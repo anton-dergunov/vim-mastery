@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vim Trainer Mobile 🦊</title>
+
+<!-- PWA meta -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vim Trainer">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #header {
+    display: flex;
+    align-items: center;
+    padding: 0.5em;
+    background: #2d2d2d;
+    border-bottom: 1px solid #555;
+    flex-shrink: 0;
+  }
+
+  #menu-icon {
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0.2em 0.5em;
+    margin-right: 0.5em;
+    user-select: none;
+  }
+
+  #menu-icon:active {
+    color: #007acc;
+  }
+
+  h1 {
+    font-size: 1.2em;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  #menu {
+    display: none;
+    position: fixed;
+    top: 50px;
+    left: 10px;
+    background: #2d2d2d;
+    border: 2px solid #555;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  }
+
+  #menu.visible {
+    display: block;
+  }
+
+  .menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+  }
+
+  .menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .menu-item:hover {
+    background: #3d3d3d;
+  }
+
+  #game-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 10px;
+  }
+
+  #game {
+    background: #2d2d2d;
+    border: 2px solid #555;
+    padding: 10px;
+    box-shadow: 0 0 20px #000;
+    font-size: 1.2em;
+    line-height: 1.4;
+    white-space: pre;
+    font-family: 'Courier New', Courier, monospace;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .cursor {
+    background: #007acc;
+    color: #fff;
+  }
+
+  .fox {
+    color: #f9d342;
+  }
+
+  .hint {
+    color: #9cdcfe;
+  }
+
+  #keyboard {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    background: #111;
+    padding: 2px 1px 2px 1px;
+    box-sizing: border-box;
+    z-index: 10;
+  }
+
+  .keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1px;
+    width: 100%;
+    position: relative;
+  }
+
+  .key {
+    background: linear-gradient(180deg, #444 0%, #333 100%);
+    color: white;
+    border-radius: 3px;
+    padding: 3px 1px;
+    margin: 0.5px;
+    font-size: min(calc(1.2vw + 7px), 15px);
+    text-align: center;
+    user-select: none;
+    width: min(calc(1.5vw + 16px), 32px);
+    height: min(calc(1.3vh + 18px), 30px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid #555;
+    border-bottom: 2px solid #222;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: all 0.1s ease;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .key.wide {
+    width: min(calc(3vw + 18px), 48px);
+  }
+
+  .key.space {
+    width: min(calc(15vw + 50px), 140px);
+  }
+
+  .key:active,
+  .key.pressed {
+    background: linear-gradient(180deg, #00ff00 0%, #00cc00 100%);
+    color: #000;
+    transform: scale(1.12) translateY(1px);
+    border-color: #00ff00;
+    border-bottom: 1px solid #00aa00;
+    box-shadow: 0 0 12px #00ff00, 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  #keyboard-close {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    background: linear-gradient(180deg, #555 0%, #444 100%);
+    color: white;
+    border: 1px solid #666;
+    border-bottom: 2px solid #222;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: min(calc(1vw + 5px), 12px);
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: min(calc(1.3vh + 16px), 26px);
+  }
+
+  #keyboard-close:active {
+    background: linear-gradient(180deg, #007acc 0%, #005999 100%);
+    transform: translateY(1px);
+    border-bottom: 1px solid #003366;
+  }
+
+  #keyboard-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    background: #007acc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    z-index: 5;
+    cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .key {
+      padding: 2px 1px;
+      font-size: min(calc(1.6vw + 6px), 14px);
+      width: min(calc(2.2vw + 12px), 28px);
+      margin: 0.4px;
+      height: min(calc(1.3vh + 16px), 28px);
+    }
+
+    .key.wide {
+      width: min(calc(4vw + 14px), 42px);
+    }
+
+    .key.space {
+      width: min(calc(18vw + 40px), 110px);
+    }
+  }
+
+  @media (max-width: 400px) {
+    .key {
+      font-size: min(calc(1.9vw + 5px), 13px);
+      width: min(calc(2.6vw + 10px), 26px);
+      padding: 2px 0.5px;
+      margin: 0.3px;
+      height: min(calc(1.3vh + 14px), 26px);
+    }
+
+    .key.wide {
+      width: min(calc(4.8vw + 12px), 38px);
+    }
+
+    .key.space {
+      width: min(calc(21vw + 30px), 95px);
+    }
+  }
+
+  @media (orientation: landscape) {
+    #keyboard {
+      padding: 1px 1px 1px 1px;
+      bottom: 8px;
+    }
+
+    .keyboard-row {
+      margin-bottom: 0.5px;
+    }
+
+    .key {
+      padding: 2px 2px;
+      font-size: min(calc(1.3vw + 5px), 12px);
+      width: min(calc(1.7vw + 14px), 32px);
+      height: min(calc(2vh + 10px), 24px);
+      border-bottom: 1px solid #222;
+      margin: 0.3px;
+    }
+
+    .key.wide {
+      width: min(calc(3.6vw + 16px), 46px);
+    }
+
+    .key.space {
+      width: min(calc(18vw + 45px), 125px);
+    }
+
+    #keyboard-close {
+      padding: 2px 5px;
+      font-size: min(calc(1.2vw + 4px), 10px);
+      height: min(calc(2vh + 8px), 22px);
+    }
+
+    #keyboard-toggle {
+      bottom: 15px;
+    }
+  }
+
+  @media (orientation: portrait) {
+    .key {
+      width: min(calc(2.8vw + 13px), 34px);
+      font-size: min(calc(1.8vw + 7px), 16px);
+      height: min(calc(1.3vh + 20px), 34px);
+      padding: 3px 1px;
+    }
+
+    .key.wide {
+      width: min(calc(4.8vw + 17px), 50px);
+    }
+
+    .key.space {
+      width: min(calc(20vw + 50px), 150px);
+    }
+
+    #keyboard-close {
+      height: min(calc(1.3vh + 18px), 30px);
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="header">
+    <div id="menu-icon">☰</div>
+    <h1>Vim Trainer 🦊</h1>
+  </div>
+
+  <div id="menu">
+    <div class="menu-item">New Lesson</div>
+    <div class="menu-item">Settings</div>
+    <div class="menu-item">Help</div>
+    <div class="menu-item">About</div>
+  </div>
+
+  <div id="game-container">
+    <div id="game"></div>
+  </div>
+
+  <button id="keyboard-toggle">Show Keyboard</button>
+
+  <div id="keyboard">
+    <button id="keyboard-close">✕</button>
+    <div class="keyboard-row">
+      <div class="key wide">⎋</div>
+      <div class="key">1</div>
+      <div class="key">2</div>
+      <div class="key">3</div>
+      <div class="key">4</div>
+      <div class="key">5</div>
+      <div class="key">6</div>
+      <div class="key">7</div>
+      <div class="key">8</div>
+      <div class="key">9</div>
+      <div class="key">0</div>
+      <div class="key wide">⌫</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">⇥</div>
+      <div class="key">q</div>
+      <div class="key">w</div>
+      <div class="key">e</div>
+      <div class="key">r</div>
+      <div class="key">t</div>
+      <div class="key">y</div>
+      <div class="key">u</div>
+      <div class="key">i</div>
+      <div class="key">o</div>
+      <div class="key">p</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">⌃</div>
+      <div class="key">a</div>
+      <div class="key">s</div>
+      <div class="key">d</div>
+      <div class="key">f</div>
+      <div class="key">g</div>
+      <div class="key">h</div>
+      <div class="key">j</div>
+      <div class="key">k</div>
+      <div class="key">l</div>
+      <div class="key">;</div>
+      <div class="key wide">↵</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">⇧</div>
+      <div class="key">z</div>
+      <div class="key">x</div>
+      <div class="key">c</div>
+      <div class="key">v</div>
+      <div class="key">b</div>
+      <div class="key">n</div>
+      <div class="key">m</div>
+      <div class="key">,</div>
+      <div class="key">.</div>
+      <div class="key wide">⇧</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">⌃</div>
+      <div class="key wide">⌥</div>
+      <div class="key space">Space</div>
+      <div class="key wide">←</div>
+      <div class="key wide">↑</div>
+      <div class="key wide">↓</div>
+      <div class="key wide">→</div>
+    </div>
+  </div>
+
+  <script>
+    const gameEl = document.getElementById('game');
+
+    // Create more realistic editor content
+    const lines = [
+      '# Welcome to Vim Trainer! 🦊',
+      '',
+      'Move the cursor using h, j, k, l:',
+      '  h - left',
+      '  j - down  ',
+      '  k - up',
+      '  l - right',
+      '',
+      'Find the fox and press i to insert!',
+      '',
+      'Lorem ipsum dolor sit amet, consectetur',
+      'adipiscing elit. Sed do eiusmod tempor',
+      'incididunt ut labore et dolore magna.',
+      '',
+      'The quick brown 🦊 jumps over the lazy dog.',
+      '',
+      'Practice makes perfect! Keep going!',
+      'You can do it! 💪'
+    ];
+
+    let cursorLine = 0;
+    let cursorCol = 0;
+    let foxLine = 14;
+    let foxCol = 16;
+
+    function render() {
+      let output = '';
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        for (let j = 0; j < line.length; j++) {
+          const char = line[j];
+          if (i === cursorLine && j === cursorCol) {
+            output += `<span class="cursor">${char || ' '}</span>`;
+          } else if (i === foxLine && j === foxCol && char === '🦊') {
+            output += `<span class="fox">${char}</span>`;
+          } else {
+            output += char;
+          }
+        }
+        if (i < lines.length - 1) output += '\n';
+      }
+      gameEl.innerHTML = output;
+    }
+
+    function moveCursor(dLine, dCol) {
+      cursorLine = Math.max(0, Math.min(lines.length - 1, cursorLine + dLine));
+      cursorCol = Math.max(0, Math.min(lines[cursorLine].length - 1, cursorCol + dCol));
+
+      // Adjust if current line is shorter
+      if (cursorCol >= lines[cursorLine].length) {
+        cursorCol = Math.max(0, lines[cursorLine].length - 1);
+      }
+
+      render();
+      checkGoal();
+    }
+
+    function checkGoal() {
+      if (cursorLine === foxLine && cursorCol === foxCol) {
+        lines[foxLine + 2] = '🎉 Great! You found the fox! Press i to insert!';
+        render();
+      }
+    }
+
+    function visualFeedback(element) {
+      element.classList.add('pressed');
+      setTimeout(() => {
+        element.classList.remove('pressed');
+      }, 150);
+    }
+
+    function handleKey(key) {
+      switch (key) {
+        case 'h': moveCursor(0, -1); break;
+        case 'j': moveCursor(1, 0); break;
+        case 'k': moveCursor(-1, 0); break;
+        case 'l': moveCursor(0, 1); break;
+        case 'ArrowLeft': moveCursor(0, -1); break;
+        case 'ArrowDown': moveCursor(1, 0); break;
+        case 'ArrowUp': moveCursor(-1, 0); break;
+        case 'ArrowRight': moveCursor(0, 1); break;
+        case 'i':
+          if (cursorLine === foxLine && cursorCol === foxCol) {
+            lines[foxLine + 2] = '✍️ Insert mode! (Press Esc to exit)';
+            render();
+          }
+          break;
+      }
+    }
+
+    document.addEventListener('keydown', e => handleKey(e.key));
+
+    document.querySelectorAll('.key').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const key = btn.textContent;
+        visualFeedback(btn);
+
+        if (key === '←') handleKey('ArrowLeft');
+        else if (key === '→') handleKey('ArrowRight');
+        else if (key === '↑') handleKey('ArrowUp');
+        else if (key === '↓') handleKey('ArrowDown');
+        else if (key === '⌫') handleKey('Backspace');
+        else if (key === '↵') handleKey('Enter');
+        else if (key === '⎋') handleKey('Escape');
+        else if (key === '⇥') handleKey('Tab');
+        else if (key === '⇧') handleKey('Shift');
+        else if (key === '⌃') handleKey('Control');
+        else if (key === '⌥') handleKey('Alt');
+        else handleKey(key);
+      });
+
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        visualFeedback(btn);
+      });
+
+      btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        const key = btn.textContent;
+
+        if (key === '←') handleKey('ArrowLeft');
+        else if (key === '→') handleKey('ArrowRight');
+        else if (key === '↑') handleKey('ArrowUp');
+        else if (key === '↓') handleKey('ArrowDown');
+        else if (key === '⌫') handleKey('Backspace');
+        else if (key === '↵') handleKey('Enter');
+        else if (key === '⎋') handleKey('Escape');
+        else if (key === '⇥') handleKey('Tab');
+        else if (key === '⇧') handleKey('Shift');
+        else if (key === '⌃') handleKey('Control');
+        else if (key === '⌥') handleKey('Alt');
+        else handleKey(key);
+      });
+    });
+
+    const keyboard = document.getElementById('keyboard');
+    const toggleBtn = document.getElementById('keyboard-toggle');
+    const closeBtn = document.getElementById('keyboard-close');
+    const menuIcon = document.getElementById('menu-icon');
+    const menu = document.getElementById('menu');
+
+    function showKeyboard() {
+      keyboard.style.display = 'block';
+      toggleBtn.style.display = 'none';
+    }
+
+    function hideKeyboard() {
+      keyboard.style.display = 'none';
+      toggleBtn.style.display = 'block';
+    }
+
+    toggleBtn.addEventListener('click', showKeyboard);
+    closeBtn.addEventListener('click', hideKeyboard);
+
+    menuIcon.addEventListener('click', () => {
+      menu.classList.toggle('visible');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && e.target !== menuIcon) {
+        menu.classList.remove('visible');
+      }
+    });
+
+    // Menu item clicks
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        alert('Menu item: ' + item.textContent);
+        menu.classList.remove('visible');
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

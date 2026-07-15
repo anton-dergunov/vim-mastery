@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Vim Adventures — Prototype Level</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#0b1220; --accent:#7dd3fc; --muted:#94a3b8;
+    --tile:#081026; --cursor:#fffb8f;
+  }
+  html,body{height:100%; margin:0; font-family:Inter,ui-sans-serif,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+  body{background:linear-gradient(180deg,#071028 0%, #071020 50%, #071018 100%); color:#e6eef6; display:flex; align-items:center; justify-content:center;}
+  .game {
+    width:950px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    display:grid; grid-template-columns: 1fr 340px; gap:18px;
+  }
+  .world {
+    border-radius:10px; padding:12px; background:linear-gradient(180deg,#081224,#06101b); min-height:520px; display:flex; flex-direction:column;
+  }
+  .stage { flex:1; background:linear-gradient(180deg,#061226 0,#071227 100%); border-radius:8px; padding:10px; overflow:auto;}
+  pre.buffer {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:6px; padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    line-height:1.5; font-size:16px; color:#cfe8ff; margin:0; white-space:pre;
+  }
+  .line { padding:2px 6px; }
+  .cursor { background: linear-gradient(90deg, rgba(255,255,0,0.14), rgba(255,255,0,0.08)); box-shadow:inset 0 0 6px rgba(255,255,0,0.08); border-radius:2px;}
+  .char { display:inline-block; min-width:10px; }
+  .hud {
+    display:flex; gap:8px; align-items:center; margin-top:8px;
+  }
+  .chip { padding:6px 10px; border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); color:var(--muted); font-size:13px;}
+  .side {
+    background:linear-gradient(180deg,#051226,#031421); padding:14px; border-radius:10px; min-height:520px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  h2 { margin:0 0 6px 0; font-size:18px; color:var(--accent);}
+  .panel { background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); padding:10px; border-radius:8px; color:#cfe8ff;}
+  .controls { display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .big {
+    font-size:20px; font-weight:600; color:#fff; text-align:center; padding:10px; border-radius:8px;
+  }
+  .cheat { font-size:13px; color:var(--muted); }
+  .hint { font-size:13px; color:#bfe6ff; }
+  .footer { font-size:12px; color:var(--muted); margin-top:auto; }
+  .stat { display:flex; gap:6px; align-items:center; }
+  .target { color:#ffd166; font-weight:700; }
+  .treasure { font-size:20px; transform:translateY(2px); }
+  .avatar { width:26px; height:26px; display:inline-block; vertical-align:middle; margin-right:6px; }
+  .log { font-family:ui-monospace,monospace; font-size:13px; color:#9ec9ff; max-height:120px; overflow:auto; padding:6px; border-radius:6px; background:rgba(255,255,255,0.01);}
+  .kbd { background:#0b1220; border:1px solid rgba(255,255,255,0.04); padding:2px 6px; border-radius:6px; color:var(--muted); font-weight:600; font-size:12px;}
+  .ready { color:#7efcc4; font-weight:700; }
+  .bad { color:#ff9b9b; font-weight:700; }
+  .title { display:flex; gap:12px; align-items:center; }
+  .title h1{ margin:0; font-size:20px; color:#bfe6ff; }
+  .countbox { font-weight:700; color:#fff; }
+</style>
+</head>
+<body>
+  <div class="game" id="game">
+    <div class="world">
+      <div class="title">
+        <svg class="avatar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#7dd3fc"/><path d="M8 14c1.5 1 3.5 1 5 0" stroke="#042" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+        <h1>Vim Adventures — Prototype Level</h1>
+      </div>
+
+      <div class="stage">
+        <pre class="buffer" id="buffer"></pre>
+      </div>
+
+      <div class="hud">
+        <div class="chip">Mode: <span id="mode" class="ready">NORMAL</span></div>
+        <div class="chip">Count: <span id="count">—</span></div>
+        <div class="chip">Operator: <span id="operator">—</span></div>
+        <div class="chip">Register: <span id="register">""</span></div>
+        <div class="chip">Last: <span id="lastcmd">—</span></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="panel">
+        <h2>Goal</h2>
+        <p class="hint">Use Vim motions and operators (d, y, p, ., u, Ctrl+R) to remove the monsters (🦊) and place the treasure (💎) on the golden tile (🔶).</p>
+        <div class="stat"><span class="treasure">💎</span> Treasure spot: <span class="target">🔶 (line 8)</span></div>
+      </div>
+
+      <div class="panel">
+        <h2>Cheat-sheet (implemented)</h2>
+        <div class="cheat">
+          <strong>Motions:</strong> h j k l | w b | 0 ^ $ | f<char> t<char> ; , | gg G<br/>
+          <strong>Operators:</strong> d, y (with motions). dd, yy (line ops).<br/>
+          <strong>Other:</strong> p (put), . (repeat last change), u (undo), Ctrl+R (redo).<br/>
+          Counts supported: eg. <span class="kbd">3w</span>, <span class="kbd">2dw</span>.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Controls & Tips</h2>
+        <ul style="margin:7px 0 0 18px; color:var(--muted)">
+          <li>Type commands as in Vim — try <span class="kbd">dw</span> to delete a word.</li>
+          <li>To find a char on the line type <span class="kbd">f</span> then the character.</li>
+          <li>Use counts like <span class="kbd">3j</span> to move down 3 lines.</li>
+          <li>Press <span class="kbd">p</span> to paste yanked text.</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h2>Log</h2>
+        <div class="log" id="log"></div>
+      </div>
+
+      <div class="footer">
+        Prototype — save as <code>vim_adventures_prototype.html</code> and open in browser. Built for practicing Vim motions.
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  Vim Adventures Prototype
+  Author: assistant (prototype)
+  Implemented features:
+  - buffer as array of lines
+  - cursor (line, col)
+  - motions: h j k l w b 0 ^ $ f t ; , gg G
+  - operators: d, y (with motions); dd, yy
+  - counts
+  - p put, . repeat, u undo, Ctrl+R redo
+  - unnamed register (single string)
+  - simple undo stack with last change
+*/
+
+const bufferEl = document.getElementById('buffer');
+const modeEl = document.getElementById('mode');
+const countEl = document.getElementById('count');
+const operatorEl = document.getElementById('operator');
+const registerEl = document.getElementById('register');
+const lastCmdEl = document.getElementById('lastcmd');
+const logEl = document.getElementById('log');
+
+let state = {
+  // sample level: short poem with monsters 🦊 and one treasure 💎
+  lines: [
+    "The quick brown fox 🦊 jumped high.",
+    "Across the silent hill it went.",
+    "A curious wind blew by the trees.",
+    "The fox found nothing but echoes.",
+    "Then the old chest opened — inside: 💎",
+    "But monsters guarded the treasure lines.",
+    "You must tidy the text to claim the prize.",
+    "🔶 The Golden Tile awaits treasure here.",
+    "Good luck, brave typist!"
+  ],
+  cursor: { line: 0, col: 0 },
+  countBuf: '',       // digits typed as count prefix
+  operator: null,     // current operator char like 'd' or 'y'
+  pendingFind: null,  // for f/t awaiting char
+  lastFind: null,     // last f/t used for ; and ,
+  lastFindForward: true,
+  register: '',       // unnamed register content
+  undoStack: [],
+  redoStack: [],
+  lastChange: null,   // for '.'
+};
+
+function log(msg) {
+  const time = new Date().toLocaleTimeString();
+  logEl.innerHTML = `<div>[${time}] ${escapeHtml(msg)}</div>` + logEl.innerHTML;
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+function render() {
+  // render buffer into pre with cursor highlighted
+  const lines = state.lines.map((ln, i) => {
+    let rendered = '';
+    for (let c = 0; c < ln.length; c++) {
+      const ch = ln[c];
+      let cls = 'char';
+      if (i === state.cursor.line && c === state.cursor.col) {
+        rendered += `<span class="cursor char">${escapeHtml(ch)}</span>`;
+      } else {
+        rendered += `<span class="${cls}">${escapeHtml(ch)}</span>`;
+      }
+    }
+    // If cursor at end of line (col == len), show placeholder
+    if (i === state.cursor.line && state.cursor.col === ln.length) {
+      rendered += `<span class="cursor char">·</span>`;
+    }
+    return `<div class="line"><span style="color:#87f7ff; width:28px; display:inline-block;">${i+1}</span> ${rendered}</div>`;
+  });
+  bufferEl.innerHTML = lines.join('\n');
+  // HUD
+  modeEl.textContent = 'NORMAL';
+  countEl.textContent = state.countBuf || '—';
+  operatorEl.textContent = state.operator || '—';
+  registerEl.textContent = state.register ? `"${state.register}"` : '""';
+  lastCmdEl.textContent = state.lastChange ? state.lastChange.summary || '—' : '—';
+}
+
+function clampCursor() {
+  if (state.cursor.line < 0) state.cursor.line = 0;
+  if (state.cursor.line >= state.lines.length) state.cursor.line = state.lines.length-1;
+  const ln = state.lines[state.cursor.line];
+  if (state.cursor.col < 0) state.cursor.col = 0;
+  if (state.cursor.col > ln.length) state.cursor.col = ln.length;
+}
+
+// Helpers for motions
+function moveLeft(count=1) {
+  while(count--) {
+    if (state.cursor.col > 0) { state.cursor.col--; }
+    else if (state.cursor.line > 0) {
+      state.cursor.line--; state.cursor.col = state.lines[state.cursor.line].length;
+    }
+  }
+}
+function moveRight(count=1) {
+  while(count--) {
+    const ln = state.lines[state.cursor.line];
+    if (state.cursor.col < ln.length) state.cursor.col++;
+    else if (state.cursor.line < state.lines.length-1) { state.cursor.line++; state.cursor.col=0; }
+  }
+}
+function moveDown(count=1) {
+  state.cursor.line = Math.min(state.cursor.line + count, state.lines.length-1);
+  const ln = state.lines[state.cursor.line];
+  state.cursor.col = Math.min(state.cursor.col, ln.length);
+}
+function moveUp(count=1) {
+  state.cursor.line = Math.max(state.cursor.line - count, 0);
+  const ln = state.lines[state.cursor.line];
+  state.cursor.col = Math.min(state.cursor.col, ln.length);
+}
+function moveToLineStartNonBlank() {
+  const ln = state.lines[state.cursor.line];
+  const m = ln.match(/\S/);
+  state.cursor.col = m ? m.index : 0;
+}
+function moveToLineStart() { state.cursor.col = 0; }
+function moveToLineEnd() { state.cursor.col = state.lines[state.cursor.line].length; }
+
+// word motions: basic definition: word = sequence of non-space chars separated by spaces
+function moveWordForward(count=1) {
+  for (let i=0;i<count;i++) {
+    let ln = state.lines[state.cursor.line];
+    let pos = state.cursor.col;
+    // skip spaces
+    while (pos < ln.length && ln[pos] === ' ') pos++;
+    // skip non-space until next space
+    while (pos < ln.length && ln[pos] !== ' ') pos++;
+    // if at end of line, go to next line start
+    if (pos === ln.length && state.cursor.line < state.lines.length-1) {
+      state.cursor.line++; state.cursor.col = 0;
+    } else {
+      state.cursor.col = pos;
+    }
+  }
+}
+function moveWordBack(count=1) {
+  for (let i=0;i<count;i++) {
+    let ln = state.lines[state.cursor.line];
+    let pos = state.cursor.col;
+    // if at start and previous line exists -> move to end previous
+    if (pos === 0 && state.cursor.line>0) {
+      state.cursor.line--; state.cursor.col = state.lines[state.cursor.line].length;
+      ln = state.lines[state.cursor.line];
+      pos = state.cursor.col;
+    }
+    // step back over spaces
+    while (pos>0 && ln[pos-1] === ' ') pos--;
+    // then back over non-spaces
+    while (pos>0 && ln[pos-1] !== ' ') pos--;
+    state.cursor.col = pos;
+  }
+}
+
+// f/t motions: find next occurrence of char on current line
+function findCharOnLine(ch, forward=true, count=1, until=false) {
+  const ln = state.lines[state.cursor.line];
+  const startIndex = state.cursor.col + (forward ? 1 : -1);
+  let pos = -1;
+  if (forward) {
+    let idx = startIndex;
+    while (count--) {
+      idx = ln.indexOf(ch, idx);
+      if (idx === -1) { pos = -1; break; }
+      pos = idx;
+      idx = pos + 1;
+    }
+  } else {
+    let idx = startIndex;
+    while (count--) {
+      idx = ln.lastIndexOf(ch, idx);
+      if (idx === -1) { pos = -1; break; }
+      pos = idx;
+      idx = pos - 1;
+    }
+  }
+  if (pos === -1) return null;
+  return until ? (forward ? pos - 1 : pos + 1) : pos;
+}
+
+// compute destination for motion token (used by operators)
+function computeMotionDest(token, count) {
+  // returns {line, col}
+  count = count || 1;
+  let dest = {line: state.cursor.line, col: state.cursor.col};
+  if (token === 'h') { dest.col = Math.max(0, dest.col - count); }
+  else if (token === 'l') {
+    dest.col = Math.min(state.lines[dest.line].length, dest.col + count);
+  } else if (token === 'j') {
+    dest.line = Math.min(state.lines.length-1, dest.line + count);
+    dest.col = Math.min(dest.col, state.lines[dest.line].length);
+  } else if (token === 'k') {
+    dest.line = Math.max(0, dest.line - count);
+    dest.col = Math.min(dest.col, state.lines[dest.line].length);
+  } else if (token === 'w') {
+    // simulate by moving from a copy
+    const save = {...state.cursor};
+    state.cursor = {...dest};
+    moveWordForward(count);
+    dest = {...state.cursor};
+    state.cursor = save;
+  } else if (token === 'b') {
+    const save = {...state.cursor};
+    state.cursor = {...dest};
+    moveWordBack(count);
+    dest = {...state.cursor};
+    state.cursor = save;
+  } else if (token === '0') { dest.col = 0; }
+  else if (token === '^') {
+    const ln = state.lines[dest.line];
+    const m = ln.match(/\S/); dest.col = m ? m.index : 0;
+  } else if (token === '$') { dest.col = state.lines[dest.line].length; }
+  else if (token === 'gg') { dest.line = 0; dest.col = Math.min(dest.col, state.lines[0].length); }
+  else if (token === 'G') { dest.line = state.lines.length - 1; dest.col = Math.min(dest.col, state.lines[dest.line].length); }
+  else if (token.startsWith('f:')) {
+    const ch = token.slice(2);
+    const found = findCharOnLine(ch, true, count, false);
+    if (found === null) return null;
+    dest.col = found;
+  } else if (token.startsWith('t:')) {
+    const ch = token.slice(2);
+    const found = findCharOnLine(ch, true, count, true);
+    if (found === null) return null;
+    dest.col = found;
+  } else if (token === ';' || token === ',') {
+    // ; repeat last find: apply direction from lastFind
+    if (!state.lastFind) return null;
+    const dir = state.lastFindForward;
+    if (token === ';') {
+      // repeat same direction
+      if (state.lastFindType === 'f' || state.lastFindType === 't') {
+        const base = (state.lastFindType === 'f') ? 'f:' : 't:';
+        return computeMotionDest(base + state.lastFindChar, count);
+      }
+    } else {
+      // repeat opposite direction
+      if (state.lastFindType === 'f' || state.lastFindType === 't') {
+        // reverse by using F/T with same char backward
+        const base = (state.lastFindType === 'f') ? 'F:' : 'T:';
+        // We'll implement a backward search fallback by scanning
+        const ch = state.lastFindChar;
+        const found = findCharOnLine(ch, !state.lastFindForward, count, state.lastFindUntil);
+        if (found === null) return null;
+        dest.col = found; return dest;
+      }
+    }
+  }
+  return dest;
+}
+
+// perform operator from original cursor to dest (inclusive/exclusive rules simplified)
+// we will treat motions as selecting from start location to dest (not a perfect vim behavior but good for practice)
+function performOperator(op, motionToken, countPrefix) {
+  const count = countPrefix || 1;
+  const dest = computeMotionDest(motionToken, count);
+  if (!dest) { log(`Motion ${motionToken} failed.`); return; }
+  // compute linear positions
+  const [sLine,sCol] = [state.cursor.line, state.cursor.col];
+  const [eLine,eCol] = [dest.line, dest.col];
+  // normalize ordering
+  let startLine = sLine, startCol = sCol, endLine = eLine, endCol = eCol;
+  if (startLine > endLine || (startLine === endLine && startCol > endCol)) {
+    [startLine,endLine] = [endLine,startLine];
+    [startCol,endCol] = [endCol,startCol];
+  }
+  // For characterwise operator, include endCol (like d$ deletes to end)
+  // We'll remove text from start (inclusive) to end (inclusive of character before end if end is at column).
+  // Simpler: if same line, remove substring from startCol to endCol (inclusive if endCol > startCol).
+  pushUndo(`op ${op}${motionToken}`);
+  if (startLine === endLine) {
+    const ln = state.lines[startLine];
+    const removed = ln.slice(startCol, endCol+1);
+    state.register = removed;
+    state.lines[startLine] = ln.slice(0,startCol) + ln.slice(endCol+1);
+    state.cursor.line = startLine; state.cursor.col = startCol;
+    state.lastChange = {kind:op, summary:`${op}${motionToken}`, text:removed, pos:{line:startLine,col:startCol}};
+    log(`${op} removed "${removed}"`);
+  } else {
+    // multiple line removal: collect and compact
+    const removedLines = [];
+    removedLines.push(state.lines[startLine].slice(startCol));
+    for (let L = startLine+1; L < endLine; L++) removedLines.push(state.lines[L]);
+    removedLines.push(state.lines[endLine].slice(0,endCol+1));
+    const removedText = removedLines.join('\n');
+    state.register = removedText;
+    state.lines[startLine] = state.lines[startLine].slice(0,startCol) + state.lines[endLine].slice(endCol+1);
+    // remove middle lines
+    state.lines.splice(startLine+1, endLine-startLine);
+    state.cursor.line = startLine; state.cursor.col = startCol;
+    state.lastChange = {kind:op, summary:`${op}${motionToken}`, text:removedText, pos:{line:startLine,col:startCol}};
+    log(`${op} removed multiple lines`);
+  }
+}
+
+function pushUndo(desc) {
+  const snapshot = {
+    lines: JSON.parse(JSON.stringify(state.lines)),
+    cursor: {...state.cursor},
+    register: state.register,
+    desc
+  };
+  state.undoStack.push(snapshot);
+  if (state.undoStack.length > 100) state.undoStack.shift();
+  // clear redo on new action
+  state.redoStack = [];
+}
+
+function doPut(after=true) {
+  if (!state.register) { log("Register empty."); return; }
+  pushUndo('put');
+  const ln = state.lines[state.cursor.line];
+  if (after) {
+    const before = ln.slice(0, state.cursor.col+ (state.cursor.col < ln.length ? 1 : 0));
+    const afterText = ln.slice(state.cursor.col + (state.cursor.col < ln.length ? 1 : 0));
+    // if register contains newline(s) -> split into lines and insert
+    if (state.register.includes('\n')) {
+      const pieces = state.register.split('\n');
+      const first = before + pieces[0];
+      const last = pieces[pieces.length-1] + afterText;
+      const mid = pieces.slice(1, pieces.length-1);
+      const idx = state.cursor.line;
+      state.lines.splice(idx, 1, first, ...mid, last);
+      state.cursor.line = idx + pieces.length - 1;
+      state.cursor.col = pieces[pieces.length-1].length;
+    } else {
+      state.lines[state.cursor.line] = before + state.register + afterText;
+      state.cursor.col = before.length + state.register.length - (state.cursor.col < ln.length ? 0 : 1);
+    }
+  } else {
+    // put before cursor
+    const before = ln.slice(0, state.cursor.col);
+    const afterText = ln.slice(state.cursor.col);
+    if (state.register.includes('\n')) {
+      const pieces = state.register.split('\n');
+      const first = before + pieces[0];
+      const last = pieces[pieces.length-1] + afterText;
+      const mid = pieces.slice(1, pieces.length-1);
+      const idx = state.cursor.line;
+      state.lines.splice(idx, 1, first, ...mid, last);
+      state.cursor.line = idx + pieces.length - 1;
+      state.cursor.col = pieces[pieces.length-1].length;
+    } else {
+      state.lines[state.cursor.line] = before + state.register + afterText;
+      state.cursor.col = before.length + state.register.length;
+    }
+  }
+  state.lastChange = {kind:'p', summary:'p', text:state.register, pos:{...state.cursor}};
+  log(`Put register content.`);
+}
+
+function doDeleteLine(lineIdx) {
+  pushUndo('dd');
+  const removed = state.lines.splice(lineIdx,1)[0];
+  state.register = removed + '\n';
+  state.cursor.line = Math.min(lineIdx, state.lines.length-1);
+  state.cursor.col = 0;
+  state.lastChange = {kind:'dd', summary:'dd', text:removed, pos:{line:state.cursor.line,col:0}};
+  log(`Deleted line ${lineIdx+1}`);
+}
+
+function doYankLine(lineIdx) {
+  state.register = state.lines[lineIdx] + '\n';
+  state.lastChange = {kind:'yy', summary:'yy', text:state.register, pos:{line:lineIdx,col:0}};
+  log(`Yanked line ${lineIdx+1}`);
+}
+
+function undo() {
+  if (!state.undoStack.length) { log('Nothing to undo'); return; }
+  const snap = state.undoStack.pop();
+  state.redoStack.push({
+    lines: JSON.parse(JSON.stringify(state.lines)),
+    cursor: {...state.cursor},
+    register: state.register
+  });
+  state.lines = JSON.parse(JSON.stringify(snap.lines));
+  state.cursor = {...snap.cursor};
+  state.register = snap.register;
+  log('Undo: ' + (snap.desc || 'action'));
+}
+function redo() {
+  if (!state.redoStack.length) { log('Nothing to redo'); return; }
+  const snap = state.redoStack.pop();
+  state.undoStack.push({
+    lines: JSON.parse(JSON.stringify(state.lines)),
+    cursor: {...state.cursor},
+    register: state.register
+  });
+  state.lines = JSON.parse(JSON.stringify(snap.lines));
+  state.cursor = {...snap.cursor};
+  state.register = snap.register;
+  log('Redo');
+}
+
+// Interpret a motion key and return a token for computeMotionDest
+function parseMotionKey(ev, count) {
+  const k = ev.key;
+  if (k === 'h' || k === 'l' || k === 'j' || k === 'k') return k;
+  if (k === 'w' || k === 'b' || k === '0' || k === '^' || k === '$') return k;
+  if (k === 'g') {
+    // check double g for gg
+    if (lastKey === 'g') return 'gg';
+    return 'g'; // we will wait for second g
+  }
+  if (k === 'G') return 'G';
+  if (k === 'f' || k === 't') {
+    // next char will be used; we set pendingFind
+    state.pendingFind = k; // 'f' or 't'
+    return null;
+  }
+  if ((k === ';' || k === ',') ) return k;
+  if (k.length === 1 && state.pendingFind) {
+    const type = state.pendingFind; state.pendingFind = null;
+    // store lastFind
+    state.lastFind = {char: k}; state.lastFindChar = k; state.lastFindType = type; state.lastFindForward = true;
+    return `${type}:${k}`;
+  }
+  // fallback: not a motion
+  return null;
+}
+
+let lastKey = null;
+let awaitingSecondG = false;
+
+window.addEventListener('keydown', e => {
+  // prevent browser default for some keys
+  if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Tab' || e.ctrlKey) {
+    e.preventDefault();
+  }
+  // Ctrl+R for redo
+  if (e.ctrlKey && (e.key === 'r' || e.key === 'R')) {
+    redo(); render(); return;
+  }
+  if (e.key === 'Escape') {
+    // reset state
+    state.countBuf = '';
+    state.operator = null;
+    state.pendingFind = null;
+    render(); return;
+  }
+
+  // Allowed keys: numbers, letters, punctuation
+  // Digits for count prefix (if no pending operator)
+  if (/^[0-9]$/.test(e.key) && !state.pendingFind && !state.operator) {
+    // if leading 0 and countBuf empty: treat as motion '0'
+    if (e.key === '0' && state.countBuf === '') {
+      // act as motion '0' immediately
+      handleKey('0'); lastKey = '0'; return;
+    }
+    state.countBuf += e.key;
+    render(); return;
+  }
+
+  // handle Ctrl separately done above
+  handleKey(e.key);
+  lastKey = e.key;
+});
+
+function handleKey(key) {
+  // if we are awaiting a pending find char (from f/t), process as motion input
+  if (state.pendingFind && key.length === 1) {
+    const token = (state.pendingFind + ':' + key);
+    state.lastFind = true; state.lastFindChar = key; state.lastFindType = state.pendingFind;
+    state.pendingFind = null;
+    // if operator waiting, perform operator with this motion
+    if (state.operator) {
+      const cnt = parseInt(state.countBuf||'1',10);
+      performOperator(state.operator, token, cnt);
+      state.operator = null; state.countBuf = '';
+      render(); return;
+    } else {
+      // just move cursor
+      const cnt = parseInt(state.countBuf||'1',10);
+      const dest = computeMotionDest(token, cnt);
+      if (dest) { state.cursor = dest; render(); return; }
+    }
+  }
+
+  // if operator is pending and key is motion
+  if (state.operator) {
+    // handle dd and yy shortcuts: if operator same as key produces line op
+    if ((state.operator === 'd' && key === 'd') || (state.operator === 'y' && key === 'y')) {
+      const cnt = parseInt(state.countBuf||'1',10);
+      // dd deletes lines
+      if (state.operator === 'd') {
+        for (let i=0;i<cnt;i++) {
+          doDeleteLine(state.cursor.line);
+        }
+        state.operator = null; state.countBuf=''; render(); return;
+      } else {
+        for (let i=0;i<cnt;i++) {
+          doYankLine(state.cursor.line + i);
+        }
+        state.operator = null; state.countBuf=''; render(); return;
+      }
+    }
+    // parse motion token
+    // If key is 'g' may be gg used as motion; handle double g
+    if (key === 'g') {
+      if (lastKey === 'g') {
+        // treat as gg
+        performOperator(state.operator, 'gg', parseInt(state.countBuf||'1',10));
+        state.operator = null; state.countBuf=''; render(); return;
+      } else {
+        // wait for second g
+        // set lastKey and return
+        return;
+      }
+    }
+    // handle f/t which require next character: set pendingFind and wait (we already handle above)
+    if (key === 'f' || key === 't') {
+      state.pendingFind = key;
+      render(); return;
+    }
+    // ; and , handled in computeMotionDest
+    const cnt = parseInt(state.countBuf||'1',10);
+    const token = parseMotionTokenFromKey(key);
+    if (token) {
+      performOperator(state.operator, token, cnt);
+      state.operator = null; state.countBuf=''; render(); return;
+    } else {
+      log(`Unknown motion after ${state.operator}: ${key}`);
+      state.operator = null; state.countBuf=''; render(); return;
+    }
+  }
+
+  // No operator pending: interpret as plain motion or operator or command
+  // Operators: d, y
+  if (key === 'd' || key === 'y') {
+    state.operator = key;
+    render(); return;
+  }
+  // dd or yy when operator not set and key repeated -> handle in operator flow but also support dd typed directly
+  if (key === 'd' && lastKey === 'd') {
+    doDeleteLine(state.cursor.line); render(); return;
+  }
+  if (key === 'y' && lastKey === 'y') { doYankLine(state.cursor.line); render(); return; }
+
+  // Single-key commands:
+  if (key === 'h') { moveLeft(parseInt(state.countBuf||'1',10)); state.countBuf=''; render(); return; }
+  if (key === 'l') { moveRight(parseInt(state.countBuf||'1',10)); state.countBuf=''; render(); return; }
+  if (key === 'j') { moveDown(parseInt(state.countBuf||'1',10)); state.countBuf=''; render(); return; }
+  if (key === 'k') { moveUp(parseInt(state.countBuf||'1',10)); state.countBuf=''; render(); return; }
+  if (key === '0') { moveToLineStart(); state.countBuf=''; render(); return; }
+  if (key === '^') { moveToLineStartNonBlank(); state.countBuf=''; render(); return; }
+  if (key === '$') { moveToLineEnd(); state.countBuf=''; render(); return; }
+  if (key === 'w') { moveWordForward(parseInt(state.countBuf||'1',10)); state.countBuf=''; render(); return; }
+  if (key === 'b') { moveWordBack(parseInt(state.countBuf||'1',10)); state.countBuf=''; render(); return; }
+  if (key === 'g') {
+    if (lastKey === 'g') { // gg - go to top
+      state.cursor.line = 0; state.cursor.col = 0; state.countBuf=''; render(); return;
+    } else {
+      // wait for next key
+      return;
+    }
+  }
+  if (key === 'G') { state.cursor.line = state.lines.length-1; state.cursor.col = 0; state.countBuf=''; render(); return; }
+
+  if (key === 'f' || key === 't') {
+    state.pendingFind = key; render(); return;
+  }
+  if (state.lastFind && (key === ';' || key === ',')) {
+    // handle last find repeat as motion
+    const token = key;
+    const cnt = parseInt(state.countBuf||'1',10);
+    const dest = computeMotionDest(token, cnt);
+    if (dest) { state.cursor = dest; state.countBuf=''; render(); return; }
+    return;
+  }
+
+  if (key === 'p') { // put after
+    pushUndo('p'); doPut(true); render(); return;
+  }
+  if (key === '.') { // repeat last change
+    if (!state.lastChange) { log('Nothing to repeat'); return; }
+    // naive repeat: if last was dd -> repeat delete line
+    pushUndo('repeat');
+    if (state.lastChange.kind === 'dd') {
+      doDeleteLine(state.cursor.line);
+      render(); return;
+    } else if (state.lastChange.kind === 'p') {
+      doPut(true); render(); return;
+    } else if (state.lastChange.text) {
+      // insert lastChange.text as put
+      state.register = state.lastChange.text;
+      doPut(true); render(); return;
+    }
+    return;
+  }
+  if (key === 'u') { undo(); render(); return; }
+
+  // search related keys '*' '#' not implemented; ignore others
+  log('Key not handled: ' + key);
+  render();
+}
+
+function parseMotionTokenFromKey(key) {
+  // helper to map simple keys to motion tokens
+  if (['h','j','k','l','w','b','0','^','$','gg','G',';',' ,'].includes(key)) return key;
+  // handle f/t if followed by char must be passed earlier
+  if (key.length === 1 && state.pendingFind === null && (key === ';' || key === ',')) return key;
+  // if key is generic char we may treat as f<char> if previously pressed 'f' and pendingFind set; but that flow handled elsewhere.
+  // fallback null
+  if (key === ';' || key === ',') return key;
+  return key;
+}
+
+// initialize cursor at start of first line's first word
+function init() {
+  state.cursor.line = 0; state.cursor.col = 0;
+  // move to first non-blank
+  moveToLineStartNonBlank();
+  pushUndo('init');
+  render();
+  log('Welcome! Use Vim motions and operators to complete the goal.');
+}
+
+init();
+</script>
+</body>
+</html>

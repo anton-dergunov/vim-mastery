@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#071715">
+  <title>The Vim Wilds — Rune Column</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4ecd8;
+      --muted: #9cb7aa;
+      --moss: #7ed69e;
+      --violet: #b694ff;
+      --amber: #ffc866;
+      --deep: #06110f;
+      --panel: #0d1c19;
+      --key: #182522;
+      --key-edge: #30413b;
+      --key-shadow: #07100e;
+      --gap: 2.5px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overscroll-behavior: none;
+      background: #020706;
+    }
+
+    body {
+      overflow: hidden;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(51, 116, 94, .22), transparent 36rem),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px);
+    }
+
+    button { font: inherit; }
+
+    .phone {
+      position: relative;
+      width: min(100%, 430px);
+      height: 100dvh;
+      min-height: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        linear-gradient(180deg, rgba(14, 34, 29, .96), rgba(5, 13, 12, .99) 55%),
+        #071411;
+      box-shadow: 0 0 70px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(255,255,255,.035);
+      padding-top: env(safe-area-inset-top);
+    }
+
+    .topbar {
+      height: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 13px;
+      border-bottom: 1px solid rgba(166, 219, 192, .1);
+      background: rgba(5, 15, 13, .76);
+      backdrop-filter: blur(16px);
+      z-index: 5;
+    }
+
+    .brand-mark {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 200, 102, .46);
+      border-radius: 7px 7px 11px 7px;
+      color: var(--amber);
+      background: linear-gradient(145deg, #263a28, #0d1b17);
+      box-shadow: 0 0 14px rgba(255, 194, 83, .14), inset 0 0 7px rgba(255,255,255,.04);
+      font: 700 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      transform: rotate(-4deg);
+    }
+
+    .brand-copy { min-width: 0; line-height: 1; }
+    .brand-copy strong {
+      display: block;
+      font-size: 10px;
+      line-height: 1.2;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #d9eadf;
+    }
+    .brand-copy span {
+      display: block;
+      margin-top: 3px;
+      font: 500 8px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .1em;
+      color: #708f81;
+      text-transform: uppercase;
+    }
+
+    .mode-pill {
+      margin-left: auto;
+      min-width: 68px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 9px;
+      border: 1px solid rgba(126, 214, 158, .28);
+      border-radius: 999px;
+      color: var(--moss);
+      background: rgba(51, 112, 76, .13);
+      font: 700 8px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: .25s ease;
+    }
+
+    .mode-pill.visual {
+      color: #eadfff;
+      border-color: rgba(182, 148, 255, .58);
+      background: rgba(120, 76, 196, .2);
+      box-shadow: 0 0 15px rgba(157, 110, 255, .2);
+    }
+
+    .reset-button {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 9px;
+      color: #93aa9e;
+      background: rgba(255,255,255,.035);
+      cursor: pointer;
+    }
+    .reset-button:active { transform: scale(.91) rotate(-20deg); }
+
+    .quest {
+      position: relative;
+      flex: 0 0 64px;
+      padding: 10px 15px 9px 17px;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(166, 219, 192, .09);
+      background:
+        linear-gradient(90deg, rgba(20, 53, 42, .78), rgba(8, 22, 19, .35)),
+        repeating-linear-gradient(90deg, transparent 0 20px, rgba(255,255,255,.018) 20px 21px);
+    }
+
+    .quest::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(var(--amber), #a46a24);
+      box-shadow: 0 0 12px rgba(255, 193, 78, .42);
+    }
+
+    .eyebrow {
+      margin-bottom: 4px;
+      color: #8cb19e;
+      font: 700 8px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .quest h1 {
+      margin: 0;
+      font: 700 clamp(14px, 4.1vw, 17px)/1.18 Georgia, "Times New Roman", serif;
+      letter-spacing: .01em;
+      color: #fff7df;
+    }
+
+    .quest p {
+      margin: 4px 0 0;
+      color: #9bb4a8;
+      font-size: 9px;
+      line-height: 1.2;
+    }
+
+    .game-area {
+      min-height: 0;
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      padding: 8px 9px;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(49, 109, 83, .08), transparent 70%),
+        linear-gradient(#081613, #07110f);
+    }
+
+    .world {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 260px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 225, 197, .2);
+      border-radius: 12px;
+      background-color: #0b2624;
+      background-image: url("assets/enchanted-ruins.png");
+      background-size: cover;
+      background-position: center 51%;
+      box-shadow:
+        0 10px 24px rgba(0,0,0,.38),
+        0 0 0 3px rgba(6, 18, 15, .86),
+        0 0 0 4px rgba(105, 151, 128, .18),
+        inset 0 0 42px rgba(1, 8, 7, .5);
+    }
+
+    .world::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(3, 16, 14, .18), transparent 28%, transparent 72%, rgba(3, 16, 14, .16)),
+        radial-gradient(ellipse at center, transparent 45%, rgba(1, 8, 7, .34) 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
+    }
+
+    .world::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      aspect-ratio: 4 / 3;
+      z-index: 9;
+      pointer-events: none;
+      opacity: .35;
+      background-image:
+        linear-gradient(rgba(198, 235, 215, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(198, 235, 215, .055) 1px, transparent 1px);
+      background-size: calc(100% / 12) calc(100% / 9);
+      mix-blend-mode: screen;
+      transform: translateY(-50%);
+    }
+
+    .world-grid {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      aspect-ratio: 4 / 3;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(9, 1fr);
+      transform: translateY(-50%);
+    }
+
+    .gate {
+      grid-column: 8 / span 3;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      justify-self: stretch;
+      position: relative;
+      transform: translateY(-4%);
+      filter: drop-shadow(0 8px 6px rgba(0,0,0,.65));
+      transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .4s ease;
+    }
+    .gate::before,
+    .gate::after {
+      content: "";
+      position: absolute;
+      top: 5%;
+      bottom: 3%;
+      width: 24%;
+      border: 1px solid #576a59;
+      background:
+        linear-gradient(90deg, #1a2520, #4d604d 45%, #17231e),
+        #27362d;
+      box-shadow: inset 0 0 0 2px #15221c;
+    }
+    .gate::before { left: 2%; }
+    .gate::after { right: 2%; }
+    .gate-door {
+      position: absolute;
+      left: 23%;
+      right: 23%;
+      top: 18%;
+      bottom: 1%;
+      border: 2px solid #314037;
+      border-bottom: 0;
+      border-radius: 50% 50% 4px 4px / 24% 24% 4px 4px;
+      background:
+        repeating-linear-gradient(90deg, #171f1c 0 4px, #425047 4px 6px, #202b26 6px 10px);
+      box-shadow: inset 0 0 12px #020403, 0 0 0 2px #151f1b;
+      transform-origin: top center;
+      transition: transform .75s cubic-bezier(.25,.8,.18,1), opacity .55s;
+    }
+    .gate-sigil {
+      position: absolute;
+      left: 50%;
+      top: 49%;
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #7c6231;
+      border-radius: 50%;
+      color: #d9a849;
+      background: #22251d;
+      box-shadow: 0 0 10px rgba(255, 186, 67, .23);
+      font: 700 10px/1 ui-monospace, monospace;
+      transform: translate(-50%, -50%);
+      transition: .45s ease;
+    }
+    .world.complete .gate { filter: drop-shadow(0 6px 9px rgba(255, 199, 89, .3)); }
+    .world.complete .gate-door { transform: translateY(-86%) scaleY(.08); opacity: .22; }
+    .world.complete .gate-sigil { color: #fff3bd; background: #6d4b18; box-shadow: 0 0 24px #ffc65e; }
+
+    .rune {
+      grid-column: 8;
+      position: relative;
+      align-self: center;
+      justify-self: center;
+      width: 78%;
+      max-width: 34px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid #607064;
+      border-radius: 4px 4px 7px 7px;
+      color: #c4d3c8;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.12), transparent 28%),
+        linear-gradient(#435047, #1c2923 72%);
+      box-shadow: 0 4px 0 #0b1511, 0 6px 8px rgba(0,0,0,.54), inset 0 0 0 2px rgba(9, 20, 16, .5);
+      font: 700 clamp(9px, 2.7vw, 12px)/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-shadow: 0 1px 2px #000;
+      transition: .24s cubic-bezier(.2,.8,.2,1);
+    }
+    .rune::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      transition: .22s ease;
+    }
+    .rune[data-rune="1"] { grid-row: 3; }
+    .rune[data-rune="2"] { grid-row: 4; }
+    .rune[data-rune="3"] { grid-row: 5; }
+    .rune[data-rune="4"] { grid-row: 6; }
+    .rune.cursor::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 70%;
+      left: 31%;
+      top: 15%;
+      background: #fff0a9;
+      box-shadow: 0 0 8px #ffc35b;
+      animation: cursorBlink .88s steps(1) infinite;
+    }
+    .rune.selected {
+      z-index: 4;
+      color: #f2eaff;
+      border-color: #c8aaff;
+      background: linear-gradient(145deg, rgba(232,217,255,.22), rgba(75,45,119,.72)), #322447;
+      box-shadow: 0 3px 0 #160d23, 0 0 15px rgba(176, 130, 255, .75), inset 0 0 0 2px rgba(50, 22, 78, .72);
+      transform: translateY(-1px) scale(1.06);
+    }
+    .rune.selected::before { border-color: rgba(221, 204, 255, .7); }
+    .rune.lit {
+      color: #242016;
+      border-color: #f3cf71;
+      background: radial-gradient(circle, #fff5b4 0 24%, #e5ad3c 44%, #4b492c 74%);
+      box-shadow: 0 3px 0 #1a170d, 0 0 19px rgba(255, 199, 79, .95), inset 0 0 0 2px rgba(255,243,170,.45);
+      text-shadow: none;
+      animation: runeIgnite .58s both;
+    }
+
+    .nix {
+      grid-column: 3 / span 3;
+      grid-row: 5 / span 4;
+      align-self: end;
+      justify-self: center;
+      width: clamp(76px, 23vw, 98px);
+      aspect-ratio: 1;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 7px 5px rgba(0,0,0,.68));
+      transform-origin: 55% 88%;
+      animation: nixIdle 2.4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
+
+    .oracle {
+      grid-column: 2;
+      grid-row: 6;
+      align-self: center;
+      justify-self: center;
+      position: relative;
+      width: clamp(29px, 8vw, 35px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(153, 244, 197, .66);
+      border-radius: 50% 50% 44% 44%;
+      color: #d8ffe9;
+      background: radial-gradient(circle at 45% 38%, #caffdf 0 5%, #3a9a6c 10%, #123a2a 57%, #091b15 72%);
+      box-shadow: 0 0 8px #6de3a0, 0 0 22px rgba(83, 226, 147, .38), inset 0 0 7px rgba(255,255,255,.24);
+      cursor: pointer;
+      z-index: 6;
+      font: 800 14px/1 Georgia, serif;
+      animation: oracleFloat 2.1s ease-in-out infinite;
+    }
+    .oracle::after {
+      content: "HELP";
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 50%;
+      padding: 2px 4px;
+      border-radius: 3px;
+      color: #9fe7bc;
+      background: rgba(4, 15, 12, .72);
+      font: 700 6px/1 ui-monospace, monospace;
+      letter-spacing: .1em;
+      transform: translateX(-50%);
+    }
+
+    .mote {
+      position: absolute;
+      z-index: 2;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #d9c7ff;
+      box-shadow: 0 0 7px 2px #9c72ef;
+      animation: moteFloat 3.5s ease-in-out infinite;
+    }
+    .mote.one { left: 38%; top: 22%; animation-delay: -.7s; }
+    .mote.two { left: 69%; top: 71%; animation-delay: -2.1s; }
+    .mote.three { left: 17%; top: 35%; animation-delay: -1.4s; }
+
+    .help-card {
+      position: absolute;
+      z-index: 12;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      padding: 11px 12px 10px;
+      border: 1px solid rgba(209, 188, 139, .62);
+      border-radius: 10px;
+      color: #292219;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.38), transparent 42%),
+        #dfcda5;
+      box-shadow: 0 12px 26px rgba(0,0,0,.55), inset 0 0 18px rgba(92, 60, 26, .14);
+      transform: translateY(calc(100% + 14px));
+      opacity: 0;
+      visibility: hidden;
+      transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .22s, visibility .22s;
+    }
+    .help-card.open { transform: translateY(0); opacity: 1; visibility: visible; }
+    .help-card header { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+    .help-card header span {
+      width: 21px;
+      height: 21px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fbe7a1;
+      background: #1d4a38;
+      font: 800 11px/1 Georgia, serif;
+    }
+    .help-card h2 { margin: 0; font: 700 12px/1.1 Georgia, serif; }
+    .help-close {
+      margin-left: auto;
+      width: 23px;
+      height: 23px;
+      border: 0;
+      border-radius: 7px;
+      color: #5f503a;
+      background: rgba(66, 51, 31, .1);
+    }
+    .hint-steps { display: flex; gap: 5px; }
+    .hint-step {
+      flex: 1;
+      min-width: 0;
+      padding: 6px 5px;
+      border: 1px solid rgba(85, 61, 30, .19);
+      border-radius: 6px;
+      background: rgba(255, 250, 226, .45);
+      text-align: center;
+    }
+    .hint-step kbd {
+      display: block;
+      margin-bottom: 4px;
+      color: #25523e;
+      font: 800 10px/1 ui-monospace, monospace;
+    }
+    .hint-step small { display: block; font-size: 7px; line-height: 1.2; color: #66563d; }
+
+    .success-banner {
+      position: absolute;
+      z-index: 11;
+      top: 9px;
+      left: 50%;
+      width: calc(100% - 30px);
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 225, 141, .64);
+      border-radius: 9px;
+      color: #fff5cd;
+      background: rgba(46, 54, 30, .92);
+      box-shadow: 0 8px 22px rgba(0,0,0,.4), 0 0 23px rgba(255, 194, 75, .18);
+      text-align: center;
+      transform: translate(-50%, -130%);
+      opacity: 0;
+      transition: .5s cubic-bezier(.2,.9,.2,1);
+      backdrop-filter: blur(8px);
+    }
+    .success-banner.show { transform: translate(-50%, 0); opacity: 1; }
+    .success-banner strong { display: block; font: 700 12px/1.1 Georgia, serif; }
+    .success-banner span { display: block; margin-top: 3px; color: #c6d9c9; font-size: 8px; }
+
+    .keyboard-panel {
+      position: relative;
+      z-index: 20;
+      flex: 0 0 auto;
+      padding: 7px 5px calc(7px + env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(153, 198, 177, .13);
+      background:
+        linear-gradient(180deg, rgba(22, 36, 32, .98), rgba(7, 13, 12, .995)),
+        #0a1210;
+      box-shadow: 0 -9px 24px rgba(0,0,0,.34);
+    }
+
+    .command-tray {
+      height: 39px;
+      margin: 0 2px 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      overflow: hidden;
+      border: 1px solid rgba(155, 205, 181, .15);
+      border-radius: 9px;
+      background: rgba(2, 9, 7, .64);
+      box-shadow: inset 0 1px 8px rgba(0,0,0,.55);
+    }
+    .prompt-glyph { color: var(--amber); font: 800 13px/1 ui-monospace, monospace; }
+    .command-text {
+      min-width: 68px;
+      color: #f6edda;
+      font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: nowrap;
+    }
+    .command-text .ghost { color: #597065; font-weight: 500; }
+    .guidance {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      color: #81998e;
+      font-size: 8px;
+      line-height: 1.15;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .command-tray.error { animation: trayShake .28s ease; border-color: rgba(239, 116, 96, .52); }
+
+    .keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      touch-action: manipulation;
+    }
+    .key-row { display: flex; gap: var(--gap); width: 100%; }
+    .key {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+      height: clamp(31px, 4.35dvh, 39px);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid var(--key-edge);
+      border-bottom-color: #101815;
+      border-radius: 5px;
+      color: #d8e2dc;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), transparent 35%),
+        linear-gradient(#22302c, var(--key));
+      box-shadow: 0 2px 0 var(--key-shadow), inset 0 0 0 1px rgba(255,255,255,.018);
+      font: 650 clamp(8px, 2.55vw, 10px)/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+      cursor: pointer;
+      transform: translateY(0);
+      transition: transform .055s, background .12s, border-color .12s, color .12s, box-shadow .12s;
+      touch-action: manipulation;
+    }
+    .key .stack {
+      height: 76%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    .key .shifted { color: #71867c; font-size: .72em; font-weight: 550; }
+    .key .base { color: inherit; }
+    .key.modifier, .key.utility { color: #9fb2a8; font-size: clamp(6px, 2vw, 8px); }
+    .key.pressed, .key:active {
+      transform: translateY(2px);
+      color: #fff8df;
+      border-color: #536a60;
+      background: linear-gradient(#16211e, #101916);
+      box-shadow: 0 0 0 var(--key-shadow), inset 0 2px 5px rgba(0,0,0,.4);
+    }
+    .key.latched {
+      color: #191322;
+      border-color: #d4bcff;
+      background: linear-gradient(180deg, #dacbff, #a989e0);
+      box-shadow: 0 2px 0 #4d356f, 0 0 12px rgba(182, 148, 255, .48), inset 0 0 0 1px rgba(255,255,255,.35);
+    }
+    .key.hinted {
+      border-color: #efc86a;
+      color: #fff1bf;
+      box-shadow: 0 2px 0 var(--key-shadow), 0 0 10px rgba(255, 199, 83, .4), inset 0 0 0 1px rgba(255,223,144,.12);
+    }
+    .u-115 { flex-grow: 1.15; }
+    .u-125 { flex-grow: 1.25; }
+    .u-145 { flex-grow: 1.45; }
+    .u-17 { flex-grow: 1.7; }
+    .u-2 { flex-grow: 2; }
+    .u-space { flex-grow: 6; }
+
+    @keyframes cursorBlink { 0%, 48% { opacity: 1; } 49%, 100% { opacity: 0; } }
+    @keyframes runeIgnite { 0% { transform: scale(.76); filter: brightness(2); } 65% { transform: scale(1.16); } 100% { transform: scale(1); } }
+    @keyframes nixIdle { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-3px) rotate(1deg); } }
+    @keyframes nixCelebrate { 0%,100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-15px) rotate(-7deg); } 70% { transform: translateY(-5px) rotate(6deg); } }
+    @keyframes oracleFloat { 0%,100% { transform: translateY(1px); } 50% { transform: translateY(-3px); } }
+    @keyframes moteFloat { 0%,100% { transform: translate(0, 2px); opacity: .35; } 50% { transform: translate(4px, -6px); opacity: 1; } }
+    @keyframes trayShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 65% { transform: translateX(4px); } }
+
+    @media (max-height: 720px) {
+      .topbar { height: 38px; flex-basis: 38px; }
+      .quest { flex-basis: 58px; padding-top: 8px; }
+      .game-area { padding: 6px 8px; }
+      .command-tray { height: 34px; margin-bottom: 4px; }
+      .keyboard-panel { padding-top: 5px; }
+      .key { height: 30px; }
+    }
+
+    @media (min-width: 600px) {
+      .phone {
+        height: min(100dvh, 932px);
+        margin-top: max(0px, calc((100dvh - 932px) / 2));
+        border: 1px solid rgba(180, 220, 200, .12);
+        border-radius: 28px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="The Vim Wilds mobile prototype">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">V</div>
+      <div class="brand-copy">
+        <strong>The Vim Wilds</strong>
+        <span>Moonroot Ruins · Trial 01</span>
+      </div>
+      <div class="mode-pill" id="modePill" aria-live="polite">Normal</div>
+      <button class="reset-button" id="resetButton" type="button" aria-label="Restart exercise" title="Restart">↻</button>
+    </header>
+
+    <section class="quest" aria-labelledby="questTitle">
+      <div class="eyebrow">Visual Block · Rune Column</div>
+      <h1 id="questTitle">Light all four runes in one spell.</h1>
+      <p>The seal is a column—not four separate edits.</p>
+    </section>
+
+    <section class="game-area" aria-label="Enchanted ruins exercise board">
+      <div class="world" id="world">
+        <span class="mote one" aria-hidden="true"></span>
+        <span class="mote two" aria-hidden="true"></span>
+        <span class="mote three" aria-hidden="true"></span>
+
+        <div class="world-grid">
+          <div class="gate" aria-hidden="true">
+            <div class="gate-door"></div>
+            <div class="gate-sigil">×</div>
+          </div>
+
+          <div class="rune cursor" data-rune="1"><span>[ ]</span></div>
+          <div class="rune" data-rune="2"><span>[ ]</span></div>
+          <div class="rune" data-rune="3"><span>[ ]</span></div>
+          <div class="rune" data-rune="4"><span>[ ]</span></div>
+
+          <img class="nix" src="assets/nix.png" alt="Nix, a small lantern-moth apprentice">
+          <button class="oracle" id="oracleButton" type="button" aria-label="Open in-world help">?</button>
+        </div>
+
+        <aside class="help-card" id="helpCard" aria-hidden="true">
+          <header>
+            <span>?</span>
+            <h2>The oracle whispers…</h2>
+            <button class="help-close" id="helpClose" type="button" aria-label="Close help">×</button>
+          </header>
+          <div class="hint-steps">
+            <div class="hint-step"><kbd>Ctrl-v</kbd><small>enter block mode</small></div>
+            <div class="hint-step"><kbd>3j</kbd><small>reach 3 rows down</small></div>
+            <div class="hint-step"><kbd>rx</kbd><small>replace with x</small></div>
+          </div>
+        </aside>
+
+        <div class="success-banner" id="successBanner" role="status">
+          <strong>The Moon Gate awakens!</strong>
+          <span>One column. One precise edit. Beautiful.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="keyboard-panel" aria-label="Physical-style Vim keyboard">
+      <div class="command-tray" id="commandTray" aria-live="polite">
+        <span class="prompt-glyph">›</span>
+        <div class="command-text" id="commandText"><span class="ghost">waiting…</span></div>
+        <div class="guidance" id="guidance">Start a block selection</div>
+      </div>
+
+      <div class="keyboard" id="keyboard">
+        <div class="key-row">
+          <button class="key utility u-115" data-key="Escape">Esc</button>
+          <button class="key" data-key="`" data-shift="~"><span class="stack"><span class="shifted">~</span><span class="base">`</span></span></button>
+          <button class="key" data-key="1" data-shift="!"><span class="stack"><span class="shifted">!</span><span class="base">1</span></span></button>
+          <button class="key" data-key="2" data-shift="@"><span class="stack"><span class="shifted">@</span><span class="base">2</span></span></button>
+          <button class="key" data-key="3" data-shift="#"><span class="stack"><span class="shifted">#</span><span class="base">3</span></span></button>
+          <button class="key" data-key="4" data-shift="$"><span class="stack"><span class="shifted">$</span><span class="base">4</span></span></button>
+          <button class="key" data-key="5" data-shift="%"><span class="stack"><span class="shifted">%</span><span class="base">5</span></span></button>
+          <button class="key" data-key="6" data-shift="^"><span class="stack"><span class="shifted">^</span><span class="base">6</span></span></button>
+          <button class="key" data-key="7" data-shift="&amp;"><span class="stack"><span class="shifted">&amp;</span><span class="base">7</span></span></button>
+          <button class="key" data-key="8" data-shift="*"><span class="stack"><span class="shifted">*</span><span class="base">8</span></span></button>
+          <button class="key" data-key="9" data-shift="("><span class="stack"><span class="shifted">(</span><span class="base">9</span></span></button>
+          <button class="key" data-key="0" data-shift=")"><span class="stack"><span class="shifted">)</span><span class="base">0</span></span></button>
+          <button class="key" data-key="-" data-shift="_"><span class="stack"><span class="shifted">_</span><span class="base">-</span></span></button>
+          <button class="key" data-key="=" data-shift="+"><span class="stack"><span class="shifted">+</span><span class="base">=</span></span></button>
+          <button class="key utility u-145" data-key="Backspace">⌫</button>
+        </div>
+
+        <div class="key-row">
+          <button class="key utility u-145" data-key="Tab">Tab</button>
+          <button class="key" data-key="q">Q</button><button class="key" data-key="w">W</button><button class="key" data-key="e">E</button>
+          <button class="key" data-key="r">R</button><button class="key" data-key="t">T</button><button class="key" data-key="y">Y</button>
+          <button class="key" data-key="u">U</button><button class="key" data-key="i">I</button><button class="key" data-key="o">O</button>
+          <button class="key" data-key="p">P</button>
+          <button class="key" data-key="[" data-shift="{"><span class="stack"><span class="shifted">{</span><span class="base">[</span></span></button>
+          <button class="key" data-key="]" data-shift="}"><span class="stack"><span class="shifted">}</span><span class="base">]</span></span></button>
+          <button class="key" data-key="\" data-shift="|"><span class="stack"><span class="shifted">|</span><span class="base">\</span></span></button>
+        </div>
+
+        <div class="key-row">
+          <button class="key modifier u-17" data-mod="Ctrl">Ctrl</button>
+          <button class="key" data-key="a">A</button><button class="key" data-key="s">S</button><button class="key" data-key="d">D</button>
+          <button class="key" data-key="f">F</button><button class="key" data-key="g">G</button><button class="key" data-key="h">H</button>
+          <button class="key" data-key="j">J</button><button class="key" data-key="k">K</button><button class="key" data-key="l">L</button>
+          <button class="key" data-key=";" data-shift=":"><span class="stack"><span class="shifted">:</span><span class="base">;</span></span></button>
+          <button class="key" data-key="'" data-shift="&quot;"><span class="stack"><span class="shifted">&quot;</span><span class="base">'</span></span></button>
+          <button class="key utility u-2" data-key="Enter">Enter</button>
+        </div>
+
+        <div class="key-row">
+          <button class="key modifier u-2" data-mod="Shift">Shift</button>
+          <button class="key" data-key="z">Z</button><button class="key" data-key="x">X</button><button class="key" data-key="c">C</button>
+          <button class="key" data-key="v">V</button><button class="key" data-key="b">B</button><button class="key" data-key="n">N</button><button class="key" data-key="m">M</button>
+          <button class="key" data-key="," data-shift="&lt;"><span class="stack"><span class="shifted">&lt;</span><span class="base">,</span></span></button>
+          <button class="key" data-key="." data-shift="&gt;"><span class="stack"><span class="shifted">&gt;</span><span class="base">.</span></span></button>
+          <button class="key" data-key="/" data-shift="?"><span class="stack"><span class="shifted">?</span><span class="base">/</span></span></button>
+          <button class="key modifier u-2" data-mod="Shift">Shift</button>
+        </div>
+
+        <div class="key-row">
+          <button class="key modifier u-145" data-mod="Ctrl">Ctrl</button>
+          <button class="key modifier u-145" data-mod="Alt">Alt</button>
+          <button class="key utility u-space" data-key=" ">Space</button>
+          <button class="key modifier u-145" data-mod="Alt">Alt</button>
+          <button class="key utility" data-key="ArrowLeft">←</button>
+          <button class="key utility" data-key="ArrowDown">↓</button>
+          <button class="key utility" data-key="ArrowUp">↑</button>
+          <button class="key utility" data-key="ArrowRight">→</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const expected = ["Ctrl-v", "3", "j", "r", "x"];
+      const guidanceByStep = [
+        "Start a block selection",
+        "Now extend it down",
+        "Choose the downward motion",
+        "Replace the selection",
+        "Choose the new character",
+        "Gate open · exercise complete"
+      ];
+
+      const world = document.getElementById("world");
+      const keyboard = document.getElementById("keyboard");
+      const commandTray = document.getElementById("commandTray");
+      const commandText = document.getElementById("commandText");
+      const guidance = document.getElementById("guidance");
+      const modePill = document.getElementById("modePill");
+      const resetButton = document.getElementById("resetButton");
+      const oracleButton = document.getElementById("oracleButton");
+      const helpCard = document.getElementById("helpCard");
+      const helpClose = document.getElementById("helpClose");
+      const successBanner = document.getElementById("successBanner");
+      const runes = [...document.querySelectorAll(".rune")];
+      const keys = [...document.querySelectorAll(".key")];
+
+      let step = 0;
+      let history = [];
+      let activeModifiers = new Set();
+      let complete = false;
+
+      function vibrate(duration = 7) {
+        if (navigator.vibrate) navigator.vibrate(duration);
+      }
+
+      function keyElementsFor(value, type = "key") {
+        const selector = type === "mod" ? `[data-mod="${value}"]` : `[data-key="${CSS.escape(value)}"]`;
+        return [...document.querySelectorAll(selector)];
+      }
+
+      function renderModifiers() {
+        document.querySelectorAll("[data-mod]").forEach(button => {
+          button.classList.toggle("latched", activeModifiers.has(button.dataset.mod));
+        });
+        renderCommand();
+      }
+
+      function renderCommand() {
+        const chunks = history.map(token => token === "Ctrl-v" ? "^V" : token);
+        const pending = [...activeModifiers].map(mod => `${mod} +`).join(" ");
+        if (!chunks.length && !pending) {
+          commandText.innerHTML = '<span class="ghost">waiting…</span>';
+        } else {
+          commandText.textContent = `${chunks.join(" ")}${chunks.length && pending ? "  " : ""}${pending}`;
+        }
+        guidance.textContent = guidanceByStep[step];
+      }
+
+      function setHelp(open) {
+        helpCard.classList.toggle("open", open);
+        helpCard.setAttribute("aria-hidden", String(!open));
+        keys.forEach(key => key.classList.remove("hinted"));
+        if (open) {
+          ["Ctrl", "v", "3", "j", "r", "x"].forEach(value => {
+            const type = value === "Ctrl" ? "mod" : "key";
+            keyElementsFor(value, type).forEach(key => key.classList.add("hinted"));
+          });
+          vibrate(5);
+        }
+      }
+
+      function flashKey(button) {
+        if (!button) return;
+        button.classList.add("pressed");
+        window.setTimeout(() => button.classList.remove("pressed"), 110);
+      }
+
+      function showError() {
+        commandTray.classList.remove("error");
+        void commandTray.offsetWidth;
+        commandTray.classList.add("error");
+        guidance.textContent = `Try ${expected[step] === "Ctrl-v" ? "Ctrl + v" : expected[step]} next`;
+        vibrate([14, 25, 14]);
+        window.setTimeout(() => {
+          commandTray.classList.remove("error");
+          if (!complete) guidance.textContent = guidanceByStep[step];
+        }, 900);
+      }
+
+      function updateRunes() {
+        runes.forEach((rune, index) => {
+          const selectedDepth = step >= 3 ? 4 : step >= 1 ? 1 : 0;
+          rune.classList.toggle("selected", !complete && index < selectedDepth);
+          rune.classList.toggle("cursor", !complete && index === 0 && step === 0);
+        });
+      }
+
+      function finish() {
+        complete = true;
+        step = 5;
+        modePill.textContent = "Complete";
+        modePill.classList.remove("visual");
+        world.classList.add("complete");
+        runes.forEach((rune, index) => {
+          rune.classList.remove("selected", "cursor");
+          window.setTimeout(() => {
+            rune.classList.add("lit");
+            rune.querySelector("span").textContent = "[x]";
+          }, index * 95);
+        });
+        window.setTimeout(() => successBanner.classList.add("show"), 260);
+        vibrate([18, 35, 18]);
+        renderCommand();
+      }
+
+      function processToken(token) {
+        if (complete) return;
+        setHelp(false);
+
+        if (token !== expected[step]) {
+          showError();
+          return;
+        }
+
+        history.push(token);
+        step += 1;
+
+        if (token === "Ctrl-v") {
+          modePill.textContent = "V-Block";
+          modePill.classList.add("visual");
+        }
+
+        if (step === expected.length) {
+          finish();
+          return;
+        }
+
+        updateRunes();
+        renderCommand();
+        vibrate(7);
+      }
+
+      function toggleModifier(modifier) {
+        if (activeModifiers.has(modifier)) activeModifiers.delete(modifier);
+        else activeModifiers.add(modifier);
+        renderModifiers();
+        vibrate(5);
+      }
+
+      function emitFromButton(button) {
+        if (button.dataset.mod) {
+          toggleModifier(button.dataset.mod);
+          return;
+        }
+
+        let value = button.dataset.key;
+        if (activeModifiers.has("Shift")) value = button.dataset.shift || (value.length === 1 ? value.toUpperCase() : value);
+
+        let token = value;
+        if (activeModifiers.has("Ctrl")) token = `Ctrl-${value.toLowerCase()}`;
+        else if (activeModifiers.has("Alt")) token = `Alt-${value}`;
+
+        activeModifiers.clear();
+        renderModifiers();
+        processToken(token);
+      }
+
+      function reset() {
+        step = 0;
+        history = [];
+        complete = false;
+        activeModifiers.clear();
+        world.classList.remove("complete");
+        modePill.textContent = "Normal";
+        modePill.classList.remove("visual");
+        successBanner.classList.remove("show");
+        runes.forEach(rune => {
+          rune.classList.remove("lit", "selected", "cursor");
+          rune.querySelector("span").textContent = "[ ]";
+        });
+        runes[0].classList.add("cursor");
+        setHelp(false);
+        renderModifiers();
+        updateRunes();
+        vibrate(9);
+      }
+
+      keyboard.addEventListener("pointerdown", event => {
+        const button = event.target.closest(".key");
+        if (!button) return;
+        event.preventDefault();
+        flashKey(button);
+        emitFromButton(button);
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.repeat) return;
+        const special = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
+        if (special[event.key]) {
+          keyElementsFor(special[event.key], "mod").forEach(key => key.classList.add("pressed"));
+          return;
+        }
+
+        const value = event.key.length === 1 ? event.key : event.key;
+        const button = keyElementsFor(value.toLowerCase())[0] || keyElementsFor(value)[0];
+        if (!button && !["v", "3", "j", "r", "x"].includes(value.toLowerCase())) return;
+        event.preventDefault();
+        flashKey(button);
+        const token = event.ctrlKey ? `Ctrl-${value.toLowerCase()}` : value.toLowerCase();
+        processToken(token);
+      });
+
+      document.addEventListener("keyup", event => {
+        const special = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
+        if (special[event.key]) keyElementsFor(special[event.key], "mod").forEach(key => key.classList.remove("pressed"));
+      });
+
+      oracleButton.addEventListener("click", () => setHelp(!helpCard.classList.contains("open")));
+      helpClose.addEventListener("click", () => setHelp(false));
+      resetButton.addEventListener("click", reset);
+
+      renderCommand();
+      updateRunes();
+    })();
+  </script>
+</body>
+</html>

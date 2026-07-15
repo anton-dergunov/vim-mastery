@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vim Trainer Mobile 🦊</title>
+
+<!-- PWA meta -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vim Trainer">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+  body {
+    margin: 0;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 1.2em;
+    margin: 0.4em 0;
+  }
+
+  #game {
+    display: grid;
+    grid-template-columns: repeat(20, 1.2em);
+    grid-template-rows: repeat(10, 1.2em);
+    gap: 0;
+    background: #2d2d2d;
+    border: 2px solid #555;
+    padding: 10px;
+    box-shadow: 0 0 20px #000;
+    flex-shrink: 0;
+  }
+
+  .cell {
+    width: 1.2em;
+    height: 1.2em;
+    text-align: center;
+  }
+
+  .cursor {
+    background: #007acc;
+    color: #fff;
+  }
+
+  .fox {
+    color: #f9d342;
+  }
+
+  #hint {
+    margin: 0.4em 0;
+    color: #9cdcfe;
+    font-size: 1.1em;
+    text-align: center;
+  }
+
+  #keyboard-toggle {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    background: #007acc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    z-index: 5;
+    transition: bottom 0.3s ease;
+  }
+
+  #keyboard-toggle.keyboard-visible {
+    bottom: 220px;
+  }
+
+  #keyboard {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #111;
+    padding: 8px 4px;
+    box-sizing: border-box;
+    z-index: 10;
+  }
+
+  .keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .key {
+    background: #333;
+    color: white;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 2px;
+    font-size: calc(0.5vw + 8px);
+    text-align: center;
+    user-select: none;
+    min-width: calc(1.5vw + 20px);
+    flex-shrink: 0;
+    border: 1px solid #444;
+    transition: all 0.1s ease;
+  }
+
+  .key.wide {
+    min-width: calc(3vw + 30px);
+  }
+
+  .key.space {
+    min-width: calc(15vw + 80px);
+  }
+
+  .key:active {
+    background: #007acc;
+    transform: scale(0.95);
+    border-color: #0098ff;
+  }
+
+  @media (max-width: 600px) {
+    #game {
+      transform: scale(0.8);
+    }
+
+    .key {
+      padding: 8px 4px;
+      font-size: calc(1vw + 6px);
+      min-width: calc(2vw + 18px);
+      margin: 1px;
+    }
+
+    .key.wide {
+      min-width: calc(4vw + 24px);
+    }
+
+    .key.space {
+      min-width: calc(20vw + 60px);
+    }
+
+    #keyboard-toggle.keyboard-visible {
+      bottom: 180px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .key {
+      font-size: calc(1.2vw + 5px);
+      min-width: calc(2.5vw + 15px);
+      padding: 6px 2px;
+    }
+
+    .key.wide {
+      min-width: calc(5vw + 20px);
+    }
+
+    .key.space {
+      min-width: calc(25vw + 50px);
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Vim Trainer 🦊</h1>
+  <div id="game"></div>
+  <div id="hint">Hint: Move to the fox using <b>h j k l</b></div>
+  <button id="keyboard-toggle">Show Keyboard</button>
+
+  <div id="keyboard">
+    <div class="keyboard-row">
+      <div class="key wide">Esc</div>
+      <div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div>
+      <div class="key">5</div><div class="key">6</div><div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key">0</div>
+      <div class="key wide">⌫</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">Tab</div>
+      <div class="key">q</div><div class="key">w</div><div class="key">e</div><div class="key">r</div>
+      <div class="key">t</div><div class="key">y</div><div class="key">u</div><div class="key">i</div><div class="key">o</div><div class="key">p</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">Ctrl</div>
+      <div class="key">a</div><div class="key">s</div><div class="key">d</div><div class="key">f</div>
+      <div class="key">g</div><div class="key">h</div><div class="key">j</div><div class="key">k</div><div class="key">l</div><div class="key">;</div>
+      <div class="key wide">↵</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">Shift</div>
+      <div class="key">z</div><div class="key">x</div><div class="key">c</div><div class="key">v</div>
+      <div class="key">b</div><div class="key">n</div><div class="key">m</div><div class="key">,</div><div class="key">.</div>
+      <div class="key wide">Shift</div>
+    </div>
+    <div class="keyboard-row">
+      <div class="key wide">Ctrl</div>
+      <div class="key wide">Alt</div>
+      <div class="key space">Space</div>
+      <div class="key wide">←</div>
+      <div class="key wide">↑</div>
+      <div class="key wide">↓</div>
+      <div class="key wide">→</div>
+    </div>
+  </div>
+
+  <script>
+    const rows = 10, cols = 20;
+    const grid = document.getElementById('game');
+    const cells = [];
+    let cursor = { x: 2, y: 2 };
+    let fox = { x: 10, y: 5 };
+
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    for (let y = 0; y < rows; y++) {
+      cells[y] = [];
+      for (let x = 0; x < cols; x++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.textContent = alphabet[Math.floor(Math.random() * alphabet.length)];
+        grid.appendChild(cell);
+        cells[y][x] = cell;
+      }
+    }
+
+    cells[fox.y][fox.x].textContent = '🦊';
+    cells[fox.y][fox.x].classList.add('fox');
+
+    function updateCursor() {
+      document.querySelectorAll('.cursor').forEach(c => c.classList.remove('cursor'));
+      cells[cursor.y][cursor.x].classList.add('cursor');
+    }
+
+    updateCursor();
+
+    function moveCursor(dx, dy) {
+      cursor.x = Math.max(0, Math.min(cols - 1, cursor.x + dx));
+      cursor.y = Math.max(0, Math.min(rows - 1, cursor.y + dy));
+      updateCursor();
+      checkGoal();
+    }
+
+    function checkGoal() {
+      if (cursor.x === fox.x && cursor.y === fox.y) {
+        document.getElementById('hint').innerHTML = "🎉 Great job! You found the fox! Press <b>i</b> to insert!";
+      }
+    }
+
+    function handleKey(key) {
+      switch (key) {
+        case 'h': moveCursor(-1, 0); break;
+        case 'j': moveCursor(0, 1); break;
+        case 'k': moveCursor(0, -1); break;
+        case 'l': moveCursor(1, 0); break;
+        case 'ArrowLeft': moveCursor(-1, 0); break;
+        case 'ArrowDown': moveCursor(0, 1); break;
+        case 'ArrowUp': moveCursor(0, -1); break;
+        case 'ArrowRight': moveCursor(1, 0); break;
+        case 'i':
+          if (cursor.x === fox.x && cursor.y === fox.y)
+            document.getElementById('hint').innerHTML = "✍️ Insert mode! (Press Esc to exit)";
+          break;
+      }
+    }
+
+    document.addEventListener('keydown', e => handleKey(e.key));
+
+    document.querySelectorAll('.key').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.textContent;
+        if (key === '←') handleKey('ArrowLeft');
+        else if (key === '→') handleKey('ArrowRight');
+        else if (key === '↑') handleKey('ArrowUp');
+        else if (key === '↓') handleKey('ArrowDown');
+        else if (key === '⌫') handleKey('Backspace');
+        else if (key === '↵') handleKey('Enter');
+        else handleKey(key);
+      });
+    });
+
+    const keyboard = document.getElementById('keyboard');
+    const toggleBtn = document.getElementById('keyboard-toggle');
+
+    toggleBtn.addEventListener('click', () => {
+      const visible = keyboard.style.display === 'block';
+      keyboard.style.display = visible ? 'none' : 'block';
+      toggleBtn.textContent = visible ? 'Show Keyboard' : 'Hide Keyboard';
+
+      if (visible) {
+        toggleBtn.classList.remove('keyboard-visible');
+      } else {
+        toggleBtn.classList.add('keyboard-visible');
+      }
+    });
+  </script>
+</body>
+</html>

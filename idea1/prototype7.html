@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Vim Trainer" />
+<title>Vim Trainer</title>
+<style>
+  body {
+    font-family: monospace;
+    background-color: #1e1e1e;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  #game-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  #text-grid {
+    display: grid;
+    grid-template-columns: repeat(20, 1ch);
+    gap: 0;
+    justify-content: center;
+    font-size: 1.4rem;
+    line-height: 1.5rem;
+    white-space: pre;
+    user-select: none;
+    margin-top: 20px;
+  }
+
+  .cell {
+    width: 1ch;
+    text-align: center;
+  }
+
+  .cursor {
+    background-color: #00ff88;
+    color: #000;
+  }
+
+  #keyboard-container {
+    width: 100%;
+    background: #111;
+    padding: 4px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 2px solid #333;
+  }
+
+  .key-row {
+    display: flex;
+    justify-content: center;
+    margin: 2px 0;
+  }
+
+  button.key {
+    background: #333;
+    color: #eee;
+    border: 1px solid #555;
+    border-radius: 5px;
+    margin: 1px;
+    padding: 0.5em;
+    font-size: calc(1.2vw + 0.3rem);
+    cursor: pointer;
+    min-width: 2.2em;
+    transition: background 0.1s, transform 0.1s;
+  }
+
+  button.key:active {
+    background: #00ff88;
+    color: #000;
+    transform: scale(0.9);
+  }
+
+  #keyboard-toggle {
+    position: fixed;
+    bottom: calc(35vh + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #00ff88;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  @media (max-width: 600px) {
+    #text-grid {
+      grid-template-columns: repeat(15, 1ch);
+      font-size: 1rem;
+    }
+    button.key {
+      font-size: calc(2.3vw + 0.3rem);
+      padding: 0.3em;
+    }
+    #keyboard-toggle {
+      bottom: calc(40vh + 8px);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="game-container">
+  <h2>🦊 Vim Trainer</h2>
+  <div id="text-grid"></div>
+  <button id="keyboard-toggle">Show Keyboard</button>
+</div>
+
+<div id="keyboard-container">
+  <div class="key-row">
+    <button class="key">Esc</button>
+    <button class="key">1</button>
+    <button class="key">2</button>
+    <button class="key">3</button>
+    <button class="key">4</button>
+    <button class="key">5</button>
+    <button class="key">6</button>
+    <button class="key">7</button>
+    <button class="key">8</button>
+    <button class="key">9</button>
+    <button class="key">0</button>
+    <button class="key">-</button>
+    <button class="key">=</button>
+    <button class="key">⌫</button>
+  </div>
+  <div class="key-row">
+    <button class="key">Tab</button>
+    <button class="key">q</button>
+    <button class="key">w</button>
+    <button class="key">e</button>
+    <button class="key">r</button>
+    <button class="key">t</button>
+    <button class="key">y</button>
+    <button class="key">u</button>
+    <button class="key">i</button>
+    <button class="key">o</button>
+    <button class="key">p</button>
+    <button class="key">[</button>
+    <button class="key">]</button>
+    <button class="key">\\</button>
+  </div>
+  <div class="key-row">
+    <button class="key">Caps</button>
+    <button class="key">a</button>
+    <button class="key">s</button>
+    <button class="key">d</button>
+    <button class="key">f</button>
+    <button class="key">g</button>
+    <button class="key">h</button>
+    <button class="key">j</button>
+    <button class="key">k</button>
+    <button class="key">l</button>
+    <button class="key">;</button>
+    <button class="key">'</button>
+    <button class="key">⏎</button>
+  </div>
+  <div class="key-row">
+    <button class="key">Shift</button>
+    <button class="key">z</button>
+    <button class="key">x</button>
+    <button class="key">c</button>
+    <button class="key">v</button>
+    <button class="key">b</button>
+    <button class="key">n</button>
+    <button class="key">m</button>
+    <button class="key">,</button>
+    <button class="key">.</button>
+    <button class="key">/</button>
+    <button class="key">Shift</button>
+  </div>
+  <div class="key-row">
+    <button class="key">Ctrl</button>
+    <button class="key">Alt</button>
+    <button class="key">Cmd</button>
+    <button class="key" style="min-width: 8em;">Space</button>
+    <button class="key">Cmd</button>
+    <button class="key">Alt</button>
+    <button class="key">Ctrl</button>
+  </div>
+</div>
+
+<script>
+  const grid = document.getElementById('text-grid');
+  const keyboard = document.getElementById('keyboard-container');
+  const toggleButton = document.getElementById('keyboard-toggle');
+
+  const text = `You are 🦊
+Practice: move right (l), left (h)
+Reach the 🪙`;
+
+  let cells = text.split('');
+  let cursorPos = cells.indexOf('🦊');
+
+  function renderGrid() {
+    grid.innerHTML = '';
+    cells.forEach((ch, idx) => {
+      const span = document.createElement('span');
+      span.textContent = ch;
+      span.classList.add('cell');
+      if (idx === cursorPos) span.classList.add('cursor');
+      grid.appendChild(span);
+    });
+  }
+
+  function moveCursor(delta) {
+    const newPos = cursorPos + delta;
+    if (newPos >= 0 && newPos < cells.length && cells[newPos] !== '\n') {
+      cursorPos = newPos;
+      renderGrid();
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'l') moveCursor(1);
+    if (e.key === 'h') moveCursor(-1);
+  });
+
+  // Virtual keyboard events
+  document.querySelectorAll('.key').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.add('active');
+      setTimeout(() => btn.classList.remove('active'), 150);
+      const key = btn.textContent.trim();
+      if (key === 'l') moveCursor(1);
+      if (key === 'h') moveCursor(-1);
+    });
+  });
+
+  toggleButton.addEventListener('click', () => {
+    if (keyboard.style.display === 'none' || keyboard.style.display === '') {
+      keyboard.style.display = 'flex';
+      toggleButton.textContent = 'Hide Keyboard';
+    } else {
+      keyboard.style.display = 'none';
+      toggleButton.textContent = 'Show Keyboard';
+    }
+  });
+
+  renderGrid();
+</script>
+</body>
+</html>

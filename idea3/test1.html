@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Learn Vim for Code Editing – Interactive Demo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/keymap/vim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.14/mode/python/python.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .exercise-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .editor {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
+    .hint-box {
+      background: #e0f7fa;
+      border-left: 4px solid #00796b;
+      padding: 8px 12px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .vim-keys {
+      font-family: monospace;
+      background: #fff3cd;
+      border-left: 4px solid #ffb300;
+      padding: 6px 10px;
+      margin-top: 5px;
+    }
+    .success {
+      background: #c8e6c9;
+      border-left: 4px solid #2e7d32;
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Interactive Vim Practice: Editing Python Code</h1>
+    <div id="exercise-container">
+      <div class="exercise-info">
+        <span id="exercise-title">Exercise 1 of 3</span>
+        <span id="exercise-progress">Progress: 0%</span>
+      </div>
+      <div id="exercise-description" class="hint-box">
+        <strong>Goal:</strong> Copy the line <code>print("Hello World")</code> and paste it below the function definition using <code>yy</code> and <code>p</code>.
+      </div>
+      <textarea id="editor"></textarea>
+      <div id="vim-keys" class="vim-keys">Keys pressed: (none yet)</div>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    const exercises = [
+      {
+        title: "Exercise 1: Copy & Paste",
+        description: 'Copy the line <code>print("Hello World")</code> and paste it below the function definition using <code>yy</code> and <code>p</code>.',
+        initialCode: 'def greet():\n    print("Hello World")\n',
+        targetCode: 'def greet():\n    print("Hello World")\n    print("Hello World")\n'
+      },
+      {
+        title: "Exercise 2: Visual Mode Editing",
+        description: "Use visual mode (<code>v</code>) to select the word <code>world</code> and surround it with quotes to make it a string: <code>'world'</code>.",
+        initialCode: 'def say():\n    print(world)\n',
+        targetCode: 'def say():\n    print(\'world\')\n'
+      },
+      {
+        title: "Exercise 3: Move a Line",
+        description: "Cut (<code>dd</code>) the line <code>result = a + b</code> and paste (<code>p</code>) it below the <code>return</code> statement.",
+        initialCode: 'def add(a, b):\n    result = a + b\n    return result\n',
+        targetCode: 'def add(a, b):\n    return result\n    result = a + b\n'
+      }
+    ];
+
+    let currentExercise = 0;
+    const total = exercises.length;
+    const editorEl = document.getElementById("editor");
+    const descEl = document.getElementById("exercise-description");
+    const titleEl = document.getElementById("exercise-title");
+    const progressEl = document.getElementById("exercise-progress");
+    const statusEl = document.getElementById("status");
+    const keysEl = document.getElementById("vim-keys");
+
+    const editor = CodeMirror.fromTextArea(editorEl, {
+      mode: "python",
+      theme: "default",
+      keyMap: "vim",
+      lineNumbers: true,
+      indentUnit: 4
+    });
+
+    function loadExercise(index) {
+      const ex = exercises[index];
+      titleEl.innerHTML = `${ex.title} (${index + 1} of ${total})`;
+      descEl.innerHTML = `<strong>Goal:</strong> ${ex.description}`;
+      editor.setValue(ex.initialCode);
+      statusEl.innerHTML = "";
+      progressEl.innerText = `Progress: ${Math.round((index / total) * 100)}%`;
+      keysEl.innerText = "Keys pressed: (none yet)";
+    }
+
+    function checkSolution() {
+      const code = editor.getValue();
+      const expected = exercises[currentExercise].targetCode;
+      if (code.trim() === expected.trim()) {
+        statusEl.innerHTML = '<div class="success">✅ Great! Exercise complete.</div>';
+        currentExercise++;
+        if (currentExercise < total) {
+          setTimeout(() => loadExercise(currentExercise), 1500);
+        } else {
+          progressEl.innerText = "Progress: 100%";
+          statusEl.innerHTML = '<div class="success">🎉 All exercises complete!</div>';
+        }
+      }
+    }
+
+    // Listen for any changes
+    editor.on("change", checkSolution);
+
+    // Track keys pressed in Vim mode
+    CodeMirror.Vim.on("key", function(_, key) {
+      keysEl.innerText = "Keys pressed: " + key;
+    });
+
+    loadExercise(currentExercise);
+  </script>
+</body>
+</html>
