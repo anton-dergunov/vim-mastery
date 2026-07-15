@@ -1,0 +1,22 @@
+{
+  "name": "vim-wilds",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "6.2.4",
+    "@codemirror/language": "6.12.4",
+    "@codemirror/state": "6.7.1",
+    "@codemirror/view": "6.43.6",
+    "@lezer/highlight": "1.2.3",
+    "@replit/codemirror-vim": "6.3.0"
+  },
+  "devDependencies": {
+    "vite": "8.1.4"
+  }
+}

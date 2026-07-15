@@ -7,6 +7,14 @@
   <title>The Vim Wilds — Pocket Practice</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23071715'/%3E%3Cpath d='M16 15h10l7 29 7-29h9L38 51H27z' fill='%23ffc866'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    window.setTimeout(() => {
+      if (window.VimWilds) return;
+      const world = document.getElementById("worldGrid");
+      if (!world) return;
+      world.innerHTML = '<div class="runtime-notice"><strong>The editor needs the local Vite server.</strong><span>Run <code>npm install</code>, then <code>npm run dev</code>, and open the address Vite prints.</span></div>';
+    }, 1800);
+  </script>
 </head>
 <body>
   <main class="phone" id="phone" aria-label="The Vim Wilds bite-sized exercise feed">

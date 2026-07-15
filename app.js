@@ -4,6 +4,7 @@ import {
   knownThemes,
   spriteCells,
 } from "./exercise-data.js";
+import { VimEngine, resetVimEngineState } from "./vim-engine.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -61,7 +62,10 @@ const state = {
   pointerStartY: null,
   physicalShift: false,
   capsLock: false,
+  editorSnapshot: null,
 };
+
+let vimEngine = null;
 
 function validateExercises(catalog) {
   const errors = [];
@@ -181,85 +185,6 @@ function guidanceToken(token) {
   return token;
 }
 
-function getVisualState(exercise = currentExercise()) {
-  const visual = {
-    code: exercise.initialCode,
-    cursor: exercise.cursor,
-    selection: null,
-    mode: "Normal",
-  };
-
-  for (const checkpoint of exercise.checkpoints) {
-    if (checkpoint.at > state.progress) break;
-    if (checkpoint.code === "target") visual.code = exercise.targetCode;
-    else if (Array.isArray(checkpoint.code)) visual.code = checkpoint.code;
-    if (checkpoint.cursor) visual.cursor = checkpoint.cursor;
-    if (checkpoint.selection) visual.selection = checkpoint.selection;
-    if (checkpoint.code) visual.selection = null;
-    if (checkpoint.mode) visual.mode = checkpoint.mode;
-  }
-
-  if (state.complete) {
-    visual.code = exercise.targetCode;
-    visual.selection = null;
-    visual.mode = "Complete";
-  }
-  return visual;
-}
-
-function tokenKinds(line) {
-  const kinds = Array.from({ length: line.length }, () => "");
-  const mark = (start, end, kind) => {
-    for (let i = Math.max(0, start); i < Math.min(line.length, end); i += 1) kinds[i] = kind;
-  };
-
-  const comment = line.indexOf("//");
-  if (comment >= 0) mark(comment, line.length, "comment");
-
-  for (const match of line.matchAll(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g)) {
-    if (comment < 0 || match.index < comment) mark(match.index, match.index + match[0].length, "string");
-  }
-  for (const match of line.matchAll(/\b(?:const|let|var|if|return|false|true|function|test)\b/g)) {
-    if (!kinds[match.index]) mark(match.index, match.index + match[0].length, "keyword");
-  }
-  for (const match of line.matchAll(/\b\d+\b/g)) {
-    if (!kinds[match.index]) mark(match.index, match.index + match[0].length, "number");
-  }
-  return kinds;
-}
-
-function isSelected(selection, row, col) {
-  if (!selection) return false;
-  const [startRow, startCol] = selection.from;
-  const [endRow, endCol] = selection.to;
-  if (selection.kind === "line") return row >= startRow && row <= endRow;
-  if (selection.kind === "block") {
-    return row >= startRow && row <= endRow && col >= startCol && col <= endCol;
-  }
-  if (row < startRow || row > endRow) return false;
-  if (startRow === endRow) return col >= startCol && col <= endCol;
-  if (row === startRow) return col >= startCol;
-  if (row === endRow) return col <= endCol;
-  return true;
-}
-
-function renderCode(exercise, visual) {
-  return visual.code.map((line, row) => {
-    const kinds = tokenKinds(line);
-    const chars = [...line].map((character, col) => {
-      const classes = ["code-char"];
-      if (kinds[col]) classes.push(kinds[col]);
-      if (isSelected(visual.selection, row, col)) classes.push("selected");
-      if (!state.complete && visual.cursor[0] === row && visual.cursor[1] === col) classes.push("cursor");
-      return `<span class="${classes.join(" ")}">${escapeHtml(character)}</span>`;
-    }).join("");
-    const emptyCursor = !state.complete && visual.cursor[0] === row && visual.cursor[1] === line.length
-      ? '<span class="code-char cursor"> </span>'
-      : "";
-    return `<div class="code-line"><span class="line-no">${row + 1}</span><span>${chars}${emptyCursor}</span></div>`;
-  }).join("");
-}
-
 function groundType(template, row, col) {
   const edge = row === 1 || row === 9 || col === 1 || col === 12;
   const center = col >= 5 && col <= 8;
@@ -291,7 +216,7 @@ function renderGround(exercise) {
   elements.groundGrid.innerHTML = cells.join("");
 }
 
-function renderSprite(sceneBlock) {
+function renderSprite(sceneBlock, index) {
   const [x, y] = spriteCells[sceneBlock.type];
   const xPos = `${(x * 100 / 3).toFixed(3)}%`;
   const yPos = `${(y * 100 / 3).toFixed(3)}%`;
@@ -303,7 +228,7 @@ function renderSprite(sceneBlock) {
     `--sprite-x:${xPos}`,
     `--sprite-y:${yPos}`,
   ].join(";");
-  return `<div class="sprite type-${sceneBlock.type}${sizeClass}${active}" data-block="${sceneBlock.type}" style="${style}" aria-hidden="true"></div>`;
+  return `<div class="sprite type-${sceneBlock.type}${sizeClass}${active}" data-block-index="${index}" style="${style}" aria-hidden="true"></div>`;
 }
 
 function setTheme(theme) {
@@ -318,7 +243,6 @@ function setTheme(theme) {
 
 function renderWorld() {
   const exercise = currentExercise();
-  const visual = getVisualState(exercise);
   setTheme(exercise.scene.theme);
   renderGround(exercise);
 
@@ -326,12 +250,31 @@ function renderWorld() {
   const code = `
     <div class="code-slab side-${exercise.scene.codeSide}">
       <div class="code-head"><i></i><span>${escapeHtml(exercise.language)} · buffer</span></div>
-      <div class="code-body">${renderCode(exercise, visual)}</div>
+      <div class="code-body" id="editorMount" aria-label="Vim code editor"></div>
     </div>`;
   const sprites = exercise.scene.blocks.map(renderSprite).join("");
   const character = `<img class="nix ${exercise.scene.codeSide}" src="assets/nix.png" alt="Nix, a lantern-moth apprentice">`;
   const oracle = `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open in-world help">?</button>`;
   elements.worldGrid.innerHTML = `${sprites}${code}${character}${oracle}`;
+  mountEditor();
+}
+
+function mountEditor() {
+  vimEngine?.destroy();
+  resetVimEngineState();
+  const exercise = currentExercise();
+  vimEngine = new VimEngine({
+    parent: $("#editorMount", elements.worldGrid),
+    text: exercise.initialCode.join("\n"),
+    cursor: exercise.cursor,
+    onEvent: handleEngineEvent,
+  });
+  state.editorSnapshot = vimEngine.getSnapshot();
+
+  // A touch tap on a contenteditable CodeMirror surface can summon a native
+  // keyboard. The game supplies its own keyboard; hardware keyboards still
+  // focus the editor normally on non-touch devices.
+  if (!window.matchMedia("(pointer: coarse)").matches) vimEngine.focus();
 }
 
 function modeClass(mode) {
@@ -344,9 +287,13 @@ function modeClass(mode) {
 }
 
 function renderMode() {
-  const mode = getVisualState().mode;
-  elements.modePill.textContent = mode;
-  elements.modePill.className = `mode-pill ${modeClass(mode)}`.trim();
+  const mode = state.complete ? "Complete" : state.editorSnapshot?.mode || "normal";
+  const label = mode === "visual-line" ? "Visual Line"
+    : mode === "visual-block" ? "Visual Block"
+      : mode === "command-line" ? "Command"
+        : `${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
+  elements.modePill.textContent = label;
+  elements.modePill.className = `mode-pill ${modeClass(label)}`.trim();
 }
 
 function renderCommand() {
@@ -359,7 +306,7 @@ function renderCommand() {
     elements.guidance.textContent = state.exerciseIndex === exercises.length - 1 ? "MEMORY READY" : "NEXT: SWIPE UP";
   } else {
     const next = currentExercise().solution[state.progress];
-    elements.guidance.textContent = `NEXT: ${guidanceToken(next)}`;
+    elements.guidance.textContent = next ? `NEXT: ${guidanceToken(next)}` : "EDIT THE BUFFER";
   }
 }
 
@@ -451,50 +398,53 @@ function flashKey(button) {
   window.setTimeout(() => button.classList.remove("pressed"), 110);
 }
 
-function showError() {
-  elements.commandTray.classList.remove("error");
-  void elements.commandTray.offsetWidth;
-  elements.commandTray.classList.add("error");
-  const expected = currentExercise().solution[state.progress];
-  elements.guidance.textContent = `TRY: ${guidanceToken(expected)}`;
-  vibrate([14, 25, 14]);
-  window.setTimeout(() => {
-    elements.commandTray.classList.remove("error");
-    renderCommand();
-  }, 850);
-}
-
 function finishExercise() {
   state.complete = true;
+  vimEngine?.setLocked(true);
   setHelp(false);
-  renderWorld();
+  setTheme(currentExercise().scene.theme);
+  $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
   renderMode();
   renderCommand();
   window.setTimeout(renderSuccess, 160);
   vibrate([18, 35, 18]);
 }
 
-function processToken(token) {
-  if (state.complete || state.transitioning) return false;
-  setHelp(false);
-  const exercise = currentExercise();
-  if (token !== exercise.solution[state.progress]) {
-    showError();
-    return false;
-  }
+function canonicalProgress() {
+  const solution = currentExercise().solution;
+  return state.history.every((key, index) => key === solution[index])
+    ? Math.min(state.history.length, solution.length)
+    : 0;
+}
 
-  state.history.push(token);
-  state.progress += 1;
-  if (state.progress === exercise.solution.length) {
-    finishExercise();
-    return true;
-  }
+function isTargetSnapshot(snapshot) {
+  return snapshot.text === currentExercise().targetCode.join("\n") && snapshot.mode === "normal";
+}
 
-  renderWorld();
+function refreshScene() {
+  $$(".sprite", elements.worldGrid).forEach(sprite => {
+    const block = currentExercise().scene.blocks[Number(sprite.dataset.blockIndex)];
+    if (block) sprite.classList.toggle("active", state.complete || state.progress >= block.activatesAt);
+  });
+}
+
+function handleEngineEvent(event) {
+  state.editorSnapshot = event.snapshot;
+  if (event.kind === "key") {
+    state.history.push(event.key);
+    state.progress = canonicalProgress();
+    vibrate(7);
+  }
+  refreshScene();
   renderMode();
   renderCommand();
-  vibrate(7);
-  return true;
+  if (!state.complete && isTargetSnapshot(event.snapshot)) finishExercise();
+}
+
+function processToken(token) {
+  if (state.complete || state.transitioning || !vimEngine) return false;
+  setHelp(false);
+  return vimEngine.sendKey(token);
 }
 
 function toggleModifier(modifier) {
@@ -580,13 +530,13 @@ elements.keyboard.addEventListener("pointerdown", event => {
 });
 
 document.addEventListener("keydown", event => {
-  if (event.repeat || elements.rewardOverlay.classList.contains("open")) return;
+  if (elements.rewardOverlay.classList.contains("open")) return;
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
   if (event.key === "CapsLock") {
-    event.preventDefault();
     const capsButton = $('.key[data-key="CapsLock"]', elements.keyboard);
     flashKey(capsButton);
-    toggleCapsLock();
+    state.capsLock = event.getModifierState("CapsLock");
+    renderModifiers();
     return;
   }
   if (modifierMap[event.key]) {
@@ -598,12 +548,17 @@ document.addEventListener("keydown", event => {
     return;
   }
 
+  // CodeMirror receives physical keys directly when it has focus. This small
+  // fallback keeps hardware keyboards useful after a UI button has focus,
+  // without recreating the old command interpreter.
+  if (event.target.closest?.(".cm-content")) return;
+  if (event.repeat) return;
   let token = event.key;
   if (event.ctrlKey && event.key.length === 1) token = `Ctrl-${event.key.toLowerCase()}`;
   const matching = token.startsWith("Ctrl-")
     ? keyButtonsFor(token.slice(5))[0]
     : keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
-  if (!matching && token !== currentExercise().solution[state.progress]) return;
+  if (!matching) return;
   event.preventDefault();
   flashKey(matching);
   processToken(token);
@@ -620,6 +575,9 @@ document.addEventListener("keyup", event => {
 
 elements.worldGrid.addEventListener("click", event => {
   if (event.target.closest('[data-action="help"]')) setHelp(!elements.helpCard.classList.contains("open"));
+});
+elements.worldGrid.addEventListener("pointerdown", event => {
+  if (event.pointerType === "touch" && event.target.closest?.(".cm-editor")) event.preventDefault();
 });
 elements.helpClose.addEventListener("click", () => setHelp(false));
 elements.resetButton.addEventListener("click", () => resetExercise());
@@ -656,17 +614,23 @@ window.VimWilds = Object.freeze({
     remaining.forEach(processToken);
   },
   getState() {
-    const visual = getVisualState();
+    const snapshot = state.editorSnapshot || vimEngine?.getSnapshot();
+    const hasSelection = snapshot?.anchor !== snapshot?.head;
+    const selection = hasSelection ? {
+      kind: "linear",
+      from: snapshot.anchorPosition,
+      to: snapshot.cursorPosition,
+    } : null;
     return {
       exerciseIndex: state.exerciseIndex,
       exerciseId: currentExercise().id,
       progress: state.progress,
       history: [...state.history],
       complete: state.complete,
-      code: [...visual.code],
-      cursor: [...visual.cursor],
-      selection: visual.selection ? structuredClone(visual.selection) : null,
-      mode: visual.mode,
+      code: snapshot?.text.split("\n") || [],
+      cursor: snapshot?.cursorPosition || [0, 0],
+      selection,
+      mode: state.complete ? "Complete" : (snapshot?.mode || "normal"),
       modifiers: [...state.modifiers],
       capsLock: state.capsLock,
       guidance: elements.guidance.textContent,
