@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "policy": "A command family is exposed only after its native-Vim and browser fixtures pass.",
+  "verified": [
+    "Visual Block replace (Ctrl-v, count, motion, r)",
+    "text objects (ci\", di()",
+    "counts and line deletion",
+    "dot repeat",
+    "macros",
+    "substitution",
+    "Visual Line indentation",
+    "join lines",
+    "find/till",
+    "yank and put"
+  ],
+  "pending": [
+    "full curriculum matrix: advanced motions, registers, history, advanced regex, Ex ranges, :normal, :global, and host-dependent clipboard behavior"
+  ]
+}

@@ -4,7 +4,7 @@ import {
   knownThemes,
   spriteCells,
 } from "./exercise-data.js";
-import { VimEngine, resetVimEngineState } from "./vim-engine.js";
+import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -176,6 +176,7 @@ function formatToken(token) {
 }
 
 function guidanceToken(token) {
+  if (token.includes("+")) return token.replaceAll("+", " + ").toUpperCase();
   if (token.startsWith("Ctrl-")) return `CTRL + ${token.slice(5).toUpperCase()}`;
   const labels = { Escape: "ESCAPE", Enter: "ENTER", " ": "SPACE", Tab: "TAB" };
   if (labels[token]) return labels[token];
@@ -369,6 +370,13 @@ function modifierButtonsFor(value) {
 
 function requiredButtons(token) {
   const result = [];
+  if (token.includes("+")) {
+    const parts = token.split("+");
+    const key = parts.pop();
+    parts.forEach(modifier => result.push(...modifierButtonsFor(modifier)));
+    result.push(...keyButtonsFor(key));
+    return result;
+  }
   if (token.startsWith("Ctrl-")) {
     result.push(...modifierButtonsFor("Ctrl"));
     result.push(...keyButtonsFor(token.slice(5)));
@@ -477,9 +485,11 @@ function emitFromButton(button) {
   if (isLetter) value = shiftActive !== state.capsLock ? value.toUpperCase() : value;
   else if (shiftActive) value = button.dataset.shift || value;
 
+  const chordModifiers = ["Ctrl", "Alt", "Shift"].filter(modifier => state.modifiers.has(modifier));
   let token = value;
-  if (state.modifiers.has("Ctrl")) token = `Ctrl-${value.toLowerCase()}`;
-  else if (state.modifiers.has("Alt")) token = `Alt-${value}`;
+  if (chordModifiers.some(modifier => modifier !== "Shift")) {
+    token = `${chordModifiers.join("+")}+${value.toLowerCase()}`;
+  }
 
   state.modifiers.clear();
   renderModifiers();
@@ -553,8 +563,15 @@ document.addEventListener("keydown", event => {
   // without recreating the old command interpreter.
   if (event.target.closest?.(".cm-content")) return;
   if (event.repeat) return;
+  const physicalModifiers = [
+    event.ctrlKey && "Ctrl",
+    event.altKey && "Alt",
+    event.shiftKey && "Shift",
+  ].filter(Boolean);
   let token = event.key;
-  if (event.ctrlKey && event.key.length === 1) token = `Ctrl-${event.key.toLowerCase()}`;
+  if (physicalModifiers.length && event.key.length === 1) {
+    token = canonicalKeyToken(`${physicalModifiers.join("+")}+${event.key}`);
+  }
   const matching = token.startsWith("Ctrl-")
     ? keyButtonsFor(token.slice(5))[0]
     : keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
@@ -616,7 +633,12 @@ window.VimWilds = Object.freeze({
   getState() {
     const snapshot = state.editorSnapshot || vimEngine?.getSnapshot();
     const hasSelection = snapshot?.anchor !== snapshot?.head;
-    const selection = hasSelection ? {
+    const ranges = snapshot?.ranges || [];
+    const selection = snapshot?.mode === "visual-block" && ranges.length > 1 ? {
+      kind: "block",
+      from: ranges[0].from,
+      to: [ranges.at(-1).to[0], ranges.at(-1).to[1] - 1],
+    } : hasSelection ? {
       kind: "linear",
       from: snapshot.anchorPosition,
       to: snapshot.cursorPosition,

@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "postinstall": "patch-package",
+    "test": "npm run test:native && npm run test:browser",
+    "test:native": "node --test tests/native-vim.test.mjs",
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "6.2.4",
@@ -17,6 +21,8 @@
     "@replit/codemirror-vim": "6.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "patch-package": "^8.0.1",
     "vite": "8.1.4"
   }
 }

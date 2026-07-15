@@ -24,11 +24,41 @@ const wildsHighlighting = syntaxHighlighting(HighlightStyle.define([
   { tag: tags.number, color: "#88d4dd" },
 ]));
 
-function toVimKey(key) {
+export function toVimKey(key) {
   if (specialKeys[key]) return specialKeys[key];
-  if (key.startsWith("Ctrl-")) return `<C-${key.slice(5)}>`;
-  if (key.startsWith("Alt-")) return `<A-${key.slice(4)}>`;
-  return key;
+  if (/^<[^>]+>$/.test(key)) return key;
+
+  const legacy = key.match(/^(Ctrl|Alt)-(.*)$/);
+  const parts = (legacy ? `${legacy[1]}+${legacy[2]}` : key).split("+");
+  const value = parts.pop();
+  const modifiers = new Set(parts);
+  if (!value) return key;
+
+  const prefix = [
+    modifiers.has("Ctrl") && "C-",
+    modifiers.has("Alt") && "A-",
+    modifiers.has("Meta") && "M-",
+    modifiers.has("Shift") && "S-",
+  ].filter(Boolean).join("");
+  return prefix ? `<${prefix}${specialKeys[value] ? specialKeys[value].slice(1, -1) : value}>` : value;
+}
+
+export function canonicalKeyToken(key) {
+  const vimKey = toVimKey(key);
+  const chord = vimKey.match(/^<((?:C-)?(?:A-)?(?:M-)?(?:S-)?)(.+)>$/);
+  if (!chord) return vimKey;
+  const modifiers = [
+    chord[1].includes("C-") && "Ctrl",
+    chord[1].includes("A-") && "Alt",
+    chord[1].includes("M-") && "Meta",
+    chord[1].includes("S-") && "Shift",
+  ].filter(Boolean);
+  const value = Object.entries(specialKeys).find(([, token]) => token === `<${chord[2]}>`)?.[0] || chord[2];
+  if (!modifiers.length && value !== chord[2]) return value;
+  if (modifiers.length === 1 && (modifiers[0] === "Ctrl" || modifiers[0] === "Alt")) {
+    return `${modifiers[0]}-${value}`;
+  }
+  return modifiers.length ? `${modifiers.join("+")}+${value}` : vimKey;
 }
 
 function literalText(key) {
@@ -77,6 +107,7 @@ export class VimEngine {
         doc: text,
         selection: EditorSelection.cursor(start),
         extensions: [
+          EditorState.allowMultipleSelections.of(true),
           vim(),
           drawSelection(),
           lineNumbers(),
@@ -98,7 +129,7 @@ export class VimEngine {
       this.subMode = event.subMode || "";
       this.emit("mode");
     };
-    this.onVimKey = key => this.emit("key", { key });
+    this.onVimKey = key => this.emit("key", { key: canonicalKeyToken(key), source: "physical" });
     this.onCommandDone = () => this.emit("command-complete");
     this.cm?.on("vim-mode-change", this.onModeChange);
     this.cm?.on("vim-keypress", this.onVimKey);
@@ -115,6 +146,12 @@ export class VimEngine {
       head: selection.head,
       cursorPosition: positionForOffset(doc, selection.head),
       anchorPosition: positionForOffset(doc, selection.anchor),
+      ranges: this.view.state.selection.ranges.map(range => ({
+        anchor: positionForOffset(doc, range.anchor),
+        head: positionForOffset(doc, range.head),
+        from: positionForOffset(doc, range.from),
+        to: positionForOffset(doc, range.to),
+      })),
       mode: normalizeMode(this.mode, this.subMode, this.cm, this.commandLine !== null),
     };
   }
@@ -122,6 +159,7 @@ export class VimEngine {
   sendKey(key) {
     if (this.locked || !this.cm) return false;
     const vimKey = toVimKey(key);
+    const canonicalKey = canonicalKeyToken(vimKey);
 
     if (this.commandLine !== null) {
       if (vimKey === "<Esc>") {
@@ -136,7 +174,7 @@ export class VimEngine {
         if (text !== null) this.commandLine += text;
       }
       this.syncCommandInput();
-      this.emit("key", { key });
+      this.emit("key", { key: canonicalKey, source: "touch" });
       return true;
     }
 
@@ -151,7 +189,7 @@ export class VimEngine {
       if (text !== null) this.cm.replaceSelection(text);
     }
     if (vimKey === ":" && this.cm.state.dialog) this.commandLine = "";
-    this.emit("key", { key });
+    this.emit("key", { key: canonicalKey, source: "touch" });
     return Boolean(handled);
   }
 
