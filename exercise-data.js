@@ -52,9 +52,9 @@ export const exercises = [
       { keys: "rx", label: "replace with x" },
     ],
     checkpoints: [
-      { at: 1, mode: "V-Block", selection: { kind: "block", from: [0, 25], to: [0, 25] } },
-      { at: 3, mode: "V-Block", selection: { kind: "block", from: [0, 25], to: [3, 25] } },
-      { at: 5, mode: "Complete", code: "target" },
+      { at: 1, mode: "V-Block", cursor: [0, 25], selection: { kind: "block", from: [0, 25], to: [0, 25] } },
+      { at: 3, mode: "V-Block", cursor: [3, 25], selection: { kind: "block", from: [0, 25], to: [3, 25] } },
+      { at: 5, mode: "Complete", code: "target", cursor: [3, 25] },
     ],
     scene: {
       theme: "moonroot",
@@ -188,9 +188,11 @@ export const exercises = [
     ],
     checkpoints: [
       { at: 3, mode: "Insert", selection: { kind: "linear", from: [0, 6], to: [0, 8] } },
-      { at: 7, mode: "Normal", code: ["cache.new = loader;", "auth.old  = verifier;", "api.old   = router;"] },
-      { at: 9, mode: "Normal", code: ["cache.new = loader;", "auth.new  = verifier;", "api.old   = router;"] },
-      { at: 11, mode: "Complete", code: "target" },
+      { at: 7, mode: "Normal", code: ["cache.new = loader;", "auth.old  = verifier;", "api.old   = router;"], cursor: [0, 8] },
+      { at: 8, mode: "Normal", cursor: [1, 8] },
+      { at: 9, mode: "Normal", code: ["cache.new = loader;", "auth.new  = verifier;", "api.old   = router;"], cursor: [1, 8] },
+      { at: 10, mode: "Normal", cursor: [2, 8] },
+      { at: 11, mode: "Complete", code: "target", cursor: [2, 8] },
     ],
     scene: {
       theme: "glass",
@@ -222,9 +224,11 @@ export const exercises = [
     checkpoints: [
       { at: 2, mode: "Recording @a" },
       { at: 7, mode: "Recording @a", code: ["// fetchUser();", "fetchTeam();", "fetchAdmin();"] },
-      { at: 8, mode: "Normal", code: ["// fetchUser();", "fetchTeam();", "fetchAdmin();"] },
-      { at: 11, mode: "Normal", code: ["// fetchUser();", "// fetchTeam();", "fetchAdmin();"] },
-      { at: 14, mode: "Complete", code: "target" },
+      { at: 8, mode: "Normal", code: ["// fetchUser();", "fetchTeam();", "fetchAdmin();"], cursor: [0, 2] },
+      { at: 9, mode: "Normal", cursor: [1, 2] },
+      { at: 11, mode: "Normal", code: ["// fetchUser();", "// fetchTeam();", "fetchAdmin();"], cursor: [1, 2] },
+      { at: 12, mode: "Normal", cursor: [2, 2] },
+      { at: 14, mode: "Complete", code: "target", cursor: [2, 2] },
     ],
     scene: {
       theme: "ember",
@@ -290,9 +294,9 @@ export const exercises = [
       { keys: ">", label: "indent selection" },
     ],
     checkpoints: [
-      { at: 1, mode: "Visual Line", selection: { kind: "line", from: [1, 0], to: [1, 6] } },
-      { at: 2, mode: "Visual Line", selection: { kind: "line", from: [1, 0], to: [2, 8] } },
-      { at: 3, mode: "Complete", code: "target" },
+      { at: 1, mode: "Visual Line", cursor: [1, 0], selection: { kind: "line", from: [1, 0], to: [1, 6] } },
+      { at: 2, mode: "Visual Line", cursor: [2, 0], selection: { kind: "line", from: [1, 0], to: [2, 8] } },
+      { at: 3, mode: "Complete", code: "target", cursor: [2, 0] },
     ],
     scene: {
       theme: "moonroot",

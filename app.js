@@ -59,6 +59,7 @@ const state = {
   complete: false,
   transitioning: false,
   pointerStartY: null,
+  physicalShift: false,
 };
 
 function validateExercises(catalog) {
@@ -94,11 +95,33 @@ function validateExercises(catalog) {
     ) errors.push(`${prefix}: cursor is outside the initial buffer.`);
 
     let previous = 0;
+    const checkpointsByStep = new Map();
     (exercise.checkpoints || []).forEach(checkpoint => {
       if (checkpoint.at < previous || checkpoint.at > exercise.solution.length) {
         errors.push(`${prefix}: checkpoint ${checkpoint.at} is out of sequence.`);
       }
+      if (checkpointsByStep.has(checkpoint.at)) errors.push(`${prefix}: checkpoint ${checkpoint.at} is duplicated.`);
+      checkpointsByStep.set(checkpoint.at, checkpoint);
+
+      if (checkpoint.selection?.kind === "block") {
+        if (!checkpoint.cursor || checkpoint.cursor[0] !== checkpoint.selection.to[0] || checkpoint.cursor[1] !== checkpoint.selection.to[1]) {
+          errors.push(`${prefix}: block selection at ${checkpoint.at} must end at its cursor.`);
+        }
+      }
+      if (checkpoint.selection?.kind === "line" && checkpoint.mode?.toLowerCase().includes("visual")) {
+        if (!checkpoint.cursor || checkpoint.cursor[0] !== checkpoint.selection.to[0]) {
+          errors.push(`${prefix}: line selection at ${checkpoint.at} must end on its cursor row.`);
+        }
+      }
       previous = checkpoint.at;
+    });
+
+    exercise.solution.forEach((token, tokenIndex) => {
+      const step = tokenIndex + 1;
+      const finishesFind = tokenIndex > 0 && exercise.solution[tokenIndex - 1] === "f";
+      if ((token === "j" || finishesFind) && !checkpointsByStep.get(step)?.cursor) {
+        errors.push(`${prefix}: cursor-moving step ${step} (${token}) requires an explicit cursor checkpoint.`);
+      }
     });
     const lastCheckpoint = exercise.checkpoints?.at(-1);
     if (!lastCheckpoint || lastCheckpoint.at !== exercise.solution.length || lastCheckpoint.code !== "target") {
@@ -138,13 +161,23 @@ function escapeHtml(value) {
 
 function formatToken(token) {
   const labels = {
-    "Ctrl-v": "^V",
-    Escape: "Esc",
-    Enter: "↵",
-    " ": "␠",
-    Tab: "⇥",
+    "Ctrl-v": "CTRL+V",
+    Escape: "ESC",
+    Enter: "ENTER",
+    " ": "SPACE",
+    Tab: "TAB",
   };
   return labels[token] || token;
+}
+
+function guidanceToken(token) {
+  if (token.startsWith("Ctrl-")) return `CTRL + ${token.slice(5).toUpperCase()}`;
+  const labels = { Escape: "ESCAPE", Enter: "ENTER", " ": "SPACE", Tab: "TAB" };
+  if (labels[token]) return labels[token];
+  const shiftedKey = keyButtonsFor(token).find(button => button.dataset.shift === token);
+  if (shiftedKey) return `SHIFT + ${shiftedKey.dataset.key.toUpperCase()}`;
+  if (token.length === 1 && token !== token.toLowerCase()) return `SHIFT + ${token}`;
+  return token;
 }
 
 function getVisualState(exercise = currentExercise()) {
@@ -219,7 +252,7 @@ function renderCode(exercise, visual) {
       if (!state.complete && visual.cursor[0] === row && visual.cursor[1] === col) classes.push("cursor");
       return `<span class="${classes.join(" ")}">${escapeHtml(character)}</span>`;
     }).join("");
-    const emptyCursor = !line.length && !state.complete && visual.cursor[0] === row
+    const emptyCursor = !state.complete && visual.cursor[0] === row && visual.cursor[1] === line.length
       ? '<span class="code-char cursor"> </span>'
       : "";
     return `<div class="code-line"><span class="line-no">${row + 1}</span><span>${chars}${emptyCursor}</span></div>`;
@@ -317,15 +350,15 @@ function renderMode() {
 
 function renderCommand() {
   const history = state.history.map(formatToken).join(" ");
-  const pending = [...state.modifiers].map(modifier => `${modifier} +`).join(" ");
+  const pending = [...state.modifiers].map(modifier => `${modifier.toUpperCase()} + …`).join(" ");
   if (!history && !pending) elements.commandText.innerHTML = '<span class="ghost">waiting…</span>';
   else elements.commandText.textContent = `${history}${history && pending ? "  " : ""}${pending}`;
 
   if (state.complete) {
-    elements.guidance.textContent = state.exerciseIndex === exercises.length - 1 ? "Memory ready to unlock" : "Swipe up for next";
+    elements.guidance.textContent = state.exerciseIndex === exercises.length - 1 ? "MEMORY READY" : "NEXT: SWIPE UP";
   } else {
     const next = currentExercise().solution[state.progress];
-    elements.guidance.textContent = `Next · ${formatToken(next)}`;
+    elements.guidance.textContent = `NEXT: ${guidanceToken(next)}`;
   }
 }
 
@@ -333,6 +366,7 @@ function renderModifiers() {
   $$('[data-mod]', elements.keyboard).forEach(button => {
     button.classList.toggle("latched", state.modifiers.has(button.dataset.mod));
   });
+  elements.keyboard.classList.toggle("shift-layer", state.modifiers.has("Shift") || state.physicalShift);
   renderCommand();
 }
 
@@ -415,7 +449,7 @@ function showError() {
   void elements.commandTray.offsetWidth;
   elements.commandTray.classList.add("error");
   const expected = currentExercise().solution[state.progress];
-  elements.guidance.textContent = `Try ${formatToken(expected)} next`;
+  elements.guidance.textContent = `TRY: ${guidanceToken(expected)}`;
   vibrate([14, 25, 14]);
   window.setTimeout(() => {
     elements.commandTray.classList.remove("error");
@@ -487,6 +521,7 @@ function resetExercise({ vibrateReset = true } = {}) {
   state.modifiers.clear();
   state.complete = false;
   state.transitioning = false;
+  state.physicalShift = false;
   setHelp(false);
   elements.successBanner.classList.remove("show");
   renderAll();
@@ -527,6 +562,10 @@ document.addEventListener("keydown", event => {
   if (event.repeat || elements.rewardOverlay.classList.contains("open")) return;
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
   if (modifierMap[event.key]) {
+    if (event.key === "Shift") {
+      state.physicalShift = true;
+      renderModifiers();
+    }
     modifierButtonsFor(modifierMap[event.key]).forEach(button => button.classList.add("pressed"));
     return;
   }
@@ -545,6 +584,10 @@ document.addEventListener("keydown", event => {
 document.addEventListener("keyup", event => {
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
   if (modifierMap[event.key]) modifierButtonsFor(modifierMap[event.key]).forEach(button => button.classList.remove("pressed"));
+  if (event.key === "Shift") {
+    state.physicalShift = false;
+    renderModifiers();
+  }
 });
 
 elements.worldGrid.addEventListener("click", event => {
@@ -585,13 +628,19 @@ window.VimWilds = Object.freeze({
     remaining.forEach(processToken);
   },
   getState() {
+    const visual = getVisualState();
     return {
       exerciseIndex: state.exerciseIndex,
       exerciseId: currentExercise().id,
       progress: state.progress,
       history: [...state.history],
       complete: state.complete,
-      code: [...getVisualState().code],
+      code: [...visual.code],
+      cursor: [...visual.cursor],
+      selection: visual.selection ? structuredClone(visual.selection) : null,
+      mode: visual.mode,
+      modifiers: [...state.modifiers],
+      guidance: elements.guidance.textContent,
     };
   },
 });
