@@ -734,6 +734,7 @@ button { font: inherit; }
 .key .base { order: 2; color: inherit; font-size: 1em; font-weight: 750; }
 .keyboard.shift-layer .key .shifted { order: 2; color: #fff5d7; font-size: 1em; font-weight: 800; }
 .keyboard.shift-layer .key .base { order: 1; color: #71867c; font-size: .68em; font-weight: 600; }
+.keyboard.letter-uppercase .letter-key { text-transform: uppercase; }
 .key.modifier,
 .key.utility { color: #aebfb7; font-size: clamp(10px, 2.65vw, 11.5px); }
 .key.pressed,

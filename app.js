@@ -60,6 +60,7 @@ const state = {
   transitioning: false,
   pointerStartY: null,
   physicalShift: false,
+  capsLock: false,
 };
 
 function validateExercises(catalog) {
@@ -363,10 +364,16 @@ function renderCommand() {
 }
 
 function renderModifiers() {
+  const shiftActive = state.modifiers.has("Shift") || state.physicalShift;
   $$('[data-mod]', elements.keyboard).forEach(button => {
     button.classList.toggle("latched", state.modifiers.has(button.dataset.mod));
+    button.setAttribute("aria-pressed", String(state.modifiers.has(button.dataset.mod)));
   });
-  elements.keyboard.classList.toggle("shift-layer", state.modifiers.has("Shift") || state.physicalShift);
+  const capsButton = $('.key[data-key="CapsLock"]', elements.keyboard);
+  capsButton.classList.toggle("latched", state.capsLock);
+  capsButton.setAttribute("aria-pressed", String(state.capsLock));
+  elements.keyboard.classList.toggle("shift-layer", shiftActive);
+  elements.keyboard.classList.toggle("letter-uppercase", shiftActive !== state.capsLock);
   renderCommand();
 }
 
@@ -497,14 +504,28 @@ function toggleModifier(modifier) {
   vibrate(5);
 }
 
+function toggleCapsLock() {
+  state.capsLock = !state.capsLock;
+  renderModifiers();
+  vibrate(5);
+}
+
 function emitFromButton(button) {
   if (button.dataset.mod) {
     toggleModifier(button.dataset.mod);
     return;
   }
 
+  if (button.dataset.key === "CapsLock") {
+    toggleCapsLock();
+    return;
+  }
+
   let value = button.dataset.key;
-  if (state.modifiers.has("Shift")) value = button.dataset.shift || (value.length === 1 ? value.toUpperCase() : value);
+  const shiftActive = state.modifiers.has("Shift");
+  const isLetter = /^[a-z]$/.test(value);
+  if (isLetter) value = shiftActive !== state.capsLock ? value.toUpperCase() : value;
+  else if (shiftActive) value = button.dataset.shift || value;
 
   let token = value;
   if (state.modifiers.has("Ctrl")) token = `Ctrl-${value.toLowerCase()}`;
@@ -561,6 +582,13 @@ elements.keyboard.addEventListener("pointerdown", event => {
 document.addEventListener("keydown", event => {
   if (event.repeat || elements.rewardOverlay.classList.contains("open")) return;
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
+  if (event.key === "CapsLock") {
+    event.preventDefault();
+    const capsButton = $('.key[data-key="CapsLock"]', elements.keyboard);
+    flashKey(capsButton);
+    toggleCapsLock();
+    return;
+  }
   if (modifierMap[event.key]) {
     if (event.key === "Shift") {
       state.physicalShift = true;
@@ -640,6 +668,7 @@ window.VimWilds = Object.freeze({
       selection: visual.selection ? structuredClone(visual.selection) : null,
       mode: visual.mode,
       modifiers: [...state.modifiers],
+      capsLock: state.capsLock,
       guidance: elements.guidance.textContent,
     };
   },
