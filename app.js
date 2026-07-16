@@ -428,12 +428,17 @@ function playSuccessCharacter() {
   if (!character || !asset?.successSrc) return;
 
   // A fresh image element restarts WebP animation without a cache-busting URL.
+  // Keep the approved idle pose under it briefly so the success state dissolves
+  // in rather than visibly popping to Veo's first frame.
   const celebrating = character.cloneNode();
   celebrating.src = asset.successSrc;
   celebrating.alt = `${asset.alt}, celebrating`;
   celebrating.style.setProperty("--success-canvas-scale", String(asset.successCanvasScale || 1));
-  celebrating.classList.add("celebrating");
-  character.replaceWith(celebrating);
+  celebrating.classList.add("celebrating", "transitioning-in");
+  character.classList.add("transitioning-out");
+  character.setAttribute("aria-hidden", "true");
+  character.after(celebrating);
+  window.setTimeout(() => character.remove(), 280);
 }
 
 function finishExercise() {

@@ -67,8 +67,10 @@ test.describe("CodeMirror Vim conformance", () => {
     await page.goto("/");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
-    await expect(page.locator(".nix")).toHaveClass(/celebrating/);
-    await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix-success\.webp$/);
+    await expect(page.locator(".nix.celebrating")).toHaveClass(/transitioning-in/);
+    await expect(page.locator(".nix.celebrating")).toHaveAttribute("src", /assets\/nix-success\.webp$/);
+    await expect(page.locator(".nix.transitioning-out")).toHaveCount(1);
+    await expect.poll(() => page.locator(".nix").count()).toBe(1);
 
     await page.locator("#resetButton").click();
     await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
@@ -82,8 +84,8 @@ test.describe("CodeMirror Vim conformance", () => {
       window.VimWilds.goTo(rightIndex);
       window.VimWilds.solveCurrent();
     });
-    await expect(page.locator(".nix.right")).toHaveClass(/celebrating/);
-    expect(await page.locator(".nix.right").evaluate(element => getComputedStyle(element).transform)).not.toContain("matrix(-");
+    await expect(page.locator(".nix.right.celebrating")).toHaveClass(/celebrating/);
+    expect(await page.locator(".nix.right.celebrating").evaluate(element => getComputedStyle(element).transform)).not.toContain("matrix(-");
   });
 
   test("reduced-motion users retain the static Nix sprite on success", async ({ page }) => {

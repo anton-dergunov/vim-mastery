@@ -579,6 +579,8 @@ button { font: inherit; }
   transform: scale(var(--success-canvas-scale, 1));
   transform-origin: center;
 }
+.world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .28s ease-out forwards; }
+.world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .28s ease-out forwards; }
 
 .oracle {
   z-index: 10;
@@ -894,6 +896,8 @@ button { font: inherit; }
 @keyframes waterShimmer { from { filter: brightness(.9); } to { filter: brightness(1.13); } }
 @keyframes nixIdle { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-3px) rotate(1deg); } }
 @keyframes nixCelebrate { 0%,100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-15px) rotate(-7deg); } 70% { transform: translateY(-5px) rotate(6deg); } }
+@keyframes nixSuccessFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes nixSuccessFadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes oracleFloat { 0%,100% { transform: translateY(1px); } 50% { transform: translateY(-3px); } }
 @keyframes moteFloat { 0%,100% { transform: translate(0, 2px); opacity: .35; } 50% { transform: translate(4px, -5px); opacity: 1; } }
 @keyframes trayShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 65% { transform: translateX(4px); } }
