@@ -76,6 +76,10 @@ class VeoConversionTests(unittest.TestCase):
                 self.assertEqual(result.info.get("loop"), 1)
                 result.seek(1)
                 self.assertEqual(result.convert("RGBA").getchannel("A").getextrema()[1], 180)
+            self.assertEqual(
+                converter.inspect_webp_animation(output),
+                {"frames": 2, "duration_ms": round(2 * 1000 / 12), "loop": 1},
+            )
 
 
 if __name__ == "__main__":

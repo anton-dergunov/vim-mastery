@@ -329,19 +329,28 @@ def render_aligned_frames(frames: Sequence[Image.Image], placement: Placement, s
     return rendered
 
 
-def save_webp(frames: Sequence[Image.Image], output: Path, fps: int, loop: int) -> None:
+def save_webp(
+    frames: Sequence[Image.Image],
+    output: Path,
+    fps: int,
+    loop: int,
+    *,
+    lossless: bool = True,
+    quality: int = 88,
+) -> None:
     if not frames:
         raise ConversionError("No frames were rendered")
     encoder = require_executable("img2webp")
     output.parent.mkdir(parents=True, exist_ok=True)
-    duration = round(1000 / fps)
     with tempfile.TemporaryDirectory(prefix="vim-wilds-veo-webp-") as directory:
         root = Path(directory)
         command = [encoder, "-loop", str(loop), "-kmax", "0"]
         for index, frame in enumerate(frames):
             path = root / f"frame-{index:04d}.png"
             frame.save(path)
-            command.extend(["-lossless", "-exact", "-m", "6", "-d", str(duration), str(path)])
+            encoding = ["-lossless", "-exact", "-m", "6"] if lossless else ["-q", str(quality), "-m", "6"]
+            duration = round((index + 1) * 1000 / fps) - round(index * 1000 / fps)
+            command.extend([*encoding, "-d", str(duration), str(path)])
         encoded = root / "animation.webp"
         command.extend(["-o", str(encoded)])
         try:
@@ -350,6 +359,32 @@ def save_webp(frames: Sequence[Image.Image], output: Path, fps: int, loop: int) 
             details = error.stderr.strip() or error.stdout.strip() or str(error)
             raise ConversionError(f"img2webp failed: {details}") from error
         encoded.replace(output)
+
+
+def inspect_webp_animation(path: Path) -> dict[str, int]:
+    """Read authoritative animation timing and loop metadata with webpmux."""
+    webpmux = require_executable("webpmux")
+    try:
+        result = subprocess.run(
+            [webpmux, "-info", str(path)], check=True, capture_output=True, text=True
+        )
+    except subprocess.CalledProcessError as error:
+        details = error.stderr.strip() or error.stdout.strip() or str(error)
+        raise ConversionError(f"webpmux could not inspect {path}: {details}") from error
+    metadata: dict[str, int] = {"frames": 0, "duration_ms": 0, "loop": -1}
+    for line in result.stdout.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("Number of frames:"):
+            metadata["frames"] = int(stripped.rsplit(":", 1)[1])
+        elif "Loop Count :" in stripped:
+            metadata["loop"] = int(stripped.rsplit("Loop Count :", 1)[1])
+        else:
+            columns = stripped.split()
+            if columns and columns[0].rstrip(":").isdigit() and len(columns) >= 7:
+                metadata["duration_ms"] += int(columns[6])
+    if metadata["frames"] < 1 or metadata["loop"] < 0:
+        raise ConversionError(f"Could not parse animated WebP metadata for {path}")
+    return metadata
 
 
 def write_debug(

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "catalogue_approved": false,
+  "stills": {
+    "nix": {
+      "candidate": "existing",
+      "path": "assets/nix.png",
+      "approved": true
+    }
+  },
+  "animations": {
+    "nix": {
+      "joyful-hop": {
+        "attempt": "existing",
+        "path": "assets/nix-success.webp",
+        "approved": true
+      }
+    }
+  }
+}
