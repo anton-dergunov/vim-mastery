@@ -1,0 +1,596 @@
+Quick Nano Banana test through your GCP project
+
+Since your credit is on Google Cloud, use the Google Gen AI SDK in Vertex AI mode rather than a separate Gemini API key.
+
+gcloud auth application-default login
+gcloud services enable aiplatform.googleapis.com
+python -m pip install --upgrade google-genai pillow
+
+Save your reference character as nix.png, then run:
+
+from __future__ import annotations
+import os
+from pathlib import Path
+from google import genai
+from google.genai import types
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID")
+LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "global")
+INPUT_IMAGE = Path("nix.png")
+OUTPUT_IMAGE = Path("nix_happy.png")
+client = genai.Client(
+    vertexai=True,
+    project=PROJECT_ID,
+    location=LOCATION,
+)
+reference_bytes = INPUT_IMAGE.read_bytes()
+prompt = """
+The attached image is the canonical reference for an original mobile-game
+mascot named Nix.
+Create a new image of exactly the same character:
+- preserve the hood shape, glowing eyes, antennae, wings, staff, clothing,
+  proportions, colour palette, pixel-art rendering and outline style
+- show Nix celebrating after the player completes a difficult Vim exercise
+- one foot lifted, wings fluttering, staff raised, small golden magic sparks
+- joyful and energetic, but still readable at small mobile UI size
+- full body, centred
+- transparent background
+- no text, no border, no UI elements
+- do not add extra limbs, wings, fingers, accessories, or characters
+Treat this as a production game sprite, not as a reinterpretation.
+"""
+response = client.models.generate_content(
+    model="gemini-2.5-flash-image",
+    contents=[
+        types.Part.from_text(text=prompt),
+        types.Part.from_bytes(
+            data=reference_bytes,
+            mime_type="image/png",
+        ),
+    ],
+    config=types.GenerateContentConfig(
+        response_modalities=["IMAGE"],
+    ),
+)
+saved = False
+for candidate in response.candidates or []:
+    for part in candidate.content.parts or []:
+        if part.inline_data and part.inline_data.data:
+            OUTPUT_IMAGE.write_bytes(part.inline_data.data)
+            saved = True
+            print(f"Saved: {OUTPUT_IMAGE}")
+            break
+    if saved:
+        break
+if not saved:
+    raise RuntimeError(
+        "The model did not return an image. "
+        f"Response: {response}"
+    )
+
+Run it with:
+
+export GOOGLE_CLOUD_PROJECT="your-project-id"
+export GOOGLE_CLOUD_LOCATION="global"
+python generate_nix.py
+
+gemini-2.5-flash-image is the stable Nano Banana model. Google now recommends newer Nano Banana 2 models where available; on GCP, you can experimentally replace the model ID with gemini-3.1-flash-image-preview. The newer general-purpose model is specifically positioned as stronger at multiple references and character consistency, but preview access may vary by project and location.  
+
+One practical warning: “transparent background” is not always obeyed perfectly. You may receive black, white, or checkerboard-like pixels instead of genuine alpha. Test the PNG alpha channel and remove the background afterwards when necessary.
+
+⸻
+
+Can Nano Banana produce tens of characters?
+
+Yes, but generating 30 unrelated characters one prompt at a time would probably give you a visually inconsistent collection.
+
+Nano Banana is unusually appropriate for this project because Google explicitly supports:
+
+* character and style consistency;
+* multiple reference images;
+* conversational editing;
+* placing the same subject into different scenes and poses.  
+
+The difficult part is not making one attractive character. It is maintaining a coherent game art system across:
+
+* 20–40 characters;
+* perhaps 15 states per character;
+* multiple animation frames;
+* backgrounds and props;
+* different device sizes.
+
+You should therefore treat generation more like art direction than like asking for individual illustrations.
+
+Start with an “enchanted terminal world” art bible
+
+Define a compact specification such as:
+
+world:
+  name: The Modal Realms
+  premise: Tiny magical creatures repair an enchanted world using Vim commands.
+rendering:
+  style: polished 2D pixel-art fantasy mobile-game mascot
+  sprite_canvas: 512x512 source, downscaled for the app
+  proportions: 2.5 to 3 heads tall
+  outline: dark, warm, 2 to 4 source pixels thick
+  lighting: warm key light, restrained highlights
+  detail_level: readable at 128x128
+  background: transparent
+palette:
+  shared_neutrals: deep navy, warm cream, muted brown
+  magic: amber, turquoise, violet
+  saturation: moderately rich, never neon everywhere
+character_rules:
+  face: simple and expressive
+  silhouette: recognisable at 64x64
+  accessories: at most two major props
+  hands: simplified
+  no photorealism: true
+  no text: true
+world_motifs:
+  - runes resembling abstract keyboard symbols
+  - enchanted manuscripts
+  - glowing command-line crystals
+  - forest terminals
+  - mechanical spell books
+forbidden:
+  - existing franchise characters
+  - franchise logos
+  - modern firearms
+  - excessive costume detail
+  - realistic human anatomy
+
+Then design characters by roles and silhouettes, not just random species:
+
+Role	Possible character
+Guide	Firefly mage like Nix
+Motion teacher	Swift fox courier
+Editing teacher	Tailor spider who repairs text
+Search teacher	Owl archivist with a glowing lens
+Command teacher	Salamander spellcaster
+Visual-mode teacher	Prism moth or crystal beetle
+Repetition teacher	Clockwork woodpecker
+Debugging teacher	Curious goblin mechanic
+Boss/challenge host	Ancient stone terminal guardian
+Encouragement character	Tiny mushroom bard
+
+That naturally connects characters to Vim concepts without turning them into literal keyboard-button mascots.
+
+Do not begin with tens
+
+A safer sequence is:
+
+1. Build three characters.
+2. Give each one 8–12 states.
+3. Put them into an actual prototype.
+4. Check readability at 64, 96 and 128 pixels.
+5. Only then expand to 10–15 characters.
+
+You may discover that five strong recurring characters are more effective than thirty disposable ones. Duolingo has a cast, but it repeatedly reuses recognisable personalities rather than presenting a new mascot in every lesson.
+
+⸻
+
+What does your existing character resemble?
+
+I do not see it as an obvious copy of one particular character.
+
+It uses several familiar fantasy-design motifs:
+
+* a hood with a face hidden in darkness and luminous eyes;
+* the classic “small black mage” silhouette;
+* insect wings and antennae;
+* an ornate staff;
+* polished modern indie-game pixel art.
+
+The hood and glowing eyes create a loose association with the general black-mage/Vivi-like archetype, while the insect anatomy may remind people of games built around small stylised bugs, including the broad visual territory of Hollow Knight. The proportions and rendering also resemble collectible mobile-RPG mascots.
+
+However, the teal embroidered hood, lantern staff, cream wings and firefly identity make it sufficiently distinct to my eye. The greatest risk is not this individual image. It would be repeatedly prompting a model with things such as “make it look like character X from game Y.” For commercial work, describe your own visual rules instead.
+
+There is another useful design issue: at the current size, the character contains a lot of fine detail. It looks excellent as a 512-pixel illustration, but some embroidery, belts and staff details will disappear at 64–96 pixels. You may eventually want two versions:
+
+* portrait/illustration version: detailed, for dialogue and lesson screens;
+* animation sprite version: simplified shapes and fewer accessories.
+
+⸻
+
+Every situation that might trigger character animation
+
+You probably do not need one unique animation per product event. Build a smaller reusable animation vocabulary, and map many events to it.
+
+1. Exercise lifecycle
+
+Situation	Character response
+Exercise appears	Enters, opens book, points at text
+User begins typing	Watches attentively
+Normal valid typing	Subtle nod or staff glow
+Motion succeeds	Quick approving spark
+Intermediate step succeeds	Small smile or bounce
+Entire drill succeeds	Celebration
+Perfect solution	Exceptional celebration
+Faster than previous record	Surprised applause or speed effect
+New command mastered	Spell unlock ceremony
+Exercise failed	Gentle disappointment, never punishment
+Incorrect but plausible input	Thinking/confused
+Repeated identical mistake	Concerned observation
+User gets stuck	Quiet hint invitation
+Hint opened	Demonstrates or casts revealing magic
+Solution shown	Teaching/explaining pose
+Exercise restarted	Rewinds magic or resets objects
+Exercise abandoned	Waves goodbye, neutral rather than sad
+
+2. Typing and Vim-specific events
+
+Situation	Response
+User types ordinary characters in Normal mode	Alarmed “that entered a command” reaction
+User remains in Insert mode unexpectedly	Points towards mode indicator
+User presses Escape correctly	Relieved flash or hood relaxes
+User repeats inefficient arrow-key movement	Character runs laboriously
+User uses an efficient motion	Teleports to destination
+User creates an operator-motion command	Combines two magic symbols
+User enters an incomplete command	Holds an unfinished spell
+User enters an invalid sequence	Spell fizzles harmlessly
+User uses count prefix	Multiplies glowing objects
+User searches successfully	Reveals a hidden target
+Search has no result	Looks through telescope, shrugs
+Undo	Reverses time
+Redo	Replays time
+Delete/change/yank	Cut, transform or bottle glowing text
+Paste	Releases text from a magical container
+Visual selection	Draws a glowing selection boundary
+Macro recording	Produces a miniature recording crystal
+Macro replay	Crystal repeats the action automatically
+
+This could become one of the app’s strongest qualities: animations can make abstract Vim concepts physically understandable.
+
+3. Progress and retention
+
+Situation	Response
+First session	Introduction and greeting
+Daily return	Welcome-back wave
+Streak extended	Lights another lantern
+Long streak milestone	Larger ceremony
+Level completed	Opens a new gate or path
+Skill decayed and needs review	Dusts off an old spell book
+User improves after struggling	Proud/emotional celebration
+Personal best	Trophy or magical crown
+Achievement unlocked	Produces badge
+Daily goal complete	Rests beside a glowing campfire
+Course completed	Ensemble celebration
+
+4. Inactivity and interface events
+
+Situation	Response
+10–20 seconds inactive	Blinks, breathes, shifts weight
+Longer inactivity	Examines staff or catches a firefly
+Very long inactivity	Sits down, naps or reads
+User resumes	Wakes and rapidly becomes attentive
+App loading	Casts a looping spell
+Network delay	Tries to repair a magic connection
+Recoverable error	Tool slips; character fixes it
+Serious application error	Concerned, points to retry
+Help panel available	Raises hand or glowing question rune
+Settings opened	Adjusts equipment
+Sound muted	Covers ears or extinguishes a music note
+Offline mode	Lights a travel lantern
+
+5. Social and tonal events
+
+Situation	Response
+Friendly encouragement	Thumbs-up equivalent or warm nod
+User is making rapid errors	Calm-down gesture
+User succeeds after many failures	Bigger, warmer celebration
+User enters something bizarre	Double-take, puzzled inspection
+Easter egg command	Secret dance
+Seasonal event	Costume or environmental variation
+Character selected	Introduction pose
+Character deselected	Polite farewell
+Another character speaks	Listening reaction
+
+⸻
+
+The actual emotion/action set you need
+
+You do not need 50 fully independent animations. A production-worthy starter set could be only 14 reusable states:
+
+1. Idle breathing
+2. Idle variation: inspect staff
+3. Idle variation: wings twitch
+4. Attentive/watch typing
+5. Thinking
+6. Confused
+7. Gentle error/fizzle
+8. Concerned/stuck
+9. Hinting/pointing
+10. Small success
+11. Large success
+12. Exceptional success/dance
+13. Cast magic
+14. Sleep/wake
+
+Add these later:
+
+* run/enter/leave;
+* explain;
+* rewind/undo;
+* search;
+* carry or manipulate text;
+* unlock/reward;
+* sad-but-supportive;
+* shocked;
+* mischievous Easter-egg reaction.
+
+The distinction between small, large and exceptional success matters. If every correct key causes an enormous dance, the animation becomes distracting and loses its reward value.
+
+⸻
+
+Best generation and animation workflow
+
+Phase 1: Generate canonical character sheets
+
+For every character, create one approved sheet containing:
+
+* front three-quarter view;
+* side view;
+* back three-quarter view;
+* neutral pose;
+* colour palette swatches;
+* staff/accessory close-up;
+* expression examples;
+* height next to the other characters.
+
+Generate a sheet first, inspect it, and manually record its important constants:
+
+character_id: nix
+height_ratio: 2.7_heads
+hood:
+  colour: dark teal
+  trim: warm gold
+eyes:
+  count: 2
+  colour: amber
+wings:
+  count: 2
+  colour: translucent cream
+staff:
+  wood: dark brown
+  top: square-hook lantern
+boots:
+  colour: teal
+
+AI models are prone to gradually changing wing counts, staff shapes, belt placement and clothing details. Explicitly listing those invariants helps.
+
+Phase 2: Generate static key poses, not animations
+
+For example:
+
+Using the attached canonical Nix reference sheet, create a sprite sheet
+containing exactly six separate poses of the same character:
+1. neutral idle
+2. attentive
+3. confused
+4. gentle mistake reaction
+5. small celebration
+6. major celebration
+Use a strict 3 by 2 grid. Each cell must show the full body at exactly
+the same scale and camera angle. Preserve every permanent design feature.
+Transparent background. No labels, text, borders or shadows.
+
+A model may still produce unequal cells or slight mutations. It is often more reliable to generate each key pose independently and assemble the sheet yourself.
+
+Phase 3: Normalize the frames programmatically
+
+After generation:
+
+* remove backgrounds;
+* crop to a consistent canvas;
+* align feet to the same baseline;
+* scale all poses consistently;
+* check alpha;
+* reduce colours if pursuing genuine pixel art;
+* downscale using nearest-neighbour resampling;
+* export WebP or PNG sprite sheets.
+
+Generate at 512 or 1024 pixels and reduce later. Asking the model to generate directly at 64×64 usually gives you less control and malformed details. Google notes that the legacy 2.5 image model normally generates at 1024-pixel resolution.  
+
+Phase 4: Animate between approved key poses
+
+Nano Banana is principally an image generation/editing model, not a deterministic sprite-animation system. It can generate candidate frames, but requesting “eight consecutive animation frames” frequently causes:
+
+* limb length drift;
+* accessory mutation;
+* inconsistent camera position;
+* flickering colours;
+* frames that do not form natural motion;
+* changed pixel density.
+
+Three workable approaches follow.
+
+Approach A: Minimal frame-by-frame sprites
+
+Use Nano Banana to generate:
+
+* anticipation pose;
+* action pose;
+* recovery pose.
+
+Then create intermediate frames manually by moving or redrawing small parts.
+
+For a celebration:
+
+1. crouch;
+2. rise;
+3. staff lifted;
+4. airborne peak;
+5. land;
+6. return to idle.
+
+Even six frames can look convincing at 8–12 frames per second.
+
+This is probably the best fit for your desired pixel-art presentation.
+
+Approach B: Cut-out skeletal animation
+
+Split one character into layers:
+
+* hood/head;
+* eyes;
+* torso;
+* upper/lower arms;
+* staff;
+* legs;
+* left and right wings;
+* accessory effects.
+
+Rig the parts in a 2D animation system and rotate/translate them. Then you can create dozens of reactions from one character without generating every frame again.
+
+This produces a slightly more puppet-like appearance, but it is far cheaper and far more consistent. Wings, eye glow, staff particles and body bounce can hide the limited deformation surprisingly well.
+
+Approach C: Hybrid
+
+This is my recommendation:
+
+* skeletal idle, typing, pointing and sleep animations;
+* hand-drawn/generated frame animation for major celebrations;
+* particle effects implemented in the app;
+* facial expression changes as small overlay layers.
+
+That lets one character feel alive without requiring hundreds of generated images.
+
+⸻
+
+A particularly efficient architecture
+
+Separate animations into layers:
+
+character body animation
++ facial/eye overlay
++ prop overlay
++ magic particle effect
++ camera/UI response
+
+A success reaction might therefore be:
+
+body: hop animation
+eyes: happy crescent shape
+staff: raised
+particles: 12 gold sparks
+UI: exercise card briefly expands
+sound: short positive chime
+
+A wrong command could be:
+
+body: recoil by 4 pixels
+eyes: widen
+staff: unchanged
+particles: tiny smoke puff
+UI: invalid command shakes by 2 pixels
+sound: soft wooden click
+
+Only the body animation needs character-specific artwork. Particles, screen shake and highlights can be shared across your entire cast.
+
+⸻
+
+Can Nano Banana generate a whole sprite sheet?
+
+It can generate something resembling one, but I would not make a generated sprite sheet your canonical production asset.
+
+A better loop is:
+
+canonical reference
+      ↓
+generate one key pose
+      ↓
+accept/reject
+      ↓
+edit accepted pose conversationally
+      ↓
+normalize and store
+      ↓
+animate manually or with a rig
+
+Google specifically recommends conversational, multi-turn editing for image iteration.  
+
+Keep every approved image and always start new state generation from the original canonical reference plus one or two approved state images. Do not repeatedly edit the most recently edited image for 20 generations; small mutations will accumulate.
+
+⸻
+
+Do you own and have permission to use the generated images?
+
+Relationship with Google
+
+Under the current Google Cloud terms:
+
+* generated output is treated as your Customer Data;
+* Google says it does not assert ownership over new intellectual property created in generated output;
+* Google warns that different customers may receive identical or similar outputs.  
+
+Therefore, Google does not prohibit you from placing the output in a commercial mobile app merely because it was generated with Nano Banana.
+
+However, “Google does not own it” is not quite identical to “you have an unquestionably enforceable copyright over every pixel.”
+
+UK copyright position
+
+The UK currently has statutory protection for certain computer-generated works, although the government continues to examine how that protection should operate. AI-assisted work involving meaningful human creative decisions is generally a stronger position than blindly accepting a one-shot output.  
+
+You should contribute human authorship by:
+
+* designing the character and world specifications;
+* selecting and rejecting generations;
+* combining outputs;
+* redrawing defects;
+* changing palettes and silhouettes;
+* constructing animations;
+* designing the sprite layout;
+* integrating effects, timing and narrative personality.
+
+That is also simply good production practice.
+
+Third-party infringement remains possible
+
+Google’s terms explicitly say outputs can resemble outputs provided to other customers. You should therefore not assume that a generated asset is guaranteed unique or non-infringing.  
+
+Also note an important trial-credit detail: Google Cloud’s generated-output indemnity applies only to listed indemnified services where use is not provided free of charge. Your free trial may therefore not provide the same indemnification as paid usage.  
+
+For a small indie app, the sensible procedure is:
+
+1. Never request named existing characters.
+2. Avoid “in the style of [living artist/studio/game]”.
+3. Use only references that you created or have rights to use.
+4. Search visually for suspiciously close matches before launch.
+5. Keep your prompts, intermediate files and manual edits.
+6. Create your own names, lore, silhouettes and signature props.
+7. Consider paying for the final production generations rather than relying entirely on trial usage if Google’s relevant paid-service indemnity matters to you.
+8. Register your game name and key mascot as trademarks later if the product gains traction; trademark protection is separate from copyright.
+
+This is practical guidance rather than a legal opinion.
+
+⸻
+
+My recommended scope for your first prototype
+
+Use one character—Nix—with 10 states:
+
+idle
+typing/watch
+confused
+invalid command
+stuck
+offer hint
+small success
+large success
+cast spell
+sleep/wake
+
+Make only three genuine animations initially:
+
+* idle loop;
+* error/fizzle;
+* success hop.
+
+Implement the other states as a static pose with blinking, floating, wing motion and particles. That will already feel animated in the app.
+
+Once Nix works in the interface, add two contrasting characters:
+
+* an energetic fox movement tutor;
+* a patient owl search tutor.
+
+That would give you enough variation to validate the product while avoiding the enormous hidden cost of building a cast of tens before you know exactly how the characters will be used.
