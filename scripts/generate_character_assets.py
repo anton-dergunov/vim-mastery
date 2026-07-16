@@ -422,9 +422,10 @@ def normalize_idle(raw_path: Path, output: Path, device: str) -> None:
     rgb = np.asarray(image.convert("RGB"), dtype=np.uint8)
     brightness = rgb.mean(axis=2)
     chroma = rgb.max(axis=2) - rgb.min(axis=2)
-    # Nano Banana's baked checkerboards range from light white through mid-grey;
-    # their border shades can be as low as 150 even when the subject is centred.
-    neutral_light = (brightness >= 140) & (chroma <= 12)
+    # Nano Banana can bake opaque transparency checkers from white down to a
+    # dark grey.  Only treat this broad range as removable when every border
+    # pixel is near-neutral; that distinguishes a checkerboard from a scene.
+    neutral_light = (brightness >= 80) & (chroma <= 12)
     border = max(4, min(image.width, image.height) // 40)
     border_mask = np.concatenate((
         neutral_light[:border, :].ravel(), neutral_light[-border:, :].ravel(),
@@ -432,7 +433,7 @@ def normalize_idle(raw_path: Path, output: Path, device: str) -> None:
     ))
     if variation <= 7:
         cleaned = converter.matte_frames([image], background, 7, 16, "background", device)[0]
-    elif float(border_mask.mean()) >= 0.9:
+    elif float(border_mask.mean()) >= 0.98:
         alpha = Image.fromarray(np.where(neutral_light, 0, 255).astype(np.uint8), mode="L")
         cleaned = converter.decontaminate_edges(
             image, converter.keep_character_and_effects(alpha)
@@ -466,6 +467,32 @@ def make_contact_sheet(paths: Sequence[Path], output: Path, label: str) -> None:
         sheet.alpha_composite(tile, (index * 256, 32))
     output.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(output, optimize=True)
+
+
+def make_cast_contact_sheet(catalogue: dict[str, Any], artifact_root: Path) -> Path:
+    """Make one compact review image containing all 42 still candidates."""
+    tile_width, tile_height = 176, 208
+    columns, rows = 6, 7  # two characters (three candidates each) per row
+    sheet = Image.new("RGBA", (tile_width * columns, tile_height * rows + 28), (8, 19, 16, 255))
+    draw = ImageDraw.Draw(sheet)
+    draw.text((8, 6), "The Vim Wilds — static candidate review", fill=(119, 224, 163, 255))
+    for character_index, character in enumerate(catalogue["characters"][1:]):
+        row = character_index // 2
+        character_column = (character_index % 2) * 3
+        for candidate in range(1, 4):
+            source = artifact_root / "stills" / character["id"] / f"candidate-{candidate:02d}.png"
+            if not source.exists():
+                continue
+            with Image.open(source) as image:
+                preview = image.convert("RGBA").resize((tile_width, tile_width), Image.Resampling.LANCZOS)
+            x = (character_column + candidate - 1) * tile_width
+            y = 28 + row * tile_height
+            sheet.alpha_composite(preview, (x, y))
+            draw.text((x + 5, y + tile_width + 5), f"{character['id']} #{candidate}", fill=(240, 215, 135, 255))
+    output = artifact_root / "stills" / "all-candidates.png"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(output, optimize=True)
+    return output
 
 
 def selected_characters(catalogue: dict[str, Any], requested: Sequence[str] | None, include_nix: bool = True) -> list[dict[str, Any]]:
@@ -560,6 +587,9 @@ def command_stills(args: argparse.Namespace) -> int:
         directory = args.artifact_root / "stills" / character["id"]
         paths = [directory / f"candidate-{candidate:02d}.png" for candidate in range(1, args.candidates + 1)]
         make_contact_sheet([path for path in paths if path.exists()], directory / "contact-sheet.png", character["name"])
+    if not args.character and args.candidates == 3:
+        review = make_cast_contact_sheet(catalogue, args.artifact_root)
+        print(f"Wrote cast review sheet: {review}")
     return 0
 
 
