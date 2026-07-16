@@ -1,0 +1,2 @@
+-r requirements-animation.txt
+google-genai==2.10.0
