@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "catalogue_approved": false,
+  "catalogue_approved": true,
   "stills": {
     "nix": {
       "candidate": "existing",
@@ -16,5 +16,6 @@
         "approved": true
       }
     }
-  }
+  },
+  "catalogue_sha256": "715bcdd615d29b4a8d6aa89e74d7dc41f4c61c367447f6522e71c3bac48921e0"
 }

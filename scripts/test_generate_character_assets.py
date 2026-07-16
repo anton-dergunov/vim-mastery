@@ -85,9 +85,11 @@ class CharacterAssetPipelineTests(unittest.TestCase):
             pipeline.append_ledger(root, {"event": "submitted", "kind": "image", "estimated_cost_usd": 2.81})
             pipeline.append_ledger(root, {"event": "submitted", "kind": "video", "estimated_cost_usd": 17.88})
             self.assertAlmostEqual(pipeline.ledger_spend(root), 20.69)
+            pipeline.append_ledger(root, {"event": "voided_submission", "kind": "image", "estimated_cost_usd": 0.067})
+            self.assertAlmostEqual(pipeline.ledger_spend(root), 20.623)
             pipeline.enforce_budget(root, 25, 4.31)
             with self.assertRaises(pipeline.PipelineError):
-                pipeline.enforce_budget(root, 25, 4.32)
+                pipeline.enforce_budget(root, 25, 4.38)
 
     def test_catalogue_approval_gate_stays_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -125,6 +127,41 @@ class CharacterAssetPipelineTests(unittest.TestCase):
             Image.new("RGBA", (128, 128), (20, 110, 108, 255)).save(path)
             with self.assertRaisesRegex(pipeline.PipelineError, "transparency"):
                 pipeline.validate_idle_sprite(path)
+
+    def test_uniform_generated_backdrop_uses_cv_matte_without_model_download(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "raw.png"
+            output = root / "idle.png"
+            image = Image.new("RGB", (256, 256), "white")
+            ImageDraw.Draw(image).ellipse((64, 32, 192, 224), fill=(31, 102, 104))
+            image.save(raw)
+            with mock.patch.object(pipeline.animate_character, "prepare_foreground_cached") as birefnet:
+                pipeline.normalize_idle(raw, output, "cpu")
+            birefnet.assert_not_called()
+            with Image.open(output) as result:
+                self.assertEqual(result.mode, "RGBA")
+                self.assertEqual(result.getchannel("A").getpixel((0, 0)), 0)
+
+    def test_baked_checkerboard_uses_cv_matte_without_model_download(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "raw.png"
+            output = root / "idle.png"
+            grid = Image.new("RGB", (256, 256), "white")
+            draw = ImageDraw.Draw(grid)
+            for y in range(0, 256, 16):
+                for x in range(0, 256, 16):
+                    if (x // 16 + y // 16) % 2:
+                        draw.rectangle((x, y, x + 15, y + 15), fill=(205, 205, 205))
+            draw.ellipse((64, 32, 192, 224), fill=(31, 102, 104))
+            grid.save(raw)
+            with mock.patch.object(pipeline.animate_character, "prepare_foreground_cached") as birefnet:
+                pipeline.normalize_idle(raw, output, "cpu")
+            birefnet.assert_not_called()
+            with Image.open(output) as result:
+                self.assertEqual(result.getchannel("A").getpixel((0, 0)), 0)
+                self.assertIsNotNone(result.getchannel("A").getbbox())
 
     def test_video_jobs_require_approved_stills_only_for_execution(self) -> None:
         approvals = pipeline.load_approvals()

@@ -342,7 +342,17 @@ def read_ledger(root: Path) -> list[dict[str, Any]]:
 
 
 def ledger_spend(root: Path) -> float:
-    return sum(float(event.get("estimated_cost_usd", 0)) for event in read_ledger(root) if event.get("event") == "submitted")
+    submitted = sum(
+        float(event.get("estimated_cost_usd", 0))
+        for event in read_ledger(root)
+        if event.get("event") == "submitted"
+    )
+    voided = sum(
+        float(event.get("estimated_cost_usd", 0))
+        for event in read_ledger(root)
+        if event.get("event") == "voided_submission"
+    )
+    return submitted - voided
 
 
 def append_ledger(root: Path, event: dict[str, Any]) -> None:
@@ -357,6 +367,36 @@ def enforce_budget(root: Path, budget: float, next_cost: float) -> None:
     spent = ledger_spend(root)
     if spent + next_cost > budget + 1e-9:
         raise PipelineError(f"Budget cap would be exceeded: ${spent:.2f} + ${next_cost:.2f} > ${budget:.2f}")
+
+
+def command_void_submissions(args: argparse.Namespace) -> int:
+    """Append accounting reversals for requests Vertex rejected before accepting."""
+    events = read_ledger(args.artifact_root)
+    candidates = [
+        event for event in events
+        if event.get("event") == "submitted"
+        and event.get("kind") == args.kind
+        and event.get("character") == args.character
+        and event.get("candidate") == args.candidate
+    ]
+    already_voided = sum(
+        1 for event in events
+        if event.get("event") == "voided_submission"
+        and event.get("kind") == args.kind
+        and event.get("character") == args.character
+        and event.get("candidate") == args.candidate
+    )
+    remaining = candidates[already_voided:]
+    if not remaining:
+        raise PipelineError("No unmatched submitted ledger entries found to void")
+    for index, event in enumerate(remaining, already_voided + 1):
+        append_ledger(args.artifact_root, {
+            "event": "voided_submission", "kind": args.kind, "character": args.character,
+            "candidate": args.candidate, "estimated_cost_usd": event.get("estimated_cost_usd", 0),
+            "reason": args.reason, "voids_submission_number": index,
+        })
+    print(f"Voided {len(remaining)} rejected {args.kind} submission ledger entries.")
+    return 0
 
 
 def create_vertex_client(project: str, location: str):
@@ -378,9 +418,27 @@ def extract_response_image(response: Any) -> bytes:
 def normalize_idle(raw_path: Path, output: Path, device: str) -> None:
     source_bytes = raw_path.read_bytes()
     image = Image.open(raw_path)
-    cleaned = animate_character.prepare_foreground_cached(
-        image, source_bytes, animate_character.default_cache_dir(), animate_character.choose_device(device)
-    )
+    background, variation = converter.estimate_background([image])
+    rgb = np.asarray(image.convert("RGB"), dtype=np.uint8)
+    brightness = rgb.mean(axis=2)
+    chroma = rgb.max(axis=2) - rgb.min(axis=2)
+    neutral_light = (brightness >= 180) & (chroma <= 12)
+    border = max(4, min(image.width, image.height) // 40)
+    border_mask = np.concatenate((
+        neutral_light[:border, :].ravel(), neutral_light[-border:, :].ravel(),
+        neutral_light[border:-border, :border].ravel(), neutral_light[border:-border, -border:].ravel(),
+    ))
+    if variation <= 7:
+        cleaned = converter.matte_frames([image], background, 7, 16, "background", device)[0]
+    elif float(border_mask.mean()) >= 0.9:
+        alpha = Image.fromarray(np.where(neutral_light, 0, 255).astype(np.uint8), mode="L")
+        cleaned = converter.decontaminate_edges(
+            image, converter.keep_character_and_effects(alpha)
+        )
+    else:
+        cleaned = animate_character.prepare_foreground_cached(
+            image, source_bytes, animate_character.default_cache_dir(), animate_character.choose_device(device)
+        )
     normalized, _ = animate_character.normalize_image(cleaned, 512)
     output.parent.mkdir(parents=True, exist_ok=True)
     normalized.save(output, optimize=True)
@@ -421,6 +479,8 @@ def command_stills(args: argparse.Namespace) -> int:
     catalogue = load_catalogue(args.catalogue)
     if args.candidates < 1:
         raise PipelineError("--candidates must be at least 1")
+    if args.min_request_interval < 0:
+        raise PipelineError("--min-request-interval cannot be negative")
     characters = selected_characters(catalogue, args.character, include_nix=False)
     jobs = [(character, candidate) for character in characters for candidate in range(1, args.candidates + 1)]
     cost = len(jobs) * float(catalogue["models"]["image_cost_usd"])
@@ -435,6 +495,7 @@ def command_stills(args: argparse.Namespace) -> int:
 
     client = create_vertex_client(args.project, args.location)
     reference = (ROOT / "assets" / "nix.png").read_bytes()
+    last_request_at = 0.0
     for character, candidate in jobs:
         directory = args.artifact_root / "stills" / character["id"]
         raw = directory / f"candidate-{candidate:02d}-raw.png"
@@ -457,22 +518,34 @@ def command_stills(args: argparse.Namespace) -> int:
             continue
         unit_cost = float(catalogue["models"]["image_cost_usd"])
         enforce_budget(args.artifact_root, args.budget_usd, unit_cost)
+        wait_seconds = args.min_request_interval - (time.monotonic() - last_request_at)
+        if wait_seconds > 0:
+            print(f"Waiting {wait_seconds:.0f}s before the next Nano Banana request to stay within quota...")
+            time.sleep(wait_seconds)
+        try:
+            response = client.models.generate_content(
+                model=catalogue["models"]["image"],
+                contents=[
+                    types.Part.from_text(text=still_prompt(catalogue, character)),
+                    types.Part.from_bytes(data=reference, mime_type="image/png"),
+                ],
+                config=types.GenerateContentConfig(
+                    response_modalities=["IMAGE"],
+                    seed=still_seed(catalogue, character, candidate),
+                    image_config=types.ImageConfig(aspect_ratio="1:1", image_size="1K", output_mime_type="image/png"),
+                ),
+            )
+        except Exception as error:
+            append_ledger(args.artifact_root, {
+                "event": "request_rejected", "kind": "image", "character": character["id"],
+                "candidate": candidate, "model": catalogue["models"]["image"], "reason": str(error),
+            })
+            raise PipelineError(f"Vertex rejected {character['id']}/candidate-{candidate:02d}: {error}") from error
+        last_request_at = time.monotonic()
         append_ledger(args.artifact_root, {
             "event": "submitted", "kind": "image", "character": character["id"],
             "candidate": candidate, "model": catalogue["models"]["image"], "estimated_cost_usd": unit_cost,
         })
-        response = client.models.generate_content(
-            model=catalogue["models"]["image"],
-            contents=[
-                types.Part.from_text(text=still_prompt(catalogue, character)),
-                types.Part.from_bytes(data=reference, mime_type="image/png"),
-            ],
-            config=types.GenerateContentConfig(
-                response_modalities=["IMAGE"],
-                seed=still_seed(catalogue, character, candidate),
-                image_config=types.ImageConfig(aspect_ratio="1:1", image_size="1K", output_mime_type="image/png"),
-            ),
-        )
         directory.mkdir(parents=True, exist_ok=True)
         raw.write_bytes(extract_response_image(response))
         normalize_idle(raw, normalized, args.device)
@@ -907,7 +980,19 @@ def build_parser() -> argparse.ArgumentParser:
     stills.add_argument("--project", default=os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID"))
     stills.add_argument("--location", default=os.environ.get("GOOGLE_CLOUD_LOCATION", "global"))
     stills.add_argument("--device", choices=("auto", "cpu", "mps", "cuda"), default="auto")
+    stills.add_argument(
+        "--min-request-interval", type=float, default=60.0,
+        help="Minimum seconds between Nano Banana requests (default: 60, quota-safe).",
+    )
     stills.set_defaults(handler=command_stills)
+
+    void = subparsers.add_parser("void-submissions", help="Append reversals for requests Vertex rejected before acceptance")
+    void.add_argument("--kind", choices=("image", "video"), required=True)
+    void.add_argument("--character", required=True)
+    void.add_argument("--candidate", type=int, required=True)
+    void.add_argument("--reason", required=True)
+    void.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
+    void.set_defaults(handler=command_void_submissions)
 
     approve = subparsers.add_parser("approve", help="Approve the catalogue, a still, or an animation candidate")
     approve.add_argument("--catalogue", dest="catalogue_approval", action="store_true")
