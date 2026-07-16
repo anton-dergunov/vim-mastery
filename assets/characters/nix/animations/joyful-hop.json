@@ -1,0 +1,19 @@
+{
+  "character": "nix",
+  "animation": "joyful-hop",
+  "attempt": "existing",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "source": "assets/nix-success.webp",
+  "source_sha256": "7bfddcf7baf22685c7178fb452d176380dea4e65e93098224b81528103493aaf",
+  "frames": 48,
+  "fps": 12,
+  "loop": 1,
+  "canvas_size": 352,
+  "base_size": 256,
+  "css_scale": 1.375,
+  "runtime_bytes": 2207022,
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved"
+}

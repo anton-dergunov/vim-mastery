@@ -898,6 +898,7 @@ def write_manifest(catalogue: dict[str, Any], approvals: dict[str, Any]) -> None
         idle = approved_idle_path(character, approvals)
         animations = {}
         directory = ASSET_ROOT / character["id"] / "animations"
+        directory.mkdir(parents=True, exist_ok=True)
         for action in catalogue["actions"]:
             runtime = directory / f"{action['id']}.webp"
             metadata = directory / f"{action['id']}.json"

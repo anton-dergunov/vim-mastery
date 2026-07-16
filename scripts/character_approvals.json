@@ -4,15 +4,294 @@
   "stills": {
     "nix": {
       "candidate": "existing",
-      "path": "assets/nix.png",
-      "approved": true
+      "path": "assets/characters/nix/idle.png",
+      "sha256": "7d35ede81121913e1566e415ce0065cfc04582a96e7e30edc7e33019ec053cf6",
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          89,
+          90,
+          434,
+          421
+        ],
+        "baseline": 421,
+        "coverage": 0.227
+      }
+    },
+    "vela": {
+      "candidate": 3,
+      "path": "assets/characters/vela/idle.png",
+      "sha256": "37704679d03e81a431fc16034e75166702fd7543af2b3ab2ac4806d9fbb7f3a7",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1103,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          143,
+          95,
+          369,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.1578
+      }
+    },
+    "tatter": {
+      "candidate": 1,
+      "path": "assets/characters/tatter/idle.png",
+      "sha256": "612a3235c73461289e85874797263a3b85732768e0da15d17226ade308768e46",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1201,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          95,
+          101,
+          418,
+          411
+        ],
+        "baseline": 411,
+        "coverage": 0.2147
+      }
+    },
+    "orin": {
+      "candidate": 3,
+      "path": "assets/characters/orin/idle.png",
+      "sha256": "d85f54af54e687c87c0c7a64cf022a6bffe13336922ff3b318a54fa735ac5bfe",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1303,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          109,
+          95,
+          402,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.2312
+      }
+    },
+    "cinder": {
+      "candidate": 2,
+      "path": "assets/characters/cinder/idle.png",
+      "sha256": "9838cb462db0e3a22d25148075db8d7476e1ddb31a71f8993100780748ca96c2",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1402,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          95,
+          95,
+          418,
+          416
+        ],
+        "baseline": 416,
+        "coverage": 0.19
+      }
+    },
+    "prism": {
+      "candidate": 2,
+      "path": "assets/characters/prism/idle.png",
+      "sha256": "5f2c2000e9d400c9bfff9c142bf2a83c6d2ff2b760644bd396e65e62a870be26",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1502,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          95,
+          113,
+          418,
+          400
+        ],
+        "baseline": 400,
+        "coverage": 0.1805
+      }
+    },
+    "tock": {
+      "candidate": 2,
+      "path": "assets/characters/tock/idle.png",
+      "sha256": "68fd836069866225b0afbd9eb1f11db49a13635f33498035c80d1ef85c5e033c",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1602,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          97,
+          95,
+          415,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.2064
+      }
+    },
+    "brikk": {
+      "candidate": 2,
+      "path": "assets/characters/brikk/idle.png",
+      "sha256": "53a6aaef731f2b2de0a97a370f6885c0757f7e00b0a53aaa2e93f6ca5caa9711",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1702,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          97,
+          95,
+          414,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.2254
+      }
+    },
+    "cairn": {
+      "candidate": 3,
+      "path": "assets/characters/cairn/idle.png",
+      "sha256": "c2970204bc32fda771435e95e93232983c69c8422779ffdd09290337b396fc2c",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1803,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          110,
+          95,
+          402,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.2591
+      }
+    },
+    "mello": {
+      "candidate": 1,
+      "path": "assets/characters/mello/idle.png",
+      "sha256": "3d9abddaae6bd4dbf4c292247ae921d3cb7e87ec11e1be5efb4377ceb45755b8",
+      "model": "gemini-3.1-flash-image",
+      "seed": 1901,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          133,
+          95,
+          378,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.1973
+      }
+    },
+    "puddle": {
+      "candidate": 2,
+      "path": "assets/characters/puddle/idle.png",
+      "sha256": "ec9b8c558cfe8427cf137853f5ed8b1e7869ee68d5f91d342c15fa3d200fecac",
+      "model": "gemini-3.1-flash-image",
+      "seed": 2002,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          115,
+          95,
+          396,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.2014
+      }
+    },
+    "bramble": {
+      "candidate": 2,
+      "path": "assets/characters/bramble/idle.png",
+      "sha256": "b79fabd36aae153cd629e890ec393e3cbf046ff7a0a22ecc6ac65c6688384601",
+      "model": "gemini-3.1-flash-image",
+      "seed": 2102,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          119,
+          95,
+          394,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.215
+      }
+    },
+    "mica": {
+      "candidate": 2,
+      "path": "assets/characters/mica/idle.png",
+      "sha256": "b406b80576861ce03cb6466a22f1be60409b20615cb8dbe601105699d324bbc9",
+      "model": "gemini-3.1-flash-image",
+      "seed": 2202,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          127,
+          95,
+          385,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.1642
+      }
+    },
+    "luma": {
+      "candidate": 1,
+      "path": "assets/characters/luma/idle.png",
+      "sha256": "c75dae62cd47711ef821f86e59cd0301e7807febf2b74f7af9ad959563fa2ade",
+      "model": "gemini-3.1-flash-image",
+      "seed": 2301,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          177,
+          95,
+          336,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.1173
+      }
+    },
+    "fen": {
+      "candidate": 2,
+      "path": "assets/characters/fen/idle.png",
+      "sha256": "d9d454e2908a5d21441199312a09d0fa15ed0becc84015a65bb8d88ec4a89eb9",
+      "model": "gemini-3.1-flash-image",
+      "seed": 2402,
+      "approved": true,
+      "validation": {
+        "size": 512,
+        "visible_bounds": [
+          107,
+          95,
+          404,
+          418
+        ],
+        "baseline": 418,
+        "coverage": 0.1765
+      }
     }
   },
   "animations": {
     "nix": {
       "joyful-hop": {
         "attempt": "existing",
-        "path": "assets/nix-success.webp",
+        "path": "assets/characters/nix/animations/joyful-hop.webp",
+        "sha256": "9ade756023746840e17af219f5e28c07928da59ad8925ca950e66415ce27b89d",
         "approved": true
       }
     }

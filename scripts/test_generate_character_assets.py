@@ -165,6 +165,7 @@ class CharacterAssetPipelineTests(unittest.TestCase):
 
     def test_video_jobs_require_approved_stills_only_for_execution(self) -> None:
         approvals = pipeline.load_approvals()
+        approvals["stills"].pop("vela")
         dry_run_jobs = pipeline.video_jobs(self.catalogue, approvals, None, None, require_approved=False)
         self.assertEqual(len(dry_run_jobs), 149)
         with self.assertRaisesRegex(pipeline.PipelineError, "No approved idle sprite for vela"):
