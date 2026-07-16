@@ -1,2 +1,6 @@
 -r requirements-animation.txt
 google-genai==2.10.0
+
+# Local Veo-to-WebP conversion also needs the ffmpeg and WebP command-line
+# tools (for example: brew install ffmpeg webp).  No additional Python package
+# is needed beyond the animation stack above.

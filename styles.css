@@ -573,6 +573,12 @@ button { font: inherit; }
 .nix.left { grid-column: 1 / span 3; grid-row: 7 / span 3; }
 .nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; transform: scaleX(-1); }
 .world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
+.world.complete .nix.celebrating {
+  animation: none;
+  filter: none;
+  transform: none;
+}
+.world.complete .nix.right.celebrating { transform: scaleX(-1); }
 
 .oracle {
   z-index: 10;
@@ -925,4 +931,5 @@ button { font: inherit; }
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+  .world.complete .nix { animation: none !important; }
 }

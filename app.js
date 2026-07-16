@@ -52,6 +52,16 @@ const themeColors = {
   deepwater: ["#07151d", "#123f4e", "#55bfd0", "#888cff", "#f6bd63"],
 };
 
+// Scene data can opt into another entry later with `scene.character`.  The
+// current lessons intentionally default to Nix without duplicating metadata.
+const characterAssets = {
+  nix: {
+    idleSrc: "assets/nix.png",
+    successSrc: "assets/nix-success.webp",
+    alt: "Nix, a lantern-moth apprentice",
+  },
+};
+
 const state = {
   exerciseIndex: 0,
   progress: 0,
@@ -81,6 +91,7 @@ function validateExercises(catalog) {
     if (!knownThemes.includes(exercise.scene?.theme)) errors.push(`${prefix}: unknown theme.`);
     if (!knownTemplates.includes(exercise.scene?.template)) errors.push(`${prefix}: unknown template.`);
     if (!["left", "right"].includes(exercise.scene?.codeSide)) errors.push(`${prefix}: invalid code side.`);
+    if (!characterAssets[exercise.scene?.character || "nix"]) errors.push(`${prefix}: unknown character.`);
     if (!Array.isArray(exercise.initialCode) || !exercise.initialCode.length || exercise.initialCode.length > 5) {
       errors.push(`${prefix}: initialCode must contain 1–5 lines.`);
     }
@@ -254,7 +265,9 @@ function renderWorld() {
       <div class="code-body" id="editorMount" aria-label="Vim code editor"></div>
     </div>`;
   const sprites = exercise.scene.blocks.map(renderSprite).join("");
-  const character = `<img class="nix ${exercise.scene.codeSide}" src="assets/nix.png" alt="Nix, a lantern-moth apprentice">`;
+  const characterId = exercise.scene.character || "nix";
+  const characterAsset = characterAssets[characterId];
+  const character = `<img class="nix ${exercise.scene.codeSide}" data-character="${characterId}" src="${characterAsset.idleSrc}" alt="${characterAsset.alt}">`;
   const oracle = `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open in-world help">?</button>`;
   elements.worldGrid.innerHTML = `${sprites}${code}${character}${oracle}`;
   mountEditor();
@@ -406,12 +419,27 @@ function flashKey(button) {
   window.setTimeout(() => button.classList.remove("pressed"), 110);
 }
 
+function playSuccessCharacter() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const character = $(".nix", elements.worldGrid);
+  const asset = characterAssets[character?.dataset.character || ""];
+  if (!character || !asset?.successSrc) return;
+
+  // A fresh image element restarts WebP animation without a cache-busting URL.
+  const celebrating = character.cloneNode();
+  celebrating.src = asset.successSrc;
+  celebrating.alt = `${asset.alt}, celebrating`;
+  celebrating.classList.add("celebrating");
+  character.replaceWith(celebrating);
+}
+
 function finishExercise() {
   state.complete = true;
   vimEngine?.setLocked(true);
   setHelp(false);
   setTheme(currentExercise().scene.theme);
   $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
+  playSuccessCharacter();
   renderMode();
   renderCommand();
   window.setTimeout(renderSuccess, 160);

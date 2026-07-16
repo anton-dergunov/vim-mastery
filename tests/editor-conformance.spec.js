@@ -63,6 +63,38 @@ test.describe("CodeMirror Vim conformance", () => {
     expect(browser.complete).toBe(true);
   });
 
+  test("success replaces Nix with the transparent WebP and reset restores the idle sprite", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
+    await expect(page.locator(".nix")).toHaveClass(/celebrating/);
+    await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix-success\.webp$/);
+
+    await page.locator("#resetButton").click();
+    await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
+    await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix\.png$/);
+  });
+
+  test("success WebP retains right-side mirroring", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      const rightIndex = window.VimWilds.exercises.findIndex(exercise => exercise.scene.codeSide === "right");
+      window.VimWilds.goTo(rightIndex);
+      window.VimWilds.solveCurrent();
+    });
+    await expect(page.locator(".nix.right")).toHaveClass(/celebrating/);
+    await expect(page.locator(".nix.right")).toHaveCSS("transform", "matrix(-1, 0, 0, 1, 0, 0)");
+  });
+
+  test("reduced-motion users retain the static Nix sprite on success", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
+    await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
+    await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix\.png$/);
+  });
+
   test("touch Ctrl+Alt chord retains both modifiers", async ({ page }) => {
     await page.goto("/");
     await page.locator("[data-mod=Ctrl]").first().click();
