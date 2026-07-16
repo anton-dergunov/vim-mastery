@@ -293,8 +293,14 @@
         "path": "assets/characters/nix/animations/joyful-hop.webp",
         "sha256": "9ade756023746840e17af219f5e28c07928da59ad8925ca950e66415ce27b89d",
         "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 2,
+        "path": "assets/characters/nix/animations/magic-flourish.webp",
+        "sha256": "54cbf6a7cbe7ab96bf537ba5926c728fbae1c96503a9c2a6e89ee31bbef0306f",
+        "approved": true
       }
     }
   },
-  "catalogue_sha256": "715bcdd615d29b4a8d6aa89e74d7dc41f4c61c367447f6522e71c3bac48921e0"
+  "catalogue_sha256": "e447b1bf4f347196cac3bc6b6af5e5cff05c57ab937dfe1118998b249c64fb46"
 }

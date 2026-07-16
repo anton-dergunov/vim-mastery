@@ -156,19 +156,30 @@ Background: genuinely transparent if supported; otherwise a completely uniform r
 def video_prompt(catalogue: dict[str, Any], character: dict[str, Any], action: dict[str, Any]) -> str:
     invariants = "; ".join(character["invariants"])
     description = action_description(character, action)
+    action_specific_constraint = ""
+    if character["id"] == "tatter" and action["id"] == "high-jump":
+        action_specific_constraint = (
+            " Tatter makes a strictly vertical in-place hop only: no turn, spin, back view or occlusion. "
+            "Keep the hood, cream face and both amber eyes visible in every frame. "
+            "The final three-quarters of a second holds the exact approved front three-quarter neutral pose, "
+            "with all four arms, two walking legs, needle and spool visible and attached."
+        )
     return f"""Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character {character['name']}, {character['description']}
 Action over exactly four seconds: {description}
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: {invariants}.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described."""
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose.{action_specific_constraint} Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described."""
 
 
 def negative_video_prompt(character: dict[str, Any]) -> str:
     return (
         "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, "
         "new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, "
-        "new props, missing props, mutated anatomy, changed costume, changed face, changed species, "
-        "text, captions, watermark, scenery, floor, realistic texture, photorealism, 3D render, "
+        "new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, "
+        "back-facing turn, back view, "
+        "changed costume, changed face, changed species, "
+        "text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, "
+        "religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, "
         f"anything inconsistent with {character['name']}"
     )
 
@@ -741,15 +752,20 @@ def command_videos(args: argparse.Namespace) -> int:
         )
     if args.max_concurrency < 1 or args.max_concurrency > 2:
         raise PipelineError("--max-concurrency must be 1 or 2")
+    if args.quota_backoff_seconds < 1:
+        raise PipelineError("--quota-backoff-seconds must be at least 1")
     from google.genai import types
 
     client = create_vertex_client(args.project, args.location)
     operations = load_operations(args.artifact_root)
     queue = list(jobs)
     pending: dict[str, tuple[Any, dict[str, Any], dict[str, Any], Path]] = {}
+    retry_after = 0.0
 
     while queue or pending:
         while queue and len(pending) < args.max_concurrency:
+            if time.monotonic() < retry_after:
+                break
             character, action = queue.pop(0)
             key = f"{character['id']}/{action['id']}"
             record = operations["jobs"].get(key)
@@ -767,22 +783,39 @@ def command_videos(args: argparse.Namespace) -> int:
             idle = approved_idle_path(character, approvals)
             prepared = prepare_veo_input(idle, args.artifact_root / "prepared" / f"{character['id']}.png")
             enforce_budget(args.artifact_root, args.budget_usd, unit_cost)
-            operation = client.models.generate_videos(
-                model=catalogue["models"]["video"],
-                prompt=video_prompt(catalogue, character, action),
-                image=types.Image(image_bytes=prepared.read_bytes(), mime_type="image/png"),
-                config=types.GenerateVideosConfig(
-                    number_of_videos=1,
-                    duration_seconds=4,
-                    fps=24,
-                    seed=video_seed(catalogue, character, action),
-                    aspect_ratio="9:16",
-                    resolution="720p",
-                    negative_prompt=negative_video_prompt(character),
-                    generate_audio=False,
-                    resize_mode=types.ImageResizeMode.PAD,
-                ),
-            )
+            try:
+                operation = client.models.generate_videos(
+                    model=catalogue["models"]["video"],
+                    prompt=video_prompt(catalogue, character, action),
+                    image=types.Image(image_bytes=prepared.read_bytes(), mime_type="image/png"),
+                    config=types.GenerateVideosConfig(
+                        number_of_videos=1,
+                        duration_seconds=4,
+                        fps=24,
+                        seed=video_seed(catalogue, character, action),
+                        aspect_ratio="9:16",
+                        resolution="720p",
+                        negative_prompt=negative_video_prompt(character),
+                        generate_audio=False,
+                        resize_mode=types.ImageResizeMode.PAD,
+                    ),
+                )
+            except Exception as error:
+                append_ledger(args.artifact_root, {
+                    "event": "request_rejected", "kind": "video", "character": character["id"],
+                    "animation": action["id"], "model": catalogue["models"]["video"],
+                    "reason": str(error),
+                })
+                if "429" in str(error) or "RESOURCE_EXHAUSTED" in str(error):
+                    queue.insert(0, (character, action))
+                    retry_after = time.monotonic() + args.quota_backoff_seconds
+                    print(
+                        f"Vertex quota temporarily exhausted for {key}; retrying in "
+                        f"{args.quota_backoff_seconds:.0f}s.",
+                        file=sys.stderr,
+                    )
+                    break
+                raise PipelineError(f"Vertex rejected {key}: {error}") from error
             if record and record.get("status") == "completed" and args.retry:
                 append_ledger(args.artifact_root, {
                     "event": "rejected", "kind": "video", "character": character["id"],
@@ -803,6 +836,8 @@ def command_videos(args: argparse.Namespace) -> int:
             print(f"Started {key}: {operation.name}")
 
         if not pending:
+            if retry_after > time.monotonic():
+                time.sleep(min(15, retry_after - time.monotonic()))
             continue
         time.sleep(15)
         for key in list(pending):
@@ -843,7 +878,11 @@ def convert_video_asset(raw_video: Path, idle: Path, master: Path, runtime: Path
         if len(source) != 48:
             raise PipelineError(f"Expected 48 decoded frames for a four-second clip, found {len(source)}")
         background, variation = converter.estimate_background(source)
-        mode = "background" if variation <= 7 else "birefnet"
+        # Locked Veo backdrops can have a small amount of compression noise or
+        # a stray effect at the border.  The component filter removes that
+        # noise, so keep the fast matte for this still-flat range instead of
+        # needlessly loading BiRefNet.
+        mode = "background" if variation <= 12 else "birefnet"
         cleaned = converter.matte_frames(source, background, 7, 16, mode, "auto")
         placement = converter.fit_placement(cleaned, Image.open(idle).convert("RGBA"), 256, 6, "width")
         frames = converter.render_aligned_frames(cleaned, placement, 256)
@@ -1045,6 +1084,10 @@ def build_parser() -> argparse.ArgumentParser:
     videos.add_argument("--rejection-reason", help="Human review reason recorded before a numbered retry")
     videos.add_argument("--budget-usd", type=float, default=DEFAULT_BUDGET)
     videos.add_argument("--max-concurrency", type=int, default=2)
+    videos.add_argument(
+        "--quota-backoff-seconds", type=float, default=60.0,
+        help="Wait this long after a temporary Vertex 429 before retrying (default: 60).",
+    )
     videos.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     videos.add_argument("--project", default=os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID"))
     videos.add_argument("--location", default=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"))

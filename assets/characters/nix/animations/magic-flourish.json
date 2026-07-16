@@ -1,0 +1,43 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "loop": 1,
+  "canvas_size": 350,
+  "base_size": 256,
+  "css_scale": 1.3671875,
+  "border_variation": 10.440306663513184,
+  "runtime_bytes": 2233514,
+  "master_bytes": 2235216,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "first_last_mean_absolute_error": 2.497,
+  "foreground_area_ratio": 1.549,
+  "automatic_review_flags": [
+    "nonuniform-background-required-birefnet",
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "character": "nix",
+  "animation": "magic-flourish",
+  "attempt": 2,
+  "description": "Nix performs controlled signature magic: the lantern releases an asymmetric orbit of three amber fireflies and scattered turquoise motes; the eyes and lantern brighten, with no text, glyph, emblem or geometric symbol; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Nix, A teal-hooded firefly mage and lantern-bearing guide with a shadowed face, two amber eyes, two antennae and two translucent cream wings.\nAction over exactly four seconds: Nix performs controlled signature magic: the lantern releases an asymmetric orbit of three amber fireflies and scattered turquoise motes; the eyes and lantern brighten, with no text, glyph, emblem or geometric symbol; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: dark teal embroidered hood with warm gold trim; exactly two amber eyes and two antennae; exactly two translucent cream wings; dark wooden square-hook lantern staff; teal boots and compact brown travel clothes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2002,
+  "source": "artifacts/character-generation/videos/nix/magic-flourish-attempt-02.mp4",
+  "source_sha256": "cc8ca2e9d0b0dcdbb536e42f6e6a2a1883659f79b3ecef76761bd9a075d775b4",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 2
+}
