@@ -422,7 +422,9 @@ def normalize_idle(raw_path: Path, output: Path, device: str) -> None:
     rgb = np.asarray(image.convert("RGB"), dtype=np.uint8)
     brightness = rgb.mean(axis=2)
     chroma = rgb.max(axis=2) - rgb.min(axis=2)
-    neutral_light = (brightness >= 180) & (chroma <= 12)
+    # Nano Banana's baked checkerboards range from light white through mid-grey;
+    # their border shades can be as low as 150 even when the subject is centred.
+    neutral_light = (brightness >= 140) & (chroma <= 12)
     border = max(4, min(image.width, image.height) // 40)
     border_mask = np.concatenate((
         neutral_light[:border, :].ravel(), neutral_light[-border:, :].ravel(),
