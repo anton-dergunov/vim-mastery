@@ -571,14 +571,14 @@ button { font: inherit; }
   pointer-events: none;
 }
 .nix.left { grid-column: 1 / span 3; grid-row: 7 / span 3; }
-.nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; transform: scaleX(-1); }
+.nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; }
 .world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
 .world.complete .nix.celebrating {
   animation: none;
   filter: none;
-  transform: none;
+  transform: scale(var(--success-canvas-scale, 1));
+  transform-origin: center;
 }
-.world.complete .nix.right.celebrating { transform: scaleX(-1); }
 
 .oracle {
   z-index: 10;

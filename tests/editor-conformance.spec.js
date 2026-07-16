@@ -75,7 +75,7 @@ test.describe("CodeMirror Vim conformance", () => {
     await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix\.png$/);
   });
 
-  test("success WebP retains right-side mirroring", async ({ page }) => {
+  test("success WebP keeps Nix unmirrored on the right side", async ({ page }) => {
     await page.goto("/");
     await page.evaluate(() => {
       const rightIndex = window.VimWilds.exercises.findIndex(exercise => exercise.scene.codeSide === "right");
@@ -83,7 +83,7 @@ test.describe("CodeMirror Vim conformance", () => {
       window.VimWilds.solveCurrent();
     });
     await expect(page.locator(".nix.right")).toHaveClass(/celebrating/);
-    await expect(page.locator(".nix.right")).toHaveCSS("transform", "matrix(-1, 0, 0, 1, 0, 0)");
+    expect(await page.locator(".nix.right").evaluate(element => getComputedStyle(element).transform)).not.toContain("matrix(-");
   });
 
   test("reduced-motion users retain the static Nix sprite on success", async ({ page }) => {

@@ -48,6 +48,8 @@ class Placement:
     scale: float
     x: float
     y: float
+    inset: int
+    canvas_size: int
 
 
 def require_executable(name: str) -> str:
@@ -264,7 +266,7 @@ def alpha_bbox(image: Image.Image, minimum_alpha: int = 1) -> tuple[int, int, in
 
 
 def fit_placement(
-    frames: Sequence[Image.Image], anchor: Image.Image, size: int, padding: int
+    frames: Sequence[Image.Image], anchor: Image.Image, size: int, padding: int, anchor_fit: str = "width"
 ) -> Placement:
     """Align the initial body to the anchor while finding the largest safe scale."""
     anchor_alpha = anchor.convert("RGBA").getchannel("A")
@@ -275,40 +277,42 @@ def fit_placement(
     target_scale = size / anchor.width
     target_center_x = ((anchor_box[0] + anchor_box[2]) / 2) * target_scale
     target_baseline = anchor_box[3] * target_scale
-    desired_scale = ((anchor_box[3] - anchor_box[1]) * target_scale) / (first_body[3] - first_body[1])
+    width_scale = ((anchor_box[2] - anchor_box[0]) * target_scale) / (first_body[2] - first_body[0])
+    height_scale = ((anchor_box[3] - anchor_box[1]) * target_scale) / (first_body[3] - first_body[1])
+    if anchor_fit == "width":
+        desired_scale = width_scale
+    elif anchor_fit == "height":
+        desired_scale = height_scale
+    elif anchor_fit == "area":
+        desired_scale = (width_scale * height_scale) ** 0.5
+    else:
+        raise ConversionError(f"Unknown anchor fit: {anchor_fit}")
     bounds = [alpha_bbox(frame) for frame in frames]
 
-    def placement_at(scale: float) -> Placement:
-        return Placement(
-            scale=scale,
-            x=target_center_x - ((first_body[0] + first_body[2]) / 2) * scale,
-            y=target_baseline - first_body[3] * scale,
-        )
-
-    def fits(scale: float) -> bool:
-        placement = placement_at(scale)
-        for left, top, right, bottom in bounds:
-            if (
-                left * scale + placement.x < padding
-                or right * scale + placement.x > size - padding
-                or top * scale + placement.y < padding
-                or bottom * scale + placement.y > size - padding
-            ):
-                return False
-        return True
-
-    if fits(desired_scale):
-        return placement_at(desired_scale)
-    low, high = 0.0, desired_scale
-    for _ in range(36):
-        midpoint = (low + high) / 2
-        if fits(midpoint):
-            low = midpoint
-        else:
-            high = midpoint
-    if low <= 0.0:
-        raise ConversionError("The requested padding leaves no room for the character")
-    return placement_at(low)
+    x = target_center_x - ((first_body[0] + first_body[2]) / 2) * desired_scale
+    y = target_baseline - first_body[3] * desired_scale
+    minimum_x = min(left * desired_scale + x for left, _, _, _ in bounds)
+    maximum_x = max(right * desired_scale + x for _, _, right, _ in bounds)
+    minimum_y = min(top * desired_scale + y for _, top, _, _ in bounds)
+    maximum_y = max(bottom * desired_scale + y for _, _, _, bottom in bounds)
+    overflow = max(
+        padding - minimum_x,
+        maximum_x - (size - padding),
+        padding - minimum_y,
+        maximum_y - (size - padding),
+        0.0,
+    )
+    # Keep the original logical square centred in a larger transparent canvas.
+    # CSS can scale that canvas by canvas_size / size, so the character retains
+    # its native Veo proportions and anchor-relative on-screen size.
+    inset = int(np.ceil(overflow))
+    return Placement(
+        scale=desired_scale,
+        x=x + inset,
+        y=y + inset,
+        inset=inset,
+        canvas_size=size + inset * 2,
+    )
 
 
 def render_aligned_frames(frames: Sequence[Image.Image], placement: Placement, size: int) -> list[Image.Image]:
@@ -316,7 +320,7 @@ def render_aligned_frames(frames: Sequence[Image.Image], placement: Placement, s
     for frame in frames:
         scaled_size = (max(1, round(frame.width * placement.scale)), max(1, round(frame.height * placement.scale)))
         scaled = frame.resize(scaled_size, Image.Resampling.LANCZOS)
-        canvas = Image.new("RGBA", (size, size))
+        canvas = Image.new("RGBA", (placement.canvas_size, placement.canvas_size))
         canvas.alpha_composite(scaled, (round(placement.x), round(placement.y)))
         alpha = np.asarray(canvas.getchannel("A"), dtype=np.uint8)
         if alpha[0].any() or alpha[-1].any() or alpha[:, 0].any() or alpha[:, -1].any():
@@ -368,7 +372,14 @@ def write_debug(
             {
                 "background_rgb": [round(float(value), 2) for value in background],
                 "border_variation": round(variation, 3),
-                "placement": {"scale": placement.scale, "x": placement.x, "y": placement.y},
+                "placement": {
+                    "scale": placement.scale,
+                    "x": placement.x,
+                    "y": placement.y,
+                    "inset": placement.inset,
+                    "canvas_size": placement.canvas_size,
+                    "css_scale": placement.canvas_size / (placement.canvas_size - placement.inset * 2),
+                },
             },
             indent=2,
         )
@@ -404,12 +415,16 @@ def convert(args: argparse.Namespace) -> Path:
         )
         cleaned = matte_frames(source_frames, background, args.threshold, args.softness, mode, args.device)
         anchor = Image.open(args.anchor).convert("RGBA")
-        placement = fit_placement(cleaned, anchor, args.size, args.padding)
+        placement = fit_placement(cleaned, anchor, args.size, args.padding, args.anchor_fit)
         rendered = render_aligned_frames(cleaned, placement, args.size)
         save_webp(rendered, args.output, args.fps, args.loop)
         if args.debug_dir is not None:
             write_debug(args.debug_dir, source_frames, cleaned, rendered, background, variation, placement)
-    print(f"Saved {args.output} ({len(rendered)} frames at {args.fps} fps, loop={args.loop})")
+    css_scale = rendered[0].size[0] / args.size
+    print(
+        f"Saved {args.output} ({len(rendered)} frames at {args.fps} fps, loop={args.loop}, "
+        f"canvas={rendered[0].size[0]}, css-scale={css_scale:.5f})"
+    )
     return args.output
 
 
@@ -418,9 +433,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("input", type=Path, help="Veo MP4 input")
     parser.add_argument("--anchor", type=Path, required=True, help="Transparent static sprite whose placement to match")
     parser.add_argument("--output", type=Path, required=True, help="Transparent animated WebP output")
-    parser.add_argument("--size", type=int, default=DEFAULT_SIZE, help="Square output size (default: 256)")
+    parser.add_argument("--size", type=int, default=DEFAULT_SIZE, help="Logical square size before transparent safety expansion (default: 256)")
     parser.add_argument("--fps", type=int, default=DEFAULT_FPS, help="Sample/output frame rate (default: 12)")
     parser.add_argument("--padding", type=int, default=6, help="Guaranteed transparent edge padding (default: 6)")
+    parser.add_argument(
+        "--anchor-fit",
+        choices=("width", "height", "area"),
+        default="width",
+        help="Anchor dimension used for uniform Veo sizing (default: width)",
+    )
     parser.add_argument("--loop", type=int, default=1, help="Play count; 0 means loop forever (default: 1)")
     parser.add_argument("--debug-dir", type=Path, help="Write representative mattes, frames, and placement metadata")
     parser.add_argument("--matte-mode", choices=("auto", "background", "birefnet"), default="auto")

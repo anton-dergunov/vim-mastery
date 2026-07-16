@@ -58,6 +58,8 @@ const characterAssets = {
   nix: {
     idleSrc: "assets/nix.png",
     successSrc: "assets/nix-success.webp",
+    // `convert_veo_animation.py` prints this canvas/base-size ratio.
+    successCanvasScale: 1.375,
     alt: "Nix, a lantern-moth apprentice",
   },
 };
@@ -429,6 +431,7 @@ function playSuccessCharacter() {
   const celebrating = character.cloneNode();
   celebrating.src = asset.successSrc;
   celebrating.alt = `${asset.alt}, celebrating`;
+  celebrating.style.setProperty("--success-canvas-scale", String(asset.successCanvasScale || 1));
   celebrating.classList.add("celebrating");
   character.replaceWith(celebrating);
 }

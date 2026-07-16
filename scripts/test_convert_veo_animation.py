@@ -53,8 +53,14 @@ class VeoConversionTests(unittest.TestCase):
         output = converter.render_aligned_frames(frames, placement, 128)
         anchor_box = anchor_sprite().getchannel("A").getbbox()
         first_body = converter.largest_component_bbox(output[0].getchannel("A"))
-        self.assertAlmostEqual((first_body[0] + first_body[2]) / 2, (anchor_box[0] + anchor_box[2]) / 2, delta=2)
-        self.assertAlmostEqual(first_body[3], anchor_box[3], delta=2)
+        self.assertGreaterEqual(placement.canvas_size, 128)
+        self.assertAlmostEqual(
+            (first_body[0] + first_body[2]) / 2,
+            (anchor_box[0] + anchor_box[2]) / 2 + placement.inset,
+            delta=2,
+        )
+        self.assertAlmostEqual(first_body[3], anchor_box[3] + placement.inset, delta=2)
+        self.assertAlmostEqual(first_body[2] - first_body[0], anchor_box[2] - anchor_box[0], delta=2)
         for frame in output:
             alpha = np.asarray(frame.getchannel("A"))
             self.assertFalse(alpha[0].any() or alpha[-1].any() or alpha[:, 0].any() or alpha[:, -1].any())
