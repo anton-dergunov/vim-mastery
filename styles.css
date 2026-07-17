@@ -571,7 +571,7 @@ button { font: inherit; }
   animation: nixIdle 2.4s ease-in-out infinite;
   pointer-events: none;
 }
-.nix.left { --character-facing: -1; position: relative; left: -12px; transform-origin: center; grid-column: 1 / span 3; grid-row: 7 / span 3; }
+.nix.left { --character-facing: -1; position: relative; left: -6px; transform-origin: center; grid-column: 1 / span 3; grid-row: 7 / span 3; }
 .nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; }
 .world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
 .world.complete .nix.celebrating {
