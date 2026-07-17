@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    262,
+    262
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0234375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.4494898319244385,
+  "runtime_bytes": 1564974,
+  "master_bytes": 1569126,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      67,
+      47,
+      195,
+      214
+    ],
+    [
+      66,
+      49,
+      196,
+      219
+    ],
+    [
+      67,
+      54,
+      196,
+      222
+    ],
+    [
+      67,
+      58,
+      196,
+      222
+    ],
+    [
+      67,
+      43,
+      196,
+      221
+    ],
+    [
+      67,
+      41,
+      195,
+      216
+    ],
+    [
+      66,
+      26,
+      195,
+      204
+    ],
+    [
+      59,
+      20,
+      200,
+      199
+    ],
+    [
+      59,
+      17,
+      200,
+      197
+    ],
+    [
+      59,
+      17,
+      200,
+      197
+    ],
+    [
+      59,
+      17,
+      200,
+      196
+    ],
+    [
+      59,
+      17,
+      201,
+      197
+    ],
+    [
+      59,
+      17,
+      200,
+      197
+    ],
+    [
+      59,
+      17,
+      200,
+      197
+    ],
+    [
+      59,
+      17,
+      200,
+      256
+    ],
+    [
+      59,
+      21,
+      200,
+      198
+    ],
+    [
+      59,
+      28,
+      200,
+      206
+    ],
+    [
+      59,
+      36,
+      200,
+      256
+    ],
+    [
+      59,
+      41,
+      200,
+      256
+    ],
+    [
+      60,
+      38,
+      200,
+      255
+    ],
+    [
+      59,
+      31,
+      200,
+      256
+    ],
+    [
+      59,
+      29,
+      200,
+      256
+    ],
+    [
+      65,
+      28,
+      195,
+      256
+    ],
+    [
+      65,
+      30,
+      195,
+      256
+    ],
+    [
+      65,
+      38,
+      195,
+      256
+    ],
+    [
+      68,
+      48,
+      196,
+      221
+    ],
+    [
+      65,
+      52,
+      196,
+      256
+    ],
+    [
+      65,
+      51,
+      196,
+      256
+    ],
+    [
+      65,
+      49,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      196,
+      256
+    ],
+    [
+      65,
+      46,
+      204,
+      255
+    ],
+    [
+      66,
+      46,
+      196,
+      221
+    ],
+    [
+      66,
+      46,
+      196,
+      221
+    ],
+    [
+      66,
+      46,
+      196,
+      221
+    ],
+    [
+      66,
+      46,
+      204,
+      221
+    ],
+    [
+      66,
+      46,
+      204,
+      221
+    ],
+    [
+      66,
+      46,
+      196,
+      221
+    ],
+    [
+      66,
+      46,
+      196,
+      221
+    ],
+    [
+      66,
+      46,
+      204,
+      221
+    ],
+    [
+      66,
+      46,
+      204,
+      221
+    ],
+    [
+      66,
+      46,
+      204,
+      221
+    ],
+    [
+      65,
+      46,
+      204,
+      256
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 7.761,
+  "foreground_area_ratio": 1.115,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "mello",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Mello performs a larger anatomy-appropriate celebratory leap using springy cap bounces, two-foot steps and cheerful lute strums. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Mello lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Mello, A tiny cream-stemmed mushroom bard with amber cap, teal spots, two simple arms and legs, and one leaf lute.\nAction over exactly four seconds: Mello performs a larger anatomy-appropriate celebratory leap using springy cap bounces, two-foot steps and cheerful lute strums. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Mello lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream stem body; amber mushroom cap with teal spots; exactly two arms and two legs; two amber eyes; one small leaf lute.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2905,
+  "source": "artifacts/character-generation/videos/mello/high-jump-attempt-01.mp4",
+  "source_sha256": "be430d9d6f3ef64777b7118ed879bd6877fdfb2f97d780de157fdc47345257d9",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

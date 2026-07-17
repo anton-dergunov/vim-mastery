@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    324,
+    324
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.265625,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1762210,
+  "master_bytes": 1763796,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      237,
+      245
+    ],
+    [
+      71,
+      5,
+      237,
+      314
+    ],
+    [
+      71,
+      5,
+      233,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      233,
+      245
+    ],
+    [
+      71,
+      5,
+      233,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      313
+    ],
+    [
+      71,
+      5,
+      248,
+      313
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      313
+    ],
+    [
+      75,
+      4,
+      248,
+      314
+    ],
+    [
+      75,
+      6,
+      248,
+      314
+    ],
+    [
+      75,
+      6,
+      248,
+      314
+    ],
+    [
+      75,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      5,
+      234,
+      245
+    ],
+    [
+      71,
+      5,
+      234,
+      245
+    ],
+    [
+      71,
+      5,
+      234,
+      245
+    ],
+    [
+      71,
+      5,
+      235,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      245
+    ],
+    [
+      71,
+      6,
+      234,
+      245
+    ],
+    [
+      71,
+      6,
+      237,
+      245
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      6,
+      237,
+      314
+    ],
+    [
+      71,
+      6,
+      237,
+      314
+    ],
+    [
+      71,
+      6,
+      248,
+      314
+    ],
+    [
+      71,
+      5,
+      237,
+      245
+    ],
+    [
+      71,
+      6,
+      248,
+      245
+    ],
+    [
+      72,
+      5,
+      237,
+      245
+    ],
+    [
+      71,
+      6,
+      248,
+      245
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 4,
+  "first_last_mean_absolute_error": 2.384,
+  "foreground_area_ratio": 1.085,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "orin",
+  "animation": "signature-finale",
+  "attempt": 1,
+  "description": "Orin's signature finale: Orin discovers a lost glowing rune, magnifies it, and stamps it found; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Orin, A round navy-and-cream owl archivist with two wing-arms, two taloned feet, one glowing monocular lens and one rolled scroll.\nAction over exactly four seconds: Orin's signature finale: Orin discovers a lost glowing rune, magnifies it, and stamps it found; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: navy plumage with cream brow and chest; exactly two wing-arms and two taloned feet; two amber eyes; one turquoise monocular lens; one rolled scroll.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2309,
+  "source": "artifacts/character-generation/videos/orin/signature-finale-attempt-01.mp4",
+  "source_sha256": "2a7688f7fddeb553a3ebeda9b95aef1c632b031d0abe4d157bccac1e14f3b2d5",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    350,
+    350
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3671875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 8.366600036621094,
+  "runtime_bytes": 1958764,
+  "master_bytes": 1960072,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      84,
+      13,
+      259,
+      340
+    ],
+    [
+      84,
+      13,
+      258,
+      340
+    ],
+    [
+      84,
+      13,
+      256,
+      340
+    ],
+    [
+      84,
+      13,
+      255,
+      340
+    ],
+    [
+      84,
+      13,
+      255,
+      340
+    ],
+    [
+      84,
+      15,
+      269,
+      340
+    ],
+    [
+      84,
+      15,
+      271,
+      340
+    ],
+    [
+      84,
+      15,
+      271,
+      340
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      90,
+      83,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      15,
+      271,
+      339
+    ],
+    [
+      84,
+      8,
+      271,
+      344
+    ],
+    [
+      84,
+      7,
+      271,
+      344
+    ],
+    [
+      84,
+      7,
+      271,
+      344
+    ],
+    [
+      89,
+      7,
+      271,
+      344
+    ],
+    [
+      89,
+      7,
+      271,
+      344
+    ],
+    [
+      89,
+      7,
+      271,
+      344
+    ],
+    [
+      89,
+      7,
+      271,
+      344
+    ],
+    [
+      89,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      85,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      90,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      85,
+      7,
+      271,
+      344
+    ],
+    [
+      92,
+      7,
+      271,
+      344
+    ],
+    [
+      85,
+      7,
+      271,
+      344
+    ],
+    [
+      85,
+      8,
+      271,
+      344
+    ],
+    [
+      85,
+      8,
+      271,
+      344
+    ],
+    [
+      85,
+      8,
+      269,
+      344
+    ],
+    [
+      85,
+      8,
+      269,
+      344
+    ],
+    [
+      85,
+      15,
+      267,
+      344
+    ],
+    [
+      85,
+      15,
+      266,
+      344
+    ],
+    [
+      85,
+      15,
+      266,
+      344
+    ],
+    [
+      85,
+      13,
+      266,
+      344
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 1.133,
+  "foreground_area_ratio": 1.618,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cinder",
+  "animation": "signature-finale",
+  "attempt": 1,
+  "description": "Cinder's signature finale: Cinder coils a controlled flame glyph around the tail and resolves it into a check mark; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cinder, An ember-orange salamander spellcaster with dark teal robe, gold belt, long single tail and compact rune wand.\nAction over exactly four seconds: Cinder's signature finale: Cinder coils a controlled flame glyph around the tail and resolves it into a check mark; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: ember-orange skin; exactly two arms, two legs and one long tail; dark teal robe with gold belt; two amber eyes; one compact dark rune wand.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2409,
+  "source": "artifacts/character-generation/videos/cinder/signature-finale-attempt-01.mp4",
+  "source_sha256": "ee49f6258b3b58106e234386f001af44a7b7d38bc205ee4d2f600e45fcd52976",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

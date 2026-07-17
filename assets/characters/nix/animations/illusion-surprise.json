@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    358,
+    358
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3984375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 4.123105525970459,
+  "runtime_bytes": 2234094,
+  "master_bytes": 2234598,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      93,
+      9,
+      282,
+      264
+    ],
+    [
+      91,
+      9,
+      282,
+      264
+    ],
+    [
+      82,
+      11,
+      282,
+      264
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      264
+    ],
+    [
+      82,
+      9,
+      282,
+      264
+    ],
+    [
+      82,
+      9,
+      282,
+      264
+    ],
+    [
+      82,
+      9,
+      282,
+      264
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      352
+    ],
+    [
+      82,
+      9,
+      282,
+      354
+    ],
+    [
+      82,
+      9,
+      282,
+      354
+    ],
+    [
+      82,
+      47,
+      274,
+      352
+    ],
+    [
+      82,
+      48,
+      275,
+      352
+    ],
+    [
+      82,
+      49,
+      276,
+      352
+    ],
+    [
+      82,
+      47,
+      276,
+      352
+    ],
+    [
+      82,
+      45,
+      273,
+      352
+    ],
+    [
+      82,
+      40,
+      273,
+      352
+    ],
+    [
+      82,
+      37,
+      275,
+      352
+    ],
+    [
+      82,
+      35,
+      276,
+      352
+    ],
+    [
+      82,
+      30,
+      276,
+      352
+    ],
+    [
+      82,
+      30,
+      275,
+      264
+    ],
+    [
+      82,
+      26,
+      273,
+      264
+    ],
+    [
+      82,
+      24,
+      274,
+      352
+    ],
+    [
+      82,
+      23,
+      276,
+      352
+    ],
+    [
+      82,
+      19,
+      276,
+      352
+    ],
+    [
+      82,
+      20,
+      275,
+      352
+    ],
+    [
+      82,
+      17,
+      274,
+      352
+    ],
+    [
+      82,
+      15,
+      273,
+      352
+    ],
+    [
+      82,
+      17,
+      274,
+      352
+    ],
+    [
+      82,
+      71,
+      275,
+      352
+    ],
+    [
+      82,
+      94,
+      275,
+      352
+    ],
+    [
+      82,
+      94,
+      274,
+      352
+    ],
+    [
+      82,
+      94,
+      273,
+      352
+    ],
+    [
+      82,
+      94,
+      273,
+      352
+    ],
+    [
+      82,
+      94,
+      274,
+      352
+    ],
+    [
+      82,
+      94,
+      275,
+      352
+    ],
+    [
+      82,
+      94,
+      275,
+      352
+    ],
+    [
+      82,
+      94,
+      274,
+      352
+    ],
+    [
+      82,
+      94,
+      273,
+      352
+    ],
+    [
+      82,
+      94,
+      273,
+      264
+    ],
+    [
+      82,
+      94,
+      274,
+      352
+    ],
+    [
+      82,
+      94,
+      275,
+      352
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 4,
+  "first_last_mean_absolute_error": 4.306,
+  "foreground_area_ratio": 1.358,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "nix",
+  "animation": "illusion-surprise",
+  "attempt": 1,
+  "description": "Nix conjures a small harmless surprise: three tiny fireflies form a check mark above the lantern; the illusion vanishes cleanly before the approved neutral pose returns.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Nix, A teal-hooded firefly mage and lantern-bearing guide with a shadowed face, two amber eyes, two antennae and two translucent cream wings.\nAction over exactly four seconds: Nix conjures a small harmless surprise: three tiny fireflies form a check mark above the lantern; the illusion vanishes cleanly before the approved neutral pose returns.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: dark teal embroidered hood with warm gold trim; exactly two amber eyes and two antennae; exactly two translucent cream wings; dark wooden square-hook lantern staff; teal boots and compact brown travel clothes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2008,
+  "source": "artifacts/character-generation/videos/nix/illusion-surprise-attempt-01.mp4",
+  "source_sha256": "16cc41529d077f2e7146c0193b045d31d9310c57eeb8c6bd9322ceb840418c67",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

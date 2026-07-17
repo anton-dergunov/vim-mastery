@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    368,
+    368
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.4375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1988018,
+  "master_bytes": 1988252,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      89,
+      15,
+      276,
+      358
+    ],
+    [
+      89,
+      15,
+      276,
+      358
+    ],
+    [
+      89,
+      15,
+      276,
+      358
+    ],
+    [
+      89,
+      15,
+      287,
+      358
+    ],
+    [
+      89,
+      15,
+      287,
+      269
+    ],
+    [
+      89,
+      15,
+      285,
+      269
+    ],
+    [
+      89,
+      15,
+      287,
+      331
+    ],
+    [
+      89,
+      15,
+      287,
+      269
+    ],
+    [
+      89,
+      7,
+      287,
+      337
+    ],
+    [
+      89,
+      15,
+      286,
+      336
+    ],
+    [
+      89,
+      15,
+      287,
+      326
+    ],
+    [
+      91,
+      12,
+      287,
+      327
+    ],
+    [
+      89,
+      14,
+      287,
+      325
+    ],
+    [
+      89,
+      15,
+      286,
+      325
+    ],
+    [
+      89,
+      15,
+      286,
+      338
+    ],
+    [
+      87,
+      10,
+      287,
+      338
+    ],
+    [
+      89,
+      15,
+      287,
+      343
+    ],
+    [
+      89,
+      15,
+      286,
+      360
+    ],
+    [
+      89,
+      15,
+      286,
+      361
+    ],
+    [
+      87,
+      15,
+      287,
+      362
+    ],
+    [
+      87,
+      15,
+      287,
+      360
+    ],
+    [
+      89,
+      15,
+      286,
+      361
+    ],
+    [
+      87,
+      15,
+      286,
+      360
+    ],
+    [
+      87,
+      15,
+      287,
+      356
+    ],
+    [
+      87,
+      13,
+      287,
+      362
+    ],
+    [
+      89,
+      13,
+      286,
+      362
+    ],
+    [
+      89,
+      13,
+      286,
+      360
+    ],
+    [
+      89,
+      13,
+      286,
+      361
+    ],
+    [
+      89,
+      15,
+      285,
+      334
+    ],
+    [
+      89,
+      15,
+      285,
+      334
+    ],
+    [
+      87,
+      15,
+      284,
+      330
+    ],
+    [
+      91,
+      15,
+      284,
+      334
+    ],
+    [
+      89,
+      15,
+      284,
+      355
+    ],
+    [
+      89,
+      15,
+      284,
+      356
+    ],
+    [
+      89,
+      13,
+      284,
+      355
+    ],
+    [
+      89,
+      15,
+      284,
+      362
+    ],
+    [
+      91,
+      15,
+      284,
+      352
+    ],
+    [
+      91,
+      15,
+      284,
+      324
+    ],
+    [
+      99,
+      7,
+      284,
+      329
+    ],
+    [
+      91,
+      15,
+      287,
+      339
+    ],
+    [
+      89,
+      15,
+      285,
+      344
+    ],
+    [
+      89,
+      15,
+      284,
+      338
+    ],
+    [
+      90,
+      11,
+      284,
+      343
+    ],
+    [
+      90,
+      20,
+      284,
+      344
+    ],
+    [
+      88,
+      12,
+      284,
+      354
+    ],
+    [
+      97,
+      11,
+      284,
+      346
+    ],
+    [
+      88,
+      26,
+      286,
+      357
+    ],
+    [
+      97,
+      34,
+      284,
+      334
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 5.439,
+  "foreground_area_ratio": 1.123,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "nix",
+  "animation": "sparkle-applause",
+  "attempt": 1,
+  "description": "Nix gives an anatomy-appropriate round of applause and the square-hook lantern staff bobs without changing shape, accompanied by a restrained burst of amber and turquoise sparks.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Nix, A teal-hooded firefly mage and lantern-bearing guide with a shadowed face, two amber eyes, two antennae and two translucent cream wings.\nAction over exactly four seconds: Nix gives an anatomy-appropriate round of applause and the square-hook lantern staff bobs without changing shape, accompanied by a restrained burst of amber and turquoise sparks.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: dark teal embroidered hood with warm gold trim; exactly two amber eyes and two antennae; exactly two translucent cream wings; dark wooden square-hook lantern staff; teal boots and compact brown travel clothes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2007,
+  "source": "artifacts/character-generation/videos/nix/sparkle-applause-attempt-01.mp4",
+  "source_sha256": "6dadd0c3d39eb1e3211e4f9f9a4e6e6a53ee225f1be9644b8a2a294b4ed263fa",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

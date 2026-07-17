@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    274,
+    274
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0703125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 9.433980941772461,
+  "runtime_bytes": 1636700,
+  "master_bytes": 1637258,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      70,
+      54,
+      204,
+      221
+    ],
+    [
+      70,
+      54,
+      204,
+      221
+    ],
+    [
+      70,
+      54,
+      204,
+      221
+    ],
+    [
+      70,
+      56,
+      206,
+      222
+    ],
+    [
+      62,
+      64,
+      211,
+      231
+    ],
+    [
+      61,
+      71,
+      213,
+      238
+    ],
+    [
+      61,
+      75,
+      213,
+      238
+    ],
+    [
+      61,
+      73,
+      213,
+      238
+    ],
+    [
+      61,
+      58,
+      213,
+      237
+    ],
+    [
+      61,
+      59,
+      213,
+      229
+    ],
+    [
+      61,
+      25,
+      213,
+      219
+    ],
+    [
+      61,
+      22,
+      213,
+      208
+    ],
+    [
+      61,
+      22,
+      213,
+      205
+    ],
+    [
+      61,
+      23,
+      213,
+      204
+    ],
+    [
+      61,
+      23,
+      213,
+      268
+    ],
+    [
+      61,
+      23,
+      213,
+      268
+    ],
+    [
+      61,
+      22,
+      213,
+      204
+    ],
+    [
+      61,
+      22,
+      213,
+      204
+    ],
+    [
+      61,
+      23,
+      213,
+      268
+    ],
+    [
+      61,
+      25,
+      213,
+      268
+    ],
+    [
+      61,
+      26,
+      213,
+      268
+    ],
+    [
+      61,
+      26,
+      213,
+      268
+    ],
+    [
+      61,
+      26,
+      213,
+      268
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      26,
+      213,
+      208
+    ],
+    [
+      61,
+      27,
+      213,
+      209
+    ],
+    [
+      61,
+      40,
+      213,
+      227
+    ],
+    [
+      61,
+      63,
+      213,
+      231
+    ],
+    [
+      61,
+      73,
+      213,
+      238
+    ],
+    [
+      61,
+      77,
+      213,
+      238
+    ],
+    [
+      61,
+      77,
+      213,
+      238
+    ],
+    [
+      61,
+      72,
+      213,
+      238
+    ],
+    [
+      61,
+      66,
+      213,
+      238
+    ],
+    [
+      63,
+      63,
+      213,
+      238
+    ],
+    [
+      67,
+      60,
+      210,
+      238
+    ],
+    [
+      69,
+      57,
+      208,
+      238
+    ],
+    [
+      69,
+      57,
+      206,
+      238
+    ],
+    [
+      70,
+      57,
+      205,
+      238
+    ],
+    [
+      70,
+      56,
+      205,
+      238
+    ],
+    [
+      70,
+      56,
+      205,
+      238
+    ],
+    [
+      70,
+      56,
+      205,
+      238
+    ],
+    [
+      70,
+      56,
+      205,
+      238
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 8.831,
+  "foreground_area_ratio": 1.421,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "mica",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Mica performs a larger anatomy-appropriate celebratory leap using quick bird hops, two-wing flourishes and precise head tilts. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Mica lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Mica, A black-and-cream magpie relic keeper with two wings, two feet, teal hoodlet and one brown crystal satchel.\nAction over exactly four seconds: Mica performs a larger anatomy-appropriate celebratory leap using quick bird hops, two-wing flourishes and precise head tilts. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Mica lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: black-and-cream magpie plumage with subtle blue sheen; exactly two wings and two feet; one teal hoodlet; one brown crystal satchel; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3205,
+  "source": "artifacts/character-generation/videos/mica/high-jump-attempt-01.mp4",
+  "source_sha256": "80db088268161bae8cc088aebbbb1f1ed86e166232f0b51269c3514e0be9e729",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

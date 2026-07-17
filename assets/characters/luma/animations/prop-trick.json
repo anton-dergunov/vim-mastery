@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    256,
+    256
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1046314,
+  "master_bytes": 1048938,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      64,
+      15,
+      194,
+      212
+    ],
+    [
+      86,
+      44,
+      170,
+      212
+    ],
+    [
+      64,
+      15,
+      170,
+      243
+    ],
+    [
+      86,
+      15,
+      194,
+      212
+    ],
+    [
+      86,
+      15,
+      194,
+      212
+    ],
+    [
+      87,
+      44,
+      170,
+      212
+    ],
+    [
+      88,
+      45,
+      170,
+      212
+    ],
+    [
+      67,
+      45,
+      170,
+      243
+    ],
+    [
+      88,
+      45,
+      170,
+      212
+    ],
+    [
+      87,
+      45,
+      170,
+      212
+    ],
+    [
+      81,
+      44,
+      169,
+      212
+    ],
+    [
+      70,
+      45,
+      169,
+      212
+    ],
+    [
+      72,
+      46,
+      170,
+      212
+    ],
+    [
+      81,
+      46,
+      173,
+      212
+    ],
+    [
+      85,
+      15,
+      194,
+      212
+    ],
+    [
+      86,
+      34,
+      174,
+      212
+    ],
+    [
+      67,
+      26,
+      175,
+      243
+    ],
+    [
+      87,
+      21,
+      175,
+      212
+    ],
+    [
+      68,
+      20,
+      175,
+      243
+    ],
+    [
+      68,
+      19,
+      174,
+      243
+    ],
+    [
+      87,
+      19,
+      174,
+      212
+    ],
+    [
+      87,
+      20,
+      175,
+      212
+    ],
+    [
+      87,
+      20,
+      175,
+      212
+    ],
+    [
+      87,
+      20,
+      175,
+      212
+    ],
+    [
+      87,
+      21,
+      175,
+      212
+    ],
+    [
+      87,
+      22,
+      175,
+      212
+    ],
+    [
+      87,
+      25,
+      175,
+      212
+    ],
+    [
+      87,
+      28,
+      175,
+      212
+    ],
+    [
+      87,
+      33,
+      175,
+      212
+    ],
+    [
+      87,
+      39,
+      175,
+      212
+    ],
+    [
+      87,
+      41,
+      175,
+      212
+    ],
+    [
+      87,
+      48,
+      175,
+      212
+    ],
+    [
+      83,
+      48,
+      173,
+      212
+    ],
+    [
+      73,
+      47,
+      172,
+      212
+    ],
+    [
+      74,
+      47,
+      169,
+      212
+    ],
+    [
+      80,
+      46,
+      169,
+      212
+    ],
+    [
+      84,
+      45,
+      169,
+      212
+    ],
+    [
+      85,
+      45,
+      170,
+      212
+    ],
+    [
+      85,
+      45,
+      171,
+      212
+    ],
+    [
+      85,
+      45,
+      170,
+      212
+    ],
+    [
+      85,
+      45,
+      170,
+      212
+    ],
+    [
+      85,
+      44,
+      170,
+      212
+    ],
+    [
+      85,
+      44,
+      170,
+      212
+    ],
+    [
+      86,
+      44,
+      170,
+      212
+    ],
+    [
+      85,
+      44,
+      170,
+      212
+    ],
+    [
+      85,
+      44,
+      170,
+      212
+    ],
+    [
+      85,
+      44,
+      170,
+      212
+    ],
+    [
+      85,
+      44,
+      170,
+      212
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 13,
+  "first_last_mean_absolute_error": 0.799,
+  "foreground_area_ratio": 1.167,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "luma",
+  "animation": "prop-trick",
+  "attempt": 1,
+  "description": "Luma performs a playful expert trick: the crescent compass arcs overhead and lands in the same paw; only the canonical prop is used and it returns to its original place.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Luma, A cream-grey moon hare with two long ears, violet short cape, teal boots and one crescent compass.\nAction over exactly four seconds: Luma performs a playful expert trick: the crescent compass arcs overhead and lands in the same paw; only the canonical prop is used and it returns to its original place.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream-grey fur; exactly two long ears, two arms and two legs; violet short cape; teal boots; one crescent compass.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3304,
+  "source": "artifacts/character-generation/videos/luma/prop-trick-attempt-01.mp4",
+  "source_sha256": "3edd9aa345b88622fae7caf3dad34b19c190eee226cdb44a58feb7c8d3f91cb9",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

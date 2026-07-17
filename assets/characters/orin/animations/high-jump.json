@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    342,
+    342
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3359375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 5.74456262588501,
+  "runtime_bytes": 1901734,
+  "master_bytes": 1901396,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      85,
+      80,
+      246,
+      324
+    ],
+    [
+      77,
+      55,
+      246,
+      325
+    ],
+    [
+      80,
+      7,
+      246,
+      325
+    ],
+    [
+      77,
+      9,
+      255,
+      324
+    ],
+    [
+      84,
+      26,
+      246,
+      325
+    ],
+    [
+      78,
+      7,
+      247,
+      325
+    ],
+    [
+      79,
+      8,
+      246,
+      283
+    ],
+    [
+      83,
+      9,
+      257,
+      272
+    ],
+    [
+      77,
+      9,
+      257,
+      272
+    ],
+    [
+      77,
+      10,
+      257,
+      278
+    ],
+    [
+      77,
+      9,
+      257,
+      296
+    ],
+    [
+      77,
+      11,
+      257,
+      315
+    ],
+    [
+      77,
+      10,
+      257,
+      328
+    ],
+    [
+      77,
+      11,
+      257,
+      327
+    ],
+    [
+      77,
+      24,
+      257,
+      309
+    ],
+    [
+      77,
+      22,
+      257,
+      310
+    ],
+    [
+      77,
+      17,
+      257,
+      321
+    ],
+    [
+      77,
+      9,
+      257,
+      324
+    ],
+    [
+      77,
+      7,
+      257,
+      322
+    ],
+    [
+      77,
+      11,
+      257,
+      326
+    ],
+    [
+      77,
+      15,
+      257,
+      327
+    ],
+    [
+      77,
+      16,
+      257,
+      328
+    ],
+    [
+      77,
+      14,
+      257,
+      327
+    ],
+    [
+      77,
+      13,
+      257,
+      327
+    ],
+    [
+      77,
+      15,
+      257,
+      328
+    ],
+    [
+      77,
+      14,
+      257,
+      313
+    ],
+    [
+      77,
+      15,
+      257,
+      316
+    ],
+    [
+      77,
+      15,
+      257,
+      312
+    ],
+    [
+      78,
+      18,
+      257,
+      315
+    ],
+    [
+      77,
+      18,
+      250,
+      314
+    ],
+    [
+      77,
+      17,
+      257,
+      304
+    ],
+    [
+      77,
+      16,
+      256,
+      305
+    ],
+    [
+      77,
+      16,
+      251,
+      322
+    ],
+    [
+      79,
+      16,
+      253,
+      322
+    ],
+    [
+      79,
+      14,
+      255,
+      321
+    ],
+    [
+      77,
+      12,
+      257,
+      327
+    ],
+    [
+      77,
+      17,
+      257,
+      325
+    ],
+    [
+      77,
+      17,
+      257,
+      315
+    ],
+    [
+      79,
+      7,
+      257,
+      317
+    ],
+    [
+      79,
+      8,
+      256,
+      328
+    ],
+    [
+      77,
+      8,
+      249,
+      321
+    ],
+    [
+      79,
+      8,
+      249,
+      325
+    ],
+    [
+      77,
+      8,
+      257,
+      328
+    ],
+    [
+      77,
+      12,
+      256,
+      328
+    ],
+    [
+      77,
+      14,
+      256,
+      328
+    ],
+    [
+      78,
+      11,
+      254,
+      328
+    ],
+    [
+      80,
+      13,
+      249,
+      324
+    ],
+    [
+      77,
+      12,
+      247,
+      328
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 7.903,
+  "foreground_area_ratio": 1.235,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "orin",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Orin performs a larger anatomy-appropriate celebratory leap using small hops, careful wing gestures and a dignified feather ruffle. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Orin lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Orin, A round navy-and-cream owl archivist with two wing-arms, two taloned feet, one glowing monocular lens and one rolled scroll.\nAction over exactly four seconds: Orin performs a larger anatomy-appropriate celebratory leap using small hops, careful wing gestures and a dignified feather ruffle. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Orin lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: navy plumage with cream brow and chest; exactly two wing-arms and two taloned feet; two amber eyes; one turquoise monocular lens; one rolled scroll.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2305,
+  "source": "artifacts/character-generation/videos/orin/high-jump-attempt-01.mp4",
+  "source_sha256": "383d6019443979edd47a7ff36c78ce8f8dbff4029f060cbc5427d5d30f21a1b5",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    298,
+    298
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1640625,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1673624,
+  "master_bytes": 1675812,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      11,
+      230,
+      292
+    ],
+    [
+      73,
+      89,
+      224,
+      294
+    ],
+    [
+      73,
+      94,
+      224,
+      292
+    ],
+    [
+      72,
+      93,
+      224,
+      293
+    ],
+    [
+      73,
+      79,
+      223,
+      292
+    ],
+    [
+      74,
+      57,
+      222,
+      294
+    ],
+    [
+      74,
+      42,
+      230,
+      294
+    ],
+    [
+      74,
+      43,
+      230,
+      294
+    ],
+    [
+      74,
+      43,
+      230,
+      294
+    ],
+    [
+      74,
+      42,
+      230,
+      294
+    ],
+    [
+      74,
+      43,
+      230,
+      292
+    ],
+    [
+      74,
+      46,
+      230,
+      292
+    ],
+    [
+      74,
+      49,
+      230,
+      292
+    ],
+    [
+      74,
+      48,
+      230,
+      292
+    ],
+    [
+      74,
+      46,
+      230,
+      292
+    ],
+    [
+      73,
+      51,
+      230,
+      292
+    ],
+    [
+      74,
+      50,
+      230,
+      292
+    ],
+    [
+      73,
+      12,
+      230,
+      292
+    ],
+    [
+      73,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      293
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      50,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      49,
+      230,
+      292
+    ],
+    [
+      74,
+      57,
+      229,
+      292
+    ],
+    [
+      70,
+      57,
+      228,
+      292
+    ],
+    [
+      67,
+      56,
+      229,
+      292
+    ],
+    [
+      69,
+      57,
+      228,
+      292
+    ],
+    [
+      74,
+      54,
+      221,
+      292
+    ],
+    [
+      74,
+      55,
+      221,
+      292
+    ],
+    [
+      74,
+      57,
+      221,
+      292
+    ],
+    [
+      74,
+      68,
+      221,
+      292
+    ],
+    [
+      74,
+      68,
+      221,
+      292
+    ],
+    [
+      74,
+      68,
+      221,
+      292
+    ],
+    [
+      74,
+      68,
+      221,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      13,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      293
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      74,
+      12,
+      230,
+      294
+    ],
+    [
+      74,
+      12,
+      230,
+      292
+    ],
+    [
+      70,
+      12,
+      230,
+      292
+    ],
+    [
+      70,
+      12,
+      230,
+      292
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 4,
+  "first_last_mean_absolute_error": 5.022,
+  "foreground_area_ratio": 1.229,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "puddle",
+  "animation": "victory-dance",
+  "attempt": 1,
+  "description": "Puddle performs a short rhythmic victory dance using frog-like crouches, buoyant leg springs and careful two-hand gestures; the stirring rod and closed potion satchel remain secure; the movement stays readable and returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Puddle, A jade frog alchemist with pale throat, amber goggles, teal potion satchel and one short stirring rod.\nAction over exactly four seconds: Puddle performs a short rhythmic victory dance using frog-like crouches, buoyant leg springs and careful two-hand gestures; the stirring rod and closed potion satchel remain secure; the movement stays readable and returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: jade skin with pale throat; exactly two arms and two powerful legs; two amber goggles over two eyes; one teal potion satchel; one short stirring rod.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3001,
+  "source": "artifacts/character-generation/videos/puddle/victory-dance-attempt-01.mp4",
+  "source_sha256": "e7103a54649241e5b75286d64b9516e32d175e1f1b959254308b85dcbe337564",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

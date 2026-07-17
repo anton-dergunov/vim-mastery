@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    350,
+    350
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3671875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 2549232,
+  "master_bytes": 2558128,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      88,
+      94,
+      259,
+      338
+    ],
+    [
+      88,
+      94,
+      259,
+      339
+    ],
+    [
+      88,
+      94,
+      259,
+      339
+    ],
+    [
+      88,
+      78,
+      259,
+      339
+    ],
+    [
+      92,
+      37,
+      259,
+      255
+    ],
+    [
+      88,
+      37,
+      259,
+      339
+    ],
+    [
+      88,
+      38,
+      259,
+      339
+    ],
+    [
+      88,
+      33,
+      259,
+      339
+    ],
+    [
+      88,
+      24,
+      259,
+      339
+    ],
+    [
+      88,
+      14,
+      259,
+      339
+    ],
+    [
+      85,
+      6,
+      258,
+      339
+    ],
+    [
+      85,
+      6,
+      258,
+      339
+    ],
+    [
+      84,
+      6,
+      261,
+      339
+    ],
+    [
+      84,
+      6,
+      262,
+      253
+    ],
+    [
+      84,
+      6,
+      263,
+      339
+    ],
+    [
+      84,
+      6,
+      263,
+      253
+    ],
+    [
+      84,
+      6,
+      263,
+      339
+    ],
+    [
+      84,
+      6,
+      263,
+      339
+    ],
+    [
+      84,
+      6,
+      263,
+      339
+    ],
+    [
+      85,
+      6,
+      262,
+      338
+    ],
+    [
+      85,
+      6,
+      261,
+      339
+    ],
+    [
+      85,
+      6,
+      259,
+      339
+    ],
+    [
+      86,
+      6,
+      258,
+      339
+    ],
+    [
+      86,
+      6,
+      258,
+      339
+    ],
+    [
+      87,
+      7,
+      259,
+      339
+    ],
+    [
+      87,
+      13,
+      259,
+      339
+    ],
+    [
+      87,
+      16,
+      259,
+      338
+    ],
+    [
+      86,
+      24,
+      259,
+      339
+    ],
+    [
+      86,
+      30,
+      259,
+      339
+    ],
+    [
+      86,
+      35,
+      259,
+      339
+    ],
+    [
+      87,
+      35,
+      259,
+      339
+    ],
+    [
+      88,
+      35,
+      259,
+      339
+    ],
+    [
+      88,
+      35,
+      259,
+      338
+    ],
+    [
+      88,
+      35,
+      259,
+      339
+    ],
+    [
+      88,
+      35,
+      259,
+      339
+    ],
+    [
+      88,
+      35,
+      259,
+      339
+    ],
+    [
+      88,
+      35,
+      259,
+      339
+    ],
+    [
+      88,
+      36,
+      259,
+      339
+    ],
+    [
+      88,
+      38,
+      259,
+      339
+    ],
+    [
+      88,
+      41,
+      259,
+      339
+    ],
+    [
+      88,
+      43,
+      259,
+      339
+    ],
+    [
+      86,
+      44,
+      259,
+      341
+    ],
+    [
+      84,
+      94,
+      259,
+      341
+    ],
+    [
+      84,
+      94,
+      259,
+      341
+    ],
+    [
+      84,
+      94,
+      260,
+      341
+    ],
+    [
+      86,
+      94,
+      262,
+      341
+    ],
+    [
+      81,
+      94,
+      262,
+      341
+    ],
+    [
+      80,
+      94,
+      264,
+      339
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 5.587,
+  "foreground_area_ratio": 2.139,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "tatter",
+  "animation": "magic-flourish",
+  "attempt": 1,
+  "description": "Tatter performs controlled signature magic: teal thread stitches an amber edit rune in the air; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Tatter, An indigo fantasy spider tailor with exactly four arms and two walking legs, warm cream face, golden needle and teal thread spool.\nAction over exactly four seconds: Tatter performs controlled signature magic: teal thread stitches an amber edit rune in the air; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: exactly four arms and two walking legs; indigo body with warm cream face; two amber eyes; one golden needle; one teal thread spool.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2202,
+  "source": "artifacts/character-generation/videos/tatter/magic-flourish-attempt-01.mp4",
+  "source_sha256": "3d5a8beb8ba4ba0318881475f4b8e3b025d693ced75722e46f642fab1134fe26",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    342,
+    342
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3359375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1911336,
+  "master_bytes": 1911854,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      81,
+      9,
+      266,
+      272
+    ],
+    [
+      81,
+      9,
+      266,
+      271
+    ],
+    [
+      77,
+      9,
+      266,
+      333
+    ],
+    [
+      77,
+      9,
+      266,
+      336
+    ],
+    [
+      78,
+      9,
+      265,
+      338
+    ],
+    [
+      77,
+      70,
+      253,
+      338
+    ],
+    [
+      77,
+      11,
+      255,
+      336
+    ],
+    [
+      79,
+      72,
+      253,
+      336
+    ],
+    [
+      81,
+      9,
+      266,
+      336
+    ],
+    [
+      81,
+      9,
+      250,
+      335
+    ],
+    [
+      81,
+      9,
+      251,
+      335
+    ],
+    [
+      79,
+      9,
+      261,
+      335
+    ],
+    [
+      81,
+      9,
+      252,
+      335
+    ],
+    [
+      81,
+      9,
+      252,
+      330
+    ],
+    [
+      80,
+      11,
+      253,
+      335
+    ],
+    [
+      80,
+      11,
+      257,
+      334
+    ],
+    [
+      80,
+      11,
+      262,
+      336
+    ],
+    [
+      81,
+      11,
+      266,
+      336
+    ],
+    [
+      81,
+      11,
+      265,
+      334
+    ],
+    [
+      81,
+      11,
+      266,
+      334
+    ],
+    [
+      80,
+      11,
+      266,
+      334
+    ],
+    [
+      80,
+      11,
+      265,
+      334
+    ],
+    [
+      80,
+      11,
+      263,
+      334
+    ],
+    [
+      80,
+      11,
+      261,
+      334
+    ],
+    [
+      80,
+      11,
+      260,
+      336
+    ],
+    [
+      80,
+      11,
+      257,
+      336
+    ],
+    [
+      77,
+      11,
+      258,
+      336
+    ],
+    [
+      77,
+      11,
+      259,
+      336
+    ],
+    [
+      80,
+      11,
+      257,
+      336
+    ],
+    [
+      80,
+      11,
+      255,
+      334
+    ],
+    [
+      80,
+      11,
+      254,
+      285
+    ],
+    [
+      80,
+      11,
+      253,
+      284
+    ],
+    [
+      80,
+      11,
+      253,
+      254
+    ],
+    [
+      77,
+      11,
+      254,
+      254
+    ],
+    [
+      77,
+      45,
+      257,
+      254
+    ],
+    [
+      77,
+      11,
+      260,
+      254
+    ],
+    [
+      77,
+      11,
+      260,
+      254
+    ],
+    [
+      77,
+      11,
+      260,
+      254
+    ],
+    [
+      77,
+      11,
+      260,
+      254
+    ],
+    [
+      77,
+      11,
+      259,
+      254
+    ],
+    [
+      77,
+      9,
+      266,
+      254
+    ],
+    [
+      77,
+      11,
+      255,
+      254
+    ],
+    [
+      77,
+      11,
+      254,
+      254
+    ],
+    [
+      77,
+      9,
+      253,
+      254
+    ],
+    [
+      77,
+      11,
+      250,
+      254
+    ],
+    [
+      77,
+      9,
+      249,
+      254
+    ],
+    [
+      77,
+      9,
+      248,
+      254
+    ],
+    [
+      77,
+      11,
+      247,
+      254
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 4,
+  "first_last_mean_absolute_error": 3.447,
+  "foreground_area_ratio": 1.644,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cinder",
+  "animation": "magic-flourish",
+  "attempt": 2,
+  "description": "Cinder performs controlled signature magic: the wand writes a clean amber command glyph inside a turquoise ring; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cinder, An ember-orange salamander spellcaster with dark teal robe, gold belt, long single tail and compact rune wand.\nAction over exactly four seconds: Cinder performs controlled signature magic: the wand writes a clean amber command glyph inside a turquoise ring; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: ember-orange skin; exactly two arms, two legs and one long tail; dark teal robe with gold belt; two amber eyes; one compact dark rune wand.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Cinder's rune wand sends one small turquoise block-cursor-shaped light past three separate amber motes. The motes never join into a glyph, diagram, letter, icon or geometric symbol. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2402,
+  "source": "artifacts/character-generation/videos/cinder/magic-flourish-attempt-02.mp4",
+  "source_sha256": "26334e81956fdcc16c661171e0632525dccde87535f4b9ead5a3756e9034ca33",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 2
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    270,
+    270
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0546875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1493024,
+  "master_bytes": 1496536,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      260
+    ],
+    [
+      69,
+      13,
+      207,
+      263
+    ],
+    [
+      67,
+      13,
+      207,
+      263
+    ],
+    [
+      65,
+      13,
+      207,
+      263
+    ],
+    [
+      67,
+      30,
+      207,
+      263
+    ],
+    [
+      63,
+      40,
+      207,
+      263
+    ],
+    [
+      63,
+      51,
+      207,
+      263
+    ],
+    [
+      63,
+      51,
+      202,
+      263
+    ],
+    [
+      63,
+      51,
+      207,
+      262
+    ],
+    [
+      63,
+      13,
+      207,
+      261
+    ],
+    [
+      63,
+      51,
+      207,
+      260
+    ],
+    [
+      63,
+      51,
+      207,
+      260
+    ],
+    [
+      63,
+      51,
+      207,
+      260
+    ],
+    [
+      63,
+      51,
+      203,
+      260
+    ],
+    [
+      63,
+      13,
+      207,
+      260
+    ],
+    [
+      63,
+      13,
+      207,
+      263
+    ],
+    [
+      63,
+      13,
+      207,
+      263
+    ],
+    [
+      63,
+      51,
+      203,
+      263
+    ],
+    [
+      69,
+      26,
+      207,
+      263
+    ],
+    [
+      69,
+      26,
+      207,
+      263
+    ],
+    [
+      71,
+      27,
+      204,
+      263
+    ],
+    [
+      69,
+      13,
+      207,
+      263
+    ],
+    [
+      68,
+      13,
+      207,
+      263
+    ],
+    [
+      67,
+      22,
+      207,
+      263
+    ],
+    [
+      67,
+      19,
+      202,
+      263
+    ],
+    [
+      67,
+      13,
+      207,
+      263
+    ],
+    [
+      67,
+      18,
+      207,
+      262
+    ],
+    [
+      68,
+      18,
+      206,
+      262
+    ],
+    [
+      68,
+      15,
+      207,
+      263
+    ],
+    [
+      68,
+      15,
+      206,
+      263
+    ],
+    [
+      68,
+      12,
+      207,
+      263
+    ],
+    [
+      65,
+      11,
+      207,
+      263
+    ],
+    [
+      63,
+      7,
+      205,
+      263
+    ],
+    [
+      68,
+      7,
+      207,
+      262
+    ],
+    [
+      65,
+      7,
+      206,
+      262
+    ],
+    [
+      65,
+      7,
+      207,
+      260
+    ],
+    [
+      64,
+      7,
+      207,
+      259
+    ],
+    [
+      67,
+      12,
+      204,
+      262
+    ],
+    [
+      64,
+      7,
+      198,
+      262
+    ],
+    [
+      67,
+      7,
+      198,
+      260
+    ],
+    [
+      67,
+      7,
+      198,
+      262
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 4.083,
+  "foreground_area_ratio": 1.118,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "mello",
+  "animation": "prop-trick",
+  "attempt": 1,
+  "description": "Mello performs a playful expert trick: the leaf lute turns once in the hands and lands ready to play; only the canonical prop is used and it returns to its original place.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Mello, A tiny cream-stemmed mushroom bard with amber cap, teal spots, two simple arms and legs, and one leaf lute.\nAction over exactly four seconds: Mello performs a playful expert trick: the leaf lute turns once in the hands and lands ready to play; only the canonical prop is used and it returns to its original place.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream stem body; amber mushroom cap with teal spots; exactly two arms and two legs; two amber eyes; one small leaf lute.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2904,
+  "source": "artifacts/character-generation/videos/mello/prop-trick-attempt-01.mp4",
+  "source_sha256": "486bca97e9cb30789ccc02d0678fddff5e42b8fe87493e7edc48d270de09cc0b",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

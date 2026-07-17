@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    308,
+    308
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.203125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 2006204,
+  "master_bytes": 2008540,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      78,
+      7,
+      239,
+      246
+    ],
+    [
+      78,
+      7,
+      239,
+      249
+    ],
+    [
+      78,
+      7,
+      239,
+      254
+    ],
+    [
+      78,
+      7,
+      239,
+      259
+    ],
+    [
+      78,
+      7,
+      239,
+      263
+    ],
+    [
+      78,
+      71,
+      229,
+      266
+    ],
+    [
+      78,
+      71,
+      229,
+      264
+    ],
+    [
+      78,
+      71,
+      229,
+      266
+    ],
+    [
+      78,
+      71,
+      229,
+      268
+    ],
+    [
+      78,
+      71,
+      229,
+      270
+    ],
+    [
+      77,
+      72,
+      232,
+      272
+    ],
+    [
+      69,
+      73,
+      234,
+      273
+    ],
+    [
+      68,
+      70,
+      236,
+      273
+    ],
+    [
+      68,
+      69,
+      237,
+      273
+    ],
+    [
+      68,
+      67,
+      238,
+      263
+    ],
+    [
+      68,
+      67,
+      238,
+      262
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      251
+    ],
+    [
+      68,
+      9,
+      239,
+      252
+    ],
+    [
+      68,
+      9,
+      239,
+      252
+    ],
+    [
+      68,
+      10,
+      239,
+      252
+    ],
+    [
+      68,
+      10,
+      239,
+      251
+    ],
+    [
+      68,
+      10,
+      239,
+      302
+    ],
+    [
+      70,
+      69,
+      232,
+      302
+    ],
+    [
+      74,
+      69,
+      231,
+      302
+    ],
+    [
+      76,
+      69,
+      230,
+      302
+    ],
+    [
+      76,
+      68,
+      230,
+      302
+    ],
+    [
+      76,
+      68,
+      230,
+      302
+    ],
+    [
+      76,
+      68,
+      230,
+      302
+    ],
+    [
+      76,
+      68,
+      230,
+      302
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 4.987,
+  "foreground_area_ratio": 1.172,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cairn",
+  "animation": "illusion-surprise",
+  "attempt": 1,
+  "description": "Cairn conjures a small harmless surprise: a tiny stone arch rises, salutes, and sinks away; the illusion vanishes cleanly before the approved neutral pose returns.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.\nAction over exactly four seconds: Cairn conjures a small harmless surprise: a tiny stone arch rises, salutes, and sinks away; the illusion vanishes cleanly before the approved neutral pose returns.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2808,
+  "source": "artifacts/character-generation/videos/cairn/illusion-surprise-attempt-01.mp4",
+  "source_sha256": "3cf3ca7eb900345eca4363761e41210a3e0217f6a32d6f2078bf54c212ac24a3",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

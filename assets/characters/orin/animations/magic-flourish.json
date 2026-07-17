@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    326,
+    326
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.2734375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1748128,
+  "master_bytes": 1751454,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      5,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      301
+    ],
+    [
+      73,
+      6,
+      249,
+      313
+    ],
+    [
+      73,
+      6,
+      249,
+      316
+    ],
+    [
+      73,
+      6,
+      249,
+      303
+    ],
+    [
+      71,
+      6,
+      233,
+      316
+    ],
+    [
+      71,
+      7,
+      233,
+      316
+    ],
+    [
+      71,
+      6,
+      249,
+      320
+    ],
+    [
+      71,
+      6,
+      249,
+      320
+    ],
+    [
+      71,
+      6,
+      249,
+      320
+    ],
+    [
+      71,
+      6,
+      249,
+      320
+    ],
+    [
+      70,
+      6,
+      249,
+      320
+    ],
+    [
+      69,
+      6,
+      249,
+      320
+    ],
+    [
+      69,
+      5,
+      249,
+      320
+    ],
+    [
+      69,
+      7,
+      249,
+      320
+    ],
+    [
+      69,
+      6,
+      249,
+      320
+    ],
+    [
+      69,
+      6,
+      233,
+      320
+    ],
+    [
+      69,
+      7,
+      233,
+      320
+    ],
+    [
+      69,
+      7,
+      233,
+      320
+    ],
+    [
+      69,
+      7,
+      240,
+      320
+    ],
+    [
+      72,
+      6,
+      249,
+      320
+    ],
+    [
+      82,
+      7,
+      249,
+      320
+    ],
+    [
+      82,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      242,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      7,
+      249,
+      320
+    ],
+    [
+      72,
+      6,
+      249,
+      320
+    ],
+    [
+      72,
+      6,
+      249,
+      320
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      317
+    ],
+    [
+      72,
+      6,
+      249,
+      317
+    ],
+    [
+      72,
+      6,
+      249,
+      315
+    ],
+    [
+      72,
+      6,
+      249,
+      315
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 6.279,
+  "foreground_area_ratio": 1.095,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "orin",
+  "animation": "magic-flourish",
+  "attempt": 1,
+  "description": "Orin performs controlled signature magic: the lens reveals a hidden violet rune and frames it in amber light; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Orin, A round navy-and-cream owl archivist with two wing-arms, two taloned feet, one glowing monocular lens and one rolled scroll.\nAction over exactly four seconds: Orin performs controlled signature magic: the lens reveals a hidden violet rune and frames it in amber light; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: navy plumage with cream brow and chest; exactly two wing-arms and two taloned feet; two amber eyes; one turquoise monocular lens; one rolled scroll.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2302,
+  "source": "artifacts/character-generation/videos/orin/magic-flourish-attempt-01.mp4",
+  "source_sha256": "ae406de2dfb38d7946c5140dfc8b33e6b37613b82ff8e8949fa43dc7afb47cdc",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    298,
+    298
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1640625,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1756376,
+  "master_bytes": 1760450,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      69,
+      11,
+      230,
+      289
+    ],
+    [
+      71,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      290
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      289
+    ],
+    [
+      68,
+      12,
+      230,
+      259
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      75,
+      12,
+      230,
+      289
+    ],
+    [
+      77,
+      12,
+      230,
+      270
+    ],
+    [
+      77,
+      12,
+      230,
+      292
+    ],
+    [
+      77,
+      12,
+      230,
+      292
+    ],
+    [
+      77,
+      65,
+      220,
+      291
+    ],
+    [
+      77,
+      65,
+      220,
+      271
+    ],
+    [
+      77,
+      65,
+      220,
+      284
+    ],
+    [
+      77,
+      6,
+      221,
+      284
+    ],
+    [
+      77,
+      6,
+      230,
+      284
+    ],
+    [
+      77,
+      6,
+      221,
+      284
+    ],
+    [
+      77,
+      65,
+      221,
+      233
+    ],
+    [
+      77,
+      65,
+      221,
+      233
+    ],
+    [
+      77,
+      65,
+      221,
+      233
+    ],
+    [
+      77,
+      65,
+      221,
+      233
+    ],
+    [
+      71,
+      12,
+      220,
+      290
+    ],
+    [
+      71,
+      12,
+      220,
+      289
+    ],
+    [
+      71,
+      12,
+      220,
+      290
+    ],
+    [
+      75,
+      65,
+      220,
+      289
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 1.523,
+  "foreground_area_ratio": 1.171,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "bramble",
+  "animation": "magic-flourish",
+  "attempt": 1,
+  "description": "Bramble performs controlled signature magic: the shield projects nested turquoise structural wards; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Bramble, A charcoal-and-cream badger wardkeeper with broad paws, moss cape, amber clasp and one round rune shield.\nAction over exactly four seconds: Bramble performs controlled signature magic: the shield projects nested turquoise structural wards; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: charcoal fur with cream facial stripes and chest; exactly two arms and two legs; moss-green cape with amber clasp; one round rune shield; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3102,
+  "source": "artifacts/character-generation/videos/bramble/magic-flourish-attempt-01.mp4",
+  "source_sha256": "3081a4b90f3223410857b988da0be48c262ff5b4c15f9b76c234e55507fd9e45",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

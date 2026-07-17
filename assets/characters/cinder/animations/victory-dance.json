@@ -1,0 +1,356 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    350,
+    350
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3671875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1627930,
+  "master_bytes": 1629974,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      90,
+      14,
+      271,
+      338
+    ],
+    [
+      92,
+      14,
+      271,
+      256
+    ],
+    [
+      89,
+      14,
+      271,
+      253
+    ],
+    [
+      88,
+      14,
+      271,
+      253
+    ],
+    [
+      81,
+      14,
+      271,
+      253
+    ],
+    [
+      81,
+      14,
+      271,
+      253
+    ],
+    [
+      81,
+      14,
+      271,
+      330
+    ],
+    [
+      81,
+      14,
+      271,
+      330
+    ],
+    [
+      86,
+      14,
+      271,
+      332
+    ],
+    [
+      94,
+      34,
+      271,
+      333
+    ],
+    [
+      103,
+      14,
+      271,
+      325
+    ],
+    [
+      104,
+      14,
+      271,
+      331
+    ],
+    [
+      105,
+      34,
+      271,
+      335
+    ],
+    [
+      105,
+      14,
+      270,
+      334
+    ],
+    [
+      90,
+      14,
+      270,
+      338
+    ],
+    [
+      105,
+      14,
+      271,
+      338
+    ],
+    [
+      105,
+      14,
+      271,
+      340
+    ],
+    [
+      105,
+      12,
+      271,
+      338
+    ],
+    [
+      105,
+      14,
+      271,
+      340
+    ],
+    [
+      81,
+      14,
+      271,
+      339
+    ],
+    [
+      83,
+      34,
+      271,
+      341
+    ],
+    [
+      87,
+      34,
+      271,
+      338
+    ],
+    [
+      93,
+      34,
+      271,
+      338
+    ],
+    [
+      81,
+      34,
+      271,
+      338
+    ],
+    [
+      81,
+      34,
+      271,
+      335
+    ],
+    [
+      81,
+      34,
+      271,
+      338
+    ],
+    [
+      82,
+      15,
+      271,
+      337
+    ],
+    [
+      81,
+      34,
+      269,
+      339
+    ],
+    [
+      82,
+      14,
+      271,
+      342
+    ],
+    [
+      81,
+      14,
+      271,
+      342
+    ],
+    [
+      81,
+      34,
+      270,
+      341
+    ],
+    [
+      81,
+      34,
+      271,
+      341
+    ],
+    [
+      81,
+      14,
+      271,
+      343
+    ],
+    [
+      81,
+      34,
+      271,
+      343
+    ],
+    [
+      82,
+      34,
+      271,
+      343
+    ],
+    [
+      83,
+      34,
+      271,
+      343
+    ],
+    [
+      81,
+      34,
+      271,
+      343
+    ],
+    [
+      81,
+      34,
+      271,
+      343
+    ],
+    [
+      81,
+      34,
+      271,
+      343
+    ],
+    [
+      82,
+      34,
+      271,
+      343
+    ],
+    [
+      82,
+      34,
+      244,
+      343
+    ],
+    [
+      86,
+      34,
+      244,
+      343
+    ],
+    [
+      86,
+      34,
+      246,
+      343
+    ],
+    [
+      97,
+      34,
+      247,
+      342
+    ],
+    [
+      110,
+      92,
+      240,
+      342
+    ],
+    [
+      110,
+      92,
+      215,
+      335
+    ],
+    [
+      110,
+      92,
+      215,
+      340
+    ],
+    [
+      110,
+      92,
+      218,
+      341
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 5.403,
+  "foreground_area_ratio": 1.495,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": [
+      [
+        0.3,
+        0.03,
+        0.4,
+        0.06
+      ]
+    ]
+  },
+  "character": "cinder",
+  "animation": "victory-dance",
+  "attempt": 1,
+  "description": "Cinder performs a short rhythmic victory dance using springy steps, one tail curl and precise wand gestures; the rune wand turns once without leaving the hand; the movement stays readable and returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cinder, An ember-orange salamander spellcaster with dark teal robe, gold belt, long single tail and compact rune wand.\nAction over exactly four seconds: Cinder performs a short rhythmic victory dance using springy steps, one tail curl and precise wand gestures; the rune wand turns once without leaving the hand; the movement stays readable and returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: ember-orange skin; exactly two arms, two legs and one long tail; dark teal robe with gold belt; two amber eyes; one compact dark rune wand.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2401,
+  "source": "artifacts/character-generation/videos/cinder/victory-dance-attempt-01.mp4",
+  "source_sha256": "2a02c9175c02ec23775801d742ccb7f7f4b63cc9cfe9ca78fe18e4ee14de491a",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

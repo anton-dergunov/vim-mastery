@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    340,
+    340
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.328125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1868086,
+  "master_bytes": 1869804,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      78,
+      7,
+      265,
+      333
+    ],
+    [
+      78,
+      9,
+      265,
+      333
+    ],
+    [
+      78,
+      9,
+      265,
+      333
+    ],
+    [
+      79,
+      7,
+      265,
+      333
+    ],
+    [
+      78,
+      7,
+      265,
+      333
+    ],
+    [
+      78,
+      9,
+      265,
+      334
+    ],
+    [
+      78,
+      9,
+      265,
+      333
+    ],
+    [
+      79,
+      7,
+      265,
+      333
+    ],
+    [
+      78,
+      7,
+      265,
+      333
+    ],
+    [
+      78,
+      7,
+      265,
+      334
+    ],
+    [
+      78,
+      9,
+      265,
+      334
+    ],
+    [
+      78,
+      9,
+      265,
+      334
+    ],
+    [
+      79,
+      9,
+      265,
+      334
+    ],
+    [
+      79,
+      9,
+      264,
+      333
+    ],
+    [
+      79,
+      9,
+      264,
+      333
+    ],
+    [
+      79,
+      9,
+      264,
+      334
+    ],
+    [
+      79,
+      9,
+      265,
+      334
+    ],
+    [
+      79,
+      9,
+      265,
+      334
+    ],
+    [
+      79,
+      9,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      333
+    ],
+    [
+      79,
+      7,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      334
+    ],
+    [
+      79,
+      9,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      334
+    ],
+    [
+      79,
+      7,
+      265,
+      336
+    ],
+    [
+      79,
+      7,
+      265,
+      336
+    ],
+    [
+      79,
+      7,
+      265,
+      336
+    ],
+    [
+      79,
+      7,
+      265,
+      336
+    ],
+    [
+      76,
+      7,
+      258,
+      336
+    ],
+    [
+      75,
+      9,
+      265,
+      336
+    ],
+    [
+      75,
+      9,
+      265,
+      336
+    ],
+    [
+      75,
+      10,
+      265,
+      336
+    ],
+    [
+      75,
+      10,
+      265,
+      336
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      7,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      7,
+      265,
+      334
+    ],
+    [
+      75,
+      7,
+      265,
+      333
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ],
+    [
+      75,
+      9,
+      265,
+      334
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 4,
+  "first_last_mean_absolute_error": 9.319,
+  "foreground_area_ratio": 1.28,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "tatter",
+  "animation": "victory-dance",
+  "attempt": 1,
+  "description": "Tatter performs a short rhythmic victory dance using coordinated four-hand gestures and two-leg bouncing without adding limbs; the needle and spool exchange between existing hands only; the movement stays readable and returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Tatter, An indigo fantasy spider tailor with exactly four arms and two walking legs, warm cream face, golden needle and teal thread spool.\nAction over exactly four seconds: Tatter performs a short rhythmic victory dance using coordinated four-hand gestures and two-leg bouncing without adding limbs; the needle and spool exchange between existing hands only; the movement stays readable and returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: exactly four arms and two walking legs; indigo body with warm cream face; two amber eyes; one golden needle; one teal thread spool.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2201,
+  "source": "artifacts/character-generation/videos/tatter/victory-dance-attempt-01.mp4",
+  "source_sha256": "48f432a2f7055f04c6da0bf54188aafca2387f85e96809f8fb0533df4cf3c69a",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

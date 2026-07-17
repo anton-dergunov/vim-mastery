@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    256,
+    256
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1036492,
+  "master_bytes": 1037588,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      64,
+      14,
+      171,
+      242
+    ],
+    [
+      65,
+      14,
+      171,
+      242
+    ],
+    [
+      65,
+      14,
+      171,
+      242
+    ],
+    [
+      64,
+      14,
+      171,
+      242
+    ],
+    [
+      64,
+      14,
+      171,
+      242
+    ],
+    [
+      82,
+      49,
+      174,
+      211
+    ],
+    [
+      64,
+      14,
+      177,
+      211
+    ],
+    [
+      64,
+      14,
+      178,
+      242
+    ],
+    [
+      64,
+      14,
+      178,
+      211
+    ],
+    [
+      64,
+      14,
+      178,
+      211
+    ],
+    [
+      64,
+      14,
+      178,
+      211
+    ],
+    [
+      68,
+      50,
+      177,
+      242
+    ],
+    [
+      68,
+      44,
+      177,
+      242
+    ],
+    [
+      80,
+      41,
+      180,
+      201
+    ],
+    [
+      86,
+      31,
+      187,
+      188
+    ],
+    [
+      68,
+      23,
+      193,
+      242
+    ],
+    [
+      90,
+      21,
+      195,
+      173
+    ],
+    [
+      90,
+      21,
+      195,
+      173
+    ],
+    [
+      90,
+      22,
+      195,
+      173
+    ],
+    [
+      90,
+      22,
+      195,
+      173
+    ],
+    [
+      90,
+      23,
+      195,
+      173
+    ],
+    [
+      90,
+      23,
+      195,
+      173
+    ],
+    [
+      90,
+      23,
+      195,
+      173
+    ],
+    [
+      68,
+      23,
+      195,
+      242
+    ],
+    [
+      68,
+      23,
+      195,
+      242
+    ],
+    [
+      68,
+      23,
+      194,
+      242
+    ],
+    [
+      68,
+      22,
+      195,
+      242
+    ],
+    [
+      68,
+      23,
+      195,
+      242
+    ],
+    [
+      68,
+      26,
+      195,
+      242
+    ],
+    [
+      67,
+      34,
+      195,
+      242
+    ],
+    [
+      67,
+      50,
+      195,
+      242
+    ],
+    [
+      67,
+      52,
+      195,
+      242
+    ],
+    [
+      67,
+      52,
+      195,
+      242
+    ],
+    [
+      67,
+      51,
+      195,
+      242
+    ],
+    [
+      67,
+      50,
+      195,
+      242
+    ],
+    [
+      67,
+      49,
+      193,
+      242
+    ],
+    [
+      67,
+      44,
+      187,
+      242
+    ],
+    [
+      67,
+      41,
+      185,
+      242
+    ],
+    [
+      67,
+      40,
+      179,
+      242
+    ],
+    [
+      67,
+      39,
+      172,
+      242
+    ],
+    [
+      67,
+      39,
+      171,
+      242
+    ],
+    [
+      87,
+      39,
+      171,
+      211
+    ],
+    [
+      87,
+      39,
+      171,
+      211
+    ],
+    [
+      67,
+      39,
+      171,
+      242
+    ],
+    [
+      67,
+      39,
+      171,
+      242
+    ],
+    [
+      67,
+      39,
+      171,
+      242
+    ],
+    [
+      67,
+      39,
+      171,
+      242
+    ],
+    [
+      67,
+      39,
+      171,
+      242
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 14,
+  "first_last_mean_absolute_error": 3.168,
+  "foreground_area_ratio": 1.219,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "luma",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Luma performs a larger anatomy-appropriate celebratory leap using high hare hops, long-ear follow-through and one cape flutter. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Luma lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Luma, A cream-grey moon hare with two long ears, violet short cape, teal boots and one crescent compass.\nAction over exactly four seconds: Luma performs a larger anatomy-appropriate celebratory leap using high hare hops, long-ear follow-through and one cape flutter. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Luma lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream-grey fur; exactly two long ears, two arms and two legs; violet short cape; teal boots; one crescent compass.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3305,
+  "source": "artifacts/character-generation/videos/luma/high-jump-attempt-01.mp4",
+  "source_sha256": "c0910bb7e81dddcfa8fd9a9ab8bef285eb39f9a29498bfeb3fdd3bd1d9e23352",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

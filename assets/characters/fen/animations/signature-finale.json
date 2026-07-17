@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    316,
+    316
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.234375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1658166,
+  "master_bytes": 1660222,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      74,
+      8,
+      245,
+      309
+    ],
+    [
+      74,
+      8,
+      245,
+      309
+    ],
+    [
+      74,
+      8,
+      245,
+      310
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      8,
+      245,
+      309
+    ],
+    [
+      74,
+      8,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      241
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      244,
+      309
+    ],
+    [
+      78,
+      11,
+      245,
+      309
+    ],
+    [
+      78,
+      9,
+      245,
+      309
+    ],
+    [
+      78,
+      7,
+      245,
+      309
+    ],
+    [
+      78,
+      7,
+      245,
+      309
+    ],
+    [
+      78,
+      7,
+      235,
+      309
+    ],
+    [
+      78,
+      7,
+      235,
+      309
+    ],
+    [
+      78,
+      7,
+      245,
+      309
+    ],
+    [
+      75,
+      7,
+      245,
+      309
+    ],
+    [
+      75,
+      7,
+      235,
+      309
+    ],
+    [
+      75,
+      7,
+      235,
+      309
+    ],
+    [
+      75,
+      7,
+      235,
+      309
+    ],
+    [
+      75,
+      7,
+      235,
+      309
+    ],
+    [
+      78,
+      7,
+      235,
+      309
+    ],
+    [
+      78,
+      7,
+      235,
+      309
+    ],
+    [
+      78,
+      7,
+      235,
+      309
+    ],
+    [
+      78,
+      6,
+      235,
+      309
+    ],
+    [
+      78,
+      7,
+      235,
+      309
+    ],
+    [
+      72,
+      8,
+      235,
+      309
+    ],
+    [
+      71,
+      11,
+      235,
+      309
+    ],
+    [
+      75,
+      10,
+      235,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 5.038,
+  "foreground_area_ratio": 1.595,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "fen",
+  "animation": "signature-finale",
+  "attempt": 1,
+  "description": "Fen's signature finale: Fen unfurls a map whose glowing path rises into the air and ends at a golden gate; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Fen, A warm-brown otter cartographer with cream muzzle, teal vest, one rolled map and one reed stylus.\nAction over exactly four seconds: Fen's signature finale: Fen unfurls a map whose glowing path rises into the air and ends at a golden gate; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: warm-brown fur with cream muzzle and chest; exactly two arms, two legs and one otter tail; teal vest; one rolled parchment map; one reed stylus.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3409,
+  "source": "artifacts/character-generation/videos/fen/signature-finale-attempt-01.mp4",
+  "source_sha256": "4db2f8213c0edb73d21881f8a5d4f3f57d29032ca22d59cd77e48b7e1b76cd12",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

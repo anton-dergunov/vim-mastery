@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    306,
+    306
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1953125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1711502,
+  "master_bytes": 1714620,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      300
+    ],
+    [
+      77,
+      15,
+      235,
+      300
+    ],
+    [
+      76,
+      13,
+      235,
+      296
+    ],
+    [
+      76,
+      13,
+      235,
+      296
+    ],
+    [
+      78,
+      13,
+      235,
+      296
+    ],
+    [
+      78,
+      13,
+      235,
+      296
+    ],
+    [
+      78,
+      13,
+      235,
+      299
+    ],
+    [
+      78,
+      13,
+      235,
+      297
+    ],
+    [
+      78,
+      15,
+      235,
+      300
+    ],
+    [
+      78,
+      13,
+      235,
+      300
+    ],
+    [
+      78,
+      13,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      13,
+      235,
+      296
+    ],
+    [
+      76,
+      15,
+      235,
+      296
+    ],
+    [
+      76,
+      15,
+      235,
+      296
+    ],
+    [
+      76,
+      15,
+      235,
+      296
+    ],
+    [
+      76,
+      15,
+      235,
+      296
+    ],
+    [
+      76,
+      15,
+      235,
+      257
+    ],
+    [
+      75,
+      15,
+      235,
+      258
+    ],
+    [
+      79,
+      15,
+      235,
+      260
+    ],
+    [
+      78,
+      15,
+      235,
+      262
+    ],
+    [
+      75,
+      15,
+      235,
+      296
+    ],
+    [
+      71,
+      15,
+      235,
+      270
+    ],
+    [
+      71,
+      15,
+      235,
+      273
+    ],
+    [
+      71,
+      15,
+      235,
+      296
+    ],
+    [
+      75,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      76,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      71,
+      15,
+      235,
+      296
+    ],
+    [
+      71,
+      15,
+      235,
+      296
+    ],
+    [
+      74,
+      15,
+      235,
+      296
+    ],
+    [
+      75,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      75,
+      15,
+      235,
+      296
+    ],
+    [
+      73,
+      15,
+      232,
+      296
+    ],
+    [
+      75,
+      15,
+      235,
+      296
+    ],
+    [
+      75,
+      15,
+      233,
+      296
+    ],
+    [
+      75,
+      15,
+      235,
+      296
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 6.166,
+  "foreground_area_ratio": 1.182,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "puddle",
+  "animation": "prop-trick",
+  "attempt": 1,
+  "description": "Puddle performs a playful expert trick: one potion bubble balances on the stirring rod and returns to the satchel; only the canonical prop is used and it returns to its original place.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Puddle, A jade frog alchemist with pale throat, amber goggles, teal potion satchel and one short stirring rod.\nAction over exactly four seconds: Puddle performs a playful expert trick: one potion bubble balances on the stirring rod and returns to the satchel; only the canonical prop is used and it returns to its original place.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: jade skin with pale throat; exactly two arms and two powerful legs; two amber goggles over two eyes; one teal potion satchel; one short stirring rod.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3004,
+  "source": "artifacts/character-generation/videos/puddle/prop-trick-attempt-01.mp4",
+  "source_sha256": "b36c3ff00ed8ce0998f8158503f32ed8673600dbb4b452378820f658dc39a341",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -148,8 +148,20 @@ def largest_component_bbox(alpha: Image.Image, minimum_alpha: int = 64) -> tuple
     return int(columns.min()), int(rows.min()), int(columns.max()) + 1, int(rows.max()) + 1
 
 
-def keep_character_and_effects(alpha: Image.Image, minimum_alpha: int = 28) -> Image.Image:
-    """Keep the main sprite and small nearby sparks, but reject background noise."""
+def keep_character_and_effects(
+    alpha: Image.Image,
+    minimum_alpha: int = 28,
+    effect_margin_ratio: float = 0.85,
+    temporal_bounds: tuple[int, int, int, int] | None = None,
+) -> Image.Image:
+    """Keep the sprite plus detached effects without clipping animated motion.
+
+    Veo often separates a wand tip, sparkle, projectile, or high jump accent
+    into its own component.  The former 30% proximity margin was too tight and
+    could erase those components before the all-frame canvas-fit stage saw
+    them.  The larger conservative envelope still rejects remote compression
+    speckles while preserving legitimate character-adjacent animation.
+    """
     values = np.asarray(alpha, dtype=np.uint8)
     labels, count = ndimage.label(values >= minimum_alpha)
     if count == 0:
@@ -161,7 +173,9 @@ def keep_character_and_effects(alpha: Image.Image, minimum_alpha: int = 28) -> I
         raise ConversionError("The detected foreground is too small to be a character")
     rows, columns = np.where(labels == main_label)
     left, top, right, bottom = columns.min(), rows.min(), columns.max() + 1, rows.max() + 1
-    margin = max(20, int(max(right - left, bottom - top) * 0.30))
+    if temporal_bounds is not None:
+        left, top, right, bottom = temporal_bounds
+    margin = max(48, int(max(right - left, bottom - top) * effect_margin_ratio))
     keep_labels = {main_label}
     for label in range(1, count + 1):
         if sizes[label] < 3:
@@ -178,6 +192,15 @@ def keep_character_and_effects(alpha: Image.Image, minimum_alpha: int = 28) -> I
             keep_labels.add(label)
     keep = np.isin(labels, list(keep_labels))
     return Image.fromarray(np.where(keep, values, 0).astype(np.uint8), mode="L")
+
+
+def temporal_main_bounds(alphas: Sequence[Image.Image], minimum_alpha: int = 28) -> tuple[int, int, int, int]:
+    """Union the main sprite bounds across the whole clip before effect filtering."""
+    bounds = [largest_component_bbox(alpha, minimum_alpha) for alpha in alphas]
+    return (
+        min(bound[0] for bound in bounds), min(bound[1] for bound in bounds),
+        max(bound[2] for bound in bounds), max(bound[3] for bound in bounds),
+    )
 
 
 def decontaminate_edges(frame: Image.Image, alpha: Image.Image) -> Image.Image:
@@ -250,9 +273,10 @@ def matte_frames(
         alphas = birefnet_alphas(frames, device)
     else:
         alphas = [soft_background_alpha(frame, background, threshold, softness) for frame in frames]
+    temporal_bounds = temporal_main_bounds(alphas)
     result: list[Image.Image] = []
     for frame, alpha in zip(frames, alphas):
-        cleaned_alpha = keep_character_and_effects(alpha)
+        cleaned_alpha = keep_character_and_effects(alpha, temporal_bounds=temporal_bounds)
         result.append(decontaminate_edges(frame, cleaned_alpha))
     return result
 

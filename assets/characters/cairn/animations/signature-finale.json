@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    310,
+    310
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.2109375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.4494898319244385,
+  "runtime_bytes": 1890014,
+  "master_bytes": 1891866,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      76,
+      72,
+      230,
+      304
+    ],
+    [
+      76,
+      72,
+      230,
+      304
+    ],
+    [
+      76,
+      72,
+      230,
+      304
+    ],
+    [
+      76,
+      69,
+      230,
+      305
+    ],
+    [
+      76,
+      61,
+      230,
+      304
+    ],
+    [
+      76,
+      54,
+      230,
+      304
+    ],
+    [
+      76,
+      47,
+      230,
+      304
+    ],
+    [
+      76,
+      41,
+      231,
+      304
+    ],
+    [
+      76,
+      36,
+      231,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      10,
+      240,
+      304
+    ],
+    [
+      76,
+      8,
+      240,
+      304
+    ],
+    [
+      76,
+      8,
+      240,
+      304
+    ],
+    [
+      76,
+      74,
+      229,
+      304
+    ],
+    [
+      82,
+      8,
+      240,
+      239
+    ],
+    [
+      76,
+      75,
+      228,
+      304
+    ],
+    [
+      82,
+      10,
+      240,
+      239
+    ],
+    [
+      76,
+      75,
+      228,
+      304
+    ],
+    [
+      82,
+      10,
+      240,
+      239
+    ],
+    [
+      72,
+      10,
+      240,
+      304
+    ],
+    [
+      82,
+      75,
+      228,
+      239
+    ],
+    [
+      82,
+      75,
+      228,
+      239
+    ],
+    [
+      82,
+      75,
+      228,
+      239
+    ],
+    [
+      81,
+      10,
+      240,
+      239
+    ],
+    [
+      81,
+      75,
+      228,
+      239
+    ],
+    [
+      76,
+      10,
+      240,
+      305
+    ],
+    [
+      79,
+      74,
+      228,
+      259
+    ],
+    [
+      72,
+      10,
+      230,
+      304
+    ],
+    [
+      72,
+      10,
+      231,
+      304
+    ],
+    [
+      72,
+      10,
+      240,
+      239
+    ],
+    [
+      72,
+      10,
+      232,
+      239
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 3.882,
+  "foreground_area_ratio": 1.369,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cairn",
+  "animation": "signature-finale",
+  "attempt": 4,
+  "description": "Cairn's signature finale: Cairn opens a glowing rune gate, bows proudly, and closes it safely; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.\nAction over exactly four seconds: Cairn warmly floats three small, separate stone tiles at chest height, each with one clear uppercase V, I or M on its front; they orbit once and return to Cairn's low hands before the exact neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. No gate, path, floor, ground object, raised platform, rune or joined symbol. Cairn stays in the approved neutral position and playfully juggles exactly three small separate floating stone bricks at chest height. Their front faces clearly show one uppercase letter each: V, I and M, in that order; the bricks never touch the ground and settle into Cairn's hands before the neutral end pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2809,
+  "source": "artifacts/character-generation/videos/cairn/signature-finale-attempt-04.mp4",
+  "source_sha256": "09726696ca561814dcc3f5e4a0361a4875f405720080c5c389450e595c8c4398",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 4
+}

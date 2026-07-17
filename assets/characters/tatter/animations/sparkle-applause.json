@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    350,
+    350
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3671875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1699912,
+  "master_bytes": 1700730,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      83,
+      13,
+      269,
+      256
+    ],
+    [
+      83,
+      15,
+      269,
+      336
+    ],
+    [
+      80,
+      15,
+      269,
+      336
+    ],
+    [
+      80,
+      15,
+      269,
+      339
+    ],
+    [
+      80,
+      15,
+      269,
+      339
+    ],
+    [
+      83,
+      13,
+      257,
+      335
+    ],
+    [
+      83,
+      15,
+      263,
+      332
+    ],
+    [
+      80,
+      15,
+      269,
+      339
+    ],
+    [
+      83,
+      15,
+      269,
+      339
+    ],
+    [
+      81,
+      13,
+      269,
+      340
+    ],
+    [
+      80,
+      15,
+      269,
+      340
+    ],
+    [
+      80,
+      13,
+      269,
+      330
+    ],
+    [
+      80,
+      15,
+      269,
+      340
+    ],
+    [
+      80,
+      15,
+      269,
+      341
+    ],
+    [
+      80,
+      15,
+      269,
+      340
+    ],
+    [
+      84,
+      15,
+      269,
+      340
+    ],
+    [
+      84,
+      15,
+      269,
+      340
+    ],
+    [
+      84,
+      15,
+      269,
+      330
+    ],
+    [
+      84,
+      15,
+      269,
+      340
+    ],
+    [
+      84,
+      15,
+      269,
+      339
+    ],
+    [
+      84,
+      15,
+      269,
+      340
+    ],
+    [
+      84,
+      15,
+      269,
+      338
+    ],
+    [
+      84,
+      15,
+      269,
+      337
+    ],
+    [
+      84,
+      7,
+      269,
+      337
+    ],
+    [
+      83,
+      7,
+      269,
+      343
+    ],
+    [
+      83,
+      7,
+      269,
+      342
+    ],
+    [
+      83,
+      7,
+      269,
+      341
+    ],
+    [
+      83,
+      7,
+      269,
+      341
+    ],
+    [
+      83,
+      7,
+      269,
+      340
+    ],
+    [
+      83,
+      7,
+      269,
+      335
+    ],
+    [
+      84,
+      15,
+      269,
+      333
+    ],
+    [
+      84,
+      13,
+      269,
+      339
+    ],
+    [
+      84,
+      13,
+      269,
+      334
+    ],
+    [
+      84,
+      15,
+      269,
+      338
+    ],
+    [
+      84,
+      15,
+      269,
+      340
+    ],
+    [
+      83,
+      13,
+      269,
+      341
+    ],
+    [
+      84,
+      15,
+      269,
+      342
+    ],
+    [
+      84,
+      15,
+      264,
+      343
+    ],
+    [
+      83,
+      13,
+      264,
+      344
+    ],
+    [
+      84,
+      15,
+      269,
+      344
+    ],
+    [
+      88,
+      16,
+      269,
+      344
+    ],
+    [
+      86,
+      16,
+      269,
+      344
+    ],
+    [
+      86,
+      16,
+      269,
+      344
+    ],
+    [
+      86,
+      16,
+      269,
+      344
+    ],
+    [
+      80,
+      15,
+      269,
+      343
+    ],
+    [
+      80,
+      14,
+      269,
+      344
+    ],
+    [
+      80,
+      14,
+      269,
+      344
+    ],
+    [
+      80,
+      16,
+      269,
+      343
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 6.544,
+  "foreground_area_ratio": 1.36,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "tatter",
+  "animation": "sparkle-applause",
+  "attempt": 1,
+  "description": "Tatter gives an anatomy-appropriate round of applause and the needle and spool exchange between existing hands only, accompanied by a restrained burst of amber and turquoise sparks.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Tatter, An indigo fantasy spider tailor with exactly four arms and two walking legs, warm cream face, golden needle and teal thread spool.\nAction over exactly four seconds: Tatter gives an anatomy-appropriate round of applause and the needle and spool exchange between existing hands only, accompanied by a restrained burst of amber and turquoise sparks.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: exactly four arms and two walking legs; indigo body with warm cream face; two amber eyes; one golden needle; one teal thread spool.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2207,
+  "source": "artifacts/character-generation/videos/tatter/sparkle-applause-attempt-01.mp4",
+  "source_sha256": "ae04bf96e1a995be22d36e2f3f0811f7b29bf44ce8503144c19d30c5060b0d7d",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    342,
+    342
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3359375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 4.123105525970459,
+  "runtime_bytes": 1806142,
+  "master_bytes": 1808646,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      80,
+      9,
+      266,
+      246
+    ],
+    [
+      80,
+      9,
+      266,
+      246
+    ],
+    [
+      80,
+      9,
+      266,
+      246
+    ],
+    [
+      77,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      246
+    ],
+    [
+      80,
+      9,
+      266,
+      336
+    ],
+    [
+      80,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      78,
+      9,
+      266,
+      335
+    ],
+    [
+      80,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      246
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      246
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      11,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      336
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      246
+    ],
+    [
+      80,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      11,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      76,
+      11,
+      266,
+      246
+    ],
+    [
+      76,
+      11,
+      265,
+      335
+    ],
+    [
+      80,
+      11,
+      266,
+      335
+    ],
+    [
+      80,
+      11,
+      262,
+      335
+    ],
+    [
+      76,
+      11,
+      266,
+      335
+    ],
+    [
+      76,
+      11,
+      266,
+      335
+    ],
+    [
+      76,
+      9,
+      266,
+      335
+    ],
+    [
+      78,
+      9,
+      265,
+      335
+    ],
+    [
+      79,
+      11,
+      259,
+      335
+    ],
+    [
+      79,
+      11,
+      260,
+      335
+    ],
+    [
+      77,
+      11,
+      266,
+      335
+    ],
+    [
+      76,
+      11,
+      266,
+      335
+    ],
+    [
+      76,
+      11,
+      266,
+      335
+    ],
+    [
+      77,
+      11,
+      263,
+      335
+    ],
+    [
+      79,
+      11,
+      255,
+      335
+    ],
+    [
+      79,
+      11,
+      253,
+      336
+    ],
+    [
+      79,
+      11,
+      260,
+      246
+    ],
+    [
+      76,
+      11,
+      266,
+      246
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 7.327,
+  "foreground_area_ratio": 1.332,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "prism",
+  "animation": "victory-dance",
+  "attempt": 1,
+  "description": "Prism performs a short rhythmic victory dance using precise four-limb posing, shell tilt and two-wing shimmer; the fixed chest prism rotates its light but never detaches; the movement stays readable and returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Prism, A violet-cyan crystal beetle with faceted shell, exactly two cream under-wings, four small limbs and a prism focus on the chest.\nAction over exactly four seconds: Prism performs a short rhythmic victory dance using precise four-limb posing, shell tilt and two-wing shimmer; the fixed chest prism rotates its light but never detaches; the movement stays readable and returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: faceted violet and cyan shell; exactly two cream under-wings; exactly two arms and two legs; two amber eyes; one fixed chest prism.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2501,
+  "source": "artifacts/character-generation/videos/prism/victory-dance-attempt-01.mp4",
+  "source_sha256": "5ed5f0cefdedd596e06340c944b0fa0f3ed9c567b8d74119d21d38f2ea88d1fd",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

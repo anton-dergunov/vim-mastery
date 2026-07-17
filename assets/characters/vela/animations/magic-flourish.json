@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    256,
+    256
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1299712,
+  "master_bytes": 1301948,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      69,
+      45,
+      187,
+      213
+    ],
+    [
+      69,
+      45,
+      187,
+      213
+    ],
+    [
+      69,
+      45,
+      187,
+      213
+    ],
+    [
+      69,
+      45,
+      189,
+      213
+    ],
+    [
+      69,
+      45,
+      190,
+      213
+    ],
+    [
+      69,
+      45,
+      190,
+      213
+    ],
+    [
+      69,
+      45,
+      191,
+      213
+    ],
+    [
+      69,
+      45,
+      192,
+      213
+    ],
+    [
+      69,
+      45,
+      192,
+      213
+    ],
+    [
+      69,
+      45,
+      194,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      195,
+      213
+    ],
+    [
+      68,
+      45,
+      195,
+      233
+    ],
+    [
+      68,
+      45,
+      195,
+      233
+    ],
+    [
+      68,
+      45,
+      195,
+      234
+    ],
+    [
+      68,
+      45,
+      195,
+      234
+    ],
+    [
+      68,
+      45,
+      195,
+      239
+    ],
+    [
+      64,
+      45,
+      195,
+      239
+    ],
+    [
+      69,
+      45,
+      195,
+      234
+    ],
+    [
+      69,
+      45,
+      195,
+      234
+    ],
+    [
+      62,
+      16,
+      195,
+      234
+    ],
+    [
+      62,
+      45,
+      195,
+      242
+    ],
+    [
+      64,
+      45,
+      195,
+      243
+    ],
+    [
+      64,
+      45,
+      192,
+      243
+    ],
+    [
+      69,
+      16,
+      195,
+      220
+    ],
+    [
+      64,
+      45,
+      189,
+      232
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      16,
+      195,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      16,
+      195,
+      213
+    ],
+    [
+      69,
+      16,
+      195,
+      213
+    ],
+    [
+      69,
+      45,
+      189,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ],
+    [
+      69,
+      15,
+      195,
+      213
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 13,
+  "first_last_mean_absolute_error": 1.65,
+  "foreground_area_ratio": 1.286,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "vela",
+  "animation": "magic-flourish",
+  "attempt": 1,
+  "description": "Vela performs controlled signature magic: the compass projects a turquoise route rune that snaps to its destination; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Vela, A quick rust-red fox courier with cream muzzle and tail tip, teal scarf, small compass satchel and alert amber eyes.\nAction over exactly four seconds: Vela performs controlled signature magic: the compass projects a turquoise route rune that snaps to its destination; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: rust-red fur with cream muzzle, chest and single tail tip; exactly two fox ears, two arms, two legs and one tail; teal scarf; one brown compass satchel; amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2102,
+  "source": "artifacts/character-generation/videos/vela/magic-flourish-attempt-01.mp4",
+  "source_sha256": "c1fe01802e2deab13908297df9a2bb698af175d5511644b898293b1e60c030cf",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    306,
+    306
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1953125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.8284270763397217,
+  "runtime_bytes": 1814136,
+  "master_bytes": 1817238,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      297
+    ],
+    [
+      78,
+      15,
+      235,
+      297
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      300
+    ],
+    [
+      78,
+      15,
+      235,
+      300
+    ],
+    [
+      78,
+      15,
+      235,
+      300
+    ],
+    [
+      78,
+      15,
+      235,
+      300
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      297
+    ],
+    [
+      78,
+      15,
+      235,
+      297
+    ],
+    [
+      78,
+      15,
+      235,
+      297
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      78,
+      8,
+      235,
+      296
+    ],
+    [
+      78,
+      9,
+      235,
+      296
+    ],
+    [
+      78,
+      15,
+      235,
+      296
+    ],
+    [
+      80,
+      11,
+      235,
+      294
+    ],
+    [
+      76,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      14,
+      235,
+      295
+    ],
+    [
+      72,
+      9,
+      235,
+      297
+    ],
+    [
+      71,
+      15,
+      235,
+      297
+    ],
+    [
+      71,
+      15,
+      235,
+      297
+    ],
+    [
+      71,
+      15,
+      235,
+      300
+    ],
+    [
+      71,
+      15,
+      235,
+      299
+    ],
+    [
+      71,
+      15,
+      235,
+      295
+    ],
+    [
+      71,
+      13,
+      235,
+      300
+    ],
+    [
+      71,
+      13,
+      235,
+      300
+    ],
+    [
+      71,
+      11,
+      235,
+      295
+    ],
+    [
+      71,
+      11,
+      235,
+      292
+    ],
+    [
+      71,
+      13,
+      235,
+      292
+    ],
+    [
+      71,
+      15,
+      235,
+      293
+    ],
+    [
+      71,
+      15,
+      235,
+      284
+    ],
+    [
+      71,
+      15,
+      234,
+      289
+    ],
+    [
+      71,
+      15,
+      235,
+      290
+    ],
+    [
+      71,
+      16,
+      235,
+      290
+    ],
+    [
+      71,
+      15,
+      234,
+      288
+    ],
+    [
+      71,
+      16,
+      235,
+      275
+    ],
+    [
+      71,
+      15,
+      235,
+      279
+    ],
+    [
+      71,
+      15,
+      235,
+      280
+    ],
+    [
+      71,
+      15,
+      235,
+      281
+    ],
+    [
+      90,
+      18,
+      226,
+      283
+    ],
+    [
+      99,
+      18,
+      226,
+      281
+    ],
+    [
+      109,
+      8,
+      226,
+      270
+    ],
+    [
+      109,
+      9,
+      226,
+      270
+    ],
+    [
+      109,
+      21,
+      226,
+      237
+    ],
+    [
+      109,
+      28,
+      229,
+      237
+    ],
+    [
+      105,
+      34,
+      229,
+      279
+    ],
+    [
+      102,
+      30,
+      232,
+      280
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 3.718,
+  "foreground_area_ratio": 1.373,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "puddle",
+  "animation": "signature-finale",
+  "attempt": 1,
+  "description": "Puddle's signature finale: Puddle brews one bubbling star potion and raises it in triumph; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Puddle, A jade frog alchemist with pale throat, amber goggles, teal potion satchel and one short stirring rod.\nAction over exactly four seconds: Puddle's signature finale: Puddle brews one bubbling star potion and raises it in triumph; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: jade skin with pale throat; exactly two arms and two powerful legs; two amber goggles over two eyes; one teal potion satchel; one short stirring rod.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3009,
+  "source": "artifacts/character-generation/videos/puddle/signature-finale-attempt-01.mp4",
+  "source_sha256": "75baec04bdff9851e6054b0dfba7e0f8e26d544e04e0c0858bf32fd7fe5ae31e",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

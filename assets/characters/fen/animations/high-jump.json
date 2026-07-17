@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    316,
+    316
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.234375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1677798,
+  "master_bytes": 1680888,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      11,
+      245,
+      241
+    ],
+    [
+      74,
+      11,
+      245,
+      309
+    ],
+    [
+      79,
+      75,
+      235,
+      309
+    ],
+    [
+      79,
+      75,
+      235,
+      309
+    ],
+    [
+      80,
+      84,
+      239,
+      279
+    ],
+    [
+      79,
+      92,
+      242,
+      309
+    ],
+    [
+      79,
+      100,
+      243,
+      309
+    ],
+    [
+      79,
+      98,
+      242,
+      279
+    ],
+    [
+      80,
+      94,
+      235,
+      279
+    ],
+    [
+      79,
+      84,
+      230,
+      309
+    ],
+    [
+      81,
+      66,
+      231,
+      279
+    ],
+    [
+      78,
+      51,
+      234,
+      309
+    ],
+    [
+      79,
+      40,
+      236,
+      309
+    ],
+    [
+      81,
+      40,
+      236,
+      233
+    ],
+    [
+      79,
+      40,
+      236,
+      309
+    ],
+    [
+      78,
+      40,
+      236,
+      309
+    ],
+    [
+      78,
+      40,
+      236,
+      309
+    ],
+    [
+      78,
+      40,
+      236,
+      309
+    ],
+    [
+      78,
+      40,
+      235,
+      309
+    ],
+    [
+      78,
+      40,
+      234,
+      309
+    ],
+    [
+      82,
+      40,
+      232,
+      233
+    ],
+    [
+      82,
+      40,
+      232,
+      233
+    ],
+    [
+      82,
+      40,
+      233,
+      233
+    ],
+    [
+      82,
+      40,
+      235,
+      233
+    ],
+    [
+      82,
+      40,
+      236,
+      233
+    ],
+    [
+      82,
+      40,
+      237,
+      233
+    ],
+    [
+      81,
+      40,
+      237,
+      233
+    ],
+    [
+      81,
+      40,
+      237,
+      233
+    ],
+    [
+      81,
+      40,
+      237,
+      233
+    ],
+    [
+      81,
+      40,
+      237,
+      234
+    ],
+    [
+      81,
+      47,
+      239,
+      241
+    ],
+    [
+      81,
+      61,
+      243,
+      279
+    ],
+    [
+      81,
+      81,
+      244,
+      279
+    ],
+    [
+      80,
+      92,
+      242,
+      279
+    ],
+    [
+      80,
+      92,
+      230,
+      279
+    ],
+    [
+      80,
+      88,
+      228,
+      279
+    ],
+    [
+      79,
+      83,
+      229,
+      279
+    ],
+    [
+      79,
+      79,
+      230,
+      279
+    ],
+    [
+      79,
+      78,
+      230,
+      279
+    ],
+    [
+      79,
+      78,
+      230,
+      279
+    ],
+    [
+      79,
+      77,
+      229,
+      279
+    ],
+    [
+      79,
+      77,
+      228,
+      279
+    ],
+    [
+      79,
+      77,
+      227,
+      279
+    ],
+    [
+      75,
+      10,
+      227,
+      279
+    ],
+    [
+      79,
+      77,
+      227,
+      279
+    ],
+    [
+      79,
+      77,
+      227,
+      279
+    ],
+    [
+      79,
+      77,
+      227,
+      279
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 8.566,
+  "foreground_area_ratio": 1.415,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "fen",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Fen performs a larger anatomy-appropriate celebratory leap using fluid side steps, one tail sweep and careful map-handling gestures. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Fen lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Fen, A warm-brown otter cartographer with cream muzzle, teal vest, one rolled map and one reed stylus.\nAction over exactly four seconds: Fen performs a larger anatomy-appropriate celebratory leap using fluid side steps, one tail sweep and careful map-handling gestures. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Fen lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: warm-brown fur with cream muzzle and chest; exactly two arms, two legs and one otter tail; teal vest; one rolled parchment map; one reed stylus.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3405,
+  "source": "artifacts/character-generation/videos/fen/high-jump-attempt-01.mp4",
+  "source_sha256": "7342d9270840b079e72b8c3b22afac2e958c6dd80cc11f2d09e2f8d67ba31372",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

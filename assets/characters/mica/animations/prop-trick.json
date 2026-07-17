@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    276,
+    276
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.078125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 4.690415859222412,
+  "runtime_bytes": 1599102,
+  "master_bytes": 1599230,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      68,
+      9,
+      214,
+      270
+    ],
+    [
+      68,
+      9,
+      214,
+      270
+    ],
+    [
+      68,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      7,
+      214,
+      270
+    ],
+    [
+      62,
+      7,
+      214,
+      270
+    ],
+    [
+      62,
+      8,
+      214,
+      270
+    ],
+    [
+      62,
+      7,
+      214,
+      270
+    ],
+    [
+      62,
+      8,
+      214,
+      269
+    ],
+    [
+      62,
+      8,
+      214,
+      270
+    ],
+    [
+      62,
+      8,
+      214,
+      222
+    ],
+    [
+      62,
+      8,
+      214,
+      270
+    ],
+    [
+      62,
+      8,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      8,
+      214,
+      270
+    ],
+    [
+      62,
+      8,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      214,
+      229
+    ],
+    [
+      62,
+      9,
+      214,
+      230
+    ],
+    [
+      62,
+      9,
+      214,
+      230
+    ],
+    [
+      62,
+      9,
+      214,
+      230
+    ],
+    [
+      62,
+      9,
+      214,
+      230
+    ],
+    [
+      62,
+      9,
+      214,
+      230
+    ],
+    [
+      64,
+      9,
+      214,
+      270
+    ],
+    [
+      68,
+      9,
+      214,
+      270
+    ],
+    [
+      71,
+      10,
+      214,
+      223
+    ],
+    [
+      68,
+      9,
+      213,
+      270
+    ],
+    [
+      65,
+      9,
+      214,
+      270
+    ],
+    [
+      68,
+      10,
+      214,
+      270
+    ],
+    [
+      68,
+      10,
+      214,
+      270
+    ],
+    [
+      71,
+      10,
+      214,
+      222
+    ],
+    [
+      65,
+      9,
+      214,
+      270
+    ],
+    [
+      65,
+      10,
+      214,
+      222
+    ],
+    [
+      65,
+      10,
+      214,
+      222
+    ],
+    [
+      65,
+      9,
+      214,
+      222
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 1.332,
+  "foreground_area_ratio": 1.372,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "mica",
+  "animation": "prop-trick",
+  "attempt": 1,
+  "description": "Mica performs a playful expert trick: three crystals pass between wings and return to the satchel; only the canonical prop is used and it returns to its original place.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Mica, A black-and-cream magpie relic keeper with two wings, two feet, teal hoodlet and one brown crystal satchel.\nAction over exactly four seconds: Mica performs a playful expert trick: three crystals pass between wings and return to the satchel; only the canonical prop is used and it returns to its original place.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: black-and-cream magpie plumage with subtle blue sheen; exactly two wings and two feet; one teal hoodlet; one brown crystal satchel; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3204,
+  "source": "artifacts/character-generation/videos/mica/prop-trick-attempt-01.mp4",
+  "source_sha256": "ccebda41ef768af3ef50d400cb188cb92c9eb27dd7a8e46fb8aa8143d0c4b8c7",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

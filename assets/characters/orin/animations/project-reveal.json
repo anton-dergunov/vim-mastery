@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    326,
+    326
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.2734375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1753216,
+  "master_bytes": 1755966,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      7,
+      242,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      81,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      7,
+      248,
+      247
+    ],
+    [
+      73,
+      7,
+      248,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      316
+    ],
+    [
+      73,
+      6,
+      235,
+      316
+    ],
+    [
+      73,
+      6,
+      235,
+      316
+    ],
+    [
+      73,
+      6,
+      233,
+      247
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      86,
+      6,
+      249,
+      247
+    ],
+    [
+      77,
+      7,
+      249,
+      315
+    ],
+    [
+      77,
+      64,
+      233,
+      315
+    ],
+    [
+      73,
+      6,
+      249,
+      247
+    ],
+    [
+      73,
+      6,
+      235,
+      316
+    ],
+    [
+      73,
+      6,
+      234,
+      316
+    ],
+    [
+      73,
+      6,
+      234,
+      316
+    ],
+    [
+      72,
+      6,
+      234,
+      316
+    ],
+    [
+      72,
+      6,
+      234,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      315
+    ],
+    [
+      72,
+      6,
+      234,
+      247
+    ],
+    [
+      72,
+      6,
+      234,
+      315
+    ],
+    [
+      72,
+      6,
+      249,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      316
+    ],
+    [
+      72,
+      6,
+      234,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      315
+    ],
+    [
+      72,
+      6,
+      249,
+      247
+    ],
+    [
+      72,
+      5,
+      249,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      315
+    ],
+    [
+      72,
+      6,
+      249,
+      315
+    ],
+    [
+      72,
+      6,
+      249,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      316
+    ],
+    [
+      72,
+      6,
+      249,
+      316
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 6.96,
+  "foreground_area_ratio": 1.181,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "orin",
+  "animation": "project-reveal",
+  "attempt": 2,
+  "description": "Orin completes a correctly indexed enchanted archive scroll, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Orin, A round navy-and-cream owl archivist with two wing-arms, two taloned feet, one glowing monocular lens and one rolled scroll.\nAction over exactly four seconds: Orin completes a correctly indexed enchanted archive scroll, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: navy plumage with cream brow and chest; exactly two wing-arms and two taloned feet; two amber eyes; one turquoise monocular lens; one rolled scroll.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Orin's torso, feathers and silhouette stay rigidly unchanged: no swelling, balloon, bubble or growth from the body. Orin opens the scroll and reveals three small, flat page-tab lights beside it, then closes it. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2303,
+  "source": "artifacts/character-generation/videos/orin/project-reveal-attempt-02.mp4",
+  "source_sha256": "bb29b67b07113a2bcd372d77aed5e3fde5f50d1653e4388b1fdbd788cf50a9b1",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 2
+}

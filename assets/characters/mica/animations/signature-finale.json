@@ -1,0 +1,350 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    276,
+    276
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.078125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 31.59113883972168,
+  "runtime_bytes": 1969542,
+  "master_bytes": 1972670,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      71,
+      54,
+      205,
+      222
+    ],
+    [
+      71,
+      10,
+      214,
+      222
+    ],
+    [
+      68,
+      10,
+      214,
+      270
+    ],
+    [
+      62,
+      9,
+      210,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      9,
+      214,
+      222
+    ],
+    [
+      62,
+      53,
+      214,
+      222
+    ],
+    [
+      62,
+      51,
+      214,
+      223
+    ],
+    [
+      62,
+      48,
+      214,
+      234
+    ],
+    [
+      62,
+      45,
+      214,
+      270
+    ],
+    [
+      62,
+      43,
+      214,
+      240
+    ],
+    [
+      62,
+      42,
+      214,
+      243
+    ],
+    [
+      62,
+      40,
+      214,
+      244
+    ],
+    [
+      62,
+      35,
+      214,
+      245
+    ],
+    [
+      62,
+      33,
+      214,
+      245
+    ],
+    [
+      62,
+      33,
+      214,
+      245
+    ],
+    [
+      62,
+      32,
+      214,
+      245
+    ],
+    [
+      62,
+      32,
+      214,
+      244
+    ],
+    [
+      62,
+      34,
+      214,
+      270
+    ],
+    [
+      62,
+      31,
+      214,
+      270
+    ],
+    [
+      62,
+      29,
+      214,
+      270
+    ],
+    [
+      62,
+      30,
+      214,
+      270
+    ],
+    [
+      62,
+      33,
+      214,
+      270
+    ],
+    [
+      62,
+      38,
+      214,
+      270
+    ],
+    [
+      62,
+      44,
+      214,
+      270
+    ],
+    [
+      62,
+      45,
+      214,
+      269
+    ],
+    [
+      62,
+      10,
+      214,
+      269
+    ],
+    [
+      62,
+      44,
+      214,
+      269
+    ],
+    [
+      62,
+      44,
+      214,
+      269
+    ],
+    [
+      62,
+      44,
+      214,
+      269
+    ],
+    [
+      62,
+      10,
+      214,
+      269
+    ],
+    [
+      62,
+      10,
+      214,
+      269
+    ],
+    [
+      62,
+      10,
+      214,
+      269
+    ],
+    [
+      62,
+      10,
+      214,
+      228
+    ],
+    [
+      62,
+      10,
+      214,
+      269
+    ],
+    [
+      65,
+      10,
+      214,
+      269
+    ],
+    [
+      68,
+      10,
+      214,
+      269
+    ],
+    [
+      68,
+      55,
+      205,
+      269
+    ],
+    [
+      68,
+      10,
+      214,
+      269
+    ],
+    [
+      68,
+      10,
+      214,
+      269
+    ],
+    [
+      68,
+      10,
+      214,
+      270
+    ],
+    [
+      68,
+      10,
+      214,
+      269
+    ],
+    [
+      68,
+      10,
+      214,
+      270
+    ],
+    [
+      68,
+      54,
+      205,
+      270
+    ],
+    [
+      68,
+      54,
+      205,
+      270
+    ],
+    [
+      68,
+      54,
+      205,
+      269
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.941,
+  "foreground_area_ratio": 1.997,
+  "automatic_review_flags": [
+    "high-border-variation-reviewed-with-cv-matte",
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "mica",
+  "animation": "signature-finale",
+  "attempt": 1,
+  "description": "Mica's signature finale: Mica releases a spiral of collected crystals and recalls each one in order; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Mica, A black-and-cream magpie relic keeper with two wings, two feet, teal hoodlet and one brown crystal satchel.\nAction over exactly four seconds: Mica's signature finale: Mica releases a spiral of collected crystals and recalls each one in order; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: black-and-cream magpie plumage with subtle blue sheen; exactly two wings and two feet; one teal hoodlet; one brown crystal satchel; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3209,
+  "source": "artifacts/character-generation/videos/mica/signature-finale-attempt-01.mp4",
+  "source_sha256": "92ea1dc9f78c376f88a6f0bee37afe9097def965fe84758d589ca27d94add5c8",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

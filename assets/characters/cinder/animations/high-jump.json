@@ -1,0 +1,350 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    332,
+    332
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.296875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1685136,
+  "master_bytes": 1686512,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      83,
+      84,
+      249,
+      249
+    ],
+    [
+      83,
+      84,
+      250,
+      251
+    ],
+    [
+      83,
+      90,
+      252,
+      264
+    ],
+    [
+      85,
+      98,
+      252,
+      286
+    ],
+    [
+      85,
+      112,
+      253,
+      291
+    ],
+    [
+      87,
+      119,
+      253,
+      291
+    ],
+    [
+      88,
+      120,
+      254,
+      291
+    ],
+    [
+      90,
+      118,
+      256,
+      291
+    ],
+    [
+      91,
+      105,
+      257,
+      291
+    ],
+    [
+      92,
+      95,
+      254,
+      291
+    ],
+    [
+      94,
+      75,
+      252,
+      291
+    ],
+    [
+      96,
+      54,
+      252,
+      290
+    ],
+    [
+      97,
+      42,
+      250,
+      242
+    ],
+    [
+      97,
+      42,
+      249,
+      243
+    ],
+    [
+      97,
+      44,
+      246,
+      245
+    ],
+    [
+      97,
+      44,
+      243,
+      245
+    ],
+    [
+      97,
+      44,
+      240,
+      320
+    ],
+    [
+      97,
+      44,
+      237,
+      321
+    ],
+    [
+      97,
+      6,
+      261,
+      321
+    ],
+    [
+      97,
+      44,
+      238,
+      321
+    ],
+    [
+      97,
+      44,
+      239,
+      245
+    ],
+    [
+      97,
+      44,
+      240,
+      245
+    ],
+    [
+      97,
+      7,
+      261,
+      245
+    ],
+    [
+      97,
+      6,
+      261,
+      245
+    ],
+    [
+      97,
+      44,
+      243,
+      245
+    ],
+    [
+      97,
+      44,
+      243,
+      245
+    ],
+    [
+      97,
+      45,
+      244,
+      246
+    ],
+    [
+      97,
+      51,
+      254,
+      255
+    ],
+    [
+      96,
+      65,
+      256,
+      289
+    ],
+    [
+      94,
+      92,
+      256,
+      291
+    ],
+    [
+      72,
+      113,
+      257,
+      291
+    ],
+    [
+      72,
+      114,
+      257,
+      291
+    ],
+    [
+      72,
+      6,
+      261,
+      306
+    ],
+    [
+      72,
+      6,
+      261,
+      308
+    ],
+    [
+      72,
+      6,
+      261,
+      308
+    ],
+    [
+      76,
+      6,
+      261,
+      308
+    ],
+    [
+      76,
+      6,
+      261,
+      291
+    ],
+    [
+      76,
+      6,
+      261,
+      291
+    ],
+    [
+      76,
+      6,
+      261,
+      291
+    ],
+    [
+      76,
+      6,
+      261,
+      291
+    ],
+    [
+      76,
+      6,
+      240,
+      291
+    ],
+    [
+      76,
+      6,
+      261,
+      291
+    ],
+    [
+      76,
+      6,
+      241,
+      293
+    ],
+    [
+      76,
+      6,
+      242,
+      291
+    ],
+    [
+      76,
+      6,
+      242,
+      291
+    ],
+    [
+      76,
+      6,
+      243,
+      291
+    ],
+    [
+      76,
+      6,
+      244,
+      291
+    ],
+    [
+      76,
+      6,
+      244,
+      291
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 12.592,
+  "foreground_area_ratio": 1.213,
+  "automatic_review_flags": [
+    "possible-neutral-pose-return-failure",
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cinder",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Cinder performs a larger anatomy-appropriate celebratory leap using springy steps, one tail curl and precise wand gestures. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Cinder lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cinder, An ember-orange salamander spellcaster with dark teal robe, gold belt, long single tail and compact rune wand.\nAction over exactly four seconds: Cinder performs a larger anatomy-appropriate celebratory leap using springy steps, one tail curl and precise wand gestures. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Cinder lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: ember-orange skin; exactly two arms, two legs and one long tail; dark teal robe with gold belt; two amber eyes; one compact dark rune wand.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2405,
+  "source": "artifacts/character-generation/videos/cinder/high-jump-attempt-01.mp4",
+  "source_sha256": "6ddb0d55423070333a30d793dd3d61c1f68b496e78d53463c584c6e156842776",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    264,
+    264
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.03125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1491280,
+  "master_bytes": 1494842,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      66,
+      47,
+      196,
+      257
+    ],
+    [
+      66,
+      49,
+      197,
+      257
+    ],
+    [
+      66,
+      41,
+      197,
+      257
+    ],
+    [
+      66,
+      39,
+      199,
+      257
+    ],
+    [
+      66,
+      32,
+      201,
+      257
+    ],
+    [
+      66,
+      28,
+      203,
+      257
+    ],
+    [
+      66,
+      29,
+      203,
+      257
+    ],
+    [
+      66,
+      40,
+      202,
+      257
+    ],
+    [
+      66,
+      46,
+      202,
+      257
+    ],
+    [
+      66,
+      31,
+      202,
+      257
+    ],
+    [
+      66,
+      26,
+      202,
+      257
+    ],
+    [
+      66,
+      25,
+      200,
+      257
+    ],
+    [
+      66,
+      25,
+      198,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      63,
+      25,
+      195,
+      257
+    ],
+    [
+      60,
+      25,
+      195,
+      257
+    ],
+    [
+      60,
+      25,
+      195,
+      257
+    ],
+    [
+      60,
+      25,
+      195,
+      257
+    ],
+    [
+      63,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      25,
+      195,
+      257
+    ],
+    [
+      66,
+      26,
+      198,
+      257
+    ],
+    [
+      66,
+      30,
+      203,
+      257
+    ],
+    [
+      62,
+      9,
+      203,
+      257
+    ],
+    [
+      62,
+      9,
+      203,
+      257
+    ],
+    [
+      62,
+      9,
+      203,
+      257
+    ],
+    [
+      65,
+      49,
+      203,
+      257
+    ],
+    [
+      65,
+      48,
+      201,
+      257
+    ],
+    [
+      64,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      48,
+      201,
+      257
+    ],
+    [
+      64,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      49,
+      201,
+      257
+    ],
+    [
+      64,
+      49,
+      201,
+      257
+    ],
+    [
+      65,
+      47,
+      201,
+      257
+    ],
+    [
+      65,
+      47,
+      201,
+      257
+    ],
+    [
+      65,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      49,
+      201,
+      257
+    ],
+    [
+      64,
+      48,
+      201,
+      257
+    ],
+    [
+      64,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      47,
+      201,
+      257
+    ],
+    [
+      64,
+      48,
+      201,
+      257
+    ],
+    [
+      64,
+      48,
+      201,
+      257
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 8.162,
+  "foreground_area_ratio": 1.215,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "mello",
+  "animation": "celebratory-spin",
+  "attempt": 1,
+  "description": "Mello makes one clear celebratory turn with springy cap bounces, two-foot steps and cheerful lute strums; permanent costume and props remain attached and the character finishes at the original camera angle.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Mello, A tiny cream-stemmed mushroom bard with amber cap, teal spots, two simple arms and legs, and one leaf lute.\nAction over exactly four seconds: Mello makes one clear celebratory turn with springy cap bounces, two-foot steps and cheerful lute strums; permanent costume and props remain attached and the character finishes at the original camera angle.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream stem body; amber mushroom cap with teal spots; exactly two arms and two legs; two amber eyes; one small leaf lute.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2906,
+  "source": "artifacts/character-generation/videos/mello/celebratory-spin-attempt-01.mp4",
+  "source_sha256": "4c7512aa9f4533c58a2d9754d196637eb8be01ec080504bfe16b0079454f789a",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

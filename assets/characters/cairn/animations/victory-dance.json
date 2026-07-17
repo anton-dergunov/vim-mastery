@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    308,
+    308
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.203125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1781190,
+  "master_bytes": 1784660,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      71,
+      9,
+      239,
+      303
+    ],
+    [
+      75,
+      9,
+      239,
+      303
+    ],
+    [
+      71,
+      9,
+      239,
+      303
+    ],
+    [
+      75,
+      9,
+      239,
+      303
+    ],
+    [
+      69,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      68,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      69,
+      7,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      68,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      239
+    ],
+    [
+      68,
+      7,
+      239,
+      239
+    ],
+    [
+      68,
+      9,
+      239,
+      239
+    ],
+    [
+      68,
+      9,
+      239,
+      240
+    ],
+    [
+      69,
+      9,
+      239,
+      241
+    ],
+    [
+      69,
+      9,
+      239,
+      243
+    ],
+    [
+      69,
+      9,
+      239,
+      244
+    ],
+    [
+      68,
+      9,
+      239,
+      244
+    ],
+    [
+      68,
+      9,
+      239,
+      246
+    ],
+    [
+      68,
+      9,
+      239,
+      249
+    ],
+    [
+      69,
+      9,
+      239,
+      238
+    ],
+    [
+      69,
+      9,
+      239,
+      238
+    ],
+    [
+      69,
+      9,
+      239,
+      238
+    ],
+    [
+      69,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      9,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      68,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      303
+    ],
+    [
+      71,
+      7,
+      239,
+      238
+    ],
+    [
+      71,
+      7,
+      238,
+      238
+    ],
+    [
+      71,
+      7,
+      238,
+      238
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 0.785,
+  "foreground_area_ratio": 1.076,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cairn",
+  "animation": "victory-dance",
+  "attempt": 1,
+  "description": "Cairn performs a short rhythmic victory dance using weighty body lifts, small stone stomps and controlled arm raises; the inset command-key slab lights up but never detaches; the movement stays readable and returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.\nAction over exactly four seconds: Cairn performs a short rhythmic victory dance using weighty body lifts, small stone stomps and controlled arm raises; the inset command-key slab lights up but never detaches; the movement stays readable and returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2801,
+  "source": "artifacts/character-generation/videos/cairn/victory-dance-attempt-01.mp4",
+  "source_sha256": "10da9c3fa7053d364848c084eca157dcf3139040c9ec29aa67536c964aa1ce2c",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

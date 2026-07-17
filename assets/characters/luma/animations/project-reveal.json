@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    256,
+    256
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 4.123105525970459,
+  "runtime_bytes": 1323452,
+  "master_bytes": 1325106,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      62,
+      42,
+      171,
+      226
+    ],
+    [
+      62,
+      42,
+      171,
+      225
+    ],
+    [
+      62,
+      42,
+      171,
+      245
+    ],
+    [
+      62,
+      42,
+      171,
+      240
+    ],
+    [
+      62,
+      42,
+      171,
+      240
+    ],
+    [
+      62,
+      42,
+      177,
+      245
+    ],
+    [
+      62,
+      41,
+      177,
+      241
+    ],
+    [
+      62,
+      15,
+      193,
+      241
+    ],
+    [
+      62,
+      15,
+      195,
+      241
+    ],
+    [
+      62,
+      15,
+      195,
+      246
+    ],
+    [
+      62,
+      15,
+      195,
+      245
+    ],
+    [
+      62,
+      15,
+      195,
+      245
+    ],
+    [
+      62,
+      15,
+      195,
+      245
+    ],
+    [
+      62,
+      14,
+      195,
+      246
+    ],
+    [
+      62,
+      14,
+      195,
+      246
+    ],
+    [
+      62,
+      14,
+      195,
+      246
+    ],
+    [
+      62,
+      14,
+      195,
+      246
+    ],
+    [
+      62,
+      14,
+      195,
+      246
+    ],
+    [
+      62,
+      12,
+      195,
+      245
+    ],
+    [
+      62,
+      14,
+      195,
+      245
+    ],
+    [
+      62,
+      9,
+      195,
+      246
+    ],
+    [
+      62,
+      9,
+      195,
+      246
+    ],
+    [
+      62,
+      9,
+      195,
+      246
+    ],
+    [
+      62,
+      9,
+      195,
+      246
+    ],
+    [
+      62,
+      13,
+      195,
+      246
+    ],
+    [
+      62,
+      13,
+      195,
+      246
+    ],
+    [
+      62,
+      13,
+      195,
+      246
+    ],
+    [
+      62,
+      14,
+      195,
+      246
+    ],
+    [
+      63,
+      9,
+      195,
+      246
+    ],
+    [
+      66,
+      9,
+      189,
+      246
+    ],
+    [
+      66,
+      9,
+      189,
+      246
+    ],
+    [
+      66,
+      9,
+      189,
+      246
+    ],
+    [
+      64,
+      10,
+      186,
+      246
+    ],
+    [
+      64,
+      10,
+      186,
+      246
+    ],
+    [
+      64,
+      10,
+      186,
+      246
+    ],
+    [
+      72,
+      10,
+      186,
+      246
+    ],
+    [
+      68,
+      10,
+      186,
+      246
+    ],
+    [
+      64,
+      10,
+      186,
+      246
+    ],
+    [
+      64,
+      9,
+      186,
+      246
+    ],
+    [
+      68,
+      9,
+      186,
+      246
+    ],
+    [
+      71,
+      11,
+      186,
+      246
+    ],
+    [
+      71,
+      15,
+      186,
+      246
+    ],
+    [
+      71,
+      41,
+      186,
+      240
+    ],
+    [
+      71,
+      41,
+      186,
+      242
+    ],
+    [
+      78,
+      13,
+      186,
+      214
+    ],
+    [
+      88,
+      13,
+      186,
+      215
+    ],
+    [
+      73,
+      13,
+      186,
+      215
+    ],
+    [
+      73,
+      36,
+      186,
+      215
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 9,
+  "first_last_mean_absolute_error": 5.201,
+  "foreground_area_ratio": 1.66,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "luma",
+  "animation": "project-reveal",
+  "attempt": 1,
+  "description": "Luma completes a completed path of moonlit navigation marks, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Luma, A cream-grey moon hare with two long ears, violet short cape, teal boots and one crescent compass.\nAction over exactly four seconds: Luma completes a completed path of moonlit navigation marks, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream-grey fur; exactly two long ears, two arms and two legs; violet short cape; teal boots; one crescent compass.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3303,
+  "source": "artifacts/character-generation/videos/luma/project-reveal-attempt-01.mp4",
+  "source_sha256": "2907d5e11cbe0e2bd289c333df3891c0c5a58d76624bfc676554daf3f90105b9",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

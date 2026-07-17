@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    346,
+    346
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3515625,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1643562,
+  "master_bytes": 1645186,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      82,
+      12,
+      267,
+      248
+    ],
+    [
+      90,
+      14,
+      267,
+      248
+    ],
+    [
+      82,
+      14,
+      267,
+      248
+    ],
+    [
+      81,
+      12,
+      267,
+      337
+    ],
+    [
+      78,
+      12,
+      267,
+      337
+    ],
+    [
+      79,
+      14,
+      267,
+      338
+    ],
+    [
+      80,
+      14,
+      267,
+      338
+    ],
+    [
+      82,
+      14,
+      267,
+      338
+    ],
+    [
+      82,
+      12,
+      267,
+      338
+    ],
+    [
+      81,
+      14,
+      260,
+      338
+    ],
+    [
+      81,
+      14,
+      261,
+      340
+    ],
+    [
+      81,
+      14,
+      267,
+      340
+    ],
+    [
+      80,
+      12,
+      267,
+      341
+    ],
+    [
+      79,
+      14,
+      267,
+      340
+    ],
+    [
+      80,
+      14,
+      267,
+      340
+    ],
+    [
+      81,
+      14,
+      267,
+      338
+    ],
+    [
+      81,
+      14,
+      267,
+      338
+    ],
+    [
+      81,
+      14,
+      267,
+      338
+    ],
+    [
+      81,
+      14,
+      267,
+      338
+    ],
+    [
+      80,
+      14,
+      267,
+      338
+    ],
+    [
+      79,
+      12,
+      267,
+      338
+    ],
+    [
+      81,
+      12,
+      265,
+      248
+    ],
+    [
+      81,
+      12,
+      262,
+      338
+    ],
+    [
+      81,
+      12,
+      259,
+      248
+    ],
+    [
+      80,
+      12,
+      261,
+      338
+    ],
+    [
+      81,
+      12,
+      262,
+      338
+    ],
+    [
+      81,
+      12,
+      265,
+      338
+    ],
+    [
+      80,
+      12,
+      266,
+      338
+    ],
+    [
+      80,
+      12,
+      265,
+      338
+    ],
+    [
+      81,
+      12,
+      263,
+      338
+    ],
+    [
+      81,
+      12,
+      263,
+      338
+    ],
+    [
+      82,
+      100,
+      263,
+      248
+    ],
+    [
+      81,
+      14,
+      263,
+      338
+    ],
+    [
+      81,
+      14,
+      263,
+      338
+    ],
+    [
+      81,
+      14,
+      263,
+      338
+    ],
+    [
+      82,
+      14,
+      263,
+      338
+    ],
+    [
+      82,
+      12,
+      263,
+      338
+    ],
+    [
+      82,
+      12,
+      263,
+      338
+    ],
+    [
+      82,
+      14,
+      263,
+      338
+    ],
+    [
+      82,
+      14,
+      263,
+      338
+    ],
+    [
+      82,
+      14,
+      263,
+      337
+    ],
+    [
+      82,
+      14,
+      263,
+      337
+    ],
+    [
+      82,
+      14,
+      263,
+      337
+    ],
+    [
+      82,
+      14,
+      263,
+      337
+    ],
+    [
+      81,
+      14,
+      263,
+      337
+    ],
+    [
+      81,
+      14,
+      263,
+      337
+    ],
+    [
+      80,
+      14,
+      263,
+      337
+    ],
+    [
+      81,
+      14,
+      263,
+      337
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 3.931,
+  "foreground_area_ratio": 1.395,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "prism",
+  "animation": "magic-flourish",
+  "attempt": 1,
+  "description": "Prism performs controlled signature magic: the chest prism projects a rectangular violet selection field; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Prism, A violet-cyan crystal beetle with faceted shell, exactly two cream under-wings, four small limbs and a prism focus on the chest.\nAction over exactly four seconds: Prism performs controlled signature magic: the chest prism projects a rectangular violet selection field; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: faceted violet and cyan shell; exactly two cream under-wings; exactly two arms and two legs; two amber eyes; one fixed chest prism.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2502,
+  "source": "artifacts/character-generation/videos/prism/magic-flourish-attempt-01.mp4",
+  "source_sha256": "4e3c13c67eadeda8a5c6460109e39fb6da83c9beb3a5ca8c221470021c9bc1ab",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

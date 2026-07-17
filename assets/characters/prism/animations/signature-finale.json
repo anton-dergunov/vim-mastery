@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    342,
+    342
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3359375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1824638,
+  "master_bytes": 1827394,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      84,
+      9,
+      265,
+      335
+    ],
+    [
+      88,
+      9,
+      265,
+      246
+    ],
+    [
+      84,
+      9,
+      265,
+      335
+    ],
+    [
+      84,
+      11,
+      265,
+      335
+    ],
+    [
+      84,
+      79,
+      251,
+      335
+    ],
+    [
+      84,
+      79,
+      251,
+      335
+    ],
+    [
+      84,
+      75,
+      257,
+      335
+    ],
+    [
+      82,
+      68,
+      261,
+      335
+    ],
+    [
+      82,
+      64,
+      261,
+      246
+    ],
+    [
+      87,
+      64,
+      255,
+      246
+    ],
+    [
+      91,
+      64,
+      251,
+      246
+    ],
+    [
+      91,
+      64,
+      248,
+      246
+    ],
+    [
+      88,
+      64,
+      254,
+      246
+    ],
+    [
+      84,
+      64,
+      258,
+      246
+    ],
+    [
+      81,
+      11,
+      265,
+      246
+    ],
+    [
+      84,
+      11,
+      265,
+      246
+    ],
+    [
+      84,
+      11,
+      265,
+      336
+    ],
+    [
+      91,
+      64,
+      248,
+      246
+    ],
+    [
+      91,
+      64,
+      249,
+      246
+    ],
+    [
+      84,
+      64,
+      255,
+      336
+    ],
+    [
+      83,
+      64,
+      258,
+      246
+    ],
+    [
+      82,
+      64,
+      259,
+      336
+    ],
+    [
+      84,
+      64,
+      256,
+      336
+    ],
+    [
+      84,
+      64,
+      250,
+      336
+    ],
+    [
+      84,
+      64,
+      250,
+      336
+    ],
+    [
+      84,
+      64,
+      251,
+      336
+    ],
+    [
+      84,
+      64,
+      255,
+      336
+    ],
+    [
+      82,
+      64,
+      259,
+      335
+    ],
+    [
+      83,
+      64,
+      258,
+      336
+    ],
+    [
+      78,
+      11,
+      252,
+      336
+    ],
+    [
+      77,
+      11,
+      249,
+      336
+    ],
+    [
+      81,
+      59,
+      248,
+      335
+    ],
+    [
+      84,
+      70,
+      253,
+      335
+    ],
+    [
+      84,
+      76,
+      257,
+      336
+    ],
+    [
+      82,
+      81,
+      259,
+      335
+    ],
+    [
+      84,
+      100,
+      255,
+      335
+    ],
+    [
+      80,
+      11,
+      251,
+      336
+    ],
+    [
+      80,
+      11,
+      249,
+      335
+    ],
+    [
+      80,
+      11,
+      251,
+      336
+    ],
+    [
+      80,
+      11,
+      257,
+      246
+    ],
+    [
+      80,
+      11,
+      260,
+      336
+    ],
+    [
+      80,
+      11,
+      258,
+      336
+    ],
+    [
+      80,
+      11,
+      256,
+      336
+    ],
+    [
+      78,
+      11,
+      253,
+      336
+    ],
+    [
+      78,
+      11,
+      253,
+      336
+    ],
+    [
+      78,
+      11,
+      253,
+      336
+    ],
+    [
+      78,
+      11,
+      253,
+      336
+    ],
+    [
+      78,
+      11,
+      253,
+      336
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 3.086,
+  "foreground_area_ratio": 1.668,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "prism",
+  "animation": "signature-finale",
+  "attempt": 3,
+  "description": "Prism's signature finale: Prism refracts one bright beam into a compact rainbow fan and folds it back into the chest prism; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Prism, A violet-cyan crystal beetle with faceted shell, exactly two cream under-wings, four small limbs and a prism focus on the chest.\nAction over exactly four seconds: Prism lets three separate small keycaps marked uppercase V, I and M hover at chest height, then sends a short individual glow through each one before they fade and Prism returns to the exact neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: faceted violet and cyan shell; exactly two cream under-wings; exactly two arms and two legs; two amber eyes; one fixed chest prism.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. No rainbow, spectrum arc, emblem or unrelated text. Prism's chest gem sends three separate short cyan, amber and violet beams through three clearly separated small keycaps held at chest height, never near the floor. Their labels are exactly uppercase V, I and M, one letter per keycap in that order; they remain separate and fade. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2509,
+  "source": "artifacts/character-generation/videos/prism/signature-finale-attempt-03.mp4",
+  "source_sha256": "be57ab6e7ec3a60825f5e8504c2d4aaa8aab6cb1f56953aa2409dc8d0dffaeee",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 3
+}

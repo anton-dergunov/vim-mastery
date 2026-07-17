@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    290,
+    290
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1328125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.4494898319244385,
+  "runtime_bytes": 1942526,
+  "master_bytes": 1946822,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      73,
+      6,
+      226,
+      239
+    ],
+    [
+      73,
+      6,
+      226,
+      240
+    ],
+    [
+      73,
+      6,
+      226,
+      242
+    ],
+    [
+      73,
+      59,
+      217,
+      242
+    ],
+    [
+      73,
+      59,
+      217,
+      246
+    ],
+    [
+      73,
+      59,
+      218,
+      249
+    ],
+    [
+      73,
+      59,
+      218,
+      249
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      73,
+      59,
+      218,
+      248
+    ],
+    [
+      74,
+      58,
+      215,
+      248
+    ],
+    [
+      74,
+      58,
+      217,
+      248
+    ],
+    [
+      75,
+      57,
+      226,
+      248
+    ],
+    [
+      75,
+      58,
+      226,
+      248
+    ],
+    [
+      75,
+      58,
+      226,
+      248
+    ],
+    [
+      75,
+      58,
+      226,
+      248
+    ],
+    [
+      75,
+      58,
+      226,
+      248
+    ],
+    [
+      75,
+      58,
+      226,
+      248
+    ],
+    [
+      75,
+      58,
+      226,
+      248
+    ],
+    [
+      74,
+      5,
+      226,
+      248
+    ],
+    [
+      74,
+      58,
+      226,
+      247
+    ],
+    [
+      74,
+      58,
+      226,
+      247
+    ],
+    [
+      74,
+      58,
+      226,
+      247
+    ],
+    [
+      74,
+      58,
+      226,
+      246
+    ],
+    [
+      74,
+      58,
+      226,
+      241
+    ],
+    [
+      74,
+      58,
+      226,
+      230
+    ],
+    [
+      74,
+      58,
+      226,
+      230
+    ],
+    [
+      74,
+      58,
+      226,
+      227
+    ],
+    [
+      74,
+      58,
+      226,
+      227
+    ],
+    [
+      75,
+      58,
+      226,
+      227
+    ],
+    [
+      74,
+      59,
+      216,
+      227
+    ],
+    [
+      74,
+      59,
+      215,
+      227
+    ],
+    [
+      74,
+      59,
+      216,
+      227
+    ],
+    [
+      73,
+      58,
+      216,
+      227
+    ],
+    [
+      73,
+      58,
+      216,
+      227
+    ],
+    [
+      71,
+      58,
+      217,
+      283
+    ],
+    [
+      73,
+      58,
+      217,
+      227
+    ],
+    [
+      73,
+      6,
+      226,
+      227
+    ],
+    [
+      73,
+      58,
+      217,
+      227
+    ],
+    [
+      73,
+      58,
+      217,
+      227
+    ],
+    [
+      71,
+      6,
+      226,
+      284
+    ],
+    [
+      71,
+      6,
+      226,
+      284
+    ],
+    [
+      73,
+      58,
+      217,
+      227
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 3.41,
+  "foreground_area_ratio": 1.184,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "bramble",
+  "animation": "project-reveal",
+  "attempt": 1,
+  "description": "Bramble completes a balanced stack of protective command wards, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Bramble, A charcoal-and-cream badger wardkeeper with broad paws, moss cape, amber clasp and one round rune shield.\nAction over exactly four seconds: Bramble completes a balanced stack of protective command wards, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: charcoal fur with cream facial stripes and chest; exactly two arms and two legs; moss-green cape with amber clasp; one round rune shield; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3103,
+  "source": "artifacts/character-generation/videos/bramble/project-reveal-attempt-01.mp4",
+  "source_sha256": "5e02ed38a05315a2ab00c33be8740db0a83f7de39617fc093f52fdad09d642d9",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

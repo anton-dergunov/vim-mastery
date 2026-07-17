@@ -1,0 +1,350 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    300,
+    300
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.171875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 91.29074096679688,
+  "runtime_bytes": 2355806,
+  "master_bytes": 2359172,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      76,
+      67,
+      222,
+      290
+    ],
+    [
+      76,
+      67,
+      222,
+      290
+    ],
+    [
+      76,
+      67,
+      222,
+      290
+    ],
+    [
+      76,
+      67,
+      222,
+      290
+    ],
+    [
+      76,
+      67,
+      222,
+      290
+    ],
+    [
+      74,
+      67,
+      221,
+      290
+    ],
+    [
+      72,
+      67,
+      221,
+      290
+    ],
+    [
+      72,
+      67,
+      219,
+      290
+    ],
+    [
+      73,
+      66,
+      218,
+      290
+    ],
+    [
+      73,
+      66,
+      217,
+      290
+    ],
+    [
+      73,
+      66,
+      217,
+      290
+    ],
+    [
+      73,
+      58,
+      226,
+      290
+    ],
+    [
+      70,
+      42,
+      231,
+      290
+    ],
+    [
+      70,
+      29,
+      231,
+      290
+    ],
+    [
+      70,
+      23,
+      231,
+      290
+    ],
+    [
+      70,
+      19,
+      231,
+      290
+    ],
+    [
+      70,
+      18,
+      231,
+      290
+    ],
+    [
+      70,
+      18,
+      231,
+      288
+    ],
+    [
+      70,
+      18,
+      231,
+      279
+    ],
+    [
+      70,
+      18,
+      231,
+      289
+    ],
+    [
+      70,
+      9,
+      231,
+      284
+    ],
+    [
+      70,
+      11,
+      231,
+      286
+    ],
+    [
+      70,
+      7,
+      231,
+      287
+    ],
+    [
+      70,
+      7,
+      231,
+      289
+    ],
+    [
+      70,
+      8,
+      231,
+      276
+    ],
+    [
+      70,
+      18,
+      231,
+      277
+    ],
+    [
+      70,
+      7,
+      231,
+      283
+    ],
+    [
+      70,
+      7,
+      231,
+      286
+    ],
+    [
+      70,
+      7,
+      231,
+      288
+    ],
+    [
+      70,
+      7,
+      231,
+      283
+    ],
+    [
+      70,
+      19,
+      231,
+      282
+    ],
+    [
+      70,
+      22,
+      231,
+      294
+    ],
+    [
+      70,
+      25,
+      231,
+      294
+    ],
+    [
+      70,
+      32,
+      231,
+      293
+    ],
+    [
+      70,
+      31,
+      231,
+      277
+    ],
+    [
+      70,
+      30,
+      231,
+      282
+    ],
+    [
+      71,
+      43,
+      231,
+      289
+    ],
+    [
+      76,
+      45,
+      229,
+      287
+    ],
+    [
+      78,
+      67,
+      222,
+      294
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ],
+    [
+      79,
+      67,
+      222,
+      234
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.775,
+  "foreground_area_ratio": 2.179,
+  "automatic_review_flags": [
+    "high-border-variation-reviewed-with-cv-matte",
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "bramble",
+  "animation": "signature-finale",
+  "attempt": 1,
+  "description": "Bramble's signature finale: Bramble raises a protective ward that blooms with amber forest flowers; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Bramble, A charcoal-and-cream badger wardkeeper with broad paws, moss cape, amber clasp and one round rune shield.\nAction over exactly four seconds: Bramble's signature finale: Bramble raises a protective ward that blooms with amber forest flowers; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: charcoal fur with cream facial stripes and chest; exactly two arms and two legs; moss-green cape with amber clasp; one round rune shield; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3109,
+  "source": "artifacts/character-generation/videos/bramble/signature-finale-attempt-01.mp4",
+  "source_sha256": "62a02eccfe7c0a46af0c0275ce0cbe04798ea1478473554dc82d4c164c40e0c7",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

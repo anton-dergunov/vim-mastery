@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    306,
+    306
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1953125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1676448,
+  "master_bytes": 1677038,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      72,
+      15,
+      235,
+      295
+    ],
+    [
+      72,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      74,
+      15,
+      235,
+      296
+    ],
+    [
+      74,
+      15,
+      235,
+      296
+    ],
+    [
+      74,
+      15,
+      235,
+      295
+    ],
+    [
+      78,
+      16,
+      235,
+      260
+    ],
+    [
+      72,
+      66,
+      226,
+      276
+    ],
+    [
+      71,
+      64,
+      226,
+      291
+    ],
+    [
+      71,
+      62,
+      235,
+      299
+    ],
+    [
+      71,
+      16,
+      235,
+      299
+    ],
+    [
+      71,
+      60,
+      233,
+      299
+    ],
+    [
+      71,
+      60,
+      227,
+      284
+    ],
+    [
+      71,
+      60,
+      226,
+      278
+    ],
+    [
+      71,
+      15,
+      235,
+      299
+    ],
+    [
+      71,
+      15,
+      235,
+      299
+    ],
+    [
+      71,
+      16,
+      235,
+      299
+    ],
+    [
+      71,
+      15,
+      235,
+      299
+    ],
+    [
+      71,
+      15,
+      235,
+      296
+    ],
+    [
+      71,
+      16,
+      235,
+      276
+    ],
+    [
+      71,
+      15,
+      235,
+      283
+    ],
+    [
+      71,
+      15,
+      234,
+      295
+    ],
+    [
+      71,
+      8,
+      235,
+      281
+    ],
+    [
+      71,
+      10,
+      235,
+      292
+    ],
+    [
+      72,
+      13,
+      235,
+      299
+    ],
+    [
+      71,
+      15,
+      235,
+      295
+    ],
+    [
+      71,
+      15,
+      234,
+      298
+    ],
+    [
+      86,
+      15,
+      234,
+      275
+    ],
+    [
+      85,
+      70,
+      226,
+      285
+    ],
+    [
+      79,
+      15,
+      234,
+      299
+    ],
+    [
+      74,
+      15,
+      234,
+      236
+    ],
+    [
+      73,
+      15,
+      234,
+      236
+    ],
+    [
+      73,
+      15,
+      234,
+      236
+    ],
+    [
+      78,
+      13,
+      235,
+      295
+    ],
+    [
+      74,
+      13,
+      235,
+      236
+    ],
+    [
+      74,
+      13,
+      235,
+      236
+    ],
+    [
+      74,
+      13,
+      235,
+      236
+    ],
+    [
+      74,
+      13,
+      235,
+      236
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 7.382,
+  "foreground_area_ratio": 1.167,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "puddle",
+  "animation": "magic-flourish",
+  "attempt": 1,
+  "description": "Puddle performs controlled signature magic: a turquoise droplet transforms into an amber star above the stirring rod; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Puddle, A jade frog alchemist with pale throat, amber goggles, teal potion satchel and one short stirring rod.\nAction over exactly four seconds: Puddle performs controlled signature magic: a turquoise droplet transforms into an amber star above the stirring rod; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: jade skin with pale throat; exactly two arms and two powerful legs; two amber goggles over two eyes; one teal potion satchel; one short stirring rod.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3002,
+  "source": "artifacts/character-generation/videos/puddle/magic-flourish-attempt-01.mp4",
+  "source_sha256": "830b94a06340ee1be417c5879179dfdd5fd90c4e966deb6f89ec9c29be8d2439",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

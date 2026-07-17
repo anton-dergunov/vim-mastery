@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    336,
+    336
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1978434,
+  "master_bytes": 1980856,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      10,
+      261,
+      330
+    ],
+    [
+      75,
+      10,
+      261,
+      330
+    ],
+    [
+      75,
+      10,
+      261,
+      330
+    ],
+    [
+      76,
+      10,
+      261,
+      330
+    ],
+    [
+      77,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      329
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      77,
+      8,
+      261,
+      330
+    ],
+    [
+      77,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      78,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      10,
+      261,
+      330
+    ],
+    [
+      79,
+      8,
+      261,
+      330
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 8.712,
+  "foreground_area_ratio": 1.234,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "brikk",
+  "animation": "project-reveal",
+  "attempt": 1,
+  "description": "Brikk completes a repaired miniature forest terminal mechanism, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Brikk, A compact moss-green goblin mechanic with two oversized amber goggles, patched teal apron and one rune wrench.\nAction over exactly four seconds: Brikk completes a repaired miniature forest terminal mechanism, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: moss-green skin; exactly two arms, two legs and two pointed ears; two oversized amber goggles; patched teal apron; one dark metal rune wrench.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2703,
+  "source": "artifacts/character-generation/videos/brikk/project-reveal-attempt-01.mp4",
+  "source_sha256": "124a104fcdcd4461e4172503003b40ed136448c375926de3bfc9600654e0934f",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

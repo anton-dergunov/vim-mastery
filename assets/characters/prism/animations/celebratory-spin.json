@@ -1,0 +1,356 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    350,
+    350
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3671875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 6.557438373565674,
+  "runtime_bytes": 1878650,
+  "master_bytes": 1878328,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      83,
+      13,
+      269,
+      250
+    ],
+    [
+      83,
+      13,
+      269,
+      250
+    ],
+    [
+      83,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      13,
+      269,
+      250
+    ],
+    [
+      80,
+      15,
+      269,
+      248
+    ],
+    [
+      80,
+      13,
+      269,
+      245
+    ],
+    [
+      83,
+      13,
+      269,
+      244
+    ],
+    [
+      83,
+      15,
+      269,
+      244
+    ],
+    [
+      87,
+      15,
+      269,
+      244
+    ],
+    [
+      82,
+      15,
+      269,
+      310
+    ],
+    [
+      80,
+      15,
+      269,
+      332
+    ],
+    [
+      80,
+      15,
+      269,
+      343
+    ],
+    [
+      80,
+      15,
+      269,
+      343
+    ],
+    [
+      80,
+      15,
+      269,
+      344
+    ],
+    [
+      80,
+      15,
+      269,
+      344
+    ],
+    [
+      80,
+      15,
+      269,
+      344
+    ],
+    [
+      80,
+      15,
+      269,
+      344
+    ],
+    [
+      80,
+      10,
+      269,
+      344
+    ],
+    [
+      80,
+      11,
+      269,
+      344
+    ],
+    [
+      80,
+      9,
+      269,
+      344
+    ],
+    [
+      82,
+      10,
+      269,
+      344
+    ],
+    [
+      80,
+      7,
+      269,
+      344
+    ],
+    [
+      80,
+      7,
+      269,
+      344
+    ],
+    [
+      80,
+      12,
+      269,
+      344
+    ],
+    [
+      80,
+      12,
+      269,
+      344
+    ],
+    [
+      80,
+      12,
+      269,
+      344
+    ],
+    [
+      80,
+      12,
+      269,
+      344
+    ],
+    [
+      82,
+      12,
+      269,
+      344
+    ],
+    [
+      82,
+      12,
+      269,
+      344
+    ],
+    [
+      80,
+      12,
+      269,
+      344
+    ],
+    [
+      80,
+      12,
+      269,
+      344
+    ],
+    [
+      90,
+      12,
+      269,
+      344
+    ],
+    [
+      90,
+      12,
+      269,
+      344
+    ],
+    [
+      85,
+      10,
+      269,
+      344
+    ],
+    [
+      84,
+      12,
+      269,
+      344
+    ],
+    [
+      89,
+      10,
+      269,
+      344
+    ],
+    [
+      89,
+      12,
+      267,
+      344
+    ],
+    [
+      110,
+      12,
+      266,
+      342
+    ],
+    [
+      113,
+      12,
+      266,
+      342
+    ],
+    [
+      113,
+      12,
+      264,
+      342
+    ],
+    [
+      113,
+      12,
+      264,
+      342
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 5.384,
+  "foreground_area_ratio": 1.642,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": [
+      [
+        0.3,
+        0.86,
+        0.4,
+        0.1
+      ]
+    ]
+  },
+  "character": "prism",
+  "animation": "celebratory-spin",
+  "attempt": 1,
+  "description": "Prism makes one clear celebratory turn with precise four-limb posing, shell tilt and two-wing shimmer; permanent costume and props remain attached and the character finishes at the original camera angle.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Prism, A violet-cyan crystal beetle with faceted shell, exactly two cream under-wings, four small limbs and a prism focus on the chest.\nAction over exactly four seconds: Prism makes one clear celebratory turn with precise four-limb posing, shell tilt and two-wing shimmer; permanent costume and props remain attached and the character finishes at the original camera angle.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: faceted violet and cyan shell; exactly two cream under-wings; exactly two arms and two legs; two amber eyes; one fixed chest prism.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2506,
+  "source": "artifacts/character-generation/videos/prism/celebratory-spin-attempt-01.mp4",
+  "source_sha256": "efa845d19552efe6dc3b23a8b1c776b6100143c13c66b6763f47161400d52430",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

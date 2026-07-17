@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    324,
+    324
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.265625,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1436662,
+  "master_bytes": 1437092,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      77,
+      14,
+      238,
+      246
+    ],
+    [
+      77,
+      14,
+      238,
+      314
+    ],
+    [
+      77,
+      14,
+      238,
+      314
+    ],
+    [
+      77,
+      14,
+      238,
+      314
+    ],
+    [
+      77,
+      14,
+      249,
+      314
+    ],
+    [
+      77,
+      14,
+      249,
+      314
+    ],
+    [
+      77,
+      14,
+      249,
+      314
+    ],
+    [
+      74,
+      14,
+      249,
+      314
+    ],
+    [
+      75,
+      14,
+      244,
+      314
+    ],
+    [
+      74,
+      14,
+      238,
+      314
+    ],
+    [
+      74,
+      7,
+      238,
+      314
+    ],
+    [
+      74,
+      7,
+      243,
+      314
+    ],
+    [
+      74,
+      8,
+      243,
+      314
+    ],
+    [
+      75,
+      14,
+      238,
+      314
+    ],
+    [
+      75,
+      7,
+      238,
+      314
+    ],
+    [
+      74,
+      16,
+      238,
+      315
+    ],
+    [
+      74,
+      7,
+      238,
+      318
+    ],
+    [
+      74,
+      7,
+      238,
+      317
+    ],
+    [
+      75,
+      7,
+      238,
+      318
+    ],
+    [
+      75,
+      17,
+      238,
+      314
+    ],
+    [
+      75,
+      12,
+      238,
+      318
+    ],
+    [
+      75,
+      7,
+      240,
+      316
+    ],
+    [
+      74,
+      7,
+      238,
+      318
+    ],
+    [
+      74,
+      13,
+      238,
+      318
+    ],
+    [
+      74,
+      9,
+      239,
+      318
+    ],
+    [
+      75,
+      14,
+      239,
+      317
+    ],
+    [
+      74,
+      14,
+      238,
+      316
+    ],
+    [
+      74,
+      11,
+      247,
+      315
+    ],
+    [
+      74,
+      7,
+      249,
+      315
+    ],
+    [
+      74,
+      12,
+      249,
+      315
+    ],
+    [
+      74,
+      10,
+      248,
+      313
+    ],
+    [
+      74,
+      7,
+      249,
+      317
+    ],
+    [
+      74,
+      8,
+      239,
+      318
+    ],
+    [
+      77,
+      11,
+      239,
+      314
+    ],
+    [
+      77,
+      12,
+      240,
+      314
+    ],
+    [
+      76,
+      12,
+      240,
+      314
+    ],
+    [
+      75,
+      7,
+      241,
+      314
+    ],
+    [
+      78,
+      14,
+      238,
+      314
+    ],
+    [
+      78,
+      14,
+      238,
+      314
+    ],
+    [
+      78,
+      14,
+      238,
+      314
+    ],
+    [
+      76,
+      11,
+      238,
+      314
+    ],
+    [
+      78,
+      14,
+      238,
+      314
+    ],
+    [
+      74,
+      63,
+      238,
+      314
+    ],
+    [
+      76,
+      14,
+      238,
+      314
+    ],
+    [
+      76,
+      66,
+      245,
+      314
+    ],
+    [
+      75,
+      66,
+      245,
+      314
+    ],
+    [
+      81,
+      79,
+      238,
+      314
+    ],
+    [
+      74,
+      61,
+      249,
+      314
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 4.171,
+  "foreground_area_ratio": 1.126,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "fen",
+  "animation": "sparkle-applause",
+  "attempt": 1,
+  "description": "Fen gives an anatomy-appropriate round of applause and the map and reed stylus remain in the two existing paws, accompanied by a restrained burst of amber and turquoise sparks.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Fen, A warm-brown otter cartographer with cream muzzle, teal vest, one rolled map and one reed stylus.\nAction over exactly four seconds: Fen gives an anatomy-appropriate round of applause and the map and reed stylus remain in the two existing paws, accompanied by a restrained burst of amber and turquoise sparks.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: warm-brown fur with cream muzzle and chest; exactly two arms, two legs and one otter tail; teal vest; one rolled parchment map; one reed stylus.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3407,
+  "source": "artifacts/character-generation/videos/fen/sparkle-applause-attempt-01.mp4",
+  "source_sha256": "e683a4be1f7d4ac15bc1fe75fec90c56d5c8d4fdc091bdf1a34400ef65f1b6ed",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -660,8 +660,10 @@ def promote_animation_candidate(
     character: dict[str, Any],
     action: dict[str, Any],
     attempt: int,
+    *,
+    replace_approved: bool = False,
 ) -> Path:
-    """Promote exactly one reviewed candidate without permitting overwrites."""
+    """Promote one reviewed candidate, replacing an approved asset only on request."""
     source = artifact_root / "runtime-candidates" / character["id"] / f"{action['id']}-attempt-{attempt:02d}.webp"
     source_metadata = source.with_suffix(".json")
     if not source.is_file() or not source_metadata.is_file():
@@ -669,9 +671,9 @@ def promote_animation_candidate(
     destination = ASSET_ROOT / character["id"] / "animations" / f"{action['id']}.webp"
     destination_metadata = destination.with_suffix(".json")
     existing = approvals.get("animations", {}).get(character["id"], {}).get(action["id"])
-    if existing and existing.get("approved"):
+    if existing and existing.get("approved") and not replace_approved:
         raise PipelineError(f"Approved animation already exists: {destination}")
-    if destination.exists() or destination_metadata.exists():
+    if (destination.exists() or destination_metadata.exists()) and not replace_approved:
         raise PipelineError(f"Refusing to overwrite repository animation: {destination}")
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, destination)
@@ -974,6 +976,25 @@ def cover_source_rectangles(
     return covered
 
 
+def write_all_frame_contact_sheet(frames: Sequence[Image.Image], output: Path, label: str) -> None:
+    """Write a compact all-frame review sheet for motion and clipping checks."""
+    columns = 8
+    tile = 128
+    rows = int(np.ceil(len(frames) / columns))
+    sheet = Image.new("RGBA", (columns * tile, rows * (tile + 18) + 26), (8, 19, 16, 255))
+    draw = ImageDraw.Draw(sheet)
+    draw.text((8, 5), label, fill=(119, 224, 163, 255))
+    for index, frame in enumerate(frames):
+        x = (index % columns) * tile
+        y = 26 + (index // columns) * (tile + 18)
+        preview = frame.copy()
+        preview.thumbnail((tile, tile), Image.Resampling.LANCZOS)
+        sheet.alpha_composite(preview, (x + (tile - preview.width) // 2, y + (tile - preview.height) // 2))
+        draw.text((x + 4, y + tile), f"{index:02d}", fill=(240, 215, 135, 255))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(output, optimize=True)
+
+
 def convert_video_asset(
     raw_video: Path,
     idle: Path,
@@ -1017,6 +1038,7 @@ def convert_video_asset(
         converter.save_webp(frames, master, 12, 1, lossless=True)
         converter.save_webp(frames, runtime, 12, 1, lossless=False, quality=RUNTIME_QUALITY)
         converter.write_debug(debug, source, cleaned, frames, background, variation, placement)
+        write_all_frame_contact_sheet(frames, debug / "all-frames-contact-sheet.png", raw_video.stem)
         review_frames = [debug / f"frame-{index:02d}.png" for index in (0, len(frames) // 2, len(frames) - 1)]
         make_contact_sheet(review_frames, debug / "contact-sheet.png", raw_video.stem)
     animation_info = converter.inspect_webp_animation(runtime)
@@ -1030,6 +1052,11 @@ def convert_video_asset(
                 alpha = np.asarray(encoded.convert("RGBA").getchannel("A"))
                 if alpha[0].any() or alpha[-1].any() or alpha[:, 0].any() or alpha[:, -1].any():
                     raise PipelineError(f"Runtime WebP clips foreground pixels in frame {index}")
+    content_bounds = [converter.alpha_bbox(frame) for frame in frames]
+    edge_clearance = min(
+        min(left, top, frame.width - right, frame.height - bottom)
+        for frame, (left, top, right, bottom) in zip(frames, content_bounds)
+    )
     runtime_bytes = runtime.stat().st_size
     first_last_mae = float(np.abs(np.asarray(frames[0], dtype=np.int16) - np.asarray(frames[-1], dtype=np.int16)).mean())
     alpha_areas = [int(np.count_nonzero(np.asarray(frame.getchannel("A")))) for frame in frames]
@@ -1055,6 +1082,9 @@ def convert_video_asset(
         "runtime_bytes": runtime_bytes, "master_bytes": master.stat().st_size,
         "runtime_size_target_bytes": [300 * 1024, 700 * 1024],
         "runtime_size_in_target": 300 * 1024 <= runtime_bytes <= 700 * 1024,
+        "all_frames_audited": True,
+        "frame_alpha_bounds": [list(bounds) for bounds in content_bounds],
+        "minimum_content_edge_clearance_px": edge_clearance,
         "first_last_mean_absolute_error": round(first_last_mae, 3),
         "foreground_area_ratio": round(area_ratio, 3),
         "automatic_review_flags": automatic_flags,
@@ -1223,8 +1253,8 @@ def command_review_approve(args: argparse.Namespace) -> int:
     operations = load_operations(args.artifact_root)
     jobs = review_jobs(catalogue, review, operations)
     print(f"Review promotion plan: {len(jobs)} completed clips")
-    if args.max_concurrency < 1 or args.max_concurrency > 4:
-        raise PipelineError("--max-concurrency must be between 1 and 4")
+    if args.max_concurrency < 1 or args.max_concurrency > 8:
+        raise PipelineError("--max-concurrency must be between 1 and 8")
     # Convert all files before any repository promotion. A bad matte cannot leave
     # a partially approved group behind.
     def convert_one(
@@ -1236,24 +1266,28 @@ def command_review_approve(args: argparse.Namespace) -> int:
         runtime = args.artifact_root / "runtime-candidates" / character["id"] / f"{action['id']}-attempt-{attempt:02d}.webp"
         metadata_path = runtime.with_suffix(".json")
         if runtime.exists() and metadata_path.exists() and args.resume:
-            return character, action, attempt, False
-        else:
-            master = args.artifact_root / "masters" / character["id"] / f"{action['id']}-attempt-{attempt:02d}.webp"
-            debug = args.artifact_root / "debug" / character["id"] / f"{action['id']}-attempt-{attempt:02d}"
-            metadata = convert_video_asset(
-                raw, approved_idle_path(character, approvals), master, runtime, debug,
-                duration_seconds=options["duration_seconds"], cover_rectangles=options["cover_rectangles"],
-            )
-            metadata.update({
-                "character": character["id"], "animation": action["id"], "attempt": attempt,
-                "description": action_description(character, action), "prompt": video_prompt(catalogue, character, action),
-                "negative_prompt": negative_video_prompt(character), "model": catalogue["models"]["video"],
-                "model_revision": catalogue["models"]["video"], "seed": video_seed(catalogue, character, action),
-                "source": str(raw.relative_to(ROOT)), "source_sha256": sha256_path(raw),
-                "estimated_generation_cost_usd": float(catalogue["models"]["video_cost_per_second_usd"]) * 4,
-                "approved": False, "approval_state": "awaiting-human-review",
-            })
-            write_json(metadata_path, metadata)
+            existing_metadata = read_json(metadata_path)
+            # A rebuild must not silently reuse the earlier per-frame matte.
+            # Only candidates written by the all-frame audit path are safe to
+            # reuse while replacing approved runtime assets.
+            if not args.replace_approved or existing_metadata.get("all_frames_audited"):
+                return character, action, attempt, False
+        master = args.artifact_root / "masters" / character["id"] / f"{action['id']}-attempt-{attempt:02d}.webp"
+        debug = args.artifact_root / "debug" / character["id"] / f"{action['id']}-attempt-{attempt:02d}"
+        metadata = convert_video_asset(
+            raw, approved_idle_path(character, approvals), master, runtime, debug,
+            duration_seconds=options["duration_seconds"], cover_rectangles=options["cover_rectangles"],
+        )
+        metadata.update({
+            "character": character["id"], "animation": action["id"], "attempt": attempt,
+            "description": action_description(character, action), "prompt": video_prompt(catalogue, character, action),
+            "negative_prompt": negative_video_prompt(character), "model": catalogue["models"]["video"],
+            "model_revision": catalogue["models"]["video"], "seed": video_seed(catalogue, character, action),
+            "source": str(raw.relative_to(ROOT)), "source_sha256": sha256_path(raw),
+            "estimated_generation_cost_usd": float(catalogue["models"]["video_cost_per_second_usd"]) * 4,
+            "approved": False, "approval_state": "awaiting-human-review",
+        })
+        write_json(metadata_path, metadata)
         return character, action, attempt, True
 
     converted: list[tuple[dict[str, Any], dict[str, Any], int]] = []
@@ -1266,7 +1300,10 @@ def command_review_approve(args: argparse.Namespace) -> int:
             print(f"{state} review candidate {runtime} ({runtime.stat().st_size / 1024:.0f} KiB)", flush=True)
             converted.append((character, action, attempt))
     for character, action, attempt in converted:
-        destination = promote_animation_candidate(catalogue, approvals, args.artifact_root, character, action, attempt)
+        destination = promote_animation_candidate(
+            catalogue, approvals, args.artifact_root, character, action, attempt,
+            replace_approved=args.replace_approved,
+        )
         print(f"Approved {character['name']} {action['id']} attempt {attempt}: {destination}")
     write_json(APPROVALS_PATH, approvals)
     write_manifest(catalogue, approvals)
@@ -1346,6 +1383,10 @@ def build_parser() -> argparse.ArgumentParser:
     review.add_argument("--review-file", type=Path, default=VIDEO_REVIEW_PATH)
     review.add_argument("--resume", action="store_true")
     review.add_argument("--max-concurrency", type=int, default=2)
+    review.add_argument(
+        "--replace-approved", action="store_true",
+        help="Rebuild and replace approved runtime WebPs from the reviewed sources.",
+    )
     review.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     review.set_defaults(handler=command_review_approve)
     return parser

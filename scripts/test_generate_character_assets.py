@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import generate_character_assets as pipeline
+import convert_veo_animation as converter
 
 
 class CharacterAssetPipelineTests(unittest.TestCase):
@@ -162,6 +163,17 @@ class CharacterAssetPipelineTests(unittest.TestCase):
             with Image.open(output) as result:
                 self.assertEqual(result.getchannel("A").getpixel((0, 0)), 0)
                 self.assertIsNotNone(result.getchannel("A").getbbox())
+
+    def test_temporal_matte_retains_detached_animated_effects(self) -> None:
+        first = Image.new("L", (256, 256))
+        second = Image.new("L", (256, 256))
+        for alpha, body_y in ((first, 112), (second, 88)):
+            draw = ImageDraw.Draw(alpha)
+            draw.rectangle((96, body_y, 159, body_y + 95), fill=255)
+            draw.ellipse((116, 36, 132, 52), fill=255)  # detached high sparkle
+        bounds = converter.temporal_main_bounds([first, second])
+        kept = converter.keep_character_and_effects(first, temporal_bounds=bounds)
+        self.assertEqual(kept.getpixel((124, 44)), 255)
 
     def test_video_jobs_require_approved_stills_only_for_execution(self) -> None:
         approvals = pipeline.load_approvals()

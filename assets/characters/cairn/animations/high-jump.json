@@ -1,0 +1,350 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    308,
+    308
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.203125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 4.123105525970459,
+  "runtime_bytes": 1905330,
+  "master_bytes": 1907440,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      76,
+      71,
+      230,
+      302
+    ],
+    [
+      76,
+      71,
+      230,
+      302
+    ],
+    [
+      79,
+      73,
+      230,
+      242
+    ],
+    [
+      79,
+      76,
+      231,
+      250
+    ],
+    [
+      77,
+      78,
+      233,
+      258
+    ],
+    [
+      69,
+      82,
+      237,
+      261
+    ],
+    [
+      69,
+      80,
+      240,
+      261
+    ],
+    [
+      69,
+      74,
+      240,
+      302
+    ],
+    [
+      69,
+      61,
+      240,
+      244
+    ],
+    [
+      69,
+      54,
+      240,
+      229
+    ],
+    [
+      69,
+      40,
+      240,
+      224
+    ],
+    [
+      75,
+      32,
+      237,
+      222
+    ],
+    [
+      76,
+      34,
+      238,
+      239
+    ],
+    [
+      77,
+      40,
+      238,
+      238
+    ],
+    [
+      77,
+      47,
+      237,
+      253
+    ],
+    [
+      78,
+      54,
+      237,
+      267
+    ],
+    [
+      77,
+      43,
+      238,
+      268
+    ],
+    [
+      75,
+      40,
+      238,
+      268
+    ],
+    [
+      74,
+      36,
+      238,
+      268
+    ],
+    [
+      74,
+      34,
+      238,
+      271
+    ],
+    [
+      75,
+      10,
+      238,
+      272
+    ],
+    [
+      75,
+      12,
+      238,
+      272
+    ],
+    [
+      75,
+      10,
+      238,
+      272
+    ],
+    [
+      76,
+      11,
+      237,
+      272
+    ],
+    [
+      76,
+      11,
+      237,
+      302
+    ],
+    [
+      76,
+      13,
+      237,
+      302
+    ],
+    [
+      73,
+      9,
+      238,
+      302
+    ],
+    [
+      69,
+      9,
+      240,
+      302
+    ],
+    [
+      69,
+      8,
+      240,
+      282
+    ],
+    [
+      69,
+      6,
+      240,
+      283
+    ],
+    [
+      69,
+      8,
+      240,
+      284
+    ],
+    [
+      69,
+      8,
+      240,
+      284
+    ],
+    [
+      69,
+      9,
+      240,
+      284
+    ],
+    [
+      69,
+      10,
+      240,
+      284
+    ],
+    [
+      69,
+      10,
+      240,
+      284
+    ],
+    [
+      75,
+      10,
+      240,
+      284
+    ],
+    [
+      74,
+      7,
+      240,
+      284
+    ],
+    [
+      72,
+      7,
+      240,
+      283
+    ],
+    [
+      70,
+      7,
+      229,
+      271
+    ],
+    [
+      69,
+      7,
+      230,
+      271
+    ],
+    [
+      69,
+      7,
+      230,
+      271
+    ],
+    [
+      69,
+      7,
+      230,
+      271
+    ],
+    [
+      69,
+      9,
+      230,
+      271
+    ],
+    [
+      69,
+      9,
+      230,
+      271
+    ],
+    [
+      69,
+      9,
+      230,
+      271
+    ],
+    [
+      72,
+      5,
+      230,
+      271
+    ],
+    [
+      72,
+      5,
+      230,
+      271
+    ],
+    [
+      72,
+      6,
+      230,
+      271
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 11.636,
+  "foreground_area_ratio": 1.196,
+  "automatic_review_flags": [
+    "possible-neutral-pose-return-failure",
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cairn",
+  "animation": "high-jump",
+  "attempt": 1,
+  "description": "Cairn performs a larger anatomy-appropriate celebratory leap using weighty body lifts, small stone stomps and controlled arm raises. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Cairn lands softly and settles into the approved pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.\nAction over exactly four seconds: Cairn performs a larger anatomy-appropriate celebratory leap using weighty body lifts, small stone stomps and controlled arm raises. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Cairn lands softly and settles into the approved pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2805,
+  "source": "artifacts/character-generation/videos/cairn/high-jump-attempt-01.mp4",
+  "source_sha256": "ce62b4c6559b0060a2ff35544dde51819d21bbd7d0bff1bfb837d3c1821061f2",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    316,
+    316
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.234375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.464101552963257,
+  "runtime_bytes": 1939522,
+  "master_bytes": 1941242,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      80,
+      75,
+      234,
+      306
+    ],
+    [
+      80,
+      79,
+      234,
+      306
+    ],
+    [
+      80,
+      81,
+      235,
+      306
+    ],
+    [
+      80,
+      85,
+      237,
+      306
+    ],
+    [
+      80,
+      82,
+      238,
+      306
+    ],
+    [
+      78,
+      76,
+      239,
+      306
+    ],
+    [
+      73,
+      69,
+      240,
+      306
+    ],
+    [
+      73,
+      60,
+      243,
+      306
+    ],
+    [
+      73,
+      39,
+      244,
+      306
+    ],
+    [
+      73,
+      28,
+      244,
+      306
+    ],
+    [
+      73,
+      28,
+      244,
+      306
+    ],
+    [
+      73,
+      28,
+      244,
+      306
+    ],
+    [
+      73,
+      6,
+      244,
+      304
+    ],
+    [
+      73,
+      6,
+      244,
+      306
+    ],
+    [
+      73,
+      6,
+      244,
+      307
+    ],
+    [
+      73,
+      6,
+      244,
+      308
+    ],
+    [
+      73,
+      6,
+      244,
+      306
+    ],
+    [
+      73,
+      6,
+      244,
+      308
+    ],
+    [
+      73,
+      6,
+      244,
+      308
+    ],
+    [
+      73,
+      19,
+      244,
+      307
+    ],
+    [
+      73,
+      59,
+      244,
+      309
+    ],
+    [
+      73,
+      68,
+      244,
+      309
+    ],
+    [
+      73,
+      69,
+      244,
+      309
+    ],
+    [
+      73,
+      69,
+      244,
+      309
+    ],
+    [
+      73,
+      70,
+      243,
+      309
+    ],
+    [
+      73,
+      71,
+      244,
+      309
+    ],
+    [
+      73,
+      71,
+      244,
+      309
+    ],
+    [
+      73,
+      72,
+      244,
+      309
+    ],
+    [
+      73,
+      71,
+      244,
+      309
+    ],
+    [
+      73,
+      71,
+      244,
+      308
+    ],
+    [
+      73,
+      70,
+      244,
+      307
+    ],
+    [
+      73,
+      69,
+      244,
+      309
+    ],
+    [
+      73,
+      13,
+      237,
+      309
+    ],
+    [
+      73,
+      68,
+      236,
+      309
+    ],
+    [
+      73,
+      13,
+      243,
+      309
+    ],
+    [
+      73,
+      13,
+      243,
+      309
+    ],
+    [
+      73,
+      13,
+      243,
+      309
+    ],
+    [
+      73,
+      13,
+      244,
+      310
+    ],
+    [
+      73,
+      13,
+      244,
+      309
+    ],
+    [
+      73,
+      13,
+      243,
+      309
+    ],
+    [
+      73,
+      13,
+      238,
+      309
+    ],
+    [
+      73,
+      68,
+      238,
+      309
+    ],
+    [
+      73,
+      68,
+      238,
+      309
+    ],
+    [
+      73,
+      68,
+      237,
+      309
+    ],
+    [
+      73,
+      68,
+      239,
+      309
+    ],
+    [
+      73,
+      68,
+      239,
+      309
+    ],
+    [
+      73,
+      68,
+      239,
+      309
+    ],
+    [
+      73,
+      68,
+      239,
+      309
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 9.347,
+  "foreground_area_ratio": 1.191,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cairn",
+  "animation": "joyful-hop",
+  "attempt": 1,
+  "description": "Cairn makes one buoyant success hop using weighty body lifts, small stone stomps and controlled arm raises, shows unmistakable happiness, and settles exactly into the approved neutral pose.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.\nAction over exactly four seconds: Cairn makes one buoyant success hop using weighty body lifts, small stone stomps and controlled arm raises, shows unmistakable happiness, and settles exactly into the approved neutral pose.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2800,
+  "source": "artifacts/character-generation/videos/cairn/joyful-hop-attempt-01.mp4",
+  "source_sha256": "39902bb3953cfaf2716c3f3b75faaa480dad4676a5839ff25974044bd83903d7",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}

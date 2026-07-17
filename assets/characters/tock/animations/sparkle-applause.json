@@ -1,0 +1,349 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    344,
+    344
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.34375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 2053020,
+  "master_bytes": 2056144,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      83,
+      16,
+      254,
+      333
+    ],
+    [
+      87,
+      90,
+      260,
+      333
+    ],
+    [
+      79,
+      90,
+      260,
+      333
+    ],
+    [
+      81,
+      16,
+      261,
+      256
+    ],
+    [
+      79,
+      8,
+      265,
+      256
+    ],
+    [
+      79,
+      8,
+      265,
+      333
+    ],
+    [
+      79,
+      8,
+      265,
+      333
+    ],
+    [
+      79,
+      8,
+      265,
+      333
+    ],
+    [
+      79,
+      8,
+      265,
+      256
+    ],
+    [
+      79,
+      8,
+      265,
+      338
+    ],
+    [
+      79,
+      8,
+      265,
+      338
+    ],
+    [
+      79,
+      12,
+      265,
+      338
+    ],
+    [
+      79,
+      8,
+      265,
+      338
+    ],
+    [
+      79,
+      8,
+      265,
+      338
+    ],
+    [
+      79,
+      8,
+      265,
+      338
+    ],
+    [
+      79,
+      14,
+      265,
+      338
+    ],
+    [
+      79,
+      9,
+      265,
+      338
+    ],
+    [
+      79,
+      8,
+      265,
+      335
+    ],
+    [
+      79,
+      8,
+      253,
+      337
+    ],
+    [
+      79,
+      16,
+      252,
+      337
+    ],
+    [
+      79,
+      11,
+      251,
+      338
+    ],
+    [
+      79,
+      16,
+      244,
+      338
+    ],
+    [
+      79,
+      16,
+      247,
+      338
+    ],
+    [
+      79,
+      16,
+      244,
+      262
+    ],
+    [
+      79,
+      16,
+      248,
+      258
+    ],
+    [
+      79,
+      16,
+      252,
+      256
+    ],
+    [
+      79,
+      16,
+      256,
+      256
+    ],
+    [
+      83,
+      16,
+      259,
+      256
+    ],
+    [
+      83,
+      16,
+      260,
+      256
+    ],
+    [
+      83,
+      16,
+      258,
+      256
+    ],
+    [
+      83,
+      16,
+      254,
+      256
+    ],
+    [
+      83,
+      16,
+      249,
+      256
+    ],
+    [
+      83,
+      16,
+      245,
+      256
+    ],
+    [
+      83,
+      16,
+      243,
+      256
+    ],
+    [
+      83,
+      16,
+      265,
+      256
+    ],
+    [
+      83,
+      16,
+      243,
+      256
+    ],
+    [
+      83,
+      16,
+      243,
+      256
+    ],
+    [
+      83,
+      14,
+      246,
+      256
+    ],
+    [
+      83,
+      14,
+      251,
+      256
+    ],
+    [
+      83,
+      14,
+      255,
+      256
+    ],
+    [
+      83,
+      14,
+      259,
+      256
+    ],
+    [
+      83,
+      16,
+      260,
+      256
+    ],
+    [
+      83,
+      16,
+      264,
+      256
+    ],
+    [
+      83,
+      16,
+      255,
+      256
+    ],
+    [
+      83,
+      16,
+      264,
+      256
+    ],
+    [
+      83,
+      16,
+      264,
+      256
+    ],
+    [
+      90,
+      90,
+      243,
+      256
+    ],
+    [
+      90,
+      90,
+      243,
+      256
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 1.356,
+  "foreground_area_ratio": 1.274,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "tock",
+  "animation": "sparkle-applause",
+  "attempt": 1,
+  "description": "Tock gives an anatomy-appropriate round of applause and the wind-up key turns once and the metronome tail keeps steady time, accompanied by a restrained burst of amber and turquoise sparks.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Tock, A brass-and-teal clockwork woodpecker with two wings, two feet, pointed beak, one wind-up key and metronome tail.\nAction over exactly four seconds: Tock gives an anatomy-appropriate round of applause and the wind-up key turns once and the metronome tail keeps steady time, accompanied by a restrained burst of amber and turquoise sparks.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: brass plates with teal enamel; exactly two wings and two feet; one pointed woodpecker beak; one wind-up key on the back; one metronome tail.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 2607,
+  "source": "artifacts/character-generation/videos/tock/sparkle-applause-attempt-01.mp4",
+  "source_sha256": "ba3100b98935ba88045531dcf130598065f100aba101a10ec2cd616c71aa6c9e",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1
+}
