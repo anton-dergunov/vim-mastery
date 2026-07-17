@@ -52,17 +52,59 @@ const themeColors = {
   deepwater: ["#07151d", "#123f4e", "#55bfd0", "#888cff", "#f6bd63"],
 };
 
-// Scene data can opt into another entry later with `scene.character`.  The
-// current lessons intentionally default to Nix without duplicating metadata.
-const characterAssets = {
+// This fallback renders immediately; the complete local manifest replaces it
+// after loading so every exercise can receive a stable random cast member.
+let characterAssets = {
   nix: {
-    idleSrc: "assets/nix.png",
-    successSrc: "assets/nix-success.webp",
-    // `convert_veo_animation.py` prints this canvas/base-size ratio.
-    successCanvasScale: 1.375,
+    name: "Nix",
+    idle: "assets/characters/nix/idle.png",
+    animations: {
+      "joyful-hop": { src: "assets/characters/nix/animations/joyful-hop.webp", css_scale: 1.375 },
+    },
     alt: "Nix, a lantern-moth apprentice",
   },
 };
+const characterAssignments = new Map();
+
+function shuffle(items) {
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [result[index], result[other]] = [result[other], result[index]];
+  }
+  return result;
+}
+
+function assignCharacters() {
+  characterAssignments.clear();
+  const characterIds = shuffle(Object.keys(characterAssets));
+  exercises.forEach((exercise, index) => {
+    const characterId = exercise.scene.character || characterIds[index % characterIds.length];
+    const actions = Object.keys(characterAssets[characterId].animations);
+    const animationId = actions[Math.floor(Math.random() * actions.length)];
+    characterAssignments.set(exercise.id, { characterId, animationId });
+  });
+}
+
+function characterAssignment(exercise = currentExercise()) {
+  return characterAssignments.get(exercise.id) || { characterId: "nix", animationId: "joyful-hop" };
+}
+
+async function loadCharacterAssets() {
+  try {
+    const response = await fetch("assets/characters/manifest.json");
+    if (!response.ok) throw new Error(`manifest request failed (${response.status})`);
+    const manifest = await response.json();
+    characterAssets = Object.fromEntries(Object.entries(manifest.characters).map(([id, character]) => [id, {
+      ...character,
+      alt: `${character.name}, ${character.role}`,
+    }]));
+    assignCharacters();
+    renderAll();
+  } catch (error) {
+    console.warn("Using Nix-only fallback character assets:", error);
+  }
+}
 
 const state = {
   exerciseIndex: 0,
@@ -267,9 +309,9 @@ function renderWorld() {
       <div class="code-body" id="editorMount" aria-label="Vim code editor"></div>
     </div>`;
   const sprites = exercise.scene.blocks.map(renderSprite).join("");
-  const characterId = exercise.scene.character || "nix";
-  const characterAsset = characterAssets[characterId];
-  const character = `<img class="nix ${exercise.scene.codeSide}" data-character="${characterId}" src="${characterAsset.idleSrc}" alt="${characterAsset.alt}">`;
+  const assignment = characterAssignment(exercise);
+  const characterAsset = characterAssets[assignment.characterId];
+  const character = `<img class="nix ${exercise.scene.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${characterAsset.idle}" alt="${characterAsset.alt}">`;
   const oracle = `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open in-world help">?</button>`;
   elements.worldGrid.innerHTML = `${sprites}${code}${character}${oracle}`;
   mountEditor();
@@ -425,20 +467,27 @@ function playSuccessCharacter() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const character = $(".nix", elements.worldGrid);
   const asset = characterAssets[character?.dataset.character || ""];
-  if (!character || !asset?.successSrc) return;
+  const animation = asset?.animations?.[character?.dataset.animation || ""];
+  if (!character || !animation?.src) return;
 
   // A fresh image element restarts WebP animation without a cache-busting URL.
-  // Keep the approved idle pose under it briefly so the success state dissolves
-  // in rather than visibly popping to Veo's first frame.
+  // Decode it before replacing the idle sprite so the two approved poses can
+  // cross-fade at the same canvas scale rather than flashing a loading frame.
   const celebrating = character.cloneNode();
-  celebrating.src = asset.successSrc;
+  celebrating.src = animation.src;
   celebrating.alt = `${asset.alt}, celebrating`;
-  celebrating.style.setProperty("--success-canvas-scale", String(asset.successCanvasScale || 1));
-  celebrating.classList.add("celebrating", "transitioning-in");
-  character.classList.add("transitioning-out");
-  character.setAttribute("aria-hidden", "true");
-  character.after(celebrating);
-  window.setTimeout(() => character.remove(), 280);
+  celebrating.style.setProperty("--success-canvas-scale", String(animation.css_scale || 1));
+  let started = false;
+  const startTransition = () => {
+    if (started || !state.complete || !character.isConnected) return;
+    started = true;
+    celebrating.classList.add("celebrating", "transitioning-in");
+    character.classList.add("transitioning-out");
+    character.setAttribute("aria-hidden", "true");
+    character.after(celebrating);
+    window.setTimeout(() => character.remove(), 420);
+  };
+  celebrating.decode().then(startTransition, startTransition);
 }
 
 function finishExercise() {
@@ -696,7 +745,9 @@ window.VimWilds = Object.freeze({
   },
 });
 
+assignCharacters();
 renderAll();
+void loadCharacterAssets();
 requestAnimationFrame(() => {
   // Force a separate first-paint pass for the dense keyboard layer on mobile WebKit/Chromium.
   elements.keyboard.style.opacity = ".999";

@@ -561,26 +561,27 @@ button { font: inherit; }
   z-index: 8;
   align-self: end;
   justify-self: center;
-  width: clamp(74px, 21vw, 92px);
+  width: clamp(111px, 31.5vw, 138px);
   aspect-ratio: 1;
   object-fit: contain;
   image-rendering: pixelated;
-  filter: drop-shadow(0 7px 5px rgba(0,0,0,.68));
+  filter: drop-shadow(0 10px 7px rgba(0,0,0,.68));
   transform-origin: 55% 88%;
+  transform: scaleX(var(--character-facing, 1));
   animation: nixIdle 2.4s ease-in-out infinite;
   pointer-events: none;
 }
-.nix.left { grid-column: 1 / span 3; grid-row: 7 / span 3; }
+.nix.left { --character-facing: -1; position: relative; left: -12px; transform-origin: center; grid-column: 1 / span 3; grid-row: 7 / span 3; }
 .nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; }
 .world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
 .world.complete .nix.celebrating {
   animation: none;
   filter: none;
-  transform: scale(var(--success-canvas-scale, 1));
+  transform: scale(var(--success-canvas-scale, 1)) scaleX(var(--character-facing, 1));
   transform-origin: center;
 }
-.world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .28s ease-out forwards; }
-.world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .28s ease-out forwards; }
+.world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .42s ease-in-out forwards; }
+.world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .42s ease-in-out forwards; }
 
 .oracle {
   z-index: 10;
@@ -894,10 +895,10 @@ button { font: inherit; }
 
 @keyframes cursorBlink { 0%, 48% { opacity: 1; } 49%, 100% { opacity: .28; } }
 @keyframes waterShimmer { from { filter: brightness(.9); } to { filter: brightness(1.13); } }
-@keyframes nixIdle { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-3px) rotate(1deg); } }
-@keyframes nixCelebrate { 0%,100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-15px) rotate(-7deg); } 70% { transform: translateY(-5px) rotate(6deg); } }
+@keyframes nixIdle { 0%, 100% { transform: translateY(0) rotate(-1deg) scaleX(var(--character-facing, 1)); } 50% { transform: translateY(-3px) rotate(1deg) scaleX(var(--character-facing, 1)); } }
+@keyframes nixCelebrate { 0%,100% { transform: translateY(0) rotate(0) scaleX(var(--character-facing, 1)); } 45% { transform: translateY(-15px) rotate(-7deg) scaleX(var(--character-facing, 1)); } 70% { transform: translateY(-5px) rotate(6deg) scaleX(var(--character-facing, 1)); } }
 @keyframes nixSuccessFadeOut { from { opacity: 1; } to { opacity: 0; } }
-@keyframes nixSuccessFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nixSuccessFadeIn { from { opacity: 0; transform: scale(var(--success-canvas-scale, 1)) scaleX(var(--character-facing, 1)); } to { opacity: 1; transform: scale(var(--success-canvas-scale, 1)) scaleX(var(--character-facing, 1)); } }
 @keyframes oracleFloat { 0%,100% { transform: translateY(1px); } 50% { transform: translateY(-3px); } }
 @keyframes moteFloat { 0%,100% { transform: translate(0, 2px); opacity: .35; } 50% { transform: translate(4px, -5px); opacity: 1; } }
 @keyframes trayShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 65% { transform: translateX(4px); } }

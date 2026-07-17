@@ -63,21 +63,22 @@ test.describe("CodeMirror Vim conformance", () => {
     expect(browser.complete).toBe(true);
   });
 
-  test("success replaces Nix with the transparent WebP and reset restores the idle sprite", async ({ page }) => {
+  test("success replaces the assigned idle character with its transparent WebP and reset restores it", async ({ page }) => {
     await page.goto("/");
+    const idleSrc = await page.locator(".nix").getAttribute("src");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
     await expect(page.locator(".nix.celebrating")).toHaveClass(/transitioning-in/);
-    await expect(page.locator(".nix.celebrating")).toHaveAttribute("src", /assets\/nix-success\.webp$/);
+    await expect(page.locator(".nix.celebrating")).toHaveAttribute("src", /assets\/characters\/[^/]+\/animations\/[^/]+\.webp$/);
     await expect(page.locator(".nix.transitioning-out")).toHaveCount(1);
     await expect.poll(() => page.locator(".nix").count()).toBe(1);
 
     await page.locator("#resetButton").click();
     await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
-    await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix\.png$/);
+    await expect(page.locator(".nix")).toHaveAttribute("src", idleSrc);
   });
 
-  test("success WebP keeps Nix unmirrored on the right side", async ({ page }) => {
+  test("success WebP keeps the assigned character unmirrored on the right side", async ({ page }) => {
     await page.goto("/");
     await page.evaluate(() => {
       const rightIndex = window.VimWilds.exercises.findIndex(exercise => exercise.scene.codeSide === "right");
@@ -86,15 +87,24 @@ test.describe("CodeMirror Vim conformance", () => {
     });
     await expect(page.locator(".nix.right.celebrating")).toHaveClass(/celebrating/);
     expect(await page.locator(".nix.right.celebrating").evaluate(element => getComputedStyle(element).transform)).not.toContain("matrix(-");
+    expect(await page.locator(".nix.right.celebrating").evaluate(element => getComputedStyle(element).getPropertyValue("--character-facing").trim())).not.toBe("-1");
   });
 
-  test("reduced-motion users retain the static Nix sprite on success", async ({ page }) => {
+  test("left-side characters mirror for idle and success animation", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator(".nix.left")).toHaveCSS("--character-facing", "-1");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect(page.locator(".nix.left.celebrating")).toHaveCSS("--character-facing", "-1");
+  });
+
+  test("reduced-motion users retain the assigned static character on success", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
+    const idleSrc = await page.locator(".nix").getAttribute("src");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
     await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
-    await expect(page.locator(".nix")).toHaveAttribute("src", /assets\/nix\.png$/);
+    await expect(page.locator(".nix")).toHaveAttribute("src", idleSrc);
   });
 
   test("touch Ctrl+Alt chord retains both modifiers", async ({ page }) => {
