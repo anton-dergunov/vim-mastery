@@ -299,6 +299,922 @@
         "path": "assets/characters/nix/animations/magic-flourish.webp",
         "sha256": "54cbf6a7cbe7ab96bf537ba5926c728fbae1c96503a9c2a6e89ee31bbef0306f",
         "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/prop-trick.webp",
+        "sha256": "bfe7d6853d13e8e22ac741c8bc1ca3a866d70f45da699793d2536212406ff881",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/victory-dance.webp",
+        "sha256": "3c1565df4afec10bfd2e91900b1ef7f70e3768b258dad432c19860b84228d1f5",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/project-reveal.webp",
+        "sha256": "81314935966d866a8f33046979d3a1db2c44d7b7092c8fffa73177c4fe451e25",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/high-jump.webp",
+        "sha256": "52ff644e4fc905d65cb4dd732d5e09896e98bb8314c0454e19ca0b8e8511feeb",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/sparkle-applause.webp",
+        "sha256": "f70120ccf93b1f718873d1236f1a778947d1b30d0ab80a5032203e82277d2bed",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/signature-finale.webp",
+        "sha256": "bcb029116cc821642208b07f79b9946256f9712da2dd65a5abe6d33324012d78",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/celebratory-spin.webp",
+        "sha256": "4e920f257664a4b154b8f4c14c970ac98d69b4b5a5357b094ba76d03689a08cd",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/nix/animations/illusion-surprise.webp",
+        "sha256": "e2aabf04cf07b4e9bccc050ef17fe586213434b4e3ffcb9eb78e3580b72477c2",
+        "approved": true
+      }
+    },
+    "vela": {
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/victory-dance.webp",
+        "sha256": "5b6f9142fde1df531e0dbf27e2811da70969825296bc674c688dd69aa201ab76",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/magic-flourish.webp",
+        "sha256": "01d6d256f6f2b64b0e25c66e417033e43587046de3a92645e97360b1696211c9",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/prop-trick.webp",
+        "sha256": "3d56b08d8e488b950493a186f056fee93ff3c462b69568be5494d0608ede17f2",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/high-jump.webp",
+        "sha256": "03e4ee34f1625b5f5c714b7bd963c6bfd91042a711903601591087398e136628",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/celebratory-spin.webp",
+        "sha256": "04fe494f9db1ecc20a568b90ebd7f9e12ca581ca7447a21a757d6a6c030663b0",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/sparkle-applause.webp",
+        "sha256": "993cc679edbceb49c64ef71012ceabcd1f2623c713ce12f38f75d8ca12aefefe",
+        "approved": true
+      },
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/joyful-hop.webp",
+        "sha256": "9673306a19b2a8723ada63159d0b556a0419b6dcb85ae73946dbe9ef87ac08ff",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/project-reveal.webp",
+        "sha256": "827381407fe5e36184c38ecbb1a401642418148eb1b9b603e6673ebe09efa854",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/illusion-surprise.webp",
+        "sha256": "abf8be6f31eaafb249c803a6d98b3dcd7cf5fbc964d2aea783e8418cf00d9825",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/vela/animations/signature-finale.webp",
+        "sha256": "306de8b94585bbd18bb7f2d9509a0ab6f6abe75c54254c8a14cc43d6ce1ac95d",
+        "approved": true
+      }
+    },
+    "tatter": {
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/victory-dance.webp",
+        "sha256": "a3fd1bec3c5504de7bd06ca33e3426847aa95f446ce997a79f9ddd395d80f4a4",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/prop-trick.webp",
+        "sha256": "0059c31701ebc96e6239fb0cf1ead4897e162ffedfad6f4823a8247b8d2bf687",
+        "approved": true
+      },
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/joyful-hop.webp",
+        "sha256": "41a1c407b9706990ac2b6abcef1a5d0db7a1e02d7c17e4a26b39f8babd304edf",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/project-reveal.webp",
+        "sha256": "01629d8c82658f5dc1e3fd93372e96a1a195c541f1d1eb13415f192c26dde101",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/sparkle-applause.webp",
+        "sha256": "b73acc9cb1b31e4ee8e5769a77c46fd442c72c0727f549ae48b31263e699132d",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/illusion-surprise.webp",
+        "sha256": "110ec574ad72b48dcef7feb0d2967854596633454f92678e1eafd865260bf654",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/signature-finale.webp",
+        "sha256": "a014ed9c90befff6f6d88af6549f8a0742781465f21365da1877296723dd8116",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 3,
+        "path": "assets/characters/tatter/animations/high-jump.webp",
+        "sha256": "31ae0d44aede2c12f033804174c82c4bcf9dd7c17ae05b9345e8ba0fcbfb5f99",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/magic-flourish.webp",
+        "sha256": "c7ece03ebd253b25e7bc9981d2fe64a20817ca9a3512d6c40be6985a154969c6",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/tatter/animations/celebratory-spin.webp",
+        "sha256": "af6764f17909517ea18768e9a3d7debf4dc2a2325241666d6787180420312deb",
+        "approved": true
+      }
+    },
+    "orin": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/joyful-hop.webp",
+        "sha256": "37119f1aa7c32169f7c4ca38534c586d26e9bac4b2e923c25d14423c8c911614",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/victory-dance.webp",
+        "sha256": "acd7d72e3af05129970c7d22c608619e5e850c7023bafbe60e3d5ccb2d9f7fbc",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/prop-trick.webp",
+        "sha256": "dcdaece8175af0480efb2f7b36716ecf563a0f4039af79b3b6da2c2b0f90de98",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/magic-flourish.webp",
+        "sha256": "658a463f32924902955a042d664e9a3c0b36e69c7f0e7e68186561665aec13bc",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/high-jump.webp",
+        "sha256": "961f8551da3805d48b81f1a82875c34b78d76a7cbb494fd8fde3900dbf68e818",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/sparkle-applause.webp",
+        "sha256": "8c1a1354157f05ee6a5e16af55108e9248e8f7d57e265587c61b9da0b29be198",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/celebratory-spin.webp",
+        "sha256": "17e7ad343f47ba48b1eff7c0503067308934251720d7bdc7090b1ac9723444d8",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/illusion-surprise.webp",
+        "sha256": "08761a623ab8f83aaaef7b3f267ed89c54f1ce51e927f41275f4ac2de4542703",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/orin/animations/signature-finale.webp",
+        "sha256": "ac0a31a5abe38d1174888b22a4b573fe97404cafebd50c4c3c837bc1578cba17",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 2,
+        "path": "assets/characters/orin/animations/project-reveal.webp",
+        "sha256": "be4bd35a5ea8dc73e029a0a39b23d52691f56df28cac65a509f3d1c296169f6b",
+        "approved": true
+      }
+    },
+    "cinder": {
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/victory-dance.webp",
+        "sha256": "74af164d0e0ca5f5b5fab3939f4b29720951344c5f6fde83fc2964400877631e",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/project-reveal.webp",
+        "sha256": "ae0e56fd509cbc01c95b0d6a91c8da468322a5d340c3c1c39f780739305afb7e",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/prop-trick.webp",
+        "sha256": "d2dcb1bf54553731d0909a3b2c380bbc62884ea9a884ea69779863d16d6154fe",
+        "approved": true
+      },
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/joyful-hop.webp",
+        "sha256": "7c34545d5b0bada4a28140c127347464d5f1c0aa1b1a59fc8ed39b87ac8da33f",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/celebratory-spin.webp",
+        "sha256": "9fcfe0bf4aa854344c890105575ce82cef3cc334e40fc7f866c1f3ad8f430375",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/sparkle-applause.webp",
+        "sha256": "e60971b3334124827f8b227c0ac508064093b6faf2f19f9d48cc5b8ba4720bd4",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/high-jump.webp",
+        "sha256": "a423d5c467cfee456c866632ad4a1790f8d19400de76b025580d1c8ad448a2d2",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/signature-finale.webp",
+        "sha256": "b8c60a52dfc5c22c8c34500c17e28da4c4035c100297f9853c2c92b817458f92",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/cinder/animations/illusion-surprise.webp",
+        "sha256": "b30a4fd403ba8d11d41ef8f3c3d5523b868893b5201e1159f67bebadf691fae1",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 2,
+        "path": "assets/characters/cinder/animations/magic-flourish.webp",
+        "sha256": "783b16f0f4bb954d46eee6f23c0fbe4e1237da17b23211ca477ab033b66f6b23",
+        "approved": true
+      }
+    },
+    "prism": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/joyful-hop.webp",
+        "sha256": "6d24bd4fc55375a82738670ca5dab34be722d6ac741b893e2163a024e88cd31e",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/magic-flourish.webp",
+        "sha256": "1a278081c2d3e4d9901d1b2b660f0be42fd70503f0f5f8cf09a200e6576d95f9",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/victory-dance.webp",
+        "sha256": "3e107dad3edebfc18fc0f2e41ba4f25239affb3a419c8dbb342c5520176d2f0f",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/prop-trick.webp",
+        "sha256": "95471222464f3b8d45dae2bc7a67e2407dba1512413845b3c649ae850bd2da56",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/high-jump.webp",
+        "sha256": "24f0c05ef9e11add983fb0c6883696da0f0f99fa90beb2f8fad54089be279384",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/celebratory-spin.webp",
+        "sha256": "b695290511c33a432e3bb914fe678ea197957b7f5245655f2d6d779e89623c3b",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/sparkle-applause.webp",
+        "sha256": "c04dade900cf99b47e98ca4e7b2d6a110f7fcc2cb300a61ccdbcc4e80fde9a57",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/prism/animations/illusion-surprise.webp",
+        "sha256": "86fae982c90cb15c0f68113bd17ed99d489f408fed2fff40af245e0af149adf4",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 2,
+        "path": "assets/characters/prism/animations/project-reveal.webp",
+        "sha256": "870b9dee3098aca6990326241245fd65e47ed3d14e189a792a300b25117493c2",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 3,
+        "path": "assets/characters/prism/animations/signature-finale.webp",
+        "sha256": "014c40ca52001353581b9aa380d2cf8d38adfe099b903d6938399b3d3d8a109a",
+        "approved": true
+      }
+    },
+    "tock": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/joyful-hop.webp",
+        "sha256": "14b5267a5fee458c091e8213df2b9f319b8600cf0a07fd43c21eb0516210b77d",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/victory-dance.webp",
+        "sha256": "d422e99321530ee95604999f6a64f23acde80a6a436bd505b9649ddd66db7193",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/magic-flourish.webp",
+        "sha256": "fbf8eba7b15470b4505abf92ccb3656a51dcecbe6a1481873ef0ae5e44c9fd5b",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/project-reveal.webp",
+        "sha256": "a0c78a095aea5c5466e56ef4d24ba3915e32340fbb55e9fbc79a5481806a4f19",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/prop-trick.webp",
+        "sha256": "276316a457e3ad55a1048950a18b8141f01cbcdb3962a57c004543b54de8d8fc",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/high-jump.webp",
+        "sha256": "477c706c622962d9bbf4f1cd665e9aa3de6c19c1da2527b01bb636b74ba41829",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/celebratory-spin.webp",
+        "sha256": "6be061cf3e93c5d3911f6e0906c9e48ca84c7129928efbd7b1fd8748b71d9955",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/sparkle-applause.webp",
+        "sha256": "24c0850f023c3d5778946182aac03e7a7eee6fba5b8ef8e8811bf187b6e8bf47",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/illusion-surprise.webp",
+        "sha256": "d708207cae62876a7f0d90ef1977f3bfa48a50aad73ee331382bf2def8543b62",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/tock/animations/signature-finale.webp",
+        "sha256": "8157c53f97f95ba095839f0789e84e9e2d744b3dcb06cd459256cdef4746db93",
+        "approved": true
+      }
+    },
+    "brikk": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/joyful-hop.webp",
+        "sha256": "b0433803dd4dff9f5acc6e1832d8569561ca6d3f170f56b92e4bd0e560c2303e",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/victory-dance.webp",
+        "sha256": "2f7bc04a99948ae4da730c86799fdb431a5ee2ca0d9700b6a7fcd32e67835859",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/magic-flourish.webp",
+        "sha256": "0010cda32064da3e2704fbea236b9437b41a69d120383b1bd6b57f6af3ffa3bb",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/project-reveal.webp",
+        "sha256": "b16efd75c17411033c00653f201dfaaa4448c9e0cf5980aa04330a4c06b9037b",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/prop-trick.webp",
+        "sha256": "4e60edae1b19f1a3c73584a6264ba858147a1d816d903af5c0aa9127e46c1374",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/high-jump.webp",
+        "sha256": "2037223bbb445e7f0fac184e2b599ffb6bf7eb4704770b8e81c5e0994ffa1952",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/celebratory-spin.webp",
+        "sha256": "31f091102a0aa5c398004395e296a902b47e71b07ab0b6f91637b0de0786452d",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/sparkle-applause.webp",
+        "sha256": "56f239f1a76a601f7c038f5c7ce365e2f88849fbb3f5dbb3045b83257e0f5782",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/illusion-surprise.webp",
+        "sha256": "c56b2b093faec9e8df152a7cb4b68ada2de63d7ff901c1d3a68cce4b4ce2cd18",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/brikk/animations/signature-finale.webp",
+        "sha256": "159618e3b0bee076f7a6d4640f815ec3b1a99e1250f0d27cc9e7c08acc22e9fb",
+        "approved": true
+      }
+    },
+    "cairn": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/joyful-hop.webp",
+        "sha256": "a8150365aa7680f44cd3f3da6087751287d884fca168c3ce42556a364b047d1a",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/victory-dance.webp",
+        "sha256": "59dd9c7819028915e99b966c01413b2ab722f249063e77f140a2cc8702bd5e8a",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/magic-flourish.webp",
+        "sha256": "eb5cab50787d335bea1e7a1685c98ab45f2afc7347dd8ab9911dcd9ec2e7bc67",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/project-reveal.webp",
+        "sha256": "01979e61d3d1d161b18372fc67456b3e49c72e2ae917ed25955c18c1876defd0",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/prop-trick.webp",
+        "sha256": "691c8a0b38f266bdbe31b5c5c439df51ee196b062d2be7561a0bcf8568445d92",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/high-jump.webp",
+        "sha256": "9e349a59cf8e7eb85c97341eb1ab1a2b8e2a4b3a1c85bd4a57a51adb791186c6",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/celebratory-spin.webp",
+        "sha256": "609332e19b604f2aff7e821ad7892742c4dcba0408fafbef5c93526f7343e5a3",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/sparkle-applause.webp",
+        "sha256": "d6a52cc3a2a8a22769d137f335defd18f1415bafcca91f4e1a047e7e00ec5664",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/cairn/animations/illusion-surprise.webp",
+        "sha256": "8d92038ff9025066b63ef5ed87819c43eeebb2137134ae1007fe45445bc64c80",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 4,
+        "path": "assets/characters/cairn/animations/signature-finale.webp",
+        "sha256": "4e3f7afd53bbaf5f50c2c684452c14638ca230c541ac54fefeb3f29013981fdd",
+        "approved": true
+      }
+    },
+    "mello": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/joyful-hop.webp",
+        "sha256": "05e013e7697eb5b4a36d1eefb124fa59a8cd7800c291a033df3b018d152941de",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/victory-dance.webp",
+        "sha256": "71df29a36941126ae09146020c0b8aa9855e2699d6aad125519494d9730fe3f9",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/magic-flourish.webp",
+        "sha256": "b9ecf9d28d88807a5b9dcd1e7a249f022e34b278a031f8ea5b61409f48f72c48",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/prop-trick.webp",
+        "sha256": "4fd9aa677e5ae241e5c23d3459b8fac9b92309f17eb773686da9eaec39e83bf7",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/high-jump.webp",
+        "sha256": "431510c76e1a896460f1fb5a3381e0c125ff08a057bbc52415e433015c16fe18",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/celebratory-spin.webp",
+        "sha256": "2fbf93f00f1f7fd7969ba07c45cda2574e5da56252ac34ac16c265c12b73d258",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/sparkle-applause.webp",
+        "sha256": "ce8f0b520c1a43d79ab5d825cc25f6b32aa41b14c83ba4c97e40a51f2720d819",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/illusion-surprise.webp",
+        "sha256": "51d02e05fe63ea84740576760f6fdc13c97c865c629ac8d49ea22ef4a4370ee5",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/mello/animations/signature-finale.webp",
+        "sha256": "028e496795f12bafbad388558cfa664c40174f3e6cb5e600670af98604ccd37a",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 2,
+        "path": "assets/characters/mello/animations/project-reveal.webp",
+        "sha256": "d77e7aa54d95f2950af0586b9c5afe166d3c610341bb44d4650aa8b0926f151d",
+        "approved": true
+      }
+    },
+    "puddle": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/joyful-hop.webp",
+        "sha256": "808715d4db069af96bacee345ac0818b158a8683fef50779b5d8fa540bd2a806",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/victory-dance.webp",
+        "sha256": "d1f6d94ffc1563947766588fdb82605ab74fe3e0fd4e90a11a50f6bf95ed40a1",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/magic-flourish.webp",
+        "sha256": "3dd40e229c68f4da1f6b59f71ad434d052fc31897e64fcbc1b88ac9dfd83d04a",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/project-reveal.webp",
+        "sha256": "f6e276bf18359153fb46dcf85ee2f3f771a8fd08f7ce4be786994b10cb146a76",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/prop-trick.webp",
+        "sha256": "a525b012a0dc674c700c67451cafe436a547f22b502a95f84b5a1baa272d8fa8",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/high-jump.webp",
+        "sha256": "8cd57bd1eeb0674dd2cf8f14ba584b6eefe3efe473146e974d756f68b8585884",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/celebratory-spin.webp",
+        "sha256": "2fca80e1767b7d8bad3059083d94f4785562133491641c65b83dcae4ff349b94",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 2,
+        "path": "assets/characters/puddle/animations/sparkle-applause.webp",
+        "sha256": "371e0fdee85a48fe3d97f6ab2c4d4a9ca31230ec30ee5d88fc8d29e35995fbdf",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/illusion-surprise.webp",
+        "sha256": "37f97cece86cf805cf85444280ddbaa41eb3413e7137797a5479beec1cc748c3",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/puddle/animations/signature-finale.webp",
+        "sha256": "971ea37d81bf6ade956c47885d99683f9d0c3782e62bae785a7278ba1321e226",
+        "approved": true
+      }
+    },
+    "bramble": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/joyful-hop.webp",
+        "sha256": "ae6913da3b25f249942c40623f0e0e95eaf008ba205ec8e824937dfa3dd9d76d",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/victory-dance.webp",
+        "sha256": "bcef8eb394680b3866619a9f608d0960ea833b8adafd62038d3e36b289f43c05",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/magic-flourish.webp",
+        "sha256": "0cf1bb6fd8db3e075f21816f9f9921f9083155fcb2c10c8a05ce679e48e6ee65",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/prop-trick.webp",
+        "sha256": "d1d57d8d2da04a9789fc69151fd248f1cf98712dd3c2ff7514432332e304a2aa",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/project-reveal.webp",
+        "sha256": "2068f0bb7c24aef4df7520fa41a7012113db5daa3fbb18ba5a5eebc536fa8878",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 2,
+        "path": "assets/characters/bramble/animations/high-jump.webp",
+        "sha256": "fb96df62c9fdf81312c4d85bc60a0a661e2985c226acd47a99450057825c642f",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/celebratory-spin.webp",
+        "sha256": "9a75c94f968ab9dcb98a908923f7fe2d21fc629b888e5645cf69e6298a98c07f",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/sparkle-applause.webp",
+        "sha256": "c1ed189eafcbd8ce6b7e216dc4232de8b2264bda8e7c62ba74998c05224b1976",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/illusion-surprise.webp",
+        "sha256": "44ada43ce0c80e727b913037d0b78fb23866437a01866033b2e9d6443670c19f",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/bramble/animations/signature-finale.webp",
+        "sha256": "bc24e7b4fa8b0be22ea8f618b127071db61fd61134157fa8a7448c364e822636",
+        "approved": true
+      }
+    },
+    "mica": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/joyful-hop.webp",
+        "sha256": "3ae2d2903d05a3f169724ddc99c0186f5a884090b6c7367c773e182d163d48c8",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/victory-dance.webp",
+        "sha256": "c6b0fb2333ff9fcb637ef5de5c4ed05d35e0e8c7dfc2b6ecc3520e81f2a3eb83",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/magic-flourish.webp",
+        "sha256": "2a41793b111892540a956d0255f4c4be4a47085e18740d48d820437205de7aa9",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/project-reveal.webp",
+        "sha256": "07757328ead3b6a28ec6301e3aa90c3f45dfc0c799442deaa24e99ea488bff43",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/prop-trick.webp",
+        "sha256": "7b2a1c8a80d8da174f429072785d395be265d64e42ca280b208977b124021489",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/high-jump.webp",
+        "sha256": "2739869686fae679a6a951d05f8fd9bfed3a0ef8d0062c1b535bcfe8e5e82e22",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 2,
+        "path": "assets/characters/mica/animations/celebratory-spin.webp",
+        "sha256": "6af1b38310af1f6f198290a45e3c0dbfdc682484719c81de66ae956d20c4a184",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/illusion-surprise.webp",
+        "sha256": "67ad1fc6dded984c54ef2fbb5fbf26b159cad45fbbb3b73bfc20690901ef66e7",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/sparkle-applause.webp",
+        "sha256": "09f9fae4e54f447e2b1184272ade67c7c2f7ebb7bdcb0fe629a3679bc76e1472",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/mica/animations/signature-finale.webp",
+        "sha256": "0afcdf13fab861c2e1d7136330736b5cd97dfc640e3483871ebbbbc68e5ab2e2",
+        "approved": true
+      }
+    },
+    "luma": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/joyful-hop.webp",
+        "sha256": "0e69f7e48f9fad228d42a8abaf06a9961b717fb18bf75548d8b99f5e4ae39362",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/victory-dance.webp",
+        "sha256": "0fc9320dc3466b4cec39b496ad6cd585b69b57a00910b604fb7ce590f007d5f9",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/magic-flourish.webp",
+        "sha256": "3a97603d155c084d708e052253425f4e78c8d3c54044559823f7e4e6a4bdd2da",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/prop-trick.webp",
+        "sha256": "f59185c5ece64b801bd9aebd95ec5b742c78a58e4fa382b8201d99ef160979d9",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/project-reveal.webp",
+        "sha256": "4c5b27e5cc2dff4b9615c34fbe64ad979aabb5265116a4c74dd8954e40d42498",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/high-jump.webp",
+        "sha256": "2d79af43feed82b7fa6dc98645d86e918c2d50b7eb83cc80e64547ccbdbd2c4e",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/celebratory-spin.webp",
+        "sha256": "87b5c4a02e966e5fb4e78fdf028ecef5c56861f6ab5cf384d82a55300a1ac17c",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/sparkle-applause.webp",
+        "sha256": "8fd81d275c87bf33327d3d5b19fe02b65bbb0c37a578ecc0ba5a945aebd583fd",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/signature-finale.webp",
+        "sha256": "816accf3258fddc00fcca21d2f93e00287522a390b8c00a1198109fabf4c5de7",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/luma/animations/illusion-surprise.webp",
+        "sha256": "03d8431d3e6994692812eb3d18d2a3f73edd405bac06e3e7f5feac16e273c6c7",
+        "approved": true
+      }
+    },
+    "fen": {
+      "joyful-hop": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/joyful-hop.webp",
+        "sha256": "7f085d83fa5f10d32cd29542cb58aacec6a0a4ce45ae6ddd1fec7a17db3c80ee",
+        "approved": true
+      },
+      "victory-dance": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/victory-dance.webp",
+        "sha256": "ef6cf4ba54dc8e3c570007f2a9adc12918b9fe7bb44f200720b12b345c7da785",
+        "approved": true
+      },
+      "project-reveal": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/project-reveal.webp",
+        "sha256": "f72b9872b97d0e0e93921a6b51fd3e63309b8f100ac71fae90028c97d513ee02",
+        "approved": true
+      },
+      "magic-flourish": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/magic-flourish.webp",
+        "sha256": "111889a46a215be2ed508f8ee2cac7faa1895f7618cb6426573ad7cf56f37b44",
+        "approved": true
+      },
+      "prop-trick": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/prop-trick.webp",
+        "sha256": "d745a5b9f8bd594d93ed1da537e74fb444c492840c0d40971e1283c37b8ad5e1",
+        "approved": true
+      },
+      "high-jump": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/high-jump.webp",
+        "sha256": "fd44aaebaafb29bb2f11d2ce2a5b73e617900fd5638fa6dda2a859d5104f8950",
+        "approved": true
+      },
+      "celebratory-spin": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/celebratory-spin.webp",
+        "sha256": "241f672bcf039f998e3fcf78a1c950ecc4c9a4c994daf8d2c5b6dd87b7c76ab1",
+        "approved": true
+      },
+      "illusion-surprise": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/illusion-surprise.webp",
+        "sha256": "694ac06ca80002f9711438ff1fb252cc07e8166c641bcfba64fa2b05dbe70a7d",
+        "approved": true
+      },
+      "sparkle-applause": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/sparkle-applause.webp",
+        "sha256": "33b86f9040822acf1bde476b947ef793adb45f92d7b77b3cebc9705091c1ee9e",
+        "approved": true
+      },
+      "signature-finale": {
+        "attempt": 1,
+        "path": "assets/characters/fen/animations/signature-finale.webp",
+        "sha256": "cf765f817cb45b8e85f5ac97dd0e0f1fd4361d617e747eef4a20a8624d55e1a4",
+        "approved": true
       }
     }
   },

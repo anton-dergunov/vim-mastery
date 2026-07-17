@@ -348,7 +348,10 @@ def save_webp(
         for index, frame in enumerate(frames):
             path = root / f"frame-{index:04d}.png"
             frame.save(path)
-            encoding = ["-lossless", "-exact", "-m", "6"] if lossless else ["-q", str(quality), "-m", "6"]
+            # Method 4 is still visually identical for lossless output and
+            # high quality for runtime output, while making large batch
+            # conversions practical on a laptop.
+            encoding = ["-lossless", "-exact", "-m", "4"] if lossless else ["-q", str(quality), "-m", "4"]
             duration = round((index + 1) * 1000 / fps) - round(index * 1000 / fps)
             command.extend([*encoding, "-d", str(duration), str(path)])
         encoded = root / "animation.webp"
@@ -394,7 +397,7 @@ def write_debug(
     rendered: Sequence[Image.Image],
     background: np.ndarray,
     variation: float,
-    placement: Placement,
+    placement: Placement | None,
 ) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     for index in {0, len(source) // 2, len(source) - 1}:
@@ -407,14 +410,18 @@ def write_debug(
             {
                 "background_rgb": [round(float(value), 2) for value in background],
                 "border_variation": round(variation, 3),
-                "placement": {
-                    "scale": placement.scale,
-                    "x": placement.x,
-                    "y": placement.y,
-                    "inset": placement.inset,
-                    "canvas_size": placement.canvas_size,
-                    "css_scale": placement.canvas_size / (placement.canvas_size - placement.inset * 2),
-                },
+                "placement": (
+                    {
+                        "scale": placement.scale,
+                        "x": placement.x,
+                        "y": placement.y,
+                        "inset": placement.inset,
+                        "canvas_size": placement.canvas_size,
+                        "css_scale": placement.canvas_size / (placement.canvas_size - placement.inset * 2),
+                    }
+                    if placement is not None
+                    else {"mode": "native", "canvas_size": list(rendered[0].size)}
+                ),
             },
             indent=2,
         )

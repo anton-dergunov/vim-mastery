@@ -99,7 +99,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -117,7 +117,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -135,7 +135,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -153,7 +153,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -171,7 +171,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -189,7 +189,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -207,7 +207,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -225,7 +225,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -243,7 +243,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -261,7 +261,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Nix
 ```
 </details>
 
@@ -324,7 +324,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -342,7 +342,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -360,7 +360,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -378,7 +378,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -396,7 +396,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -414,7 +414,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -432,7 +432,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -450,7 +450,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -468,7 +468,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -486,7 +486,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela
 ```
 </details>
 
@@ -549,7 +549,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -567,7 +567,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -585,7 +585,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -603,7 +603,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -621,7 +621,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -636,10 +636,10 @@ Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Tatter, An indigo fantasy spider tailor with exactly four arms and two walking legs, warm cream face, golden needle and teal thread spool.
 Action over exactly four seconds: Tatter performs a larger anatomy-appropriate celebratory leap using coordinated four-hand gestures and two-leg bouncing without adding limbs. Throughout the airborne motion, the head, face, torso, all canonical limbs and props remain fully visible, connected and unchanged; nothing detaches, disappears or is occluded. Tatter lands softly and settles into the approved pose.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: exactly four arms and two walking legs; indigo body with warm cream face; two amber eyes; one golden needle; one teal thread spool.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Tatter makes a strictly vertical in-place hop only: no turn, spin, back view or occlusion. Keep the hood, cream face and both amber eyes visible in every frame. The final three-quarters of a second holds the exact approved front three-quarter neutral pose, with all four arms, two walking legs, needle and spool visible and attached. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -657,7 +657,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -675,7 +675,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -693,7 +693,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -711,7 +711,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter
 ```
 </details>
 
@@ -774,7 +774,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -792,7 +792,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -810,7 +810,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -825,10 +825,10 @@ Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Orin, A round navy-and-cream owl archivist with two wing-arms, two taloned feet, one glowing monocular lens and one rolled scroll.
 Action over exactly four seconds: Orin completes a correctly indexed enchanted archive scroll, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: navy plumage with cream brow and chest; exactly two wing-arms and two taloned feet; two amber eyes; one turquoise monocular lens; one rolled scroll.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Orin's torso, feathers and silhouette stay rigidly unchanged: no swelling, balloon, bubble or growth from the body. Orin opens the scroll and reveals three small, flat page-tab lights beside it, then closes it. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -846,7 +846,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -864,7 +864,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -882,7 +882,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -900,7 +900,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -918,7 +918,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -936,7 +936,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin
 ```
 </details>
 
@@ -999,7 +999,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1017,7 +1017,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1032,10 +1032,10 @@ Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Cinder, An ember-orange salamander spellcaster with dark teal robe, gold belt, long single tail and compact rune wand.
 Action over exactly four seconds: Cinder performs controlled signature magic: the wand writes a clean amber command glyph inside a turquoise ring; the effect blooms briefly, clears completely, and leaves the exact approved character unchanged.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: ember-orange skin; exactly two arms, two legs and one long tail; dark teal robe with gold belt; two amber eyes; one compact dark rune wand.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Cinder's rune wand sends one small turquoise block-cursor-shaped light past three separate amber motes. The motes never join into a glyph, diagram, letter, icon or geometric symbol. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1053,7 +1053,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1071,7 +1071,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1089,7 +1089,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1107,7 +1107,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1125,7 +1125,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1143,7 +1143,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1161,7 +1161,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cinder
 ```
 </details>
 
@@ -1224,7 +1224,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1242,7 +1242,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1260,7 +1260,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1275,10 +1275,10 @@ Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Prism, A violet-cyan crystal beetle with faceted shell, exactly two cream under-wings, four small limbs and a prism focus on the chest.
 Action over exactly four seconds: Prism completes a perfectly aligned crystal selection mosaic, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: faceted violet and cyan shell; exactly two cream under-wings; exactly two arms and two legs; two amber eyes; one fixed chest prism.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. No rocks, pebbles, floor objects or ground effects. Prism projects three small floating rectangular selection tiles that align beside the chest prism, then fold into its glow without forming text or a symbol. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1296,7 +1296,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1314,7 +1314,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1332,7 +1332,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1350,7 +1350,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1368,7 +1368,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1381,12 +1381,12 @@ Prism's signature finale: Prism refracts one bright beam into a compact rainbow 
 ```text
 Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Prism, A violet-cyan crystal beetle with faceted shell, exactly two cream under-wings, four small limbs and a prism focus on the chest.
-Action over exactly four seconds: Prism's signature finale: Prism refracts one bright beam into a compact rainbow fan and folds it back into the chest prism; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.
+Action over exactly four seconds: Prism lets three separate small keycaps marked uppercase V, I and M hover at chest height, then sends a short individual glow through each one before they fade and Prism returns to the exact neutral pose.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: faceted violet and cyan shell; exactly two cream under-wings; exactly two arms and two legs; two amber eyes; one fixed chest prism.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. No rainbow, spectrum arc, emblem or unrelated text. Prism's chest gem sends three separate short cyan, amber and violet beams through three clearly separated small keycaps held at chest height, never near the floor. Their labels are exactly uppercase V, I and M, one letter per keycap in that order; they remain separate and fade. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Prism
 ```
 </details>
 
@@ -1449,7 +1449,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1467,7 +1467,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1485,7 +1485,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1503,7 +1503,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1521,7 +1521,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1539,7 +1539,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1557,7 +1557,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1575,7 +1575,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1593,7 +1593,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1611,7 +1611,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock
 ```
 </details>
 
@@ -1674,7 +1674,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1692,7 +1692,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1710,7 +1710,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1728,7 +1728,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1746,7 +1746,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1764,7 +1764,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1782,7 +1782,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1800,7 +1800,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1818,7 +1818,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1836,7 +1836,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Brikk
 ```
 </details>
 
@@ -1899,7 +1899,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -1917,7 +1917,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -1935,7 +1935,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -1953,7 +1953,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -1971,7 +1971,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -1989,7 +1989,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -2007,7 +2007,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -2025,7 +2025,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -2043,7 +2043,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -2056,12 +2056,12 @@ Cairn's signature finale: Cairn opens a glowing rune gate, bows proudly, and clo
 ```text
 Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.
-Action over exactly four seconds: Cairn's signature finale: Cairn opens a glowing rune gate, bows proudly, and closes it safely; it is joyful, role-specific, fully visible, and resolves into the exact approved neutral pose.
+Action over exactly four seconds: Cairn warmly floats three small, separate stone tiles at chest height, each with one clear uppercase V, I or M on its front; they orbit once and return to Cairn's low hands before the exact neutral pose.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. No gate, path, floor, ground object, raised platform, rune or joined symbol. Cairn stays in the approved neutral position and playfully juggles exactly three small separate floating stone bricks at chest height. Their front faces clearly show one uppercase letter each: V, I and M, in that order; the bricks never touch the ground and settle into Cairn's hands before the neutral end pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn
 ```
 </details>
 
@@ -2124,7 +2124,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2142,7 +2142,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2160,7 +2160,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2175,10 +2175,10 @@ Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character Mello, A tiny cream-stemmed mushroom bard with amber cap, teal spots, two simple arms and legs, and one leaf lute.
 Action over exactly four seconds: Mello completes a completed four-note forest victory phrase, proudly reveals the finished work with a warm celebratory reaction, then returns to the approved neutral pose.
 Preserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: cream stem body; amber mushroom cap with teal spots; exactly two arms and two legs; two amber eyes; one small leaf lute.
-Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
+Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Keep Mello's cap-and-stem silhouette and full body unchanged and visible throughout: no human anatomy, no chest features, no hiding, collapsing or shrinking. Mello proudly strums the leaf lute; four tiny separate amber motes rise and fade. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2196,7 +2196,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2214,7 +2214,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2232,7 +2232,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2250,7 +2250,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2268,7 +2268,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2286,7 +2286,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mello
 ```
 </details>
 
@@ -2349,7 +2349,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2367,7 +2367,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2385,7 +2385,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2403,7 +2403,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2421,7 +2421,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2439,7 +2439,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2457,7 +2457,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2475,7 +2475,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2493,7 +2493,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2511,7 +2511,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle
 ```
 </details>
 
@@ -2574,7 +2574,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2592,7 +2592,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2610,7 +2610,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2628,7 +2628,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2646,7 +2646,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2664,7 +2664,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2682,7 +2682,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2700,7 +2700,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2718,7 +2718,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2736,7 +2736,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble
 ```
 </details>
 
@@ -2799,7 +2799,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2817,7 +2817,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2835,7 +2835,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2853,7 +2853,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2871,7 +2871,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2889,7 +2889,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2907,7 +2907,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2925,7 +2925,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2943,7 +2943,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -2961,7 +2961,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Mica
 ```
 </details>
 
@@ -3024,7 +3024,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3042,7 +3042,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3060,7 +3060,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3078,7 +3078,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3096,7 +3096,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3114,7 +3114,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3132,7 +3132,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3150,7 +3150,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3168,7 +3168,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3186,7 +3186,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Luma
 ```
 </details>
 
@@ -3249,7 +3249,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3267,7 +3267,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3285,7 +3285,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3303,7 +3303,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3321,7 +3321,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3339,7 +3339,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3357,7 +3357,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3375,7 +3375,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3393,7 +3393,7 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>
 
@@ -3411,6 +3411,6 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.
 
 Negative prompt:
-camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
+camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen
 ```
 </details>

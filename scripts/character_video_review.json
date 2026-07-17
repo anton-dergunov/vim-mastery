@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "reviewed": {
+    "nix": {
+      "exclude": ["joyful-hop", "magic-flourish"]
+    },
+    "vela": {},
+    "tatter": {},
+    "orin": {},
+    "cinder": {},
+    "prism": {},
+    "tock": {},
+    "brikk": {},
+    "cairn": {},
+    "mello": {},
+    "puddle": {},
+    "bramble": {},
+    "mica": {},
+    "luma": {},
+    "fen": {}
+  },
+  "overrides": {
+    "brikk/high-jump": {
+      "duration_seconds": 3
+    },
+    "mello/project-reveal": {
+      "duration_seconds": 3
+    },
+    "cinder/victory-dance": {
+      "cover_rectangles": [[0.30, 0.03, 0.40, 0.06]]
+    },
+    "prism/celebratory-spin": {
+      "cover_rectangles": [[0.30, 0.86, 0.40, 0.10]]
+    }
+  },
+  "regenerate": {
+    "cairn/signature-finale": "Hands and generated mark read as a religious symbol; use the low asymmetric pathway concept.",
+    "cinder/magic-flourish": "Generated mark resembles a swastika; use separate cursor light and motes, never a joined symbol.",
+    "mello/project-reveal": "Mello gains inappropriate anatomy and hides at the end; preserve cap-and-stem silhouette and full body.",
+    "orin/project-reveal": "Orin's body grows a balloon-like deformation; use flat page-tab lights beside the scroll.",
+    "prism/project-reveal": "Unrelated rocks appear beneath Prism; use floating selection tiles only.",
+    "prism/signature-finale": "Avoid rainbow imagery; use separate blank keycap lights and short individual beams."
+  }
+}
