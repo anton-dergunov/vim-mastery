@@ -1364,8 +1364,7 @@ html.next-ui .world[data-mode="insert"] .code-body .cm-vimMode .cm-cursor {
   filter: drop-shadow(0 0 3px rgba(120, 219, 234, .8));
 }
 html.next-ui .world[data-mode="replace"] .code-body .cm-cursorLayer .cm-cursor,
-html.next-ui .world[data-mode="replace"] .code-body .cm-vimMode .cm-cursor,
-html.next-ui .world[data-mode="replace"] .code-body .cm-fat-cursor {
+html.next-ui .world[data-mode="replace"] .code-body .cm-vimMode .cm-cursor {
   width: .62em !important;
   border-left: 0 !important;
   color: inherit !important;
@@ -1373,7 +1372,9 @@ html.next-ui .world[data-mode="replace"] .code-body .cm-fat-cursor {
   outline: 0 !important;
   box-shadow: 0 2px 5px rgba(245, 154, 97, .45) !important;
   filter: none;
+  animation: cursorBlink .9s steps(1) infinite;
 }
+html.next-ui .world[data-mode="replace"] .code-body .cm-fat-cursor { display: none !important; }
 html.next-ui .code-body .cm-vim-panel {
   align-items: flex-start;
   padding: 4px 7px;

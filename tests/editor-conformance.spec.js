@@ -105,6 +105,7 @@ test.describe("Production lesson flow", () => {
     await page.goto("/?activity=ctrl-bracket-seeded-replace");
     expect((await state(page))).toMatchObject({ mode: "replace", history: [] });
     await expect(page.locator(".cm-cursor")).toHaveCSS("background-image", /linear-gradient/);
+    await expect(page.locator(".cm-fat-cursor")).toHaveCSS("display", "none");
 
     await page.goto("/?activity=escape-seeded-command-line");
     expect((await state(page))).toMatchObject({ mode: "command-line", history: [] });
