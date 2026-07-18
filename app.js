@@ -440,6 +440,7 @@ function mountEditor() {
     text: initial.lines.join("\n"),
     cursor: startCursor,
     language: activity.languageId,
+    wrapColumns: activity.editor?.wrapColumns,
     onEvent: handleEngineEvent,
   });
   for (const step of initial.setup?.steps || []) {

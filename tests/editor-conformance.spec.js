@@ -3,8 +3,11 @@ import { readFileSync } from "node:fs";
 
 const unit = JSON.parse(readFileSync(new URL("../content/units/10-repeatable-editing.json", import.meta.url), "utf8"));
 const modalUnit = JSON.parse(readFileSync(new URL("../content/units/01-modal-model.json", import.meta.url), "utf8"));
+const cursorUnit = JSON.parse(readFileSync(new URL("../content/units/02-cursor-movement.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
+const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const cursorExercises = cursorActivities.filter(activity => activity.type === "exercise");
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
 
@@ -44,7 +47,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(2);
+    await expect(page.locator(".toc-unit")).toHaveCount(3);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -59,16 +62,18 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ activityId: "dot-python-values-recall", practiceMode: "recall" });
   });
 
-  test("starts at Unit 1 and exposes both numbered units through the course contents", async ({ page }) => {
+  test("starts at Unit 1 and exposes all numbered units through the course contents", async ({ page }) => {
     await page.goto("/");
     expect((await state(page))).toMatchObject({ unitId: "modal-model", unitNumber: 1, activityId: "welcome-to-modal-vim" });
     const catalog = await page.evaluate(() => ({ unit: window.VimWilds.unit, units: window.VimWilds.units }));
     expect(catalog.units).toEqual([
       { id: "modal-model", unitNumber: 1, title: "The modal model" },
+      { id: "cursor-movement", unitNumber: 2, title: "Cursor movement" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(2);
+    await expect(page.locator(".toc-unit")).toHaveCount(3);
+    await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
   });
 
@@ -176,13 +181,63 @@ test.describe("Production lesson flow", () => {
     });
   });
 
-  test("ends Unit 1 with sequential continuation instead of looping", async ({ page }) => {
+  test("continues from Unit 1 to Unit 2 instead of skipping the sequence", async ({ page }) => {
     await page.goto("/?activity=modal-model-unit-summary");
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 2 is next");
+    await expect(page.getByRole("button", { name: "Continue to Unit 2" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Review the full introduction" })).toBeVisible();
-    await page.getByRole("button", { name: "Open course contents" }).click();
-    await expect(page.locator("#tocDialog")).toHaveAttribute("open", "");
-    expect((await state(page)).activityId).toBe("modal-model-unit-summary");
+    await page.getByRole("button", { name: "Continue to Unit 2" }).click();
+    await page.waitForURL(/unit=cursor-movement/);
+    expect((await state(page))).toMatchObject({ unitId: "cursor-movement", unitNumber: 2, activityId: "home-row-directions" });
+  });
+
+  test("runs every Unit 2 movement and leaves Unit 3 as the next unavailable unit", async ({ page }) => {
+    await page.goto("/?unit=cursor-movement");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 58, exerciseCount: cursorExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        if (activity.type === "exercise" && !current.complete) result.push({ id: activity.id, current });
+        if (activity.type === "demo" && (JSON.stringify(current.code) !== JSON.stringify(activity.scenario.target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(activity.scenario.target.cursor))) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+    await page.goto("/?unit=cursor-movement&activity=cursor-movement-unit-summary");
+    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 3 is next");
+  });
+
+  test("keeps wrapped display-line motions deterministic at every target phone width", async ({ page }) => {
+    const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
+    for (const [width, height] of viewports) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/?unit=cursor-movement&activity=display-lines-demo");
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await page.evaluate(() => window.VimWilds.solveCurrent());
+      expect((await state(page)).cursor, `${width}×${height}`).toEqual([1, 29]);
+    }
+  });
+
+  test("enters g_ and counted | through touch Shift chords", async ({ page }) => {
+    await page.goto("/?unit=cursor-movement&activity=last-nonblank-result");
+    await page.locator('.key[data-key="g"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="-"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [0, 17], modifiers: [] });
+
+    await page.goto("/?unit=cursor-movement&activity=counted-last-nonblank-column");
+    for (const key of ["3", "g"]) await page.locator(`.key[data-key="${key}"]`).click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="-"]').click();
+    await page.locator('.key[data-key="8"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-shift="|"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [2, 7], modifiers: [] });
   });
 
   test("completes every Unit 1 runnable with its authored sequence", async ({ page }) => {
@@ -466,7 +521,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "repeatable-editing"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "repeatable-editing"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

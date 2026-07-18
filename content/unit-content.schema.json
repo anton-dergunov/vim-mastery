@@ -79,9 +79,13 @@
             "languageId":{"$ref":"#/$defs/id"},"sourceKind":{"enum":["complete","fragment","neutral"]},"scenario":{"$ref":"#/$defs/scenario"},"script":{"$ref":"#/$defs/script"},
             "hints":{"type":"array","items":{"type":"string"}},"feedback":{"$ref":"#/$defs/feedback"},"skills":{"$ref":"#/$defs/skills"},"difficulty":{"$ref":"#/$defs/difficulty"},
             "portability":{"type":"string"},"provenance":{"$ref":"#/$defs/provenance"},"verification":{"$ref":"#/$defs/verification"},
-            "delivery":{"enum":["guided","guided-then-recall","recall"]},"remediationRef":{"$ref":"#/$defs/id"},"routes":{"$ref":"#/$defs/routes"}
+            "delivery":{"enum":["guided","guided-then-recall","recall"]},"remediationRef":{"$ref":"#/$defs/id"},"routes":{"$ref":"#/$defs/routes"},"editor":{"$ref":"#/$defs/editorConfig"}
           }}
       ]
+    },
+    "editorConfig": {
+      "type":"object","additionalProperties":false,"required":["wrapColumns"],
+      "properties":{"wrapColumns":{"type":"integer","minimum":12,"maximum":80}}
     },
     "presentation": {
       "oneOf": [

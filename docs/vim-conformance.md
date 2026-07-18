@@ -14,3 +14,8 @@ verified only with fixture coverage for text, cursor/selection, mode, registers
 when relevant, and undo grouping when relevant. Package defects are patched
 with `patch-package`, kept version-specific under `patches/`, and linked to the
 fixture that demonstrates the upstream mismatch.
+
+Unit 2 configures a fixed character wrap width for `gj`/`gk` fixtures so their
+display-line destinations remain deterministic across supported phone widths.
+The pinned `@replit/codemirror-vim` 6.3.0 package omits `g_`; the compatibility
+patch in `patches/` restores its native last-nonblank and counted-line behavior.

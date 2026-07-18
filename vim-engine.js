@@ -107,7 +107,10 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
  * this module reaches into EditorView, getCM, or Vim directly.
  */
 export class VimEngine {
-  constructor({ parent, text, cursor, language = "plain-text", onEvent }) {
+  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, onEvent }) {
+    if (wrapColumns !== undefined && (!Number.isInteger(wrapColumns) || wrapColumns < 12 || wrapColumns > 80)) {
+      throw new RangeError("wrapColumns must be an integer from 12 to 80");
+    }
     this.onEvent = onEvent;
     this.mode = "normal";
     this.subMode = "";
@@ -131,6 +134,17 @@ export class VimEngine {
           lineNumbers(),
           previewRangeField,
           ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
+          ...(wrapColumns ? [
+            EditorView.lineWrapping,
+            EditorView.theme({
+              ".cm-line": {
+                width: `${wrapColumns}ch`,
+                maxWidth: `${wrapColumns}ch`,
+                boxSizing: "content-box",
+                overflowWrap: "anywhere",
+              },
+            }),
+          ] : []),
           wildsHighlighting,
           EditorView.updateListener.of(update => {
             if (update.docChanged) this.emit("change");

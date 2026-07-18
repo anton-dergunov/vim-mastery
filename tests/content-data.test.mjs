@@ -10,6 +10,7 @@ const unitDirectory = new URL("../content/units/", import.meta.url);
 const unitFiles = readdirSync(unitDirectory).filter(file => /^\d{2}-.*\.json$/.test(file)).sort();
 const units = unitFiles.map(file => ({ file, data: JSON.parse(readFileSync(new URL(file, unitDirectory), "utf8")) }));
 const modalUnit = units.find(item => item.data.id === "modal-model").data;
+const cursorUnit = units.find(item => item.data.id === "cursor-movement").data;
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -24,6 +25,8 @@ test("content files expose the expected schema versions", () => {
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
   assert.equal(unit.schemaVersion, 1);
   assert.equal(unit.unitNumber, 10);
+  assert.equal(cursorUnit.schemaVersion, 1);
+  assert.equal(cursorUnit.unitNumber, 2);
   assert.equal(registry.schemaVersion, 1);
   assert.equal(unit.releaseStatus, "authoring");
   assert.deepEqual(unit.playback, {
@@ -35,7 +38,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -67,9 +70,8 @@ test("numbered unit catalog is ordered and internally linked", () => {
 
 test("unit continuation requires the immediately following unit", () => {
   const current = { unitNumber: 1 };
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), current), null, "Unit 1 must not skip to Unit 10");
-  const unitTwo = { id: "cursor-movement", unitNumber: 2, title: "Cursor movement" };
-  assert.equal(findNextSequentialUnit([...units.map(item => item.data), unitTwo], current), unitTwo);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), current), cursorUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), null, "Unit 2 must not skip to Unit 10");
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -94,6 +96,47 @@ test("Unit 10 curriculum definition is preserved verbatim", () => {
     representativeExercises: "Change one field and repeat on later rows; search for a token and apply the same edit; compare `3dd` with repeated `dd`; rerun a recent Ex change",
     priorityAndPortability: "Core. `@:`, `&`, and `:~` bridge into Arc 3 and appear only after basic Command-line use",
   });
+});
+
+test("Unit 2 curriculum definition is preserved verbatim", () => {
+  assert.deepEqual(cursorUnit.curriculumDefinition, {
+    unit: "2. Cursor movement",
+    commandsAndConcepts: "`h j k l`; counts; `0`, `^`, `$`, `g_`, `|`; `w W e E b B ge gE`; `gg`, `G`; `gj`, `gk`",
+    prerequisites: "Unit 1",
+    learningOutcome: "Reach characters, words, line boundaries, and buffer boundaries without editing",
+    representativeExercises: "Move to an identifier, last nonblank character, next WORD, or requested line; compare logical and wrapped display lines",
+    priorityAndPortability: "Core. `gj/gk` behavior depends on wrapping, but the distinction is portable",
+  });
+  assert.deepEqual(cursorUnit.prerequisiteSkillIds, ["modal-model"]);
+  assert.equal(cursorUnit.releaseStatus, "authoring");
+});
+
+test("Unit 2 covers every movement family with cursor-only runnable states", () => {
+  const expectedConcepts = [
+    "h j k l and counts",
+    "0 ^ $ g_ and count|",
+    "w and W",
+    "e E b B ge gE",
+    "gg G and counted G",
+    "j k versus gj gk",
+    "integrated cursor movement",
+  ];
+  assert.deepEqual(cursorUnit.coverage.map(item => item.concept), expectedConcepts);
+  const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities);
+  const cursorRunnable = cursorActivities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert(cursorRunnable.length >= 25);
+  for (const activity of cursorRunnable) {
+    assert.deepEqual(activity.scenario.target.lines, activity.scenario.initial.lines, `${activity.id} must not edit text`);
+    assert(activity.scenario.target.cursor, `${activity.id} needs an exact target cursor`);
+    const finalCheckpoint = activity.script.checkpoints.at(-1);
+    assert.deepEqual(finalCheckpoint.lines, activity.scenario.target.lines, `${activity.id} final checkpoint needs target lines`);
+    assert.deepEqual(finalCheckpoint.cursor, activity.scenario.target.cursor, `${activity.id} final checkpoint needs target cursor`);
+    assert.equal(activity.provenance.nativeValidation, "passed");
+    assert.equal(activity.provenance.browserConformance, "passed");
+  }
+  const wrapped = cursorRunnable.filter(activity => activity.editor?.wrapColumns);
+  assert.equal(wrapped.length, 4);
+  assert(wrapped.every(activity => activity.editor.wrapColumns === 24));
 });
 
 test("language profiles are complete and uniquely addressable", () => {
@@ -238,3 +281,40 @@ for (const activity of modalRunnable) {
     }
   });
 }
+
+const cursorRunnable = cursorUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of cursorRunnable) {
+  test(`native Vim Unit 2 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const result = runNativeVim({
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+    });
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    // Headless Vim has no display geometry, so wrapped-screen cursor positions
+    // are asserted by the fixed-width browser conformance tests instead.
+    if (!activity.editor?.wrapColumns) assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+
+    if (activity.editor?.wrapColumns) return;
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({
+        initialCode: activity.scenario.initial.lines,
+        cursor: activity.scenario.initial.cursor,
+        keys: keys.slice(0, checkpoint.afterStep),
+      });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+    }
+  });
+}
+
+test("native Vim accepts gj and gk as logical-line equivalents without wrapping", () => {
+  const initialCode = ["alpha", "bravo", "charlie"];
+  const down = runNativeVim({ initialCode, cursor: [0, 2], keys: ["g", "j"] });
+  const up = runNativeVim({ initialCode, cursor: [2, 2], keys: ["g", "k"] });
+  assert.deepEqual(down.cursor, [1, 2]);
+  assert.deepEqual(up.cursor, [1, 2]);
+});

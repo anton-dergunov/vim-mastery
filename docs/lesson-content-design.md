@@ -75,6 +75,11 @@ Ranges use zero-based `[line, column]` positions and an exclusive end. Incidenta
 cursor or mode properties should not be required. Cursor-moving teaching steps
 must have checkpoints so demonstrations and conformance fixtures cannot drift.
 
+Runnable activities may opt into deterministic display-line wrapping with
+`editor.wrapColumns`. The positive integer fixes the visible character width for
+that activity, allowing `gj` and `gk` checkpoints to remain stable across phone
+sizes. Activities without this field retain the normal unwrapped editor.
+
 Unit files also carry an explicit `unitNumber`; the two-digit filename prefix
 must match it. Introductory content may use the reusable `mode-compass` or
 `command-assembly` theory presentations, scenario-backed inspection choices,
