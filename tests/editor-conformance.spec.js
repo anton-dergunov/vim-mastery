@@ -4,10 +4,13 @@ import { readFileSync } from "node:fs";
 const unit = JSON.parse(readFileSync(new URL("../content/units/10-repeatable-editing.json", import.meta.url), "utf8"));
 const modalUnit = JSON.parse(readFileSync(new URL("../content/units/01-modal-model.json", import.meta.url), "utf8"));
 const cursorUnit = JSON.parse(readFileSync(new URL("../content/units/02-cursor-movement.json", import.meta.url), "utf8"));
+const changingUnit = JSON.parse(readFileSync(new URL("../content/units/03-entering-changing-text.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const cursorExercises = cursorActivities.filter(activity => activity.type === "exercise");
+const changingActivities = changingUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const changingExercises = changingActivities.filter(activity => activity.type === "exercise");
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
 
@@ -47,7 +50,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(3);
+    await expect(page.locator(".toc-unit")).toHaveCount(4);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -69,10 +72,11 @@ test.describe("Production lesson flow", () => {
     expect(catalog.units).toEqual([
       { id: "modal-model", unitNumber: 1, title: "The modal model" },
       { id: "cursor-movement", unitNumber: 2, title: "Cursor movement" },
+      { id: "entering-changing-text", unitNumber: 3, title: "Entering and changing text" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(3);
+    await expect(page.locator(".toc-unit")).toHaveCount(4);
     await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
   });
@@ -192,7 +196,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "cursor-movement", unitNumber: 2, activityId: "home-row-directions" });
   });
 
-  test("runs every Unit 2 movement and leaves Unit 3 as the next unavailable unit", async ({ page }) => {
+  test("runs every Unit 2 movement and continues to Unit 3", async ({ page }) => {
     await page.goto("/?unit=cursor-movement");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 58, exerciseCount: cursorExercises.length });
@@ -211,7 +215,88 @@ test.describe("Production lesson flow", () => {
     });
     expect(failures).toEqual([]);
     await page.goto("/?unit=cursor-movement&activity=cursor-movement-unit-summary");
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 3 is next");
+    await expect(page.getByRole("button", { name: "Continue to Unit 3" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 3" }).click();
+    await page.waitForURL(/unit=entering-changing-text/);
+    expect((await state(page))).toMatchObject({ unitId: "entering-changing-text", unitNumber: 3, activityId: "entry-point-meanings" });
+  });
+
+  test("runs every Unit 3 local change and leaves Unit 4 as the next unavailable unit", async ({ page }) => {
+    await page.goto("/?unit=entering-changing-text");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 72, exerciseCount: changingExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        if (activity.type === "exercise" && !current.complete) result.push({ id: activity.id, current });
+        if (activity.type === "demo" && (JSON.stringify(current.code) !== JSON.stringify(activity.scenario.target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(activity.scenario.target.cursor))) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+    await page.goto("/?unit=entering-changing-text&activity=entering-changing-text-unit-summary");
+    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 4 is next");
+  });
+
+  test("overwrites in Replace mode and groups complete changes for undo and redo", async ({ page }) => {
+    await page.goto("/?unit=entering-changing-text&activity=replace-word-demo");
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page))).toMatchObject({ mode: "replace", code: ["mode = oldxx"], cursor: [0, 7] });
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({ code: ["mode = draft"], cursor: [0, 11] });
+
+    await page.goto("/?unit=entering-changing-text&activity=undo-redo-demo");
+    for (let index = 0; index < 3; index += 1) await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page)).code).toEqual(["const ready = true;"]);
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page)).code).toEqual(["const ready = true"]);
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page)).code).toEqual(["const ready = true;"]);
+  });
+
+  test("enters Unit 3 Ctrl chords through touch and physical keyboards", async ({ page }) => {
+    await page.goto("/?unit=entering-changing-text&activity=increment-version-number-recall");
+    await page.locator('[data-mod="Ctrl"]').click();
+    await page.locator('.key[data-key="a"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ["version = 20"], modifiers: [] });
+    await page.goto("/?unit=entering-changing-text&activity=increment-version-number");
+    await page.keyboard.press("Control+a");
+    expect((await state(page))).toMatchObject({ complete: true, code: ["version = 20"] });
+
+    await page.goto("/?unit=entering-changing-text&activity=decrement-retry-count-recall");
+    await page.locator('.key[data-key="2"]').click();
+    await page.locator('[data-mod="Ctrl"]').click();
+    await page.locator('.key[data-key="x"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ["retries = 3"], modifiers: [] });
+    await page.goto("/?unit=entering-changing-text&activity=decrement-retry-count");
+    await page.evaluate(() => window.VimWilds.emit("2"));
+    await page.keyboard.press("Control+x");
+    expect((await state(page))).toMatchObject({ complete: true, code: ["retries = 3"] });
+
+    await page.goto("/?unit=entering-changing-text&activity=redo-substitution-recall");
+    for (const key of ["s", "r", "Escape", "u"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await page.locator('[data-mod="Ctrl"]').click();
+    await page.locator('.key[data-key="r"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
+    await page.goto("/?unit=entering-changing-text&activity=redo-substitution");
+    for (const key of ["s", "r", "Escape", "u"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await page.keyboard.press("Control+r");
+    expect((await state(page))).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
+  });
+
+  test("visualizes whitespace only where Unit 3 compares J with gJ", async ({ page }) => {
+    await page.goto("/?unit=entering-changing-text&activity=join-spacing-demo");
+    await expect(page.locator(".cm-highlightSpace")).toHaveCount(9);
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page)).code).toEqual(["const left = first;", "const right =   second;"]);
+
+    await page.goto("/?unit=entering-changing-text&activity=join-aqueduct");
+    await expect(page.locator(".cm-highlightSpace")).toHaveCount(0);
   });
 
   test("keeps wrapped display-line motions deterministic at every target phone width", async ({ page }) => {
@@ -549,7 +634,7 @@ test.describe("Production lesson flow", () => {
   });
 
   test("keeps every production activity inside the target phone viewports without clipping", async ({ page }) => {
-    test.setTimeout(120000);
+    test.setTimeout(240000);
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
     const textSelector = [
       ".lesson-label", ".activity-intro h1", ".activity-intro p", ".command-explanation", ".next-command-tray .command-text",
@@ -559,7 +644,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "repeatable-editing"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "repeatable-editing"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

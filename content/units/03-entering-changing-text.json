@@ -1,0 +1,4598 @@
+{
+  "$schema": "../unit-content.schema.json",
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 3,
+  "id": "entering-changing-text",
+  "title": "Entering and changing text",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "3. Entering and changing text",
+    "commandsAndConcepts": "`i I a A o O`; `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
+    "prerequisites": "Units 1–2",
+    "learningOutcome": "Choose a precise entry/change command, undo safely, and perform common local transformations",
+    "representativeExercises": "Append an argument; open a line; replace a delimiter; join a wrapped statement; change case; increment a version number",
+    "priorityAndPortability": "Core, with `R`, `gJ`, and numeric changes introduced after the everyday commands"
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "entering-changing-text-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "choose-an-entry-point",
+      "title": "Enter text exactly where it belongs",
+      "objective": "Choose i, I, a, or A from the intended insertion boundary.",
+      "activities": [
+        {
+          "id": "entry-point-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Before, after, first text, or line end",
+          "body": "`i` inserts before the cursor and `a` appends after it. Their uppercase partners target line landmarks: `I` starts at the first nonblank character and `A` starts at the physical line end.",
+          "grammar": "i → before · a → after · I → first text · A → line end",
+          "contrast": "Choose the boundary directly instead of moving there one character at a time.",
+          "demoRef": "entry-points-demo"
+        },
+        {
+          "id": "entry-points-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Frame an assignment",
+          "instruction": "Insert `const ` before the first text, then append a semicolon at the line end.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "  enabled = true"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "  const enabled = true;"
+              ],
+              "cursor": [
+                0,
+                22
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "I",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              " ",
+              "Escape",
+              "A",
+              ";",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "Iconst ␠Esc",
+                "explanation": "Enter Insert mode at the first nonblank and add the declaration keyword."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "A;Esc",
+                "explanation": "Append punctuation at the physical end and return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "  const enabled = true"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "  const enabled = true;"
+                ],
+                "cursor": [
+                  0,
+                  22
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The declaration was framed without navigation taps.",
+            "why": "I targeted the first text while A targeted the line end."
+          },
+          "skills": {
+            "primary": [
+              "entry-points"
+            ],
+            "supporting": [
+              "normal-insert-transition"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "two-entry-landmarks"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "An indented JavaScript assignment exposes both first-text and line-end entry points.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "first-text-insert",
+              "line-end-append"
+            ]
+          }
+        },
+        {
+          "id": "insert-missing-digit",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Insert before the value",
+          "instruction": "Insert `4` before the final digit to make `42`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "value = 2"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "value = 42"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "i",
+              "4",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "i4Esc",
+                "explanation": "Insert immediately before the cursor, then return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "value = 42"
+                ],
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The new digit belongs before the cursor.",
+            "Use lowercase `i`.",
+            "Press `i4Esc`."
+          ],
+          "feedback": {
+            "success": "The number became 42.",
+            "why": "i opened Insert mode on the cursor's left boundary."
+          },
+          "skills": {
+            "primary": [
+              "insert-before"
+            ],
+            "supporting": [
+              "normal-insert-transition"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-literal"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A short Python assignment makes the insertion boundary unambiguous.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-before"
+            ]
+          }
+        },
+        {
+          "id": "append-list-comma",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Append after an item",
+          "instruction": "Append a comma after `1` without moving onto the following space.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items = [1 2]"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items = [1, 2]"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "a",
+              ",",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "a,Esc",
+                "explanation": "Append on the cursor's right boundary."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "items = [1, 2]"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The punctuation belongs after the selected item.",
+            "Use lowercase `a`.",
+            "Press `a,Esc`."
+          ],
+          "feedback": {
+            "success": "The list separator is in place.",
+            "why": "a began text entry directly after the 1."
+          },
+          "skills": {
+            "primary": [
+              "append-after"
+            ],
+            "supporting": [
+              "insert-before"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "punctuation-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A compact list gives append-after a natural punctuation task.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "append-after"
+            ]
+          }
+        },
+        {
+          "id": "append-return-semicolon",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Finish the statement",
+          "instruction": "Append a semicolon at the end of the line from the current distant cursor.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "return value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "return value;"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;Esc",
+                "explanation": "Jump to the end and append in one entry command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "return value;"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Do not walk to the line end.",
+            "Use uppercase `A`.",
+            "Press `A;Esc`."
+          ],
+          "feedback": {
+            "success": "The statement is terminated.",
+            "why": "A combined line-end movement with entry."
+          },
+          "skills": {
+            "primary": [
+              "line-end-append"
+            ],
+            "supporting": [
+              "cursor-landmarks"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "distant-entry-point"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A JavaScript return statement naturally needs terminal punctuation.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-end-append"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "open-new-lines",
+      "title": "Create space above or below",
+      "objective": "Use o and O to open a correctly placed new line and begin typing.",
+      "activities": [
+        {
+          "id": "open-line-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Open below or above",
+          "body": "`o` creates a new line below the current row; `O` creates one above. Both enter Insert mode immediately so the new row can be filled without a separate command.",
+          "grammar": "o → open below · O → open above",
+          "contrast": "Opening a line is one change, not a movement followed by Enter.",
+          "demoRef": "open-middle-line-demo"
+        },
+        {
+          "id": "open-middle-line-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Fill the missing call",
+          "instruction": "Open a line below `first()` and type `second()`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "first()",
+                "third()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "first()",
+                "second()",
+                "third()"
+              ],
+              "cursor": [
+                1,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "o",
+              "s",
+              "e",
+              "c",
+              "o",
+              "n",
+              "d",
+              "(",
+              ")",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "osecond()Esc",
+                "explanation": "Open below, enter the call, and return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "first()",
+                  "",
+                  "third()"
+                ]
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "first()",
+                  "second()",
+                  "third()"
+                ],
+                "cursor": [
+                  1,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The call sequence now has its middle row.",
+            "why": "o created the row and entered Insert mode as one command."
+          },
+          "skills": {
+            "primary": [
+              "open-below"
+            ],
+            "supporting": [
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "new-line-entry"
+            ]
+          },
+          "portability": "Indentation is intentionally neutral; host autoindent settings can vary.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Three top-level calls avoid host-specific indentation while giving the new line a clear position.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "open-below"
+            ]
+          }
+        },
+        {
+          "id": "open-beta-above",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Insert the missing label",
+          "instruction": "Open a row above `gamma` and type `beta`.",
+          "languageId": "yaml",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "gamma"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma"
+              ],
+              "cursor": [
+                1,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "O",
+              "b",
+              "e",
+              "t",
+              "a",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "ObetaEsc",
+                "explanation": "Open above the current row and fill it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 6,
+                "lines": [
+                  "alpha",
+                  "beta",
+                  "gamma"
+                ],
+                "cursor": [
+                  1,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The new row belongs above the cursor.",
+            "Use uppercase `O`.",
+            "Press `ObetaEsc`."
+          ],
+          "feedback": {
+            "success": "The labels are ordered.",
+            "why": "O opened a row above gamma."
+          },
+          "skills": {
+            "primary": [
+              "open-above"
+            ],
+            "supporting": [
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "above-below-choice"
+            ]
+          },
+          "portability": "Indentation-neutral core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A neutral YAML-like list isolates vertical placement without indentation rules.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "open-above"
+            ]
+          }
+        },
+        {
+          "id": "open-before-final-row",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Navigate, then open above",
+          "instruction": "Jump to the final row, open above it, and type `middle`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "north",
+                "south"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "north",
+                "middle",
+                "south"
+              ],
+              "cursor": [
+                1,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "G",
+              "O",
+              "m",
+              "i",
+              "d",
+              "d",
+              "l",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "G",
+                "explanation": "Reach the final logical line."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "OmiddleEsc",
+                "explanation": "Open above it and enter the missing row."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "north",
+                  "middle",
+                  "south"
+                ],
+                "cursor": [
+                  1,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "First reach the last row.",
+            "Then open above it.",
+            "Press `GOmiddleEsc`."
+          ],
+          "feedback": {
+            "success": "The middle row landed between the endpoints.",
+            "why": "G chose the anchor row and O created space above it."
+          },
+          "skills": {
+            "primary": [
+              "open-above"
+            ],
+            "supporting": [
+              "buffer-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "movement-then-entry"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Directional labels make row order immediately readable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "open-above",
+              "buffer-end-motion"
+            ]
+          }
+        },
+        {
+          "id": "open-header-and-footer",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Frame a small block",
+          "instruction": "Open `header` above the block, then `footer` below its final row.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "start",
+                "end"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "header",
+                "start",
+                "end",
+                "footer"
+              ],
+              "cursor": [
+                3,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "O",
+              "h",
+              "e",
+              "a",
+              "d",
+              "e",
+              "r",
+              "Escape",
+              "G",
+              "o",
+              "f",
+              "o",
+              "o",
+              "t",
+              "e",
+              "r",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "OheaderEsc",
+                "explanation": "Create the header above."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "G",
+                "explanation": "Reach the final row."
+              },
+              {
+                "from": 9,
+                "to": 17,
+                "display": "ofooterEsc",
+                "explanation": "Create the footer below."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "header",
+                  "start",
+                  "end"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "header",
+                  "start",
+                  "end",
+                  "footer"
+                ],
+                "cursor": [
+                  3,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use uppercase above and lowercase below.",
+            "Jump to the last row between the changes.",
+            "Use `O…Esc`, `G`, then `o…Esc`."
+          ],
+          "feedback": {
+            "success": "The block now has both boundaries.",
+            "why": "O and o expressed opposite insertion directions directly."
+          },
+          "skills": {
+            "primary": [
+              "open-above",
+              "open-below"
+            ],
+            "supporting": [
+              "buffer-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "two-open-directions"
+            ]
+          },
+          "portability": "Indentation-neutral core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A neutral block keeps the challenge about placement rather than syntax.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "open-above",
+              "open-below"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "edit-single-characters",
+      "title": "Delete or replace the smallest target",
+      "objective": "Use x, X, and r for local character corrections without entering a longer edit.",
+      "activities": [
+        {
+          "id": "character-edit-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Remove here, remove before, or replace",
+          "body": "`x` deletes the character under the cursor, while `X` deletes the character before it. `r{char}` replaces one character and stays in Normal mode.",
+          "grammar": "x → delete here · X → delete before · r{char} → replace here",
+          "contrast": "Use `r` when the target width is already exactly one character.",
+          "demoRef": "character-corrections-demo"
+        },
+        {
+          "id": "character-corrections-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Repair three tiny defects",
+          "instruction": "Delete a duplicate colon, replace the final character with a semicolon, then remove one leading hash with X.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name:: value",
+                "ready? true",
+                "##title"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name: value",
+                "ready? tru;",
+                "#title"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "x",
+              "j",
+              "$",
+              "r",
+              ";",
+              "j",
+              "0",
+              "l",
+              "X"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "x",
+                "explanation": "Delete the duplicate colon under the cursor."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "j$",
+                "explanation": "Reach the next row's final character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "r;",
+                "explanation": "Replace that one character without entering Insert mode."
+              },
+              {
+                "from": 5,
+                "to": 9,
+                "display": "j0lX",
+                "explanation": "Stand after the extra hash and delete backward."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "name: value",
+                  "ready? true",
+                  "##title"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "name: value",
+                  "ready? tru;",
+                  "##title"
+                ],
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  2,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "name: value",
+                  "ready? tru;",
+                  "#title"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "All three one-character defects are gone.",
+            "why": "x, r, and X matched the defect direction and width."
+          },
+          "skills": {
+            "primary": [
+              "character-edits"
+            ],
+            "supporting": [
+              "cursor-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "three-character-actions"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Log-like rows make isolated punctuation defects visually obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "delete-under-cursor",
+              "delete-before-cursor",
+              "replace-character"
+            ]
+          }
+        },
+        {
+          "id": "delete-three-suffixes",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Remove a fixed run",
+          "instruction": "Delete the three trailing `x` characters with a count.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "tokenxxx"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "token"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "3x",
+                "explanation": "Delete three characters starting under the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "token"
+                ],
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The unwanted run starts under the cursor.",
+            "Counts work with x.",
+            "Press `3x`."
+          ],
+          "feedback": {
+            "success": "The suffix is clean.",
+            "why": "The count made x cover the known three-character width."
+          },
+          "skills": {
+            "primary": [
+              "delete-under-cursor"
+            ],
+            "supporting": [
+              "counts"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "counted-delete"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A neutral token isolates counted character deletion.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "counted-character-delete"
+            ]
+          }
+        },
+        {
+          "id": "delete-extra-slash-before",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Delete backward",
+          "instruction": "Remove the extra slash immediately before the cursor.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "path//api"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "path/api"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "X"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "X",
+                "explanation": "Delete the character immediately before the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "path/api"
+                ],
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The unwanted character is left of the cursor.",
+            "Use uppercase `X`."
+          ],
+          "feedback": {
+            "success": "The path has one separator.",
+            "why": "X deletes backward without a separate left motion."
+          },
+          "skills": {
+            "primary": [
+              "delete-before-cursor"
+            ],
+            "supporting": [
+              "character-targeting"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "direction-choice"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A doubled path separator gives X a realistic local correction.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "delete-before-cursor"
+            ]
+          }
+        },
+        {
+          "id": "replace-boolean-letter",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Repair one letter",
+          "instruction": "Replace `q` with `u` without entering Insert mode.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready = trqe"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready = true"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "r",
+              "u"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "ru",
+                "explanation": "Replace exactly the character under the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "ready = true"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Only one character is wrong.",
+            "Use `r` followed by the replacement.",
+            "Press `ru`."
+          ],
+          "feedback": {
+            "success": "The boolean is repaired.",
+            "why": "r performed a one-for-one replacement and stayed in Normal mode."
+          },
+          "skills": {
+            "primary": [
+              "replace-character"
+            ],
+            "supporting": [
+              "normal-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "single-character-replacement"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A misspelled boolean makes the one-character replacement meaningful.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "replace-character"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "substitute-and-replace",
+      "title": "Replace one unit or keep overwriting",
+      "objective": "Choose s, S, or R according to the replacement span.",
+      "activities": [
+        {
+          "id": "substitute-replace-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Character, line, or overwrite stream",
+          "body": "`s` removes the character under the cursor and enters Insert mode; `S` replaces the whole line. `R` enters Replace mode, overwriting existing characters until the line ends and then inserting beyond it.",
+          "grammar": "s → substitute character · S → substitute line · R → overwrite stream",
+          "contrast": "Use the smallest command whose replacement span matches the task.",
+          "demoRef": "replace-word-demo"
+        },
+        {
+          "id": "replace-word-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Overwrite a fixed-width value",
+          "instruction": "Enter Replace mode on `oldxx` and overwrite it with `draft`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode = oldxx"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode = draft"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "R",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "RdraftEsc",
+                "explanation": "Overwrite the existing five-character value and return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "mode = draft"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The old value was overwritten in place.",
+            "why": "R replaced existing characters instead of shifting them right."
+          },
+          "skills": {
+            "primary": [
+              "replace-mode"
+            ],
+            "supporting": [
+              "mode-transitions"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "fixed-width-overwrite"
+            ]
+          },
+          "portability": "Core Vim Replace-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Equal-width state labels make overwrite semantics immediately visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "replace-mode-overwrite"
+            ]
+          }
+        },
+        {
+          "id": "substitute-one-letter",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Substitute a character",
+          "instruction": "Replace the `x` in `hxgh` with `i` using s.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "level = hxgh"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "level = high"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "s",
+              "i",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "siEsc",
+                "explanation": "Remove one character, enter its replacement, and leave Insert mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "level = high"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "This replacement enters Insert mode.",
+            "Use lowercase `s`.",
+            "Press `siEsc`."
+          ],
+          "feedback": {
+            "success": "The level now reads high.",
+            "why": "s combined a one-character deletion with Insert mode."
+          },
+          "skills": {
+            "primary": [
+              "substitute-character"
+            ],
+            "supporting": [
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-character-substitution"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A short string value gives s an obvious one-character correction.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substitute-character"
+            ]
+          }
+        },
+        {
+          "id": "substitute-whole-line",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replace a placeholder row",
+          "instruction": "Replace the entire `TODO` line with `return true;`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TODO",
+                "next()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "return true;",
+                "next()"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "S",
+              "r",
+              "e",
+              "t",
+              "u",
+              "r",
+              "n",
+              " ",
+              "t",
+              "r",
+              "u",
+              "e",
+              ";",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": "Sreturn true;Esc",
+                "explanation": "Substitute the complete current line and type its replacement."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "",
+                  "next()"
+                ]
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "return true;",
+                  "next()"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The entire line is disposable.",
+            "Use uppercase `S`.",
+            "Replace it in one Insert session."
+          ],
+          "feedback": {
+            "success": "The placeholder became a real statement.",
+            "why": "S selected the whole logical line as the replacement unit."
+          },
+          "skills": {
+            "primary": [
+              "substitute-line"
+            ],
+            "supporting": [
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "linewise-substitution"
+            ]
+          },
+          "portability": "The fixture is unindented because automatic indentation is host-configurable.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A top-level placeholder avoids host-specific indentation while preserving a realistic line replacement.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substitute-line"
+            ]
+          }
+        },
+        {
+          "id": "replace-beyond-line-end",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Overwrite and extend",
+          "instruction": "Use Replace mode to turn `dev` into `production`, continuing beyond the old line end.",
+          "languageId": "yaml",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "tag = dev"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "tag = production"
+              ],
+              "cursor": [
+                0,
+                15
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "R",
+              "p",
+              "r",
+              "o",
+              "d",
+              "u",
+              "c",
+              "t",
+              "i",
+              "o",
+              "n",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 12,
+                "display": "RproductionEsc",
+                "explanation": "Overwrite the old value, then insert once Replace mode reaches the line end."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "tag = production"
+                ],
+                "cursor": [
+                  0,
+                  15
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The replacement starts at the cursor and is longer than the old value.",
+            "R can extend beyond end-of-line.",
+            "Use `RproductionEsc`."
+          ],
+          "feedback": {
+            "success": "The tag was replaced and extended.",
+            "why": "Replace mode overwrote dev, then inserted the remaining characters at end-of-line."
+          },
+          "skills": {
+            "primary": [
+              "replace-mode"
+            ],
+            "supporting": [
+              "line-end-semantics"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "overwrite-then-insert"
+            ]
+          },
+          "portability": "Core Vim Replace-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A deployment tag naturally demonstrates a longer replacement value.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "replace-mode-overwrite",
+              "replace-mode-extension"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "undo-and-redo",
+      "title": "Recover and reapply safely",
+      "objective": "Use u and Ctrl-r to inspect, undo, and restore complete changes.",
+      "activities": [
+        {
+          "id": "history-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Undo a change; redo an undo",
+          "body": "`u` reverses the most recent complete change. `Ctrl-r` reapplies an undone change. An Insert or Replace session should undo as one unit, not one typed character at a time.",
+          "grammar": "u → undo · Ctrl-r → redo",
+          "contrast": "Reset restarts an exercise; undo stays inside the edit history.",
+          "demoRef": "undo-redo-demo"
+        },
+        {
+          "id": "undo-redo-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Test and restore punctuation",
+          "instruction": "Append a semicolon, undo the complete append, then redo it.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const ready = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const ready = true;"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape",
+              "u",
+              "Ctrl-r"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;Esc",
+                "explanation": "Create one complete append change."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "u",
+                "explanation": "Undo that whole change."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Ctrl-r",
+                "explanation": "Redo the undone change."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "const ready = true;"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "const ready = true"
+                ],
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "const ready = true;"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The append survived an undo-and-redo check.",
+            "why": "History treated the complete Insert session as one change."
+          },
+          "skills": {
+            "primary": [
+              "undo-redo"
+            ],
+            "supporting": [
+              "line-end-append"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "history-round-trip"
+            ]
+          },
+          "portability": "Core Vim history behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Terminal punctuation makes the history state visible after every step.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "undo",
+              "redo",
+              "insert-undo-group"
+            ]
+          }
+        },
+        {
+          "id": "undo-character-delete",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Undo a deletion",
+          "instruction": "Delete the final extra `e`, then undo that deletion.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cachee"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cachee"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "x",
+              "u"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "x",
+                "explanation": "Delete the selected character."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "u",
+                "explanation": "Restore it from history."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "cache"
+                ],
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "lines": [
+                  "cachee"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make the deletion first.",
+            "Then press `u`.",
+            "Use `xu`."
+          ],
+          "feedback": {
+            "success": "The deletion was reversed.",
+            "why": "u restored the exact prior buffer state."
+          },
+          "skills": {
+            "primary": [
+              "undo"
+            ],
+            "supporting": [
+              "delete-under-cursor"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-history-step"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A duplicated letter makes deletion and restoration obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "undo"
+            ]
+          }
+        },
+        {
+          "id": "redo-substitution",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Restore a substitution",
+          "instruction": "Change `l` to `r`, undo the Insert session, then redo it.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "flog"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "frog"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "s",
+              "r",
+              "Escape",
+              "u",
+              "Ctrl-r"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "srEsc",
+                "explanation": "Create one substitution change."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "u",
+                "explanation": "Undo the substitution."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Ctrl-r",
+                "explanation": "Redo it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "frog"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "flog"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "frog"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Complete the substitution before inspecting history.",
+            "u moves backward; Ctrl-r moves forward.",
+            "Use `srEscuCtrl-r`."
+          ],
+          "feedback": {
+            "success": "The corrected word was restored.",
+            "why": "Ctrl-r replayed the complete substitution that u had reversed."
+          },
+          "skills": {
+            "primary": [
+              "redo"
+            ],
+            "supporting": [
+              "substitute-character"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "insert-history-group"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A one-letter word correction makes the history round trip easy to audit.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "undo",
+              "redo",
+              "insert-undo-group"
+            ]
+          }
+        },
+        {
+          "id": "history-confidence-check",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Verify before keeping a change",
+          "instruction": "Append a semicolon, undo it to inspect the prior state, then redo it.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "state = draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "state = draft;"
+              ],
+              "cursor": [
+                0,
+                13
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape",
+              "u",
+              "Ctrl-r"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;Esc",
+                "explanation": "Make the append."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "u",
+                "explanation": "Inspect the prior state."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Ctrl-r",
+                "explanation": "Keep the change by redoing it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "state = draft;"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "state = draft"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "state = draft;"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make one complete append first.",
+            "Walk backward once, then forward once.",
+            "Finish with Ctrl-r."
+          ],
+          "feedback": {
+            "success": "The checked change remains applied.",
+            "why": "Undo and redo let you inspect history without rebuilding the edit."
+          },
+          "skills": {
+            "primary": [
+              "undo-redo"
+            ],
+            "supporting": [
+              "line-end-append"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "history-verification"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A concise state assignment provides a realistic punctuation check.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "undo",
+              "redo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "join-logical-lines",
+      "title": "Join lines with deliberate spacing",
+      "objective": "Use J or gJ according to whether boundary whitespace should be normalized or preserved.",
+      "activities": [
+        {
+          "id": "join-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Normalize or preserve the join",
+          "body": "`J` joins the next logical line, trims its indentation, and inserts one separating space when needed. `gJ` removes only the newline, preserving the surrounding spaces exactly.",
+          "grammar": "J → normalized join · gJ → whitespace-preserving join",
+          "contrast": "Visible whitespace matters when choosing between these commands.",
+          "demoRef": "join-spacing-demo"
+        },
+        {
+          "id": "join-spacing-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Compare both join boundaries",
+          "instruction": "Join the first statement with J, move down, then join the second statement with gJ.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "editor": {
+            "visualizeWhitespace": true
+          },
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const left =",
+                "  first;",
+                "const right = ",
+                "  second;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const left = first;",
+                "const right =   second;"
+              ],
+              "cursor": [
+                1,
+                14
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "J",
+              "j",
+              "g",
+              "J"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "J",
+                "explanation": "Normalize the first boundary to one space."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move to the next broken statement."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "gJ",
+                "explanation": "Remove only its newline and preserve the spaces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "const left = first;",
+                  "const right = ",
+                  "  second;"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "const left = first;",
+                  "const right =   second;"
+                ],
+                "cursor": [
+                  1,
+                  14
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The two boundaries expose both spacing policies.",
+            "why": "J normalized indentation; gJ preserved every space around the removed newline."
+          },
+          "skills": {
+            "primary": [
+              "join-lines"
+            ],
+            "supporting": [
+              "whitespace-awareness"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "join-contrast"
+            ]
+          },
+          "portability": "Core Vim behavior; whitespace visualization is instructional only.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Two broken JavaScript statements make normalized and preserved spacing directly comparable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normalized-join",
+              "preserved-join"
+            ]
+          }
+        },
+        {
+          "id": "join-aqueduct",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Reconnect the broken statement",
+          "instruction": "Join the two source lines with one uppercase command.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const label =",
+                "  user.name;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const label = user.name;"
+              ],
+              "cursor": [
+                0,
+                13
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "J"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "J",
+                "explanation": "Join the next line and normalize its indentation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "const label = user.name;"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the join that cleans indentation.",
+            "Press uppercase `J`."
+          ],
+          "feedback": {
+            "success": "The statement flows across one line.",
+            "why": "J removed the newline and normalized the boundary to one space."
+          },
+          "skills": {
+            "primary": [
+              "normalized-join"
+            ],
+            "supporting": [
+              "uppercase-command-entry"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-join"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "The prototype aqueduct statement remains a natural introductory J exercise.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normalized-join"
+            ]
+          }
+        },
+        {
+          "id": "join-preserve-spaces",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Keep the exact gap",
+          "instruction": "Remove the newline while preserving the existing spaces around it.",
+          "languageId": "yaml",
+          "sourceKind": "neutral",
+          "editor": {
+            "visualizeWhitespace": true
+          },
+          "scenario": {
+            "initial": {
+              "lines": [
+                "key = ",
+                "  value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "key =   value"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "g",
+              "J"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "gJ",
+                "explanation": "Remove only the newline and preserve all three boundary spaces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "key =   value"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "A normal J would collapse this gap.",
+            "Use the g-prefixed join.",
+            "Press `gJ`."
+          ],
+          "feedback": {
+            "success": "The exact three-space gap remains.",
+            "why": "gJ preserved whitespace instead of normalizing it."
+          },
+          "skills": {
+            "primary": [
+              "preserved-join"
+            ],
+            "supporting": [
+              "whitespace-awareness"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "visible-whitespace"
+            ]
+          },
+          "portability": "Core Vim behavior; spaces are visualized because they are the evidence.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A neutral key/value row makes preserved whitespace measurable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "preserved-join"
+            ]
+          }
+        },
+        {
+          "id": "join-argument-lines",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Join adjacent arguments",
+          "instruction": "Join the `one` and `two` argument rows while keeping the closing delimiter separate.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha(",
+                "  one,",
+                "  two",
+                ")"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha(",
+                "  one, two",
+                ")"
+              ],
+              "cursor": [
+                1,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "J"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "J",
+                "explanation": "Join only the current row with its successor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "alpha(",
+                  "  one, two",
+                  ")"
+                ],
+                "cursor": [
+                  1,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Only the next newline should disappear.",
+            "Whitespace should normalize around the join.",
+            "Use `J`."
+          ],
+          "feedback": {
+            "success": "The two arguments now share a row.",
+            "why": "J joined exactly the current and next logical lines."
+          },
+          "skills": {
+            "primary": [
+              "normalized-join"
+            ],
+            "supporting": [
+              "line-targeting"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "structural-line-choice"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A multi-line call makes the selected join boundary structurally meaningful.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normalized-join"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "transform-letter-case",
+      "title": "Change case without retyping",
+      "objective": "Use ~ and the g-prefixed case operators to toggle, lowercase, or uppercase a motion range.",
+      "activities": [
+        {
+          "id": "case-transform-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Toggle one or transform a range",
+          "body": "`~` toggles the character under the cursor and advances. `g~`, `gu`, and `gU` wait for a motion, then toggle, lowercase, or uppercase that range.",
+          "grammar": "~ → toggle char · g~{motion} → toggle · gu{motion} → lower · gU{motion} → upper",
+          "contrast": "The g-prefixed forms reuse known motions without introducing the general operator families from the next unit.",
+          "demoRef": "case-transform-demo"
+        },
+        {
+          "id": "case-transform-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Capitalize and emphasize",
+          "instruction": "Toggle the first letter of `draft`, move to `ready`, then uppercase that word.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Draft READY"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "~",
+              "w",
+              "g",
+              "U",
+              "w"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "~",
+                "explanation": "Toggle one character and advance."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "w",
+                "explanation": "Move to the next word."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "gUw",
+                "explanation": "Uppercase through the word motion."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "Draft ready"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "Draft READY"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The sentence has title case and emphasis.",
+            "why": "~ handled one character; gUw transformed a motion-sized range."
+          },
+          "skills": {
+            "primary": [
+              "case-transform"
+            ],
+            "supporting": [
+              "word-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "character-and-range-case"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Two plain words clearly expose character toggle and word-range uppercase.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "toggle-case",
+              "uppercase-range"
+            ]
+          }
+        },
+        {
+          "id": "lowercase-error-word",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Normalize an uppercase word",
+          "instruction": "Lowercase `ERROR` through the next word boundary.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ERROR code"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "error code"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "g",
+              "u",
+              "w"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "guw",
+                "explanation": "Lowercase the range covered by w."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "error code"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the lowercase case operator.",
+            "Give it a word motion.",
+            "Press `guw`."
+          ],
+          "feedback": {
+            "success": "The log level is lowercase.",
+            "why": "gu applied lowercasing to the w range."
+          },
+          "skills": {
+            "primary": [
+              "lowercase-range"
+            ],
+            "supporting": [
+              "word-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "case-operator-motion"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A log level is a natural case-normalization target.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "lowercase-range"
+            ]
+          }
+        },
+        {
+          "id": "toggle-mixed-word",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Invert mixed case",
+          "instruction": "Toggle every letter in `mIxEd` using a word motion.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mIxEd value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "MiXeD value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "g",
+              "~",
+              "w"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "g~w",
+                "explanation": "Toggle the case of the w range."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "MiXeD value"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "A single ~ is too narrow.",
+            "Use the g-prefixed toggle with w.",
+            "Press `g~w`."
+          ],
+          "feedback": {
+            "success": "Every letter inverted case.",
+            "why": "g~ composed toggle-case with the word motion."
+          },
+          "skills": {
+            "primary": [
+              "toggle-range"
+            ],
+            "supporting": [
+              "word-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "mixed-case-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A deliberately mixed word makes every toggled character observable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "toggle-range"
+            ]
+          }
+        },
+        {
+          "id": "normalize-two-case-styles",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Apply opposite case transforms",
+          "instruction": "Uppercase `public`, move forward, then lowercase `DRAFT`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "public DRAFT"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "PUBLIC draft"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "g",
+              "U",
+              "w",
+              "w",
+              "g",
+              "u",
+              "w"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "gUw",
+                "explanation": "Uppercase the first word."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "w",
+                "explanation": "Move to the second word."
+              },
+              {
+                "from": 4,
+                "to": 7,
+                "display": "guw",
+                "explanation": "Lowercase the second word."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "PUBLIC DRAFT"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "PUBLIC draft"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the same motion with two opposite operators.",
+            "Uppercase first, then move one word.",
+            "Finish with lowercase through w."
+          ],
+          "feedback": {
+            "success": "Both words now follow their requested styles.",
+            "why": "gU and gu reused the same word motion for opposite transformations."
+          },
+          "skills": {
+            "primary": [
+              "uppercase-range",
+              "lowercase-range"
+            ],
+            "supporting": [
+              "word-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "opposite-case-operators"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Contrasting words make the two case policies easy to inspect.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "uppercase-range",
+              "lowercase-range"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "change-numbers",
+      "title": "Increment or decrement numbers in place",
+      "objective": "Use Ctrl-a and Ctrl-x, with optional counts, for local decimal changes.",
+      "activities": [
+        {
+          "id": "number-change-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Add or subtract without retyping",
+          "body": "`Ctrl-a` increments the number at or after the cursor; `Ctrl-x` decrements it. A count supplies the amount, making small version and retry changes precise.",
+          "grammar": "count? + Ctrl-a → add · count? + Ctrl-x → subtract",
+          "contrast": "These lessons use decimal values; alternate numeric formats are outside this unit.",
+          "demoRef": "number-change-demo"
+        },
+        {
+          "id": "number-change-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Raise a version and lower retries",
+          "instruction": "Add three to version 7, move to retries, then subtract one.",
+          "languageId": "toml",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "v=7 retries=4"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "v=10 retries=3"
+              ],
+              "cursor": [
+                0,
+                13
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "Ctrl-a",
+              "w",
+              "w",
+              "Ctrl-x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "3Ctrl-a",
+                "explanation": "Add three to the first number."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "ww",
+                "explanation": "Move through the label to the next number."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Ctrl-x",
+                "explanation": "Subtract one from retries."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "v=10 retries=4"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "v=10 retries=3"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Both numeric settings changed in place.",
+            "why": "The count scaled Ctrl-a while Ctrl-x used its default amount of one."
+          },
+          "skills": {
+            "primary": [
+              "numeric-change"
+            ],
+            "supporting": [
+              "counts",
+              "word-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "two-numbers",
+              "counted-arithmetic"
+            ]
+          },
+          "portability": "Core decimal Vim behavior; host nrformats settings may affect other formats.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A compact settings row makes two decimal changes easy to compare.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "increment-number",
+              "decrement-number",
+              "counted-numeric-change"
+            ]
+          }
+        },
+        {
+          "id": "increment-version-number",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Advance the version",
+          "instruction": "Increment version 19 to 20.",
+          "languageId": "toml",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "version = 19"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "version = 20"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "Ctrl-a",
+                "explanation": "Add one to the decimal number at the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "version = 20"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the increment chord.",
+            "Latch Ctrl, then press a.",
+            "Press `Ctrl-a`."
+          ],
+          "feedback": {
+            "success": "The version advanced to 20.",
+            "why": "Ctrl-a incremented the complete decimal token."
+          },
+          "skills": {
+            "primary": [
+              "increment-number"
+            ],
+            "supporting": [
+              "control-chords"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-number"
+            ]
+          },
+          "portability": "Core decimal Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A version value is the canonical practical increment task.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "increment-number"
+            ]
+          }
+        },
+        {
+          "id": "decrement-retry-count",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reduce retries by two",
+          "instruction": "Subtract two from the retry count.",
+          "languageId": "yaml",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "retries = 5"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "retries = 3"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "2",
+              "Ctrl-x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "2Ctrl-x",
+                "explanation": "Use a count to subtract two."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "retries = 3"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Supply the amount before the chord.",
+            "Ctrl-x subtracts.",
+            "Press `2Ctrl-x`."
+          ],
+          "feedback": {
+            "success": "The retry count is now three.",
+            "why": "The count changed Ctrl-x from minus one to minus two."
+          },
+          "skills": {
+            "primary": [
+              "decrement-number"
+            ],
+            "supporting": [
+              "counts",
+              "control-chords"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "counted-decrement"
+            ]
+          },
+          "portability": "Core decimal Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A retry limit is a natural small decrement.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "decrement-number",
+              "counted-numeric-change"
+            ]
+          }
+        },
+        {
+          "id": "increment-build-from-line-start",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Reach and advance a build",
+          "instruction": "From the line start, reach the final number and add two.",
+          "languageId": "shell",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "build = 40"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "build = 42"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "$",
+              "2",
+              "Ctrl-a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "$",
+                "explanation": "Reach the final digit."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2Ctrl-a",
+                "explanation": "Add two to the complete decimal token."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "build = 42"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use a known line landmark first.",
+            "Then count the increment amount.",
+            "Press `$2Ctrl-a`."
+          ],
+          "feedback": {
+            "success": "Build 40 became 42.",
+            "why": "Ctrl-a found the numeric token even from its final digit."
+          },
+          "skills": {
+            "primary": [
+              "increment-number"
+            ],
+            "supporting": [
+              "line-end-motion",
+              "counts"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "movement-then-control-chord"
+            ]
+          },
+          "portability": "Core decimal Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A build number provides a realistic counted increment after movement.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "increment-number",
+              "line-end-motion"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "choose-the-local-change",
+      "title": "Choose the smallest precise change",
+      "objective": "Combine entry, joining, case, numeric, and history commands according to editing intent.",
+      "activities": [
+        {
+          "id": "local-change-decision-rule",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Let the target shape choose the command",
+          "body": "Choose an entry command from the boundary, a character command from the defect width, a join from its whitespace policy, and a case or numeric transform when retyping would discard structure.",
+          "grammar": "boundary · width · whitespace · transformation · history",
+          "contrast": "The shortest useful command is the one whose behavior matches the edit, not merely the one with fewest keys.",
+          "demoRef": "integrated-release-demo"
+        },
+        {
+          "id": "integrated-release-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Finish and normalize release metadata",
+          "instruction": "Append a semicolon to the release row, move down, then uppercase `draft`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "release = 8",
+                "status = draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "release = 8;",
+                "status = DRAFT"
+              ],
+              "cursor": [
+                1,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape",
+              "j",
+              "$",
+              "b",
+              "g",
+              "U",
+              "w"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;Esc",
+                "explanation": "Append at the first row's line end."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "j$b",
+                "explanation": "Reach the final word on the next row."
+              },
+              {
+                "from": 6,
+                "to": 9,
+                "display": "gUw",
+                "explanation": "Uppercase that word range."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "release = 8;",
+                  "status = draft"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  1,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  1,
+                  13
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  1,
+                  9
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "release = 8;",
+                  "status = DRAFT"
+                ],
+                "cursor": [
+                  1,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Both metadata fields now match their target forms.",
+            "why": "A chose the punctuation boundary while gUw preserved the word and changed only its case."
+          },
+          "skills": {
+            "primary": [
+              "integrated-local-changes"
+            ],
+            "supporting": [
+              "line-end-append",
+              "uppercase-range",
+              "cursor-movement"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "two-change-families"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Release metadata naturally combines punctuation and case normalization.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-end-append",
+              "uppercase-range"
+            ]
+          }
+        },
+        {
+          "id": "integrated-attempt-count",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Finish and increment a setting",
+          "instruction": "Append a semicolon, reach the number, then increment it from 2 to 3.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "attempts = 2"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "attempts = 3;"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape",
+              "$",
+              "h",
+              "Ctrl-a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;Esc",
+                "explanation": "Append the terminator."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "$h",
+                "explanation": "Stand on the number before the terminator."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Ctrl-a",
+                "explanation": "Increment the number in place."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "attempts = 2;"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "attempts = 3;"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Finish the line before changing the value.",
+            "Move left from the final semicolon.",
+            "Use Ctrl-a on the number."
+          ],
+          "feedback": {
+            "success": "The setting is terminated and incremented.",
+            "why": "A handled the boundary and Ctrl-a preserved the numeric token."
+          },
+          "skills": {
+            "primary": [
+              "integrated-local-changes"
+            ],
+            "supporting": [
+              "line-end-append",
+              "increment-number"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "punctuation-and-number"
+            ]
+          },
+          "portability": "Core decimal Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A small attempt setting naturally combines punctuation and numeric adjustment.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-end-append",
+              "increment-number"
+            ]
+          }
+        },
+        {
+          "id": "integrated-join-and-uppercase",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Join and normalize a value",
+          "instruction": "Join the broken assignment, then uppercase `draft`.",
+          "languageId": "yaml",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "message =",
+                "  draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "message = DRAFT"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "J",
+              "$",
+              "b",
+              "g",
+              "U",
+              "w"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "J",
+                "explanation": "Join and normalize the line boundary."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "$b",
+                "explanation": "Reach the joined value."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "gUw",
+                "explanation": "Uppercase it through the word motion."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "message = draft"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "message = DRAFT"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Normalize the boundary first.",
+            "Then target the final word.",
+            "Use J followed by a word-sized uppercase transform."
+          ],
+          "feedback": {
+            "success": "The assignment is joined and normalized.",
+            "why": "J repaired structure before gUw changed presentation."
+          },
+          "skills": {
+            "primary": [
+              "integrated-local-changes"
+            ],
+            "supporting": [
+              "normalized-join",
+              "uppercase-range"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "join-then-transform"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A broken key/value row combines structural joining with value normalization.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normalized-join",
+              "uppercase-range"
+            ]
+          }
+        },
+        {
+          "id": "choose-entry-command",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the direct entry point",
+          "prompt": "The cursor is at the start of a long line and a semicolon belongs at its end. Which command begins entry at the right boundary?",
+          "questionKind": "generic",
+          "options": [
+            {
+              "id": "insert-choice",
+              "label": "i"
+            },
+            {
+              "id": "append-choice",
+              "label": "a"
+            },
+            {
+              "id": "line-end-choice",
+              "label": "A"
+            }
+          ],
+          "correctOptionId": "line-end-choice",
+          "explanation": "A moves directly to the physical line end and begins appending there.",
+          "remediationRef": "entry-point-meanings"
+        },
+        {
+          "id": "entering-changing-text-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Match the command to the local change",
+          "body": "You can now enter text at precise boundaries, open rows, correct characters, overwrite spans, inspect history, join lines, transform case, and adjust decimal numbers.",
+          "takeaways": [
+            "Use i, I, a, and A to choose an insertion boundary directly.",
+            "Use x, X, r, s, S, or R according to direction and replacement span.",
+            "Use u and Ctrl-r to move safely through complete changes.",
+            "Choose J or gJ from the desired whitespace policy.",
+            "Preserve structure with case and numeric transformations instead of retyping."
+          ],
+          "routes": [
+            {
+              "id": "review-entry-points",
+              "label": "Review entry commands",
+              "activityRef": "entry-point-meanings",
+              "emphasis": "secondary"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "ref-entry-points",
+      "command": "i / I / a / A",
+      "purpose": "Enter text before or after the cursor, at first text, or at line end.",
+      "notes": [
+        "Escape returns to Normal mode.",
+        "Uppercase forms include a line-landmark movement."
+      ],
+      "exampleActivityRefs": [
+        "entry-points-demo",
+        "append-return-semicolon"
+      ]
+    },
+    {
+      "id": "ref-open-lines",
+      "command": "o / O",
+      "purpose": "Open a new line below or above and enter Insert mode.",
+      "notes": [
+        "Indentation can depend on editor settings."
+      ],
+      "exampleActivityRefs": [
+        "open-middle-line-demo",
+        "open-beta-above"
+      ]
+    },
+    {
+      "id": "ref-character-edits",
+      "command": "x / X / r{char}",
+      "purpose": "Delete under the cursor, delete before it, or replace one character.",
+      "notes": [
+        "Counts expand x and X.",
+        "r stays in Normal mode."
+      ],
+      "exampleActivityRefs": [
+        "character-corrections-demo",
+        "replace-boolean-letter"
+      ]
+    },
+    {
+      "id": "ref-substitute-replace",
+      "command": "s / S / R",
+      "purpose": "Replace a character, a line, or an overwrite stream.",
+      "notes": [
+        "s and S enter Insert mode.",
+        "R overwrites until end-of-line, then inserts."
+      ],
+      "exampleActivityRefs": [
+        "replace-word-demo",
+        "substitute-whole-line",
+        "replace-beyond-line-end"
+      ]
+    },
+    {
+      "id": "ref-history",
+      "command": "u / Ctrl-r",
+      "purpose": "Undo the latest complete change or redo an undo.",
+      "notes": [
+        "An Insert or Replace session is one history unit."
+      ],
+      "exampleActivityRefs": [
+        "undo-redo-demo",
+        "redo-substitution"
+      ]
+    },
+    {
+      "id": "ref-joins",
+      "command": "J / gJ",
+      "purpose": "Join lines with normalized or preserved boundary whitespace.",
+      "notes": [
+        "J trims indentation and normally inserts one space.",
+        "gJ removes only the newline."
+      ],
+      "exampleActivityRefs": [
+        "join-spacing-demo",
+        "join-aqueduct"
+      ]
+    },
+    {
+      "id": "ref-case",
+      "command": "~ / g~{motion} / gu{motion} / gU{motion}",
+      "purpose": "Toggle a character or transform the case of a motion range.",
+      "notes": [
+        "The g-prefixed forms wait for a motion."
+      ],
+      "exampleActivityRefs": [
+        "case-transform-demo",
+        "normalize-two-case-styles"
+      ]
+    },
+    {
+      "id": "ref-numbers",
+      "command": "Ctrl-a / Ctrl-x",
+      "purpose": "Increment or decrement the number at or after the cursor.",
+      "notes": [
+        "Prefix with a count to change the amount.",
+        "This unit practices decimal values."
+      ],
+      "exampleActivityRefs": [
+        "number-change-demo",
+        "increment-version-number"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "i I a A",
+      "explain": [
+        "entry-point-meanings"
+      ],
+      "demonstrate": [
+        "entry-points-demo"
+      ],
+      "isolate": [
+        "insert-missing-digit"
+      ],
+      "mix": [
+        "append-list-comma"
+      ],
+      "challenge": [
+        "append-return-semicolon",
+        "choose-entry-command"
+      ]
+    },
+    {
+      "concept": "o O",
+      "explain": [
+        "open-line-meanings"
+      ],
+      "demonstrate": [
+        "open-middle-line-demo"
+      ],
+      "isolate": [
+        "open-beta-above"
+      ],
+      "mix": [
+        "open-before-final-row"
+      ],
+      "challenge": [
+        "open-header-and-footer"
+      ]
+    },
+    {
+      "concept": "x X r",
+      "explain": [
+        "character-edit-meanings"
+      ],
+      "demonstrate": [
+        "character-corrections-demo"
+      ],
+      "isolate": [
+        "delete-three-suffixes"
+      ],
+      "mix": [
+        "delete-extra-slash-before"
+      ],
+      "challenge": [
+        "replace-boolean-letter"
+      ]
+    },
+    {
+      "concept": "s S R",
+      "explain": [
+        "substitute-replace-meanings"
+      ],
+      "demonstrate": [
+        "replace-word-demo"
+      ],
+      "isolate": [
+        "substitute-one-letter"
+      ],
+      "mix": [
+        "substitute-whole-line"
+      ],
+      "challenge": [
+        "replace-beyond-line-end"
+      ]
+    },
+    {
+      "concept": "u and Ctrl-r",
+      "explain": [
+        "history-meanings"
+      ],
+      "demonstrate": [
+        "undo-redo-demo"
+      ],
+      "isolate": [
+        "undo-character-delete"
+      ],
+      "mix": [
+        "redo-substitution"
+      ],
+      "challenge": [
+        "history-confidence-check"
+      ]
+    },
+    {
+      "concept": "J and gJ",
+      "explain": [
+        "join-meanings"
+      ],
+      "demonstrate": [
+        "join-spacing-demo"
+      ],
+      "isolate": [
+        "join-aqueduct"
+      ],
+      "mix": [
+        "join-preserve-spaces"
+      ],
+      "challenge": [
+        "join-argument-lines",
+        "integrated-join-and-uppercase"
+      ]
+    },
+    {
+      "concept": "~ g~ gu gU",
+      "explain": [
+        "case-transform-meanings"
+      ],
+      "demonstrate": [
+        "case-transform-demo"
+      ],
+      "isolate": [
+        "lowercase-error-word"
+      ],
+      "mix": [
+        "toggle-mixed-word"
+      ],
+      "challenge": [
+        "normalize-two-case-styles"
+      ]
+    },
+    {
+      "concept": "Ctrl-a and Ctrl-x",
+      "explain": [
+        "number-change-meanings"
+      ],
+      "demonstrate": [
+        "number-change-demo"
+      ],
+      "isolate": [
+        "increment-version-number"
+      ],
+      "mix": [
+        "decrement-retry-count"
+      ],
+      "challenge": [
+        "increment-build-from-line-start",
+        "integrated-attempt-count"
+      ]
+    },
+    {
+      "concept": "integrated local changes",
+      "explain": [
+        "local-change-decision-rule"
+      ],
+      "demonstrate": [
+        "integrated-release-demo"
+      ],
+      "isolate": [
+        "integrated-attempt-count"
+      ],
+      "mix": [
+        "integrated-join-and-uppercase"
+      ],
+      "challenge": [
+        "choose-entry-command"
+      ]
+    }
+  ]
+}

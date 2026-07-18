@@ -1,4 +1,5 @@
 import { EditorSelection, EditorState, StateEffect, StateField } from "@codemirror/state";
+import { history } from "@codemirror/commands";
 import { Decoration, EditorView, drawSelection, highlightWhitespace, lineNumbers } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
@@ -130,6 +131,7 @@ export class VimEngine {
         selection: EditorSelection.cursor(start),
         extensions: [
           EditorState.allowMultipleSelections.of(true),
+          history(),
           vim(),
           drawSelection(),
           lineNumbers(),
@@ -276,7 +278,10 @@ export class VimEngine {
     // insertion through CodeMirror's transaction API.
     if (!handled && wasInsert && this.cm.state.vim?.insertMode) {
       const text = literalText(vimKey);
-      if (text !== null) this.cm.replaceSelection(text);
+      if (text !== null) {
+        if (this.cm.state.overwrite && !text.includes("\n")) this.cm.overWriteSelection(text);
+        else this.cm.replaceSelection(text);
+      }
     }
     if ((vimKey === ":" || vimKey === "/" || vimKey === "?") && this.cm.state.dialog) {
       this.commandLine = "";

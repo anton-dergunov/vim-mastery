@@ -11,6 +11,7 @@ const unitFiles = readdirSync(unitDirectory).filter(file => /^\d{2}-.*\.json$/.t
 const units = unitFiles.map(file => ({ file, data: JSON.parse(readFileSync(new URL(file, unitDirectory), "utf8")) }));
 const modalUnit = units.find(item => item.data.id === "modal-model").data;
 const cursorUnit = units.find(item => item.data.id === "cursor-movement").data;
+const changingUnit = units.find(item => item.data.id === "entering-changing-text").data;
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -38,7 +39,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -71,7 +72,8 @@ test("numbered unit catalog is ordered and internally linked", () => {
 test("unit continuation requires the immediately following unit", () => {
   const current = { unitNumber: 1 };
   assert.equal(findNextSequentialUnit(units.map(item => item.data), current), cursorUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), null, "Unit 2 must not skip to Unit 10");
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), changingUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), changingUnit), null, "Unit 3 must not skip to Unit 10");
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -144,6 +146,38 @@ test("Unit 2 covers every movement family with cursor-only runnable states", () 
     "indented-yaml-edges",
     "counted-last-nonblank-column",
   ]);
+});
+
+test("Unit 3 preserves the curriculum and covers every local-change family", () => {
+  assert.deepEqual(changingUnit.curriculumDefinition, {
+    unit: "3. Entering and changing text",
+    commandsAndConcepts: "`i I a A o O`; `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
+    prerequisites: "Units 1–2",
+    learningOutcome: "Choose a precise entry/change command, undo safely, and perform common local transformations",
+    representativeExercises: "Append an argument; open a line; replace a delimiter; join a wrapped statement; change case; increment a version number",
+    priorityAndPortability: "Core, with `R`, `gJ`, and numeric changes introduced after the everyday commands",
+  });
+  assert.deepEqual(changingUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement"]);
+  assert.equal(changingUnit.releaseStatus, "authoring");
+  assert.equal(changingUnit.lessons.length, 9);
+  assert.deepEqual(changingUnit.coverage.map(item => item.concept), [
+    "i I a A", "o O", "x X r", "s S R", "u and Ctrl-r", "J and gJ",
+    "~ g~ gu gU", "Ctrl-a and Ctrl-x", "integrated local changes",
+  ]);
+  const activities = changingUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert(runnable.length >= 30);
+  assert.deepEqual(runnable.filter(activity => activity.editor?.visualizeWhitespace).map(activity => activity.id), [
+    "join-spacing-demo", "join-preserve-spaces",
+  ]);
+  for (const activity of runnable) {
+    assert.equal(activity.provenance.nativeValidation, "passed");
+    assert.equal(activity.provenance.browserConformance, "passed");
+    assert.equal(activity.provenance.reviewStatus, "draft");
+    assert.equal(activity.script.checkpoints.at(-1).afterStep, keysOf(activity).length);
+    assert.deepEqual(activity.script.checkpoints.at(-1).lines, activity.scenario.target.lines);
+    assert.deepEqual(activity.script.checkpoints.at(-1).cursor, activity.scenario.target.cursor);
+  }
 });
 
 test("language profiles are complete and uniquely addressable", () => {
@@ -314,6 +348,34 @@ for (const activity of cursorRunnable) {
       });
       if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
       if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+    }
+  });
+}
+
+const changingRunnable = changingUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of changingRunnable) {
+  test(`native Vim Unit 3 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const result = runNativeVim({
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+    });
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({
+        initialCode: activity.scenario.initial.lines,
+        cursor: activity.scenario.initial.cursor,
+        keys: keys.slice(0, checkpoint.afterStep),
+      });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      if (checkpoint.mode) assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
     }
   });
 }

@@ -19,3 +19,11 @@ Unit 2 configures a fixed character wrap width for `gj`/`gk` fixtures so their
 display-line destinations remain deterministic across supported phone widths.
 The pinned `@replit/codemirror-vim` 6.3.0 package omits `g_`; the compatibility
 patch in `patches/` restores its native last-nonblank and counted-line behavior.
+
+Unit 3 enables CodeMirror history explicitly so `u` and `Ctrl-r` operate on
+complete Vim changes. Its local keyboard injection also delegates Replace-mode
+literals to the adapter's overwrite operation; this preserves native `R`
+behavior while keeping the editor surface non-editable and preventing the phone
+keyboard from opening. The remaining Unit 3 families run through the pinned
+adapter without a dependency patch. Numeric fixtures use decimal values because
+other formats can depend on Vim's `nrformats` option.

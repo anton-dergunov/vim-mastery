@@ -4,7 +4,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const specialKeys = {
+  "Ctrl-a": "\\<C-a>",
+  "Ctrl-r": "\\<C-r>",
   "Ctrl-v": "\\<C-v>",
+  "Ctrl-x": "\\<C-x>",
   "Ctrl-[": "\\<C-[>",
   Escape: "\\<Esc>",
   Enter: "\\<CR>",
