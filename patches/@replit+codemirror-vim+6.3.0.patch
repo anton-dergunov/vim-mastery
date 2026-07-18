@@ -1,5 +1,5 @@
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.cjs b/node_modules/@replit/codemirror-vim/dist/index.cjs
-index 24368b8..83d4923 100644
+index 24368b8..05cef0b 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.cjs
 +++ b/node_modules/@replit/codemirror-vim/dist/index.cjs
 @@ -167,6 +167,7 @@ function initVim(CM) {
@@ -10,12 +10,13 @@ index 24368b8..83d4923 100644
      { keys: '+', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true }},
      { keys: '-', type: 'motion', motion: 'moveByLines', motionArgs: { forward: false, toFirstChar:true }},
      { keys: '_', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true, repeatOffset:-1 }},
-@@ -2559,6 +2560,14 @@ function initVim(CM) {
+@@ -2559,6 +2560,15 @@ function initVim(CM) {
        return new Pos(cursor.line,
                    findFirstNonWhiteSpaceCharacter(cm.getLine(cursor.line)));
      },
 +    moveToLastNonWhiteSpaceCharacter: function(cm, head, motionArgs, vim) {
-+      var line = Math.min(cm.lastLine(), head.line + motionArgs.repeat - 1);
++      var repeat = motionArgs.repeat || 1;
++      var line = Math.min(cm.lastLine(), head.line + repeat - 1);
 +      var text = cm.getLine(line);
 +      var ch = text.length ? text.length - 1 : 0;
 +      while (ch > 0 && isWhiteSpaceString(text.charAt(ch))) ch--;
@@ -26,7 +27,7 @@ index 24368b8..83d4923 100644
        var cursor = head;
        var line = cursor.line;
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.js b/node_modules/@replit/codemirror-vim/dist/index.js
-index 4d0faa1..8f04a99 100644
+index 4d0faa1..40b9f72 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.js
 +++ b/node_modules/@replit/codemirror-vim/dist/index.js
 @@ -147,6 +147,7 @@ function initVim(CM) {
@@ -37,12 +38,13 @@ index 4d0faa1..8f04a99 100644
      { keys: '+', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true }},
      { keys: '-', type: 'motion', motion: 'moveByLines', motionArgs: { forward: false, toFirstChar:true }},
      { keys: '_', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true, repeatOffset:-1 }},
-@@ -2539,6 +2540,14 @@ function initVim(CM) {
+@@ -2539,6 +2540,15 @@ function initVim(CM) {
        return new Pos(cursor.line,
                    findFirstNonWhiteSpaceCharacter(cm.getLine(cursor.line)));
      },
 +    moveToLastNonWhiteSpaceCharacter: function(cm, head, motionArgs, vim) {
-+      var line = Math.min(cm.lastLine(), head.line + motionArgs.repeat - 1);
++      var repeat = motionArgs.repeat || 1;
++      var line = Math.min(cm.lastLine(), head.line + repeat - 1);
 +      var text = cm.getLine(line);
 +      var ch = text.length ? text.length - 1 : 0;
 +      while (ch > 0 && isWhiteSpaceString(text.charAt(ch))) ch--;

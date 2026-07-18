@@ -1016,11 +1016,15 @@ document.addEventListener("keydown", event => {
   }
   event.preventDefault();
   let token = event.key;
+  if (!event.ctrlKey && !event.altKey && event.shiftKey && token.length === 1) {
+    const physicalKey = keyButtonsFor(token.toLowerCase()).find(button => button.dataset.key === token.toLowerCase());
+    if (physicalKey?.dataset.shift) token = physicalKey.dataset.shift;
+  }
   if (event.ctrlKey || event.altKey) {
     const modifiers = [event.ctrlKey && "Ctrl", event.altKey && "Alt"].filter(Boolean);
     token = canonicalKeyToken(`${modifiers.join("+")}+${event.key.toLowerCase()}`);
   }
-  const matching = token.startsWith("Ctrl-") ? keyButtonsFor(token.slice(5))[0] : keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
+  const matching = token.startsWith("Ctrl-") ? keyButtonsFor(token.slice(5))[0] : keyButtonsFor(token)[0] || keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
   if (!matching) {
     flashError(token);
     return;

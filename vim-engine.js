@@ -156,6 +156,13 @@ export class VimEngine {
     });
 
     this.view.contentDOM.setAttribute("inputmode", "none");
+    this.view.dom.tabIndex = -1;
+    this.onNativeInputFocus = event => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) return;
+      this.disableNativeInput(input);
+    };
+    this.view.dom.addEventListener("focusin", this.onNativeInputFocus, true);
     this.cm = getCM(this.view);
     this.onModeChange = event => {
       this.mode = event.mode || "normal";
@@ -273,15 +280,27 @@ export class VimEngine {
       this.commandLine = "";
       this.commandPrefix = vimKey;
     }
+    this.disableNativeInputs();
     this.emit("key", { key: canonicalKey, source });
     return Boolean(handled);
   }
 
+  disableNativeInput(input) {
+    input.readOnly = true;
+    input.setAttribute("readonly", "");
+    input.setAttribute("aria-readonly", "true");
+    input.setAttribute("inputmode", "none");
+  }
+
+  disableNativeInputs() {
+    this.view.dom.querySelectorAll("input, textarea").forEach(input => this.disableNativeInput(input));
+  }
+
   syncCommandInput() {
-    const input = this.cm?.state?.dialog?.querySelector("input");
+    const input = this.view.dom.querySelector(".cm-vim-panel input, .cm-vim-panel textarea");
     if (input) {
       input.value = this.commandLine || "";
-      input.setAttribute("inputmode", "none");
+      this.disableNativeInput(input);
     }
   }
 
@@ -326,22 +345,22 @@ export class VimEngine {
 
   setLocked(locked) {
     this.locked = locked;
-    this.view.contentDOM.setAttribute("contenteditable", String(!locked));
+    // Lessons inject every accepted key through sendKey(), including physical
+    // keyboard fallback. Keeping CodeMirror's surface non-editable prevents
+    // iOS from opening the native keyboard for an app that supplies its own.
+    this.view.contentDOM.setAttribute("contenteditable", "false");
     this.view.dom.classList.toggle("is-locked", locked);
   }
 
   focus() {
     if (this.locked) return;
-    const commandInput = this.cm?.state?.dialog?.querySelector("input");
-    if (this.commandLine !== null && commandInput) {
-      commandInput.setAttribute("inputmode", "none");
-      commandInput.focus({ preventScroll: true });
-      return;
-    }
-    this.view.focus();
+    this.disableNativeInputs();
+    if (this.commandLine !== null) return;
+    this.view.dom.focus({ preventScroll: true });
   }
 
   destroy() {
+    this.view.dom.removeEventListener("focusin", this.onNativeInputFocus, true);
     this.cm?.off("vim-mode-change", this.onModeChange);
     this.cm?.off("vim-keypress", this.onVimKey);
     this.cm?.off("vim-command-done", this.onCommandDone);

@@ -116,6 +116,8 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ mode: "command-line", history: [] });
     await expect(page.locator(".cm-vim-panel")).toContainText(":");
     await expect(page.locator(".cm-vim-panel input")).toHaveAttribute("inputmode", "none");
+    await expect(page.locator(".cm-vim-panel input")).toHaveAttribute("readonly", "");
+    await expect(page.locator(".cm-content")).toHaveAttribute("contenteditable", "false");
     await page.evaluate(() => window.VimWilds.emit("Escape"));
     expect((await state(page))).toMatchObject({ complete: true, mode: "Complete", history: ["Escape"] });
     await expect(page.locator(".cm-vim-panel")).toHaveCount(0);
@@ -238,6 +240,17 @@ test.describe("Production lesson flow", () => {
     await page.locator('[data-mod="Shift"]').first().click();
     await page.locator('.key[data-shift="|"]').click();
     expect((await state(page))).toMatchObject({ complete: true, cursor: [2, 7], modifiers: [] });
+  });
+
+  test("forms physical Shift symbol chords without the native editor input", async ({ page }) => {
+    await page.goto("/?unit=cursor-movement&activity=last-nonblank-result");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.press("g");
+    await page.keyboard.down("Shift");
+    await page.keyboard.press("-");
+    await page.keyboard.up("Shift");
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [0, 17], history: ["g", "_"] });
+    await expect(page.locator(".cm-content")).toHaveAttribute("contenteditable", "false");
   });
 
   test("completes every Unit 1 runnable with its authored sequence", async ({ page }) => {
