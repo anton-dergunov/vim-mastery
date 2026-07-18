@@ -242,6 +242,31 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ complete: true, cursor: [2, 7], modifiers: [] });
   });
 
+  test("makes g_ visibly distinct from the physical line end", async ({ page }) => {
+    await page.goto("/?unit=cursor-movement&activity=line-landmarks-demo");
+    const step = () => page.locator('.demo-controls [data-action="step"]').click();
+    await step();
+    await step();
+    await step();
+    expect((await state(page)).cursor).toEqual([0, 20]);
+    await expect(page.locator(".cm-highlightSpace")).toHaveCount(7);
+
+    await step();
+    await step();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    expect((await state(page)).cursor).toEqual([0, 17]);
+    const cursorPosition = await page.locator(".cm-vimCursorLayer .cm-fat-cursor").evaluate(node => {
+      const { left, right } = node.getBoundingClientRect();
+      return { left, right, character: node.textContent };
+    });
+    const trailingPosition = await page.locator(".cm-highlightSpace").last().evaluate(node => {
+      const { left, right } = node.getBoundingClientRect();
+      return { left, right };
+    });
+    expect(cursorPosition.character).toBe(")");
+    expect(cursorPosition.right).toBeLessThanOrEqual(trailingPosition.left);
+  });
+
   test("forms physical Shift symbol chords without the native editor input", async ({ page }) => {
     await page.goto("/?unit=cursor-movement&activity=last-nonblank-result");
     await page.locator(".cm-content").focus();

@@ -137,6 +137,13 @@ test("Unit 2 covers every movement family with cursor-only runnable states", () 
   const wrapped = cursorRunnable.filter(activity => activity.editor?.wrapColumns);
   assert.equal(wrapped.length, 4);
   assert(wrapped.every(activity => activity.editor.wrapColumns === 24));
+  const visibleWhitespace = cursorRunnable.filter(activity => activity.editor?.visualizeWhitespace);
+  assert.deepEqual(visibleWhitespace.map(activity => activity.id), [
+    "line-landmarks-demo",
+    "last-nonblank-result",
+    "indented-yaml-edges",
+    "counted-last-nonblank-column",
+  ]);
 });
 
 test("language profiles are complete and uniquely addressable", () => {

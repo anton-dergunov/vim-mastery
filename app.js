@@ -441,6 +441,7 @@ function mountEditor() {
     cursor: startCursor,
     language: activity.languageId,
     wrapColumns: activity.editor?.wrapColumns,
+    visualizeWhitespace: activity.editor?.visualizeWhitespace,
     onEvent: handleEngineEvent,
   });
   for (const step of initial.setup?.steps || []) {
@@ -836,11 +837,19 @@ function processToken(token, button) {
 
 function stepDemo() {
   if (!isDemo() || state.playbackStep >= scriptKeys().length || !vimEngine) return false;
+  const activityId = currentActivity().id;
   const token = scriptKeys()[state.playbackStep];
   vimEngine.sendKey(token, { bypassLock: true, source: "demo" });
   state.playbackStep += 1;
-  renderCommand();
-  renderActivityControls();
+  const renderedStep = state.playbackStep;
+  // CodeMirror positions its block cursor in its next measurement frame.
+  // Defer the surrounding demo status by the same frame so a visible step
+  // never advertises a new command while showing the previous cursor.
+  requestAnimationFrame(() => {
+    if (!isDemo() || currentActivity().id !== activityId || state.playbackStep !== renderedStep) return;
+    renderCommand();
+    renderActivityControls();
+  });
   return state.playbackStep < scriptKeys().length;
 }
 

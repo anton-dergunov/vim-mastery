@@ -84,8 +84,11 @@
       ]
     },
     "editorConfig": {
-      "type":"object","additionalProperties":false,"required":["wrapColumns"],
-      "properties":{"wrapColumns":{"type":"integer","minimum":12,"maximum":80}}
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "wrapColumns":{"type":"integer","minimum":12,"maximum":80},
+        "visualizeWhitespace":{"type":"boolean","description":"Render spaces as dots and tabs as arrows for this activity."}
+      }
     },
     "presentation": {
       "oneOf": [

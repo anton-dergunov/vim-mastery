@@ -1,5 +1,5 @@
 import { EditorSelection, EditorState, StateEffect, StateField } from "@codemirror/state";
-import { Decoration, EditorView, drawSelection, lineNumbers } from "@codemirror/view";
+import { Decoration, EditorView, drawSelection, highlightWhitespace, lineNumbers } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
@@ -107,10 +107,11 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
  * this module reaches into EditorView, getCM, or Vim directly.
  */
 export class VimEngine {
-  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, onEvent }) {
+  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, visualizeWhitespace = false, onEvent }) {
     if (wrapColumns !== undefined && (!Number.isInteger(wrapColumns) || wrapColumns < 12 || wrapColumns > 80)) {
       throw new RangeError("wrapColumns must be an integer from 12 to 80");
     }
+    if (typeof visualizeWhitespace !== "boolean") throw new TypeError("visualizeWhitespace must be a boolean");
     this.onEvent = onEvent;
     this.mode = "normal";
     this.subMode = "";
@@ -132,6 +133,7 @@ export class VimEngine {
           vim(),
           drawSelection(),
           lineNumbers(),
+          ...(visualizeWhitespace ? [highlightWhitespace()] : []),
           previewRangeField,
           ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
           ...(wrapColumns ? [

@@ -75,10 +75,18 @@ Ranges use zero-based `[line, column]` positions and an exclusive end. Incidenta
 cursor or mode properties should not be required. Cursor-moving teaching steps
 must have checkpoints so demonstrations and conformance fixtures cannot drift.
 
-Runnable activities may opt into deterministic display-line wrapping with
-`editor.wrapColumns`. The positive integer fixes the visible character width for
-that activity, allowing `gj` and `gk` checkpoints to remain stable across phone
-sizes. Activities without this field retain the normal unwrapped editor.
+Runnable activities may use the optional `editor` configuration:
+
+- `editor.wrapColumns` is a positive integer that fixes the visible character
+  width for the activity, allowing `gj` and `gk` checkpoints to remain stable
+  across phone sizes.
+- `editor.visualizeWhitespace: true` shows spaces as faint dots and tabs as
+  arrows, using CodeMirror's built-in whitespace highlighter. Use it only when
+  visible whitespace is itself teaching evidence—for example, contrasting `$`
+  with `g_` on a line with trailing spaces.
+
+Activities without these fields retain the normal unwrapped editor with
+whitespace hidden.
 
 Unit files also carry an explicit `unitNumber`; the two-digit filename prefix
 must match it. Introductory content may use the reusable `mode-compass` or
