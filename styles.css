@@ -1150,6 +1150,14 @@ html.next-ui .field-note em,
 html.next-ui .hint-step small em,
 html.next-ui .completion-panel em { color: #bcd7ca; }
 
+/* The oracle sits on a light parchment surface, so its inline code needs a
+   dark, high-contrast treatment rather than the shared light-on-dark style. */
+html.next-ui .hint-step small code {
+  color: #25523e;
+  border-color: rgba(37, 82, 62, .34);
+  background: rgba(255, 255, 255, .58);
+}
+
 html.next-ui .next-command-tray {
   --status-rail-width: clamp(86px, 24vw, 104px);
   height: var(--execution-console-height, 126px);
@@ -1725,7 +1733,7 @@ html.next-ui .type-demo { color: #cab7ff; border-color: rgba(202, 183, 255, .32)
 html.next-ui .type-theory { color: #82dbe7; border-color: rgba(130, 219, 231, .32); }
 html.next-ui .activity-type { min-width: 58px; text-align: center; }
 html.next-ui .type-guided { color: #f5d982; border-color: rgba(245, 217, 130, .32); }
-html.next-ui .type-recall { color: #bca9ff; border-color: rgba(188, 169, 255, .36); }
+html.next-ui .type-recall { color: #f39ac3; border-color: rgba(243, 154, 195, .42); }
 
 @keyframes expectedKeyError { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 65% { transform: translateX(4px); } }
 @keyframes wrongKeyError { 0%,100% { transform: translateY(0); } 35% { transform: translateY(2px); } 70% { transform: translateY(-1px); } }

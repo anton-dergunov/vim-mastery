@@ -336,7 +336,10 @@ function renderWorld() {
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
   const assignment = characterAssignment(activity);
   const character = characterAssets[assignment.characterId] || characterAssets.nix;
-  const characterMarkup = `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${character.idle}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`;
+  const shouldShowCharacter = isPractice(activity) || activity.type === "choice";
+  const characterMarkup = shouldShowCharacter
+    ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${character.idle}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
+    : "";
   elements.worldGrid.innerHTML = `${renderSprites(presentation)}${content}${characterMarkup}`;
   if (isRunnable(activity)) mountEditor();
 }
@@ -729,6 +732,9 @@ function setHelp(open) {
     scriptKeys().forEach(token => requiredButtons(token).forEach(button => button.classList.add("hinted")));
     vibrate(5);
   }
+  // The hint control receives browser focus on tap. Restore the practice
+  // editor immediately so physical Vim input remains uninterrupted.
+  if (canHelp) vimEngine?.focus();
 }
 
 function playSuccessCharacter() {

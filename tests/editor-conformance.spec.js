@@ -48,6 +48,12 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
     await expect(page.locator(".activity-type.type-recall").first()).toHaveText("recall");
+    const badgeColors = await page.evaluate(() => ({
+      demo: getComputedStyle(document.querySelector(".activity-type.type-demo")).color,
+      recall: getComputedStyle(document.querySelector(".activity-type.type-recall")).color,
+    }));
+    expect(badgeColors.demo).toBe("rgb(202, 183, 255)");
+    expect(badgeColors.recall).toBe("rgb(243, 154, 195)");
     await page.locator('[data-activity-index="6"]').click();
     expect((await state(page))).toMatchObject({ activityId: "dot-python-values-recall", practiceMode: "recall" });
   });
@@ -100,6 +106,12 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Open hints" }).click();
     await expect(page.locator(".hint-step")).toHaveCount(2);
     await expect(page.locator(".hint-step small code").first()).toHaveText("ci'");
+    const inlineColors = await page.evaluate(() => ({
+      hint: getComputedStyle(document.querySelector(".hint-step small code")).color,
+      instruction: getComputedStyle(document.querySelector("#activityInstruction code")).color,
+    }));
+    expect(inlineColors.hint).toBe("rgb(37, 82, 62)");
+    expect(inlineColors.instruction).toBe("rgb(248, 231, 173)");
     await page.getByRole("button", { name: "Close help" }).click();
     await page.getByRole("button", { name: "Open hints" }).click();
     await expect(page.locator(".hint-step")).toHaveCount(3);
@@ -107,6 +119,18 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Reset activity" }).click();
     await page.getByRole("button", { name: "Open hints" }).click();
     await expect(page.locator(".hint-step")).toHaveCount(1);
+  });
+
+  test("returns physical keyboard focus to practice after opening or closing Help", async ({ page }) => {
+    await page.goto("/?activity=dot-python-values");
+    await page.getByRole("button", { name: "Open hints" }).click();
+    await page.keyboard.press("c");
+    expect((await state(page)).history).toEqual(["c"]);
+    await expect(page.locator("#helpCard")).not.toHaveClass(/open/);
+    await page.getByRole("button", { name: "Open hints" }).click();
+    await page.getByRole("button", { name: "Close help" }).click();
+    await page.keyboard.press("i");
+    expect((await state(page)).history).toEqual(["c", "i"]);
   });
 
   test("formats authored inline code and gives guided and recall mistakes distinct feedback", async ({ page }) => {
@@ -124,7 +148,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".status-key .command-key")).toHaveText("c");
   });
 
-  test("restores a stable random character cast and celebration animation", async ({ page }) => {
+  test("shows characters only for practice and choices, with stable practice celebrations", async ({ page }) => {
     await page.goto("/?activity=dot-python-values");
     await page.waitForFunction(() => document.documentElement.dataset.charactersReady === "true");
     const guidedCharacter = await page.locator(".nix").evaluate(node => ({ character: node.dataset.character, animation: node.dataset.animation }));
@@ -134,6 +158,12 @@ test.describe("Production lesson flow", () => {
     expect(recallCharacter).toEqual(guidedCharacter);
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect(page.locator('.nix.celebrating[src$=".webp"]')).toBeVisible();
+    for (const id of ["dot-is-a-change", "dot-append-demo", "repeat-unit-summary"]) {
+      await page.evaluate(activityId => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === activityId)), id);
+      await expect(page.locator(".nix")).toHaveCount(0);
+    }
+    await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "repeat-is-wrong-choice")));
+    await expect(page.locator(".nix")).toHaveCount(1);
   });
 
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {
