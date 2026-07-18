@@ -1354,6 +1354,26 @@ html.next-ui .code-body .cm-fat-cursor {
   color: #192019;
   background: #f7d878 !important;
 }
+html.next-ui .world[data-mode="insert"] .code-body .cm-cursorLayer .cm-cursor,
+html.next-ui .world[data-mode="insert"] .code-body .cm-vimMode .cm-cursor {
+  width: 0 !important;
+  border-left: 2px solid #78dbea !important;
+  background: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 3px rgba(120, 219, 234, .8));
+}
+html.next-ui .world[data-mode="replace"] .code-body .cm-cursorLayer .cm-cursor,
+html.next-ui .world[data-mode="replace"] .code-body .cm-vimMode .cm-cursor,
+html.next-ui .world[data-mode="replace"] .code-body .cm-fat-cursor {
+  width: .62em !important;
+  border-left: 0 !important;
+  color: inherit !important;
+  background: linear-gradient(to bottom, transparent calc(100% - 3px), #f59a61 calc(100% - 3px)) !important;
+  outline: 0 !important;
+  box-shadow: 0 2px 5px rgba(245, 154, 97, .45) !important;
+  filter: none;
+}
 html.next-ui .code-body .cm-vim-panel {
   align-items: flex-start;
   padding: 4px 7px;
@@ -1781,6 +1801,34 @@ html.next-ui .secondary-action {
   border-color: rgba(157, 195, 176, .28);
   background: linear-gradient(#2a4037, #17251f);
   box-shadow: 0 2px 0 #07100e;
+}
+html.next-ui .unit-continuation {
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+}
+html.next-ui .unit-continuation > .note-action,
+html.next-ui .unit-continuation > .note-routes { margin-top: 0; }
+html.next-ui .unit-continuation > .note-routes { grid-template-columns: 1fr; }
+html.next-ui .unit-coming-soon {
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid rgba(255, 215, 125, .24);
+  border-radius: 8px;
+  background: rgba(66, 53, 31, .42);
+}
+html.next-ui .unit-coming-soon span {
+  color: #d9e7dd;
+  font: 700 12px/1.2 ui-monospace, monospace;
+}
+html.next-ui .unit-coming-soon strong {
+  color: #ffe09a;
+  font: 800 11px/1.2 ui-monospace, monospace;
+  letter-spacing: .04em;
+  text-transform: uppercase;
 }
 
 html.next-ui .mode-compass {

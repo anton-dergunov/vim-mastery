@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
+import { findNextSequentialUnit } from "../unit-navigation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -62,6 +63,13 @@ test("numbered unit catalog is ordered and internally linked", () => {
       }
     }
   }
+});
+
+test("unit continuation requires the immediately following unit", () => {
+  const current = { unitNumber: 1 };
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), current), null, "Unit 1 must not skip to Unit 10");
+  const unitTwo = { id: "cursor-movement", unitNumber: 2, title: "Cursor movement" };
+  assert.equal(findNextSequentialUnit([...units.map(item => item.data), unitTwo], current), unitTwo);
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {

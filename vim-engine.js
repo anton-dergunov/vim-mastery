@@ -265,7 +265,10 @@ export class VimEngine {
 
   syncCommandInput() {
     const input = this.cm?.state?.dialog?.querySelector("input");
-    if (input) input.value = this.commandLine || "";
+    if (input) {
+      input.value = this.commandLine || "";
+      input.setAttribute("inputmode", "none");
+    }
   }
 
   moveCursorToLineStart() {
@@ -314,7 +317,14 @@ export class VimEngine {
   }
 
   focus() {
-    if (!this.locked) this.view.focus();
+    if (this.locked) return;
+    const commandInput = this.cm?.state?.dialog?.querySelector("input");
+    if (this.commandLine !== null && commandInput) {
+      commandInput.setAttribute("inputmode", "none");
+      commandInput.focus({ preventScroll: true });
+      return;
+    }
+    this.view.focus();
   }
 
   destroy() {

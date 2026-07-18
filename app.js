@@ -1,5 +1,6 @@
 import languageProfiles from "./content/language-profiles.json";
 import { spriteCells } from "./exercise-data.js";
+import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -121,6 +122,7 @@ const state = {
   consecutiveMistakes: 0,
   recallFeedback: null,
   errorTimer: null,
+  remediationReturnId: null,
 };
 
 let vimEngine = null;
@@ -292,6 +294,19 @@ function renderRoutes(routes = []) {
   return `<div class="note-routes">${routes.map(route => `<button class="note-action${route.emphasis === "secondary" ? " secondary-action" : ""}" type="button" data-route="${escapeHtml(route.activityRef)}">${renderInline(route.label)}</button>`).join("")}</div>`;
 }
 
+function nextSequentialUnit() {
+  return findNextSequentialUnit(units, unit);
+}
+
+function renderUnitContinuation(activity) {
+  const nextUnit = nextSequentialUnit();
+  const primaryAction = nextUnit
+    ? `<button class="note-action" type="button" data-unit-id="${escapeHtml(nextUnit.id)}">Continue to Unit ${nextUnit.unitNumber} →</button>`
+    : `<div class="unit-coming-soon"><span>Unit ${unit.unitNumber + 1} is next</span><strong>Coming soon</strong></div>
+       <button class="note-action" type="button" data-action="open-toc">Open course contents</button>`;
+  return `<div class="unit-continuation">${primaryAction}${renderRoutes(activity.routes)}</div>`;
+}
+
 function modeDisplayName(mode) {
   return ({
     normal: "Normal",
@@ -334,7 +349,9 @@ function renderFieldNote(activity) {
   if (activity.type === "theory") {
     const lessonTheories = lessons[activity.lessonIndex].activities.filter(item => item.type === "theory");
     const isFinalTheory = lessonTheories.at(-1)?.id === activity.id;
-    const action = activity.routes?.length ? renderRoutes(activity.routes) : isFinalTheory && activity.demoRef
+    const action = state.remediationReturnId
+      ? '<button class="note-action" type="button" data-action="return-remediation">Back to quick check →</button>'
+      : activity.routes?.length ? renderRoutes(activity.routes) : isFinalTheory && activity.demoRef
       ? `<button class="note-action" type="button" data-action="show-demo" data-demo="${activity.demoRef}">Show example →</button>`
       : '<button class="note-action" type="button" data-action="next">Next →</button>';
     return `<article class="field-note" aria-label="Theory">
@@ -351,7 +368,7 @@ function renderFieldNote(activity) {
     const choices = activity.options.map(option => `<button class="choice-option${state.choiceResult === option.id ? " selected" : ""}" data-choice="${option.id}" type="button">${renderInline(option.label)}</button>`).join("");
     const result = state.choiceResult ? `<p class="choice-feedback ${state.complete ? "correct" : ""}">${renderInline(activity.explanation)}</p>` : "";
     const remediation = state.choiceResult && !state.complete && activity.remediationRef
-      ? `<button class="note-action secondary-action remediation-action" type="button" data-route="${escapeHtml(activity.remediationRef)}">Review this idea</button>` : "";
+      ? `<button class="note-action secondary-action remediation-action" type="button" data-remediation="${escapeHtml(activity.remediationRef)}">Review this idea</button>` : "";
     const next = state.complete ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
     return `<article class="field-note choice-note" aria-label="Tool choice challenge">
       <span class="field-note-kicker">Challenge · choose</span><h2>${renderInline(activity.title)}</h2>
@@ -361,7 +378,9 @@ function renderFieldNote(activity) {
   return `<article class="field-note summary-note" aria-label="Lesson summary">
     <span class="field-note-kicker">Lesson summary</span><h2>${renderInline(activity.title)}</h2>
     <p>${renderInline(activity.body)}</p><ul>${activity.takeaways.map(takeaway => `<li>${renderInline(takeaway)}</li>`).join("")}</ul>
-    ${activity.routes?.length ? renderRoutes(activity.routes) : '<button class="note-action" type="button" data-action="next">Next →</button>'}
+    ${activity.activityIndex === activities.length - 1
+      ? renderUnitContinuation(activity)
+      : activity.routes?.length ? renderRoutes(activity.routes) : '<button class="note-action" type="button" data-action="next">Next →</button>'}
   </article>`;
 }
 
@@ -578,7 +597,7 @@ function renderActivityControls() {
     return;
   }
   if (isPractice(activity) && state.recallFeedback === "reveal" && activity.remediationRef) {
-    elements.activityControls.innerHTML = `<button class="review-idea-action" type="button" data-route="${escapeHtml(activity.remediationRef)}">Review this idea</button>`;
+    elements.activityControls.innerHTML = `<button class="review-idea-action" type="button" data-remediation="${escapeHtml(activity.remediationRef)}">Review this idea</button>`;
     return;
   }
   elements.activityControls.innerHTML = "";
@@ -667,18 +686,33 @@ function resetActivity({ vibrateReset = true } = {}) {
   if (vibrateReset) vibrate(9);
 }
 
-function goToActivity(index) {
+function goToActivity(index, { preserveRemediation = false } = {}) {
   if (!Number.isInteger(index) || index < 0 || index >= activities.length) throw new RangeError("Invalid activity index");
   elements.tocDialog?.close();
+  if (!preserveRemediation) state.remediationReturnId = null;
   state.activityIndex = index;
   resetActivity({ vibrateReset: false });
+}
+
+function navigateToUnit(unitId) {
+  const nextUrl = new URL(window.location.href);
+  nextUrl.searchParams.set("unit", unitId);
+  nextUrl.searchParams.delete("activity");
+  window.location.assign(nextUrl);
+}
+
+function openTableOfContents() {
+  renderTableOfContents();
+  elements.tocDialog.showModal();
 }
 
 function nextActivity() {
   if (isPractice() && !state.complete) return;
   if (currentActivity().type === "choice" && !state.complete) return;
   if (state.activityIndex === activities.length - 1) {
-    goToActivity(0);
+    const nextUnit = nextSequentialUnit();
+    if (nextUnit) navigateToUnit(nextUnit.id);
+    else openTableOfContents();
     return;
   }
   goToActivity(state.activityIndex + 1);
@@ -688,9 +722,21 @@ function previousActivity() {
   if (state.activityIndex > 0) goToActivity(state.activityIndex - 1);
 }
 
-function goToActivityId(id) {
+function goToActivityId(id, options) {
   const index = activities.findIndex(activity => activity.id === id || activity.sourceActivityId === id);
-  if (index >= 0) goToActivity(index);
+  if (index >= 0) goToActivity(index, options);
+}
+
+function goToRemediation(id) {
+  state.remediationReturnId = currentActivity().id;
+  goToActivityId(id, { preserveRemediation: true });
+}
+
+function returnFromRemediation() {
+  const returnId = state.remediationReturnId;
+  if (!returnId) return;
+  state.remediationReturnId = null;
+  goToActivityId(returnId);
 }
 
 function isTargetSnapshot(snapshot) {
@@ -708,7 +754,7 @@ function completeActivity() {
   setTheme(presentationFor().theme);
   $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
   if (currentActivity().type === "choice") renderWorld();
-  if (isPractice()) playSuccessCharacter();
+  if (isPractice() || currentActivity().type === "choice") playSuccessCharacter();
   renderMode();
   renderCommand();
   renderActivityControls();
@@ -806,7 +852,10 @@ function playDemo(interval) {
       renderActivityControls();
       return;
     }
-    state.playbackTimer = window.setTimeout(tick, interval);
+    const checkpoint = currentActivity().script.checkpoints?.find(item => item.afterStep === state.playbackStep);
+    const demonstratesIntermediateMode = unit.unitNumber === 1 && checkpoint?.mode && checkpoint.mode !== "normal";
+    const delay = demonstratesIntermediateMode ? Math.max(interval, 1200) : interval;
+    state.playbackTimer = window.setTimeout(tick, delay);
     renderActivityControls();
   };
   tick();
@@ -931,6 +980,8 @@ function handleActivityAction(action) {
   }
   if (action === "next") nextActivity();
   if (action === "previous") previousActivity();
+  if (action === "return-remediation") returnFromRemediation();
+  if (action === "open-toc") openTableOfContents();
 }
 
 elements.keyboard.addEventListener("pointerdown", event => {
@@ -994,8 +1045,12 @@ elements.worldGrid.addEventListener("click", event => {
   if (!["help", "show-demo"].includes(action)) handleActivityAction(action);
   const choice = event.target.closest("[data-choice]")?.dataset.choice;
   if (choice) processChoice(choice);
+  const remediation = event.target.closest("[data-remediation]")?.dataset.remediation;
+  if (remediation) goToRemediation(remediation);
   const route = event.target.closest("[data-route]")?.dataset.route;
   if (route) goToActivityId(route);
+  const unitId = event.target.closest("[data-unit-id]")?.dataset.unitId;
+  if (unitId) navigateToUnit(unitId);
 });
 const editorPointerEvents = ["pointerdown", "mousedown", "dblclick", "selectstart", "contextmenu"];
 editorPointerEvents.forEach(type => elements.worldGrid.addEventListener(type, event => {
@@ -1007,8 +1062,7 @@ elements.helpClose.addEventListener("click", () => setHelp(false));
 elements.resetButton.addEventListener("click", () => resetActivity());
 elements.hintButton?.addEventListener("click", () => setHelp(!elements.helpCard.classList.contains("open")));
 elements.tocButton?.addEventListener("click", () => {
-  renderTableOfContents();
-  elements.tocDialog.showModal();
+  openTableOfContents();
 });
 elements.settingsButton?.addEventListener("click", () => {
   renderThemeOptions();
@@ -1018,12 +1072,7 @@ elements.tocLessons?.addEventListener("click", event => {
   const button = event.target.closest("[data-activity-index]");
   if (button) goToActivity(Number(button.dataset.activityIndex));
   const unitButton = event.target.closest("[data-unit-id]");
-  if (unitButton) {
-    const nextUrl = new URL(window.location.href);
-    nextUrl.searchParams.set("unit", unitButton.dataset.unitId);
-    nextUrl.searchParams.delete("activity");
-    window.location.assign(nextUrl);
-  }
+  if (unitButton) navigateToUnit(unitButton.dataset.unitId);
 });
 elements.themeOptions?.addEventListener("change", event => {
   const value = event.target.closest('input[name="theme"]')?.value;
@@ -1041,6 +1090,8 @@ $$('.app-dialog').forEach(dialog => dialog.addEventListener("click", event => {
 elements.activityControls.addEventListener("click", event => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   handleActivityAction(action);
+  const remediation = event.target.closest("[data-remediation]")?.dataset.remediation;
+  if (remediation) goToRemediation(remediation);
   const route = event.target.closest("[data-route]")?.dataset.route;
   if (route) goToActivityId(route);
 });
@@ -1106,7 +1157,7 @@ window.VimWilds = Object.freeze({
 });
 
 const requestedActivity = urlParams.get("activity");
-const requestedIndex = activities.findIndex(activity => activity.id === requestedActivity);
+const requestedIndex = activities.findIndex(activity => activity.id === requestedActivity || activity.sourceActivityId === requestedActivity);
 if (requestedIndex >= 0) state.activityIndex = requestedIndex;
 
 assignCharacters();

@@ -78,11 +78,19 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ activityId: "quick-exit-insert-recall", practiceMode: "recall", mode: "insert", history: [] });
     await page.evaluate(() => window.VimWilds.emit("Escape"));
     expect((await state(page))).toMatchObject({ complete: true, mode: "Complete", code: ["ready = True"], cursor: [0, 7] });
+
+    await page.goto("/?activity=quick-exit-insert");
+    expect((await state(page))).toMatchObject({ activityId: "quick-exit-insert-recall", practiceMode: "recall", mode: "insert" });
   });
 
   test("seeds modes without history, resets them exactly, and exposes Operator-pending", async ({ page }) => {
     await page.goto("/?activity=escape-seeded-insert");
     expect((await state(page))).toMatchObject({ mode: "insert", cursor: [0, 6], history: [] });
+    const insertCursor = await page.locator(".cm-cursor").evaluate(node => ({
+      border: getComputedStyle(node).borderLeftWidth,
+      background: getComputedStyle(node).backgroundColor,
+    }));
+    expect(insertCursor).toEqual({ border: "2px", background: "rgba(0, 0, 0, 0)" });
     await page.evaluate(() => window.VimWilds.emit("Escape"));
     expect((await state(page))).toMatchObject({ complete: true, cursor: [0, 5] });
     await page.getByRole("button", { name: "Reset activity" }).click();
@@ -93,6 +101,18 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator("#nextModePill")).toHaveText("Op-pending");
     await page.evaluate(() => window.VimWilds.emit("Escape"));
     expect((await state(page))).toMatchObject({ complete: true, code: ["timeout := 30", "start(timeout)"] });
+
+    await page.goto("/?activity=ctrl-bracket-seeded-replace");
+    expect((await state(page))).toMatchObject({ mode: "replace", history: [] });
+    await expect(page.locator(".cm-cursor")).toHaveCSS("background-image", /linear-gradient/);
+
+    await page.goto("/?activity=escape-seeded-command-line");
+    expect((await state(page))).toMatchObject({ mode: "command-line", history: [] });
+    await expect(page.locator(".cm-vim-panel")).toContainText(":");
+    await expect(page.locator(".cm-vim-panel input")).toHaveAttribute("inputmode", "none");
+    await page.evaluate(() => window.VimWilds.emit("Escape"));
+    expect((await state(page))).toMatchObject({ complete: true, mode: "Complete", history: ["Escape"] });
+    await expect(page.locator(".cm-vim-panel")).toHaveCount(0);
   });
 
   test("supports the mode compass, masked inspections, range reveal, and command assembly", async ({ page }) => {
@@ -105,6 +125,11 @@ test.describe("Production lesson flow", () => {
     await page.locator('[data-choice="normal-answer"]').click();
     await expect(page.getByRole("button", { name: "Review this idea" })).toBeVisible();
     await expect(page.locator("#nextModePill")).toHaveText("Identify");
+    await page.getByRole("button", { name: "Review this idea" }).click();
+    expect((await state(page)).activityId).toBe("mode-compass");
+    await page.getByRole("button", { name: "Back to quick check" }).click();
+    expect((await state(page))).toMatchObject({ activityId: "identify-insert-mode", complete: false, mode: "insert" });
+    await expect(page.locator(".choice-option.selected")).toHaveCount(0);
     await page.locator('[data-choice="insert-answer"]').click();
     await expect(page.locator("#nextModePill")).toHaveText("Insert");
 
@@ -120,6 +145,43 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Step" }).click();
     expect((await state(page)).mode).toBe("operator-pending");
     await expect(page.locator(".assembly-part.active")).toHaveCount(2);
+  });
+
+  test("holds intermediate Unit 1 demo modes long enough to read", async ({ page }) => {
+    await page.goto("/?activity=insert-return-demo");
+    await page.getByRole("button", { name: "Play" }).click();
+    await page.waitForTimeout(650);
+    expect((await state(page))).toMatchObject({ playbackStep: 1, mode: "insert" });
+    await page.waitForTimeout(700);
+    expect((await state(page))).toMatchObject({ playbackStep: 2, mode: "normal" });
+  });
+
+  test("returns recall remediation to a clean quick-check retry", async ({ page }) => {
+    await page.goto("/?activity=quick-exit-insert");
+    await page.evaluate(() => {
+      window.VimWilds.emit("x");
+      window.VimWilds.emit("x");
+      window.VimWilds.emit("x");
+    });
+    await page.getByRole("button", { name: "Review this idea" }).click();
+    expect((await state(page)).activityId).toBe("mode-compass");
+    await page.getByRole("button", { name: "Back to quick check" }).click();
+    expect((await state(page))).toMatchObject({
+      activityId: "quick-exit-insert-recall",
+      practiceMode: "recall",
+      mode: "insert",
+      history: [],
+      complete: false,
+    });
+  });
+
+  test("ends Unit 1 with sequential continuation instead of looping", async ({ page }) => {
+    await page.goto("/?activity=modal-model-unit-summary");
+    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 2 is next");
+    await expect(page.getByRole("button", { name: "Review the full introduction" })).toBeVisible();
+    await page.getByRole("button", { name: "Open course contents" }).click();
+    await expect(page.locator("#tocDialog")).toHaveAttribute("open", "");
+    expect((await state(page)).activityId).toBe("modal-model-unit-summary");
   });
 
   test("completes every Unit 1 runnable with its authored sequence", async ({ page }) => {
@@ -253,6 +315,9 @@ test.describe("Production lesson flow", () => {
     }
     await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "repeat-is-wrong-choice")));
     await expect(page.locator(".nix")).toHaveCount(1);
+    const correctOptionId = await page.evaluate(() => window.VimWilds.activities.find(activity => activity.id === "repeat-is-wrong-choice").correctOptionId);
+    await page.locator(`[data-choice="${correctOptionId}"]`).click();
+    await expect(page.locator('.nix.celebrating[src$=".webp"]')).toBeVisible();
   });
 
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {
