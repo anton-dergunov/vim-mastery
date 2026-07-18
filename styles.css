@@ -1151,11 +1151,11 @@ html.next-ui .hint-step small em,
 html.next-ui .completion-panel em { color: #bcd7ca; }
 
 /* The oracle sits on a light parchment surface, so its inline code needs a
-   dark, high-contrast treatment rather than the shared light-on-dark style. */
+   restrained parchment treatment rather than the shared light-on-dark style. */
 html.next-ui .hint-step small code {
-  color: #25523e;
-  border-color: rgba(37, 82, 62, .34);
-  background: rgba(255, 255, 255, .58);
+  color: #66563d;
+  border-color: rgba(102, 86, 61, .24);
+  background: rgba(255, 255, 255, .34);
 }
 
 html.next-ui .next-command-tray {

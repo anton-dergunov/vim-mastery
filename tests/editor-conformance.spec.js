@@ -110,7 +110,7 @@ test.describe("Production lesson flow", () => {
       hint: getComputedStyle(document.querySelector(".hint-step small code")).color,
       instruction: getComputedStyle(document.querySelector("#activityInstruction code")).color,
     }));
-    expect(inlineColors.hint).toBe("rgb(37, 82, 62)");
+    expect(inlineColors.hint).toBe("rgb(102, 86, 61)");
     expect(inlineColors.instruction).toBe("rgb(248, 231, 173)");
     await page.getByRole("button", { name: "Close help" }).click();
     await page.getByRole("button", { name: "Open hints" }).click();
