@@ -145,3 +145,122 @@ test.describe("Repeatable editing content runtime", () => {
     }
   });
 });
+
+test.describe("Simplified UI review mode", () => {
+  test("opens an accordion table of contents and navigates to any authored activity", async ({ page }) => {
+    await page.goto("/?ui=next&activity=dot-python-values");
+    await page.getByRole("button", { name: "Open table of contents" }).click();
+    await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
+    await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
+    await expect(page.locator(".toc-activity")).toHaveCount(activities.length);
+    await expect(page.locator(".toc-activity.current")).toContainText("Promote every cache mode");
+    await expect(page.locator(".activity-type.type-theory").first()).toHaveText("Theory");
+    await expect(page.locator(".activity-type.type-demo").first()).toHaveText("Demo");
+    await expect(page.locator(".activity-type.type-exercise").first()).toHaveText("Exercise");
+    await page.locator(".toc-lesson").nth(1).locator("summary").click();
+    await page.locator(`[data-activity-index="${indexOf("repeat-self-contained")}"]`).click();
+    await expect(page.getByRole("dialog", { name: "Table of contents" })).not.toBeVisible();
+    expect((await state(page)).activityId).toBe("repeat-self-contained");
+  });
+
+  test("persists a manual world theme without changing the current activity", async ({ page }) => {
+    await page.goto("/?ui=next&activity=dot-append-demo");
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await page.getByLabel("Hall of Mirrors").check();
+    await expect(page.locator("#world")).toHaveClass(/theme-glass/);
+    expect(await page.evaluate(() => localStorage.getItem("vim-wilds.theme"))).toBe("glass");
+    expect((await state(page)).activityId).toBe("dot-append-demo");
+    await page.reload();
+    await expect(page.locator("#world")).toHaveClass(/theme-glass/);
+  });
+
+  test("keeps demo controls beside the editor and allows replay or immediate navigation", async ({ page }) => {
+    await page.goto("/?ui=next&activity=dot-append-demo");
+    await expect(page.locator(".command-explanation")).toHaveText("Append once and finish the change.");
+    await expect(page.getByRole("button", { name: "Next" })).toBeEnabled();
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page)).playbackStep).toBe(1);
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect(page.getByRole("button", { name: "Replay" })).toBeVisible();
+    await page.getByRole("button", { name: "Replay" }).click();
+    await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+    await page.getByRole("button", { name: "Pause" }).click();
+    await page.getByRole("button", { name: "Next" }).click();
+    expect((await state(page)).activityId).toBe("dot-python-values");
+  });
+
+  test("replaces the completed exercise keyboard with full authored feedback", async ({ page }) => {
+    const exercise = activities[indexOf("dot-python-values")];
+    await page.goto("/?ui=next&activity=dot-python-values");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect(page.locator(".keyboard")).not.toBeVisible();
+    const result = page.locator(".completion-panel");
+    await expect(result).toBeVisible();
+    await expect(result.locator("strong")).toHaveText(exercise.feedback.success);
+    await expect(result.locator("p")).toHaveText(exercise.feedback.why);
+    await expect(result.getByRole("button", { name: "Next" })).toBeVisible();
+  });
+
+  test("renders all ordinary authored text without clipping at supported phone sizes", async ({ page }) => {
+    const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
+    const textSelector = [
+      ".lesson-label",
+      ".activity-intro h1",
+      ".activity-intro p",
+      ".command-explanation",
+      ".next-command-tray .guidance",
+      ".next-command-tray .command-text",
+      ".field-note h2",
+      ".field-note p",
+      ".grammar",
+      ".choice-option",
+      ".control-deck button",
+      ".completion-panel strong",
+      ".completion-panel p",
+      ".cm-vim-message",
+    ].join(",");
+
+    for (const [width, height] of viewports) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/?ui=next");
+      for (let index = 0; index < activities.length; index += 1) {
+        await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
+        const result = await page.evaluate(selector => {
+          const clipped = [...document.querySelectorAll(selector)]
+            .filter(element => element.getClientRects().length)
+            .filter(element => element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1)
+            .map(element => ({ className: element.className, text: element.textContent }));
+          const styles = [...document.querySelectorAll(selector)]
+            .filter(element => element.getClientRects().length)
+            .map(element => getComputedStyle(element));
+          const phone = document.querySelector("#phone").getBoundingClientRect();
+          const bounded = [
+            ...document.querySelectorAll(".next-topbar > :not([hidden])"),
+            document.querySelector(".activity-intro:not([hidden])"),
+            document.querySelector(".next-command-tray:not(.hidden)"),
+            document.querySelector(".game-area"),
+            document.querySelector(".keyboard-panel:not(.empty-panel)"),
+          ].filter(Boolean).filter(element => element.getClientRects().length);
+          const outOfBounds = bounded.filter(element => {
+            const rect = element.getBoundingClientRect();
+            return rect.left < phone.left - 1 || rect.right > phone.right + 1 || rect.top < phone.top - 1 || rect.bottom > phone.bottom + 1;
+          }).map(element => element.className);
+          return {
+            clipped,
+            outOfBounds,
+            usesEllipsis: styles.some(style => style.textOverflow === "ellipsis" || style.webkitLineClamp !== "none"),
+            documentOverflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
+            editorFont: document.querySelector(".cm-scroller") ? parseFloat(getComputedStyle(document.querySelector(".cm-scroller")).fontSize) : null,
+            guidanceFont: document.querySelector(".next-command-tray:not(.hidden) .guidance") ? parseFloat(getComputedStyle(document.querySelector(".next-command-tray .guidance")).fontSize) : null,
+          };
+        }, textSelector);
+        expect(result.clipped, `${width}×${height} ${activities[index].id}`).toEqual([]);
+        expect(result.outOfBounds, `${width}×${height} ${activities[index].id}`).toEqual([]);
+        expect(result.usesEllipsis, `${width}×${height} ${activities[index].id}`).toBe(false);
+        expect(result.documentOverflow, `${width}×${height} ${activities[index].id}`).toBe(false);
+        if (result.editorFont !== null) expect(result.editorFont).toBeGreaterThanOrEqual(14);
+        if (result.guidanceFont !== null) expect(result.guidanceFont).toBeGreaterThanOrEqual(16);
+      }
+    }
+  });
+});

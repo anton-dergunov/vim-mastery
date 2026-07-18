@@ -6,6 +6,11 @@
   <meta name="theme-color" content="#071715">
   <title>The Vim Wilds — Pocket Practice</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23071715'/%3E%3Cpath d='M16 15h10l7 29 7-29h9L38 51H27z' fill='%23ffc866'/%3E%3C/svg%3E">
+  <script>
+    if (new URLSearchParams(window.location.search).get("ui") === "next") {
+      document.documentElement.classList.add("next-ui");
+    }
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script>
     window.setTimeout(() => {
@@ -18,7 +23,7 @@
 </head>
 <body>
   <main class="phone" id="phone" aria-label="The Vim Wilds bite-sized exercise feed">
-    <header class="topbar">
+    <header class="topbar legacy-only">
       <div class="brand-mark" aria-hidden="true">V</div>
       <div class="brand-copy">
         <strong>The Vim Wilds</strong>
@@ -33,10 +38,42 @@
       <button class="reset-button" id="resetButton" type="button" aria-label="Restart exercise" title="Restart">↻</button>
     </header>
 
-    <section class="quest" id="quest" aria-labelledby="questTitle">
+    <header class="next-topbar next-only">
+      <button class="icon-button" id="tocButton" type="button" aria-label="Open table of contents" title="Contents">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="3" cy="6" r=".75"/><circle cx="3" cy="12" r=".75"/><circle cx="3" cy="18" r=".75"/></svg>
+      </button>
+      <strong class="lesson-label" id="lessonLabel">One change, many uses</strong>
+      <div class="mode-pill" id="nextModePill" aria-live="polite">Theory</div>
+      <button class="icon-button next-reset-button" id="nextResetButton" type="button" aria-label="Reset activity" title="Reset">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 9A8 8 0 1 1 5 15.3"/><path d="M4.9 4.8V9h4.2"/></svg>
+      </button>
+      <button class="icon-button" id="settingsButton" type="button" aria-label="Open settings" title="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9 1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+      </button>
+    </header>
+
+    <section class="quest legacy-only" id="quest" aria-labelledby="questTitle">
       <div class="eyebrow" id="eyebrow">Visual Block · TypeScript</div>
       <h1 id="questTitle">Light all four runes in one spell.</h1>
       <p id="questInstruction">The four feature marks form a column—not four separate edits.</p>
+    </section>
+
+    <section class="activity-intro next-only" id="activityIntro" aria-labelledby="activityTitle">
+      <div class="activity-intro-row">
+        <div class="activity-kicker" id="activityKicker">Exercise · Python</div>
+        <button class="hint-button" id="hintButton" type="button" aria-label="Open hints" title="Hints">?</button>
+      </div>
+      <h1 id="activityTitle">Promote every cache mode</h1>
+      <p id="activityInstruction">Change the first draft to ready, then replay on the next rows.</p>
+    </section>
+
+    <section class="next-command-tray next-only" id="nextCommandTray" aria-live="polite">
+      <div class="command-explanation" id="commandExplanation">Create one complete quote change.</div>
+      <div class="guidance" id="nextGuidance">Next: c</div>
+      <div class="command-history">
+        <span>History</span>
+        <div class="command-text" id="nextCommandText"><span class="ghost">waiting…</span></div>
+      </div>
     </section>
 
     <section class="game-area" id="gameArea" aria-label="Composable exercise world">
@@ -53,7 +90,7 @@
           <div class="hint-steps" id="hintSteps"></div>
         </aside>
 
-        <div class="success-banner" id="successBanner" role="status">
+        <div class="success-banner legacy-only" id="successBanner" role="status">
           <div class="success-copy">
             <strong id="successTitle">Beautifully done.</strong>
             <span id="successText">Swipe up for the next spell.</span>
@@ -65,7 +102,7 @@
 
     <section class="keyboard-panel" aria-label="Physical-style Vim keyboard">
       <div class="activity-controls" id="activityControls"></div>
-      <div class="command-tray" id="commandTray" aria-live="polite">
+      <div class="command-tray legacy-only" id="commandTray" aria-live="polite">
         <span class="prompt-glyph">›</span>
         <div class="command-text" id="commandText"><span class="ghost">waiting…</span></div>
         <div class="guidance" id="guidance">Start the command</div>
@@ -133,6 +170,37 @@
         </div>
       </div>
     </section>
+
+    <dialog class="app-dialog next-only" id="tocDialog" aria-labelledby="tocTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Course map</span>
+          <h2 id="tocTitle">Table of contents</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="tocDialog" aria-label="Close table of contents">×</button>
+      </div>
+      <div class="dialog-body toc-lessons" id="tocLessons"></div>
+    </dialog>
+
+    <dialog class="app-dialog next-only" id="settingsDialog" aria-labelledby="settingsTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Appearance</span>
+          <h2 id="settingsTitle">Settings</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="settingsDialog" aria-label="Close settings">×</button>
+      </div>
+      <div class="dialog-body">
+        <fieldset class="theme-options" id="themeOptions">
+          <legend>World theme</legend>
+          <label><input type="radio" name="theme" value="auto"> <span><strong>Follow lesson</strong><small>Use the world chosen for each lesson.</small></span></label>
+          <label><input type="radio" name="theme" value="moonroot"> <span><strong>Moonroot Ruins</strong><small>Verdant stone and violet magic.</small></span></label>
+          <label><input type="radio" name="theme" value="ember"> <span><strong>Ember Vault</strong><small>Warm stone and beacon light.</small></span></label>
+          <label><input type="radio" name="theme" value="glass"> <span><strong>Hall of Mirrors</strong><small>Cool glass and reflected light.</small></span></label>
+          <label><input type="radio" name="theme" value="deepwater"> <span><strong>Deepwater Archive</strong><small>Dark water and archive blue.</small></span></label>
+        </fieldset>
+      </div>
+    </dialog>
 
     <section class="reward-overlay" id="rewardOverlay" aria-hidden="true">
       <article class="reward-card">
