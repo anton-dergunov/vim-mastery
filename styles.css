@@ -961,60 +961,6 @@ button { font: inherit; }
 .u-2 { flex-grow: 2; }
 .u-space { flex-grow: 6; }
 
-.reward-overlay {
-  position: absolute;
-  z-index: 50;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 22px;
-  background: rgba(2, 8, 7, .86);
-  backdrop-filter: blur(14px);
-  opacity: 0;
-  visibility: hidden;
-  transition: .35s ease;
-}
-.reward-overlay.open { opacity: 1; visibility: visible; }
-.reward-card {
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid rgba(255, 220, 132, .52);
-  border-radius: 18px;
-  background: #101c18;
-  box-shadow: 0 24px 60px rgba(0,0,0,.65), 0 0 40px rgba(255, 192, 78, .13);
-  transform: translateY(20px) scale(.96);
-  transition: .4s cubic-bezier(.2,.9,.2,1);
-}
-.reward-overlay.open .reward-card { transform: translateY(0) scale(1); }
-.reward-image {
-  position: relative;
-  height: min(42dvh, 370px);
-  background: url("assets/enchanted-ruins.png") center / cover;
-}
-.reward-image::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(transparent 55%, #101c18);
-}
-.reward-copy { padding: 0 18px 18px; text-align: center; }
-.reward-kicker { color: var(--amber); font: 700 8px/1 ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; }
-.reward-copy h2 { margin: 7px 0 6px; color: #fff4d1; font: 700 23px/1.05 Georgia, serif; }
-.reward-copy p { margin: 0 auto 15px; max-width: 260px; color: #a9c0b4; font-size: 10px; line-height: 1.5; }
-.reward-button {
-  height: 39px;
-  padding: 0 18px;
-  border: 1px solid #f5d47e;
-  border-radius: 10px;
-  color: #312411;
-  background: linear-gradient(#ffe59a, #cfa34f);
-  box-shadow: 0 3px 0 #64471b;
-  font: 800 9px/1 ui-monospace, monospace;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
 @keyframes cursorBlink { 0%, 48% { opacity: 1; } 49%, 100% { opacity: .28; } }
 @keyframes waterShimmer { from { filter: brightness(.9); } to { filter: brightness(1.13); } }
 @keyframes nixIdle { 0%, 100% { transform: translateY(0) rotate(-1deg) scaleX(var(--character-facing, 1)); } 50% { transform: translateY(-3px) rotate(1deg) scaleX(var(--character-facing, 1)); } }
@@ -1060,11 +1006,6 @@ button { font: inherit; }
   }
   .world.complete .nix { animation: none !important; }
 }
-
-/* Live redesign review: enabled only with ?ui=next. */
-.next-only { display: none; }
-
-html.next-ui .legacy-only { display: none !important; }
 
 html.next-ui .phone {
   --text-meta: 11px;
@@ -1182,6 +1123,33 @@ html.next-ui .activity-intro p {
   overflow-wrap: anywhere;
 }
 
+html.next-ui .activity-intro code,
+html.next-ui .command-explanation code,
+html.next-ui .field-note code,
+html.next-ui .hint-step small code,
+html.next-ui .completion-panel code,
+html.next-ui .toc-activity-title code,
+html.next-ui .toc-lesson strong code {
+  padding: .08em .26em;
+  border: 1px solid rgba(179, 217, 197, .18);
+  border-radius: 4px;
+  color: #f8e7ad;
+  background: rgba(120, 82, 194, .13);
+  font: 700 .88em/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.next-ui .activity-intro strong,
+html.next-ui .command-explanation strong,
+html.next-ui .field-note strong,
+html.next-ui .hint-step small strong,
+html.next-ui .completion-panel strong strong { color: #fff7df; }
+
+html.next-ui .activity-intro em,
+html.next-ui .command-explanation em,
+html.next-ui .field-note em,
+html.next-ui .hint-step small em,
+html.next-ui .completion-panel em { color: #bcd7ca; }
+
 html.next-ui .next-command-tray {
   --status-rail-width: clamp(86px, 24vw, 104px);
   height: var(--execution-console-height, 126px);
@@ -1196,6 +1164,7 @@ html.next-ui .next-command-tray {
 }
 
 html.next-ui .next-command-tray.hidden { display: none; }
+html.next-ui .next-command-tray.error { animation: trayShake .3s ease; border-color: rgba(239, 116, 96, .62); }
 
 html.next-ui .execution-copy {
   min-width: 0;
@@ -1253,6 +1222,12 @@ html.next-ui .status-key {
 }
 
 html.next-ui .status-key[hidden] { display: none; }
+html.next-ui .status-key.error .command-key {
+  border-color: rgba(255, 142, 121, .9);
+  color: #fff0e9;
+  background: linear-gradient(#6e302c, #341817);
+  animation: expectedKeyError .42s ease;
+}
 
 html.next-ui .command-key {
   min-width: 15px;
@@ -1269,6 +1244,14 @@ html.next-ui .command-key {
   box-shadow: 0 1px 0 rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.05);
   font: 750 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
   white-space: nowrap;
+}
+
+html.next-ui .key.wrong {
+  border-color: rgba(255, 132, 112, .92);
+  color: #fff0ea;
+  background: linear-gradient(#72342f, #351816);
+  box-shadow: 0 0 0 #401a18, 0 0 12px rgba(239, 116, 96, .44), inset 0 1px 0 rgba(255,255,255,.1);
+  animation: wrongKeyError .36s ease;
 }
 
 html.next-ui .status-command-key {
@@ -1740,6 +1723,12 @@ html.next-ui .activity-type {
 html.next-ui .type-exercise { color: #f5d982; border-color: rgba(245, 217, 130, .32); }
 html.next-ui .type-demo { color: #cab7ff; border-color: rgba(202, 183, 255, .32); }
 html.next-ui .type-theory { color: #82dbe7; border-color: rgba(130, 219, 231, .32); }
+html.next-ui .activity-type { min-width: 58px; text-align: center; }
+html.next-ui .type-guided { color: #f5d982; border-color: rgba(245, 217, 130, .32); }
+html.next-ui .type-recall { color: #bca9ff; border-color: rgba(188, 169, 255, .36); }
+
+@keyframes expectedKeyError { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 65% { transform: translateX(4px); } }
+@keyframes wrongKeyError { 0%,100% { transform: translateY(0); } 35% { transform: translateY(2px); } 70% { transform: translateY(-1px); } }
 
 html.next-ui .theme-options {
   margin: 0;

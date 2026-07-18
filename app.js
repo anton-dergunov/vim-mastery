@@ -6,19 +6,13 @@ import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const urlParams = new URLSearchParams(window.location.search);
-const nextUI = urlParams.get("ui") === "next";
 const themePreferenceKey = "vim-wilds.theme";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 
-document.documentElement.classList.toggle("next-ui", nextUI);
-
 const elements = {
   phone: $("#phone"),
-  locationLabel: $("#locationLabel"),
-  progressPill: $("#progressPill"),
-  activitySelect: $("#activitySelect"),
-  modePill: nextUI ? $("#nextModePill") : $("#modePill"),
-  resetButton: nextUI ? $("#nextResetButton") : $("#resetButton"),
+  modePill: $("#nextModePill"),
+  resetButton: $("#nextResetButton"),
   lessonLabel: $("#lessonLabel"),
   tocButton: $("#tocButton"),
   settingsButton: $("#settingsButton"),
@@ -27,25 +21,21 @@ const elements = {
   activityTitle: $("#activityTitle"),
   activityInstruction: $("#activityInstruction"),
   hintButton: $("#hintButton"),
-  eyebrow: $("#eyebrow"),
-  questTitle: $("#questTitle"),
-  questInstruction: $("#questInstruction"),
   world: $("#world"),
   groundGrid: $("#groundGrid"),
   worldGrid: $("#worldGrid"),
   helpCard: $("#helpCard"),
   helpClose: $("#helpClose"),
   hintSteps: $("#hintSteps"),
-  successBanner: $("#successBanner"),
-  successTitle: $("#successTitle"),
-  successText: $("#successText"),
-  nextButton: $("#nextButton"),
   activityControls: $("#activityControls"),
   keyboardPanel: $(".keyboard-panel"),
-  commandTray: nextUI ? $("#nextCommandTray") : $("#commandTray"),
-  commandText: nextUI ? $("#nextCommandText") : $("#commandText"),
-  guidance: nextUI ? $("#nextGuidance") : $("#guidance"),
+  commandTray: $("#nextCommandTray"),
+  commandText: $("#nextCommandText"),
+  guidance: $("#nextGuidance"),
   commandExplanation: $("#commandExplanation"),
+  statusPrimary: $("#statusPrimary"),
+  statusSecondary: $("#statusSecondary"),
+  statusKey: $("#statusKey"),
   keyboard: $("#keyboard"),
   tocDialog: $("#tocDialog"),
   tocLessons: $("#tocLessons"),
@@ -60,13 +50,6 @@ const presentations = [
   { theme: "ember", template: "beacons", codeSide: "right", blocks: ["beacon", "beacon"] },
 ];
 
-const themeLabels = {
-  moonroot: "Moonroot Ruins",
-  ember: "Ember Vault",
-  glass: "Hall of Mirrors",
-  deepwater: "Deepwater Archive",
-};
-
 const themeColors = {
   moonroot: ["#071d18", "#1c533d", "#77e0a3", "#a77bff", "#ffc866"],
   ember: ["#20120e", "#683420", "#f59a61", "#ff7468", "#ffd06c"],
@@ -75,15 +58,36 @@ const themeColors = {
 };
 
 const lessons = unit.lessons.map((lesson, lessonIndex) => ({ ...lesson, lessonIndex }));
-const activities = lessons.flatMap(lesson => lesson.activities.map((activity, activityIndex) => ({
+const contextualizeActivity = (activity, lesson, activityIndex, extra = {}) => ({
   ...activity,
+  ...extra,
   lessonId: lesson.id,
   lessonTitle: lesson.title,
   lessonIndex: lesson.lessonIndex,
-  activityIndex,
-})));
-const exercises = activities.filter(activity => activity.type === "exercise");
+  authoredActivityIndex: activityIndex,
+});
+const activityFlowFor = lesson => {
+  const authored = lesson.activities.map((activity, activityIndex) => contextualizeActivity(activity, lesson, activityIndex));
+  const practices = authored.filter(activity => activity.type === "exercise");
+  const leadIn = authored.filter(activity => !["exercise", "choice", "summary"].includes(activity.type));
+  const closing = authored.filter(activity => ["choice", "summary"].includes(activity.type));
+  const guided = practices.map(activity => ({ ...activity, practiceMode: "guided", sourceActivityId: activity.id }));
+  const recall = practices.map(activity => ({ ...activity, id: `${activity.id}-recall`, practiceMode: "recall", sourceActivityId: activity.id }));
+  return [...leadIn, ...guided, ...recall, ...closing];
+};
+const activities = lessons.flatMap(activityFlowFor).map((activity, activityIndex) => ({ ...activity, activityIndex }));
+const exercises = activities.filter(activity => activity.type === "exercise" && activity.practiceMode === "guided");
 const languageNames = new Map(languageProfiles.profiles.map(profile => [profile.id, profile.displayName]));
+
+let characterAssets = {
+  nix: {
+    name: "Nix",
+    role: "guide",
+    idle: "assets/characters/nix/idle.png",
+    animations: { "joyful-hop": { src: "assets/characters/nix/animations/joyful-hop.webp", css_scale: 1.375 } },
+  },
+};
+const characterAssignments = new Map();
 
 function storedThemePreference() {
   try {
@@ -108,6 +112,10 @@ const state = {
   playbackTimer: null,
   playbackMode: null,
   themePreference: storedThemePreference(),
+  hintLevel: 0,
+  consecutiveMistakes: 0,
+  recallFeedback: null,
+  errorTimer: null,
 };
 
 let vimEngine = null;
@@ -115,6 +123,50 @@ let executionMeasurementFrame = null;
 
 function currentActivity() {
   return activities[state.activityIndex];
+}
+
+function shuffle(items) {
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [result[index], result[other]] = [result[other], result[index]];
+  }
+  return result;
+}
+
+function characterKey(activity) {
+  return activity?.sourceActivityId || activity?.id;
+}
+
+function assignCharacters() {
+  characterAssignments.clear();
+  const characterIds = shuffle(Object.keys(characterAssets));
+  const keys = [...new Set(activities.map(characterKey))];
+  keys.forEach((key, index) => {
+    const characterId = characterIds[index % characterIds.length];
+    const animationIds = Object.keys(characterAssets[characterId].animations);
+    const animationId = animationIds[Math.floor(Math.random() * animationIds.length)];
+    characterAssignments.set(key, { characterId, animationId });
+  });
+}
+
+function characterAssignment(activity = currentActivity()) {
+  return characterAssignments.get(characterKey(activity)) || { characterId: "nix", animationId: "joyful-hop" };
+}
+
+async function loadCharacterAssets() {
+  try {
+    const response = await fetch("assets/characters/manifest.json");
+    if (!response.ok) throw new Error(`manifest request failed (${response.status})`);
+    const manifest = await response.json();
+    characterAssets = Object.fromEntries(Object.entries(manifest.characters).map(([id, character]) => [id, character]));
+    assignCharacters();
+    document.documentElement.dataset.charactersReady = "true";
+    renderAll();
+  } catch (error) {
+    document.documentElement.dataset.charactersReady = "fallback";
+    console.warn("Using the Nix-only character fallback:", error);
+  }
 }
 
 function isRunnable(activity = currentActivity()) {
@@ -150,9 +202,14 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function formatToken(token) {
-  const labels = { Escape: "ESC", Enter: "ENTER", " ": "SPACE", Tab: "TAB" };
-  return labels[token] || token;
+function renderInline(value) {
+  const source = String(value ?? "");
+  return source.split(/(`[^`]*`)/g).map(part => {
+    if (part.startsWith("`") && part.endsWith("`")) return `<code>${escapeHtml(part.slice(1, -1))}</code>`;
+    const escaped = escapeHtml(part);
+    const bold = escaped.replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>");
+    return bold.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
+  }).join("");
 }
 
 function displayKeyToken(token) {
@@ -171,23 +228,12 @@ function renderHistory(tokens) {
     : '<span class="ghost">waiting…</span>';
 }
 
-function guidanceToken(token) {
-  if (!token) return "COMPLETE";
-  if (token.startsWith("Ctrl-")) return `CTRL + ${token.slice(5).toUpperCase()}`;
-  if (token.includes("+")) return token.replaceAll("+", " + ").toUpperCase();
-  if (token === "Escape") return "ESCAPE";
-  if (token === "Enter") return "ENTER";
-  const exact = keyButtonsFor(token);
-  if (exact.some(button => button.dataset.shift === token) || (token.length === 1 && token !== token.toLowerCase())) return `SHIFT + ${token}`;
-  return token;
-}
-
 function presentationFor(activity = currentActivity()) {
   return presentations[activity.lessonIndex % presentations.length];
 }
 
 function setTheme(theme) {
-  const activeTheme = nextUI && state.themePreference !== "auto" ? state.themePreference : theme;
+  const activeTheme = state.themePreference !== "auto" ? state.themePreference : theme;
   elements.world.className = `world theme-${activeTheme}${state.complete ? " complete" : ""}`;
   const [dark, mid, bright, magic, warm] = themeColors[activeTheme];
   elements.phone.style.setProperty("--theme-dark", dark);
@@ -230,43 +276,45 @@ function renderSprites(presentation) {
 
 function renderFieldNote(activity) {
   if (activity.type === "theory") {
-    const action = activity.demoRef
+    const lessonTheories = lessons[activity.lessonIndex].activities.filter(item => item.type === "theory");
+    const isFinalTheory = lessonTheories.at(-1)?.id === activity.id;
+    const action = isFinalTheory && activity.demoRef
       ? `<button class="note-action" type="button" data-action="show-demo" data-demo="${activity.demoRef}">Show example →</button>`
-      : nextUI ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
+      : '<button class="note-action" type="button" data-action="next">Next →</button>';
     return `<article class="field-note" aria-label="Theory">
       <span class="field-note-kicker">Field note · explain</span>
-      <h2>${escapeHtml(activity.title)}</h2>
-      <p>${escapeHtml(activity.body)}</p>
+      <h2>${renderInline(activity.title)}</h2>
+      <p>${renderInline(activity.body)}</p>
       ${activity.grammar ? `<pre class="grammar">${escapeHtml(activity.grammar)}</pre>` : ""}
-      ${activity.contrast ? `<p class="contrast">${escapeHtml(activity.contrast)}</p>` : ""}
+      ${activity.contrast ? `<p class="contrast">${renderInline(activity.contrast)}</p>` : ""}
       ${action}
     </article>`;
   }
   if (activity.type === "choice") {
-    const choices = activity.options.map(option => `<button class="choice-option${state.choiceResult === option.id ? " selected" : ""}" data-choice="${option.id}" type="button">${escapeHtml(option.label)}</button>`).join("");
-    const result = state.choiceResult ? `<p class="choice-feedback ${state.complete ? "correct" : ""}">${escapeHtml(activity.explanation)}</p>` : "";
-    const next = nextUI && state.complete ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
+    const choices = activity.options.map(option => `<button class="choice-option${state.choiceResult === option.id ? " selected" : ""}" data-choice="${option.id}" type="button">${renderInline(option.label)}</button>`).join("");
+    const result = state.choiceResult ? `<p class="choice-feedback ${state.complete ? "correct" : ""}">${renderInline(activity.explanation)}</p>` : "";
+    const next = state.complete ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
     return `<article class="field-note choice-note" aria-label="Tool choice challenge">
-      <span class="field-note-kicker">Challenge · choose</span><h2>${escapeHtml(activity.title)}</h2>
-      <p>${escapeHtml(activity.prompt)}</p><div class="choice-options">${choices}</div>${result}${next}
+      <span class="field-note-kicker">Challenge · choose</span><h2>${renderInline(activity.title)}</h2>
+      <p>${renderInline(activity.prompt)}</p><div class="choice-options">${choices}</div>${result}${next}
     </article>`;
   }
   return `<article class="field-note summary-note" aria-label="Lesson summary">
-    <span class="field-note-kicker">Lesson summary</span><h2>${escapeHtml(activity.title)}</h2>
-    <p>${escapeHtml(activity.body)}</p><ul>${activity.takeaways.map(takeaway => `<li>${escapeHtml(takeaway)}</li>`).join("")}</ul>
-    ${nextUI ? '<button class="note-action" type="button" data-action="next">Next →</button>' : ""}
+    <span class="field-note-kicker">Lesson summary</span><h2>${renderInline(activity.title)}</h2>
+    <p>${renderInline(activity.body)}</p><ul>${activity.takeaways.map(takeaway => `<li>${renderInline(takeaway)}</li>`).join("")}</ul>
+    <button class="note-action" type="button" data-action="next">Next →</button>
   </article>`;
 }
 
 function renderActivityIntro() {
-  if (!nextUI) return;
   const activity = currentActivity();
   const show = isRunnable(activity);
   elements.activityIntro.hidden = !show;
   if (!show) return;
-  elements.activityKicker.textContent = `${activity.type === "demo" ? "Demo" : "Exercise"} · ${languageLabel(activity)}`;
-  elements.activityTitle.textContent = activity.title;
-  elements.activityInstruction.textContent = activity.instruction;
+  const practiceLabel = activity.practiceMode === "guided" ? "Guided practice" : activity.practiceMode === "recall" ? "Recall practice" : "Demo";
+  elements.activityKicker.textContent = `${practiceLabel} · ${languageLabel(activity)}`;
+  elements.activityTitle.innerHTML = renderInline(activity.title);
+  elements.activityInstruction.innerHTML = renderInline(activity.instruction);
   elements.hintButton.hidden = !isPractice(activity);
 }
 
@@ -280,17 +328,16 @@ function renderWorld() {
   }
   setTheme(presentation.theme);
   renderGround(presentation);
-  const oppositeSide = presentation.codeSide === "left" ? "right" : "left";
   const content = isRunnable(activity)
-    ? nextUI
-      ? `<div class="editor-stack" style="--editor-height:${108 + activity.scenario.initial.lines.length * 24}px">
+    ? `<div class="editor-stack" style="--editor-height:${108 + activity.scenario.initial.lines.length * 24}px">
           <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
         </div>`
-      : `<div class="code-slab side-${presentation.codeSide}"><div class="code-head"><i></i><span>${escapeHtml(languageLabel(activity))} · ${activity.type}</span></div><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>`
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
-  const oracle = isPractice(activity) && !nextUI ? `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open hints">?</button>` : "";
-  elements.worldGrid.innerHTML = `${renderSprites(presentation)}${content}<img class="nix ${presentation.codeSide}" src="assets/characters/nix/idle.png" alt="Nix, a lantern-moth apprentice">${oracle}`;
+  const assignment = characterAssignment(activity);
+  const character = characterAssets[assignment.characterId] || characterAssets.nix;
+  const characterMarkup = `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${character.idle}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`;
+  elements.worldGrid.innerHTML = `${renderSprites(presentation)}${content}${characterMarkup}`;
   if (isRunnable(activity)) mountEditor();
 }
 
@@ -333,17 +380,20 @@ function executionContent(activity, step, history, complete = false) {
   const keys = scriptKeys(activity);
   const group = activeCommandGroup(activity, step);
   const done = complete || step >= keys.length;
+  const recall = activity.practiceMode === "recall" && !done;
+  const reveal = recall && state.recallFeedback === "reveal";
+  const retry = recall && state.recallFeedback === "retry";
   return {
     explanation: group?.explanation || "Follow the authored command sequence.",
     history,
-    primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? `Step ${step + 1} of ${keys.length}` : "Next",
-    secondary: done ? "Complete" : "",
-    key: done ? null : keys[step],
+    primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? `Step ${step + 1} of ${keys.length}` : retry ? "Try" : reveal ? "Next" : recall ? "Recall" : "Next",
+    secondary: done ? "Complete" : retry ? "Again" : reveal ? "A clue" : recall ? "From memory" : "",
+    key: done || (recall && !reveal) ? null : keys[step],
   };
 }
 
 function applyExecutionContent(root, content) {
-  $(".command-explanation", root).textContent = content.explanation;
+  $(".command-explanation", root).innerHTML = renderInline(content.explanation);
   $(".command-text", root).innerHTML = renderHistory(content.history);
   $(".status-primary", root).textContent = content.primary;
   $(".status-secondary", root).textContent = content.secondary;
@@ -354,7 +404,6 @@ function applyExecutionContent(root, content) {
 
 function measureExecutionConsole() {
   executionMeasurementFrame = null;
-  if (!nextUI) return;
   const probe = elements.commandTray.cloneNode(true);
   probe.removeAttribute("id");
   probe.removeAttribute("aria-live");
@@ -376,135 +425,68 @@ function measureExecutionConsole() {
 }
 
 function scheduleExecutionConsoleMeasurement() {
-  if (!nextUI || executionMeasurementFrame) return;
+  if (executionMeasurementFrame) return;
   executionMeasurementFrame = window.requestAnimationFrame(measureExecutionConsole);
 }
 
 function renderCommand() {
   const activity = currentActivity();
   if (!isRunnable(activity)) {
-    if (nextUI) {
-      elements.commandExplanation.textContent = "";
-      elements.commandTray.classList.add("hidden");
-      return;
-    }
-    elements.commandText.innerHTML = '<span class="ghost">read, choose, or continue</span>';
-    elements.guidance.textContent = activity.type === "choice" ? "CHOOSE A TOOL" : "FIELD NOTES";
+    elements.commandExplanation.textContent = "";
+    elements.commandTray.classList.add("hidden");
     return;
   }
   elements.commandTray.classList.remove("hidden");
-  if (nextUI) {
-    const step = isDemo(activity) ? state.playbackStep : state.progress;
-    applyExecutionContent(elements.commandTray, executionContent(activity, step, state.history, state.complete));
-    scheduleExecutionConsoleMeasurement();
-    return;
-  }
-  const history = state.history.map(formatToken).join(" ");
-  elements.commandText.innerHTML = history ? escapeHtml(history) : '<span class="ghost">waiting…</span>';
-  if (isDemo(activity)) {
-    const keys = scriptKeys(activity);
-    const group = activeCommandGroup(activity);
-    elements.guidance.textContent = nextUI
-      ? state.playbackStep >= keys.length ? "Demo complete" : `Step ${state.playbackStep + 1} of ${keys.length}: ${guidanceToken(keys[state.playbackStep])}`
-      : state.playbackStep >= keys.length ? "DEMO COMPLETE" : group?.explanation?.toUpperCase() || `STEP: ${guidanceToken(keys[state.playbackStep])}`;
-    return;
-  }
-  const next = scriptKeys(activity)[state.progress];
-  elements.guidance.textContent = nextUI
-    ? state.complete ? "Practice complete" : next ? `Next: ${guidanceToken(next)}` : "Verifying"
-    : state.complete ? "PRACTICE COMPLETE" : next ? `NEXT: ${guidanceToken(next)}` : "VERIFYING";
+  const step = isDemo(activity) ? state.playbackStep : state.progress;
+  applyExecutionContent(elements.commandTray, executionContent(activity, step, state.history, state.complete));
+  scheduleExecutionConsoleMeasurement();
 }
 
 function renderHeader() {
   const activity = currentActivity();
-  if (nextUI) {
-    elements.lessonLabel.textContent = activity.lessonTitle;
-    elements.resetButton.hidden = !isRunnable(activity);
-    renderTableOfContents();
-    return;
-  }
-  elements.locationLabel.textContent = `${themeLabels[presentationFor(activity).theme]} · ${activity.lessonTitle}`;
-  elements.progressPill.textContent = `${state.activityIndex + 1} / ${activities.length}`;
-  elements.activitySelect.value = String(state.activityIndex);
-  elements.eyebrow.textContent = `${activity.lessonTitle} · ${activity.phase}`;
-  elements.questTitle.textContent = activity.title;
-  elements.questInstruction.textContent = activity.instruction || activity.body || activity.prompt || "Review the field notes, then continue.";
+  elements.lessonLabel.textContent = activity.lessonTitle;
+  elements.resetButton.hidden = !isRunnable(activity);
+  renderTableOfContents();
 }
 
 function renderHints() {
   const hints = isPractice() ? currentActivity().hints : [];
-  elements.hintSteps.innerHTML = hints.map((hint, index) => `<div class="hint-step"><kbd>Hint ${index + 1}</kbd><small>${escapeHtml(hint)}</small></div>`).join("");
+  elements.hintSteps.innerHTML = hints.slice(0, state.hintLevel).map((hint, index) => `<div class="hint-step"><kbd>Hint ${index + 1}</kbd><small>${renderInline(hint)}</small></div>`).join("");
 }
 
 function renderActivityControls() {
   const activity = currentActivity();
-  if (nextUI) {
-    elements.keyboardPanel.classList.remove("controls-only");
-    elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity));
-    elements.keyboardPanel.classList.toggle("completed", isPractice(activity) && state.complete);
-    elements.keyboard.classList.toggle("hidden", !isPractice(activity));
-    elements.keyboard.toggleAttribute("inert", isPractice(activity) && state.complete);
-    if (isPractice(activity) && state.complete) elements.keyboard.setAttribute("aria-hidden", "true");
-    else elements.keyboard.removeAttribute("aria-hidden");
-    if (isDemo(activity)) {
-      const done = state.playbackStep >= scriptKeys(activity).length;
-      const playing = Boolean(state.playbackTimer);
-      const playLabel = playing ? "Pause" : done ? "Reset" : "Play";
-      const action = done ? "reset" : "play-toggle";
-      const demoControls = $("#demoControls", elements.worldGrid);
-      if (demoControls) demoControls.innerHTML = `
-        <button data-action="${action}" type="button">${playLabel}</button>
-        <button data-action="step" type="button" ${done || playing ? "disabled" : ""}>Step</button>
-        <button class="primary-action" data-action="next" type="button">Next →</button>`;
-      elements.activityControls.innerHTML = "";
-      return;
-    }
-    if (isPractice(activity) && state.complete) {
-      const feedback = activity.feedback || {};
-      elements.activityControls.innerHTML = `<section class="completion-panel" role="status">
-        <span>Exercise complete</span>
-        <strong>${escapeHtml(feedback.success || "Practice complete.")}</strong>
-        <p>${escapeHtml(feedback.why || "Continue when you are ready.")}</p>
-        <button class="primary-action" data-action="next" type="button">Next →</button>
-      </section>`;
-      return;
-    }
-    elements.activityControls.innerHTML = "";
-    return;
-  }
-  elements.keyboardPanel.classList.toggle("controls-only", !isPractice(activity));
+  elements.keyboardPanel.classList.remove("controls-only");
+  elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity));
+  elements.keyboardPanel.classList.toggle("completed", isPractice(activity) && state.complete);
   elements.keyboard.classList.toggle("hidden", !isPractice(activity));
-  elements.commandTray.classList.toggle("hidden", !isRunnable(activity));
+  elements.keyboard.toggleAttribute("inert", isPractice(activity) && state.complete);
+  if (isPractice(activity) && state.complete) elements.keyboard.setAttribute("aria-hidden", "true");
+  else elements.keyboard.removeAttribute("aria-hidden");
   if (isDemo(activity)) {
     const done = state.playbackStep >= scriptKeys(activity).length;
     const playing = Boolean(state.playbackTimer);
-    elements.activityControls.innerHTML = `<div class="control-deck demo-deck">
-      <button data-action="reset" type="button">Reset</button><button data-action="step" type="button" ${done ? "disabled" : ""}>Step</button>
-      <button data-action="play" type="button" ${done || playing ? "disabled" : ""}>Play</button><button data-action="slow" type="button" ${done || playing ? "disabled" : ""}>Slow</button>
-      <button data-action="pause" type="button" ${playing ? "" : "disabled"}>Pause</button><button data-action="next" type="button" ${done ? "" : "disabled"}>Continue →</button>
-    </div>`;
-    return;
-  }
-  if (isPractice(activity)) {
+    const playLabel = playing ? "Pause" : done ? "Reset" : "Play";
+    const action = done ? "reset" : "play-toggle";
+    const demoControls = $("#demoControls", elements.worldGrid);
+    if (demoControls) demoControls.innerHTML = `
+      <button data-action="${action}" type="button">${playLabel}</button>
+      <button data-action="step" type="button" ${done || playing ? "disabled" : ""}>Step</button>
+      <button class="primary-action" data-action="next" type="button">Next →</button>`;
     elements.activityControls.innerHTML = "";
     return;
   }
-  const previous = state.activityIndex > 0;
-  const next = state.activityIndex < activities.length - 1;
-  elements.activityControls.innerHTML = `<div class="control-deck"><button data-action="previous" type="button" ${previous ? "" : "disabled"}>← Back</button><button data-action="next" type="button" ${next ? "" : "disabled"}>Continue →</button></div>`;
-}
-
-function renderSuccess() {
-  if (nextUI) {
-    elements.successBanner.classList.remove("show");
+  if (isPractice(activity) && state.complete) {
+    const feedback = activity.feedback || {};
+    elements.activityControls.innerHTML = `<section class="completion-panel" role="status">
+      <span>${activity.practiceMode === "recall" ? "Recall complete" : "Guided practice complete"}</span>
+      <strong>${renderInline(feedback.success || "Practice complete.")}</strong>
+      <p>${renderInline(feedback.why || "Continue when you are ready.")}</p>
+      <button class="primary-action" data-action="next" type="button">Next →</button>
+    </section>`;
     return;
   }
-  const show = state.complete && (isPractice() || currentActivity().type === "choice");
-  elements.successBanner.classList.toggle("show", show);
-  if (!show) return;
-  elements.successTitle.textContent = currentActivity().type === "choice" ? "Sound judgment." : "Beautifully done.";
-  elements.successText.textContent = currentActivity().feedback?.why || "Continue to the next activity.";
-  elements.nextButton.textContent = state.activityIndex === activities.length - 1 ? "Restart" : "Next →";
+  elements.activityControls.innerHTML = "";
 }
 
 function renderModifiers() {
@@ -529,17 +511,6 @@ function renderAll() {
   renderModifiers();
   renderCommand();
   renderActivityControls();
-  renderSuccess();
-}
-
-function populateTableOfContents() {
-  elements.activitySelect.innerHTML = lessons.map(lesson => {
-    const options = activities.filter(activity => activity.lessonId === lesson.id).map(activity => {
-      const index = activities.indexOf(activity);
-      return `<option value="${index}">${escapeHtml(`${activity.activityIndex + 1}. ${activity.title}`)}</option>`;
-    }).join("");
-    return `<optgroup label="${escapeHtml(lesson.title)}">${options}</optgroup>`;
-  }).join("");
 }
 
 function activityTypeLabel(type) {
@@ -547,7 +518,6 @@ function activityTypeLabel(type) {
 }
 
 function renderTableOfContents() {
-  if (!nextUI) return;
   const current = currentActivity();
   const lessonMarkup = lessons.map((lesson, lessonIndex) => {
     const lessonActivities = activities.filter(activity => activity.lessonId === lesson.id);
@@ -556,12 +526,12 @@ function renderTableOfContents() {
       const isCurrent = globalIndex === state.activityIndex;
       return `<button class="toc-activity${isCurrent ? " current" : ""}" type="button" data-activity-index="${globalIndex}" ${isCurrent ? 'aria-current="page"' : ""}>
         <span class="toc-number">${lessonIndex + 1}.${activityIndex + 1}</span>
-        <span class="toc-activity-title">${escapeHtml(activity.title)}</span>
-        <span class="activity-type type-${activity.type}">${activityTypeLabel(activity.type)}</span>
+        <span class="toc-activity-title">${renderInline(activity.title)}</span>
+        <span class="activity-type type-${activity.practiceMode || activity.type}">${activity.practiceMode ? escapeHtml(activity.practiceMode) : activityTypeLabel(activity.type)}</span>
       </button>`;
     }).join("");
     return `<details class="toc-lesson" ${lesson.id === current.lessonId ? "open" : ""}>
-      <summary><span>${lessonIndex + 1}</span><strong>${escapeHtml(lesson.title)}</strong><small>${lessonActivities.length} activities</small></summary>
+      <summary><span>${lessonIndex + 1}</span><strong>${renderInline(lesson.title)}</strong><small>${lessonActivities.length} activities</small></summary>
       <div class="toc-activities">${rows}</div>
     </details>`;
   }).join("");
@@ -572,7 +542,7 @@ function renderTableOfContents() {
   elements.tocLessons.innerHTML = `<details class="toc-unit" open>
     <summary>
       <span>Unit ${escapeHtml(unitNumber)}</span>
-      <strong>${escapeHtml(unitTitle)}</strong>
+      <strong>${renderInline(unitTitle)}</strong>
       <small>${lessons.length} lessons</small>
     </summary>
     <div class="toc-unit-lessons">${lessonMarkup}</div>
@@ -580,7 +550,6 @@ function renderTableOfContents() {
 }
 
 function renderThemeOptions() {
-  if (!nextUI) return;
   const input = $(`input[name="theme"][value="${state.themePreference}"]`, elements.themeOptions);
   if (input) input.checked = true;
 }
@@ -601,8 +570,9 @@ function resetActivity({ vibrateReset = true } = {}) {
   state.choiceResult = null;
   state.playbackStep = 0;
   state.editorSnapshot = null;
+  state.hintLevel = 0;
+  clearPracticeError();
   setHelp(false);
-  elements.successBanner.classList.remove("show");
   renderAll();
   if (vibrateReset) vibrate(9);
 }
@@ -615,7 +585,6 @@ function goToActivity(index) {
 }
 
 function nextActivity() {
-  if (!nextUI && isDemo() && state.playbackStep < scriptKeys().length) return;
   if (isPractice() && !state.complete) return;
   if (currentActivity().type === "choice" && !state.complete) return;
   if (state.activityIndex === activities.length - 1) {
@@ -643,11 +612,11 @@ function completeActivity() {
   vimEngine?.setLocked(true);
   setTheme(presentationFor().theme);
   $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
-  if (nextUI && currentActivity().type === "choice") renderWorld();
+  if (currentActivity().type === "choice") renderWorld();
+  if (isPractice()) playSuccessCharacter();
   renderMode();
   renderCommand();
   renderActivityControls();
-  renderSuccess();
   vibrate([18, 35, 18]);
 }
 
@@ -665,20 +634,58 @@ function handleEngineEvent(event) {
   if (isPractice() && !state.complete && state.progress === scriptKeys().length && isTargetSnapshot(event.snapshot)) completeActivity();
 }
 
-function flashError() {
+function clearPracticeError() {
+  if (state.errorTimer) window.clearTimeout(state.errorTimer);
+  state.errorTimer = null;
+  state.recallFeedback = null;
+  state.consecutiveMistakes = 0;
+  elements.statusKey?.classList.remove("error");
+}
+
+function flashWrongKey(button) {
+  if (!button) return;
+  button.classList.remove("wrong");
+  void button.offsetWidth;
+  button.classList.add("wrong");
+  window.setTimeout(() => button.classList.remove("wrong"), 360);
+}
+
+function flashError(token, button) {
   elements.commandTray.classList.remove("error");
   void elements.commandTray.offsetWidth;
   elements.commandTray.classList.add("error");
   window.setTimeout(() => elements.commandTray.classList.remove("error"), 300);
+  if (!isPractice()) return;
+  if (currentActivity().practiceMode === "guided") {
+    elements.statusKey?.classList.remove("error");
+    void elements.statusKey?.offsetWidth;
+    elements.statusKey?.classList.add("error");
+    window.setTimeout(() => elements.statusKey?.classList.remove("error"), 420);
+    return;
+  }
+  // Only a touched on-screen key gets a red flash. Physical keys retain the
+  // compact rail feedback without inventing a keyboard interaction.
+  flashWrongKey(button);
+  state.consecutiveMistakes += 1;
+  state.recallFeedback = state.consecutiveMistakes >= 3 ? "reveal" : "retry";
+  if (state.errorTimer) window.clearTimeout(state.errorTimer);
+  renderCommand();
+  state.errorTimer = window.setTimeout(() => {
+    state.errorTimer = null;
+    if (state.recallFeedback === "reveal") state.consecutiveMistakes = 0;
+    state.recallFeedback = null;
+    renderCommand();
+  }, state.recallFeedback === "reveal" ? 1400 : 520);
 }
 
-function processToken(token) {
+function processToken(token, button) {
   if (!isPractice() || state.complete || !vimEngine) return false;
   const expected = scriptKeys()[state.progress];
   if (token !== expected) {
-    flashError();
+    flashError(token, button);
     return false;
   }
+  clearPracticeError();
   setHelp(false);
   return vimEngine.sendKey(token, { source: "lesson" });
 }
@@ -710,6 +717,10 @@ function playDemo(interval) {
 
 function setHelp(open) {
   const canHelp = isPractice();
+  if (open && canHelp) {
+    state.hintLevel = Math.min(currentActivity().hints.length, state.hintLevel + 1);
+    renderHints();
+  }
   elements.helpCard.classList.toggle("open", Boolean(open && canHelp));
   elements.helpCard.setAttribute("aria-hidden", String(!(open && canHelp)));
   elements.hintButton?.setAttribute("aria-expanded", String(Boolean(open && canHelp)));
@@ -718,6 +729,29 @@ function setHelp(open) {
     scriptKeys().forEach(token => requiredButtons(token).forEach(button => button.classList.add("hinted")));
     vibrate(5);
   }
+}
+
+function playSuccessCharacter() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const character = $(".nix", elements.worldGrid);
+  const asset = characterAssets[character?.dataset.character || ""];
+  const animation = asset?.animations?.[character?.dataset.animation || ""];
+  if (!character || !animation?.src) return;
+  const celebrating = character.cloneNode();
+  celebrating.src = animation.src;
+  celebrating.alt = `${asset.name}, celebrating`;
+  celebrating.style.setProperty("--success-canvas-scale", String(animation.css_scale || 1));
+  let started = false;
+  const startTransition = () => {
+    if (started || !state.complete || !character.isConnected) return;
+    started = true;
+    celebrating.classList.add("celebrating", "transitioning-in");
+    character.classList.add("transitioning-out");
+    character.setAttribute("aria-hidden", "true");
+    character.after(celebrating);
+    window.setTimeout(() => character.remove(), 420);
+  };
+  celebrating.decode().then(startTransition, startTransition);
 }
 
 function keyButtonsFor(value) {
@@ -769,7 +803,7 @@ function emitFromButton(button) {
   if (chordModifiers.some(modifier => modifier !== "Shift")) token = `${chordModifiers.join("+")}+${value.toLowerCase()}`;
   state.modifiers.clear();
   renderModifiers();
-  processToken(token);
+  processToken(token, button);
 }
 
 function processChoice(id) {
@@ -836,7 +870,7 @@ document.addEventListener("keydown", event => {
   }
   const matching = token.startsWith("Ctrl-") ? keyButtonsFor(token.slice(5))[0] : keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
   if (!matching) {
-    flashError();
+    flashError(token);
     return;
   }
   flashKey(matching);
@@ -863,14 +897,12 @@ elements.worldGrid.addEventListener("click", event => {
 });
 const editorPointerEvents = ["pointerdown", "mousedown", "dblclick", "selectstart", "contextmenu"];
 editorPointerEvents.forEach(type => elements.worldGrid.addEventListener(type, event => {
-  if (!nextUI || !event.target.closest?.(".cm-content, .cm-gutters")) return;
+  if (!event.target.closest?.(".cm-content, .cm-gutters")) return;
   event.preventDefault();
   event.stopPropagation();
 }, true));
 elements.helpClose.addEventListener("click", () => setHelp(false));
 elements.resetButton.addEventListener("click", () => resetActivity());
-elements.nextButton.addEventListener("click", nextActivity);
-elements.activitySelect.addEventListener("change", event => goToActivity(Number(event.target.value)));
 elements.hintButton?.addEventListener("click", () => setHelp(!elements.helpCard.classList.contains("open")));
 elements.tocButton?.addEventListener("click", () => {
   renderTableOfContents();
@@ -903,7 +935,6 @@ elements.activityControls.addEventListener("click", event => {
 });
 
 window.addEventListener("resize", () => {
-  if (!nextUI) return;
   elements.phone.style.removeProperty("--execution-console-height");
   scheduleExecutionConsoleMeasurement();
 });
@@ -940,8 +971,10 @@ window.VimWilds = Object.freeze({
       activityId: currentActivity().id,
       activityType: currentActivity().type,
       lessonId: currentActivity().lessonId,
-      exerciseIndex: exercises.indexOf(currentActivity()),
-      exerciseId: isPractice() ? currentActivity().id : null,
+      exerciseIndex: isPractice() ? exercises.findIndex(exercise => exercise.sourceActivityId === currentActivity().sourceActivityId) : -1,
+      exerciseId: isPractice() ? currentActivity().sourceActivityId : null,
+      sourceActivityId: currentActivity().sourceActivityId || currentActivity().id,
+      practiceMode: currentActivity().practiceMode || null,
       progress: state.progress,
       playbackStep: state.playbackStep,
       history: [...state.history],
@@ -957,17 +990,16 @@ window.VimWilds = Object.freeze({
   },
 });
 
-if (nextUI) {
-  const requestedActivity = urlParams.get("activity");
-  const requestedIndex = activities.findIndex(activity => activity.id === requestedActivity);
-  if (requestedIndex >= 0) state.activityIndex = requestedIndex;
-}
+const requestedActivity = urlParams.get("activity");
+const requestedIndex = activities.findIndex(activity => activity.id === requestedActivity);
+if (requestedIndex >= 0) state.activityIndex = requestedIndex;
 
-populateTableOfContents();
+assignCharacters();
 renderAll();
 renderThemeOptions();
+void loadCharacterAssets();
 
-if (nextUI && urlParams.get("preview") === "complete") {
+if (urlParams.get("preview") === "complete") {
   if (isDemo()) while (stepDemo());
   else if (isPractice()) scriptKeys().forEach(processToken);
 }

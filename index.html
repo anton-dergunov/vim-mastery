@@ -1,16 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html class="next-ui" lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#071715">
   <title>The Vim Wilds — Pocket Practice</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23071715'/%3E%3Cpath d='M16 15h10l7 29 7-29h9L38 51H27z' fill='%23ffc866'/%3E%3C/svg%3E">
-  <script>
-    if (new URLSearchParams(window.location.search).get("ui") === "next") {
-      document.documentElement.classList.add("next-ui");
-    }
-  </script>
   <link rel="stylesheet" href="styles.css">
   <script>
     window.setTimeout(() => {
@@ -22,23 +17,8 @@
   </script>
 </head>
 <body>
-  <main class="phone" id="phone" aria-label="The Vim Wilds bite-sized exercise feed">
-    <header class="topbar legacy-only">
-      <div class="brand-mark" aria-hidden="true">V</div>
-      <div class="brand-copy">
-        <strong>The Vim Wilds</strong>
-        <span id="locationLabel">Moonroot Ruins</span>
-      </div>
-      <label class="toc-wrap" for="activitySelect">
-        <span class="sr-only">Lesson activity</span>
-        <select id="activitySelect" aria-label="Lesson table of contents"></select>
-      </label>
-      <div class="progress-pill" id="progressPill">1 / 1</div>
-      <div class="mode-pill" id="modePill" aria-live="polite">Normal</div>
-      <button class="reset-button" id="resetButton" type="button" aria-label="Restart exercise" title="Restart">↻</button>
-    </header>
-
-    <header class="next-topbar next-only">
+  <main class="phone" id="phone" aria-label="The Vim Wilds bite-sized lesson">
+    <header class="next-topbar">
       <button class="icon-button" id="tocButton" type="button" aria-label="Open table of contents" title="Contents">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="3" cy="6" r=".75"/><circle cx="3" cy="12" r=".75"/><circle cx="3" cy="18" r=".75"/></svg>
       </button>
@@ -52,13 +32,7 @@
       </button>
     </header>
 
-    <section class="quest legacy-only" id="quest" aria-labelledby="questTitle">
-      <div class="eyebrow" id="eyebrow">Visual Block · TypeScript</div>
-      <h1 id="questTitle">Light all four runes in one spell.</h1>
-      <p id="questInstruction">The four feature marks form a column—not four separate edits.</p>
-    </section>
-
-    <section class="activity-intro next-only" id="activityIntro" aria-labelledby="activityTitle">
+    <section class="activity-intro" id="activityIntro" aria-labelledby="activityTitle">
       <div class="activity-intro-row">
         <div class="activity-kicker" id="activityKicker">Exercise · Python</div>
         <button class="hint-button" id="hintButton" type="button" aria-label="Open hints" title="Hints">?</button>
@@ -67,7 +41,7 @@
       <p id="activityInstruction">Change the first draft to ready, then replay on the next rows.</p>
     </section>
 
-    <section class="next-command-tray next-only" id="nextCommandTray" aria-live="polite">
+    <section class="next-command-tray" id="nextCommandTray" aria-live="polite">
       <div class="execution-copy">
         <div class="command-explanation" id="commandExplanation">Create one complete quote change.</div>
         <div class="command-history-label">History</div>
@@ -94,24 +68,11 @@
           <div class="hint-steps" id="hintSteps"></div>
         </aside>
 
-        <div class="success-banner legacy-only" id="successBanner" role="status">
-          <div class="success-copy">
-            <strong id="successTitle">Beautifully done.</strong>
-            <span id="successText">Swipe up for the next spell.</span>
-          </div>
-          <button class="next-button" id="nextButton" type="button">Next ↑</button>
-        </div>
       </div>
     </section>
 
     <section class="keyboard-panel" aria-label="Physical-style Vim keyboard">
       <div class="activity-controls" id="activityControls"></div>
-      <div class="command-tray legacy-only" id="commandTray" aria-live="polite">
-        <span class="prompt-glyph">›</span>
-        <div class="command-text" id="commandText"><span class="ghost">waiting…</span></div>
-        <div class="guidance" id="guidance">Start the command</div>
-      </div>
-
       <div class="keyboard" id="keyboard">
         <div class="key-row">
           <button class="key utility u-115" data-key="Escape">Esc</button>
@@ -175,7 +136,7 @@
       </div>
     </section>
 
-    <dialog class="app-dialog next-only" id="tocDialog" aria-labelledby="tocTitle">
+    <dialog class="app-dialog" id="tocDialog" aria-labelledby="tocTitle">
       <div class="dialog-head">
         <div>
           <span class="dialog-kicker">Course map</span>
@@ -186,7 +147,7 @@
       <div class="dialog-body toc-lessons" id="tocLessons"></div>
     </dialog>
 
-    <dialog class="app-dialog next-only" id="settingsDialog" aria-labelledby="settingsTitle">
+    <dialog class="app-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
       <div class="dialog-head">
         <div>
           <span class="dialog-kicker">Appearance</span>
@@ -206,17 +167,6 @@
       </div>
     </dialog>
 
-    <section class="reward-overlay" id="rewardOverlay" aria-hidden="true">
-      <article class="reward-card">
-        <div class="reward-image" role="img" aria-label="The enchanted Moonroot Ruins"></div>
-        <div class="reward-copy">
-          <div class="reward-kicker">Memory unlocked · Chapter I</div>
-          <h2>Moonroot Ruins</h2>
-          <p>Eleven tiny edits restored the old causeway. This illustration is yours—a rare reward, not disposable exercise scenery.</p>
-          <button class="reward-button" id="rewardButton" type="button">Begin another run</button>
-        </div>
-      </article>
-    </section>
   </main>
 
   <script type="module" src="app.js"></script>
