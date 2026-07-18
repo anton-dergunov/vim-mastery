@@ -1,5 +1,5 @@
-import { EditorSelection, EditorState } from "@codemirror/state";
-import { EditorView, drawSelection, lineNumbers } from "@codemirror/view";
+import { EditorSelection, EditorState, StateEffect, StateField } from "@codemirror/state";
+import { Decoration, EditorView, drawSelection, lineNumbers } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
@@ -23,6 +23,18 @@ const wildsHighlighting = syntaxHighlighting(HighlightStyle.define([
   { tag: tags.comment, color: "#668f77" },
   { tag: tags.number, color: "#88d4dd" },
 ]));
+
+const setPreviewRange = StateEffect.define();
+const previewRangeField = StateField.define({
+  create: () => Decoration.none,
+  update(value, transaction) {
+    for (const effect of transaction.effects) {
+      if (effect.is(setPreviewRange)) return effect.value;
+    }
+    return value.map(transaction.changes);
+  },
+  provide: field => EditorView.decorations.from(field),
+});
 
 export function toVimKey(key) {
   if (specialKeys[key]) return specialKeys[key];
@@ -86,6 +98,7 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
     return "visual";
   }
   if (mode === "insert" || mode === "replace") return mode;
+  if (cm?.state?.vim?.inputState?.operator) return "operator-pending";
   return "normal";
 }
 
@@ -116,6 +129,7 @@ export class VimEngine {
           vim(),
           drawSelection(),
           lineNumbers(),
+          previewRangeField,
           ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
           wildsHighlighting,
           EditorView.updateListener.of(update => {
@@ -257,6 +271,15 @@ export class VimEngine {
   moveCursorToLineStart() {
     const line = this.view.state.doc.lineAt(this.view.state.selection.main.head);
     this.view.dispatch({ selection: EditorSelection.cursor(line.from) });
+  }
+
+  showPreviewRange(range) {
+    const from = offsetForPosition(this.view.state.doc.toString(), range.from);
+    const to = offsetForPosition(this.view.state.doc.toString(), range.to);
+    const decoration = from < to
+      ? Decoration.set([Decoration.mark({ class: "cm-preview-range" }).range(from, to)])
+      : Decoration.none;
+    this.view.dispatch({ effects: setPreviewRange.of(decoration) });
   }
 
   executeEx(command) {

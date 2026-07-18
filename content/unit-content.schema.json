@@ -4,10 +4,11 @@
   "title": "Vim Wilds curriculum unit",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "contentVersion", "id", "title", "releaseStatus", "curriculumDefinition", "playback", "generation", "lessons", "reference", "coverage"],
+  "required": ["schemaVersion", "contentVersion", "unitNumber", "id", "title", "releaseStatus", "curriculumDefinition", "playback", "generation", "lessons", "reference", "coverage"],
   "properties": {
     "schemaVersion": {"const": 1},
     "contentVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "unitNumber": {"type": "integer", "minimum": 1},
     "id": {"$ref": "#/$defs/id"},
     "title": {"type": "string", "minLength": 1},
     "releaseStatus": {"enum": ["authoring", "browser-verified", "released"]},
@@ -22,6 +23,9 @@
   "$defs": {
     "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "position": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}], "items": false},
+    "mode": {"enum": ["normal", "insert", "replace", "operator-pending", "visual", "visual-line", "visual-block", "command-line"]},
+    "step": {"oneOf":[{"type":"string","minLength":1},{"type":"object","additionalProperties":false,"required":["key","kind"],"properties":{"key":{"type":"string","minLength":1},"kind":{"enum":["command","count","operator","motion","text-object","literal","control"]},"cue":{"type":"string"}}}]},
+    "routes": {"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["id","label","activityRef","emphasis"],"properties":{"id":{"$ref":"#/$defs/id"},"label":{"type":"string"},"activityRef":{"$ref":"#/$defs/id"},"emphasis":{"enum":["primary","secondary"]}}}},
     "curriculumDefinition": {
       "type": "object", "additionalProperties": false,
       "required": ["unit", "commandsAndConcepts", "prerequisites", "learningOutcome", "representativeExercises", "priorityAndPortability"],
@@ -62,7 +66,7 @@
       "allOf": [
         {"$ref": "#/$defs/commonActivity"},
         {"type": "object", "additionalProperties": false, "required": ["id", "type", "phase", "title", "body"],
-          "properties": {"id":{"$ref":"#/$defs/id"},"type":{"const":"theory"},"phase":{"const":"explain"},"title":{"type":"string"},"body":{"type":"string"},"grammar":{"type":"string"},"contrast":{"type":"string"},"demoRef":{"$ref":"#/$defs/id"}}}
+          "properties": {"id":{"$ref":"#/$defs/id"},"type":{"const":"theory"},"phase":{"const":"explain"},"title":{"type":"string"},"body":{"type":"string"},"grammar":{"type":"string"},"contrast":{"type":"string"},"demoRef":{"$ref":"#/$defs/id"},"presentation":{"$ref":"#/$defs/presentation"},"routes":{"$ref":"#/$defs/routes"}}}
       ]
     },
     "runnable": {
@@ -74,36 +78,45 @@
             "id":{"$ref":"#/$defs/id"},"type":{"enum":["demo","exercise"]},"phase":{"enum":["demonstrate","isolate","mix","challenge"]},"title":{"type":"string"},"instruction":{"type":"string"},
             "languageId":{"$ref":"#/$defs/id"},"sourceKind":{"enum":["complete","fragment","neutral"]},"scenario":{"$ref":"#/$defs/scenario"},"script":{"$ref":"#/$defs/script"},
             "hints":{"type":"array","items":{"type":"string"}},"feedback":{"$ref":"#/$defs/feedback"},"skills":{"$ref":"#/$defs/skills"},"difficulty":{"$ref":"#/$defs/difficulty"},
-            "portability":{"type":"string"},"provenance":{"$ref":"#/$defs/provenance"},"verification":{"$ref":"#/$defs/verification"}
+            "portability":{"type":"string"},"provenance":{"$ref":"#/$defs/provenance"},"verification":{"$ref":"#/$defs/verification"},
+            "delivery":{"enum":["guided","guided-then-recall","recall"]},"remediationRef":{"$ref":"#/$defs/id"},"routes":{"$ref":"#/$defs/routes"}
           }}
+      ]
+    },
+    "presentation": {
+      "oneOf": [
+        {"type":"object","additionalProperties":false,"required":["kind","transitions"],"properties":{"kind":{"const":"mode-compass"},"transitions":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["mode","enterKeys","exitKeys","purpose"],"properties":{"mode":{"$ref":"#/$defs/mode"},"enterKeys":{"type":"array","items":{"type":"string"}},"exitKeys":{"type":"array","items":{"type":"string"}},"purpose":{"type":"string"}}}}}},
+        {"type":"object","additionalProperties":false,"required":["kind","parts"],"properties":{"kind":{"const":"command-assembly"},"parts":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["role","keys","meaning"],"properties":{"role":{"enum":["count","operator","motion","text-object"]},"keys":{"type":"string"},"meaning":{"type":"string"}}}}}}
       ]
     },
     "scenario": {
       "type":"object","additionalProperties":false,"required":["initial","target"],
       "properties": {
-        "initial":{"type":"object","additionalProperties":false,"required":["lines","cursor","mode"],"properties":{"lines":{"$ref":"#/$defs/lines"},"cursor":{"$ref":"#/$defs/position"},"mode":{"const":"normal"}}},
-        "target":{"type":"object","additionalProperties":false,"required":["lines","mode"],"properties":{"lines":{"$ref":"#/$defs/lines"},"cursor":{"$ref":"#/$defs/position"},"mode":{"const":"normal"}}}
+        "initial":{"$ref":"#/$defs/initialState"},
+        "target":{"type":"object","additionalProperties":false,"required":["lines","mode"],"properties":{"lines":{"$ref":"#/$defs/lines"},"cursor":{"$ref":"#/$defs/position"},"mode":{"$ref":"#/$defs/mode"}}}
       }
     },
+    "initialState": {"type":"object","additionalProperties":false,"required":["lines","cursor","mode"],"properties":{"lines":{"$ref":"#/$defs/lines"},"cursor":{"$ref":"#/$defs/position"},"mode":{"$ref":"#/$defs/mode"},"setup":{"type":"object","additionalProperties":false,"required":["cursor","steps"],"properties":{"cursor":{"$ref":"#/$defs/position"},"steps":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/step"}}}}}},
     "lines": {"type":"array","minItems":1,"items":{"type":"string"}},
     "script": {
       "type":"object","additionalProperties":false,"required":["steps","commandGroups","checkpoints"],
       "properties": {
-        "steps":{"type":"array","minItems":1,"items":{"oneOf":[{"type":"string","minLength":1},{"type":"object","additionalProperties":false,"required":["key","kind"],"properties":{"key":{"type":"string","minLength":1},"kind":{"enum":["command","motion","literal","control"]},"cue":{"type":"string"}}}]}},
+        "steps":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/step"}},
         "commandGroups":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["from","to","display","explanation"],"properties":{"from":{"type":"integer","minimum":0},"to":{"type":"integer","minimum":1},"display":{"type":"string"},"explanation":{"type":"string"}}}},
-        "checkpoints":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["afterStep"],"properties":{"afterStep":{"type":"integer","minimum":1},"lines":{"$ref":"#/$defs/lines"},"cursor":{"$ref":"#/$defs/position"},"mode":{"enum":["normal","insert","command-line","operator-pending"]},"affectedRange":{"type":"object","additionalProperties":false,"required":["from","to"],"properties":{"from":{"$ref":"#/$defs/position"},"to":{"$ref":"#/$defs/position"}}},"caption":{"type":"string"}}}}
+        "checkpoints":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["afterStep"],"properties":{"afterStep":{"type":"integer","minimum":1},"lines":{"$ref":"#/$defs/lines"},"cursor":{"$ref":"#/$defs/position"},"mode":{"$ref":"#/$defs/mode"},"affectedRange":{"$ref":"#/$defs/range"},"caption":{"type":"string"}}}}
       }
     },
+    "range": {"type":"object","additionalProperties":false,"required":["from","to"],"properties":{"from":{"$ref":"#/$defs/position"},"to":{"$ref":"#/$defs/position"}}},
     "feedback":{"type":"object","additionalProperties":false,"required":["success","why"],"properties":{"success":{"type":"string"},"why":{"type":"string"},"contrast":{"type":"string"}}},
     "skills":{"type":"object","additionalProperties":false,"required":["primary","supporting"],"properties":{"primary":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"},"uniqueItems":true},"supporting":{"type":"array","items":{"$ref":"#/$defs/id"},"uniqueItems":true}}},
     "difficulty":{"type":"object","additionalProperties":false,"required":["level","dimensions"],"properties":{"level":{"enum":["guided","easy","medium","hard"]},"dimensions":{"type":"array","items":{"type":"string"},"uniqueItems":true}}},
     "provenance":{"type":"object","additionalProperties":false,"required":["method","promptVersion","languageRationale","nativeValidation","browserConformance","reviewStatus"],"properties":{"method":{"const":"llm-authored"},"promptVersion":{"type":"string"},"languageRationale":{"type":"string"},"nativeValidation":{"enum":["pending","passed"]},"browserConformance":{"enum":["pending","passed"]},"reviewStatus":{"enum":["draft","reviewed"]}}},
     "verification":{"type":"object","additionalProperties":false,"required":["inputPolicy","requiredEvidence"],"properties":{"inputPolicy":{"const":"exact-sequence"},"requiredEvidence":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"},"uniqueItems":true}}},
     "choice": {
-      "allOf":[{"$ref":"#/$defs/commonActivity"},{"type":"object","additionalProperties":false,"required":["id","type","phase","title","prompt","options","correctOptionId","explanation"],"properties":{"id":{"$ref":"#/$defs/id"},"type":{"const":"choice"},"phase":{"const":"challenge"},"title":{"type":"string"},"prompt":{"type":"string"},"options":{"type":"array","minItems":2,"items":{"type":"object","additionalProperties":false,"required":["id","label"],"properties":{"id":{"$ref":"#/$defs/id"},"label":{"type":"string"}}}},"correctOptionId":{"$ref":"#/$defs/id"},"explanation":{"type":"string"}}}]
+      "allOf":[{"$ref":"#/$defs/commonActivity"},{"type":"object","additionalProperties":false,"required":["id","type","phase","title","prompt","options","correctOptionId","explanation"],"properties":{"id":{"$ref":"#/$defs/id"},"type":{"const":"choice"},"phase":{"const":"challenge"},"title":{"type":"string"},"prompt":{"type":"string"},"options":{"type":"array","minItems":2,"items":{"type":"object","additionalProperties":false,"required":["id","label"],"properties":{"id":{"$ref":"#/$defs/id"},"label":{"type":"string"}}}},"correctOptionId":{"$ref":"#/$defs/id"},"explanation":{"type":"string"},"questionKind":{"enum":["generic","mode-identification","range-prediction","command-classification"]},"inspection":{"type":"object","additionalProperties":false,"required":["initial"],"properties":{"initial":{"$ref":"#/$defs/initialState"},"revealRange":{"$ref":"#/$defs/range"}}},"remediationRef":{"$ref":"#/$defs/id"},"routes":{"$ref":"#/$defs/routes"}}}]
     },
     "summary": {
-      "allOf":[{"$ref":"#/$defs/commonActivity"},{"type":"object","additionalProperties":false,"required":["id","type","phase","title","body","takeaways"],"properties":{"id":{"$ref":"#/$defs/id"},"type":{"const":"summary"},"phase":{"const":"summary"},"title":{"type":"string"},"body":{"type":"string"},"takeaways":{"type":"array","minItems":1,"items":{"type":"string"}}}}]
+      "allOf":[{"$ref":"#/$defs/commonActivity"},{"type":"object","additionalProperties":false,"required":["id","type","phase","title","body","takeaways"],"properties":{"id":{"$ref":"#/$defs/id"},"type":{"const":"summary"},"phase":{"const":"summary"},"title":{"type":"string"},"body":{"type":"string"},"takeaways":{"type":"array","minItems":1,"items":{"type":"string"}},"routes":{"$ref":"#/$defs/routes"}}}]
     },
     "referenceEntry":{"type":"object","additionalProperties":false,"required":["id","command","purpose","notes","exampleActivityRefs"],"properties":{"id":{"$ref":"#/$defs/id"},"command":{"type":"string"},"purpose":{"type":"string"},"notes":{"type":"array","items":{"type":"string"}},"exampleActivityRefs":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"},"uniqueItems":true}}},
     "coverageEntry":{"type":"object","additionalProperties":false,"required":["concept","explain","demonstrate","isolate","mix","challenge"],"properties":{"concept":{"type":"string"},"explain":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"}},"demonstrate":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"}},"isolate":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"}},"mix":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"}},"challenge":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/id"}}}}

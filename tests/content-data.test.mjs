@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
-const unit = readJson("../content/units/repeatable-editing.json");
+const unit = readJson("../content/units/10-repeatable-editing.json");
+const unitDirectory = new URL("../content/units/", import.meta.url);
+const unitFiles = readdirSync(unitDirectory).filter(file => /^\d{2}-.*\.json$/.test(file)).sort();
+const units = unitFiles.map(file => ({ file, data: JSON.parse(readFileSync(new URL(file, unitDirectory), "utf8")) }));
+const modalUnit = units.find(item => item.data.id === "modal-model").data;
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -18,6 +22,7 @@ const keysOf = activity => activity.script.steps.map(step => typeof step === "st
 test("content files expose the expected schema versions", () => {
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
   assert.equal(unit.schemaVersion, 1);
+  assert.equal(unit.unitNumber, 10);
   assert.equal(registry.schemaVersion, 1);
   assert.equal(unit.releaseStatus, "authoring");
   assert.deepEqual(unit.playback, {
@@ -26,6 +31,50 @@ test("content files expose the expected schema versions", () => {
     reset: "initial-state",
     backwardStep: "deferred",
   });
+});
+
+test("numbered unit catalog is ordered and internally linked", () => {
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 10]);
+  for (const { file, data } of units) {
+    assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
+    const allActivities = data.lessons.flatMap(lesson => lesson.activities);
+    const ids = new Set();
+    for (const lesson of data.lessons) {
+      assert(!ids.has(lesson.id), `${data.id} duplicates ${lesson.id}`);
+      ids.add(lesson.id);
+      for (const activity of lesson.activities) {
+        assert(!ids.has(activity.id), `${data.id} duplicates ${activity.id}`);
+        ids.add(activity.id);
+      }
+    }
+    const activityIds = new Set(allActivities.map(activity => activity.id));
+    for (const activity of allActivities) {
+      for (const route of activity.routes || []) assert(activityIds.has(route.activityRef), `${activity.id} routes to missing ${route.activityRef}`);
+      if (activity.remediationRef) assert(activityIds.has(activity.remediationRef), `${activity.id} remediates to missing ${activity.remediationRef}`);
+      if (activity.scenario?.initial.setup) {
+        assert.notEqual(activity.scenario.initial.mode, "normal", `${activity.id} should not seed an unnecessary Normal state`);
+      }
+    }
+    for (const coverage of data.coverage) {
+      for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+        assert(coverage[phase].length, `${data.id} ${coverage.concept} lacks ${phase}`);
+        for (const ref of coverage[phase]) assert(activityIds.has(ref), `${coverage.concept} references missing ${ref}`);
+      }
+    }
+  }
+});
+
+test("Unit 1 curriculum definition is preserved verbatim", () => {
+  assert.deepEqual(modalUnit.curriculumDefinition, {
+    unit: "1. The modal model",
+    commandsAndConcepts: "Normal, Insert, Replace, Operator-pending, Visual Character, Visual Line, Visual Block, Command-line; `Esc`, `Ctrl-[`; cancellation; cursor semantics; `count + operator + motion/text object`",
+    prerequisites: "None",
+    learningOutcome: "Identify the active mode, return safely to Normal mode, and read a composed command as a sentence",
+    representativeExercises: "Leave Insert mode; cancel a partial operator; predict the range of `2dw`; distinguish a motion from an edit",
+    priorityAndPortability: "Core. Hosts may reserve `Ctrl-[`, so `Esc` remains the primary mobile legend",
+  });
+  assert.equal(modalUnit.lessons.length, 5);
+  assert(modalUnit.lessons.flatMap(lesson => lesson.activities).length >= 30);
 });
 
 test("Unit 10 curriculum definition is preserved verbatim", () => {
@@ -146,6 +195,34 @@ for (const activity of runnable) {
       const checkpointResult = runNativeVim({
         initialCode: activity.scenario.initial.lines,
         cursor: activity.scenario.initial.cursor,
+        keys: keys.slice(0, checkpoint.afterStep),
+      });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+    }
+  });
+}
+
+const modalRunnable = modalUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of modalRunnable) {
+  test(`native Vim Unit 1 content: ${activity.id}`, () => {
+    const setupKeys = (activity.scenario.initial.setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
+    const cursor = activity.scenario.initial.setup?.cursor || activity.scenario.initial.cursor;
+    const keys = keysOf(activity);
+    const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+    assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup must not change text`);
+
+    const result = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys });
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({
+        initialCode: activity.scenario.initial.lines,
+        cursor,
+        setupKeys,
         keys: keys.slice(0, checkpoint.afterStep),
       });
       if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);

@@ -9,7 +9,8 @@ challenges, reference material, verification intent, and coverage evidence that
 a lesson UI needs.
 
 The first conforming unit is Unit 10, Repeatable Editing, in
-`content/units/repeatable-editing.json`. The JSON Schema is
+`content/units/10-repeatable-editing.json`. Unit files use a two-digit numeric
+prefix for course ordering; Unit 1 is `content/units/01-modal-model.json`. The JSON Schema is
 `content/unit-content.schema.json`, and the shared language registry is
 `content/language-profiles.json`.
 
@@ -74,6 +75,19 @@ Ranges use zero-based `[line, column]` positions and an exclusive end. Incidenta
 cursor or mode properties should not be required. Cursor-moving teaching steps
 must have checkpoints so demonstrations and conformance fixtures cannot drift.
 
+Unit files also carry an explicit `unitNumber`; the two-digit filename prefix
+must match it. Introductory content may use the reusable `mode-compass` or
+`command-assembly` theory presentations, scenario-backed inspection choices,
+routes to alternate activities, and remediation references. These additions
+describe learning behavior rather than unit-specific DOM branches.
+
+A runnable or inspection state may begin outside Normal mode through
+`initial.setup`. Its cursor is the pre-setup Normal cursor and its steps are
+replayed silently before the activity begins. The surrounding `initial.cursor`
+and `initial.mode` are the expected learner-visible state after setup. Setup
+must not modify text, appear in attempt history, or replace a normal teaching
+script. Reset reconstructs and verifies the seeded state.
+
 ## Scripts, playback, and reset
 
 `script.steps` is the source of truth. Each step contains one normalized input
@@ -93,6 +107,10 @@ UI owns the actual timers.
 Reset restores the initial buffer, cursor, mode, search state, registers, and
 repeat state, then starts again at step zero. Backward stepping and arbitrary
 seeking are not part of the first design.
+
+Runnable delivery can be `guided`, `guided-then-recall`, or `recall`. This lets
+an orientation avoid duplicating trivial transitions while preserving paired
+practice for commands that benefit from retrieval.
 
 The initial guided flow uses `exact-sequence`: a different key is rejected. Unit
 data nevertheless records target state and required skill evidence so later

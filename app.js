@@ -1,4 +1,3 @@
-import unit from "./content/units/repeatable-editing.json";
 import languageProfiles from "./content/language-profiles.json";
 import { spriteCells } from "./exercise-data.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
@@ -6,6 +5,10 @@ import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const urlParams = new URLSearchParams(window.location.search);
+const unitModules = import.meta.glob("./content/units/[0-9][0-9]-*.json", { eager: true, import: "default" });
+const units = Object.values(unitModules).sort((left, right) => left.unitNumber - right.unitNumber);
+const requestedUnitId = urlParams.get("unit");
+const unit = units.find(candidate => candidate.id === requestedUnitId) || units[0];
 const themePreferenceKey = "vim-wilds.theme";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 
@@ -71,8 +74,10 @@ const activityFlowFor = lesson => {
   const practices = authored.filter(activity => activity.type === "exercise");
   const leadIn = authored.filter(activity => !["exercise", "choice", "summary"].includes(activity.type));
   const closing = authored.filter(activity => ["choice", "summary"].includes(activity.type));
-  const guided = practices.map(activity => ({ ...activity, practiceMode: "guided", sourceActivityId: activity.id }));
-  const recall = practices.map(activity => ({ ...activity, id: `${activity.id}-recall`, practiceMode: "recall", sourceActivityId: activity.id }));
+  const guided = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "recall")
+    .map(activity => ({ ...activity, practiceMode: "guided", sourceActivityId: activity.id }));
+  const recall = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "guided")
+    .map(activity => ({ ...activity, id: `${activity.id}-recall`, practiceMode: "recall", sourceActivityId: activity.id }));
   return [...leadIn, ...guided, ...recall, ...closing];
 };
 const activities = lessons.flatMap(activityFlowFor).map((activity, activityIndex) => ({ ...activity, activityIndex }));
@@ -171,6 +176,14 @@ async function loadCharacterAssets() {
 
 function isRunnable(activity = currentActivity()) {
   return activity?.type === "demo" || activity?.type === "exercise";
+}
+
+function hasEditor(activity = currentActivity()) {
+  return isRunnable(activity) || Boolean(activity?.inspection);
+}
+
+function initialStateFor(activity = currentActivity()) {
+  return activity?.scenario?.initial || activity?.inspection?.initial || null;
 }
 
 function isPractice(activity = currentActivity()) {
@@ -274,17 +287,61 @@ function renderSprites(presentation) {
   }).join("");
 }
 
+function renderRoutes(routes = []) {
+  if (!routes.length) return "";
+  return `<div class="note-routes">${routes.map(route => `<button class="note-action${route.emphasis === "secondary" ? " secondary-action" : ""}" type="button" data-route="${escapeHtml(route.activityRef)}">${renderInline(route.label)}</button>`).join("")}</div>`;
+}
+
+function modeDisplayName(mode) {
+  return ({
+    normal: "Normal",
+    insert: "Insert",
+    replace: "Replace",
+    "operator-pending": "Operator-pending",
+    visual: "Visual Character",
+    "visual-line": "Visual Line",
+    "visual-block": "Visual Block",
+    "command-line": "Command-line",
+  })[mode] || mode;
+}
+
+function modePillName(mode) {
+  return ({
+    "operator-pending": "Op-pending",
+    visual: "Visual Char",
+    "command-line": "Command",
+  })[mode] || modeDisplayName(mode);
+}
+
+function renderTheoryPresentation(presentation) {
+  if (!presentation) return "";
+  if (presentation.kind === "mode-compass") {
+    return `<div class="mode-compass" aria-label="Vim mode compass">
+      <div class="mode-home"><strong>Normal</strong><small>home base</small></div>
+      <div class="mode-spokes">${presentation.transitions.filter(item => item.mode !== "normal").map(item => `
+        <div class="mode-spoke mode-${escapeHtml(item.mode)}">
+          <span>${escapeHtml(item.enterKeys.join(" / "))}</span><strong>${escapeHtml(modeDisplayName(item.mode))}</strong>
+          <small>${escapeHtml(item.purpose)}</small><em>${escapeHtml(item.exitKeys.join(" / "))} ↩</em>
+        </div>`).join("")}</div>
+    </div>`;
+  }
+  return `<div class="command-forge" aria-label="Command assembly">${presentation.parts.map((part, index) => `
+    ${index ? '<span class="forge-plus" aria-hidden="true">+</span>' : ""}
+    <div class="forge-part role-${part.role}"><kbd>${escapeHtml(part.keys)}</kbd><strong>${escapeHtml(part.role)}</strong><small>${escapeHtml(part.meaning)}</small></div>`).join("")}</div>`;
+}
+
 function renderFieldNote(activity) {
   if (activity.type === "theory") {
     const lessonTheories = lessons[activity.lessonIndex].activities.filter(item => item.type === "theory");
     const isFinalTheory = lessonTheories.at(-1)?.id === activity.id;
-    const action = isFinalTheory && activity.demoRef
+    const action = activity.routes?.length ? renderRoutes(activity.routes) : isFinalTheory && activity.demoRef
       ? `<button class="note-action" type="button" data-action="show-demo" data-demo="${activity.demoRef}">Show example →</button>`
       : '<button class="note-action" type="button" data-action="next">Next →</button>';
     return `<article class="field-note" aria-label="Theory">
       <span class="field-note-kicker">Field note · explain</span>
       <h2>${renderInline(activity.title)}</h2>
       <p>${renderInline(activity.body)}</p>
+      ${renderTheoryPresentation(activity.presentation)}
       ${activity.grammar ? `<pre class="grammar">${escapeHtml(activity.grammar)}</pre>` : ""}
       ${activity.contrast ? `<p class="contrast">${renderInline(activity.contrast)}</p>` : ""}
       ${action}
@@ -293,16 +350,18 @@ function renderFieldNote(activity) {
   if (activity.type === "choice") {
     const choices = activity.options.map(option => `<button class="choice-option${state.choiceResult === option.id ? " selected" : ""}" data-choice="${option.id}" type="button">${renderInline(option.label)}</button>`).join("");
     const result = state.choiceResult ? `<p class="choice-feedback ${state.complete ? "correct" : ""}">${renderInline(activity.explanation)}</p>` : "";
+    const remediation = state.choiceResult && !state.complete && activity.remediationRef
+      ? `<button class="note-action secondary-action remediation-action" type="button" data-route="${escapeHtml(activity.remediationRef)}">Review this idea</button>` : "";
     const next = state.complete ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
     return `<article class="field-note choice-note" aria-label="Tool choice challenge">
       <span class="field-note-kicker">Challenge · choose</span><h2>${renderInline(activity.title)}</h2>
-      <p>${renderInline(activity.prompt)}</p><div class="choice-options">${choices}</div>${result}${next}
+      <p>${renderInline(activity.prompt)}</p><div class="choice-options">${choices}</div>${result}${remediation}${next}
     </article>`;
   }
   return `<article class="field-note summary-note" aria-label="Lesson summary">
     <span class="field-note-kicker">Lesson summary</span><h2>${renderInline(activity.title)}</h2>
     <p>${renderInline(activity.body)}</p><ul>${activity.takeaways.map(takeaway => `<li>${renderInline(takeaway)}</li>`).join("")}</ul>
-    <button class="note-action" type="button" data-action="next">Next →</button>
+    ${activity.routes?.length ? renderRoutes(activity.routes) : '<button class="note-action" type="button" data-action="next">Next →</button>'}
   </article>`;
 }
 
@@ -321,57 +380,81 @@ function renderActivityIntro() {
 function renderWorld() {
   const activity = currentActivity();
   const presentation = presentationFor(activity);
-  if (!isRunnable(activity)) {
+  if (!hasEditor(activity)) {
     vimEngine?.destroy();
     vimEngine = null;
     resetVimEngineState();
   }
   setTheme(presentation.theme);
   renderGround(presentation);
+  const initialState = initialStateFor(activity);
   const content = isRunnable(activity)
-    ? `<div class="editor-stack" style="--editor-height:${108 + activity.scenario.initial.lines.length * 24}px">
+    ? `<div class="editor-stack" style="--editor-height:${108 + initialState.lines.length * 24}px">
           <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
+        </div>`
+    : activity.inspection
+      ? `<div class="inspection-layout">
+          <div class="code-slab inspection-code-slab"><div class="code-body" id="editorMount" aria-label="Vim inspection editor"></div></div>
+          <div class="inspection-choice">${renderFieldNote(activity)}</div>
         </div>`
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
   const assignment = characterAssignment(activity);
   const character = characterAssets[assignment.characterId] || characterAssets.nix;
-  const shouldShowCharacter = isPractice(activity) || activity.type === "choice";
+  const shouldShowCharacter = (isPractice(activity) || activity.type === "choice") && !activity.inspection;
   const characterMarkup = shouldShowCharacter
     ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${character.idle}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
     : "";
-  elements.worldGrid.innerHTML = `${renderSprites(presentation)}${content}${characterMarkup}`;
-  if (isRunnable(activity)) mountEditor();
+  const spriteMarkup = activity.inspection ? "" : renderSprites(presentation);
+  elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}`;
+  if (hasEditor(activity)) mountEditor();
 }
 
 function mountEditor() {
   vimEngine?.destroy();
   resetVimEngineState();
   const activity = currentActivity();
+  const initial = initialStateFor(activity);
+  const startCursor = initial.setup?.cursor || initial.cursor;
   vimEngine = new VimEngine({
     parent: $("#editorMount", elements.worldGrid),
-    text: activity.scenario.initial.lines.join("\n"),
-    cursor: activity.scenario.initial.cursor,
+    text: initial.lines.join("\n"),
+    cursor: startCursor,
     language: activity.languageId,
     onEvent: handleEngineEvent,
   });
+  for (const step of initial.setup?.steps || []) {
+    const key = typeof step === "string" ? step : step.key;
+    vimEngine.sendKey(key, { bypassLock: true, source: "setup" });
+  }
   state.editorSnapshot = vimEngine.getSnapshot();
+  const setupMatches = state.editorSnapshot.text === initial.lines.join("\n")
+    && state.editorSnapshot.mode === initial.mode
+    && state.editorSnapshot.cursorPosition[0] === initial.cursor[0]
+    && state.editorSnapshot.cursorPosition[1] === initial.cursor[1];
+  if (!setupMatches) console.warn(`Initial editor setup drifted for ${activity.id}`, state.editorSnapshot, initial);
   vimEngine.setLocked(!isPractice(activity));
+  if (state.complete && activity.inspection?.revealRange) vimEngine.showPreviewRange(activity.inspection.revealRange);
   if (!window.matchMedia("(pointer: coarse)").matches) vimEngine.focus();
 }
 
 function modeLabel() {
+  const activity = currentActivity();
+  if (activity.type === "choice" && activity.questionKind === "mode-identification" && !state.complete) return "Identify";
+  if (activity.type === "choice" && activity.questionKind === "mode-identification" && state.complete) return modePillName(state.editorSnapshot?.mode || activity.inspection?.initial.mode);
   if (state.complete) return "Complete";
   if (!isRunnable()) return currentActivity().type === "theory" ? "Theory" : "Review";
   const mode = state.editorSnapshot?.mode || "normal";
-  return mode === "visual-line" ? "Visual Line" : mode === "visual-block" ? "Visual Block" : mode === "command-line" ? "Command" : `${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
+  return modePillName(mode);
 }
 
 function renderMode() {
   const label = modeLabel();
   elements.modePill.textContent = label;
-  const kind = /visual/i.test(label) ? "visual" : /command/i.test(label) ? "command" : /complete/i.test(label) ? "complete" : "";
-  elements.modePill.className = `mode-pill ${kind}`.trim();
+  const actualMode = state.editorSnapshot?.mode || "normal";
+  const kind = /complete/i.test(label) ? "complete" : /identify/i.test(label) ? "identify" : actualMode;
+  elements.modePill.className = `mode-pill mode-${kind}`.trim();
+  elements.world.dataset.mode = actualMode;
 }
 
 function activeCommandGroup(activity = currentActivity(), step = state.playbackStep) {
@@ -381,6 +464,7 @@ function activeCommandGroup(activity = currentActivity(), step = state.playbackS
 
 function executionContent(activity, step, history, complete = false) {
   const keys = scriptKeys(activity);
+  const structured = activity.script.steps.filter(item => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind));
   const group = activeCommandGroup(activity, step);
   const done = complete || step >= keys.length;
   const recall = activity.practiceMode === "recall" && !done;
@@ -392,11 +476,15 @@ function executionContent(activity, step, history, complete = false) {
     primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? `Step ${step + 1} of ${keys.length}` : retry ? "Try" : reveal ? "Next" : recall ? "Recall" : "Next",
     secondary: done ? "Complete" : retry ? "Again" : reveal ? "A clue" : recall ? "From memory" : "",
     key: done || (recall && !reveal) ? null : keys[step],
+    assembly: structured.length ? activity.script.steps.map((item, index) => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind)
+      ? { key: item.key, kind: item.kind, cue: item.cue, active: index < step || done }
+      : null).filter(Boolean) : [],
   };
 }
 
 function applyExecutionContent(root, content) {
-  $(".command-explanation", root).innerHTML = renderInline(content.explanation);
+  const assembly = content.assembly.length ? `<div class="execution-assembly">${content.assembly.map(part => `<span class="assembly-part role-${part.kind}${part.active ? " active" : ""}"><kbd>${escapeHtml(part.key)}</kbd><small>${escapeHtml(part.cue || part.kind)}</small></span>`).join('<i aria-hidden="true">+</i>')}</div>` : "";
+  $(".command-explanation", root).innerHTML = `${renderInline(content.explanation)}${assembly}`;
   $(".command-text", root).innerHTML = renderHistory(content.history);
   $(".status-primary", root).textContent = content.primary;
   $(".status-secondary", root).textContent = content.secondary;
@@ -489,6 +577,10 @@ function renderActivityControls() {
     </section>`;
     return;
   }
+  if (isPractice(activity) && state.recallFeedback === "reveal" && activity.remediationRef) {
+    elements.activityControls.innerHTML = `<button class="review-idea-action" type="button" data-route="${escapeHtml(activity.remediationRef)}">Review this idea</button>`;
+    return;
+  }
   elements.activityControls.innerHTML = "";
 }
 
@@ -538,18 +630,13 @@ function renderTableOfContents() {
       <div class="toc-activities">${rows}</div>
     </details>`;
   }).join("");
-  const authoredUnit = unit.curriculumDefinition?.unit || `10. ${unit.title}`;
-  const unitMatch = authoredUnit.match(/^(\d+)\.\s*(.+)$/);
-  const unitNumber = unitMatch?.[1] || "10";
-  const unitTitle = unitMatch?.[2] || unit.title;
-  elements.tocLessons.innerHTML = `<details class="toc-unit" open>
-    <summary>
-      <span>Unit ${escapeHtml(unitNumber)}</span>
-      <strong>${renderInline(unitTitle)}</strong>
-      <small>${lessons.length} lessons</small>
-    </summary>
-    <div class="toc-unit-lessons">${lessonMarkup}</div>
-  </details>`;
+  elements.tocLessons.innerHTML = units.map(candidate => {
+    const isCurrent = candidate.id === unit.id;
+    const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong><small>${candidate.lessons.length} lessons</small>`;
+    return isCurrent
+      ? `<details class="toc-unit" open><summary>${summary}</summary><div class="toc-unit-lessons">${lessonMarkup}</div></details>`
+      : `<div class="toc-unit toc-unit-link"><button type="button" data-unit-id="${escapeHtml(candidate.id)}">${summary}</button></div>`;
+  }).join("");
 }
 
 function renderThemeOptions() {
@@ -599,6 +686,11 @@ function nextActivity() {
 
 function previousActivity() {
   if (state.activityIndex > 0) goToActivity(state.activityIndex - 1);
+}
+
+function goToActivityId(id) {
+  const index = activities.findIndex(activity => activity.id === id || activity.sourceActivityId === id);
+  if (index >= 0) goToActivity(index);
 }
 
 function isTargetSnapshot(snapshot) {
@@ -673,11 +765,13 @@ function flashError(token, button) {
   state.recallFeedback = state.consecutiveMistakes >= 3 ? "reveal" : "retry";
   if (state.errorTimer) window.clearTimeout(state.errorTimer);
   renderCommand();
+  renderActivityControls();
   state.errorTimer = window.setTimeout(() => {
     state.errorTimer = null;
     if (state.recallFeedback === "reveal") state.consecutiveMistakes = 0;
     state.recallFeedback = null;
     renderCommand();
+    renderActivityControls();
   }, state.recallFeedback === "reveal" ? 1400 : 520);
 }
 
@@ -806,7 +900,7 @@ function emitFromButton(button) {
   else if (shiftActive) value = button.dataset.shift || value;
   const chordModifiers = ["Ctrl", "Alt", "Shift"].filter(modifier => state.modifiers.has(modifier));
   let token = value;
-  if (chordModifiers.some(modifier => modifier !== "Shift")) token = `${chordModifiers.join("+")}+${value.toLowerCase()}`;
+  if (chordModifiers.some(modifier => modifier !== "Shift")) token = canonicalKeyToken(`${chordModifiers.join("+")}+${value.toLowerCase()}`);
   state.modifiers.clear();
   renderModifiers();
   processToken(token, button);
@@ -900,6 +994,8 @@ elements.worldGrid.addEventListener("click", event => {
   if (!["help", "show-demo"].includes(action)) handleActivityAction(action);
   const choice = event.target.closest("[data-choice]")?.dataset.choice;
   if (choice) processChoice(choice);
+  const route = event.target.closest("[data-route]")?.dataset.route;
+  if (route) goToActivityId(route);
 });
 const editorPointerEvents = ["pointerdown", "mousedown", "dblclick", "selectstart", "contextmenu"];
 editorPointerEvents.forEach(type => elements.worldGrid.addEventListener(type, event => {
@@ -921,6 +1017,13 @@ elements.settingsButton?.addEventListener("click", () => {
 elements.tocLessons?.addEventListener("click", event => {
   const button = event.target.closest("[data-activity-index]");
   if (button) goToActivity(Number(button.dataset.activityIndex));
+  const unitButton = event.target.closest("[data-unit-id]");
+  if (unitButton) {
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set("unit", unitButton.dataset.unitId);
+    nextUrl.searchParams.delete("activity");
+    window.location.assign(nextUrl);
+  }
 });
 elements.themeOptions?.addEventListener("change", event => {
   const value = event.target.closest('input[name="theme"]')?.value;
@@ -938,6 +1041,8 @@ $$('.app-dialog').forEach(dialog => dialog.addEventListener("click", event => {
 elements.activityControls.addEventListener("click", event => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   handleActivityAction(action);
+  const route = event.target.closest("[data-route]")?.dataset.route;
+  if (route) goToActivityId(route);
 });
 
 window.addEventListener("resize", () => {
@@ -947,6 +1052,8 @@ window.addEventListener("resize", () => {
 document.fonts?.ready.then(scheduleExecutionConsoleMeasurement);
 
 window.VimWilds = Object.freeze({
+  units: units.map(candidate => ({ id: candidate.id, unitNumber: candidate.unitNumber, title: candidate.title })),
+  unit: { id: unit.id, unitNumber: unit.unitNumber, title: unit.title },
   activities,
   exercises,
   emit: processToken,
@@ -973,6 +1080,8 @@ window.VimWilds = Object.freeze({
       to: snapshot.cursorPosition,
     } : null;
     return {
+      unitId: unit.id,
+      unitNumber: unit.unitNumber,
       activityIndex: state.activityIndex,
       activityId: currentActivity().id,
       activityType: currentActivity().type,

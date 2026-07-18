@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "contentVersion": "1.0.0",
+  "unitNumber": 10,
   "id": "repeatable-editing",
   "title": "Repeatable editing",
   "releaseStatus": "authoring",

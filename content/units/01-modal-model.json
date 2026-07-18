@@ -1,0 +1,686 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 1,
+  "id": "modal-model",
+  "title": "The modal model",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "1. The modal model",
+    "commandsAndConcepts": "Normal, Insert, Replace, Operator-pending, Visual Character, Visual Line, Visual Block, Command-line; `Esc`, `Ctrl-[`; cancellation; cursor semantics; `count + operator + motion/text object`",
+    "prerequisites": "None",
+    "learningOutcome": "Identify the active mode, return safely to Normal mode, and read a composed command as a sentence",
+    "representativeExercises": "Leave Insert mode; cancel a partial operator; predict the range of `2dw`; distinguish a motion from an edit",
+    "priorityAndPortability": "Core. Hosts may reserve `Ctrl-[`, so `Esc` remains the primary mobile legend"
+  },
+  "prerequisiteSkillIds": [],
+  "playback": {
+    "modes": ["normal", "slow", "manual"],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "modal-model-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "normal-is-home",
+      "title": "Normal is home",
+      "objective": "Recognize modal state and return safely to Normal from text-entry modes.",
+      "activities": [
+        {
+          "id": "welcome-to-modal-vim",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The same key can mean different things",
+          "body": "Vim is modal: the active mode decides what each key means. This unit is a quick map of those states, not a tour of every command.",
+          "contrast": "In Insert mode, `d` types a letter. In Normal mode, `d` begins a delete command.",
+          "routes": [
+            {"id": "start-introduction", "label": "Start introduction", "activityRef": "mode-compass", "emphasis": "primary"},
+            {"id": "take-quick-check", "label": "Take quick check", "activityRef": "quick-exit-insert", "emphasis": "secondary"}
+          ]
+        },
+        {
+          "id": "mode-compass",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Normal mode is your home base",
+          "body": "Most Vim work starts in Normal mode. Other modes have focused jobs; `Esc` brings you back to a predictable state.",
+          "demoRef": "insert-return-demo",
+          "presentation": {
+            "kind": "mode-compass",
+            "transitions": [
+              {"mode": "normal", "enterKeys": [], "exitKeys": [], "purpose": "Issue commands and begin compositions."},
+              {"mode": "insert", "enterKeys": ["i"], "exitKeys": ["Escape", "Ctrl-["], "purpose": "Insert text at the cursor."},
+              {"mode": "replace", "enterKeys": ["R"], "exitKeys": ["Escape", "Ctrl-["], "purpose": "Overwrite text continuously."},
+              {"mode": "operator-pending", "enterKeys": ["d"], "exitKeys": ["Escape"], "purpose": "Wait for the range of an operator."},
+              {"mode": "visual", "enterKeys": ["v"], "exitKeys": ["Escape"], "purpose": "Select characters."},
+              {"mode": "visual-line", "enterKeys": ["V"], "exitKeys": ["Escape"], "purpose": "Select whole lines."},
+              {"mode": "visual-block", "enterKeys": ["Ctrl-v"], "exitKeys": ["Escape"], "purpose": "Select a rectangle."},
+              {"mode": "command-line", "enterKeys": [":"], "exitKeys": ["Escape"], "purpose": "Enter an Ex command."}
+            ]
+          }
+        },
+        {
+          "id": "normal-cursor-semantics",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The cursor belongs to the current mode",
+          "body": "Normal mode treats the cursor as being on a character. Text-entry modes show an insertion or replacement position. Leaving them restores Normal-mode cursor behavior.",
+          "contrast": "Read the mode label before interpreting the cursor or a key.",
+          "demoRef": "insert-return-demo"
+        },
+        {
+          "id": "insert-return-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Visit Insert, then come home",
+          "instruction": "Enter Insert mode, observe the cursor, then return to Normal without changing the buffer.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {"lines": ["status = 'ready'", "retries = 3"], "cursor": [0, 0], "mode": "normal"},
+            "target": {"lines": ["status = 'ready'", "retries = 3"], "cursor": [0, 0], "mode": "normal"}
+          },
+          "script": {
+            "steps": [{"key": "i", "kind": "command", "cue": "enter Insert"}, {"key": "Escape", "kind": "control", "cue": "return to Normal"}],
+            "commandGroups": [
+              {"from": 0, "to": 1, "display": "i", "explanation": "Enter Insert mode at the cursor."},
+              {"from": 1, "to": 2, "display": "Esc", "explanation": "Cancel text entry and return to Normal."}
+            ],
+            "checkpoints": [
+              {"afterStep": 1, "cursor": [0, 0], "mode": "insert", "caption": "The same buffer, now in Insert mode."},
+              {"afterStep": 2, "lines": ["status = 'ready'", "retries = 3"], "cursor": [0, 0], "mode": "normal"}
+            ]
+          },
+          "hints": [],
+          "feedback": {"success": "Back in Normal mode.", "why": "Escape changed the editor state without changing the text."},
+          "skills": {"primary": ["modal-model"], "supporting": ["insert-mode", "escape-to-normal"]},
+          "difficulty": {"level": "guided", "dimensions": ["single-transition"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A short Python configuration fragment keeps attention on editor state.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["escape-to-normal"]}
+        },
+        {
+          "id": "escape-seeded-insert",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Return from Insert mode",
+          "instruction": "The editor is already in Insert mode. Return safely to Normal without changing the text.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {"lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 6], "mode": "insert", "setup": {"cursor": [0, 6], "steps": ["i"]}},
+            "target": {"lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 5], "mode": "normal"}
+          },
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Return to the Normal-mode home base."}], "checkpoints": [{"afterStep": 1, "lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 5], "mode": "normal"}]},
+          "hints": ["Use the dedicated escape key.", "Press `Esc`."],
+          "feedback": {"success": "Normal mode restored.", "why": "The seeded Insert state was cancelled without touching the buffer."},
+          "skills": {"primary": ["escape-to-normal"], "supporting": ["insert-mode"]},
+          "difficulty": {"level": "easy", "dimensions": ["seeded-mode", "no-text-change"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A familiar JavaScript declaration makes an unchanged buffer easy to verify.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["escape-to-normal"]},
+          "delivery": "guided"
+        },
+        {
+          "id": "ctrl-bracket-seeded-replace",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Use the alternate escape chord",
+          "instruction": "The editor is in Replace mode. Return to Normal with the portable Vim chord `Ctrl-[`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {"lines": ["service: api", "replicas: 3"], "cursor": [1, 10], "mode": "replace", "setup": {"cursor": [1, 10], "steps": ["R"]}},
+            "target": {"lines": ["service: api", "replicas: 3"], "cursor": [1, 9], "mode": "normal"}
+          },
+          "script": {"steps": ["Ctrl-["], "commandGroups": [{"from": 0, "to": 1, "display": "Ctrl-[", "explanation": "Ctrl-[ is Vim's keyboard-level alternative to Escape."}], "checkpoints": [{"afterStep": 1, "lines": ["service: api", "replicas: 3"], "cursor": [1, 9], "mode": "normal"}]},
+          "hints": ["Latch Ctrl, then press `[`."],
+          "feedback": {"success": "The alternate chord returned to Normal.", "why": "Vim treats `Ctrl-[` like Escape; hosts may reserve it, so Esc remains the primary legend."},
+          "skills": {"primary": ["ctrl-bracket-to-normal"], "supporting": ["replace-mode", "modifier-chord"]},
+          "difficulty": {"level": "easy", "dimensions": ["seeded-mode", "touch-chord"]},
+          "portability": "Core Vim behavior, though some hosts reserve Ctrl-[.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A compact YAML fragment keeps the chord, not code meaning, central.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["ctrl-bracket-to-normal"]},
+          "delivery": "guided"
+        },
+        {
+          "id": "identify-insert-mode",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Name the active text-entry mode",
+          "prompt": "The mode label is hidden. Which state is the editor in?",
+          "questionKind": "mode-identification",
+          "inspection": {"initial": {"lines": ["message = 'hello'"], "cursor": [0, 10], "mode": "insert", "setup": {"cursor": [0, 10], "steps": ["i"]}}},
+          "options": [
+            {"id": "normal-answer", "label": "Normal"},
+            {"id": "insert-answer", "label": "Insert"},
+            {"id": "replace-answer", "label": "Replace"}
+          ],
+          "correctOptionId": "insert-answer",
+          "explanation": "Insert mode uses an insertion caret and would type literal text; Escape returns to Normal.",
+          "remediationRef": "mode-compass"
+        }
+      ]
+    },
+    {
+      "id": "selection-is-a-mode",
+      "title": "Selection is a mode",
+      "objective": "Recognize Visual Character, Visual Line, and Visual Block by the shape of the selection.",
+      "activities": [
+        {
+          "id": "visual-shapes",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Visual modes make the range visible first",
+          "body": "Visual Character highlights a stream of characters, Visual Line highlights whole rows, and Visual Block highlights a rectangle. They expose a range before an operation acts on it.",
+          "grammar": "v → characters · V → lines · Ctrl-v → rectangle",
+          "contrast": "All three are selection modes; their geometry is the important difference.",
+          "demoRef": "visual-family-demo"
+        },
+        {
+          "id": "visual-family-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "See all three selection shapes",
+          "instruction": "Enter and cancel each Visual mode without modifying the buffer.",
+          "languageId": "json",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {"lines": ["{", "  \"east\": true,", "  \"west\": false", "}"], "cursor": [1, 2], "mode": "normal"},
+            "target": {"lines": ["{", "  \"east\": true,", "  \"west\": false", "}"], "cursor": [1, 2], "mode": "normal"}
+          },
+          "script": {
+            "steps": ["v", "Escape", "V", "Escape", "Ctrl-v", "Escape"],
+            "commandGroups": [
+              {"from": 0, "to": 2, "display": "v Esc", "explanation": "Enter Visual Character, then cancel."},
+              {"from": 2, "to": 4, "display": "V Esc", "explanation": "Enter Visual Line, then cancel."},
+              {"from": 4, "to": 6, "display": "Ctrl-v Esc", "explanation": "Enter Visual Block, then cancel."}
+            ],
+            "checkpoints": [
+              {"afterStep": 1, "mode": "visual"},
+              {"afterStep": 2, "mode": "normal"},
+              {"afterStep": 3, "mode": "visual-line"},
+              {"afterStep": 4, "mode": "normal"},
+              {"afterStep": 5, "mode": "visual-block"},
+              {"afterStep": 6, "lines": ["{", "  \"east\": true,", "  \"west\": false", "}"], "cursor": [1, 2], "mode": "normal"}
+            ]
+          },
+          "hints": [],
+          "feedback": {"success": "Three selection shapes, one safe exit.", "why": "Lowercase v, uppercase V, and Ctrl-v enter distinct Visual modes; Escape cancels each."},
+          "skills": {"primary": ["visual-mode-recognition"], "supporting": ["escape-to-normal"]},
+          "difficulty": {"level": "guided", "dimensions": ["three-modes", "modifier-chord"]},
+          "portability": "Core Vim behavior; hosts may reserve Ctrl-v.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "Aligned JSON fields make line and block selection shapes easy to distinguish.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["visual-mode-recognition"]}
+        },
+        {
+          "id": "escape-seeded-visual-character",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Cancel a character selection",
+          "instruction": "A character selection is active. Cancel it and return to Normal.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {"lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 2], "mode": "visual", "setup": {"cursor": [1, 1], "steps": ["v"]}},
+            "target": {"lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 1], "mode": "normal"}
+          },
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Cancel the visible selection."}], "checkpoints": [{"afterStep": 1, "lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 1], "mode": "normal"}]},
+          "hints": ["Use the same safe return as Insert mode."],
+          "feedback": {"success": "Selection cancelled.", "why": "Escape left the text unchanged and restored Normal mode."},
+          "skills": {"primary": ["visual-cancellation"], "supporting": ["visual-mode-recognition"]},
+          "difficulty": {"level": "easy", "dimensions": ["seeded-selection"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A short Markdown checklist provides readable selection terrain.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["visual-cancellation"]},
+          "delivery": "guided"
+        },
+        {
+          "id": "escape-seeded-visual-block",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Cancel a block selection",
+          "instruction": "A rectangular selection has started. Return to Normal without editing the table.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {"lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "visual-block", "setup": {"cursor": [1, 3], "steps": ["Ctrl-v"]}},
+            "target": {"lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "normal"}
+          },
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Release the rectangular selection."}], "checkpoints": [{"afterStep": 1, "lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "normal"}]},
+          "hints": ["The selection shape changes; the cancellation key does not."],
+          "feedback": {"success": "Block selection cancelled.", "why": "Escape is a consistent recovery action across Visual modes."},
+          "skills": {"primary": ["visual-cancellation"], "supporting": ["visual-block-mode"]},
+          "difficulty": {"level": "easy", "dimensions": ["seeded-block", "structured-data"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "CSV columns make rectangular intent natural without requiring an edit.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["visual-cancellation"]},
+          "delivery": "guided"
+        },
+        {
+          "id": "identify-visual-line",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Name a whole-line selection",
+          "prompt": "The mode label is hidden. Which Visual mode owns this full row?",
+          "questionKind": "mode-identification",
+          "inspection": {"initial": {"lines": ["def connect():", "    return client", ""], "cursor": [1, 17], "mode": "visual-line", "setup": {"cursor": [1, 4], "steps": ["V"]}}},
+          "options": [
+            {"id": "visual-character-answer", "label": "Visual Character"},
+            {"id": "visual-line-answer", "label": "Visual Line"},
+            {"id": "visual-block-answer", "label": "Visual Block"}
+          ],
+          "correctOptionId": "visual-line-answer",
+          "explanation": "Uppercase V selects the complete logical line, regardless of the starting column.",
+          "remediationRef": "visual-shapes"
+        },
+        {
+          "id": "identify-visual-block",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Name a rectangular selection",
+          "prompt": "Which mode is designed for a rectangle across rows and columns?",
+          "questionKind": "command-classification",
+          "options": [
+            {"id": "block-character", "label": "Visual Character with `v`"},
+            {"id": "block-line", "label": "Visual Line with `V`"},
+            {"id": "block-rectangle", "label": "Visual Block with `Ctrl-v`"}
+          ],
+          "correctOptionId": "block-rectangle",
+          "explanation": "Visual Block is the rectangular selection mode; its entry chord is Ctrl-v.",
+          "remediationRef": "visual-shapes"
+        }
+      ]
+    },
+    {
+      "id": "commands-can-wait",
+      "title": "Commands can wait",
+      "objective": "Recognize unfinished Operator-pending and Command-line states and cancel them safely.",
+      "activities": [
+        {
+          "id": "waiting-states",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Some keys begin a command instead of finishing it",
+          "body": "An operator such as `d` waits for a range. A colon opens Command-line mode and waits for an Ex command. Until they are completed, Escape safely releases the pending state.",
+          "grammar": "operator → wait for range · : → wait for command",
+          "contrast": "Waiting is editor state, not a frozen app.",
+          "demoRef": "cancel-waiting-demo"
+        },
+        {
+          "id": "cancel-waiting-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Cancel two unfinished commands",
+          "instruction": "Begin an operator and a Command-line command, cancelling each before it changes anything.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {"lines": ["const host = config.host;", "connect(host);"], "cursor": [0, 0], "mode": "normal"},
+            "target": {"lines": ["const host = config.host;", "connect(host);"], "cursor": [0, 0], "mode": "normal"}
+          },
+          "script": {
+            "steps": [{"key": "d", "kind": "operator", "cue": "begin delete"}, {"key": "Escape", "kind": "control", "cue": "cancel operator"}, {"key": ":", "kind": "command", "cue": "open Command-line"}, {"key": "Escape", "kind": "control", "cue": "cancel Command-line"}],
+            "commandGroups": [
+              {"from": 0, "to": 2, "display": "d Esc", "explanation": "The delete operator waits; Escape cancels it."},
+              {"from": 2, "to": 4, "display": ": Esc", "explanation": "Command-line opens; Escape closes it."}
+            ],
+            "checkpoints": [
+              {"afterStep": 1, "cursor": [0, 0], "mode": "operator-pending"},
+              {"afterStep": 2, "cursor": [0, 0], "mode": "normal"},
+              {"afterStep": 3, "cursor": [0, 0], "mode": "command-line"},
+              {"afterStep": 4, "lines": ["const host = config.host;", "connect(host);"], "cursor": [0, 0], "mode": "normal"}
+            ]
+          },
+          "hints": [],
+          "feedback": {"success": "Both pending states were released.", "why": "Escape discarded incomplete intent and preserved the buffer."},
+          "skills": {"primary": ["cancellation"], "supporting": ["operator-pending", "command-line-mode"]},
+          "difficulty": {"level": "guided", "dimensions": ["two-pending-states"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A short TypeScript fragment makes the unchanged result obvious.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["cancellation"]}
+        },
+        {
+          "id": "escape-seeded-operator",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Release a pending operator",
+          "instruction": "Delete is waiting for a range. Cancel it before any text is removed.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {"lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "operator-pending", "setup": {"cursor": [0, 0], "steps": ["d"]}},
+            "target": {"lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "normal"}
+          },
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Discard the incomplete delete composition."}], "checkpoints": [{"afterStep": 1, "lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "normal"}]},
+          "hints": ["Do not supply a motion; cancel the operator."],
+          "feedback": {"success": "The operator was cancelled.", "why": "No range was supplied, so Escape returned to Normal without deleting."},
+          "skills": {"primary": ["operator-cancellation"], "supporting": ["operator-pending"]},
+          "difficulty": {"level": "easy", "dimensions": ["seeded-pending-state"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A small Go fragment provides a clear destructive action to avoid.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["operator-cancellation"]},
+          "delivery": "guided"
+        },
+        {
+          "id": "escape-seeded-command-line",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Close an empty Command-line",
+          "instruction": "The colon prompt is open. Close it without executing a command.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {"lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "command-line", "setup": {"cursor": [0, 0], "steps": [":"]}},
+            "target": {"lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "normal"}
+          },
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Close the prompt without executing it."}], "checkpoints": [{"afterStep": 1, "lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "normal"}]},
+          "hints": ["Use the universal cancellation key."],
+          "feedback": {"success": "Command-line closed.", "why": "Escape abandoned the empty Ex command and restored Normal mode."},
+          "skills": {"primary": ["command-line-cancellation"], "supporting": ["command-line-mode"]},
+          "difficulty": {"level": "easy", "dimensions": ["seeded-command-line"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A two-line shell fragment keeps the prompt state visually separate from code.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["command-line-cancellation"]},
+          "delivery": "guided"
+        },
+        {
+          "id": "identify-operator-pending",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Name the unfinished composition",
+          "prompt": "The mode label is hidden. Delete has been pressed, but no range follows. What state is this?",
+          "questionKind": "mode-identification",
+          "inspection": {"initial": {"lines": ["cache = load()", "return cache"], "cursor": [0, 0], "mode": "operator-pending", "setup": {"cursor": [0, 0], "steps": ["d"]}}},
+          "options": [
+            {"id": "pending-normal", "label": "Normal"},
+            {"id": "pending-operator", "label": "Operator-pending"},
+            {"id": "pending-command", "label": "Command-line"}
+          ],
+          "correctOptionId": "pending-operator",
+          "explanation": "The delete operator has begun a sentence and is waiting for a motion or text object to define its range.",
+          "remediationRef": "waiting-states"
+        },
+        {
+          "id": "choose-safe-cancellation",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the safe recovery key",
+          "prompt": "You are unsure whether a partial operator or prompt is active. Which first key most safely returns to a known state?",
+          "questionKind": "command-classification",
+          "options": [
+            {"id": "cancel-enter", "label": "Enter"},
+            {"id": "cancel-escape", "label": "Escape"},
+            {"id": "cancel-delete", "label": "d"}
+          ],
+          "correctOptionId": "cancel-escape",
+          "explanation": "Escape is the dependable first recovery action for the modal states introduced here.",
+          "remediationRef": "waiting-states"
+        }
+      ]
+    },
+    {
+      "id": "commands-are-sentences",
+      "title": "Vim commands are sentences",
+      "objective": "Read a composed command as count, operator, and range rather than as unrelated keys.",
+      "activities": [
+        {
+          "id": "command-grammar-forge",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Build an edit from meaningful parts",
+          "body": "A Vim edit often reads like a small sentence: an optional count says how many, an operator says what to do, and a motion or text object says where it acts.",
+          "grammar": "2 + d + w → twice + delete + word motion",
+          "contrast": "A motion can move by itself; adding an operator turns its range into an edit.",
+          "demoRef": "two-delete-words-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {"role": "count", "keys": "2", "meaning": "apply the range twice"},
+              {"role": "operator", "keys": "d", "meaning": "delete"},
+              {"role": "motion", "keys": "w", "meaning": "to the next word start"}
+            ]
+          }
+        },
+        {
+          "id": "text-object-sentence-preview",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A text object can fill the same range slot",
+          "body": "Later units replace the motion with structural objects such as `iw` for inside a word or `i\"` for inside quotes. The sentence shape remains operator plus range.",
+          "grammar": "d + w motion · d + iw text object",
+          "contrast": "This unit asks you to read the grammar, not master every range yet.",
+          "demoRef": "two-delete-words-demo"
+        },
+        {
+          "id": "two-delete-words-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Read and execute 2dw",
+          "instruction": "Delete the first two word ranges while watching the command assemble.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {"lines": ["remove stale cache entry", "keep current cache entry"], "cursor": [0, 0], "mode": "normal"},
+            "target": {"lines": ["cache entry", "keep current cache entry"], "cursor": [0, 0], "mode": "normal"}
+          },
+          "script": {
+            "steps": [{"key": "2", "kind": "count", "cue": "twice"}, {"key": "d", "kind": "operator", "cue": "delete"}, {"key": "w", "kind": "motion", "cue": "word range"}],
+            "commandGroups": [{"from": 0, "to": 3, "display": "2dw", "explanation": "Count two, apply delete, and use the word motion as the range."}],
+            "checkpoints": [
+              {"afterStep": 2, "cursor": [0, 0], "mode": "operator-pending", "caption": "The operator is still waiting for its range."},
+              {"afterStep": 3, "lines": ["cache entry", "keep current cache entry"], "cursor": [0, 0], "mode": "normal", "affectedRange": {"from": [0, 0], "to": [0, 13]}}
+            ]
+          },
+          "hints": [],
+          "feedback": {"success": "The sentence removed two word ranges.", "why": "The count modified the operator-motion composition; the final motion supplied the affected range."},
+          "skills": {"primary": ["command-grammar"], "supporting": ["count", "delete-operator", "word-motion"]},
+          "difficulty": {"level": "guided", "dimensions": ["three-part-composition"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "Plain words make the two word ranges unambiguous without language syntax.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["command-grammar"]}
+        },
+        {
+          "id": "practice-two-delete-words",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Assemble the same sentence",
+          "instruction": "Use the count, delete operator, and word motion to remove `draft cache `.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {"lines": ["draft cache entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal"},
+            "target": {"lines": ["entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal"}
+          },
+          "script": {"steps": [{"key": "2", "kind": "count", "cue": "twice"}, {"key": "d", "kind": "operator", "cue": "delete"}, {"key": "w", "kind": "motion", "cue": "word range"}], "commandGroups": [{"from": 0, "to": 3, "display": "2dw", "explanation": "Read it as two + delete + word range."}], "checkpoints": [{"afterStep": 2, "cursor": [0, 0], "mode": "operator-pending"}, {"afterStep": 3, "lines": ["entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal", "affectedRange": {"from": [0, 0], "to": [0, 12]}}]},
+          "hints": ["Start with how many word ranges.", "Use `2`, then `d`, then `w`."],
+          "feedback": {"success": "A three-part Vim sentence.", "why": "You composed a count, an operator, and a motion instead of treating the keys as unrelated shortcuts."},
+          "skills": {"primary": ["command-grammar"], "supporting": ["count", "delete-operator", "word-motion"]},
+          "difficulty": {"level": "easy", "dimensions": ["three-key-composition"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "Neutral text isolates the grammar and makes the target range clear.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["command-grammar"]},
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "predict-two-delete-words",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Predict the range before editing",
+          "prompt": "With the cursor on `alpha`, what would `2dw` remove?",
+          "questionKind": "range-prediction",
+          "inspection": {"initial": {"lines": ["alpha beta gamma", "delta epsilon"], "cursor": [0, 0], "mode": "normal"}, "revealRange": {"from": [0, 0], "to": [0, 11]}},
+          "options": [
+            {"id": "range-one-word", "label": "Only `alpha`"},
+            {"id": "range-two-words", "label": "`alpha beta `"},
+            {"id": "range-two-lines", "label": "Both complete lines"}
+          ],
+          "correctOptionId": "range-two-words",
+          "explanation": "The count applies to the word motion, so delete receives the range from `alpha` through the start of `gamma`.",
+          "remediationRef": "command-grammar-forge"
+        },
+        {
+          "id": "motion-or-edit",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Distinguish movement from transformation",
+          "prompt": "Which command moves across two word ranges without changing text?",
+          "questionKind": "command-classification",
+          "options": [
+            {"id": "motion-two-w", "label": "`2w`"},
+            {"id": "edit-two-dw", "label": "`2dw`"},
+            {"id": "edit-dd", "label": "`dd`"}
+          ],
+          "correctOptionId": "motion-two-w",
+          "explanation": "`w` is a motion and accepts a count. Adding `d` turns the same range into a deletion.",
+          "remediationRef": "command-grammar-forge"
+        },
+        {
+          "id": "modal-model-core-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "State first, command second",
+          "body": "You now have the model later units build on: notice the mode, return safely to Normal, and read composed edits by role.",
+          "takeaways": [
+            "Normal is the predictable home base.",
+            "Escape cancels text entry, selections, pending operators, and Command-line prompts.",
+            "Counts, operators, motions, and text objects form readable command sentences."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modal-model-quick-check",
+      "title": "Modal model quick check",
+      "objective": "Confirm the Unit 1 foundation without replaying the full introduction.",
+      "activities": [
+        {
+          "id": "quick-exit-insert",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Quick check: leave Insert",
+          "instruction": "Return this seeded Insert state to Normal.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {"initial": {"lines": ["ready = True"], "cursor": [0, 8], "mode": "insert", "setup": {"cursor": [0, 8], "steps": ["i"]}}, "target": {"lines": ["ready = True"], "cursor": [0, 7], "mode": "normal"}},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Return to the known Normal state."}], "checkpoints": [{"afterStep": 1, "lines": ["ready = True"], "cursor": [0, 7], "mode": "normal"}]},
+          "hints": ["Use the safe return key."],
+          "feedback": {"success": "Insert state cleared.", "why": "You recognized the state and returned to Normal without editing."},
+          "skills": {"primary": ["escape-to-normal"], "supporting": ["insert-mode"]},
+          "difficulty": {"level": "medium", "dimensions": ["recall", "seeded-mode"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "One Python assignment keeps the check immediate.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["escape-to-normal"]},
+          "delivery": "recall",
+          "remediationRef": "mode-compass"
+        },
+        {
+          "id": "quick-cancel-operator",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Quick check: cancel delete",
+          "instruction": "Delete is waiting for a range. Release it without changing the line.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {"initial": {"lines": ["const stable = true;"], "cursor": [0, 0], "mode": "operator-pending", "setup": {"cursor": [0, 0], "steps": ["d"]}}, "target": {"lines": ["const stable = true;"], "cursor": [0, 0], "mode": "normal"}},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Cancel the incomplete operator."}], "checkpoints": [{"afterStep": 1, "lines": ["const stable = true;"], "cursor": [0, 0], "mode": "normal"}]},
+          "hints": ["Do not complete the delete sentence."],
+          "feedback": {"success": "Pending operator cleared.", "why": "You cancelled incomplete intent instead of supplying a destructive range."},
+          "skills": {"primary": ["operator-cancellation"], "supporting": ["operator-pending"]},
+          "difficulty": {"level": "medium", "dimensions": ["recall", "seeded-pending-state"]},
+          "portability": "Core Vim behavior.",
+          "provenance": {"method": "llm-authored", "promptVersion": "modal-model-v1", "languageRationale": "A stable boolean declaration makes unintended deletion conspicuous.", "nativeValidation": "passed", "browserConformance": "passed", "reviewStatus": "draft"},
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["operator-cancellation"]},
+          "delivery": "recall",
+          "remediationRef": "waiting-states"
+        },
+        {
+          "id": "quick-identify-visual",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Quick check: read the selection",
+          "prompt": "Which mode selects complete logical rows?",
+          "questionKind": "command-classification",
+          "options": [
+            {"id": "quick-visual-character", "label": "Visual Character"},
+            {"id": "quick-visual-line", "label": "Visual Line"},
+            {"id": "quick-visual-block", "label": "Visual Block"}
+          ],
+          "correctOptionId": "quick-visual-line",
+          "explanation": "Visual Line, entered with uppercase V, selects whole logical rows.",
+          "remediationRef": "visual-shapes"
+        },
+        {
+          "id": "quick-predict-range",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Quick check: read 2dw",
+          "prompt": "How should `2dw` be read?",
+          "questionKind": "command-classification",
+          "options": [
+            {"id": "quick-read-motion", "label": "Move with delete, then type two words"},
+            {"id": "quick-read-edit", "label": "Delete across two word motions"},
+            {"id": "quick-read-lines", "label": "Delete two complete lines"}
+          ],
+          "correctOptionId": "quick-read-edit",
+          "explanation": "The count modifies the range, `d` is the operator, and `w` supplies the motion.",
+          "remediationRef": "command-grammar-forge"
+        },
+        {
+          "id": "quick-motion-or-edit",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Quick check: motion or edit",
+          "prompt": "Which item is a motion rather than an edit?",
+          "questionKind": "command-classification",
+          "options": [
+            {"id": "quick-motion-w", "label": "`w`"},
+            {"id": "quick-edit-dw", "label": "`dw`"},
+            {"id": "quick-edit-dd", "label": "`dd`"}
+          ],
+          "correctOptionId": "quick-motion-w",
+          "explanation": "`w` only supplies movement. The other commands combine delete with a range.",
+          "remediationRef": "command-grammar-forge"
+        },
+        {
+          "id": "modal-model-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Your modal foundation is ready",
+          "body": "You can identify the state, recover to Normal, and read the shape of a composed command. Later units turn that model into editing fluency.",
+          "takeaways": [
+            "Check the active mode before interpreting a key.",
+            "Use Escape when you need a safe, predictable Normal state.",
+            "Read edits as count, operator, and motion or text object."
+          ],
+          "routes": [{"id": "review-full-introduction", "label": "Review the full introduction", "activityRef": "mode-compass", "emphasis": "secondary"}]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {"id": "normal-mode-reference", "command": "Normal", "purpose": "The home mode for motions and commands.", "notes": ["Escape returns here from the focused modes introduced in this unit."], "exampleActivityRefs": ["insert-return-demo", "escape-seeded-insert"]},
+    {"id": "insert-replace-reference", "command": "i / R", "purpose": "Enter Insert or Replace mode.", "notes": ["Unit 1 teaches state recognition; Unit 3 teaches precise text-entry choices."], "exampleActivityRefs": ["insert-return-demo", "ctrl-bracket-seeded-replace"]},
+    {"id": "escape-reference", "command": "Esc / Ctrl-[", "purpose": "Return to Normal or cancel incomplete intent.", "notes": ["Esc remains the primary mobile legend because hosts may reserve Ctrl-[.", "Ctrl-[ is equivalent in Vim."], "exampleActivityRefs": ["escape-seeded-insert", "ctrl-bracket-seeded-replace", "cancel-waiting-demo"]},
+    {"id": "visual-reference", "command": "v / V / Ctrl-v", "purpose": "Enter Visual Character, Visual Line, or Visual Block.", "notes": ["The selection shape distinguishes the three modes."], "exampleActivityRefs": ["visual-family-demo", "identify-visual-line"]},
+    {"id": "operator-pending-reference", "command": "operator + range", "purpose": "Wait for a motion or text object to complete an operation.", "notes": ["Escape cancels the partial composition."], "exampleActivityRefs": ["cancel-waiting-demo", "escape-seeded-operator"]},
+    {"id": "command-line-reference", "command": ":", "purpose": "Open Command-line mode for Ex commands.", "notes": ["Unit 1 teaches recognition and cancellation; later automation units teach Ex commands."], "exampleActivityRefs": ["cancel-waiting-demo", "escape-seeded-command-line"]},
+    {"id": "command-grammar-reference", "command": "count + operator + motion/text object", "purpose": "Read a composed edit as a sentence.", "notes": ["The count is optional.", "A motion can move alone; an operator turns its range into an edit."], "exampleActivityRefs": ["two-delete-words-demo", "predict-two-delete-words", "motion-or-edit"]}
+  ],
+  "coverage": [
+    {"concept": "Normal, Insert, Replace, and cursor semantics", "explain": ["mode-compass", "normal-cursor-semantics"], "demonstrate": ["insert-return-demo"], "isolate": ["escape-seeded-insert"], "mix": ["ctrl-bracket-seeded-replace"], "challenge": ["identify-insert-mode", "quick-exit-insert"]},
+    {"concept": "Esc and Ctrl-[ return to Normal", "explain": ["mode-compass"], "demonstrate": ["insert-return-demo"], "isolate": ["escape-seeded-insert"], "mix": ["ctrl-bracket-seeded-replace"], "challenge": ["quick-exit-insert"]},
+    {"concept": "Visual Character, Visual Line, and Visual Block", "explain": ["visual-shapes"], "demonstrate": ["visual-family-demo"], "isolate": ["escape-seeded-visual-character"], "mix": ["escape-seeded-visual-block"], "challenge": ["identify-visual-line", "identify-visual-block", "quick-identify-visual"]},
+    {"concept": "Operator-pending and cancellation", "explain": ["waiting-states"], "demonstrate": ["cancel-waiting-demo"], "isolate": ["escape-seeded-operator"], "mix": ["escape-seeded-command-line"], "challenge": ["identify-operator-pending", "quick-cancel-operator"]},
+    {"concept": "Command-line mode and cancellation", "explain": ["waiting-states"], "demonstrate": ["cancel-waiting-demo"], "isolate": ["escape-seeded-command-line"], "mix": ["escape-seeded-operator"], "challenge": ["choose-safe-cancellation"]},
+    {"concept": "count + operator + motion/text object", "explain": ["command-grammar-forge", "text-object-sentence-preview"], "demonstrate": ["two-delete-words-demo"], "isolate": ["practice-two-delete-words"], "mix": ["practice-two-delete-words"], "challenge": ["predict-two-delete-words", "quick-predict-range"]},
+    {"concept": "distinguish a motion from an edit", "explain": ["command-grammar-forge"], "demonstrate": ["two-delete-words-demo"], "isolate": ["practice-two-delete-words"], "mix": ["practice-two-delete-words"], "challenge": ["motion-or-edit", "quick-motion-or-edit"]}
+  ]
+}

@@ -2,6 +2,8 @@
   "version": 1,
   "policy": "A command family is exposed only after its native-Vim and browser fixtures pass.",
   "verified": [
+    "modal transitions and cancellation (i, R, v, V, Ctrl-v, :, Esc, Ctrl-[)",
+    "operator-pending state and counted operator-motion composition (2dw)",
     "Visual Block replace (Ctrl-v, count, motion, r)",
     "text objects (ci\", di()",
     "counts and line deletion",
