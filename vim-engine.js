@@ -287,6 +287,7 @@ export class VimEngine {
   setLocked(locked) {
     this.locked = locked;
     this.view.contentDOM.setAttribute("contenteditable", String(!locked));
+    this.view.dom.classList.toggle("is-locked", locked);
   }
 
   focus() {

@@ -111,6 +111,7 @@ const state = {
 };
 
 let vimEngine = null;
+let executionMeasurementFrame = null;
 
 function currentActivity() {
   return activities[state.activityIndex];
@@ -152,6 +153,22 @@ function escapeHtml(value) {
 function formatToken(token) {
   const labels = { Escape: "ESC", Enter: "ENTER", " ": "SPACE", Tab: "TAB" };
   return labels[token] || token;
+}
+
+function displayKeyToken(token) {
+  const labels = { Escape: "Esc", Enter: "Enter", " ": "Space", Tab: "Tab" };
+  return labels[token] || token;
+}
+
+function renderKeycap(token, className = "") {
+  const extraClass = className ? ` ${className}` : "";
+  return `<kbd class="command-key${extraClass}">${escapeHtml(displayKeyToken(token))}</kbd>`;
+}
+
+function renderHistory(tokens) {
+  return tokens.length
+    ? tokens.map(token => renderKeycap(token)).join("")
+    : '<span class="ghost">waiting…</span>';
 }
 
 function guidanceToken(token) {
@@ -266,7 +283,10 @@ function renderWorld() {
   const oppositeSide = presentation.codeSide === "left" ? "right" : "left";
   const content = isRunnable(activity)
     ? nextUI
-      ? `<div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>`
+      ? `<div class="editor-stack" style="--editor-height:${108 + activity.scenario.initial.lines.length * 24}px">
+          <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>
+          ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
+        </div>`
       : `<div class="code-slab side-${presentation.codeSide}"><div class="code-head"><i></i><span>${escapeHtml(languageLabel(activity))} · ${activity.type}</span></div><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>`
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
   const oracle = isPractice(activity) && !nextUI ? `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open hints">?</button>` : "";
@@ -309,6 +329,57 @@ function activeCommandGroup(activity = currentActivity(), step = state.playbackS
     || activity.script?.commandGroups.at(-1);
 }
 
+function executionContent(activity, step, history, complete = false) {
+  const keys = scriptKeys(activity);
+  const group = activeCommandGroup(activity, step);
+  const done = complete || step >= keys.length;
+  return {
+    explanation: group?.explanation || "Follow the authored command sequence.",
+    history,
+    primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? `Step ${step + 1} of ${keys.length}` : "Next",
+    secondary: done ? "Complete" : "",
+    key: done ? null : keys[step],
+  };
+}
+
+function applyExecutionContent(root, content) {
+  $(".command-explanation", root).textContent = content.explanation;
+  $(".command-text", root).innerHTML = renderHistory(content.history);
+  $(".status-primary", root).textContent = content.primary;
+  $(".status-secondary", root).textContent = content.secondary;
+  const key = $(".status-key", root);
+  key.innerHTML = content.key ? renderKeycap(content.key, "status-command-key") : "";
+  key.hidden = !content.key;
+}
+
+function measureExecutionConsole() {
+  executionMeasurementFrame = null;
+  if (!nextUI) return;
+  const probe = elements.commandTray.cloneNode(true);
+  probe.removeAttribute("id");
+  probe.removeAttribute("aria-live");
+  probe.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+  probe.classList.remove("hidden");
+  probe.classList.add("execution-measure");
+  probe.style.width = `${elements.phone.getBoundingClientRect().width}px`;
+  elements.phone.append(probe);
+  let requiredHeight = 0;
+  activities.filter(isRunnable).forEach(activity => {
+    const keys = scriptKeys(activity);
+    for (let step = 0; step <= keys.length; step += 1) {
+      applyExecutionContent(probe, executionContent(activity, step, keys.slice(0, step), step >= keys.length));
+      requiredHeight = Math.max(requiredHeight, Math.ceil(probe.scrollHeight), Math.ceil(probe.getBoundingClientRect().height));
+    }
+  });
+  probe.remove();
+  elements.phone.style.setProperty("--execution-console-height", `${requiredHeight}px`);
+}
+
+function scheduleExecutionConsoleMeasurement() {
+  if (!nextUI || executionMeasurementFrame) return;
+  executionMeasurementFrame = window.requestAnimationFrame(measureExecutionConsole);
+}
+
 function renderCommand() {
   const activity = currentActivity();
   if (!isRunnable(activity)) {
@@ -322,13 +393,14 @@ function renderCommand() {
     return;
   }
   elements.commandTray.classList.remove("hidden");
+  if (nextUI) {
+    const step = isDemo(activity) ? state.playbackStep : state.progress;
+    applyExecutionContent(elements.commandTray, executionContent(activity, step, state.history, state.complete));
+    scheduleExecutionConsoleMeasurement();
+    return;
+  }
   const history = state.history.map(formatToken).join(" ");
   elements.commandText.innerHTML = history ? escapeHtml(history) : '<span class="ghost">waiting…</span>';
-  if (nextUI) {
-    const groupStep = isDemo(activity) ? state.playbackStep : state.progress;
-    const group = activeCommandGroup(activity, groupStep);
-    elements.commandExplanation.textContent = group?.explanation || "Follow the authored command sequence.";
-  }
   if (isDemo(activity)) {
     const keys = scriptKeys(activity);
     const group = activeCommandGroup(activity);
@@ -367,18 +439,24 @@ function renderHints() {
 function renderActivityControls() {
   const activity = currentActivity();
   if (nextUI) {
-    elements.keyboardPanel.classList.toggle("controls-only", !isPractice(activity) || state.complete);
+    elements.keyboardPanel.classList.remove("controls-only");
     elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity));
-    elements.keyboard.classList.toggle("hidden", !isPractice(activity) || state.complete);
+    elements.keyboardPanel.classList.toggle("completed", isPractice(activity) && state.complete);
+    elements.keyboard.classList.toggle("hidden", !isPractice(activity));
+    elements.keyboard.toggleAttribute("inert", isPractice(activity) && state.complete);
+    if (isPractice(activity) && state.complete) elements.keyboard.setAttribute("aria-hidden", "true");
+    else elements.keyboard.removeAttribute("aria-hidden");
     if (isDemo(activity)) {
       const done = state.playbackStep >= scriptKeys(activity).length;
       const playing = Boolean(state.playbackTimer);
-      const playLabel = playing ? "Pause" : done ? "Replay" : "Play";
-      elements.activityControls.innerHTML = `<div class="control-deck next-demo-deck">
-        <button data-action="play-toggle" type="button">${playLabel}</button>
+      const playLabel = playing ? "Pause" : done ? "Reset" : "Play";
+      const action = done ? "reset" : "play-toggle";
+      const demoControls = $("#demoControls", elements.worldGrid);
+      if (demoControls) demoControls.innerHTML = `
+        <button data-action="${action}" type="button">${playLabel}</button>
         <button data-action="step" type="button" ${done || playing ? "disabled" : ""}>Step</button>
-        <button class="primary-action" data-action="next" type="button">Next →</button>
-      </div>`;
+        <button class="primary-action" data-action="next" type="button">Next →</button>`;
+      elements.activityControls.innerHTML = "";
       return;
     }
     if (isPractice(activity) && state.complete) {
@@ -471,7 +549,7 @@ function activityTypeLabel(type) {
 function renderTableOfContents() {
   if (!nextUI) return;
   const current = currentActivity();
-  elements.tocLessons.innerHTML = lessons.map((lesson, lessonIndex) => {
+  const lessonMarkup = lessons.map((lesson, lessonIndex) => {
     const lessonActivities = activities.filter(activity => activity.lessonId === lesson.id);
     const rows = lessonActivities.map((activity, activityIndex) => {
       const globalIndex = activities.indexOf(activity);
@@ -487,6 +565,18 @@ function renderTableOfContents() {
       <div class="toc-activities">${rows}</div>
     </details>`;
   }).join("");
+  const authoredUnit = unit.curriculumDefinition?.unit || `10. ${unit.title}`;
+  const unitMatch = authoredUnit.match(/^(\d+)\.\s*(.+)$/);
+  const unitNumber = unitMatch?.[1] || "10";
+  const unitTitle = unitMatch?.[2] || unit.title;
+  elements.tocLessons.innerHTML = `<details class="toc-unit" open>
+    <summary>
+      <span>Unit ${escapeHtml(unitNumber)}</span>
+      <strong>${escapeHtml(unitTitle)}</strong>
+      <small>${lessons.length} lessons</small>
+    </summary>
+    <div class="toc-unit-lessons">${lessonMarkup}</div>
+  </details>`;
 }
 
 function renderThemeOptions() {
@@ -690,6 +780,25 @@ function processChoice(id) {
   if (id === activity.correctOptionId) completeActivity();
 }
 
+function handleActivityAction(action) {
+  if (!action) return;
+  if (action === "reset") resetActivity();
+  if (action === "step") stepDemo();
+  if (action === "play") playDemo(420);
+  if (action === "slow") playDemo(850);
+  if (action === "pause") { clearPlayback(); renderActivityControls(); }
+  if (action === "play-toggle") {
+    if (state.playbackTimer) {
+      clearPlayback();
+      renderActivityControls();
+    } else {
+      playDemo(850);
+    }
+  }
+  if (action === "next") nextActivity();
+  if (action === "previous") previousActivity();
+}
+
 elements.keyboard.addEventListener("pointerdown", event => {
   const button = event.target.closest(".key");
   if (!button) return;
@@ -748,12 +857,16 @@ elements.worldGrid.addEventListener("click", event => {
     const index = activities.findIndex(activity => activity.id === event.target.closest("[data-demo]").dataset.demo);
     if (index >= 0) goToActivity(index);
   }
+  if (!["help", "show-demo"].includes(action)) handleActivityAction(action);
   const choice = event.target.closest("[data-choice]")?.dataset.choice;
   if (choice) processChoice(choice);
 });
-elements.worldGrid.addEventListener("pointerdown", event => {
-  if (event.pointerType === "touch" && event.target.closest?.(".cm-editor")) event.preventDefault();
-});
+const editorPointerEvents = ["pointerdown", "mousedown", "dblclick", "selectstart", "contextmenu"];
+editorPointerEvents.forEach(type => elements.worldGrid.addEventListener(type, event => {
+  if (!nextUI || !event.target.closest?.(".cm-content, .cm-gutters")) return;
+  event.preventDefault();
+  event.stopPropagation();
+}, true));
 elements.helpClose.addEventListener("click", () => setHelp(false));
 elements.resetButton.addEventListener("click", () => resetActivity());
 elements.nextButton.addEventListener("click", nextActivity);
@@ -786,26 +899,15 @@ $$('.app-dialog').forEach(dialog => dialog.addEventListener("click", event => {
 }));
 elements.activityControls.addEventListener("click", event => {
   const action = event.target.closest("[data-action]")?.dataset.action;
-  if (!action) return;
-  if (action === "reset") resetActivity();
-  if (action === "step") stepDemo();
-  if (action === "play") playDemo(420);
-  if (action === "slow") playDemo(850);
-  if (action === "pause") { clearPlayback(); renderActivityControls(); }
-  if (action === "play-toggle") {
-    if (state.playbackTimer) {
-      clearPlayback();
-      renderActivityControls();
-    } else if (state.playbackStep >= scriptKeys().length) {
-      resetActivity({ vibrateReset: false });
-      playDemo(850);
-    } else {
-      playDemo(850);
-    }
-  }
-  if (action === "next") nextActivity();
-  if (action === "previous") previousActivity();
+  handleActivityAction(action);
 });
+
+window.addEventListener("resize", () => {
+  if (!nextUI) return;
+  elements.phone.style.removeProperty("--execution-console-height");
+  scheduleExecutionConsoleMeasurement();
+});
+document.fonts?.ready.then(scheduleExecutionConsoleMeasurement);
 
 window.VimWilds = Object.freeze({
   activities,

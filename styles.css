@@ -1183,56 +1183,127 @@ html.next-ui .activity-intro p {
 }
 
 html.next-ui .next-command-tray {
+  --status-rail-width: clamp(86px, 24vw, 104px);
+  height: var(--execution-console-height, 126px);
   flex: 0 0 auto;
   display: grid;
-  gap: 7px;
-  padding: 10px 15px;
+  grid-template-columns: minmax(0, 1fr) var(--status-rail-width);
+  padding: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(153, 198, 177, .13);
   border-bottom: 1px solid rgba(153, 198, 177, .13);
   background: rgba(3, 12, 10, .92);
 }
 
 html.next-ui .next-command-tray.hidden { display: none; }
 
+html.next-ui .execution-copy {
+  min-width: 0;
+  padding: 9px 10px 8px 15px;
+  display: grid;
+  grid-template-rows: auto auto minmax(25px, 1fr);
+  align-content: start;
+  gap: 5px;
+}
+
 html.next-ui .command-explanation {
   color: #d7e5dc;
-  font: 600 var(--text-body)/1.35 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 600 15px/1.3 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-wrap: anywhere;
 }
 
-html.next-ui .next-command-tray .guidance {
-  display: block;
-  max-width: none;
-  color: #f2cf76;
-  font: 800 var(--text-guidance)/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  overflow-wrap: anywhere;
-}
-
-html.next-ui .command-history {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: 9px;
-}
-
-html.next-ui .command-history > span {
-  padding-top: 2px;
+html.next-ui .command-history-label {
+  margin-top: 2px;
   color: #789487;
-  font: 800 var(--text-meta)/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .08em;
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
 
-html.next-ui .next-command-tray .command-text {
+html.next-ui .execution-status {
+  min-width: 0;
+  padding: 10px 5px;
+  display: grid;
+  grid-template-rows: auto auto minmax(30px, 1fr);
+  align-content: center;
+  justify-items: center;
+  border-left: 1px solid rgba(166, 219, 192, .14);
+  color: #f2cf76;
+  background: color-mix(in srgb, var(--theme-mid) 13%, rgba(4, 13, 12, .96));
+  text-align: center;
+}
+
+html.next-ui .status-primary,
+html.next-ui .status-secondary {
   display: block;
+  font: 850 12px/1.15 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+html.next-ui .status-secondary { margin-top: 2px; }
+
+html.next-ui .status-key {
+  min-height: 30px;
+  padding-top: 7px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
+html.next-ui .status-key[hidden] { display: none; }
+
+html.next-ui .command-key {
+  min-width: 15px;
+  height: 21px;
+  padding: 0 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(194, 222, 208, .3);
+  border-bottom-color: rgba(82, 112, 98, .65);
+  border-radius: 4px;
   color: #f6edda;
-  font: 700 14px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: linear-gradient(#273a33, #14231e);
+  box-shadow: 0 1px 0 rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.05);
+  font: 750 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+html.next-ui .status-command-key {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-color: color-mix(in srgb, var(--theme-warm) 44%, rgba(194, 222, 208, .3));
+  color: #fff5cd;
+}
+
+html.next-ui .next-command-tray .command-text {
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 0;
+  display: flex;
+  align-content: start;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 2px;
+  color: #f6edda;
+  font: 700 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
-  overflow-wrap: anywhere;
+}
+
+html.next-ui .execution-measure {
+  position: fixed !important;
+  z-index: -1 !important;
+  top: 0 !important;
+  left: -10000px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 html.next-ui .game-area {
@@ -1242,15 +1313,56 @@ html.next-ui .game-area {
 
 html.next-ui .world { min-height: 150px; }
 
-html.next-ui .next-code-slab {
+html.next-ui .editor-stack {
+  position: relative;
+  z-index: 7;
   grid-column: 1 / 13;
-  grid-row: 1 / 8;
-  align-self: stretch;
+  grid-row: 1 / 9;
+  align-self: start;
+  min-width: 0;
   margin: 10px 13px 0;
+  display: grid;
+  gap: 8px;
+}
+
+html.next-ui .next-code-slab {
+  width: 100%;
+  height: clamp(132px, var(--editor-height), 228px);
+  align-self: start;
 }
 
 html.next-ui .next-code-slab .code-body { padding: 8px 5px; }
 html.next-ui .code-body .cm-scroller { font-size: var(--text-editor); }
+html.next-ui .code-body .cm-content,
+html.next-ui .code-body .cm-gutters {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+html.next-ui .code-body .cm-content { pointer-events: none; }
+html.next-ui .code-body .cm-gutters { pointer-events: none; }
+html.next-ui .code-body .cm-cursorLayer {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+html.next-ui .code-body .cm-cursorLayer .cm-cursor,
+html.next-ui .code-body .cm-vimMode .cm-cursor {
+  display: block !important;
+  width: .62em !important;
+  border-left: 0 !important;
+  background: rgba(247, 216, 120, .9);
+  outline: 1px solid rgba(255, 237, 177, .8);
+  box-shadow: 0 0 7px rgba(255, 205, 99, .65);
+  filter: none;
+}
+html.next-ui .code-body .cm-fat-cursor {
+  display: block !important;
+  width: .62em !important;
+  border-left: 0 !important;
+  color: #192019;
+  background: #f7d878 !important;
+}
 html.next-ui .code-body .cm-vim-panel {
   align-items: flex-start;
   padding: 4px 7px;
@@ -1263,13 +1375,37 @@ html.next-ui .code-body .cm-vim-message {
 
 html.next-ui .nix { z-index: 4; }
 
+html.next-ui .demo-controls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+html.next-ui .demo-controls button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 10px;
+  color: #d9eadf;
+  border: 1px solid rgba(182, 216, 199, .2);
+  border-radius: 8px;
+  background: linear-gradient(#2c443a, #18251f);
+  box-shadow: 0 2px 0 #07100e;
+  font: 800 14px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.next-ui .demo-controls button:disabled { opacity: .38; cursor: default; }
+
 html.next-ui .field-note-wrap {
   grid-column: 1 / 13;
   grid-row: 1 / 9;
   margin: 12px 14px 4px;
+  display: flex;
+  align-items: safe center;
 }
 
 html.next-ui .field-note {
+  width: 100%;
   min-height: auto;
   padding: 20px 18px;
 }
@@ -1317,10 +1453,14 @@ html.next-ui .keyboard-panel {
 }
 
 html.next-ui .keyboard-panel.empty-panel { display: none; }
-
-html.next-ui .next-demo-deck {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
+html.next-ui .keyboard-panel.completed .keyboard {
+  visibility: hidden;
+  pointer-events: none;
+}
+html.next-ui .keyboard-panel.completed .activity-controls {
+  position: absolute;
+  z-index: 2;
+  inset: 7px 5px calc(7px + env(safe-area-inset-bottom));
 }
 
 html.next-ui .control-deck button,
@@ -1341,11 +1481,15 @@ html.next-ui .completion-panel .primary-action {
 }
 
 html.next-ui .completion-panel {
-  margin: 0 2px;
-  padding: 14px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 12px 13px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 7px 12px;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  align-items: start;
+  gap: 5px 10px;
   border: 1px solid rgba(255, 225, 141, .56);
   border-radius: 11px;
   color: #fff5cd;
@@ -1357,24 +1501,36 @@ html.next-ui .completion-panel > span,
 html.next-ui .completion-panel strong,
 html.next-ui .completion-panel p { grid-column: 1; }
 
+html.next-ui .completion-panel > span {
+  color: #d9bb69;
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
 html.next-ui .completion-panel strong {
   color: #fff7df;
-  font: 700 20px/1.2 Georgia, serif;
+  font: 700 clamp(17px, 4.7vw, 20px)/1.16 Georgia, serif;
   overflow-wrap: anywhere;
 }
 
 html.next-ui .completion-panel p {
   margin: 0;
   color: #d3e1d7;
-  font: 400 var(--text-body)/1.4 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font: 400 14px/1.34 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-wrap: anywhere;
 }
 
 html.next-ui .completion-panel .primary-action {
   grid-column: 2;
-  grid-row: 1 / 4;
-  align-self: stretch;
-  min-width: 92px;
+  grid-row: 3;
+  align-self: end;
+  justify-self: end;
+  width: auto;
+  min-width: 84px;
+  max-width: 104px;
+  min-height: 44px;
+  height: 44px;
 }
 
 html.next-ui .help-card {
@@ -1416,6 +1572,8 @@ html.next-ui .app-dialog[open] {
   box-shadow: 0 24px 70px rgba(0,0,0,.78), 0 0 34px color-mix(in srgb, var(--theme-magic) 12%, transparent);
 }
 
+html.next-ui #tocDialog[open] { height: calc(100% - 20px); }
+
 html.next-ui .app-dialog::backdrop {
   background: rgba(1, 7, 6, .78);
   backdrop-filter: blur(8px);
@@ -1450,9 +1608,50 @@ html.next-ui .dialog-body {
   padding: 13px;
   overflow-y: auto;
   overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 html.next-ui .toc-lessons { display: block; }
+
+html.next-ui .toc-unit {
+  border: 1px solid rgba(193, 220, 206, .24);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+
+html.next-ui .toc-unit > summary {
+  min-height: 62px;
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+}
+
+html.next-ui .toc-unit > summary > span {
+  color: var(--theme-warm);
+  font: 850 12px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+html.next-ui .toc-unit > summary strong {
+  color: #fff7df;
+  font: 750 16px/1.25 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
+
+html.next-ui .toc-unit > summary small {
+  color: #789487;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: right;
+}
+
+html.next-ui .toc-unit-lessons {
+  padding: 0 8px 8px;
+}
 
 html.next-ui .toc-lesson {
   margin-bottom: 9px;
@@ -1460,6 +1659,8 @@ html.next-ui .toc-lesson {
   border-radius: 10px;
   background: rgba(255,255,255,.025);
 }
+
+html.next-ui .toc-unit-lessons .toc-lesson:last-child { margin-bottom: 0; }
 
 html.next-ui .toc-lesson summary {
   min-height: 54px;
@@ -1577,6 +1778,21 @@ html.next-ui .theme-options span { min-width: 0; display: grid; gap: 4px; }
 html.next-ui .theme-options strong { font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
 html.next-ui .theme-options small { color: #91aa9d; font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }
 
+/* Keep both legends physically stable; Shift changes emphasis, not geometry. */
+html.next-ui .keyboard.shift-layer .key .shifted {
+  order: 1;
+  color: #fff5d7;
+  font-size: .68em;
+  font-weight: 800;
+}
+
+html.next-ui .keyboard.shift-layer .key .base {
+  order: 2;
+  color: #71867c;
+  font-size: 1em;
+  font-weight: 750;
+}
+
 @media (max-height: 760px) {
   html.next-ui .next-topbar { min-height: 48px; padding-top: 4px; padding-bottom: 4px; }
   html.next-ui .icon-button { width: 32px; height: 32px; flex-basis: 32px; }
@@ -1584,10 +1800,10 @@ html.next-ui .theme-options small { color: #91aa9d; font-size: 13px; line-height
   html.next-ui .activity-intro { padding-top: 8px; padding-bottom: 8px; }
   html.next-ui .activity-intro h1 { font-size: 22px; }
   html.next-ui .activity-intro p { font-size: 15px; line-height: 1.32; }
-  html.next-ui .next-command-tray { gap: 5px; padding-top: 7px; padding-bottom: 7px; }
-  html.next-ui .command-explanation { font-size: 15px; line-height: 1.3; }
+  html.next-ui .execution-copy { padding-top: 7px; padding-bottom: 7px; }
+  html.next-ui .command-explanation { font-size: 14px; line-height: 1.28; }
   html.next-ui .game-area { padding: 5px 7px; }
   html.next-ui .world { min-height: 130px; }
-  html.next-ui .next-code-slab { margin-top: 7px; }
+  html.next-ui .editor-stack { margin-top: 7px; }
   html.next-ui .key { height: 30px; }
 }

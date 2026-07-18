@@ -68,11 +68,15 @@
     </section>
 
     <section class="next-command-tray next-only" id="nextCommandTray" aria-live="polite">
-      <div class="command-explanation" id="commandExplanation">Create one complete quote change.</div>
-      <div class="guidance" id="nextGuidance">Next: c</div>
-      <div class="command-history">
-        <span>History</span>
+      <div class="execution-copy">
+        <div class="command-explanation" id="commandExplanation">Create one complete quote change.</div>
+        <div class="command-history-label">History</div>
         <div class="command-text" id="nextCommandText"><span class="ghost">waiting…</span></div>
+      </div>
+      <div class="execution-status" id="nextGuidance">
+        <span class="status-primary" id="statusPrimary">Next</span>
+        <span class="status-secondary" id="statusSecondary"></span>
+        <div class="status-key" id="statusKey"><kbd class="command-key">c</kbd></div>
       </div>
     </section>
 
