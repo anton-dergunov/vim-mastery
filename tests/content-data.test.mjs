@@ -1,0 +1,155 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+import { runNativeVim } from "./native-vim-runner.mjs";
+
+const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
+const unit = readJson("../content/units/repeatable-editing.json");
+const registry = readJson("../content/language-profiles.json");
+const schema = readJson("../content/unit-content.schema.json");
+const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+const activities = unit.lessons.flatMap(lesson => lesson.activities);
+const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+const activityById = new Map(activities.map(activity => [activity.id, activity]));
+const profileById = new Map(registry.profiles.map(profile => [profile.id, profile]));
+const keysOf = activity => activity.script.steps.map(step => typeof step === "string" ? step : step.key);
+
+test("content files expose the expected schema versions", () => {
+  assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
+  assert.equal(unit.schemaVersion, 1);
+  assert.equal(registry.schemaVersion, 1);
+  assert.equal(unit.releaseStatus, "authoring");
+  assert.deepEqual(unit.playback, {
+    modes: ["normal", "slow", "manual"],
+    manualStep: "one-input-key",
+    reset: "initial-state",
+    backwardStep: "deferred",
+  });
+});
+
+test("Unit 10 curriculum definition is preserved verbatim", () => {
+  assert.deepEqual(unit.curriculumDefinition, {
+    unit: "10. Repeatable editing",
+    commandsAndConcepts: "Deliberate `.`, `;`/`,` plus `.`, `n`/`N` plus `.`, `@:`, `&`, `:~`; count vs repeat; repeat-friendly cursor placement",
+    prerequisites: "Units 1–6; Unit 8 recommended",
+    learningOutcome: "Design one change that can be replayed across nearby or searched instances, and recognize when repeat is the wrong tool",
+    representativeExercises: "Change one field and repeat on later rows; search for a token and apply the same edit; compare `3dd` with repeated `dd`; rerun a recent Ex change",
+    priorityAndPortability: "Core. `@:`, `&`, and `:~` bridge into Arc 3 and appear only after basic Command-line use",
+  });
+});
+
+test("language profiles are complete and uniquely addressable", () => {
+  assert.equal(profileById.size, registry.profiles.length);
+  for (const profile of registry.profiles) {
+    assert.match(profile.id, idPattern);
+    for (const field of ["displayName", "category", "extensions", "affordances", "comments", "strings", "delimiters", "indentation", "suitableFor", "validation", "codeMirror"]) {
+      assert.notEqual(profile[field], undefined, `${profile.id} is missing ${field}`);
+    }
+  }
+  for (const required of ["typescript", "javascript", "python", "java", "csharp", "go", "rust", "c", "cpp", "php", "ruby", "kotlin", "swift", "shell", "sql", "markdown", "json", "yaml", "toml", "html", "css", "xml", "csv", "log", "prose"]) {
+    assert(profileById.has(required), `missing language profile ${required}`);
+  }
+});
+
+test("lessons and activities have stable unique IDs and complete learning phases", () => {
+  const ids = new Set();
+  for (const lesson of unit.lessons) {
+    assert.match(lesson.id, idPattern);
+    assert(!ids.has(lesson.id), `duplicate id ${lesson.id}`);
+    ids.add(lesson.id);
+    const phases = new Set(lesson.activities.map(activity => activity.phase));
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
+    }
+    for (const activity of lesson.activities) {
+      assert.match(activity.id, idPattern);
+      assert(!ids.has(activity.id), `duplicate id ${activity.id}`);
+      ids.add(activity.id);
+    }
+  }
+  assert.equal(activityById.size, activities.length);
+  assert(runnable.length >= 30, "the validation unit must contain substantial executable practice");
+});
+
+test("runnable activities reference languages and contain coherent scripts", () => {
+  for (const activity of runnable) {
+    assert(profileById.has(activity.languageId), `${activity.id} uses unknown language ${activity.languageId}`);
+    const { initial, target } = activity.scenario;
+    assert(initial.lines.length > 0 && target.lines.length > 0, `${activity.id} has an empty buffer`);
+    assert(initial.cursor[0] < initial.lines.length, `${activity.id} cursor row is outside the buffer`);
+    assert(initial.cursor[1] < Math.max(1, initial.lines[initial.cursor[0]].length), `${activity.id} cursor column is outside the line`);
+    const keys = keysOf(activity);
+    assert(keys.length > 0, `${activity.id} has no keys`);
+    let next = 0;
+    for (const group of activity.script.commandGroups) {
+      assert.equal(group.from, next, `${activity.id} command groups must be contiguous`);
+      assert(group.to > group.from && group.to <= keys.length, `${activity.id} has an invalid command group`);
+      next = group.to;
+    }
+    assert.equal(next, keys.length, `${activity.id} command groups must cover every key`);
+    const finalCheckpoint = activity.script.checkpoints.at(-1);
+    assert.equal(finalCheckpoint.afterStep, keys.length, `${activity.id} needs a final checkpoint at its last key`);
+    assert.deepEqual(finalCheckpoint.lines, target.lines, `${activity.id} final checkpoint must contain the target`);
+    assert.equal(activity.verification.inputPolicy, "exact-sequence");
+    assert.equal(activity.provenance.method, "llm-authored");
+    assert.equal(activity.provenance.browserConformance, "pending");
+  }
+});
+
+test("references and coverage point to real activities", () => {
+  const referenceIds = new Set();
+  for (const entry of unit.reference) {
+    assert(!referenceIds.has(entry.id), `duplicate reference ${entry.id}`);
+    referenceIds.add(entry.id);
+    for (const ref of entry.exampleActivityRefs) assert(activityById.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  const expectedConcepts = ["deliberate .", "repeat-friendly cursor placement", "; and , plus .", "n and N plus .", "count vs repeat and dot counts", "@:", "&", ":~", "recognize when repeat is wrong"];
+  assert.deepEqual(unit.coverage.map(item => item.concept), expectedConcepts);
+  for (const item of unit.coverage) {
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(item[phase].length > 0, `${item.concept} has no ${phase} coverage`);
+      for (const ref of item[phase]) assert(activityById.has(ref), `${item.concept} references missing ${ref}`);
+    }
+  }
+});
+
+test("the validation unit uses a broad, natural language mix", () => {
+  const counts = new Map();
+  for (const activity of runnable) counts.set(activity.languageId, (counts.get(activity.languageId) || 0) + 1);
+  assert(counts.size >= 12, `expected at least 12 profiles, received ${counts.size}`);
+  assert((counts.get("python") || 0) >= 3, "Python must appear in demonstrations and practice");
+  const nonProgramming = new Set(["markdown", "json", "yaml", "toml", "html", "css", "xml", "csv", "log", "prose"]);
+  const neutralCount = [...counts].reduce((sum, [id, count]) => sum + (nonProgramming.has(id) ? count : 0), 0);
+  assert(neutralCount / runnable.length >= 0.2, "documentation, configuration, data, logs, and prose should be meaningfully represented");
+});
+
+test("complete JSON scenarios parse before and after", () => {
+  for (const activity of runnable.filter(item => item.languageId === "json" && item.sourceKind === "complete")) {
+    assert.doesNotThrow(() => JSON.parse(activity.scenario.initial.lines.join("\n")), `${activity.id} initial JSON is invalid`);
+    assert.doesNotThrow(() => JSON.parse(activity.scenario.target.lines.join("\n")), `${activity.id} target JSON is invalid`);
+  }
+});
+
+for (const activity of runnable) {
+  test(`native Vim content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const result = runNativeVim({
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+    });
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    if (activity.scenario.target.cursor) assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({
+        initialCode: activity.scenario.initial.lines,
+        cursor: activity.scenario.initial.cursor,
+        keys: keys.slice(0, checkpoint.afterStep),
+      });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+    }
+  });
+}

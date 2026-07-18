@@ -94,12 +94,17 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
  * this module reaches into EditorView, getCM, or Vim directly.
  */
 export class VimEngine {
-  constructor({ parent, text, cursor, onEvent }) {
+  constructor({ parent, text, cursor, language = "plain-text", onEvent }) {
     this.onEvent = onEvent;
     this.mode = "normal";
     this.subMode = "";
     this.locked = false;
     this.commandLine = null;
+    this.commandPrefix = null;
+    this.lastExCommand = null;
+    this.lastSubstitution = null;
+    this.lastSearchQuery = null;
+    this.awaitingColonRegister = false;
 
     const start = offsetForPosition(text, cursor);
     this.view = new EditorView({
@@ -111,7 +116,7 @@ export class VimEngine {
           vim(),
           drawSelection(),
           lineNumbers(),
-          javascript(),
+          ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
           wildsHighlighting,
           EditorView.updateListener.of(update => {
             if (update.docChanged) this.emit("change");
@@ -156,8 +161,8 @@ export class VimEngine {
     };
   }
 
-  sendKey(key) {
-    if (this.locked || !this.cm) return false;
+  sendKey(key, { bypassLock = false, source = "touch" } = {}) {
+    if ((this.locked && !bypassLock) || !this.cm) return false;
     const vimKey = toVimKey(key);
     const canonicalKey = canonicalKeyToken(vimKey);
 
@@ -167,19 +172,67 @@ export class VimEngine {
       } else if (vimKey === "<BS>") {
         this.commandLine = this.commandLine.slice(0, -1);
       } else if (vimKey === "<CR>") {
-        Vim.handleEx(this.cm, this.commandLine);
-        this.closeCommandLine();
+        if (this.commandPrefix === ":") {
+          this.lastExCommand = this.commandLine;
+          if (this.commandLine === "~" && this.lastSubstitution && this.lastSearchQuery !== null) {
+            this.executeEx(`s/${this.lastSearchQuery}/${this.lastSubstitution.replacement}/`);
+          } else {
+            this.rememberSubstitution(this.commandLine);
+            this.executeEx(this.commandLine);
+          }
+          this.closeCommandLine();
+        } else {
+          const input = this.cm?.state?.dialog?.querySelector("input");
+          if (input) {
+            input.value = this.commandLine;
+            const enterEvent = new KeyboardEvent("keydown", {
+              key: "Enter", code: "Enter", bubbles: true, cancelable: true,
+            });
+            // The Vim bridge checks the legacy keyCode value for dialogs.
+            Object.defineProperty(enterEvent, "keyCode", { value: 13 });
+            Object.defineProperty(enterEvent, "vimWildsPrompt", { value: true });
+            input.dispatchEvent(enterEvent);
+          }
+          this.lastSearchQuery = this.commandLine;
+          this.commandLine = null;
+          this.commandPrefix = null;
+        }
       } else {
         const text = literalText(vimKey);
         if (text !== null) this.commandLine += text;
       }
       this.syncCommandInput();
-      this.emit("key", { key: canonicalKey, source: "touch" });
+      this.emit("key", { key: canonicalKey, source });
+      return true;
+    }
+
+    // The CodeMirror Vim adapter does not implement Vim's colon register.
+    // Keep the authored `@` and `:` tokens visible to the lesson while
+    // executing the same saved Ex line in the current line context.
+    if (this.awaitingColonRegister) {
+      this.awaitingColonRegister = false;
+      if (vimKey === ":" && this.lastExCommand !== null) {
+        Vim.handleEx(this.cm, this.lastExCommand);
+        this.moveCursorToLineStart();
+        this.emit("key", { key: canonicalKey, source });
+        return true;
+      }
+    }
+    if (vimKey === "@") {
+      this.awaitingColonRegister = true;
+      this.emit("key", { key: canonicalKey, source });
+      return true;
+    }
+    if (vimKey === "&" && this.lastSubstitution) {
+      // `&` repeats the substitution pattern and replacement but intentionally
+      // does not inherit flags such as `g`.
+      this.executeEx(`s/${this.lastSubstitution.pattern}/${this.lastSubstitution.replacement}/`);
+      this.emit("key", { key: canonicalKey, source });
       return true;
     }
 
     const wasInsert = Boolean(this.cm.state.vim?.insertMode);
-    const handled = Vim.multiSelectHandleKey(this.cm, vimKey, "touch");
+    const handled = Vim.multiSelectHandleKey(this.cm, vimKey, source);
     // `handleKey` owns Vim interpretation. In Insert mode, a browser would
     // normally perform the subsequent contenteditable insertion; touch input
     // deliberately skips that browser path, so we apply only that native text
@@ -188,8 +241,11 @@ export class VimEngine {
       const text = literalText(vimKey);
       if (text !== null) this.cm.replaceSelection(text);
     }
-    if (vimKey === ":" && this.cm.state.dialog) this.commandLine = "";
-    this.emit("key", { key: canonicalKey, source: "touch" });
+    if ((vimKey === ":" || vimKey === "/" || vimKey === "?") && this.cm.state.dialog) {
+      this.commandLine = "";
+      this.commandPrefix = vimKey;
+    }
+    this.emit("key", { key: canonicalKey, source });
     return Boolean(handled);
   }
 
@@ -198,9 +254,29 @@ export class VimEngine {
     if (input) input.value = this.commandLine || "";
   }
 
+  moveCursorToLineStart() {
+    const line = this.view.state.doc.lineAt(this.view.state.selection.main.head);
+    this.view.dispatch({ selection: EditorSelection.cursor(line.from) });
+  }
+
+  executeEx(command) {
+    Vim.handleEx(this.cm, command);
+    this.moveCursorToLineStart();
+  }
+
+  rememberSubstitution(command) {
+    if (!command.startsWith("s") || command.length < 4) return;
+    const delimiter = command[1];
+    const parts = command.slice(2).split(delimiter);
+    if (parts.length < 3) return;
+    const [pattern, replacement, flags] = parts;
+    this.lastSubstitution = { pattern, replacement, flags };
+  }
+
   closeCommandLine() {
     const input = this.cm?.state?.dialog?.querySelector("input");
     this.commandLine = null;
+    this.commandPrefix = null;
     input?.blur();
   }
 

@@ -1,9 +1,6 @@
-import {
-  exercises,
-  knownTemplates,
-  knownThemes,
-  spriteCells,
-} from "./exercise-data.js";
+import unit from "./content/units/repeatable-editing.json";
+import languageProfiles from "./content/language-profiles.json";
+import { spriteCells } from "./exercise-data.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -13,13 +10,12 @@ const elements = {
   phone: $("#phone"),
   locationLabel: $("#locationLabel"),
   progressPill: $("#progressPill"),
+  activitySelect: $("#activitySelect"),
   modePill: $("#modePill"),
   resetButton: $("#resetButton"),
-  quest: $("#quest"),
   eyebrow: $("#eyebrow"),
   questTitle: $("#questTitle"),
   questInstruction: $("#questInstruction"),
-  gameArea: $("#gameArea"),
   world: $("#world"),
   groundGrid: $("#groundGrid"),
   worldGrid: $("#worldGrid"),
@@ -30,18 +26,25 @@ const elements = {
   successTitle: $("#successTitle"),
   successText: $("#successText"),
   nextButton: $("#nextButton"),
+  activityControls: $("#activityControls"),
+  keyboardPanel: $(".keyboard-panel"),
   commandTray: $("#commandTray"),
   commandText: $("#commandText"),
   guidance: $("#guidance"),
   keyboard: $("#keyboard"),
-  rewardOverlay: $("#rewardOverlay"),
-  rewardButton: $("#rewardButton"),
 };
+
+const presentations = [
+  { theme: "glass", template: "mirrors", codeSide: "left", blocks: ["mirror", "mirror", "mirror"] },
+  { theme: "deepwater", template: "terminal", codeSide: "right", blocks: ["terminal", "crystal"] },
+  { theme: "moonroot", template: "causeway", codeSide: "left", blocks: ["rune", "gate"] },
+  { theme: "ember", template: "beacons", codeSide: "right", blocks: ["beacon", "beacon"] },
+];
 
 const themeLabels = {
   moonroot: "Moonroot Ruins",
   ember: "Ember Vault",
-  glass: "Glass Garden",
+  glass: "Hall of Mirrors",
   deepwater: "Deepwater Archive",
 };
 
@@ -52,158 +55,56 @@ const themeColors = {
   deepwater: ["#07151d", "#123f4e", "#55bfd0", "#888cff", "#f6bd63"],
 };
 
-// This fallback renders immediately; the complete local manifest replaces it
-// after loading so every exercise can receive a stable random cast member.
-let characterAssets = {
-  nix: {
-    name: "Nix",
-    idle: "assets/characters/nix/idle.png",
-    animations: {
-      "joyful-hop": { src: "assets/characters/nix/animations/joyful-hop.webp", css_scale: 1.375 },
-    },
-    alt: "Nix, a lantern-moth apprentice",
-  },
-};
-const characterAssignments = new Map();
-
-function shuffle(items) {
-  const result = [...items];
-  for (let index = result.length - 1; index > 0; index -= 1) {
-    const other = Math.floor(Math.random() * (index + 1));
-    [result[index], result[other]] = [result[other], result[index]];
-  }
-  return result;
-}
-
-function assignCharacters() {
-  characterAssignments.clear();
-  const characterIds = shuffle(Object.keys(characterAssets));
-  exercises.forEach((exercise, index) => {
-    const characterId = exercise.scene.character || characterIds[index % characterIds.length];
-    const actions = Object.keys(characterAssets[characterId].animations);
-    const animationId = actions[Math.floor(Math.random() * actions.length)];
-    characterAssignments.set(exercise.id, { characterId, animationId });
-  });
-}
-
-function characterAssignment(exercise = currentExercise()) {
-  return characterAssignments.get(exercise.id) || { characterId: "nix", animationId: "joyful-hop" };
-}
-
-async function loadCharacterAssets() {
-  try {
-    const response = await fetch("assets/characters/manifest.json");
-    if (!response.ok) throw new Error(`manifest request failed (${response.status})`);
-    const manifest = await response.json();
-    characterAssets = Object.fromEntries(Object.entries(manifest.characters).map(([id, character]) => [id, {
-      ...character,
-      alt: `${character.name}, ${character.role}`,
-    }]));
-    assignCharacters();
-    renderAll();
-  } catch (error) {
-    console.warn("Using Nix-only fallback character assets:", error);
-  }
-}
+const lessons = unit.lessons.map((lesson, lessonIndex) => ({ ...lesson, lessonIndex }));
+const activities = lessons.flatMap(lesson => lesson.activities.map((activity, activityIndex) => ({
+  ...activity,
+  lessonId: lesson.id,
+  lessonTitle: lesson.title,
+  lessonIndex: lesson.lessonIndex,
+  activityIndex,
+})));
+const exercises = activities.filter(activity => activity.type === "exercise");
+const languageNames = new Map(languageProfiles.profiles.map(profile => [profile.id, profile.displayName]));
 
 const state = {
-  exerciseIndex: 0,
+  activityIndex: 0,
   progress: 0,
   history: [],
   modifiers: new Set(),
-  complete: false,
-  transitioning: false,
-  pointerStartY: null,
   physicalShift: false,
   capsLock: false,
+  complete: false,
+  choiceResult: null,
   editorSnapshot: null,
+  playbackStep: 0,
+  playbackTimer: null,
+  playbackMode: null,
 };
 
 let vimEngine = null;
 
-function validateExercises(catalog) {
-  const errors = [];
-  const ids = new Set();
-  const spriteTypes = new Set(Object.keys(spriteCells));
-
-  if (catalog.length !== 11) errors.push(`Expected 11 exercises, received ${catalog.length}.`);
-
-  catalog.forEach((exercise, index) => {
-    const prefix = `Exercise ${index + 1} (${exercise.id || "missing id"})`;
-    if (!exercise.id || ids.has(exercise.id)) errors.push(`${prefix}: id must be unique.`);
-    ids.add(exercise.id);
-    if (!knownThemes.includes(exercise.scene?.theme)) errors.push(`${prefix}: unknown theme.`);
-    if (!knownTemplates.includes(exercise.scene?.template)) errors.push(`${prefix}: unknown template.`);
-    if (!["left", "right"].includes(exercise.scene?.codeSide)) errors.push(`${prefix}: invalid code side.`);
-    if (!characterAssets[exercise.scene?.character || "nix"]) errors.push(`${prefix}: unknown character.`);
-    if (!Array.isArray(exercise.initialCode) || !exercise.initialCode.length || exercise.initialCode.length > 5) {
-      errors.push(`${prefix}: initialCode must contain 1–5 lines.`);
-    }
-    if (!Array.isArray(exercise.targetCode) || !exercise.targetCode.length || exercise.targetCode.length > 5) {
-      errors.push(`${prefix}: targetCode must contain 1–5 lines.`);
-    }
-    if (JSON.stringify(exercise.initialCode) === JSON.stringify(exercise.targetCode)) {
-      errors.push(`${prefix}: initial and target code must differ.`);
-    }
-    if (!Array.isArray(exercise.solution) || !exercise.solution.length) errors.push(`${prefix}: missing solution.`);
-    if (!Array.isArray(exercise.cursor) || exercise.cursor.length !== 2) errors.push(`${prefix}: invalid cursor.`);
-    else if (
-      exercise.cursor[0] < 0 ||
-      exercise.cursor[0] >= exercise.initialCode.length ||
-      exercise.cursor[1] < 0 ||
-      exercise.cursor[1] > exercise.initialCode[exercise.cursor[0]].length
-    ) errors.push(`${prefix}: cursor is outside the initial buffer.`);
-
-    let previous = 0;
-    const checkpointsByStep = new Map();
-    (exercise.checkpoints || []).forEach(checkpoint => {
-      if (checkpoint.at < previous || checkpoint.at > exercise.solution.length) {
-        errors.push(`${prefix}: checkpoint ${checkpoint.at} is out of sequence.`);
-      }
-      if (checkpointsByStep.has(checkpoint.at)) errors.push(`${prefix}: checkpoint ${checkpoint.at} is duplicated.`);
-      checkpointsByStep.set(checkpoint.at, checkpoint);
-
-      if (checkpoint.selection?.kind === "block") {
-        if (!checkpoint.cursor || checkpoint.cursor[0] !== checkpoint.selection.to[0] || checkpoint.cursor[1] !== checkpoint.selection.to[1]) {
-          errors.push(`${prefix}: block selection at ${checkpoint.at} must end at its cursor.`);
-        }
-      }
-      if (checkpoint.selection?.kind === "line" && checkpoint.mode?.toLowerCase().includes("visual")) {
-        if (!checkpoint.cursor || checkpoint.cursor[0] !== checkpoint.selection.to[0]) {
-          errors.push(`${prefix}: line selection at ${checkpoint.at} must end on its cursor row.`);
-        }
-      }
-      previous = checkpoint.at;
-    });
-
-    exercise.solution.forEach((token, tokenIndex) => {
-      const step = tokenIndex + 1;
-      const finishesFind = tokenIndex > 0 && exercise.solution[tokenIndex - 1] === "f";
-      if ((token === "j" || finishesFind) && !checkpointsByStep.get(step)?.cursor) {
-        errors.push(`${prefix}: cursor-moving step ${step} (${token}) requires an explicit cursor checkpoint.`);
-      }
-    });
-    const lastCheckpoint = exercise.checkpoints?.at(-1);
-    if (!lastCheckpoint || lastCheckpoint.at !== exercise.solution.length || lastCheckpoint.code !== "target") {
-      errors.push(`${prefix}: final checkpoint must resolve to target code at solution length.`);
-    }
-
-    (exercise.scene?.blocks || []).forEach(sceneBlock => {
-      if (!spriteTypes.has(sceneBlock.type)) errors.push(`${prefix}: unknown block ${sceneBlock.type}.`);
-      if (sceneBlock.col < 1 || sceneBlock.col > 12 || sceneBlock.row < 1 || sceneBlock.row > 9) {
-        errors.push(`${prefix}: block ${sceneBlock.type} is outside the 12×9 grid.`);
-      }
-    });
-  });
-
-  if (errors.length) throw new Error(`Invalid exercise catalog:\n${errors.join("\n")}`);
-  return true;
+function currentActivity() {
+  return activities[state.activityIndex];
 }
 
-validateExercises(exercises);
+function isRunnable(activity = currentActivity()) {
+  return activity?.type === "demo" || activity?.type === "exercise";
+}
 
-function currentExercise() {
-  return exercises[state.exerciseIndex];
+function isPractice(activity = currentActivity()) {
+  return activity?.type === "exercise";
+}
+
+function isDemo(activity = currentActivity()) {
+  return activity?.type === "demo";
+}
+
+function scriptKeys(activity = currentActivity()) {
+  return activity.script.steps.map(step => typeof step === "string" ? step : step.key);
+}
+
+function languageLabel(activity) {
+  return languageNames.get(activity.languageId) || activity.languageId;
 }
 
 function vibrate(pattern = 7) {
@@ -220,71 +121,23 @@ function escapeHtml(value) {
 }
 
 function formatToken(token) {
-  const labels = {
-    "Ctrl-v": "CTRL+V",
-    Escape: "ESC",
-    Enter: "ENTER",
-    " ": "SPACE",
-    Tab: "TAB",
-  };
+  const labels = { Escape: "ESC", Enter: "ENTER", " ": "SPACE", Tab: "TAB" };
   return labels[token] || token;
 }
 
 function guidanceToken(token) {
-  if (token.includes("+")) return token.replaceAll("+", " + ").toUpperCase();
+  if (!token) return "COMPLETE";
   if (token.startsWith("Ctrl-")) return `CTRL + ${token.slice(5).toUpperCase()}`;
-  const labels = { Escape: "ESCAPE", Enter: "ENTER", " ": "SPACE", Tab: "TAB" };
-  if (labels[token]) return labels[token];
-  const shiftedKey = keyButtonsFor(token).find(button => button.dataset.shift === token);
-  if (shiftedKey) return `SHIFT + ${shiftedKey.dataset.key.toUpperCase()}`;
-  if (token.length === 1 && token !== token.toLowerCase()) return `SHIFT + ${token}`;
+  if (token.includes("+")) return token.replaceAll("+", " + ").toUpperCase();
+  if (token === "Escape") return "ESCAPE";
+  if (token === "Enter") return "ENTER";
+  const exact = keyButtonsFor(token);
+  if (exact.some(button => button.dataset.shift === token) || (token.length === 1 && token !== token.toLowerCase())) return `SHIFT + ${token}`;
   return token;
 }
 
-function groundType(template, row, col) {
-  const edge = row === 1 || row === 9 || col === 1 || col === 12;
-  const center = col >= 5 && col <= 8;
-  switch (template) {
-    case "causeway": return col <= 2 || col === 12 ? "water" : col >= 8 ? "stone" : "moss";
-    case "islands": return edge || (row + col) % 7 === 0 ? "water" : center ? "stone" : "moss";
-    case "altar": return edge || (col <= 2 && row <= 6) ? "water" : row >= 3 && row <= 7 ? "stone" : "moss";
-    case "lanes": return col === 3 || col === 9 || row === 5 ? "stone" : edge ? "water" : "moss";
-    case "mirrors": return edge ? "water" : (row + col) % 3 === 0 ? "stone" : "moss";
-    case "beacons": return col <= 3 || col >= 10 ? "stone" : edge ? "water" : "moss";
-    case "terminal": return edge ? "water" : row >= 2 && row <= 8 ? "stone" : "moss";
-    case "bridge": return row === 5 ? "water" : col >= 8 ? "stone" : "moss";
-    case "aqueduct": return row >= 4 && row <= 6 ? "water" : center ? "stone" : "moss";
-    case "vines": return edge || (col < 3 && row > 4) ? "water" : (row + col) % 4 === 0 ? "stone" : "moss";
-    case "echo": return edge ? "water" : (col <= 3 || col >= 10) ? "stone" : "moss";
-    default: return edge ? "water" : "moss";
-  }
-}
-
-function renderGround(exercise) {
-  const cells = [];
-  for (let row = 1; row <= 9; row += 1) {
-    for (let col = 1; col <= 12; col += 1) {
-      const type = groundType(exercise.scene.template, row, col);
-      const glow = ((row * 13 + col * 7 + state.exerciseIndex * 3) % 29 === 0) ? " glow" : "";
-      cells.push(`<div class="ground-cell ${type}${glow}"></div>`);
-    }
-  }
-  elements.groundGrid.innerHTML = cells.join("");
-}
-
-function renderSprite(sceneBlock, index) {
-  const [x, y] = spriteCells[sceneBlock.type];
-  const xPos = `${(x * 100 / 3).toFixed(3)}%`;
-  const yPos = `${(y * 100 / 3).toFixed(3)}%`;
-  const active = state.progress >= sceneBlock.activatesAt ? " active" : "";
-  const sizeClass = sceneBlock.size > 1 ? " size-2" : "";
-  const style = [
-    `grid-column:${sceneBlock.col} / span ${sceneBlock.size}`,
-    `grid-row:${sceneBlock.row} / span ${sceneBlock.size}`,
-    `--sprite-x:${xPos}`,
-    `--sprite-y:${yPos}`,
-  ].join(";");
-  return `<div class="sprite type-${sceneBlock.type}${sizeClass}${active}" data-block-index="${index}" style="${style}" aria-hidden="true"></div>`;
+function presentationFor(activity = currentActivity()) {
+  return presentations[activity.lessonIndex % presentations.length];
 }
 
 function setTheme(theme) {
@@ -297,75 +150,181 @@ function setTheme(theme) {
   elements.phone.style.setProperty("--theme-warm", warm);
 }
 
-function renderWorld() {
-  const exercise = currentExercise();
-  setTheme(exercise.scene.theme);
-  renderGround(exercise);
+function groundType(template, row, col) {
+  const edge = row === 1 || row === 9 || col === 1 || col === 12;
+  switch (template) {
+    case "mirrors": return edge ? "water" : (row + col) % 3 === 0 ? "stone" : "moss";
+    case "terminal": return edge ? "water" : row >= 2 && row <= 8 ? "stone" : "moss";
+    case "causeway": return col <= 2 || col === 12 ? "water" : col >= 8 ? "stone" : "moss";
+    case "beacons": return col <= 3 || col >= 10 ? "stone" : edge ? "water" : "moss";
+    default: return edge ? "water" : "moss";
+  }
+}
 
-  const oppositeSide = exercise.scene.codeSide === "left" ? "right" : "left";
-  const code = `
-    <div class="code-slab side-${exercise.scene.codeSide}">
-      <div class="code-head"><i></i><span>${escapeHtml(exercise.language)} · buffer</span></div>
-      <div class="code-body" id="editorMount" aria-label="Vim code editor"></div>
-    </div>`;
-  const sprites = exercise.scene.blocks.map(renderSprite).join("");
-  const assignment = characterAssignment(exercise);
-  const characterAsset = characterAssets[assignment.characterId];
-  const character = `<img class="nix ${exercise.scene.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${characterAsset.idle}" alt="${characterAsset.alt}">`;
-  const oracle = `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open in-world help">?</button>`;
-  elements.worldGrid.innerHTML = `${sprites}${code}${character}${oracle}`;
-  mountEditor();
+function renderGround(presentation) {
+  const cells = [];
+  for (let row = 1; row <= 9; row += 1) {
+    for (let col = 1; col <= 12; col += 1) {
+      const glow = ((row * 13 + col * 7 + currentActivity().lessonIndex) % 29 === 0) ? " glow" : "";
+      cells.push(`<div class="ground-cell ${groundType(presentation.template, row, col)}${glow}"></div>`);
+    }
+  }
+  elements.groundGrid.innerHTML = cells.join("");
+}
+
+function renderSprites(presentation) {
+  return presentation.blocks.map((type, index) => {
+    const [x, y] = spriteCells[type];
+    const positions = [[10, 3], [10, 6], [2, 5]];
+    const [col, row] = positions[index] || positions[0];
+    return `<div class="sprite type-${type}${state.complete ? " active" : ""}" style="grid-column:${col};grid-row:${row};--sprite-x:${(x * 100 / 3).toFixed(3)}%;--sprite-y:${(y * 100 / 3).toFixed(3)}%" aria-hidden="true"></div>`;
+  }).join("");
+}
+
+function renderFieldNote(activity) {
+  if (activity.type === "theory") {
+    return `<article class="field-note" aria-label="Theory">
+      <span class="field-note-kicker">Field note · explain</span>
+      <h2>${escapeHtml(activity.title)}</h2>
+      <p>${escapeHtml(activity.body)}</p>
+      ${activity.grammar ? `<pre class="grammar">${escapeHtml(activity.grammar)}</pre>` : ""}
+      ${activity.contrast ? `<p class="contrast">${escapeHtml(activity.contrast)}</p>` : ""}
+      ${activity.demoRef ? `<button class="note-action" type="button" data-action="show-demo" data-demo="${activity.demoRef}">Show example →</button>` : ""}
+    </article>`;
+  }
+  if (activity.type === "choice") {
+    const choices = activity.options.map(option => `<button class="choice-option${state.choiceResult === option.id ? " selected" : ""}" data-choice="${option.id}" type="button">${escapeHtml(option.label)}</button>`).join("");
+    const result = state.choiceResult ? `<p class="choice-feedback ${state.complete ? "correct" : ""}">${escapeHtml(activity.explanation)}</p>` : "";
+    return `<article class="field-note choice-note" aria-label="Tool choice challenge">
+      <span class="field-note-kicker">Challenge · choose</span><h2>${escapeHtml(activity.title)}</h2>
+      <p>${escapeHtml(activity.prompt)}</p><div class="choice-options">${choices}</div>${result}
+    </article>`;
+  }
+  return `<article class="field-note summary-note" aria-label="Lesson summary">
+    <span class="field-note-kicker">Lesson summary</span><h2>${escapeHtml(activity.title)}</h2>
+    <p>${escapeHtml(activity.body)}</p><ul>${activity.takeaways.map(takeaway => `<li>${escapeHtml(takeaway)}</li>`).join("")}</ul>
+  </article>`;
+}
+
+function renderWorld() {
+  const activity = currentActivity();
+  const presentation = presentationFor(activity);
+  if (!isRunnable(activity)) {
+    vimEngine?.destroy();
+    vimEngine = null;
+    resetVimEngineState();
+  }
+  setTheme(presentation.theme);
+  renderGround(presentation);
+  const oppositeSide = presentation.codeSide === "left" ? "right" : "left";
+  const content = isRunnable(activity)
+    ? `<div class="code-slab side-${presentation.codeSide}"><div class="code-head"><i></i><span>${escapeHtml(languageLabel(activity))} · ${activity.type}</span></div><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>`
+    : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
+  const oracle = isPractice(activity) ? `<button class="oracle ${oppositeSide}" type="button" data-action="help" aria-label="Open hints">?</button>` : "";
+  elements.worldGrid.innerHTML = `${renderSprites(presentation)}${content}<img class="nix ${presentation.codeSide}" src="assets/characters/nix/idle.png" alt="Nix, a lantern-moth apprentice">${oracle}`;
+  if (isRunnable(activity)) mountEditor();
 }
 
 function mountEditor() {
   vimEngine?.destroy();
   resetVimEngineState();
-  const exercise = currentExercise();
+  const activity = currentActivity();
   vimEngine = new VimEngine({
     parent: $("#editorMount", elements.worldGrid),
-    text: exercise.initialCode.join("\n"),
-    cursor: exercise.cursor,
+    text: activity.scenario.initial.lines.join("\n"),
+    cursor: activity.scenario.initial.cursor,
+    language: activity.languageId,
     onEvent: handleEngineEvent,
   });
   state.editorSnapshot = vimEngine.getSnapshot();
-
-  // A touch tap on a contenteditable CodeMirror surface can summon a native
-  // keyboard. The game supplies its own keyboard; hardware keyboards still
-  // focus the editor normally on non-touch devices.
+  vimEngine.setLocked(!isPractice(activity));
   if (!window.matchMedia("(pointer: coarse)").matches) vimEngine.focus();
 }
 
-function modeClass(mode) {
-  const lower = mode.toLowerCase();
-  if (lower.includes("visual") || lower.includes("block")) return "visual";
-  if (lower.includes("record")) return "recording";
-  if (lower.includes("command")) return "command";
-  if (lower.includes("complete")) return "complete";
-  return "";
+function modeLabel() {
+  if (state.complete) return "Complete";
+  if (!isRunnable()) return currentActivity().type === "theory" ? "Theory" : "Review";
+  const mode = state.editorSnapshot?.mode || "normal";
+  return mode === "visual-line" ? "Visual Line" : mode === "visual-block" ? "Visual Block" : mode === "command-line" ? "Command" : `${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
 }
 
 function renderMode() {
-  const mode = state.complete ? "Complete" : state.editorSnapshot?.mode || "normal";
-  const label = mode === "visual-line" ? "Visual Line"
-    : mode === "visual-block" ? "Visual Block"
-      : mode === "command-line" ? "Command"
-        : `${mode.charAt(0).toUpperCase()}${mode.slice(1)}`;
+  const label = modeLabel();
   elements.modePill.textContent = label;
-  elements.modePill.className = `mode-pill ${modeClass(label)}`.trim();
+  const kind = /visual/i.test(label) ? "visual" : /command/i.test(label) ? "command" : /complete/i.test(label) ? "complete" : "";
+  elements.modePill.className = `mode-pill ${kind}`.trim();
+}
+
+function activeCommandGroup(activity = currentActivity(), step = state.playbackStep) {
+  return activity.script?.commandGroups.find(group => step >= group.from && step < group.to)
+    || activity.script?.commandGroups.at(-1);
 }
 
 function renderCommand() {
-  const history = state.history.map(formatToken).join(" ");
-  const pending = [...state.modifiers].map(modifier => `${modifier.toUpperCase()} + …`).join(" ");
-  if (!history && !pending) elements.commandText.innerHTML = '<span class="ghost">waiting…</span>';
-  else elements.commandText.textContent = `${history}${history && pending ? "  " : ""}${pending}`;
-
-  if (state.complete) {
-    elements.guidance.textContent = state.exerciseIndex === exercises.length - 1 ? "MEMORY READY" : "NEXT: SWIPE UP";
-  } else {
-    const next = currentExercise().solution[state.progress];
-    elements.guidance.textContent = next ? `NEXT: ${guidanceToken(next)}` : "EDIT THE BUFFER";
+  const activity = currentActivity();
+  if (!isRunnable(activity)) {
+    elements.commandText.innerHTML = '<span class="ghost">read, choose, or continue</span>';
+    elements.guidance.textContent = activity.type === "choice" ? "CHOOSE A TOOL" : "FIELD NOTES";
+    return;
   }
+  const history = state.history.map(formatToken).join(" ");
+  elements.commandText.innerHTML = history ? escapeHtml(history) : '<span class="ghost">waiting…</span>';
+  if (isDemo(activity)) {
+    const keys = scriptKeys(activity);
+    const group = activeCommandGroup(activity);
+    elements.guidance.textContent = state.playbackStep >= keys.length ? "DEMO COMPLETE" : group?.explanation?.toUpperCase() || `STEP: ${guidanceToken(keys[state.playbackStep])}`;
+    return;
+  }
+  const next = scriptKeys(activity)[state.progress];
+  elements.guidance.textContent = state.complete ? "PRACTICE COMPLETE" : next ? `NEXT: ${guidanceToken(next)}` : "VERIFYING";
+}
+
+function renderHeader() {
+  const activity = currentActivity();
+  elements.locationLabel.textContent = `${themeLabels[presentationFor(activity).theme]} · ${activity.lessonTitle}`;
+  elements.progressPill.textContent = `${state.activityIndex + 1} / ${activities.length}`;
+  elements.activitySelect.value = String(state.activityIndex);
+  elements.eyebrow.textContent = `${activity.lessonTitle} · ${activity.phase}`;
+  elements.questTitle.textContent = activity.title;
+  elements.questInstruction.textContent = activity.instruction || activity.body || activity.prompt || "Review the field notes, then continue.";
+}
+
+function renderHints() {
+  const hints = isPractice() ? currentActivity().hints : [];
+  elements.hintSteps.innerHTML = hints.map((hint, index) => `<div class="hint-step"><kbd>Hint ${index + 1}</kbd><small>${escapeHtml(hint)}</small></div>`).join("");
+}
+
+function renderActivityControls() {
+  const activity = currentActivity();
+  elements.keyboardPanel.classList.toggle("controls-only", !isPractice(activity));
+  elements.keyboard.classList.toggle("hidden", !isPractice(activity));
+  elements.commandTray.classList.toggle("hidden", !isRunnable(activity));
+  if (isDemo(activity)) {
+    const done = state.playbackStep >= scriptKeys(activity).length;
+    const playing = Boolean(state.playbackTimer);
+    elements.activityControls.innerHTML = `<div class="control-deck demo-deck">
+      <button data-action="reset" type="button">Reset</button><button data-action="step" type="button" ${done ? "disabled" : ""}>Step</button>
+      <button data-action="play" type="button" ${done || playing ? "disabled" : ""}>Play</button><button data-action="slow" type="button" ${done || playing ? "disabled" : ""}>Slow</button>
+      <button data-action="pause" type="button" ${playing ? "" : "disabled"}>Pause</button><button data-action="next" type="button" ${done ? "" : "disabled"}>Continue →</button>
+    </div>`;
+    return;
+  }
+  if (isPractice(activity)) {
+    elements.activityControls.innerHTML = "";
+    return;
+  }
+  const previous = state.activityIndex > 0;
+  const next = state.activityIndex < activities.length - 1;
+  elements.activityControls.innerHTML = `<div class="control-deck"><button data-action="previous" type="button" ${previous ? "" : "disabled"}>← Back</button><button data-action="next" type="button" ${next ? "" : "disabled"}>Continue →</button></div>`;
+}
+
+function renderSuccess() {
+  const show = state.complete && (isPractice() || currentActivity().type === "choice");
+  elements.successBanner.classList.toggle("show", show);
+  if (!show) return;
+  elements.successTitle.textContent = currentActivity().type === "choice" ? "Sound judgment." : "Beautifully done.";
+  elements.successText.textContent = currentActivity().feedback?.why || "Continue to the next activity.";
+  elements.nextButton.textContent = state.activityIndex === activities.length - 1 ? "Restart" : "Next →";
 }
 
 function renderModifiers() {
@@ -375,37 +334,10 @@ function renderModifiers() {
     button.setAttribute("aria-pressed", String(state.modifiers.has(button.dataset.mod)));
   });
   const capsButton = $('.key[data-key="CapsLock"]', elements.keyboard);
-  capsButton.classList.toggle("latched", state.capsLock);
-  capsButton.setAttribute("aria-pressed", String(state.capsLock));
+  capsButton?.classList.toggle("latched", state.capsLock);
+  capsButton?.setAttribute("aria-pressed", String(state.capsLock));
   elements.keyboard.classList.toggle("shift-layer", shiftActive);
   elements.keyboard.classList.toggle("letter-uppercase", shiftActive !== state.capsLock);
-  renderCommand();
-}
-
-function renderHints() {
-  elements.hintSteps.innerHTML = currentExercise().hints.map(hint => `
-    <div class="hint-step">
-      <kbd>${escapeHtml(hint.keys)}</kbd>
-      <small>${escapeHtml(hint.label)}</small>
-    </div>`).join("");
-}
-
-function renderHeader() {
-  const exercise = currentExercise();
-  elements.locationLabel.textContent = themeLabels[exercise.scene.theme];
-  elements.progressPill.textContent = `${state.exerciseIndex + 1} / ${exercises.length}`;
-  elements.eyebrow.textContent = `${exercise.skill} · ${exercise.language}`;
-  elements.questTitle.textContent = exercise.title;
-  elements.questInstruction.textContent = exercise.instruction;
-}
-
-function renderSuccess() {
-  elements.successBanner.classList.toggle("show", state.complete);
-  if (!state.complete) return;
-  const last = state.exerciseIndex === exercises.length - 1;
-  elements.successTitle.textContent = last ? "Chapter restored." : "Beautifully done.";
-  elements.successText.textContent = last ? "Your Moonroot Memory is ready." : "Swipe up for the next spell.";
-  elements.nextButton.textContent = last ? "Unlock ✦" : "Next ↑";
 }
 
 function renderAll() {
@@ -414,7 +346,151 @@ function renderAll() {
   renderMode();
   renderHints();
   renderModifiers();
+  renderCommand();
+  renderActivityControls();
   renderSuccess();
+}
+
+function populateTableOfContents() {
+  elements.activitySelect.innerHTML = lessons.map(lesson => {
+    const options = activities.filter(activity => activity.lessonId === lesson.id).map(activity => {
+      const index = activities.indexOf(activity);
+      return `<option value="${index}">${escapeHtml(`${activity.activityIndex + 1}. ${activity.title}`)}</option>`;
+    }).join("");
+    return `<optgroup label="${escapeHtml(lesson.title)}">${options}</optgroup>`;
+  }).join("");
+}
+
+function clearPlayback() {
+  if (state.playbackTimer) window.clearTimeout(state.playbackTimer);
+  state.playbackTimer = null;
+  state.playbackMode = null;
+}
+
+function resetActivity({ vibrateReset = true } = {}) {
+  clearPlayback();
+  state.progress = 0;
+  state.history = [];
+  state.modifiers.clear();
+  state.physicalShift = false;
+  state.complete = false;
+  state.choiceResult = null;
+  state.playbackStep = 0;
+  state.editorSnapshot = null;
+  setHelp(false);
+  elements.successBanner.classList.remove("show");
+  renderAll();
+  if (vibrateReset) vibrate(9);
+}
+
+function goToActivity(index) {
+  if (!Number.isInteger(index) || index < 0 || index >= activities.length) throw new RangeError("Invalid activity index");
+  state.activityIndex = index;
+  resetActivity({ vibrateReset: false });
+}
+
+function nextActivity() {
+  if (isDemo() && state.playbackStep < scriptKeys().length) return;
+  if (isPractice() && !state.complete) return;
+  if (currentActivity().type === "choice" && !state.complete) return;
+  if (state.activityIndex === activities.length - 1) {
+    goToActivity(0);
+    return;
+  }
+  goToActivity(state.activityIndex + 1);
+}
+
+function previousActivity() {
+  if (state.activityIndex > 0) goToActivity(state.activityIndex - 1);
+}
+
+function isTargetSnapshot(snapshot) {
+  const target = currentActivity().scenario.target;
+  return snapshot.text === target.lines.join("\n")
+    && snapshot.mode === target.mode
+    && snapshot.cursorPosition[0] === target.cursor[0]
+    && snapshot.cursorPosition[1] === target.cursor[1];
+}
+
+function completeActivity() {
+  state.complete = true;
+  clearPlayback();
+  vimEngine?.setLocked(true);
+  setTheme(presentationFor().theme);
+  $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
+  renderMode();
+  renderCommand();
+  renderActivityControls();
+  renderSuccess();
+  vibrate([18, 35, 18]);
+}
+
+function handleEngineEvent(event) {
+  state.editorSnapshot = event.snapshot;
+  // Only the gate's explicit injection is evidence of learner/demo progress.
+  // CodeMirror can also report keypresses from its transient search prompt;
+  // those must not turn an accepted sequence into a different one.
+  if (event.kind === "key" && (event.source === "lesson" || event.source === "demo")) {
+    state.history.push(event.key);
+    if (isPractice()) state.progress = state.history.length;
+  }
+  renderMode();
+  renderCommand();
+  if (isPractice() && !state.complete && state.progress === scriptKeys().length && isTargetSnapshot(event.snapshot)) completeActivity();
+}
+
+function flashError() {
+  elements.commandTray.classList.remove("error");
+  void elements.commandTray.offsetWidth;
+  elements.commandTray.classList.add("error");
+  window.setTimeout(() => elements.commandTray.classList.remove("error"), 300);
+}
+
+function processToken(token) {
+  if (!isPractice() || state.complete || !vimEngine) return false;
+  const expected = scriptKeys()[state.progress];
+  if (token !== expected) {
+    flashError();
+    return false;
+  }
+  setHelp(false);
+  return vimEngine.sendKey(token, { source: "lesson" });
+}
+
+function stepDemo() {
+  if (!isDemo() || state.playbackStep >= scriptKeys().length || !vimEngine) return false;
+  const token = scriptKeys()[state.playbackStep];
+  vimEngine.sendKey(token, { bypassLock: true, source: "demo" });
+  state.playbackStep += 1;
+  renderCommand();
+  renderActivityControls();
+  return state.playbackStep < scriptKeys().length;
+}
+
+function playDemo(interval) {
+  if (!isDemo() || state.playbackTimer) return;
+  state.playbackMode = interval === 850 ? "slow" : "normal";
+  const tick = () => {
+    if (!stepDemo()) {
+      clearPlayback();
+      renderActivityControls();
+      return;
+    }
+    state.playbackTimer = window.setTimeout(tick, interval);
+    renderActivityControls();
+  };
+  tick();
+}
+
+function setHelp(open) {
+  const canHelp = isPractice();
+  elements.helpCard.classList.toggle("open", Boolean(open && canHelp));
+  elements.helpCard.setAttribute("aria-hidden", String(!(open && canHelp)));
+  $$(".key", elements.keyboard).forEach(button => button.classList.remove("hinted"));
+  if (open && canHelp) {
+    scriptKeys().forEach(token => requiredButtons(token).forEach(button => button.classList.add("hinted")));
+    vibrate(5);
+  }
 }
 
 function keyButtonsFor(value) {
@@ -427,34 +503,11 @@ function modifierButtonsFor(value) {
 
 function requiredButtons(token) {
   const result = [];
-  if (token.includes("+")) {
-    const parts = token.split("+");
-    const key = parts.pop();
-    parts.forEach(modifier => result.push(...modifierButtonsFor(modifier)));
-    result.push(...keyButtonsFor(key));
-    return result;
-  }
-  if (token.startsWith("Ctrl-")) {
-    result.push(...modifierButtonsFor("Ctrl"));
-    result.push(...keyButtonsFor(token.slice(5)));
-    return result;
-  }
+  if (token.startsWith("Ctrl-")) return [...modifierButtonsFor("Ctrl"), ...keyButtonsFor(token.slice(5))];
   const exact = keyButtonsFor(token);
   result.push(...exact);
-  if (token.length === 1 && (token !== token.toLowerCase() || exact.some(button => button.dataset.shift === token))) {
-    result.push(...modifierButtonsFor("Shift"));
-  }
+  if (token.length === 1 && (token !== token.toLowerCase() || exact.some(button => button.dataset.shift === token))) result.push(...modifierButtonsFor("Shift"));
   return result;
-}
-
-function setHelp(open) {
-  elements.helpCard.classList.toggle("open", open);
-  elements.helpCard.setAttribute("aria-hidden", String(!open));
-  $$(".key", elements.keyboard).forEach(button => button.classList.remove("hinted"));
-  if (open) {
-    currentExercise().solution.forEach(token => requiredButtons(token).forEach(button => button.classList.add("hinted")));
-    vibrate(5);
-  }
 }
 
 function flashKey(button) {
@@ -463,157 +516,41 @@ function flashKey(button) {
   window.setTimeout(() => button.classList.remove("pressed"), 110);
 }
 
-function playSuccessCharacter() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const character = $(".nix", elements.worldGrid);
-  const asset = characterAssets[character?.dataset.character || ""];
-  const animation = asset?.animations?.[character?.dataset.animation || ""];
-  if (!character || !animation?.src) return;
-
-  // A fresh image element restarts WebP animation without a cache-busting URL.
-  // Decode it before replacing the idle sprite so the two approved poses can
-  // cross-fade at the same canvas scale rather than flashing a loading frame.
-  const celebrating = character.cloneNode();
-  celebrating.src = animation.src;
-  celebrating.alt = `${asset.alt}, celebrating`;
-  celebrating.style.setProperty("--success-canvas-scale", String(animation.css_scale || 1));
-  let started = false;
-  const startTransition = () => {
-    if (started || !state.complete || !character.isConnected) return;
-    started = true;
-    celebrating.classList.add("celebrating", "transitioning-in");
-    character.classList.add("transitioning-out");
-    character.setAttribute("aria-hidden", "true");
-    character.after(celebrating);
-    window.setTimeout(() => character.remove(), 420);
-  };
-  celebrating.decode().then(startTransition, startTransition);
-}
-
-function finishExercise() {
-  state.complete = true;
-  vimEngine?.setLocked(true);
-  setHelp(false);
-  setTheme(currentExercise().scene.theme);
-  $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
-  playSuccessCharacter();
-  renderMode();
-  renderCommand();
-  window.setTimeout(renderSuccess, 160);
-  vibrate([18, 35, 18]);
-}
-
-function canonicalProgress() {
-  const solution = currentExercise().solution;
-  return state.history.every((key, index) => key === solution[index])
-    ? Math.min(state.history.length, solution.length)
-    : 0;
-}
-
-function isTargetSnapshot(snapshot) {
-  return snapshot.text === currentExercise().targetCode.join("\n") && snapshot.mode === "normal";
-}
-
-function refreshScene() {
-  $$(".sprite", elements.worldGrid).forEach(sprite => {
-    const block = currentExercise().scene.blocks[Number(sprite.dataset.blockIndex)];
-    if (block) sprite.classList.toggle("active", state.complete || state.progress >= block.activatesAt);
-  });
-}
-
-function handleEngineEvent(event) {
-  state.editorSnapshot = event.snapshot;
-  if (event.kind === "key") {
-    state.history.push(event.key);
-    state.progress = canonicalProgress();
-    vibrate(7);
-  }
-  refreshScene();
-  renderMode();
-  renderCommand();
-  if (!state.complete && isTargetSnapshot(event.snapshot)) finishExercise();
-}
-
-function processToken(token) {
-  if (state.complete || state.transitioning || !vimEngine) return false;
-  setHelp(false);
-  return vimEngine.sendKey(token);
-}
-
 function toggleModifier(modifier) {
+  if (!isPractice()) return;
   if (state.modifiers.has(modifier)) state.modifiers.delete(modifier);
   else state.modifiers.add(modifier);
   renderModifiers();
   vibrate(5);
 }
 
-function toggleCapsLock() {
-  state.capsLock = !state.capsLock;
-  renderModifiers();
-  vibrate(5);
-}
-
 function emitFromButton(button) {
-  if (button.dataset.mod) {
-    toggleModifier(button.dataset.mod);
-    return;
-  }
-
+  if (button.dataset.mod) return toggleModifier(button.dataset.mod);
   if (button.dataset.key === "CapsLock") {
-    toggleCapsLock();
+    if (!isPractice()) return;
+    state.capsLock = !state.capsLock;
+    renderModifiers();
     return;
   }
-
+  if (!isPractice()) return;
   let value = button.dataset.key;
   const shiftActive = state.modifiers.has("Shift");
-  const isLetter = /^[a-z]$/.test(value);
-  if (isLetter) value = shiftActive !== state.capsLock ? value.toUpperCase() : value;
+  if (/^[a-z]$/.test(value)) value = shiftActive !== state.capsLock ? value.toUpperCase() : value;
   else if (shiftActive) value = button.dataset.shift || value;
-
   const chordModifiers = ["Ctrl", "Alt", "Shift"].filter(modifier => state.modifiers.has(modifier));
   let token = value;
-  if (chordModifiers.some(modifier => modifier !== "Shift")) {
-    token = `${chordModifiers.join("+")}+${value.toLowerCase()}`;
-  }
-
+  if (chordModifiers.some(modifier => modifier !== "Shift")) token = `${chordModifiers.join("+")}+${value.toLowerCase()}`;
   state.modifiers.clear();
   renderModifiers();
   processToken(token);
 }
 
-function resetExercise({ vibrateReset = true } = {}) {
-  state.progress = 0;
-  state.history = [];
-  state.modifiers.clear();
-  state.complete = false;
-  state.transitioning = false;
-  state.physicalShift = false;
-  setHelp(false);
-  elements.successBanner.classList.remove("show");
+function processChoice(id) {
+  const activity = currentActivity();
+  if (activity.type !== "choice" || state.complete) return;
+  state.choiceResult = id;
   renderAll();
-  if (vibrateReset) vibrate(9);
-}
-
-function showReward() {
-  elements.rewardOverlay.classList.add("open");
-  elements.rewardOverlay.setAttribute("aria-hidden", "false");
-  vibrate([20, 45, 20]);
-}
-
-function nextExercise() {
-  if (!state.complete || state.transitioning) return;
-  if (state.exerciseIndex === exercises.length - 1) {
-    showReward();
-    return;
-  }
-  state.transitioning = true;
-  elements.world.classList.add("swipe-out");
-  window.setTimeout(() => {
-    state.exerciseIndex += 1;
-    resetExercise({ vibrateReset: false });
-    elements.world.classList.add("swipe-in");
-    window.setTimeout(() => elements.world.classList.remove("swipe-in"), 420);
-  }, 290);
+  if (id === activity.correctOptionId) completeActivity();
 }
 
 elements.keyboard.addEventListener("pointerdown", event => {
@@ -625,50 +562,42 @@ elements.keyboard.addEventListener("pointerdown", event => {
 });
 
 document.addEventListener("keydown", event => {
-  if (elements.rewardOverlay.classList.contains("open")) return;
+  if (event.vimWildsPrompt) return;
+  if (event.target.closest?.("select, button:not(.key)")) return;
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
   if (event.key === "CapsLock") {
-    const capsButton = $('.key[data-key="CapsLock"]', elements.keyboard);
-    flashKey(capsButton);
-    state.capsLock = event.getModifierState("CapsLock");
+    event.preventDefault();
+    if (isPractice()) state.capsLock = event.getModifierState("CapsLock");
     renderModifiers();
     return;
   }
   if (modifierMap[event.key]) {
-    if (event.key === "Shift") {
-      state.physicalShift = true;
-      renderModifiers();
-    }
-    modifierButtonsFor(modifierMap[event.key]).forEach(button => button.classList.add("pressed"));
+    event.preventDefault();
+    if (event.key === "Shift" && isPractice()) state.physicalShift = true;
+    renderModifiers();
     return;
   }
-
-  // CodeMirror receives physical keys directly when it has focus. This small
-  // fallback keeps hardware keyboards useful after a UI button has focus,
-  // without recreating the old command interpreter.
-  if (event.target.closest?.(".cm-content")) return;
   if (event.repeat) return;
-  const physicalModifiers = [
-    event.ctrlKey && "Ctrl",
-    event.altKey && "Alt",
-    event.shiftKey && "Shift",
-  ].filter(Boolean);
-  let token = event.key;
-  if (physicalModifiers.length && event.key.length === 1) {
-    token = canonicalKeyToken(`${physicalModifiers.join("+")}+${event.key}`);
+  if (!isPractice()) {
+    event.preventDefault();
+    return;
   }
-  const matching = token.startsWith("Ctrl-")
-    ? keyButtonsFor(token.slice(5))[0]
-    : keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
-  if (!matching) return;
   event.preventDefault();
+  let token = event.key;
+  if (event.ctrlKey || event.altKey) {
+    const modifiers = [event.ctrlKey && "Ctrl", event.altKey && "Alt"].filter(Boolean);
+    token = canonicalKeyToken(`${modifiers.join("+")}+${event.key.toLowerCase()}`);
+  }
+  const matching = token.startsWith("Ctrl-") ? keyButtonsFor(token.slice(5))[0] : keyButtonsFor(event.key)[0] || keyButtonsFor(event.key.toLowerCase())[0];
+  if (!matching) {
+    flashError();
+    return;
+  }
   flashKey(matching);
   processToken(token);
-});
+}, true);
 
 document.addEventListener("keyup", event => {
-  const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
-  if (modifierMap[event.key]) modifierButtonsFor(modifierMap[event.key]).forEach(button => button.classList.remove("pressed"));
   if (event.key === "Shift") {
     state.physicalShift = false;
     renderModifiers();
@@ -676,49 +605,51 @@ document.addEventListener("keyup", event => {
 });
 
 elements.worldGrid.addEventListener("click", event => {
-  if (event.target.closest('[data-action="help"]')) setHelp(!elements.helpCard.classList.contains("open"));
+  const action = event.target.closest("[data-action]")?.dataset.action;
+  if (action === "help") setHelp(!elements.helpCard.classList.contains("open"));
+  if (action === "show-demo") {
+    const index = activities.findIndex(activity => activity.id === event.target.closest("[data-demo]").dataset.demo);
+    if (index >= 0) goToActivity(index);
+  }
+  const choice = event.target.closest("[data-choice]")?.dataset.choice;
+  if (choice) processChoice(choice);
 });
 elements.worldGrid.addEventListener("pointerdown", event => {
   if (event.pointerType === "touch" && event.target.closest?.(".cm-editor")) event.preventDefault();
 });
 elements.helpClose.addEventListener("click", () => setHelp(false));
-elements.resetButton.addEventListener("click", () => resetExercise());
-elements.nextButton.addEventListener("click", nextExercise);
-
-elements.gameArea.addEventListener("pointerdown", event => {
-  if (event.target.closest("button")) return;
-  state.pointerStartY = event.clientY;
-});
-elements.gameArea.addEventListener("pointerup", event => {
-  if (state.pointerStartY === null) return;
-  const distance = event.clientY - state.pointerStartY;
-  state.pointerStartY = null;
-  if (state.complete && distance < -42) nextExercise();
-});
-
-elements.rewardButton.addEventListener("click", () => {
-  elements.rewardOverlay.classList.remove("open");
-  elements.rewardOverlay.setAttribute("aria-hidden", "true");
-  state.exerciseIndex = 0;
-  resetExercise();
+elements.resetButton.addEventListener("click", () => resetActivity());
+elements.nextButton.addEventListener("click", nextActivity);
+elements.activitySelect.addEventListener("change", event => goToActivity(Number(event.target.value)));
+elements.activityControls.addEventListener("click", event => {
+  const action = event.target.closest("[data-action]")?.dataset.action;
+  if (!action) return;
+  if (action === "reset") resetActivity();
+  if (action === "step") stepDemo();
+  if (action === "play") playDemo(420);
+  if (action === "slow") playDemo(850);
+  if (action === "pause") { clearPlayback(); renderActivityControls(); }
+  if (action === "next") nextActivity();
+  if (action === "previous") previousActivity();
 });
 
 window.VimWilds = Object.freeze({
+  activities,
   exercises,
   emit: processToken,
   goTo(index) {
     if (!Number.isInteger(index) || index < 0 || index >= exercises.length) throw new RangeError("Invalid exercise index");
-    state.exerciseIndex = index;
-    resetExercise({ vibrateReset: false });
+    goToActivity(activities.indexOf(exercises[index]));
   },
+  goToActivity,
   solveCurrent() {
-    const remaining = currentExercise().solution.slice(state.progress);
-    remaining.forEach(processToken);
+    if (isDemo()) while (stepDemo());
+    else if (isPractice()) scriptKeys().slice(state.progress).forEach(processToken);
   },
   getState() {
     const snapshot = state.editorSnapshot || vimEngine?.getSnapshot();
-    const hasSelection = snapshot?.anchor !== snapshot?.head;
     const ranges = snapshot?.ranges || [];
+    const hasSelection = snapshot?.anchor !== snapshot?.head;
     const selection = snapshot?.mode === "visual-block" && ranges.length > 1 ? {
       kind: "block",
       from: ranges[0].from,
@@ -729,9 +660,14 @@ window.VimWilds = Object.freeze({
       to: snapshot.cursorPosition,
     } : null;
     return {
-      exerciseIndex: state.exerciseIndex,
-      exerciseId: currentExercise().id,
+      activityIndex: state.activityIndex,
+      activityId: currentActivity().id,
+      activityType: currentActivity().type,
+      lessonId: currentActivity().lessonId,
+      exerciseIndex: exercises.indexOf(currentActivity()),
+      exerciseId: isPractice() ? currentActivity().id : null,
       progress: state.progress,
+      playbackStep: state.playbackStep,
       history: [...state.history],
       complete: state.complete,
       code: snapshot?.text.split("\n") || [],
@@ -745,11 +681,5 @@ window.VimWilds = Object.freeze({
   },
 });
 
-assignCharacters();
+populateTableOfContents();
 renderAll();
-void loadCharacterAssets();
-requestAnimationFrame(() => {
-  // Force a separate first-paint pass for the dense keyboard layer on mobile WebKit/Chromium.
-  elements.keyboard.style.opacity = ".999";
-  requestAnimationFrame(() => { elements.keyboard.style.opacity = "1"; });
-});

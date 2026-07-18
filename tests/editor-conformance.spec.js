@@ -1,131 +1,147 @@
 import { expect, test } from "@playwright/test";
-import { lessonFixtures } from "./vim-fixtures.mjs";
-import { runNativeVim } from "./native-vim-runner.mjs";
+import { readFileSync } from "node:fs";
 
-test.describe("CodeMirror Vim conformance", () => {
-  for (const fixture of lessonFixtures) {
-    test(`virtual keyboard matches native Vim: ${fixture.id}`, async ({ page }) => {
-      await page.goto("/");
-      const browser = await page.evaluate(({ id, keys }) => {
-        const index = window.VimWilds.exercises.findIndex(exercise => exercise.id === id);
-        window.VimWilds.goTo(index);
+const unit = JSON.parse(readFileSync(new URL("../content/units/repeatable-editing.json", import.meta.url), "utf8"));
+const activities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
+const indexOf = id => activities.findIndex(activity => activity.id === id);
+
+async function state(page) {
+  return page.evaluate(() => window.VimWilds.getState());
+}
+
+test.describe("Repeatable editing content runtime", () => {
+  test("the table of contents and public activity API expose the complete authored order", async ({ page }) => {
+    await page.goto("/");
+    expect(await page.locator("#activitySelect option").count()).toBe(activities.length);
+    const summaryIndex = indexOf("repeat-unit-summary");
+    await page.locator("#activitySelect").selectOption(String(summaryIndex));
+    expect((await state(page)).activityId).toBe("repeat-unit-summary");
+    await page.evaluate(index => window.VimWilds.goToActivity(index), 0);
+    const first = await state(page);
+    expect(first).toMatchObject({ activityId: "dot-is-a-change", activityType: "theory", lessonId: "one-change-many-uses" });
+    await expect(page.locator(".field-note").getByRole("button", { name: /show example/i })).toBeVisible();
+  });
+
+  test("theory links to its authored demo and a demo steps one token at a time", async ({ page }) => {
+    await page.goto("/");
+    await page.locator(".note-action").click();
+    expect((await state(page)).activityId).toBe("dot-append-demo");
+    const demo = activities[indexOf("dot-append-demo")];
+    for (let step = 1; step <= keysFor(demo).length; step += 1) {
+      await page.getByRole("button", { name: "Step" }).click();
+      expect((await state(page)).playbackStep).toBe(step);
+    }
+    const after = await state(page);
+    expect(after.code).toEqual(demo.scenario.target.lines);
+    expect(after.cursor).toEqual(demo.scenario.target.cursor);
+    await expect(page.getByRole("button", { name: /continue/i })).toBeEnabled();
+  });
+
+  test("normal and slow demo playback pause and reset deterministically", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(index => window.VimWilds.goToActivity(index), indexOf("find-todos-demo"));
+    await page.getByRole("button", { name: "Play" }).click();
+    await page.waitForTimeout(480);
+    await page.getByRole("button", { name: "Pause" }).click();
+    expect((await state(page)).playbackStep).toBeGreaterThan(0);
+    await page.getByRole("button", { name: "Reset" }).click();
+    expect((await state(page)).playbackStep).toBe(0);
+    await page.getByRole("button", { name: "Slow" }).click();
+    await page.waitForTimeout(900);
+    await page.getByRole("button", { name: "Pause" }).click();
+    expect((await state(page)).playbackStep).toBeGreaterThan(0);
+  });
+
+  test("practice rejects wrong virtual input without changing the editor or history", async ({ page }) => {
+    await page.goto("/");
+    const exercise = activities[indexOf("dot-python-values")];
+    await page.evaluate(index => window.VimWilds.goToActivity(index), indexOf(exercise.id));
+    const before = await state(page);
+    await page.evaluate(() => window.VimWilds.emit("x"));
+    const rejected = await state(page);
+    expect(rejected.code).toEqual(before.code);
+    expect(rejected.cursor).toEqual(before.cursor);
+    expect(rejected.history).toEqual(before.history);
+    expect(rejected.progress).toBe(0);
+    await page.evaluate(keys => keys.forEach(key => window.VimWilds.emit(key)), keysFor(exercise));
+    const complete = await state(page);
+    expect(complete.complete).toBe(true);
+    expect(complete.code).toEqual(exercise.scenario.target.lines);
+  });
+
+  test("practice routes physical keys through the same exact-sequence gate", async ({ page }) => {
+    await page.goto("/");
+    const exercise = activities[indexOf("dot-go-booleans")];
+    await page.evaluate(index => window.VimWilds.goToActivity(index), indexOf(exercise.id));
+    await page.locator(".cm-content").focus();
+    await page.keyboard.press("x");
+    expect((await state(page)).history).toEqual([]);
+    await page.keyboard.press("c");
+    expect((await state(page)).history).toEqual(["c"]);
+    await page.evaluate(keys => keys.forEach(key => window.VimWilds.emit(key)), keysFor(exercise).slice(1));
+    expect((await state(page)).complete).toBe(true);
+  });
+
+  test("every authored practice exercise can complete through its canonical sequence", async ({ page }) => {
+    await page.goto("/");
+    for (const exercise of activities.filter(activity => activity.type === "exercise")) {
+      const result = await page.evaluate(({ id, keys }) => {
+        const index = window.VimWilds.activities.findIndex(activity => activity.id === id);
+        window.VimWilds.goToActivity(index);
         keys.forEach(key => window.VimWilds.emit(key));
         return window.VimWilds.getState();
-      }, fixture);
-      const native = runNativeVim(fixture);
-      expect(browser.code).toEqual(native.code);
-      expect(browser.complete).toBe(true);
-    });
-  }
-
-  test("physical Ctrl+V keeps a Visual Block and replaces every row", async ({ page }) => {
-    await page.goto("/");
-    await page.locator(".cm-content").focus();
-    await page.keyboard.down("Control");
-    await page.keyboard.press("v");
-    await page.keyboard.up("Control");
-    await page.keyboard.press("3");
-    await page.keyboard.press("j");
-    await expect.poll(() => page.evaluate(() => window.VimWilds.getState().mode)).toBe("visual-block");
-    expect(await page.evaluate(() => window.VimWilds.getState().selection)).toEqual({
-      kind: "block",
-      from: [0, 25],
-      to: [3, 25],
-    });
-    await page.keyboard.press("r");
-    await page.keyboard.press("x");
-    expect(await page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
+      }, { id: exercise.id, keys: keysFor(exercise) });
+      expect(result, exercise.id).toMatchObject({
+        complete: true,
+        code: exercise.scenario.target.lines,
+        cursor: exercise.scenario.target.cursor,
+      });
+    }
   });
 
-  test("touch Ctrl+V keeps a Visual Block and replaces every row", async ({ page }) => {
+  test("every authored demonstration reaches its authored target through forward steps", async ({ page }) => {
     await page.goto("/");
-    await page.locator("[data-mod=Ctrl]").first().click();
-    await page.locator("[data-key=v]").click();
-    await page.locator('[data-key="3"]').click();
-    await page.locator("[data-key=j]").click();
-    await expect.poll(() => page.evaluate(() => window.VimWilds.getState().mode)).toBe("visual-block");
-    await page.locator("[data-key=r]").click();
-    await page.locator("[data-key=x]").click();
-    expect(await page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
+    for (const demo of activities.filter(activity => activity.type === "demo")) {
+      const result = await page.evaluate(({ id }) => {
+        const index = window.VimWilds.activities.findIndex(activity => activity.id === id);
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        return window.VimWilds.getState();
+      }, { id: demo.id });
+      expect(result.playbackStep, demo.id).toBe(keysFor(demo).length);
+      expect(result.code, demo.id).toEqual(demo.scenario.target.lines);
+      expect(result.cursor, demo.id).toEqual(demo.scenario.target.cursor);
+    }
   });
 
-  test("physical keyboard dot-repeat matches native Vim", async ({ page }) => {
-    const fixture = lessonFixtures.find(item => item.id === "mirror-repeat");
+  test("choice feedback only completes on the authored answer and summaries can continue", async ({ page }) => {
     await page.goto("/");
-    await page.evaluate(() => window.VimWilds.goTo(4));
-    await page.locator(".cm-content").focus();
-    for (const key of ["c", "i", "w"]) await page.keyboard.press(key);
-    await page.keyboard.type("new");
-    await page.keyboard.press("Escape");
-    for (const key of ["j", "b", ".", "j", "b", "."]) await page.keyboard.press(key);
-    const browser = await page.evaluate(() => window.VimWilds.getState());
-    expect(browser.code).toEqual(runNativeVim(fixture).code);
-    expect(browser.complete).toBe(true);
+    const choice = activities[indexOf("repeat-is-wrong-choice")];
+    await page.evaluate(index => window.VimWilds.goToActivity(index), indexOf(choice.id));
+    const wrong = choice.options.find(option => option.id !== choice.correctOptionId);
+    const correct = choice.options.find(option => option.id === choice.correctOptionId);
+    await page.locator(`[data-choice="${wrong.id}"]`).click();
+    expect((await state(page)).complete).toBe(false);
+    await expect(page.locator(".choice-feedback")).toBeVisible();
+    await page.locator(`[data-choice="${correct.id}"]`).click();
+    expect((await state(page)).complete).toBe(true);
+    await page.getByRole("button", { name: /next/i }).click();
+    expect((await state(page)).activityId).toBe("repeat-unit-summary");
   });
 
-  test("success replaces the assigned idle character with its transparent WebP and reset restores it", async ({ page }) => {
-    await page.goto("/");
-    const idleSrc = await page.locator(".nix").getAttribute("src");
-    await page.evaluate(() => window.VimWilds.solveCurrent());
-    await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
-    await expect(page.locator(".nix.celebrating")).toHaveClass(/transitioning-in/);
-    await expect(page.locator(".nix.celebrating")).toHaveAttribute("src", /assets\/characters\/[^/]+\/animations\/[^/]+\.webp$/);
-    await expect(page.locator(".nix.transitioning-out")).toHaveCount(1);
-    await expect.poll(() => page.locator(".nix").count()).toBe(1);
-
-    await page.locator("#resetButton").click();
-    await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
-    await expect(page.locator(".nix")).toHaveAttribute("src", idleSrc);
-  });
-
-  test("success WebP keeps the assigned character unmirrored on the right side", async ({ page }) => {
-    await page.goto("/");
-    await page.evaluate(() => {
-      const rightIndex = window.VimWilds.exercises.findIndex(exercise => exercise.scene.codeSide === "right");
-      window.VimWilds.goTo(rightIndex);
-      window.VimWilds.solveCurrent();
-    });
-    await expect(page.locator(".nix.right.celebrating")).toHaveClass(/celebrating/);
-    expect(await page.locator(".nix.right.celebrating").evaluate(element => getComputedStyle(element).transform)).not.toContain("matrix(-");
-    expect(await page.locator(".nix.right.celebrating").evaluate(element => getComputedStyle(element).getPropertyValue("--character-facing").trim())).not.toBe("-1");
-  });
-
-  test("left-side characters mirror for idle and success animation", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.locator(".nix.left")).toHaveCSS("--character-facing", "-1");
-    await page.evaluate(() => window.VimWilds.solveCurrent());
-    await expect(page.locator(".nix.left.celebrating")).toHaveCSS("--character-facing", "-1");
-  });
-
-  test("reduced-motion users retain the assigned static character on success", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    const idleSrc = await page.locator(".nix").getAttribute("src");
-    await page.evaluate(() => window.VimWilds.solveCurrent());
-    await expect.poll(() => page.evaluate(() => window.VimWilds.getState().complete)).toBe(true);
-    await expect(page.locator(".nix")).not.toHaveClass(/celebrating/);
-    await expect(page.locator(".nix")).toHaveAttribute("src", idleSrc);
-  });
-
-  test("touch Ctrl+Alt chord retains both modifiers", async ({ page }) => {
-    await page.goto("/");
-    await page.locator("[data-mod=Ctrl]").first().click();
-    await page.locator("[data-mod=Alt]").first().click();
-    await page.locator("[data-key=d]").click();
-    expect(await page.evaluate(() => window.VimWilds.getState().history.at(-1))).toBe("Ctrl+Alt+d");
-  });
-
-  test("touch modifier cancellation and physical fallback both reach the engine", async ({ page }) => {
-    await page.goto("/");
-    await page.locator("[data-mod=Ctrl]").first().click();
-    await page.locator("[data-mod=Ctrl]").first().click();
-    await page.locator("[data-key=d]").click();
-    expect(await page.evaluate(() => window.VimWilds.getState().history.at(-1))).toBe("d");
-
-    await page.locator("#resetButton").click();
-    await page.keyboard.press("j");
-    const state = await page.evaluate(() => window.VimWilds.getState());
-    expect(state.history.at(-1)).toBe("j");
-    expect(state.cursor[0]).toBe(1);
+  test("phone layouts do not create document overflow at the supported viewport sizes", async ({ page }) => {
+    for (const [width, height] of [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]]) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/");
+      const dimensions = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      }));
+      expect(dimensions.scrollWidth, `${width}px width`).toBeLessThanOrEqual(dimensions.width);
+      expect(dimensions.scrollHeight, `${height}px height`).toBeLessThanOrEqual(dimensions.height);
+    }
   });
 });

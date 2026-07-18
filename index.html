@@ -24,7 +24,11 @@
         <strong>The Vim Wilds</strong>
         <span id="locationLabel">Moonroot Ruins</span>
       </div>
-      <div class="progress-pill" id="progressPill">1 / 11</div>
+      <label class="toc-wrap" for="activitySelect">
+        <span class="sr-only">Lesson activity</span>
+        <select id="activitySelect" aria-label="Lesson table of contents"></select>
+      </label>
+      <div class="progress-pill" id="progressPill">1 / 1</div>
       <div class="mode-pill" id="modePill" aria-live="polite">Normal</div>
       <button class="reset-button" id="resetButton" type="button" aria-label="Restart exercise" title="Restart">↻</button>
     </header>
@@ -60,6 +64,7 @@
     </section>
 
     <section class="keyboard-panel" aria-label="Physical-style Vim keyboard">
+      <div class="activity-controls" id="activityControls"></div>
       <div class="command-tray" id="commandTray" aria-live="polite">
         <span class="prompt-glyph">›</span>
         <div class="command-text" id="commandText"><span class="ghost">waiting…</span></div>

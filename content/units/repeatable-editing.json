@@ -1,0 +1,5082 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "id": "repeatable-editing",
+  "title": "Repeatable editing",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "10. Repeatable editing",
+    "commandsAndConcepts": "Deliberate `.`, `;`/`,` plus `.`, `n`/`N` plus `.`, `@:`, `&`, `:~`; count vs repeat; repeat-friendly cursor placement",
+    "prerequisites": "Units 1–6; Unit 8 recommended",
+    "learningOutcome": "Design one change that can be replayed across nearby or searched instances, and recognize when repeat is the wrong tool",
+    "representativeExercises": "Change one field and repeat on later rows; search for a token and apply the same edit; compare `3dd` with repeated `dd`; rerun a recent Ex change",
+    "priorityAndPortability": "Core. `@:`, `&`, and `:~` bridge into Arc 3 and appear only after basic Command-line use"
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement",
+    "entering-changing-text",
+    "operator-grammar",
+    "precision-motions-search",
+    "text-objects"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "repeatable-editing-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "one-change-many-uses",
+      "title": "One change, many uses",
+      "objective": "Treat dot as a deliberate replay of the last complete change.",
+      "activities": [
+        {
+          "id": "dot-is-a-change",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Dot repeats a change, not your journey",
+          "body": "The dot command replays the last complete text change from the cursor's new location. Motions used only to reach that location are not included.",
+          "grammar": "make one change → move → .",
+          "contrast": "`j` chooses the next line; `.` repeats the edit there.",
+          "demoRef": "dot-append-demo"
+        },
+        {
+          "id": "dot-change-boundary",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Escape seals an inserted change",
+          "body": "An Insert-mode edit becomes repeatable when you return to Normal mode. Dot remembers the entry command, the literal text, and the exit as one change.",
+          "grammar": "A + ; + Escape → .",
+          "contrast": "Pressing dot while the first change is unfinished cannot replay it.",
+          "demoRef": "dot-append-demo"
+        },
+        {
+          "id": "dot-append-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Finish three declarations",
+          "instruction": "Append a semicolon once, then replay that complete change on the next two lines.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const port = 3000",
+                "const host = getHost()",
+                "const secure = enabled"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const port = 3000;",
+                "const host = getHost();",
+                "const secure = enabled;"
+              ],
+              "cursor": [
+                2,
+                22
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;⎋",
+                "explanation": "Append once and finish the change."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "j.",
+                "explanation": "Move, then replay."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "j.",
+                "explanation": "Replay at the third line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "const port = 3000;",
+                  "const host = getHost()",
+                  "const secure = enabled"
+                ],
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  1,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  2,
+                  21
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "const port = 3000;",
+                  "const host = getHost();",
+                  "const secure = enabled;"
+                ],
+                "cursor": [
+                  2,
+                  22
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make the first append reusable.",
+            "Use `A` to append at the line end, then leave Insert mode.",
+            "After `A;Escape`, use `j.` twice."
+          ],
+          "feedback": {
+            "success": "One append, replayed twice.",
+            "why": "Dot replayed `A;Escape`; the preceding `j` motions remained separate."
+          },
+          "skills": {
+            "primary": [
+              "dot-repeat"
+            ],
+            "supporting": [
+              "append",
+              "line-motion"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "three-instances",
+              "different-line-lengths"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "TypeScript declarations make missing terminators realistic while differing lengths prove that A is repeat-friendly.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "dot-python-values",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Promote every cache mode",
+          "instruction": "Change the first `draft` to `ready`, then replay on the next rows.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "east = 'draft'",
+                "west = 'draft'",
+                "north = 'draft'"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "east = 'ready'",
+                "west = 'ready'",
+                "north = 'ready'"
+              ],
+              "cursor": [
+                2,
+                13
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "i",
+              "'",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "ci'ready⎋",
+                "explanation": "Create one complete quote change."
+              },
+              {
+                "from": 9,
+                "to": 13,
+                "display": "j.j.",
+                "explanation": "Move and replay twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "cursor": [
+                  1,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "cursor": [
+                  2,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "east = 'ready'",
+                  "west = 'ready'",
+                  "north = 'ready'"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make one structural quote change.",
+            "Use `ci'`, enter `ready`, and escape.",
+            "Type `ci'ready Escape j . j .`."
+          ],
+          "feedback": {
+            "success": "All cache modes are ready.",
+            "why": "The quote text object made a self-contained change that dot could replay."
+          },
+          "skills": {
+            "primary": [
+              "dot-repeat"
+            ],
+            "supporting": [
+              "quote-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "three-instances",
+              "short-insert"
+            ]
+          },
+          "portability": "Core Vim quote-object and dot behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Python configuration-like assignments give quote objects a natural use.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "dot-java-terminators",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Terminate the builder calls",
+          "instruction": "Add the missing semicolon to each call with one append and two repeats.",
+          "languageId": "java",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "builder.name(name)",
+                "builder.timeout(timeout)",
+                "builder.retry(retry)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "builder.name(name);",
+                "builder.timeout(timeout);",
+                "builder.retry(retry);"
+              ],
+              "cursor": [
+                2,
+                20
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ";",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A;⎋",
+                "explanation": "Prepare the append."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "j.j.",
+                "explanation": "Apply it to both remaining calls."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "cursor": [
+                  1,
+                  18
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  2,
+                  19
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "builder.name(name);",
+                  "builder.timeout(timeout);",
+                  "builder.retry(retry);"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use an entry command that finds the end for you.",
+            "`A` is replayed as part of the change.",
+            "Use `A;Escape j . j .`."
+          ],
+          "feedback": {
+            "success": "The builder chain is complete.",
+            "why": "Because `A` belongs to the recorded change, differing line lengths do not matter."
+          },
+          "skills": {
+            "primary": [
+              "dot-repeat",
+              "repeat-friendly-placement"
+            ],
+            "supporting": [
+              "append"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "different-line-lengths"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Java method calls make semicolon insertion idiomatic and visibly useful.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-repeat",
+              "repeat-friendly-placement"
+            ]
+          }
+        },
+        {
+          "id": "dot-go-booleans",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Enable every service",
+          "instruction": "Change all three aligned `false` values to `true`. Prepare the change once.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache := false",
+                "queue := false",
+                "audit := false"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cache := true",
+                "queue := true",
+                "audit := true"
+              ],
+              "cursor": [
+                2,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "i",
+              "w",
+              "t",
+              "r",
+              "u",
+              "e",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "ciwtrue⎋",
+                "explanation": "Prepare the value change."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "j.j.",
+                "explanation": "Replay it twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  1,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "cursor": [
+                  2,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "cache := true",
+                  "queue := true",
+                  "audit := true"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make the value edit one repeatable unit.",
+            "Change the word under the cursor and leave Insert mode.",
+            "Use `ciwtrue Escape j . j .`."
+          ],
+          "feedback": {
+            "success": "Every service is enabled.",
+            "why": "One word change supplied the recipe; line motions selected later instances."
+          },
+          "skills": {
+            "primary": [
+              "dot-repeat"
+            ],
+            "supporting": [
+              "word-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "recall",
+              "three-instances"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Go short declarations provide compact repeated values without extra syntax.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-repeat"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "repeat-friendly-changes",
+      "title": "Make the change repeatable",
+      "objective": "Choose changes whose own motions and final cursor position survive variation.",
+      "activities": [
+        {
+          "id": "repeat-self-contained",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Put navigation inside the change when it belongs there",
+          "body": "A repeat is robust when the change can find its own boundary. Commands such as `A`, `I`, and text objects adapt to each new line or object.",
+          "grammar": "stable target → self-contained change → useful landing",
+          "contrast": "An absolute column may work once and fail when the next line is longer.",
+          "demoRef": "repeat-python-commas"
+        },
+        {
+          "id": "repeat-python-commas",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Complete a Python mapping",
+          "instruction": "Append a comma to each mapping row, despite their different lengths.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "    'host': host",
+                "    'retry_count': retries",
+                "    'secure': enabled"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "    'host': host,",
+                "    'retry_count': retries,",
+                "    'secure': enabled,"
+              ],
+              "cursor": [
+                2,
+                21
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ",",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "A,⎋",
+                "explanation": "Make a line-end-aware append."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "j.j.",
+                "explanation": "Replay on different lengths."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "cursor": [
+                  1,
+                  16
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  2,
+                  20
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "    'host': host,",
+                  "    'retry_count': retries,",
+                  "    'secure': enabled,"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Let the change find each line end.",
+            "Append with `A`, not a fixed horizontal motion.",
+            "Use `A,Escape j . j .`."
+          ],
+          "feedback": {
+            "success": "The mapping rows now end cleanly.",
+            "why": "Replaying `A,Escape` recalculated the end of every line."
+          },
+          "skills": {
+            "primary": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ],
+            "supporting": [
+              "append"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "different-line-lengths"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Python mappings make trailing commas realistic and emphasize varied row lengths.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "repeat-yaml-quotes",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Promote every environment",
+          "instruction": "Change each quoted `dev` value to `prod` by replaying one quote-object edit.",
+          "languageId": "yaml",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "api: 'dev'",
+                "worker: 'dev'",
+                "cron: 'dev'"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "api: 'prod'",
+                "worker: 'prod'",
+                "cron: 'prod'"
+              ],
+              "cursor": [
+                2,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "i",
+              "'",
+              "p",
+              "r",
+              "o",
+              "d",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "ci'prod⎋",
+                "explanation": "Change a structural target."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "j.j.",
+                "explanation": "Replay independently of key length."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  1,
+                  9
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "cursor": [
+                  2,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "api: 'prod'",
+                  "worker: 'prod'",
+                  "cron: 'prod'"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the quotes, not columns, as the target.",
+            "Prepare `ci'prod` and escape.",
+            "Then use `j.` twice."
+          ],
+          "feedback": {
+            "success": "Every environment is production-ready.",
+            "why": "The text object adapts even though the YAML keys have different widths."
+          },
+          "skills": {
+            "primary": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ],
+            "supporting": [
+              "quote-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "different-prefix-widths"
+            ]
+          },
+          "portability": "Core Vim quote-object behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "YAML keys naturally vary in width while quoted scalar values remain structural targets.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "repeat-css-colons",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Repair custom-property separators",
+          "instruction": "Replace each mistaken `=` with `:`. Let each repeated change land on the marked separator.",
+          "languageId": "css",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "  --gap = 8px;",
+                "  --radius = 4px;",
+                "  --speed = 120ms;"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "  --gap : 8px;",
+                "  --radius : 4px;",
+                "  --speed : 120ms;"
+              ],
+              "cursor": [
+                2,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "=",
+              "r",
+              ":",
+              "j",
+              "0",
+              "f",
+              "=",
+              ".",
+              "j",
+              "0",
+              "f",
+              "=",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "f=r:",
+                "explanation": "Find and replace the first separator."
+              },
+              {
+                "from": 4,
+                "to": 9,
+                "display": "j0f=.",
+                "explanation": "Find the next separator and replay."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "j0f=.",
+                "explanation": "Repeat once more."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  1,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "cursor": [
+                  2,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "  --gap : 8px;",
+                  "  --radius : 4px;",
+                  "  --speed : 120ms;"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Position on each `=` before replaying the replacement.",
+            "Use `f=r:` once; on later rows use `0f=` before dot.",
+            "Type `f=r: j0f=. j0f=.`."
+          ],
+          "feedback": {
+            "success": "Every declaration uses the intended separator.",
+            "why": "The positioning commands were explicit; dot replayed only the one-character replacement."
+          },
+          "skills": {
+            "primary": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ],
+            "supporting": [
+              "find-character",
+              "replace-character"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "mixed-motion",
+              "different-columns"
+            ]
+          },
+          "portability": "Core character-find, replace, and dot behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "CSS custom properties provide realistic repeated separators at varying columns.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "repeat-rust-await",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Await every request",
+          "instruction": "Append `.await` to each expression with one repeatable change.",
+          "languageId": "rust",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fetch_user()",
+                "fetch_permissions(user)",
+                "fetch_dashboard(user)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fetch_user().await",
+                "fetch_permissions(user).await",
+                "fetch_dashboard(user).await"
+              ],
+              "cursor": [
+                2,
+                26
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ".",
+              "a",
+              "w",
+              "a",
+              "i",
+              "t",
+              "Escape",
+              "j",
+              ".",
+              "j",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "A.await⎋",
+                "explanation": "Prepare a line-end-aware append."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "j.j.",
+                "explanation": "Replay on the longer expressions."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  1,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "cursor": [
+                  2,
+                  20
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "fetch_user().await",
+                  "fetch_permissions(user).await",
+                  "fetch_dashboard(user).await"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make the end-of-line motion part of the change.",
+            "Append `.await` with `A`, then escape.",
+            "Use `A.await Escape j . j .`."
+          ],
+          "feedback": {
+            "success": "All requests are awaited.",
+            "why": "Dot repeated the adaptive append instead of a fragile column-based edit."
+          },
+          "skills": {
+            "primary": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ],
+            "supporting": [
+              "append"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "recall",
+              "different-line-lengths"
+            ]
+          },
+          "portability": "The text edit is portable; whether `.await` is semantically valid depends on the host code.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Rust futures make repeated `.await` suffixes a familiar local transformation.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-friendly-placement",
+              "dot-repeat"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "find-change-echo",
+      "title": "Find, change, echo",
+      "objective": "Use character-find history to position dot-repeat across nearby instances.",
+      "activities": [
+        {
+          "id": "find-repeat-direction",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Repeat the search and the change separately",
+          "body": "After `f`, `F`, `t`, or `T`, semicolon repeats that character-find in the same direction and comma reverses it. Dot then repeats the prepared edit.",
+          "grammar": "find + change → ; + .",
+          "contrast": "`;` and `,` move; `.` changes text.",
+          "demoRef": "find-todos-demo"
+        },
+        {
+          "id": "find-todos-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Update settings in both directions",
+          "instruction": "Change the middle `old`, reverse to the first setting, then continue forward to the last.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode=old | theme=old | cache=old"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode=new | theme=new | cache=new"
+              ],
+              "cursor": [
+                0,
+                31
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "2",
+              "f",
+              "=",
+              "l",
+              "c",
+              "i",
+              "w",
+              "n",
+              "e",
+              "w",
+              "Escape",
+              "2",
+              ",",
+              "l",
+              ".",
+              "2",
+              ";",
+              "l",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": "2f=lciwnew⎋",
+                "explanation": "Find the middle assignment and prepare the change."
+              },
+              {
+                "from": 11,
+                "to": 15,
+                "display": "2,l.",
+                "explanation": "Reverse past the current marker to the first value and replay."
+              },
+              {
+                "from": 15,
+                "to": 19,
+                "display": "2;l.",
+                "explanation": "Continue forward to the last value and replay."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  16
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "cursor": [
+                  0,
+                  28
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "mode=new | theme=new | cache=new"
+                ],
+                "cursor": [
+                  0,
+                  31
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The last `f=` can travel in either direction.",
+            "Use `2,` to reach the first assignment and `2;` to reach the last.",
+            "Use `2f=lciwnew Escape 2,l. 2;l.`."
+          ],
+          "feedback": {
+            "success": "All three settings are new.",
+            "why": "Comma and semicolon traversed the remembered `=` target; dot supplied the value change."
+          },
+          "skills": {
+            "primary": [
+              "find-dot-repeat"
+            ],
+            "supporting": [
+              "semicolon-repeat",
+              "comma-reverse",
+              "word-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "bidirectional",
+              "single-line"
+            ]
+          },
+          "portability": "Core Vim find-repeat behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "A neutral settings row makes forward and reverse character-find behavior explicit without language syntax distractions.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "find-csv-statuses",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Finish the CSV statuses",
+          "instruction": "Change the first `todo` to `done`, then use the remembered find to reach the others.",
+          "languageId": "csv",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "id,status,next",
+                "1,todo,todo,todo"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "id,status,next",
+                "1,done,done,done"
+              ],
+              "cursor": [
+                1,
+                15
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "t",
+              "c",
+              "i",
+              "w",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape",
+              ";",
+              ".",
+              ";",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "ftciwdone⎋",
+                "explanation": "Find and change the first status."
+              },
+              {
+                "from": 10,
+                "to": 14,
+                "display": ";.;.",
+                "explanation": "Repeat the find and change twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "cursor": [
+                  1,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "cursor": [
+                  1,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "id,status,next",
+                  "1,done,done,done"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Find the `t` once and reuse that find.",
+            "After the first change, alternate `;` and `.`.",
+            "Use `ftciwdone Escape ; . ; .`."
+          ],
+          "feedback": {
+            "success": "Every record is done.",
+            "why": "Replacing `todo` removed the old `t`, so each semicolon advanced to the next untouched value."
+          },
+          "skills": {
+            "primary": [
+              "find-dot-repeat"
+            ],
+            "supporting": [
+              "semicolon-repeat"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "same-line",
+              "three-instances"
+            ]
+          },
+          "portability": "Core Vim behavior; CSV is treated as neutral text.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "CSV naturally exposes repeated fields on one line, ideal for semicolon traversal.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "find-csharp-arrows",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Repair expression arrows",
+          "instruction": "Replace each mistaken `?` with `>` by finding the marker and replaying the replacement.",
+          "languageId": "csharp",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Name = user ? user.Name;",
+                "Age = user ? user.Age;",
+                "Role = user ? user.Role;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Name = user > user.Name;",
+                "Age = user > user.Age;",
+                "Role = user > user.Role;"
+              ],
+              "cursor": [
+                2,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "?",
+              "r",
+              ">",
+              "j",
+              "0",
+              ";",
+              ".",
+              "j",
+              "0",
+              ";",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "f?r>",
+                "explanation": "Find and repair the first marker."
+              },
+              {
+                "from": 4,
+                "to": 8,
+                "display": "j0;.",
+                "explanation": "Reuse the find on the next line, then dot."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "j0;.",
+                "explanation": "Repeat once more."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "cursor": [
+                  1,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "cursor": [
+                  2,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "Name = user > user.Name;",
+                  "Age = user > user.Age;",
+                  "Role = user > user.Role;"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The previous `f?` can be repeated after returning to line start.",
+            "Use `j0;.` for each later line.",
+            "Type `f?r> j0;. j0;.`."
+          ],
+          "feedback": {
+            "success": "Every arrow marker is repaired.",
+            "why": "Semicolon reused the character target even across lines; dot reused the replacement."
+          },
+          "skills": {
+            "primary": [
+              "find-dot-repeat"
+            ],
+            "supporting": [
+              "semicolon-repeat",
+              "replace-character"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-reset",
+              "different-columns"
+            ]
+          },
+          "portability": "Core Vim behavior; the fragment is intentionally lexical rather than compilable C#.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "C#-like member expressions provide varied prefixes around a repeated punctuation defect.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "find-shell-flags",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Enable every shell flag",
+          "instruction": "Turn each `off` field into `on`, using `;` to revisit the remembered `=` target.",
+          "languageId": "shell",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "flags=off;cache=off;audit=off"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "flags=on;cache=on;audit=on"
+              ],
+              "cursor": [
+                0,
+                25
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "=",
+              "l",
+              "c",
+              "i",
+              "w",
+              "o",
+              "n",
+              "Escape",
+              ";",
+              "l",
+              ".",
+              ";",
+              "l",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "f=lciwon⎋",
+                "explanation": "Find the first assignment and prepare the value change."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": ";l.",
+                "explanation": "Reach and change the second value."
+              },
+              {
+                "from": 12,
+                "to": 15,
+                "display": ";l.",
+                "explanation": "Reach and change the final value."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "cursor": [
+                  0,
+                  23
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "flags=on;cache=on;audit=on"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Remember the `=` rather than searching for `off` repeatedly.",
+            "After the first value change, use `;l.`.",
+            "Use `f=lciwon Escape ;l. ;l.`."
+          ],
+          "feedback": {
+            "success": "All shell flags are enabled.",
+            "why": "The find target stayed stable while dot changed each following word."
+          },
+          "skills": {
+            "primary": [
+              "find-dot-repeat"
+            ],
+            "supporting": [
+              "semicolon-repeat",
+              "word-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "compound-command",
+              "same-line"
+            ]
+          },
+          "portability": "Core Vim behavior; the line is safe illustrative text and is not executed.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Shell-style assignments create a realistic compact row of repeated flag values.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-dot-repeat"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "search-change-echo",
+      "title": "Search, change, echo",
+      "objective": "Use search history to carry one change through distant or bidirectional matches.",
+      "activities": [
+        {
+          "id": "search-repeat-direction",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Search chooses instances; dot changes them",
+          "body": "After `/` or `?`, `n` continues in the search direction and `N` goes the opposite way. Keep navigation and transformation separate: find a match, then press dot.",
+          "grammar": "/pattern Enter → change → n.",
+          "contrast": "`n` means same search direction, not always downward.",
+          "demoRef": "search-config-demo"
+        },
+        {
+          "id": "search-config-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Promote matching stages",
+          "instruction": "Search for `draft`, change one result, then continue through later matches.",
+          "languageId": "json",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "{",
+                "  \"api\": \"draft\",",
+                "  \"worker\": \"draft\",",
+                "  \"cron\": \"draft\"",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "{",
+                "  \"api\": \"live\",",
+                "  \"worker\": \"live\",",
+                "  \"cron\": \"live\"",
+                "}"
+              ],
+              "cursor": [
+                3,
+                14
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "c",
+              "i",
+              "\"",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape",
+              "n",
+              ".",
+              "n",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/draft↵",
+                "explanation": "Establish search history."
+              },
+              {
+                "from": 7,
+                "to": 15,
+                "display": "ci\"live⎋",
+                "explanation": "Prepare the structural change."
+              },
+              {
+                "from": 15,
+                "to": 19,
+                "display": "n.n.",
+                "explanation": "Advance and replay twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "cursor": [
+                  2,
+                  13
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "cursor": [
+                  3,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "{",
+                  "  \"api\": \"live\",",
+                  "  \"worker\": \"live\",",
+                  "  \"cron\": \"live\"",
+                  "}"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Search once; do not type the pattern again.",
+            "Change inside the first matched quotes, then use `n.`.",
+            "Use `/draft Enter ci\"live Escape n . n .`."
+          ],
+          "feedback": {
+            "success": "Every stage is live.",
+            "why": "Search history selected the distant values while dot replayed the quote change."
+          },
+          "skills": {
+            "primary": [
+              "search-dot-repeat"
+            ],
+            "supporting": [
+              "forward-search",
+              "quote-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "multi-line",
+              "three-matches"
+            ]
+          },
+          "portability": "Core text search and dot behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "JSON gives repeated quoted values and a structurally clear target.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "search-python-backward",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Clean logs upward",
+          "instruction": "Search backward for `debug`, change it to `info`, then keep moving in that backward direction.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "logger.debug('cache')",
+                "logger.debug('queue')",
+                "logger.debug('worker')"
+              ],
+              "cursor": [
+                2,
+                19
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "logger.info('cache')",
+                "logger.info('queue')",
+                "logger.info('worker')"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "?",
+              "d",
+              "e",
+              "b",
+              "u",
+              "g",
+              "Enter",
+              "c",
+              "i",
+              "w",
+              "i",
+              "n",
+              "f",
+              "o",
+              "Escape",
+              "n",
+              ".",
+              "n",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "?debug↵",
+                "explanation": "Search backward from the bottom."
+              },
+              {
+                "from": 7,
+                "to": 15,
+                "display": "ciwinfo⎋",
+                "explanation": "Prepare the level change."
+              },
+              {
+                "from": 15,
+                "to": 19,
+                "display": "n.n.",
+                "explanation": "Continue backward and replay."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  2,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "cursor": [
+                  1,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "logger.info('cache')",
+                  "logger.info('queue')",
+                  "logger.info('worker')"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "With `?`, `n` continues upward.",
+            "Make one `ciwinfo` change, then repeat with `n.`.",
+            "Use `?debug Enter ciwinfo Escape n . n .`."
+          ],
+          "feedback": {
+            "success": "The log levels are cleaned upward.",
+            "why": "`n` followed the original backward search direction."
+          },
+          "skills": {
+            "primary": [
+              "search-dot-repeat"
+            ],
+            "supporting": [
+              "backward-search"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "backward-direction"
+            ]
+          },
+          "portability": "Core Vim search behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Python logger calls are recognizable repeated search targets.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "search-sql-bidirectional",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Update rows on both sides",
+          "instruction": "Start at the middle `pending`, change it, continue forward, then use `N` to reach the remaining earlier match.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status = 'pending'",
+                "status = 'pending'",
+                "status = 'pending'"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "status = 'active'",
+                "status = 'active'",
+                "status = 'active'"
+              ],
+              "cursor": [
+                0,
+                15
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "p",
+              "e",
+              "n",
+              "d",
+              "i",
+              "n",
+              "g",
+              "Enter",
+              "c",
+              "i",
+              "'",
+              "a",
+              "c",
+              "t",
+              "i",
+              "v",
+              "e",
+              "Escape",
+              "n",
+              ".",
+              "N",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "/pending↵",
+                "explanation": "Find the middle value."
+              },
+              {
+                "from": 9,
+                "to": 19,
+                "display": "ci'active⎋",
+                "explanation": "Prepare the change."
+              },
+              {
+                "from": 19,
+                "to": 21,
+                "display": "n.",
+                "explanation": "Continue forward."
+              },
+              {
+                "from": 21,
+                "to": 23,
+                "display": "N.",
+                "explanation": "Reverse to the untouched earlier match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "cursor": [
+                  2,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 22,
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 23,
+                "lines": [
+                  "status = 'active'",
+                  "status = 'active'",
+                  "status = 'active'"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "`N` reverses the search direction.",
+            "After changing the middle match, use `n.` and then `N.`.",
+            "Use `/pending Enter ci'active Escape n . N .`."
+          ],
+          "feedback": {
+            "success": "Every row is active.",
+            "why": "`n` and `N` selected matches in opposite directions; dot applied one transformation."
+          },
+          "skills": {
+            "primary": [
+              "search-dot-repeat"
+            ],
+            "supporting": [
+              "forward-search",
+              "reverse-search"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "bidirectional",
+              "search-state"
+            ]
+          },
+          "portability": "Core Vim search behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "SQL predicate fragments make repeated status values realistic and direction-neutral.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "search-log-codes",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Normalize matching log codes",
+          "instruction": "Search for `E_TIMEOUT` and change every occurrence to `TIMEOUT` without touching `E_AUTH`.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "12:01 E_TIMEOUT api",
+                "12:02 E_AUTH login",
+                "12:03 E_TIMEOUT worker",
+                "12:04 E_TIMEOUT cron"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "12:01 TIMEOUT api",
+                "12:02 E_AUTH login",
+                "12:03 TIMEOUT worker",
+                "12:04 TIMEOUT cron"
+              ],
+              "cursor": [
+                3,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "E",
+              "_",
+              "T",
+              "I",
+              "M",
+              "E",
+              "O",
+              "U",
+              "T",
+              "Enter",
+              "c",
+              "i",
+              "w",
+              "T",
+              "I",
+              "M",
+              "E",
+              "O",
+              "U",
+              "T",
+              "Escape",
+              "n",
+              ".",
+              "n",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": "/E_TIMEOUT↵",
+                "explanation": "Search only for the intended code."
+              },
+              {
+                "from": 11,
+                "to": 22,
+                "display": "ciwTIMEOUT⎋",
+                "explanation": "Prepare the exact code change."
+              },
+              {
+                "from": 22,
+                "to": 26,
+                "display": "n.n.",
+                "explanation": "Replay only on later matches."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 23,
+                "cursor": [
+                  2,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 25,
+                "cursor": [
+                  3,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 26,
+                "lines": [
+                  "12:01 TIMEOUT api",
+                  "12:02 E_AUTH login",
+                  "12:03 TIMEOUT worker",
+                  "12:04 TIMEOUT cron"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the precise code as the search anchor.",
+            "Change one matched word, then use `n.`.",
+            "Search `/E_TIMEOUT`, make `ciwTIMEOUT`, then replay twice."
+          ],
+          "feedback": {
+            "success": "Only timeout records were normalized.",
+            "why": "A precise search kept the unrelated authentication record out of the workflow."
+          },
+          "skills": {
+            "primary": [
+              "search-dot-repeat"
+            ],
+            "supporting": [
+              "precise-search"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "distractor",
+              "four-lines"
+            ]
+          },
+          "portability": "Core text-based search behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Logs naturally contain repeated codes separated by unrelated distractors.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-dot-repeat"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "count-or-repeat",
+      "title": "Count or repeat?",
+      "objective": "Choose between one counted change and several independently replayed changes.",
+      "activities": [
+        {
+          "id": "count-repeat-tradeoff",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Counts commit; repeats let you inspect",
+          "body": "A count is compact when the number and adjacency are already certain. Separate repeats create separate changes and let you inspect or move between applications.",
+          "grammar": "3dd ↔ dd..",
+          "contrast": "Both can remove three lines, but they create different editing and undo histories.",
+          "demoRef": "count-delete-demo"
+        },
+        {
+          "id": "dot-count-memory",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Dot remembers—and can replace—a count",
+          "body": "Without a new count, dot reuses the count from the last change. A count before dot replaces that remembered count for the replay.",
+          "grammar": "2x → . repeats 2x; 3. repeats 3x",
+          "contrast": "The count belongs to the change recipe, not to the movement between instances.",
+          "demoRef": "dot-replace-count"
+        },
+        {
+          "id": "count-delete-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Delete a known block",
+          "instruction": "Remove the three adjacent debug lines as one counted change.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "debug('cache');",
+                "debug('queue');",
+                "debug('worker');",
+                "start();"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "start();"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "d",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "3dd",
+                "explanation": "Delete exactly three known adjacent lines."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "start();"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The rows are adjacent and the count is known.",
+            "Place the count before the line delete.",
+            "Use `3dd`."
+          ],
+          "feedback": {
+            "success": "The fixed block is gone.",
+            "why": "A count was the lowest-setup tool for three certain adjacent lines.",
+            "contrast": "`dd..` reaches the same text but creates inspectable separate changes."
+          },
+          "skills": {
+            "primary": [
+              "count-vs-repeat"
+            ],
+            "supporting": [
+              "counted-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "adjacent-lines",
+              "known-count"
+            ]
+          },
+          "portability": "Core Vim count behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Debug calls form a realistic fixed block whose size is obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "count-vs-repeat"
+            ]
+          }
+        },
+        {
+          "id": "repeat-delete-inspect",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete with inspection points",
+          "instruction": "Remove the three stale lines as three separate changes.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "stale cache note",
+                "stale queue note",
+                "stale worker note",
+                "keep release note"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "keep release note"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "d",
+              ".",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "dd",
+                "explanation": "Delete the first line."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "..",
+                "explanation": "Replay twice, with a stop available after either dot."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "stale queue note",
+                  "stale worker note",
+                  "keep release note"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "stale worker note",
+                  "keep release note"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "keep release note"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Make one line deletion, then replay it.",
+            "Use `dd`, followed by two dots.",
+            "Type `dd..`."
+          ],
+          "feedback": {
+            "success": "Three separate deletions completed.",
+            "why": "Repeated `dd` permits inspection or stopping between applications."
+          },
+          "skills": {
+            "primary": [
+              "count-vs-repeat",
+              "dot-repeat"
+            ],
+            "supporting": [
+              "line-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "undo-granularity"
+            ]
+          },
+          "portability": "Core Vim dot and undo grouping behavior; this task validates text only.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Neutral release notes keep attention on editing granularity.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "count-vs-repeat",
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "dot-inherited-count",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reuse the deletion count",
+          "instruction": "Delete two temporary rows, then let dot reuse that count for the next pair.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "temp_a = true",
+                "temp_b = true",
+                "temp_c = true",
+                "temp_d = true",
+                "keep = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "keep = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "2",
+              "d",
+              "d",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "2dd",
+                "explanation": "Delete the first pair."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": ".",
+                "explanation": "Reuse the remembered count of two."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "temp_c = true",
+                  "temp_d = true",
+                  "keep = true"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "keep = true"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Dot remembers the count attached to the change.",
+            "Make `2dd` the last change.",
+            "Then press `.` once."
+          ],
+          "feedback": {
+            "success": "Both pairs are removed.",
+            "why": "Dot replayed the complete counted change `2dd`."
+          },
+          "skills": {
+            "primary": [
+              "dot-count",
+              "dot-repeat"
+            ],
+            "supporting": [
+              "counted-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "remembered-count"
+            ]
+          },
+          "portability": "Core Vim dot count behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "TOML-like flags make two temporary pairs and one keeper easy to distinguish.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-count",
+              "dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "dot-replace-count",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replace the remembered count",
+          "instruction": "Delete two hashes first, then use a count before dot to delete the remaining three.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "##### Release notes"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                " Release notes"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "2",
+              "x",
+              "3",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "2x",
+                "explanation": "Create a two-character deletion."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "3.",
+                "explanation": "Replace the remembered count with three."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "### Release notes"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  " Release notes"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "A new count before dot replaces the old count.",
+            "After `2x`, replay deletion with a count of three.",
+            "Use `2x3.`."
+          ],
+          "feedback": {
+            "success": "The heading marks are removed.",
+            "why": "`3.` replayed the deletion with three as its replacement count."
+          },
+          "skills": {
+            "primary": [
+              "dot-count",
+              "count-vs-repeat"
+            ],
+            "supporting": [
+              "character-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "count-replacement"
+            ]
+          },
+          "portability": "Core Vim dot count behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Markdown heading markers provide a visible run of identical characters for count replacement.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-count",
+              "count-vs-repeat"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "replay-ex-command",
+      "title": "Replay the Ex line",
+      "objective": "Use @: to execute the complete most recent Command-line command again.",
+      "activities": [
+        {
+          "id": "at-colon-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The colon register remembers the last Ex command",
+          "body": "`@:` executes the most recent Command-line command again. The replay includes the command text but runs at the current cursor and line context.",
+          "grammar": ":command Enter → move → @:",
+          "contrast": "Unlike dot, `@:` is specifically Command-line history and can replay Ex commands that dot does not represent clearly.",
+          "demoRef": "at-colon-flags-demo"
+        },
+        {
+          "id": "at-colon-flags-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Enable three feature flags",
+          "instruction": "Substitute `false` with `true` on the first line, then replay the Ex command on later lines.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const cache = false;",
+                "const queue = false;",
+                "const audit = false;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const cache = true;",
+                "const queue = true;",
+                "const audit = true;"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "f",
+              "a",
+              "l",
+              "s",
+              "e",
+              "/",
+              "t",
+              "r",
+              "u",
+              "e",
+              "/",
+              "Enter",
+              "j",
+              "@",
+              ":",
+              "j",
+              "@",
+              ":"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":s/false/true/↵",
+                "explanation": "Run one current-line substitution."
+              },
+              {
+                "from": 15,
+                "to": 18,
+                "display": "j@:",
+                "explanation": "Move and replay the Ex command."
+              },
+              {
+                "from": 18,
+                "to": 21,
+                "display": "j@:",
+                "explanation": "Replay on the final line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "const cache = true;",
+                  "const queue = false;",
+                  "const audit = false;"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 21,
+                "lines": [
+                  "const cache = true;",
+                  "const queue = true;",
+                  "const audit = true;"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Replay the whole Command-line entry.",
+            "After the first substitution, move and use `@:`.",
+            "Use `:s/false/true/ Enter j @: j @:`."
+          ],
+          "feedback": {
+            "success": "Every feature flag is enabled.",
+            "why": "`@:` reran the complete current-line substitution at each new row."
+          },
+          "skills": {
+            "primary": [
+              "at-colon"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "three-lines"
+            ]
+          },
+          "portability": "Requires Command-line history; hosts may reserve or incompletely emulate Ex behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "TypeScript feature flags make a repeated literal substitution obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "at-colon"
+            ]
+          }
+        },
+        {
+          "id": "at-colon-python-none",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Replace placeholder limits",
+          "instruction": "Change each `None` to `0` by replaying the first Ex command.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "soft_limit = None",
+                "hard_limit = None",
+                "burst_limit = None"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "soft_limit = 0",
+                "hard_limit = 0",
+                "burst_limit = 0"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "N",
+              "o",
+              "n",
+              "e",
+              "/",
+              "0",
+              "/",
+              "Enter",
+              "j",
+              "@",
+              ":",
+              "j",
+              "@",
+              ":"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": ":s/None/0/↵",
+                "explanation": "Create the Ex recipe."
+              },
+              {
+                "from": 11,
+                "to": 17,
+                "display": "j@:j@:",
+                "explanation": "Replay it on both later lines."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 15,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "soft_limit = 0",
+                  "hard_limit = 0",
+                  "burst_limit = 0"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The entire substitution is in Command-line history.",
+            "Move down and execute the colon register.",
+            "Use `:s/None/0/ Enter j @: j @:`."
+          ],
+          "feedback": {
+            "success": "Every limit now has a numeric placeholder.",
+            "why": "The same Ex command was valid in each line context."
+          },
+          "skills": {
+            "primary": [
+              "at-colon"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "literal-command"
+            ]
+          },
+          "portability": "Requires Command-line history.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Python commonly uses None as an unset placeholder, producing a natural literal edit.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "at-colon"
+            ]
+          }
+        },
+        {
+          "id": "at-colon-sql-status",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Activate selected rows",
+          "instruction": "Run one literal substitution per row by moving and replaying the last Ex command.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "('api', 'draft'),",
+                "('worker', 'draft'),",
+                "('cron', 'draft')"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "('api', 'active'),",
+                "('worker', 'active'),",
+                "('cron', 'active')"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "a",
+              "c",
+              "t",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter",
+              "j",
+              "@",
+              ":",
+              "j",
+              "@",
+              ":"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 17,
+                "display": ":s/draft/active/↵",
+                "explanation": "Define the current-line edit."
+              },
+              {
+                "from": 17,
+                "to": 23,
+                "display": "j@:j@:",
+                "explanation": "Replay it on later tuples."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 21,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 23,
+                "lines": [
+                  "('api', 'active'),",
+                  "('worker', 'active'),",
+                  "('cron', 'active')"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use one current-line substitution as the recipe.",
+            "Replay the Command-line with `@:` after each `j`.",
+            "Use `:s/draft/active/ Enter j @: j @:`."
+          ],
+          "feedback": {
+            "success": "All selected rows are active.",
+            "why": "`@:` is useful when the Ex command—not merely a Normal edit—is the reusable unit."
+          },
+          "skills": {
+            "primary": [
+              "at-colon"
+            ],
+            "supporting": [
+              "literal-substitute",
+              "line-motion"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "long-command-line"
+            ]
+          },
+          "portability": "Requires Command-line history.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "SQL value tuples provide repeated row-local literals without requiring range syntax.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "at-colon"
+            ]
+          }
+        },
+        {
+          "id": "at-colon-shell-levels",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Lower every trace level",
+          "instruction": "Change each `TRACE` token to `INFO` by rerunning one Ex command.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "API_LEVEL=TRACE",
+                "QUEUE_LEVEL=TRACE",
+                "WORKER_LEVEL=TRACE"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "API_LEVEL=INFO",
+                "QUEUE_LEVEL=INFO",
+                "WORKER_LEVEL=INFO"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "T",
+              "R",
+              "A",
+              "C",
+              "E",
+              "/",
+              "I",
+              "N",
+              "F",
+              "O",
+              "/",
+              "Enter",
+              "j",
+              "@",
+              ":",
+              "j",
+              "@",
+              ":"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":s/TRACE/INFO/↵",
+                "explanation": "Run the first Ex change."
+              },
+              {
+                "from": 15,
+                "to": 21,
+                "display": "j@:j@:",
+                "explanation": "Replay on the remaining assignments."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 16,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 21,
+                "lines": [
+                  "API_LEVEL=INFO",
+                  "QUEUE_LEVEL=INFO",
+                  "WORKER_LEVEL=INFO"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Reuse the latest Command-line entry.",
+            "The replay keys are `@:`.",
+            "Run `:s/TRACE/INFO/`, then `j@:` twice."
+          ],
+          "feedback": {
+            "success": "Every log level is now INFO.",
+            "why": "The complete substitution was replayed without retyping it."
+          },
+          "skills": {
+            "primary": [
+              "at-colon"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "recall",
+              "command-line"
+            ]
+          },
+          "portability": "Requires Command-line history; the shell fragment is not executed.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Shell environment assignments are natural repeated line-local substitutions.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "at-colon"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "repeat-substitutions",
+      "title": "Repeat substitutions precisely",
+      "objective": "Distinguish repeating the last substitution from combining it with the latest search.",
+      "activities": [
+        {
+          "id": "ampersand-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Ampersand repeats the substitution recipe",
+          "body": "In Normal mode, `&` repeats the last substitution on the current line. It reuses the search and replacement text, but previous substitution flags are not remembered.",
+          "grammar": ":s/old/new/ Enter → move → &",
+          "contrast": "A prior `g` flag is dropped; use this fact deliberately rather than assuming it persists.",
+          "demoRef": "ampersand-demo"
+        },
+        {
+          "id": "tilde-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Colon-tilde combines two histories",
+          "body": "`:~` uses the replacement from the last substitution with the most recently used search pattern. It matters only when a later search changed that pattern.",
+          "grammar": ":s/cat/wolf/ → /fox → :~",
+          "contrast": "`&` would still search for `cat`; `:~` uses `fox` and replaces it with `wolf`.",
+          "demoRef": "tilde-demo"
+        },
+        {
+          "id": "ampersand-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Repeat a row-local rename",
+          "instruction": "Substitute `old` once, then use `&` on the later rows.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache.old = load",
+                "queue.old = send",
+                "audit.old = write"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cache.new = load",
+                "queue.new = send",
+                "audit.new = write"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "n",
+              "e",
+              "w",
+              "/",
+              "Enter",
+              "j",
+              "&",
+              "j",
+              "&"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 12,
+                "display": ":s/old/new/↵",
+                "explanation": "Establish the substitution recipe."
+              },
+              {
+                "from": 12,
+                "to": 16,
+                "display": "j&j&",
+                "explanation": "Apply it on the next two lines."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 15,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "cache.new = load",
+                  "queue.new = send",
+                  "audit.new = write"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Ampersand is a Normal-mode substitution repeat.",
+            "Move to a row and press `&`.",
+            "Use `:s/old/new/ Enter j & j &`."
+          ],
+          "feedback": {
+            "success": "Each field is renamed.",
+            "why": "`&` reused the last substitution pattern and replacement on the current line."
+          },
+          "skills": {
+            "primary": [
+              "ampersand-repeat"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "three-lines"
+            ]
+          },
+          "portability": "Core Vim substitution-repeat behavior; host emulators may vary.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Go-like field access gives a compact repeated literal rename.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ampersand-repeat"
+            ]
+          }
+        },
+        {
+          "id": "ampersand-flags",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Observe the dropped global flag",
+          "instruction": "Replace both TODOs on the first line, then use `&` on the second line. Notice that only its first TODO changes.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TODO docs; TODO tests",
+                "TODO release; TODO notes"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "DONE docs; DONE tests",
+                "DONE release; TODO notes"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "/",
+              "D",
+              "O",
+              "N",
+              "E",
+              "/",
+              "g",
+              "Enter",
+              "j",
+              "&"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":s/TODO/DONE/g↵",
+                "explanation": "Use `g` on the first line."
+              },
+              {
+                "from": 15,
+                "to": 17,
+                "display": "j&",
+                "explanation": "Repeat without inherited flags."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "DONE docs; DONE tests",
+                  "TODO release; TODO notes"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "DONE docs; DONE tests",
+                  "DONE release; TODO notes"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The first substitution needs `g`.",
+            "Plain `&` does not remember that flag.",
+            "Use `:s/TODO/DONE/g Enter j &`."
+          ],
+          "feedback": {
+            "success": "You exposed the flag boundary.",
+            "why": "Ampersand reused the pattern and replacement but dropped `g`, so only the first second-line match changed."
+          },
+          "skills": {
+            "primary": [
+              "ampersand-repeat",
+              "substitute-flags"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "flag-semantics",
+              "multiple-matches"
+            ]
+          },
+          "portability": "This is native Vim behavior and requires explicit browser conformance.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Markdown task text makes multiple same-line TODO markers realistic and easy to inspect.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ampersand-repeat",
+              "substitute-flags"
+            ]
+          }
+        },
+        {
+          "id": "tilde-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reuse a replacement with a new search",
+          "instruction": "Replace `cat` with `wolf`, search for `fox`, then apply the old replacement with `:~`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cat waits by the gate",
+                "fox waits by the den"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "wolf waits by the gate",
+                "wolf waits by the den"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "c",
+              "a",
+              "t",
+              "/",
+              "w",
+              "o",
+              "l",
+              "f",
+              "/",
+              "Enter",
+              "/",
+              "f",
+              "o",
+              "x",
+              "Enter",
+              ":",
+              "~",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": ":s/cat/wolf/↵",
+                "explanation": "Remember the replacement `wolf`."
+              },
+              {
+                "from": 13,
+                "to": 18,
+                "display": "/fox↵",
+                "explanation": "Make `fox` the latest search pattern."
+              },
+              {
+                "from": 18,
+                "to": 21,
+                "display": ":~↵",
+                "explanation": "Apply the old replacement to the latest search."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "wolf waits by the gate",
+                  "fox waits by the den"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 21,
+                "lines": [
+                  "wolf waits by the gate",
+                  "wolf waits by the den"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Keep the replacement, change the search pattern.",
+            "After searching for `fox`, run `:~`.",
+            "Use `:s/cat/wolf/ Enter /fox Enter :~ Enter`."
+          ],
+          "feedback": {
+            "success": "Two patterns now share one replacement.",
+            "why": "`:~` combined the latest search pattern `fox` with the last replacement `wolf`."
+          },
+          "skills": {
+            "primary": [
+              "colon-tilde"
+            ],
+            "supporting": [
+              "search-history",
+              "substitute-history"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "two-histories"
+            ]
+          },
+          "portability": "Native Vim behavior; some embedded hosts may not expose both histories correctly.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Plain prose makes the two independent search words unmistakable.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "colon-tilde"
+            ]
+          }
+        },
+        {
+          "id": "tilde-yaml-stages",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Apply the live replacement to staging",
+          "instruction": "Change `draft` to `live`, search for `staging`, then use `:~` to reuse only the replacement.",
+          "languageId": "yaml",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "api: draft",
+                "worker: staging"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "api: live",
+                "worker: live"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "l",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter",
+              "/",
+              "s",
+              "t",
+              "a",
+              "g",
+              "i",
+              "n",
+              "g",
+              "Enter",
+              ":",
+              "~",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":s/draft/live/↵",
+                "explanation": "Establish the replacement."
+              },
+              {
+                "from": 15,
+                "to": 24,
+                "display": "/staging↵",
+                "explanation": "Change the active search pattern."
+              },
+              {
+                "from": 24,
+                "to": 27,
+                "display": ":~↵",
+                "explanation": "Use that pattern with `live`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "api: live",
+                  "worker: staging"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 24,
+                "cursor": [
+                  1,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 27,
+                "lines": [
+                  "api: live",
+                  "worker: live"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The new search and old replacement live in separate histories.",
+            "Search for `staging`, then run colon-tilde.",
+            "Use `:s/draft/live/ Enter /staging Enter :~ Enter`."
+          ],
+          "feedback": {
+            "success": "Both services are live.",
+            "why": "`:~` applied `live` to the most recently searched word."
+          },
+          "skills": {
+            "primary": [
+              "colon-tilde"
+            ],
+            "supporting": [
+              "search-history",
+              "substitute-history"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "two-histories"
+            ]
+          },
+          "portability": "Requires correct search and substitution history emulation.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "YAML service stages provide two different values that naturally converge.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "colon-tilde"
+            ]
+          }
+        },
+        {
+          "id": "substitution-tool-choice",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Choose the exact substitution repeat",
+          "instruction": "Change `legacy` to `modern`, move down, and repeat that same substitution with `&`.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<nav class=\"legacy\">",
+                "<main class=\"legacy\">"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "<nav class=\"modern\">",
+                "<main class=\"modern\">"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "l",
+              "e",
+              "g",
+              "a",
+              "c",
+              "y",
+              "/",
+              "m",
+              "o",
+              "d",
+              "e",
+              "r",
+              "n",
+              "/",
+              "Enter",
+              "j",
+              "&"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":s/legacy/modern/↵",
+                "explanation": "Create the exact recipe."
+              },
+              {
+                "from": 18,
+                "to": 20,
+                "display": "j&",
+                "explanation": "Apply it on the next line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "<nav class=\"modern\">",
+                  "<main class=\"modern\">"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The second line needs the same pattern and replacement.",
+            "Use ampersand, not colon-tilde.",
+            "Run the first substitution, then `j&`."
+          ],
+          "feedback": {
+            "success": "Both classes are modern.",
+            "why": "`&` was the precise tool because neither search nor replacement needed to change."
+          },
+          "skills": {
+            "primary": [
+              "ampersand-repeat",
+              "repeat-tool-choice"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "tool-choice"
+            ]
+          },
+          "portability": "Requires substitution-repeat conformance.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "HTML class attributes are familiar repeated literals and make the unchanged recipe obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ampersand-repeat",
+              "repeat-tool-choice"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "choose-repeat-tool",
+      "title": "Choose the smallest repeat tool",
+      "objective": "Integrate repeat workflows and stop when the structure does not support safe replay.",
+      "activities": [
+        {
+          "id": "repeat-decision-rule",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Repeat only what stays predictable",
+          "body": "Use a count for a known adjacent block, dot for one reusable Normal change, find or search to select repeated targets, and Ex history for a repeated Command-line recipe. Stop when instances need different judgment.",
+          "grammar": "stable instances + stable change = repeat",
+          "contrast": "A more advanced command is not safer when the structure is irregular.",
+          "demoRef": "integrated-kotlin-demo"
+        },
+        {
+          "id": "integrated-kotlin-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Search-driven annotation cleanup",
+          "instruction": "Search for `draft`, change the first annotation value, and repeat on later matches.",
+          "languageId": "kotlin",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "@Stage(\"draft\") class Api",
+                "@Stage(\"draft\") class Worker",
+                "@Stage(\"draft\") class Cron"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "@Stage(\"live\") class Api",
+                "@Stage(\"live\") class Worker",
+                "@Stage(\"live\") class Cron"
+              ],
+              "cursor": [
+                2,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "c",
+              "i",
+              "\"",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape",
+              "n",
+              ".",
+              "n",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/draft↵",
+                "explanation": "Choose the repeated targets."
+              },
+              {
+                "from": 7,
+                "to": 15,
+                "display": "ci\"live⎋",
+                "explanation": "Prepare one structural edit."
+              },
+              {
+                "from": 15,
+                "to": 19,
+                "display": "n.n.",
+                "explanation": "Select and replay."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "cursor": [
+                  1,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "cursor": [
+                  2,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "@Stage(\"live\") class Api",
+                  "@Stage(\"live\") class Worker",
+                  "@Stage(\"live\") class Cron"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use search for selection and dot for transformation.",
+            "Prepare a quote-object edit on the first match.",
+            "Use `/draft Enter ci\"live Escape n . n .`."
+          ],
+          "feedback": {
+            "success": "The annotation values are live.",
+            "why": "Search plus dot was lower setup than a macro and more inspectable than a broad substitution."
+          },
+          "skills": {
+            "primary": [
+              "repeat-tool-choice",
+              "search-dot-repeat"
+            ],
+            "supporting": [
+              "quote-text-object"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "strategy-selection"
+            ]
+          },
+          "portability": "Core Vim search, quote-object, and dot behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Kotlin annotations provide compact repeated quoted values and clear structure.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-tool-choice",
+              "search-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "integrated-cpp-find",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Repair nearby separators",
+          "instruction": "Replace three `?` markers on one line by combining remembered find and dot.",
+          "languageId": "cpp",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Point p{1? 2? 3? 4};"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Point p{1, 2, 3, 4};"
+              ],
+              "cursor": [
+                0,
+                15
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "?",
+              "r",
+              ",",
+              ";",
+              ".",
+              ";",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "f?r,",
+                "explanation": "Find and replace once."
+              },
+              {
+                "from": 4,
+                "to": 8,
+                "display": ";.;.",
+                "explanation": "Reuse both operations."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  15
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "Point p{1, 2, 3, 4};"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The punctuation is nearby and identical.",
+            "Find `?`, replace it, then alternate semicolon and dot.",
+            "Use `f?r,;.;.`."
+          ],
+          "feedback": {
+            "success": "The initializer separators are repaired.",
+            "why": "Character-find plus dot was the smallest dependable local workflow."
+          },
+          "skills": {
+            "primary": [
+              "repeat-tool-choice",
+              "find-dot-repeat"
+            ],
+            "supporting": [
+              "replace-character"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "nearby-punctuation"
+            ]
+          },
+          "portability": "Core Vim behavior; the initial fragment is intentionally malformed until corrected.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "A C++ initializer makes nearby repeated separators visually obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-tool-choice",
+              "find-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "integrated-swift-count",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Remove a fixed debug block",
+          "instruction": "Delete the three adjacent debug statements with the lowest-setup repeat tool.",
+          "languageId": "swift",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "debugPrint(cache)",
+                "debugPrint(queue)",
+                "debugPrint(worker)",
+                "return app"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "return app"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "d",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "3dd",
+                "explanation": "Use one count for a known adjacent block."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "return app"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The rows are adjacent and already counted.",
+            "No search or replay setup is needed.",
+            "Use `3dd`."
+          ],
+          "feedback": {
+            "success": "The debug block is removed.",
+            "why": "A count was clearer than dot-repeat for a fixed adjacent block."
+          },
+          "skills": {
+            "primary": [
+              "repeat-tool-choice",
+              "count-vs-repeat"
+            ],
+            "supporting": [
+              "counted-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "strategy-selection"
+            ]
+          },
+          "portability": "Core Vim count behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "Swift debugPrint statements form a familiar fixed block.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-tool-choice",
+              "count-vs-repeat"
+            ]
+          }
+        },
+        {
+          "id": "integrated-xml-ex",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replay the exact Ex recipe",
+          "instruction": "Change `draft` to `final` on three element lines by replaying the Command-line command.",
+          "languageId": "xml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<state>draft</state>",
+                "<state>draft</state>",
+                "<state>draft</state>"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "<state>final</state>",
+                "<state>final</state>",
+                "<state>final</state>"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "f",
+              "i",
+              "n",
+              "a",
+              "l",
+              "/",
+              "Enter",
+              "j",
+              "@",
+              ":",
+              "j",
+              "@",
+              ":"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 16,
+                "display": ":s/draft/final/↵",
+                "explanation": "Prepare the row-local Ex command."
+              },
+              {
+                "from": 16,
+                "to": 22,
+                "display": "j@:j@:",
+                "explanation": "Replay it on the remaining elements."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 22,
+                "lines": [
+                  "<state>final</state>",
+                  "<state>final</state>",
+                  "<state>final</state>"
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The complete Ex recipe stays identical.",
+            "Use the colon register after each line motion.",
+            "Run the substitution once, then `j@:` twice."
+          ],
+          "feedback": {
+            "success": "Every element is final.",
+            "why": "`@:` directly expressed the repeated Command-line action."
+          },
+          "skills": {
+            "primary": [
+              "repeat-tool-choice",
+              "at-colon"
+            ],
+            "supporting": [
+              "literal-substitute"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "tool-retrieval",
+              "command-line"
+            ]
+          },
+          "portability": "Requires Command-line history conformance.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "XML element text supplies repeated line-local values without regex complexity.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-tool-choice",
+              "at-colon"
+            ]
+          }
+        },
+        {
+          "id": "repeat-is-wrong-choice",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Know when to stop repeating",
+          "prompt": "Three similar handlers need different replacements based on business meaning: one retries, one reports, and one aborts. Which starting tool is safest?",
+          "options": [
+            {
+              "id": "blind-dot",
+              "label": "Prepare one edit and press dot on every handler"
+            },
+            {
+              "id": "inspect-individually",
+              "label": "Inspect and edit each handler deliberately"
+            },
+            {
+              "id": "broad-substitute",
+              "label": "Replace the shared token everywhere"
+            }
+          ],
+          "correctOptionId": "inspect-individually",
+          "explanation": "The instances do not share one deterministic transformation. Blind repeat would encode a false assumption; semantic judgment belongs outside this repeat workflow."
+        },
+        {
+          "id": "repeat-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Design the replay before pressing dot",
+          "body": "Separate instance selection from transformation. Choose the smallest stable selector, make one self-contained change, and replay only while its assumptions remain true.",
+          "takeaways": [
+            "Use counts for fixed adjacent work.",
+            "Use `;` or `,` for nearby character targets and `n` or `N` for search matches.",
+            "Use `@:` for the last Ex command, `&` for the last substitution recipe, and `:~` when the latest search supplies a new pattern.",
+            "Stop when repeated instances require different judgment."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "ref-dot",
+      "command": ".",
+      "purpose": "Repeat the last complete change at the cursor.",
+      "notes": [
+        "Normal-mode motions used only for positioning are not repeated.",
+        "Without a new count, dot reuses the previous change count; a new count replaces it."
+      ],
+      "exampleActivityRefs": [
+        "dot-append-demo",
+        "dot-replace-count"
+      ]
+    },
+    {
+      "id": "ref-semicolon-comma",
+      "command": "; / ,",
+      "purpose": "Repeat the last character-find in the same or opposite direction.",
+      "notes": [
+        "They move the cursor; combine them with dot to replay a change."
+      ],
+      "exampleActivityRefs": [
+        "find-todos-demo",
+        "find-csv-statuses"
+      ]
+    },
+    {
+      "id": "ref-n-capital-n",
+      "command": "n / N",
+      "purpose": "Continue the latest search in the same or opposite direction.",
+      "notes": [
+        "Same direction means the direction established by `/` or `?`, not always downward."
+      ],
+      "exampleActivityRefs": [
+        "search-config-demo",
+        "search-sql-bidirectional"
+      ]
+    },
+    {
+      "id": "ref-at-colon",
+      "command": "@:",
+      "purpose": "Execute the most recent Command-line command again.",
+      "notes": [
+        "The command runs in the current cursor and line context.",
+        "Requires Command-line history support."
+      ],
+      "exampleActivityRefs": [
+        "at-colon-flags-demo",
+        "integrated-xml-ex"
+      ]
+    },
+    {
+      "id": "ref-ampersand",
+      "command": "&",
+      "purpose": "Repeat the last substitution on the current line.",
+      "notes": [
+        "The pattern and replacement are reused.",
+        "Previous substitution flags are not remembered."
+      ],
+      "exampleActivityRefs": [
+        "ampersand-demo",
+        "ampersand-flags"
+      ]
+    },
+    {
+      "id": "ref-colon-tilde",
+      "command": ":~",
+      "purpose": "Repeat the last replacement using the latest search pattern.",
+      "notes": [
+        "This combines substitution replacement history with search-pattern history."
+      ],
+      "exampleActivityRefs": [
+        "tilde-demo",
+        "tilde-yaml-stages"
+      ]
+    },
+    {
+      "id": "ref-count-choice",
+      "command": "count or repeat",
+      "purpose": "Choose a counted atomic change or inspectable repeated changes.",
+      "notes": [
+        "Prefer a count for a known adjacent block.",
+        "Prefer repeat when movement or inspection separates applications."
+      ],
+      "exampleActivityRefs": [
+        "count-delete-demo",
+        "repeat-delete-inspect"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "deliberate .",
+      "explain": [
+        "dot-is-a-change",
+        "dot-change-boundary"
+      ],
+      "demonstrate": [
+        "dot-append-demo"
+      ],
+      "isolate": [
+        "dot-python-values"
+      ],
+      "mix": [
+        "dot-java-terminators"
+      ],
+      "challenge": [
+        "dot-go-booleans"
+      ]
+    },
+    {
+      "concept": "repeat-friendly cursor placement",
+      "explain": [
+        "repeat-self-contained"
+      ],
+      "demonstrate": [
+        "repeat-python-commas"
+      ],
+      "isolate": [
+        "repeat-yaml-quotes"
+      ],
+      "mix": [
+        "repeat-css-colons"
+      ],
+      "challenge": [
+        "repeat-rust-await"
+      ]
+    },
+    {
+      "concept": "; and , plus .",
+      "explain": [
+        "find-repeat-direction"
+      ],
+      "demonstrate": [
+        "find-todos-demo"
+      ],
+      "isolate": [
+        "find-csv-statuses"
+      ],
+      "mix": [
+        "find-csharp-arrows"
+      ],
+      "challenge": [
+        "find-shell-flags",
+        "integrated-cpp-find"
+      ]
+    },
+    {
+      "concept": "n and N plus .",
+      "explain": [
+        "search-repeat-direction"
+      ],
+      "demonstrate": [
+        "search-config-demo"
+      ],
+      "isolate": [
+        "search-python-backward"
+      ],
+      "mix": [
+        "search-sql-bidirectional"
+      ],
+      "challenge": [
+        "search-log-codes"
+      ]
+    },
+    {
+      "concept": "count vs repeat and dot counts",
+      "explain": [
+        "count-repeat-tradeoff",
+        "dot-count-memory"
+      ],
+      "demonstrate": [
+        "count-delete-demo"
+      ],
+      "isolate": [
+        "repeat-delete-inspect"
+      ],
+      "mix": [
+        "dot-inherited-count"
+      ],
+      "challenge": [
+        "dot-replace-count",
+        "integrated-swift-count"
+      ]
+    },
+    {
+      "concept": "@:",
+      "explain": [
+        "at-colon-meaning"
+      ],
+      "demonstrate": [
+        "at-colon-flags-demo"
+      ],
+      "isolate": [
+        "at-colon-python-none"
+      ],
+      "mix": [
+        "at-colon-sql-status"
+      ],
+      "challenge": [
+        "at-colon-shell-levels",
+        "integrated-xml-ex"
+      ]
+    },
+    {
+      "concept": "&",
+      "explain": [
+        "ampersand-meaning"
+      ],
+      "demonstrate": [
+        "ampersand-demo"
+      ],
+      "isolate": [
+        "ampersand-flags"
+      ],
+      "mix": [
+        "substitution-tool-choice"
+      ],
+      "challenge": [
+        "substitution-tool-choice"
+      ]
+    },
+    {
+      "concept": ":~",
+      "explain": [
+        "tilde-meaning"
+      ],
+      "demonstrate": [
+        "tilde-demo"
+      ],
+      "isolate": [
+        "tilde-yaml-stages"
+      ],
+      "mix": [
+        "tilde-yaml-stages"
+      ],
+      "challenge": [
+        "substitution-tool-choice"
+      ]
+    },
+    {
+      "concept": "recognize when repeat is wrong",
+      "explain": [
+        "repeat-decision-rule"
+      ],
+      "demonstrate": [
+        "integrated-kotlin-demo"
+      ],
+      "isolate": [
+        "integrated-cpp-find"
+      ],
+      "mix": [
+        "integrated-swift-count"
+      ],
+      "challenge": [
+        "repeat-is-wrong-choice"
+      ]
+    }
+  ]
+}
