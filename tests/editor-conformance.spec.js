@@ -701,6 +701,45 @@ test.describe("Production lesson flow", () => {
     expect(afterShift.baseColor).not.toBe(beforeShift.baseColor);
   });
 
+  test("fills the visible phone viewport and keeps the Normal cursor readable", async ({ page }) => {
+    for (const [width, height] of [[360, 740], [375, 812], [390, 844], [412, 915], [430, 932]]) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/play/?unit=repeatable-editing&activity=dot-python-values");
+      await page.waitForFunction(() => document.documentElement.dataset.charactersReady);
+      await page.waitForFunction(() => document.querySelector(".cm-fat-cursor, .cm-cursorLayer .cm-cursor"));
+      const layout = await page.evaluate(() => {
+        const phone = document.querySelector("#phone").getBoundingClientRect();
+        const keyboard = document.querySelector(".keyboard").getBoundingClientRect();
+        const cursor = document.querySelector(".cm-fat-cursor, .cm-cursorLayer .cm-cursor");
+        const cursorStyle = getComputedStyle(cursor);
+        return {
+          phoneBottom: phone.bottom,
+          keyboardBottom: keyboard.bottom,
+          viewportHeight: window.visualViewport.height,
+          viewportVariable: getComputedStyle(document.documentElement).getPropertyValue("--app-viewport-height").trim(),
+          cursorBackground: cursorStyle.backgroundColor,
+        };
+      });
+      expect(layout.viewportVariable, `${width}×${height}`).toBe(`${Math.round(layout.viewportHeight)}px`);
+      expect(Math.abs(layout.phoneBottom - layout.viewportHeight), `${width}×${height}`).toBeLessThanOrEqual(1);
+      expect(layout.keyboardBottom, `${width}×${height}`).toBeLessThanOrEqual(layout.phoneBottom + 1);
+      expect(layout.cursorBackground, `${width}×${height}`).toBe("rgba(247, 216, 120, 0.18)");
+    }
+  });
+
+  test("uses the full screen height for installed iPhone and iPad windows", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "userAgent", { configurable: true, get: () => "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15" });
+      Object.defineProperty(navigator, "standalone", { configurable: true, get: () => true });
+      Object.defineProperty(window.screen, "height", { configurable: true, get: () => 812 });
+    });
+    await page.setViewportSize({ width: 375, height: 724 });
+    await page.goto("/play/?unit=repeatable-editing&activity=dot-python-values");
+    await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--app-viewport-height").trim())).toBe("812px");
+    const phone = await page.locator("#phone").evaluate(node => node.getBoundingClientRect().height);
+    expect(phone).toBe(812);
+  });
+
   test("keeps every production activity inside the target phone viewports without clipping", async ({ page }) => {
     test.setTimeout(240000);
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];

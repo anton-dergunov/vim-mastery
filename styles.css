@@ -25,9 +25,10 @@ html,
 body {
   width: 100%;
   height: 100%;
+  min-height: var(--app-viewport-height, 100%);
   margin: 0;
   overscroll-behavior: none;
-  background: #020706;
+  background: #071715;
 }
 
 body {
@@ -54,8 +55,8 @@ button { font: inherit; }
 .phone {
   position: relative;
   width: min(100%, 430px);
-  height: 100dvh;
-  min-height: 640px;
+  height: var(--app-viewport-height, 100dvh);
+  min-height: 0;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -1017,8 +1018,8 @@ button { font: inherit; }
 
 @media (min-width: 600px) {
   .phone {
-    height: min(100dvh, 932px);
-    margin-top: max(0px, calc((100dvh - 932px) / 2));
+    height: min(var(--app-viewport-height, 100dvh), 932px);
+    margin-top: max(0px, calc((var(--app-viewport-height, 100dvh) - 932px) / 2));
     border: 1px solid rgba(180, 220, 200, .12);
     border-radius: 28px;
   }
@@ -1368,17 +1369,19 @@ html.next-ui .code-body .cm-vimMode .cm-cursor {
   display: block !important;
   width: .62em !important;
   border-left: 0 !important;
-  background: rgba(247, 216, 120, .9);
-  outline: 1px solid rgba(255, 237, 177, .8);
-  box-shadow: 0 0 7px rgba(255, 205, 99, .65);
+  background: rgba(247, 216, 120, .18);
+  outline: 1px solid rgba(255, 218, 126, .92);
+  box-shadow: 0 0 3px rgba(255, 205, 99, .38);
   filter: none;
 }
 html.next-ui .code-body .cm-fat-cursor {
   display: block !important;
   width: .62em !important;
   border-left: 0 !important;
-  color: #192019;
-  background: #f7d878 !important;
+  color: inherit;
+  background: rgba(247, 216, 120, .18) !important;
+  outline: 1px solid rgba(255, 218, 126, .92);
+  box-shadow: 0 0 3px rgba(255, 205, 99, .38);
 }
 html.next-ui .world[data-mode="insert"] .code-body .cm-cursorLayer .cm-cursor,
 html.next-ui .world[data-mode="insert"] .code-body .cm-vimMode .cm-cursor {
