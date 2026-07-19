@@ -1,5 +1,4 @@
 import { execFileSync } from "node:child_process";
-import { deflateSync } from "node:zlib";
 import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,6 +7,7 @@ import { defineConfig } from "vite";
 const rootDirectory = dirname(fileURLToPath(import.meta.url));
 const contentDirectory = join(rootDirectory, "content");
 const characterDirectory = join(rootDirectory, "assets", "characters");
+const iconDirectory = join(rootDirectory, "assets", "icons");
 const packageVersion = JSON.parse(readFileSync(join(rootDirectory, "package.json"), "utf8")).version;
 
 function shortGitHash() {
@@ -16,52 +16,6 @@ function shortGitHash() {
   } catch {
     return "unknown";
   }
-}
-
-function crc32(buffer) {
-  let value = 0xffffffff;
-  for (const byte of buffer) {
-    value ^= byte;
-    for (let bit = 0; bit < 8; bit += 1) value = value & 1 ? (value >>> 1) ^ 0xedb88320 : value >>> 1;
-  }
-  return (value ^ 0xffffffff) >>> 0;
-}
-
-function pngChunk(type, data) {
-  const name = Buffer.from(type, "ascii");
-  const length = Buffer.alloc(4);
-  const checksum = Buffer.alloc(4);
-  length.writeUInt32BE(data.length);
-  checksum.writeUInt32BE(crc32(Buffer.concat([name, data])));
-  return Buffer.concat([length, name, data, checksum]);
-}
-
-function pwaIcon(size) {
-  const pixels = Buffer.alloc((size * 4 + 1) * size);
-  const scale = size / 64;
-  for (let y = 0; y < size; y += 1) {
-    pixels[y * (size * 4 + 1)] = 0;
-    for (let x = 0; x < size; x += 1) {
-      const left = x / scale;
-      const top = y / scale;
-      const inset = Math.min(left, top, 63 - left, 63 - top);
-      const gold = ((left > 15 && left < 27 && top > 14 && top < 46 - (left - 15) * 1.6)
-        || (left >= 27 && left <= 48 && top > 14 && top < 46 && top > (left - 27) * 1.2 + 14))
-        && inset > 5;
-      const offset = y * (size * 4 + 1) + 1 + x * 4;
-      pixels[offset] = gold ? 255 : 7;
-      pixels[offset + 1] = gold ? 200 : 23;
-      pixels[offset + 2] = gold ? 102 : 21;
-      pixels[offset + 3] = 255;
-    }
-  }
-  const header = Buffer.alloc(13);
-  header.writeUInt32BE(size, 0);
-  header.writeUInt32BE(size, 4);
-  header[8] = 8;
-  header[9] = 6;
-  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
-  return Buffer.concat([signature, pngChunk("IHDR", header), pngChunk("IDAT", deflateSync(pixels)), pngChunk("IEND", Buffer.alloc(0))]);
 }
 
 function walk(directory) {
@@ -111,8 +65,8 @@ function pwaBuildPlugin(base, version) {
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       idleImages.forEach(path => emit(`assets/characters/${relative(characterDirectory, path)}`, readFileSync(path)));
-      emit("icons/icon-192.png", pwaIcon(192));
-      emit("icons/icon-512.png", pwaIcon(512));
+      emit("icons/icon-192.png", readFileSync(join(iconDirectory, "icon-192.png")));
+      emit("icons/icon-512.png", readFileSync(join(iconDirectory, "icon-512.png")));
     },
     closeBundle() {
       const output = join(rootDirectory, "dist");
