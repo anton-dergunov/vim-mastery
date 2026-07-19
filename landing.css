@@ -30,6 +30,14 @@
 .landing-installation { margin-top: auto; padding: 14px; border: 1px solid rgba(185, 241, 206, .16); border-radius: 15px; background: rgba(6, 19, 16, .72); }
 .landing-installation strong { display: block; font-size: 13px; }
 .landing-installation p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.install-tabs { display: grid; grid-template-columns: 1.5fr 1fr .75fr; gap: 4px; margin-top: 10px; padding: 3px; border-radius: 10px; background: rgba(0, 0, 0, .22); }
+.install-tab { min-height: 30px; border: 0; border-radius: 7px; padding: 4px 5px; color: #a7c1b4; background: transparent; font: 700 9px/1.15 ui-monospace, monospace; }
+.install-tab[aria-selected="true"] { color: #13231d; background: #b9f1ce; box-shadow: 0 1px 5px rgba(0, 0, 0, .28); }
+.install-tab:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.install-panel { min-height: 57px; padding-top: 2px; }
+.install-panel[hidden] { display: none; }
+.install-steps { margin: 7px 0 0; padding-left: 17px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.install-steps strong { display: inline; font-size: inherit; color: #dcebe1; }
 .landing-footer { display: flex; justify-content: space-between; gap: 8px; color: #789287; font: 11px/1.3 ui-monospace, monospace; }
 
 @media (max-height: 720px) {

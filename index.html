@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071715">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vim Wilds">
   <title>The Vim Wilds — Pocket Practice</title>
   <script>
     if (["unit", "activity", "preview"].some(key => new URLSearchParams(window.location.search).has(key))) {
@@ -11,6 +14,7 @@
     }
   </script>
   <link rel="manifest" href="%BASE_URL%manifest.webmanifest">
+  <link rel="apple-touch-icon" href="%BASE_URL%icons/icon-192.png">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./landing.css">
 </head>
@@ -26,10 +30,24 @@
         <li><strong>Ready offline.</strong> Install once; lesson content and character art travel with you.</li>
       </ul>
       <a class="landing-primary" href="./play/">Start or continue practice</a>
-      <section class="landing-installation" aria-label="Install Vim Wilds">
-        <strong>Install on Android</strong>
-        <p id="installHint">In Chrome, open the ⋮ menu and choose <em>Install app</em>. The installed game opens without browser controls.</p>
-        <button class="landing-install" id="installButton" type="button" hidden>Install Vim Wilds</button>
+      <section class="landing-installation" aria-labelledby="installTitle">
+        <strong id="installTitle">Install Vim Wilds</strong>
+        <div class="install-tabs" role="tablist" aria-label="Installation instructions by platform">
+          <button class="install-tab" id="install-ios-tab" type="button" role="tab" aria-selected="false" aria-controls="install-ios-panel" data-install-platform="ios">iPhone &amp; iPad</button>
+          <button class="install-tab" id="install-android-tab" type="button" role="tab" aria-selected="false" aria-controls="install-android-panel" data-install-platform="android">Android</button>
+          <button class="install-tab" id="install-other-tab" type="button" role="tab" aria-selected="false" aria-controls="install-other-panel" data-install-platform="other">Other</button>
+        </div>
+        <div class="install-panel" id="install-ios-panel" role="tabpanel" aria-labelledby="install-ios-tab" data-install-panel="ios" tabindex="0" hidden>
+          <ol class="install-steps"><li>Open this page in <strong>Safari</strong>.</li><li>Tap <strong>Share</strong>.</li><li>Choose <strong>Add to Home Screen</strong>, then tap <strong>Add</strong>.</li></ol>
+          <p>The app will launch from your Home Screen without Safari controls.</p>
+        </div>
+        <div class="install-panel" id="install-android-panel" role="tabpanel" aria-labelledby="install-android-tab" data-install-panel="android" tabindex="0" hidden>
+          <p id="installHint">In Chrome, open the ⋮ menu and choose <em>Install app</em>. The installed game opens without browser controls.</p>
+          <button class="landing-install" id="installButton" type="button" hidden>Install Vim Wilds</button>
+        </div>
+        <div class="install-panel" id="install-other-panel" role="tabpanel" aria-labelledby="install-other-tab" data-install-panel="other" tabindex="0" hidden>
+          <p>Use your browser’s <strong>Install app</strong> or <strong>Add to Home Screen</strong> option. For iPhone and iPad, switch to the Safari instructions above.</p>
+        </div>
       </section>
       <footer class="landing-footer"><span>Animations stream only when needed.</span><span id="appVersion"></span></footer>
     </section>

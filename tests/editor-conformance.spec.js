@@ -42,6 +42,34 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator("#appVersion")).toContainText("Build 0.1.0-dev.");
   });
 
+  test("selects iPhone and iPad Safari instructions, including desktop-mode iPads", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "userAgent", { configurable: true, get: () => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15" });
+      Object.defineProperty(navigator, "platform", { configurable: true, get: () => "MacIntel" });
+      Object.defineProperty(navigator, "maxTouchPoints", { configurable: true, get: () => 5 });
+    });
+    await page.goto("/");
+    await expect(page.locator("#install-ios-tab")).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("#install-ios-panel")).toBeVisible();
+    await expect(page.locator("#install-ios-panel")).toContainText("Add to Home Screen");
+    await page.locator("#install-other-tab").click();
+    await expect(page.locator("#install-other-tab")).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("#install-other-panel")).toBeVisible();
+    await expect(page.locator("#install-ios-panel")).toBeHidden();
+  });
+
+  test("selects Android instructions and supports keyboard-accessible install tabs", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "userAgent", { configurable: true, get: () => "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 Chrome/130.0" });
+    });
+    await page.goto("/");
+    await expect(page.locator("#install-android-tab")).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("#install-android-panel")).toContainText("Install app");
+    await page.locator("#install-android-tab").press("ArrowLeft");
+    await expect(page.locator("#install-ios-tab")).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator("#install-ios-tab")).toBeFocused();
+  });
+
   test("uses the polished UI as the only route and derives 70 runtime activities", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     const runtime = await page.evaluate(() => ({

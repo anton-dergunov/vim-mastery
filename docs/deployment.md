@@ -72,6 +72,17 @@ query parameters always win over the saved location. No editor buffers,
 completed-history ledger, lesson JSON, or animation media is stored as user
 state.
 
+## Installing on iPhone and iPad
+
+1. Open <https://anton-dergunov.github.io/vim-mastery/> in **Safari**.
+2. Tap **Share**, then choose **Add to Home Screen**.
+3. Tap **Add**. Vim Wilds now starts from the Home Screen in its own app window.
+
+Safari is the recommended browser for iPhone and iPad installation. The landing
+page selects these instructions automatically, including on iPads that request
+desktop-style sites; its tabs also let visitors read the instructions for a
+different device.
+
 ## Installing on Android
 
 1. Open <https://anton-dergunov.github.io/vim-mastery/> in Chrome on Android.
@@ -83,3 +94,11 @@ state.
 The first installation needs a connection so the complete offline cache can be
 downloaded. Updates likewise need a connection once, after which the new lesson
 catalog is available offline.
+
+## Other browsers
+
+Use the browser menu’s **Install app** or **Add to Home Screen** command when
+available. The app has the same manifest, start route, offline cache, update
+behaviour, version display, and remote-animation fallback on all supported
+platforms. The landing page’s installation tabs keep the platform-specific
+steps to one compact panel.

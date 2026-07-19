@@ -20,12 +20,19 @@ test("production PWA precaches all local lessons and excludes animation WebPs", 
   const output = files(dist);
   const worker = readFileSync(join(dist, "service-worker.js"), "utf8");
   const manifest = JSON.parse(readFileSync(join(dist, "manifest.webmanifest"), "utf8"));
+  const landing = readFileSync(join(dist, "index.html"), "utf8");
+  const play = readFileSync(join(dist, "play", "index.html"), "utf8");
   const unitFiles = files(join(rootPath, "content", "units")).map(path => path.split("/").at(-1));
 
   assert.equal(existsSync(join(dist, "play", "index.html")), true);
   assert.equal(manifest.start_url, "./play/");
   assert.equal(existsSync(join(dist, "icons", "icon-192.png")), true);
   assert.equal(existsSync(join(dist, "icons", "icon-512.png")), true);
+  for (const page of [landing, play]) {
+    assert.match(page, /name="apple-mobile-web-app-capable" content="yes"/);
+    assert.match(page, /name="apple-mobile-web-app-title" content="Vim Wilds"/);
+    assert.match(page, /rel="apple-touch-icon" href="\/vim-mastery\/icons\/icon-192\.png"/);
+  }
   unitFiles.forEach(file => {
     assert.equal(existsSync(join(dist, "content", "units", file)), true);
     assert.match(worker, new RegExp(`content/units/${file.replace(".", "\\.")}`));
