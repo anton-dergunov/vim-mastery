@@ -7,6 +7,7 @@ const cursorUnit = JSON.parse(readFileSync(new URL("../content/units/02-cursor-m
 const changingUnit = JSON.parse(readFileSync(new URL("../content/units/03-entering-changing-text.json", import.meta.url), "utf8"));
 const operatorUnit = JSON.parse(readFileSync(new URL("../content/units/04-operator-grammar.json", import.meta.url), "utf8"));
 const precisionUnit = JSON.parse(readFileSync(new URL("../content/units/05-precision-motions-search.json", import.meta.url), "utf8"));
+const textObjectUnit = JSON.parse(readFileSync(new URL("../content/units/06-text-objects.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -17,6 +18,8 @@ const operatorActivities = operatorUnit.lessons.flatMap(lesson => lesson.activit
 const operatorExercises = operatorActivities.filter(activity => activity.type === "exercise");
 const precisionActivities = precisionUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const precisionExercises = precisionActivities.filter(activity => activity.type === "exercise");
+const textObjectActivities = textObjectUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const textObjectExercises = textObjectActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
@@ -107,7 +110,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(6);
+    await expect(page.locator(".toc-unit")).toHaveCount(7);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -132,10 +135,11 @@ test.describe("Production lesson flow", () => {
       { id: "entering-changing-text", unitNumber: 3, title: "Entering and changing text" },
       { id: "operator-grammar", unitNumber: 4, title: "Operator grammar" },
       { id: "precision-motions-search", unitNumber: 5, title: "Precision motions and search" },
+      { id: "text-objects", unitNumber: 6, title: "Text objects" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(6);
+    await expect(page.locator(".toc-unit")).toHaveCount(7);
     await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
   });
@@ -330,7 +334,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "precision-motions-search", unitNumber: 5, activityId: "find-and-till-meaning" });
   });
 
-  test("runs every Unit 5 precision activity and leaves Unit 6 unavailable", async ({ page }) => {
+  test("runs every Unit 5 precision activity and continues to Unit 6", async ({ page }) => {
     await page.goto("/?unit=precision-motions-search");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 67, exerciseCount: precisionExercises.length });
@@ -349,7 +353,95 @@ test.describe("Production lesson flow", () => {
     });
     expect(failures).toEqual([]);
     await page.goto("/?unit=precision-motions-search&activity=precision-motions-search-unit-summary");
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 6 is next");
+    await expect(page.getByRole("button", { name: "Continue to Unit 6" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 6" }).click();
+    await page.waitForURL(/unit=text-objects/);
+    expect((await state(page))).toMatchObject({ unitId: "text-objects", unitNumber: 6, activityId: "inside-around-meaning" });
+  });
+
+  test("runs every Unit 6 text-object activity and leaves Unit 7 unavailable", async ({ page }) => {
+    await page.goto("/?unit=text-objects");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 95, exerciseCount: textObjectExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        if (activity.type === "exercise" && !current.complete) result.push({ id: activity.id, current });
+        if (activity.type === "demo" && (JSON.stringify(current.code) !== JSON.stringify(activity.scenario.target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(activity.scenario.target.cursor))) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+    await page.goto("/?unit=text-objects&activity=text-objects-unit-summary");
+    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 7 is next");
+  });
+
+  test("matches native around-quote whitespace and balanced HTML tag objects", async ({ page }) => {
+    await page.goto("/?unit=text-objects&activity=delete-around-double-quotes");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({ complete: true, code: ["send(, next)"], cursor: [0, 5] });
+
+    await page.goto("/?unit=text-objects&activity=change-inside-tag");
+    await expect.poll(async () => (await state(page)).activityId).toBe("change-inside-tag");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({ complete: true, code: ["<p>Ready</p>"], cursor: [0, 7] });
+
+    await page.goto("/?unit=text-objects&activity=delete-around-tag");
+    await expect.poll(async () => (await state(page)).activityId).toBe("delete-around-tag");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({ complete: true, code: [""], cursor: [0, 0] });
+  });
+
+  test("preserves a completed edit when character assets finish loading", async ({ page }) => {
+    let releaseManifest;
+    await page.route("**/assets/characters/manifest.json", async route => {
+      await new Promise(resolve => { releaseManifest = resolve; });
+      await route.continue();
+    });
+    await page.goto("/?unit=text-objects&activity=delete-around-double-quotes");
+    await expect.poll(() => Boolean(releaseManifest)).toBe(true);
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({ complete: true, code: ["send(, next)"], cursor: [0, 5] });
+    releaseManifest();
+    await page.waitForFunction(() => document.documentElement.dataset.charactersReady === "true");
+    expect((await state(page))).toMatchObject({ complete: true, code: ["send(, next)"], cursor: [0, 5] });
+  });
+
+  test("renders affected text-object ranges and clears them on reset", async ({ page }) => {
+    await page.goto("/?unit=text-objects&activity=around-double-quote-demo");
+    for (let index = 0; index < 3; index += 1) await page.getByRole("button", { name: "Step" }).click();
+    await expect(page.locator(".cm-preview-range")).toHaveCount(1);
+    await expect(page.locator(".cm-preview-range")).toHaveText(' "draft"');
+    await page.getByRole("button", { name: "Reset", exact: true }).click();
+    await expect(page.locator(".cm-preview-range")).toHaveCount(0);
+  });
+
+  test("enters shifted Unit 6 objects from touch and physical keyboards", async ({ page }) => {
+    await page.goto("/?unit=text-objects&activity=change-inside-double-quotes-recall");
+    await page.locator('.key[data-key="c"]').click();
+    await page.locator('.key[data-key="i"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="\'"]').click();
+    for (const key of ["r", "e", "a", "d", "y", "Escape"]) await page.locator(`.key[data-key="${key}"]`).click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ['name = "ready";'], modifiers: [] });
+
+    await page.goto("/?unit=text-objects&activity=inside-open-brace-recall");
+    await page.locator('.key[data-key="y"]').click();
+    await page.locator('.key[data-key="i"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="["]').click();
+    expect((await state(page)).complete).toBe(true);
+
+    await page.goto("/?unit=text-objects&activity=around-open-angle-recall");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.type("ya");
+    await page.keyboard.press("Shift+,");
+    expect((await state(page)).complete).toBe(true);
   });
 
   test("keeps gn forward and gN backward with ordered Visual match ranges", async ({ page }) => {
@@ -895,7 +987,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "repeatable-editing"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "repeatable-editing"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

@@ -205,7 +205,16 @@ async function loadCharacterAssets() {
     characterAssets = Object.fromEntries(Object.entries(manifest.characters).map(([id, character]) => [id, character]));
     assignCharacters();
     document.documentElement.dataset.charactersReady = "true";
-    renderAll();
+    const assignment = characterAssignment();
+    const character = characterAssets[assignment.characterId] || characterAssets.nix;
+    const image = $(".nix", elements.worldGrid);
+    if (image && character) {
+      image.dataset.character = assignment.characterId;
+      image.dataset.animation = assignment.animationId;
+      image.src = localAssetUrl(character.idle);
+      image.alt = `${character.name}, ${character.role}`;
+    }
+    preloadSuccessMedia();
   } catch (error) {
     document.documentElement.dataset.charactersReady = "fallback";
     console.warn("Using the Nix-only character fallback:", error);
@@ -931,6 +940,8 @@ function stepDemo() {
   vimEngine.sendKey(token, { bypassLock: true, source: "demo" });
   state.playbackStep += 1;
   const renderedStep = state.playbackStep;
+  const checkpoint = currentActivity().script.checkpoints?.find(item => item.afterStep === renderedStep);
+  vimEngine.showPreviewRange(checkpoint?.affectedRange || null);
   // CodeMirror positions its block cursor in its next measurement frame.
   // Defer the surrounding demo status by the same frame so a visible step
   // never advertises a new command while showing the previous cursor.

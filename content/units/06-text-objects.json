@@ -1,0 +1,6024 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 6,
+  "id": "text-objects",
+  "title": "Text objects",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "6. Text objects",
+    "commandsAndConcepts": "`iw aw iW aW`; `i\" a\"`, `i' a'`, ``i` a` ``; `i( a(`, `i) a)`, `ib ab`; `i[ a[`, `i] a]`; `i{ a{`, `i} a}`, `iB aB`; `i< a<`, `i> a>`; `is as`, `ip ap`, `it at`",
+    "prerequisites": "Units 1–5",
+    "learningOutcome": "Choose inside versus around and apply any learned operator to a structural object",
+    "representativeExercises": "Change a quoted value; delete function arguments; yank an object literal; uppercase a word; indent a paragraph; replace tag contents",
+    "priorityAndPortability": "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous"
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement",
+    "entering-changing-text",
+    "operator-grammar",
+    "precision-motions-search"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "text-objects-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "inside-and-around-words",
+      "title": "Choose contents or surroundings",
+      "objective": "Use inside and around word objects with previously learned operators.",
+      "activities": [
+        {
+          "id": "inside-around-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Objects name complete targets",
+          "body": "A text object names a structure around the cursor. Inside keeps its boundary or neighboring space; around includes the object and useful surrounding space.",
+          "grammar": "operator + i/a + object",
+          "contrast": "A motion travels somewhere; a text object describes what to act on.",
+          "demoRef": "around-word-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "y",
+                "meaning": "yank"
+              },
+              {
+                "role": "text-object",
+                "keys": "aw",
+                "meaning": "around word"
+              }
+            ]
+          }
+        },
+        {
+          "id": "around-word-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "See the whole around-word range",
+          "instruction": "Yank the first word together with its useful following space.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "w",
+                "kind": "text-object",
+                "cue": "word"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yaw",
+                "explanation": "Yank the first word together with its useful following space."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "draft ready"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    6
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yaw`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-word"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "visible-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The prose buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-word"
+            ]
+          }
+        },
+        {
+          "id": "uppercase-inside-word",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Promote one identifier",
+          "instruction": "Uppercase the identifier under the cursor.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft_mode = True"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "DRAFT_MODE = True"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "g",
+                "kind": "operator",
+                "cue": "case operator"
+              },
+              {
+                "key": "U",
+                "kind": "operator",
+                "cue": "uppercase"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "w",
+                "kind": "text-object",
+                "cue": "word"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "gUiw",
+                "explanation": "Uppercase the identifier under the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "DRAFT_MODE = True"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `gUiw`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-word"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "identifier"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The python buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-word"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-inside-word",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replace one state",
+          "instruction": "Change `draft` to `ready` without touching its spacing.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "state = draft;"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "state = ready;"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "w",
+                "kind": "text-object",
+                "cue": "word"
+              },
+              {
+                "key": "r",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "a",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "d",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "y",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "ciwready⎋",
+                "explanation": "Change `draft` to `ready` without touching its spacing."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "state = ready;"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ciwready⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-word"
+            ],
+            "supporting": [
+              "change-operator",
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "change-and-insert"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-word"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-word",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove a stale qualifier",
+          "instruction": "Delete `stale` and the adjacent separator space in one object.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const stale value"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const value"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "w",
+                "kind": "text-object",
+                "cue": "word"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "daw",
+                "explanation": "Delete `stale` and the adjacent separator space in one object."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "const value"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `daw`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-word"
+            ],
+            "supporting": [
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "whitespace-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-word"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "word-versus-big-word",
+      "title": "Treat punctuation as part of a WORD",
+      "objective": "Contrast word objects with whitespace-delimited WORD objects.",
+      "activities": [
+        {
+          "id": "big-word-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "WORD ignores punctuation boundaries",
+          "body": "A lowercase word follows keyword and punctuation runs. Uppercase WORD treats every nonblank run as one object.",
+          "grammar": "iW / aW",
+          "contrast": "On `cache.old`, `iw` can target one side; `iW` targets the full dotted token.",
+          "demoRef": "inside-big-word-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "y",
+                "meaning": "yank"
+              },
+              {
+                "role": "text-object",
+                "keys": "iW",
+                "meaning": "inside WORD"
+              }
+            ]
+          }
+        },
+        {
+          "id": "inside-big-word-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Capture one dotted WORD",
+          "instruction": "Yank the full dotted token as one WORD.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache.old ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cache.old ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "W",
+                "kind": "text-object",
+                "cue": "WORD"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yiW",
+                "explanation": "Yank the full dotted token as one WORD."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "cache.old ready"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    9
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yiW`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-big-word"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "punctuation"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The log buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-big-word"
+            ]
+          }
+        },
+        {
+          "id": "uppercase-big-word",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Uppercase a dotted token",
+          "instruction": "Uppercase the full dotted token.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache.old ready"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "CACHE.OLD ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "g",
+                "kind": "operator",
+                "cue": "case operator"
+              },
+              {
+                "key": "U",
+                "kind": "operator",
+                "cue": "uppercase"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "W",
+                "kind": "text-object",
+                "cue": "WORD"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "gUiW",
+                "explanation": "Uppercase the full dotted token."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "CACHE.OLD ready"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `gUiW`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-big-word"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "case-change"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The log buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-big-word"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-big-word",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replace a dotted state",
+          "instruction": "Change the full dotted token to `fresh`.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache.old ready"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fresh ready"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "W",
+                "kind": "text-object",
+                "cue": "WORD"
+              },
+              {
+                "key": "f",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "r",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "s",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "h",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "ciWfresh⎋",
+                "explanation": "Change the full dotted token to `fresh`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "fresh ready"
+                ],
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ciWfresh⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-big-word"
+            ],
+            "supporting": [
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "punctuation",
+              "insert"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The log buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-big-word"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-big-word",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove one noisy field",
+          "instruction": "Delete the dotted WORD and its separator space.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache.old ready"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "W",
+                "kind": "text-object",
+                "cue": "WORD"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "daW",
+                "explanation": "Delete the dotted WORD and its separator space."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "ready"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `daW`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-big-word"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "whitespace-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The log buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-big-word"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "quote-objects",
+      "title": "Work inside or around quotes",
+      "objective": "Operate on quote contents or include their delimiters and adjacent whitespace.",
+      "activities": [
+        {
+          "id": "quote-object-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Quote objects preserve or remove boundaries",
+          "body": "Inside quotes targets their contents. Around quotes includes the delimiters and Vim's useful adjacent whitespace.",
+          "grammar": "i\" a\" · i' a' · i` a`",
+          "contrast": "Use inside to replace a value; use around to remove the whole quoted object.",
+          "demoRef": "around-double-quote-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "c",
+                "meaning": "change"
+              },
+              {
+                "role": "text-object",
+                "keys": "i\"",
+                "meaning": "inside quotes"
+              }
+            ]
+          }
+        },
+        {
+          "id": "around-double-quote-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reveal the quote and its separator",
+          "instruction": "Yank around the double-quoted value, including Vim's useful adjacent space.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name = \"draft\";"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name = \"draft\";"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "\"",
+                "kind": "text-object",
+                "cue": "double quotes"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ya\"",
+                "explanation": "Yank around the double-quoted value, including Vim's useful adjacent space."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "name = \"draft\";"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    6
+                  ],
+                  "to": [
+                    0,
+                    14
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ya\"`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-double-quotes"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "quote-boundary",
+              "whitespace"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-double-quotes"
+            ]
+          },
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "change-inside-double-quotes",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Change a quoted value",
+          "instruction": "Replace only the contents of the double quotes with `ready`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name = \"draft\";"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name = \"ready\";"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "\"",
+                "kind": "text-object",
+                "cue": "double quotes"
+              },
+              {
+                "key": "r",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "a",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "d",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "y",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "ci\"ready⎋",
+                "explanation": "Replace only the contents of the double quotes with `ready`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "name = \"ready\";"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ci\"ready⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-double-quotes"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "preserve-delimiters"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-double-quotes"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-double-quotes",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Remove a quoted argument cleanly",
+          "instruction": "Delete the double-quoted value and Vim's adjacent separator space.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "send(\"draft\", next)"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "send(, next)"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "\"",
+                "kind": "text-object",
+                "cue": "double quotes"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "da\"",
+                "explanation": "Delete the double-quoted value and Vim's adjacent separator space."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "send(, next)"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `da\"`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-double-quotes"
+            ],
+            "supporting": [
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "native-whitespace"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-double-quotes"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-inside-single-quotes",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Change single-quoted contents",
+          "instruction": "Replace only `draft` with `live`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode = 'draft'"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode = 'live'"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "'",
+                "kind": "text-object",
+                "cue": "single quotes"
+              },
+              {
+                "key": "l",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "i",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "v",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "ci'live⎋",
+                "explanation": "Replace only `draft` with `live`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "mode = 'live'"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ci'live⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-single-quotes"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-quotes"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The python buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-single-quotes"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "yank-around-single-quotes",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Capture a whole single-quoted value",
+          "instruction": "Yank the quotes and their useful following space.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "'draft' next"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "'draft' next"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "'",
+                "kind": "text-object",
+                "cue": "single quotes"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ya'",
+                "explanation": "Yank the quotes and their useful following space."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "'draft' next"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ya'`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-single-quotes"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "single-quotes",
+              "whitespace"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The python buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-single-quotes"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-inside-backticks",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Change template contents",
+          "instruction": "Replace the backtick contents with `live`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "state = `draft`;"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "state = `live`;"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "`",
+                "kind": "text-object",
+                "cue": "backticks"
+              },
+              {
+                "key": "l",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "i",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "v",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "ci`live⎋",
+                "explanation": "Replace the backtick contents with `live`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "state = `live`;"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ci`live⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-backticks"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "backticks"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-backticks"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-backticks",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove a template argument",
+          "instruction": "Delete the complete backtick object and its separator.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "send(`draft`, next)"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "send(, next)"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "`",
+                "kind": "text-object",
+                "cue": "backticks"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "da`",
+                "explanation": "Delete the complete backtick object and its separator."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "send(, next)"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `da``."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-backticks"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "backticks",
+              "native-whitespace"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-backticks"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "parenthesis-objects",
+      "title": "Target complete argument lists",
+      "objective": "Use either parenthesis spelling and the b aliases.",
+      "activities": [
+        {
+          "id": "parenthesis-object-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Several spellings name the same block",
+          "body": "Both parenthesis keys describe the surrounding pair. `b` is the traditional alias for the same object.",
+          "grammar": "i( i) ib · a( a) ab",
+          "contrast": "Inside keeps the pair; around includes it.",
+          "demoRef": "inside-parens-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "d",
+                "meaning": "delete"
+              },
+              {
+                "role": "text-object",
+                "keys": "i(",
+                "meaning": "inside parentheses"
+              }
+            ]
+          }
+        },
+        {
+          "id": "inside-parens-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reveal function arguments",
+          "instruction": "Yank the contents inside parentheses.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "call(one, two)"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "call(one, two)"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "(",
+                "kind": "text-object",
+                "cue": "parentheses"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yi(",
+                "explanation": "Yank the contents inside parentheses."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "call(one, two)"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    5
+                  ],
+                  "to": [
+                    0,
+                    13
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yi(`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-parentheses"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "arguments"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-parentheses"
+            ]
+          }
+        },
+        {
+          "id": "delete-inside-close-paren",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Empty a call",
+          "instruction": "Delete the arguments with the closing-parenthesis spelling.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "call(one, two)"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "call()"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": ")",
+                "kind": "text-object",
+                "cue": "parentheses"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "di)",
+                "explanation": "Delete the arguments with the closing-parenthesis spelling."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "call()"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `di)`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-parentheses"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "closing-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-parentheses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-inside-b-alias",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Use the block alias",
+          "instruction": "Delete the arguments with `ib`.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "load(cache, auth)"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "load()"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "b",
+                "kind": "text-object",
+                "cue": "parentheses alias"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "dib",
+                "explanation": "Delete the arguments with `ib`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "load()"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `dib`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-parentheses"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "b-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The typescript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-parentheses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-b-alias",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Remove a complete parameter list",
+          "instruction": "Delete the parentheses and their contents with `ab`.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "load(cache, auth)"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "load"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "b",
+                "kind": "text-object",
+                "cue": "parentheses alias"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "dab",
+                "explanation": "Delete the parentheses and their contents with `ab`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "load"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `dab`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-parentheses"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "b-alias",
+              "include-delimiters"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The typescript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-parentheses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-close-paren",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Remove a call boundary",
+          "instruction": "Delete around the arguments with the closing-parenthesis spelling.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "call(one, two)"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "call"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": ")",
+                "kind": "text-object",
+                "cue": "parentheses"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "da)",
+                "explanation": "Delete around the arguments with the closing-parenthesis spelling."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "call"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `da)`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-parentheses"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "closing-alias",
+              "include-delimiters"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-parentheses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-around-open-paren",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replace a full argument list",
+          "instruction": "Replace the whole parenthesized object with `(done)`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "call(one, two)"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "call(done)"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "(",
+                "kind": "text-object",
+                "cue": "parentheses"
+              },
+              {
+                "key": "(",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "d",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "o",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "n",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": ")",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "ca((done)⎋",
+                "explanation": "Replace the whole parenthesized object with `(done)`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "call(done)"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ca((done)⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-parentheses"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "replace-delimiters"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-parentheses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "bracket-and-brace-objects",
+      "title": "Target bracketed structures",
+      "objective": "Use every square- and curly-bracket spelling, including B aliases.",
+      "activities": [
+        {
+          "id": "bracket-brace-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Opening and closing keys name the same pair",
+          "body": "Square- and curly-bracket objects work from anywhere inside a balanced pair. Uppercase `B` aliases curly braces.",
+          "grammar": "i[ i] a[ a] · i{ i} iB · a{ a} aB",
+          "contrast": "Choose inside to keep delimiters and around to include them.",
+          "demoRef": "inside-open-square-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "y",
+                "meaning": "yank"
+              },
+              {
+                "role": "text-object",
+                "keys": "i[",
+                "meaning": "inside brackets"
+              }
+            ]
+          }
+        },
+        {
+          "id": "inside-open-square-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Yank inside square brackets.",
+          "instruction": "Yank inside square brackets.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items[one, two]"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items[one, two]"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "[",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yi[",
+                "explanation": "Yank inside square brackets."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "items[one, two]"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    6
+                  ],
+                  "to": [
+                    0,
+                    14
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yi[`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-square-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-square-brackets"
+            ]
+          }
+        },
+        {
+          "id": "around-open-square",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Yank around square brackets.",
+          "instruction": "Yank around square brackets.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items[one, two]"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items[one, two]"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "[",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ya[",
+                "explanation": "Yank around square brackets."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "items[one, two]"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ya[`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-square-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-square-brackets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inside-close-square",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete inside square brackets.",
+          "instruction": "Delete inside square brackets.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items[one, two]"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items[]"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "]",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "di]",
+                "explanation": "Delete inside square brackets."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "items[]"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `di]`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-square-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-square-brackets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "around-close-square",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Delete around square brackets.",
+          "instruction": "Delete around square brackets.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items[one, two]"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "]",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "da]",
+                "explanation": "Delete around square brackets."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "items"
+                ],
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `da]`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-square-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-square-brackets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inside-open-brace",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Yank inside curly braces.",
+          "instruction": "Yank inside curly braces.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "{",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yi{",
+                "explanation": "Yank inside curly braces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "config = {one: 1}"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yi{`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-curly-braces"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The json buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-curly-braces"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "around-open-brace",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Yank around curly braces.",
+          "instruction": "Yank around curly braces.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "{",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ya{",
+                "explanation": "Yank around curly braces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "config = {one: 1}"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ya{`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-curly-braces"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The json buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-curly-braces"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inside-close-brace",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete inside curly braces.",
+          "instruction": "Delete inside curly braces.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "config = {}"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "}",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "di}",
+                "explanation": "Delete inside curly braces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "config = {}"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `di}`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-curly-braces"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The json buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-curly-braces"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "around-close-brace",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Delete around curly braces.",
+          "instruction": "Delete around curly braces.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "config = "
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "}",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "da}",
+                "explanation": "Delete around curly braces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "config = "
+                ],
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `da}`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-curly-braces"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The json buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-curly-braces"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inside-big-b-alias",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Yank with iB.",
+          "instruction": "Yank with iB.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "B",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yiB",
+                "explanation": "Yank with iB."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "config = {one: 1}"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yiB`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-curly-braces"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The json buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-curly-braces"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "around-big-b-alias",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Yank with aB.",
+          "instruction": "Yank with aB.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "config = {one: 1}"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "B",
+                "kind": "text-object",
+                "cue": "delimiter object"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yaB",
+                "explanation": "Yank with aB."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "config = {one: 1}"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yaB`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-curly-braces"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "delimiter-alias"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The json buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-curly-braces"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "angle-bracket-objects",
+      "title": "Use unambiguous angle pairs",
+      "objective": "Operate on balanced angle-bracket objects without confusing them with tags.",
+      "activities": [
+        {
+          "id": "angle-object-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Angle objects need clear pairs",
+          "body": "Angle-bracket objects behave like other delimiter objects when the buffer makes the pair unambiguous, such as a generic type list.",
+          "grammar": "i< i> · a< a>",
+          "contrast": "Tag objects use `it` and `at`; angle objects target literal angle pairs.",
+          "demoRef": "inside-open-angle-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "d",
+                "meaning": "delete"
+              },
+              {
+                "role": "text-object",
+                "keys": "i<",
+                "meaning": "inside angles"
+              }
+            ]
+          }
+        },
+        {
+          "id": "inside-open-angle-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reveal generic parameters",
+          "instruction": "Yank inside the angle brackets.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Result<Ok, Error>"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Result<Ok, Error>"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "<",
+                "kind": "text-object",
+                "cue": "angle brackets"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yi<",
+                "explanation": "Yank inside the angle brackets."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "Result<Ok, Error>"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    7
+                  ],
+                  "to": [
+                    0,
+                    16
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yi<`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-angle-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "generic-type"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The typescript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-angle-brackets"
+            ]
+          }
+        },
+        {
+          "id": "around-open-angle",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Capture a complete generic list",
+          "instruction": "Yank around the angle-bracketed parameters.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Result<Ok, Error>"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Result<Ok, Error>"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "<",
+                "kind": "text-object",
+                "cue": "angle brackets"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ya<",
+                "explanation": "Yank around the angle-bracketed parameters."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "Result<Ok, Error>"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ya<`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-angle-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "opening-spelling"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The typescript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-angle-brackets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inside-close-angle",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Clear generic parameters",
+          "instruction": "Delete inside the angle brackets with `i>`.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Result<Ok, Error>"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Result<>"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": ">",
+                "kind": "text-object",
+                "cue": "angle brackets"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "di>",
+                "explanation": "Delete inside the angle brackets with `i>`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "Result<>"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `di>`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-angle-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "closing-spelling"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The typescript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-angle-brackets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "around-close-angle",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove a generic list",
+          "instruction": "Delete the complete angle-bracket object with `a>`.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Result<Ok, Error>"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Result"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": ">",
+                "kind": "text-object",
+                "cue": "angle brackets"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "da>",
+                "explanation": "Delete the complete angle-bracket object with `a>`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "Result"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `da>`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-angle-brackets"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "closing-spelling",
+              "include-delimiters"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The typescript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-angle-brackets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "sentence-and-paragraph-objects",
+      "title": "Operate on prose structure",
+      "objective": "Use sentence and paragraph objects as reusable line and character ranges.",
+      "activities": [
+        {
+          "id": "prose-object-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Prose has structural objects too",
+          "body": "Sentence objects follow sentence boundaries. Paragraph objects follow blank-line-separated blocks and act linewise with operators such as indent.",
+          "grammar": "is as · ip ap",
+          "contrast": "Sentence objects are characterwise; paragraph objects commonly become linewise ranges.",
+          "demoRef": "inside-sentence-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "y",
+                "meaning": "yank"
+              },
+              {
+                "role": "text-object",
+                "keys": "is",
+                "meaning": "inside sentence"
+              }
+            ]
+          }
+        },
+        {
+          "id": "inside-sentence-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Capture one sentence",
+          "instruction": "Yank the sentence under the cursor without its separator.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "First sentence. Second sentence!",
+                "",
+                "Next paragraph line one.",
+                "Next paragraph line two."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "First sentence. Second sentence!",
+                "",
+                "Next paragraph line one.",
+                "Next paragraph line two."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "s",
+                "kind": "text-object",
+                "cue": "sentence"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yis",
+                "explanation": "Yank the sentence under the cursor without its separator."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "First sentence. Second sentence!",
+                  "",
+                  "Next paragraph line one.",
+                  "Next paragraph line two."
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    15
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yis`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-sentence"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "sentence-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The prose buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-sentence"
+            ]
+          }
+        },
+        {
+          "id": "delete-around-sentence",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Remove one sentence cleanly",
+          "instruction": "Delete the first sentence and its separator space.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "First sentence. Second sentence!",
+                "",
+                "Next paragraph line one.",
+                "Next paragraph line two."
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Second sentence!",
+                "",
+                "Next paragraph line one.",
+                "Next paragraph line two."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "s",
+                "kind": "text-object",
+                "cue": "sentence"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "das",
+                "explanation": "Delete the first sentence and its separator space."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "Second sentence!",
+                  "",
+                  "Next paragraph line one.",
+                  "Next paragraph line two."
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `das`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-sentence"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "separator-space"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The prose buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-sentence"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "indent-inside-paragraph",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Indent one paragraph",
+          "instruction": "Indent the current paragraph with `>ip`.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha line",
+                "beta line",
+                "",
+                "next block"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "  alpha line",
+                "  beta line",
+                "",
+                "next block"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": ">",
+                "kind": "operator",
+                "cue": "indent"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "p",
+                "kind": "text-object",
+                "cue": "paragraph"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": ">ip",
+                "explanation": "Indent the current paragraph with `>ip`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "  alpha line",
+                  "  beta line",
+                  "",
+                  "next block"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `>ip`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-paragraph"
+            ],
+            "supporting": [
+              "indent-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "linewise-object"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The markdown buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-paragraph"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-paragraph",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove a paragraph and separator",
+          "instruction": "Delete the current paragraph with its separating blank line.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha line",
+                "beta line",
+                "",
+                "next block"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "next block"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "p",
+                "kind": "text-object",
+                "cue": "paragraph"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "dap",
+                "explanation": "Delete the current paragraph with its separating blank line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "next block"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `dap`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-paragraph"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "blank-line-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The markdown buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-paragraph"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "tag-objects",
+      "title": "Target balanced HTML elements",
+      "objective": "Replace tag contents or include the enclosing tags.",
+      "activities": [
+        {
+          "id": "tag-object-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Tags are semantic delimiter objects",
+          "body": "Inside tag targets content between a balanced opening and closing tag. Around tag includes both tags and all nested content.",
+          "grammar": "it · at",
+          "contrast": "Use `it` to preserve markup; use `at` to move or remove the entire element.",
+          "demoRef": "inside-tag-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "c",
+                "meaning": "change"
+              },
+              {
+                "role": "text-object",
+                "keys": "it",
+                "meaning": "inside tag"
+              }
+            ]
+          }
+        },
+        {
+          "id": "inside-tag-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reveal tag contents",
+          "instruction": "Yank everything inside the enclosing paragraph tag.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<p>Hello <em>world</em></p>"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "<p>Hello <em>world</em></p>"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "t",
+                "kind": "text-object",
+                "cue": "tag"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yit",
+                "explanation": "Yank everything inside the enclosing paragraph tag."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "<p>Hello <em>world</em></p>"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    3
+                  ],
+                  "to": [
+                    0,
+                    25
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yit`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-tag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "nested-balanced-tags"
+            ]
+          },
+          "portability": "Core Vim behavior on balanced lowercase HTML tags.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-tag"
+            ]
+          }
+        },
+        {
+          "id": "change-inside-tag",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Replace tag contents",
+          "instruction": "Replace the paragraph contents with `Ready` while keeping its tags.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<p>Hello <em>world</em></p>"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "<p>Ready</p>"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "t",
+                "kind": "text-object",
+                "cue": "tag"
+              },
+              {
+                "key": "R",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "a",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "d",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "y",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "citReady⎋",
+                "explanation": "Replace the paragraph contents with `Ready` while keeping its tags."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "<p>Ready</p>"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `citReady⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "inside-tag"
+            ],
+            "supporting": [
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "preserve-tags"
+            ]
+          },
+          "portability": "Core Vim behavior on balanced lowercase HTML tags.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inside-tag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "yank-around-tag",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Capture a complete element",
+          "instruction": "Yank the enclosing element with both tags.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<p>Hello <em>world</em></p>"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "<p>Hello <em>world</em></p>"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "t",
+                "kind": "text-object",
+                "cue": "tag"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yat",
+                "explanation": "Yank the enclosing element with both tags."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "<p>Hello <em>world</em></p>"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `yat`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-tag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "nested-balanced-tags"
+            ]
+          },
+          "portability": "Core Vim behavior on balanced lowercase HTML tags.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-tag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-around-tag",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove a complete element",
+          "instruction": "Delete the enclosing paragraph element and all its contents.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<p>Hello <em>world</em></p>"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                ""
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "t",
+                "kind": "text-object",
+                "cue": "tag"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "dat",
+                "explanation": "Delete the enclosing paragraph element and all its contents."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  ""
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `dat`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "around-tag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "include-tags"
+            ]
+          },
+          "portability": "Core Vim behavior on balanced lowercase HTML tags.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "around-tag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "integrate-text-objects",
+      "title": "Choose the object, then the operator",
+      "objective": "Transfer operator grammar across words, delimiters, quotes, prose, and tags.",
+      "activities": [
+        {
+          "id": "text-object-transfer",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The operator vocabulary now scales",
+          "body": "Every learned operator can reuse the same object vocabulary. Choose the transformation, then choose inside or around, then name the structure.",
+          "grammar": "operator + inside/around + object",
+          "contrast": "Prefer the smallest object that states the intended boundary clearly.",
+          "demoRef": "integration-word-demo",
+          "presentation": {
+            "kind": "command-assembly",
+            "parts": [
+              {
+                "role": "operator",
+                "keys": "gU",
+                "meaning": "uppercase"
+              },
+              {
+                "role": "text-object",
+                "keys": "iw",
+                "meaning": "inside word"
+              }
+            ]
+          }
+        },
+        {
+          "id": "integration-word-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Compose without memorizing a phrase",
+          "instruction": "Uppercase the object under the cursor by combining a known operator with `iw`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status_code = 200"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "STATUS_CODE = 200"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "g",
+                "kind": "operator",
+                "cue": "case operator"
+              },
+              {
+                "key": "U",
+                "kind": "operator",
+                "cue": "uppercase"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "w",
+                "kind": "text-object",
+                "cue": "word"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "gUiw",
+                "explanation": "Uppercase the object under the cursor by combining a known operator with `iw`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "STATUS_CODE = 200"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `gUiw`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "text-object-composition"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "operator-transfer"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The python buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "text-object-composition"
+            ]
+          }
+        },
+        {
+          "id": "integration-delete-arguments",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Empty a call structurally",
+          "instruction": "Delete the function arguments while keeping the parentheses.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "notify(user, event)"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "notify()"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "d",
+                "kind": "operator",
+                "cue": "delete"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "(",
+                "kind": "text-object",
+                "cue": "parentheses"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "di(",
+                "explanation": "Delete the function arguments while keeping the parentheses."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "notify()"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `di(`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "text-object-composition"
+            ],
+            "supporting": [
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "code-structure"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The go buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "text-object-composition"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "integration-yank-object-literal",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Capture an object literal",
+          "instruction": "Yank the complete object literal, including its braces.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const config = { ready: true };"
+              ],
+              "cursor": [
+                0,
+                15
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const config = { ready: true };"
+              ],
+              "cursor": [
+                0,
+                15
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "y",
+                "kind": "operator",
+                "cue": "yank"
+              },
+              {
+                "key": "a",
+                "kind": "command",
+                "cue": "around"
+              },
+              {
+                "key": "{",
+                "kind": "text-object",
+                "cue": "curly braces"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ya{",
+                "explanation": "Yank the complete object literal, including its braces."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "const config = { ready: true };"
+                ],
+                "cursor": [
+                  0,
+                  15
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `ya{`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "text-object-composition"
+            ],
+            "supporting": [
+              "yank-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "object-literal"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "text-object-composition"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "integration-replace-tag",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Choose the structural target",
+          "instruction": "Replace only the contents of the status element with `Ready`.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "<status>Draft</status>"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "<status>Ready</status>"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              {
+                "key": "c",
+                "kind": "operator",
+                "cue": "change"
+              },
+              {
+                "key": "i",
+                "kind": "command",
+                "cue": "inside"
+              },
+              {
+                "key": "t",
+                "kind": "text-object",
+                "cue": "tag"
+              },
+              {
+                "key": "R",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "e",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "a",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "d",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "y",
+                "kind": "literal",
+                "cue": "insert text"
+              },
+              {
+                "key": "Escape",
+                "kind": "control",
+                "cue": "finish change"
+              }
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "citReady⎋",
+                "explanation": "Replace only the contents of the status element with `Ready`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "<status>Ready</status>"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the operator first, then name the whole object.",
+            "Use `citReady⎋`."
+          ],
+          "feedback": {
+            "success": "The structural target was handled as one object.",
+            "why": "The text object supplied a stable range without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "text-object-composition"
+            ],
+            "supporting": [
+              "inside-tag",
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "independent-choice",
+              "markup"
+            ]
+          },
+          "portability": "Core Vim behavior on balanced lowercase HTML tags.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "text-objects-v1",
+            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "text-object-composition"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "text-objects-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Structures are reusable ranges",
+          "body": "You can now apply familiar operators to words, quotes, balanced delimiters, prose blocks, and HTML elements.",
+          "takeaways": [
+            "Choose inside when boundaries should remain.",
+            "Choose around when delimiters or separator whitespace belong to the edit.",
+            "Compose operators with objects instead of counting characters."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "word-object-reference",
+      "command": "iw / aw / iW / aW",
+      "purpose": "Target word or WORD contents and surroundings.",
+      "notes": [
+        "WORD is whitespace-delimited."
+      ],
+      "exampleActivityRefs": [
+        "uppercase-inside-word",
+        "delete-around-big-word"
+      ]
+    },
+    {
+      "id": "quote-object-reference",
+      "command": "i\" / a\" / i' / a' / i` / a`",
+      "purpose": "Target quote contents or include quotes and adjacent whitespace.",
+      "notes": [
+        "Quote objects remain on one line."
+      ],
+      "exampleActivityRefs": [
+        "change-inside-double-quotes",
+        "delete-around-backticks"
+      ]
+    },
+    {
+      "id": "parenthesis-object-reference",
+      "command": "i( / a( / i) / a) / ib / ab",
+      "purpose": "Target a balanced parenthesized object.",
+      "notes": [
+        "b aliases parentheses."
+      ],
+      "exampleActivityRefs": [
+        "inside-parens-demo",
+        "delete-around-b-alias"
+      ]
+    },
+    {
+      "id": "bracket-object-reference",
+      "command": "i[ / a[ / i] / a]",
+      "purpose": "Target a balanced square-bracket object.",
+      "notes": [],
+      "exampleActivityRefs": [
+        "inside-open-square-demo",
+        "around-close-square"
+      ]
+    },
+    {
+      "id": "brace-object-reference",
+      "command": "i{ / a{ / i} / a} / iB / aB",
+      "purpose": "Target a balanced curly-brace object.",
+      "notes": [
+        "B aliases curly braces."
+      ],
+      "exampleActivityRefs": [
+        "inside-open-brace",
+        "around-big-b-alias"
+      ]
+    },
+    {
+      "id": "angle-object-reference",
+      "command": "i< / a< / i> / a>",
+      "purpose": "Target an unambiguous angle-bracket pair.",
+      "notes": [
+        "Use tag objects for HTML elements."
+      ],
+      "exampleActivityRefs": [
+        "inside-open-angle-demo",
+        "around-close-angle"
+      ]
+    },
+    {
+      "id": "prose-object-reference",
+      "command": "is / as / ip / ap",
+      "purpose": "Target sentences or blank-line-separated paragraphs.",
+      "notes": [
+        "Paragraph operators are commonly linewise."
+      ],
+      "exampleActivityRefs": [
+        "inside-sentence-demo",
+        "indent-inside-paragraph"
+      ]
+    },
+    {
+      "id": "tag-object-reference",
+      "command": "it / at",
+      "purpose": "Target HTML contents or the complete enclosing element.",
+      "notes": [
+        "Exercises use balanced lowercase tags."
+      ],
+      "exampleActivityRefs": [
+        "change-inside-tag",
+        "delete-around-tag"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "inside versus around and iw aw",
+      "explain": [
+        "inside-around-meaning"
+      ],
+      "demonstrate": [
+        "around-word-demo"
+      ],
+      "isolate": [
+        "uppercase-inside-word"
+      ],
+      "mix": [
+        "change-inside-word"
+      ],
+      "challenge": [
+        "delete-around-word"
+      ]
+    },
+    {
+      "concept": "iW and aW",
+      "explain": [
+        "big-word-meaning"
+      ],
+      "demonstrate": [
+        "inside-big-word-demo"
+      ],
+      "isolate": [
+        "uppercase-big-word"
+      ],
+      "mix": [
+        "change-big-word"
+      ],
+      "challenge": [
+        "delete-around-big-word"
+      ]
+    },
+    {
+      "concept": "quote text objects",
+      "explain": [
+        "quote-object-meaning"
+      ],
+      "demonstrate": [
+        "around-double-quote-demo"
+      ],
+      "isolate": [
+        "change-inside-double-quotes",
+        "change-inside-single-quotes",
+        "change-inside-backticks"
+      ],
+      "mix": [
+        "delete-around-double-quotes",
+        "yank-around-single-quotes"
+      ],
+      "challenge": [
+        "delete-around-backticks"
+      ]
+    },
+    {
+      "concept": "parenthesis objects and ib ab",
+      "explain": [
+        "parenthesis-object-meaning"
+      ],
+      "demonstrate": [
+        "inside-parens-demo"
+      ],
+      "isolate": [
+        "delete-inside-close-paren",
+        "delete-inside-b-alias"
+      ],
+      "mix": [
+        "delete-around-b-alias",
+        "delete-around-close-paren"
+      ],
+      "challenge": [
+        "change-around-open-paren"
+      ]
+    },
+    {
+      "concept": "bracket and brace objects and iB aB",
+      "explain": [
+        "bracket-brace-meaning"
+      ],
+      "demonstrate": [
+        "inside-open-square-demo"
+      ],
+      "isolate": [
+        "around-open-square",
+        "inside-close-square",
+        "inside-open-brace",
+        "inside-close-brace"
+      ],
+      "mix": [
+        "around-close-square",
+        "around-open-brace",
+        "inside-big-b-alias"
+      ],
+      "challenge": [
+        "around-close-brace",
+        "around-big-b-alias"
+      ]
+    },
+    {
+      "concept": "angle-bracket objects",
+      "explain": [
+        "angle-object-meaning"
+      ],
+      "demonstrate": [
+        "inside-open-angle-demo"
+      ],
+      "isolate": [
+        "around-open-angle"
+      ],
+      "mix": [
+        "inside-close-angle"
+      ],
+      "challenge": [
+        "around-close-angle"
+      ]
+    },
+    {
+      "concept": "sentence and paragraph objects",
+      "explain": [
+        "prose-object-meaning"
+      ],
+      "demonstrate": [
+        "inside-sentence-demo"
+      ],
+      "isolate": [
+        "delete-around-sentence"
+      ],
+      "mix": [
+        "indent-inside-paragraph"
+      ],
+      "challenge": [
+        "delete-around-paragraph"
+      ]
+    },
+    {
+      "concept": "tag objects",
+      "explain": [
+        "tag-object-meaning"
+      ],
+      "demonstrate": [
+        "inside-tag-demo"
+      ],
+      "isolate": [
+        "change-inside-tag"
+      ],
+      "mix": [
+        "yank-around-tag"
+      ],
+      "challenge": [
+        "delete-around-tag"
+      ]
+    },
+    {
+      "concept": "integrated text objects",
+      "explain": [
+        "text-object-transfer"
+      ],
+      "demonstrate": [
+        "integration-word-demo"
+      ],
+      "isolate": [
+        "integration-delete-arguments"
+      ],
+      "mix": [
+        "integration-yank-object-literal"
+      ],
+      "challenge": [
+        "integration-replace-tag"
+      ]
+    }
+  ]
+}

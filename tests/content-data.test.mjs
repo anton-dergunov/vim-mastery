@@ -14,6 +14,7 @@ const cursorUnit = units.find(item => item.data.id === "cursor-movement").data;
 const changingUnit = units.find(item => item.data.id === "entering-changing-text").data;
 const operatorUnit = units.find(item => item.data.id === "operator-grammar").data;
 const precisionUnit = units.find(item => item.data.id === "precision-motions-search").data;
+const textObjectUnit = units.find(item => item.data.id === "text-objects").data;
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -43,7 +44,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -79,7 +80,8 @@ test("unit continuation requires the immediately following unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), changingUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), changingUnit), operatorUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), operatorUnit), precisionUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), precisionUnit), null, "Unit 5 must not skip to Unit 10");
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), precisionUnit), textObjectUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), textObjectUnit), null, "Unit 6 must not skip to Unit 10");
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -261,6 +263,52 @@ test("Unit 5 preserves the curriculum and covers every precision-search family",
     { from: [0, 11], to: [0, 16] },
     { from: [0, 21], to: [0, 26] },
   ]);
+});
+
+test("Unit 6 preserves the curriculum and covers every text-object family", () => {
+  assert.deepEqual(textObjectUnit.curriculumDefinition, {
+    unit: "6. Text objects",
+    commandsAndConcepts: "`iw aw iW aW`; `i\" a\"`, `i' a'`, ``i` a` ``; `i( a(`, `i) a)`, `ib ab`; `i[ a[`, `i] a]`; `i{ a{`, `i} a}`, `iB aB`; `i< a<`, `i> a>`; `is as`, `ip ap`, `it at`",
+    prerequisites: "Units 1–5",
+    learningOutcome: "Choose inside versus around and apply any learned operator to a structural object",
+    representativeExercises: "Change a quoted value; delete function arguments; yank an object literal; uppercase a word; indent a paragraph; replace tag contents",
+    priorityAndPortability: "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous",
+  });
+  assert.deepEqual(textObjectUnit.prerequisiteSkillIds, [
+    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search",
+  ]);
+  assert.equal(textObjectUnit.releaseStatus, "authoring");
+  assert.equal(textObjectUnit.lessons.length, 9);
+  assert.deepEqual(textObjectUnit.coverage.map(item => item.concept), [
+    "inside versus around and iw aw", "iW and aW", "quote text objects",
+    "parenthesis objects and ib ab", "bracket and brace objects and iB aB",
+    "angle-bracket objects", "sentence and paragraph objects", "tag objects", "integrated text objects",
+  ]);
+  const activities = textObjectUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert.equal(runnable.length, 47);
+  const objectSpellings = new Set(runnable.map(activity => keysOf(activity).slice(1, 3).join("")));
+  for (const spelling of [
+    "iw", "aw", "iW", "aW", 'i"', 'a"', "i'", "a'", "i`", "a`",
+    "i(", "a(", "i)", "a)", "ib", "ab", "i[", "a[", "i]", "a]",
+    "i{", "a{", "i}", "a}", "iB", "aB", "i<", "a<", "i>", "a>",
+    "is", "as", "ip", "ap", "it", "at",
+  ]) assert(objectSpellings.has(spelling), `Unit 6 lacks executable ${spelling}`);
+  assert.deepEqual(runnable.filter(activity => activity.editor?.visualizeWhitespace).map(activity => activity.id), ["around-double-quote-demo"]);
+  for (const activity of runnable) {
+    assert(profileById.has(activity.languageId), `${activity.id} uses unknown language ${activity.languageId}`);
+    assert.equal(activity.provenance.nativeValidation, "passed");
+    assert.equal(activity.provenance.browserConformance, "passed");
+    assert.equal(activity.provenance.reviewStatus, "draft");
+    const keys = keysOf(activity);
+    assert.equal(activity.script.commandGroups[0].from, 0);
+    assert.equal(activity.script.commandGroups.at(-1).to, keys.length);
+    const finalCheckpoint = activity.script.checkpoints.at(-1);
+    assert.equal(finalCheckpoint.afterStep, keys.length);
+    assert.deepEqual(finalCheckpoint.lines, activity.scenario.target.lines);
+    assert.deepEqual(finalCheckpoint.cursor, activity.scenario.target.cursor);
+    assert.equal(finalCheckpoint.mode, activity.scenario.target.mode);
+  }
 });
 
 test("language profiles are complete and uniquely addressable", () => {
@@ -517,6 +565,33 @@ for (const activity of precisionRunnable) {
       // Headless feedkeys exits standalone Visual match selections before the
       // assertion function runs; browser fixtures own those affected ranges.
       if (checkpoint.mode && !checkpoint.affectedRange && checkpoint.afterStep === keys.length) {
+        assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+      }
+    }
+  });
+}
+
+const textObjectRunnable = textObjectUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of textObjectRunnable) {
+  test(`native Vim Unit 6 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const options = {
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+    };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      if (checkpoint.mode && checkpoint.afterStep === keys.length) {
         assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
       }
     }

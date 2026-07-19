@@ -14,4 +14,8 @@ Unit 2, including counted line movement and last-nonblank cursor placement. It
 also restores native `gn`/`gN` behavior for Unit 5: match selection always
 moves forward/backward respectively, regardless of whether `/` or `?` created
 the previous search, and it chooses the correct neighboring match when the
-cursor sits between matches.
+cursor sits between matches. Unit 6 extends the same versioned patch so
+around-quote text objects include trailing whitespace, or leading whitespace
+when no trailing whitespace is available, matching native Vim. It also parses
+the complete CodeMirror buffer before resolving an enclosing HTML tag, so
+`it`/`at` can see closing tags beyond the cursor.

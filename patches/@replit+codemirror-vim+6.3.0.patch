@@ -1,5 +1,5 @@
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.cjs b/node_modules/@replit/codemirror-vim/dist/index.cjs
-index 24368b8..1116777 100644
+index 24368b8..b9bdf28 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.cjs
 +++ b/node_modules/@replit/codemirror-vim/dist/index.cjs
 @@ -167,6 +167,7 @@ function initVim(CM) {
@@ -58,7 +58,25 @@ index 24368b8..1116777 100644
      moveToMatchedSymbol: function(cm, head) {
        var cursor = head;
        var line = cursor.line;
-@@ -5499,33 +5498,35 @@ function initVim(CM) {
+@@ -5024,6 +5023,17 @@ function initVim(CM) {
+     // include the symbols
+     if (inclusive) {
+       --start; ++end;
++      var whitespaceEnd = end;
++      while (whitespaceEnd < chars.length && isWhiteSpaceString(chars[whitespaceEnd])) {
++        whitespaceEnd++;
++      }
++      if (whitespaceEnd > end) {
++        end = whitespaceEnd;
++      } else {
++        while (start > 0 && isWhiteSpaceString(chars[start - 1])) {
++          start--;
++        }
++      }
+     }
+
+     return {
+@@ -5499,33 +5509,35 @@ function initVim(CM) {
      return cm.operation(function() {
        if (repeat === undefined) { repeat = 1; }
        var pos = cm.getCursor();
@@ -116,8 +134,19 @@ index 24368b8..1116777 100644
      });
    }
    /** @arg {CodeMirrorV} cm */
+@@ -8072,7 +8084,9 @@ function findEnclosingTag(cm, pos) {
+         if (text == "<")
+             offset++;
+     }
+-    var tree = language.ensureSyntaxTree(state, offset);
++    // Tag objects need the closing tag, which can sit beyond the cursor.
++    // Ensure the complete lesson buffer is parsed before walking ancestors.
++    var tree = language.ensureSyntaxTree(state, state.doc.length);
+     var node = (tree === null || tree === void 0 ? void 0 : tree.resolve(offset)) || null;
+     while (node) {
+         if (((_a = node.firstChild) === null || _a === void 0 ? void 0 : _a.type.name) == 'OpenTag'
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.js b/node_modules/@replit/codemirror-vim/dist/index.js
-index 4d0faa1..12d5ea1 100644
+index 4d0faa1..e81efa0 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.js
 +++ b/node_modules/@replit/codemirror-vim/dist/index.js
 @@ -147,6 +147,7 @@ function initVim(CM) {
@@ -176,7 +205,25 @@ index 4d0faa1..12d5ea1 100644
      moveToMatchedSymbol: function(cm, head) {
        var cursor = head;
        var line = cursor.line;
-@@ -5479,33 +5478,35 @@ function initVim(CM) {
+@@ -5004,6 +5003,17 @@ function initVim(CM) {
+     // include the symbols
+     if (inclusive) {
+       --start; ++end;
++      var whitespaceEnd = end;
++      while (whitespaceEnd < chars.length && isWhiteSpaceString(chars[whitespaceEnd])) {
++        whitespaceEnd++;
++      }
++      if (whitespaceEnd > end) {
++        end = whitespaceEnd;
++      } else {
++        while (start > 0 && isWhiteSpaceString(chars[start - 1])) {
++          start--;
++        }
++      }
+     }
+
+     return {
+@@ -5479,33 +5489,35 @@ function initVim(CM) {
      return cm.operation(function() {
        if (repeat === undefined) { repeat = 1; }
        var pos = cm.getCursor();
@@ -234,3 +281,14 @@ index 4d0faa1..12d5ea1 100644
      });
    }
    /** @arg {CodeMirrorV} cm */
+@@ -8052,7 +8064,9 @@ function findEnclosingTag(cm, pos) {
+         if (text == "<")
+             offset++;
+     }
+-    var tree = ensureSyntaxTree(state, offset);
++    // Tag objects need the closing tag, which can sit beyond the cursor.
++    // Ensure the complete lesson buffer is parsed before walking ancestors.
++    var tree = ensureSyntaxTree(state, state.doc.length);
+     var node = (tree === null || tree === void 0 ? void 0 : tree.resolve(offset)) || null;
+     while (node) {
+         if (((_a = node.firstChild) === null || _a === void 0 ? void 0 : _a.type.name) == 'OpenTag'

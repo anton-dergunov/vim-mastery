@@ -2,6 +2,7 @@ import { EditorSelection, EditorState, StateEffect, StateField } from "@codemirr
 import { history } from "@codemirror/commands";
 import { Decoration, EditorView, drawSelection, highlightWhitespace, lineNumbers } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
 import { HighlightStyle, indentUnit, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 import { Vim, getCM, vim } from "@replit/codemirror-vim";
@@ -142,6 +143,7 @@ export class VimEngine {
           ...(visualizeWhitespace ? [highlightWhitespace()] : []),
           previewRangeField,
           ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
+          ...(language === "html" ? [html()] : []),
           ...(wrapColumns ? [
             EditorView.lineWrapping,
             EditorView.theme({
@@ -322,6 +324,10 @@ export class VimEngine {
   }
 
   showPreviewRange(range) {
+    if (!range) {
+      this.view.dispatch({ effects: setPreviewRange.of(Decoration.none) });
+      return;
+    }
     const from = offsetForPosition(this.view.state.doc.toString(), range.from);
     const to = offsetForPosition(this.view.state.doc.toString(), range.to);
     const decoration = from < to

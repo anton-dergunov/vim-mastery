@@ -43,3 +43,16 @@ was between matches. The versioned compatibility patch makes `gn` unconditionall
 forward and `gN` unconditionally backward, matching Vim, while leaving the
 direction-sensitive `n`/`N` behavior unchanged. Browser fixtures also assert
 ordered, end-exclusive Visual match ranges for both directions.
+
+Unit 6 enables CodeMirror's HTML language parser for HTML activities so the
+adapter can resolve balanced `it`/`at` objects from the syntax tree. The
+versioned patch asks CodeMirror to parse the complete buffer before resolving
+an enclosing tag, ensuring its closing tag is available beyond the cursor. Tag
+fixtures deliberately use well-formed, lowercase HTML and avoid malformed
+tags, comments, and ambiguous angle brackets. The pinned adapter also omitted
+Vim's adjacent-whitespace rule for around-quote objects: `a"`, `a'`, and
+``a` `` now include following horizontal whitespace when present, otherwise
+preceding whitespace. The versioned compatibility patch applies that behavior
+to all three quote forms. Demo checkpoints may expose an `affectedRange`; the
+playback controller renders that range through the editor's existing preview
+decoration and clears it at the next checkpoint or reset.
