@@ -17,6 +17,7 @@ const precisionUnit = units.find(item => item.data.id === "precision-motions-sea
 const textObjectUnit = units.find(item => item.data.id === "text-objects").data;
 const visualUnit = units.find(item => item.data.id === "visual-selection").data;
 const registerUnit = units.find(item => item.data.id === "registers-putting").data;
+const navigationUnit = units.find(item => item.data.id === "long-range-navigation").data;
 const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
@@ -47,7 +48,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -65,7 +66,10 @@ test("numbered unit catalog is ordered and internally linked", () => {
       for (const route of activity.routes || []) assert(activityIds.has(route.activityRef), `${activity.id} routes to missing ${route.activityRef}`);
       if (activity.remediationRef) assert(activityIds.has(activity.remediationRef), `${activity.id} remediates to missing ${activity.remediationRef}`);
       if (activity.scenario?.initial.setup) {
-        assert.notEqual(activity.scenario.initial.mode, "normal", `${activity.id} should not seed an unnecessary Normal state`);
+        assert(
+          activity.scenario.initial.mode !== "normal" || activity.editor?.viewportRows,
+          `${activity.id} should not seed an unnecessary Normal state`,
+        );
       }
     }
     for (const coverage of data.coverage) {
@@ -86,7 +90,9 @@ test("unit continuation requires the immediately following unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), precisionUnit), textObjectUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), textObjectUnit), visualUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), visualUnit), registerUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), registerUnit), null, "Unit 8 must not skip to Unit 10");
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), registerUnit), navigationUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), navigationUnit)?.id, unit.id);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), unit), null);
 });
 
 test("unit catalog groups implemented units into curriculum arcs", () => {
@@ -95,7 +101,7 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
     { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 10]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -145,6 +151,66 @@ test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   }
   assert(languageCounts.size >= 10, "Unit 8 should use a broad language and text-format mix");
   assert((languageCounts.get("python") || 0) >= 3, "Unit 8 should include regular Python practice");
+});
+
+test("Unit 9 preserves the long-range-navigation curriculum and deterministic viewport contract", () => {
+  assert.deepEqual(navigationUnit.curriculumDefinition, {
+    unit: "9. Long-range navigation",
+    commandsAndConcepts: "`H M L`; `zt zz zb`; `Ctrl-f`, `Ctrl-b`, `Ctrl-d`, `Ctrl-u`, `Ctrl-e`, `Ctrl-y`; `m{char}`; `'` and backtick jumps; special marks such as `'.`, ```.```, `'^`, ```^```, `'[`, `']`; `Ctrl-o`, `Ctrl-i`; `g;`, `g,`; `gi`, `gv`; advanced bracket/section motions",
+    prerequisites: "Units 1–6",
+    learningOutcome: "Move through a large edit without losing important locations, and return to prior jumps, changes, insertions, or selections",
+    representativeExercises: "Inspect a distant definition and return; revisit the last change; center a target line; mark two sites and shuttle between them",
+    priorityAndPortability: "Core through marks, jump/change lists, and viewport commands. Code-section motions are advanced and syntax-dependent",
+  });
+  assert.deepEqual(navigationUnit.prerequisiteSkillIds, [
+    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects",
+  ]);
+  assert.equal(navigationUnit.lessons.length, 11);
+  assert.deepEqual(navigationUnit.coverage.map(item => item.concept), [
+    "H M L",
+    "zt zz zb",
+    "page and half-page movement",
+    "one-line viewport scrolling",
+    "named marks and quote/backtick jumps",
+    "previous context and jump list",
+    "last change insertion and selection",
+    "previous operated range marks",
+    "g; and g, change list",
+    "advanced bracket and section motions",
+    "integrated long-range navigation",
+  ]);
+
+  const activities = navigationUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  const ids = new Set(activities.map(activity => activity.id));
+  assert.equal(runnable.length, 51);
+  for (const lesson of navigationUnit.lessons) {
+    const phases = new Set(lesson.activities.map(activity => activity.phase));
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
+    }
+  }
+  for (const entry of navigationUnit.reference) {
+    for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  for (const activity of runnable) {
+    assert.equal(activity.editor?.viewportRows, 7, `${activity.id} must use the seven-row viewport`);
+    assert(activity.scenario.initial.lines.length >= 24 && activity.scenario.initial.lines.length <= 36, `${activity.id} needs a realistic long buffer`);
+    assert(activity.scenario.initial.setup, `${activity.id} must reconstruct its navigation state`);
+    assert.equal(activity.scenario.initial.viewport.bottomLine - activity.scenario.initial.viewport.topLine, 6, `${activity.id} initial viewport`);
+    assert.equal(activity.scenario.target.viewport.bottomLine - activity.scenario.target.viewport.topLine, 6, `${activity.id} target viewport`);
+    assert.deepEqual(activity.scenario.target.lines, activity.scenario.initial.lines, `${activity.id} must be navigation-only`);
+    assert.equal(activity.provenance.nativeValidation, "passed");
+    assert.equal(activity.provenance.browserConformance, "passed");
+    const finalCheckpoint = activity.script.checkpoints.at(-1);
+    assert.equal(finalCheckpoint.afterStep, keysOf(activity).length);
+    assert.deepEqual(finalCheckpoint.lines, activity.scenario.target.lines);
+    assert.deepEqual(finalCheckpoint.cursor, activity.scenario.target.cursor);
+    assert.deepEqual(finalCheckpoint.viewport, activity.scenario.target.viewport);
+  }
+  const authoredCommands = runnable.flatMap(keysOf).join("");
+  assert(!authoredCommands.includes("#"), "specialized preprocessor motions stay outside Unit 9");
+  assert(!navigationUnit.reference.some(entry => /comment|preprocessor/i.test(entry.title)), "specialized comment motions stay outside Unit 9");
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -766,6 +832,55 @@ for (const activity of registerRunnable) {
     }
   });
 }
+
+const navigationRunnable = navigationUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+const nativeViewportActivityIds = new Set(navigationUnit.lessons.slice(0, 4)
+  .flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise")
+  .map(activity => activity.id));
+
+for (const activity of navigationRunnable) {
+  test(`native Vim Unit 9 content: ${activity.id}`, () => {
+    const setup = activity.scenario.initial.setup;
+    const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
+    const cursor = setup?.cursor || activity.scenario.initial.cursor;
+    const keys = keysOf(activity);
+    const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+    assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup must restore learner-visible text`);
+    assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
+
+    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    // H/M/L, paging, and viewport scrolling require a rendered window. Their
+    // exact seven-row positions are owned by the browser conformance suite.
+    if (!nativeViewportActivityIds.has(activity.id)) {
+      assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    }
+    if (activity.scenario.target.mode !== "visual") assert.equal(result.mode, activity.scenario.target.mode);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor && !nativeViewportActivityIds.has(activity.id)) {
+        assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      }
+    }
+  });
+}
+
+test("native Vim method-boundary fixture covers all four directions", () => {
+  const lines = navigationRunnable.find(activity => activity.id === "method-start-mix").scenario.initial.lines;
+  for (const fixture of [
+    { keys: ["[", "m"], cursor: [12, 13] },
+    { keys: ["]", "m"], cursor: [19, 10] },
+    { keys: ["[", "M"], cursor: [10, 2] },
+    { keys: ["]", "M"], cursor: [17, 2] },
+  ]) {
+    assert.deepEqual(runNativeVim({ initialCode: lines, cursor: [15, 10], keys: fixture.keys }).cursor, fixture.cursor);
+  }
+});
 
 test("native Vim accepts gj and gk as logical-line equivalents without wrapping", () => {
   const initialCode = ["alpha", "bravo", "charlie"];

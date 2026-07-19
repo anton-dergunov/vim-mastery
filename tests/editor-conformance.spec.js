@@ -10,6 +10,7 @@ const precisionUnit = JSON.parse(readFileSync(new URL("../content/units/05-preci
 const textObjectUnit = JSON.parse(readFileSync(new URL("../content/units/06-text-objects.json", import.meta.url), "utf8"));
 const visualUnit = JSON.parse(readFileSync(new URL("../content/units/07-visual-selection.json", import.meta.url), "utf8"));
 const registerUnit = JSON.parse(readFileSync(new URL("../content/units/08-registers-putting.json", import.meta.url), "utf8"));
+const navigationUnit = JSON.parse(readFileSync(new URL("../content/units/09-long-range-navigation.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -26,6 +27,8 @@ const visualActivities = visualUnit.lessons.flatMap(lesson => lesson.activities.
 const visualExercises = visualActivities.filter(activity => activity.type === "exercise");
 const registerActivities = registerUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const registerExercises = registerActivities.filter(activity => activity.type === "exercise");
+const navigationActivities = navigationUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const navigationExercises = navigationActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
@@ -116,7 +119,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(9);
+    await expect(page.locator(".toc-unit")).toHaveCount(10);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -144,13 +147,14 @@ test.describe("Production lesson flow", () => {
       { id: "text-objects", unitNumber: 6, title: "Text objects" },
       { id: "visual-selection", unitNumber: 7, title: "Visual selection" },
       { id: "registers-putting", unitNumber: 8, title: "Registers and putting" },
+      { id: "long-range-navigation", unitNumber: 9, title: "Long-range navigation" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(9);
+    await expect(page.locator(".toc-unit")).toHaveCount(10);
     await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks"]);
     await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
-    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(3);
+    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(4);
     const arcPresentation = await page.evaluate(() => {
       const heading = document.querySelector(".toc-arc-heading");
       const secondArc = document.querySelectorAll(".toc-arc")[1];
@@ -165,6 +169,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
     await expect(page.locator('[data-unit-id="visual-selection"]')).toContainText("Unit 7");
     await expect(page.locator('[data-unit-id="registers-putting"]')).toContainText("Unit 8");
+    await expect(page.locator('[data-unit-id="long-range-navigation"]')).toContainText("Unit 9");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
   });
 
@@ -475,7 +480,116 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".cm-vim-message")).toHaveCSS("white-space", "pre-wrap");
 
     await page.goto("/?unit=registers-putting&activity=registers-putting-unit-summary");
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 9 is next");
+    await expect(page.getByRole("button", { name: "Continue to Unit 9" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 9" }).click();
+    await page.waitForURL(/unit=long-range-navigation/);
+    expect((await state(page))).toMatchObject({ unitId: "long-range-navigation", unitNumber: 9, activityId: "window-landmarks-meaning" });
+  });
+
+  test("runs every Unit 9 activity with exact cursor and semantic viewport targets", async ({ page }) => {
+    await page.goto("/?unit=long-range-navigation");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 104, exerciseCount: navigationExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        const target = activity.scenario.target;
+        const viewportMatches = current.viewport?.topLine === target.viewport?.topLine
+          && current.viewport?.bottomLine === target.viewport?.bottomLine;
+        if (activity.type === "exercise" && !current.complete) result.push({ id: activity.id, current });
+        if (activity.type === "demo" && (JSON.stringify(current.code) !== JSON.stringify(target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(target.cursor) || !viewportMatches)) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+
+    await page.goto("/?unit=long-range-navigation&activity=long-range-navigation-summary");
+    await expect(page.getByRole("button", { name: "Continue to Unit 10" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 10" }).click();
+    await page.waitForURL(/unit=repeatable-editing/);
+    expect((await state(page))).toMatchObject({ unitId: "repeatable-editing", unitNumber: 10, activityId: "dot-is-a-change" });
+  });
+
+  test("locks direct scrolling while Vim updates the Unit 9 position rail", async ({ page }) => {
+    await page.goto("/?unit=long-range-navigation&activity=scroll-down-twice-mix");
+    const before = await state(page);
+    const scroller = page.locator(".cm-scroller");
+    const box = await scroller.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.wheel(0, 240);
+    await page.waitForTimeout(50);
+    expect((await state(page)).viewport).toEqual(before.viewport);
+    const directInput = await scroller.evaluate(node => ({
+      touchCanceled: !node.dispatchEvent(new TouchEvent("touchmove", { bubbles: true, cancelable: true })),
+      overflow: getComputedStyle(node).overflow,
+      touchAction: getComputedStyle(node).touchAction,
+      scrollbarWidth: getComputedStyle(node).scrollbarWidth,
+    }));
+    expect(directInput).toEqual({ touchCanceled: true, overflow: "hidden", touchAction: "none", scrollbarWidth: "none" });
+
+    const railBefore = await page.locator(".buffer-position").evaluate(node => ({
+      pointerEvents: getComputedStyle(node).pointerEvents,
+      above: node.classList.contains("has-above"),
+      below: node.classList.contains("has-below"),
+      top: node.querySelector("i").style.top,
+    }));
+    expect(railBefore).toMatchObject({ pointerEvents: "none", above: true, below: true });
+    for (const key of ["Ctrl-e", "Ctrl-e"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    const after = await state(page);
+    expect(after).toMatchObject({ complete: true, viewport: { topLine: 11, bottomLine: 17, totalLines: 30 } });
+    const railAfter = await page.locator(".buffer-position i").evaluate(node => node.style.top);
+    expect(railAfter).not.toBe(railBefore.top);
+  });
+
+  test("reconstructs Unit 9 marks and history on reset and accepts touch and physical Ctrl chords", async ({ page }) => {
+    await page.goto("/?unit=long-range-navigation&activity=change-list-newer-mix");
+    const seeded = await state(page);
+    await page.evaluate(() => window.VimWilds.emit("g"));
+    await page.getByRole("button", { name: "Reset activity" }).click();
+    expect(await state(page)).toMatchObject({ code: seeded.code, cursor: seeded.cursor, viewport: seeded.viewport, history: [] });
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page)).complete).toBe(true);
+
+    await page.goto("/?unit=long-range-navigation&activity=half-page-down-mix");
+    await page.locator('[data-mod="Ctrl"]').click();
+    await page.locator('.key[data-key="d"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [15, 0], viewport: { topLine: 12, bottomLine: 18, totalLines: 30 }, modifiers: [] });
+    await page.goto("/?unit=long-range-navigation&activity=page-backward-isolate");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.press("Control+b");
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [7, 0], viewport: { topLine: 4, bottomLine: 10, totalLines: 30 } });
+  });
+
+  test("matches native Vim for every method-boundary direction", async ({ page }) => {
+    await page.goto("/?unit=long-range-navigation");
+    const lines = navigationActivities.find(activity => activity.id === "method-start-mix").scenario.initial.lines;
+    const results = await page.evaluate(async sourceLines => {
+      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const cases = [
+        { keys: ["[", "m"], cursor: [12, 13] },
+        { keys: ["]", "m"], cursor: [19, 10] },
+        { keys: ["[", "M"], cursor: [10, 2] },
+        { keys: ["]", "M"], cursor: [17, 2] },
+      ];
+      const output = [];
+      for (const fixture of cases) {
+        resetVimEngineState();
+        const parent = document.createElement("div");
+        document.body.append(parent);
+        const engine = new VimEngine({ parent, text: sourceLines.join("\n"), cursor: [15, 10] });
+        fixture.keys.forEach(key => engine.sendKey(key));
+        output.push({ expected: fixture.cursor, actual: engine.getSnapshot().cursorPosition });
+        engine.destroy();
+        parent.remove();
+      }
+      return output;
+    }, lines);
+    for (const result of results) expect(result.actual).toEqual(result.expected);
   });
 
   test("matches native Visual Block insertion, block shifting, and characterwise gq", async ({ page }) => {
@@ -1171,7 +1285,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "repeatable-editing"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "long-range-navigation", "repeatable-editing"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

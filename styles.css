@@ -1349,6 +1349,53 @@ html.next-ui .next-code-slab {
   align-self: start;
 }
 
+html.next-ui .editor-stack.has-viewport .next-code-slab { position: relative; }
+html.next-ui .editor-stack.has-viewport .code-body .cm-scroller {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  touch-action: none;
+  scrollbar-width: none;
+}
+html.next-ui .editor-stack.has-viewport .code-body .cm-scroller::-webkit-scrollbar { display: none; }
+html.next-ui .editor-stack.has-viewport .code-body .cm-content { padding-top: 0; padding-bottom: 0; }
+html.next-ui .buffer-position {
+  position: absolute;
+  z-index: 10;
+  top: 7px;
+  right: 3px;
+  bottom: 7px;
+  width: 8px;
+  display: grid;
+  grid-template-rows: 10px minmax(0, 1fr) 10px;
+  justify-items: center;
+  pointer-events: none;
+  opacity: .82;
+}
+html.next-ui .buffer-track {
+  position: relative;
+  width: 3px;
+  height: 100%;
+  border-radius: 3px;
+  background: rgba(137, 174, 156, .13);
+}
+html.next-ui .buffer-track i {
+  position: absolute;
+  left: 0;
+  width: 3px;
+  min-height: 14px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--theme-bright) 62%, #789083);
+  box-shadow: 0 0 4px color-mix(in srgb, var(--theme-bright) 28%, transparent);
+}
+html.next-ui .buffer-cue {
+  color: color-mix(in srgb, var(--theme-warm) 76%, #7f9187);
+  font: 700 7px/10px ui-monospace, monospace;
+  opacity: 0;
+  transition: opacity .12s;
+}
+html.next-ui .buffer-position.has-above .buffer-cue-top,
+html.next-ui .buffer-position.has-below .buffer-cue-bottom { opacity: .85; }
+
 html.next-ui .next-code-slab .code-body { padding: 8px 5px; }
 html.next-ui .code-body .cm-scroller { font-size: var(--text-editor); }
 html.next-ui .code-body .cm-content,

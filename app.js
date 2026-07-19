@@ -499,9 +499,13 @@ function renderWorld() {
   setTheme(presentation.theme);
   renderGround(presentation);
   const initialState = initialStateFor(activity);
+  const viewportRows = activity.editor?.viewportRows;
+  const editorStyle = viewportRows
+    ? `--viewport-rows:${viewportRows};--editor-height:${viewportRows * 24 + 18}px`
+    : `--editor-height:${108 + (initialState?.lines.length || 0) * 24}px`;
   const content = isRunnable(activity)
-    ? `<div class="editor-stack" style="--editor-height:${108 + initialState.lines.length * 24}px">
-          <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div></div>
+    ? `<div class="editor-stack${viewportRows ? " has-viewport" : ""}" style="${editorStyle}">
+          <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}</div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
         </div>`
     : activity.inspection
@@ -534,6 +538,7 @@ function mountEditor() {
     language: activity.languageId,
     wrapColumns: activity.editor?.wrapColumns,
     textWidth: activity.editor?.textWidth,
+    viewportRows: activity.editor?.viewportRows,
     visualizeWhitespace: activity.editor?.visualizeWhitespace,
     onEvent: handleEngineEvent,
   });
@@ -542,10 +547,13 @@ function mountEditor() {
     vimEngine.sendKey(key, { bypassLock: true, source: "setup" });
   }
   state.editorSnapshot = vimEngine.getSnapshot();
+  renderBufferPosition();
   const setupMatches = state.editorSnapshot.text === initial.lines.join("\n")
     && state.editorSnapshot.mode === initial.mode
     && state.editorSnapshot.cursorPosition[0] === initial.cursor[0]
-    && state.editorSnapshot.cursorPosition[1] === initial.cursor[1];
+    && state.editorSnapshot.cursorPosition[1] === initial.cursor[1]
+    && (!initial.viewport || (state.editorSnapshot.viewport.topLine === initial.viewport.topLine
+      && state.editorSnapshot.viewport.bottomLine === initial.viewport.bottomLine));
   if (!setupMatches) console.warn(`Initial editor setup drifted for ${activity.id}`, state.editorSnapshot, initial);
   vimEngine.setLocked(!isPractice(activity));
   if (state.complete && activity.inspection?.revealRange) vimEngine.showPreviewRange(activity.inspection.revealRange);
@@ -858,11 +866,28 @@ function isTargetSnapshot(snapshot) {
     const actual = snapshot.registers?.[name];
     return actual?.text === expected.text && actual.type === expected.type;
   });
+  const viewportMatches = !target.viewport
+    || (snapshot.viewport?.topLine === target.viewport.topLine && snapshot.viewport?.bottomLine === target.viewport.bottomLine);
   return snapshot.text === target.lines.join("\n")
     && snapshot.mode === target.mode
     && snapshot.cursorPosition[0] === target.cursor[0]
     && snapshot.cursorPosition[1] === target.cursor[1]
-    && registersMatch;
+    && registersMatch
+    && viewportMatches;
+}
+
+function renderBufferPosition() {
+  const rail = $(".buffer-position", elements.worldGrid);
+  const viewport = state.editorSnapshot?.viewport;
+  if (!rail || !viewport) return;
+  const visibleLines = viewport.bottomLine - viewport.topLine + 1;
+  const travel = Math.max(0, viewport.totalLines - visibleLines);
+  const thumb = $(".buffer-track i", rail);
+  const ratio = Math.min(1, visibleLines / viewport.totalLines);
+  rail.classList.toggle("has-above", viewport.topLine > 0);
+  rail.classList.toggle("has-below", viewport.bottomLine < viewport.totalLines - 1);
+  thumb.style.height = `${Math.max(14, ratio * 100)}%`;
+  thumb.style.top = `${travel ? (viewport.topLine / travel) * (100 - Math.max(14, ratio * 100)) : 0}%`;
 }
 
 function completeActivity() {
@@ -885,6 +910,7 @@ function handleEngineEvent(event) {
   // report them with a stale pre-search cursor after the real selection event.
   if (event.kind === "key" && event.source === "physical") return;
   state.editorSnapshot = event.snapshot;
+  renderBufferPosition();
   // Only the gate's explicit injection is evidence of learner/demo progress.
   // CodeMirror can also report keypresses from its transient search prompt;
   // those must not turn an accepted sequence into a different one.
@@ -1332,6 +1358,7 @@ window.VimWilds = Object.freeze({
       code: snapshot?.text.split("\n") || [],
       cursor: snapshot?.cursorPosition || [0, 0],
       registers: snapshot?.registers || {},
+      viewport: snapshot?.viewport || null,
       selection,
       mode: state.complete ? "Complete" : (snapshot?.mode || "normal"),
       modifiers: [...state.modifiers],

@@ -77,3 +77,20 @@ host clipboard. The compatibility patch also adds native cursor placement for
 characterwise and linewise `gp` and `gP`. Native fixtures alias `+` to an
 ordinary named register solely to provide a deterministic oracle on headless
 systems where the OS clipboard is unavailable.
+
+Unit 9 fixes authored viewport activities to seven 24px logical rows and exposes
+zero-based top and bottom visible lines through `VimEngine` and
+`window.VimWilds.getState()`. Native wheel/scrollbar/touch scrolling is hidden
+and canceled while adapter-initiated scrolling remains active; a pointer-
+transparent rail reports the visible fraction and whether text continues above
+or below. Headless Vim verifies text, marks, histories, and structural cursor
+results, while Chromium owns exact viewport assertions because Ex mode has no
+reliable rendered window geometry.
+
+The versioned adapter patch adds native-conforming change-list traversal for
+`g;` and `g,`, records the Insert-exit mark used by `'^`, backtick-`^`, and
+`gi`, and maintains the previous operated range marks used by `'[` and `']`.
+It also corrects odd-row centering, page-size movement, and nested method
+boundaries. Activity reset clears marks, jump/change lists, insertion and
+selection history, and viewport state before deterministic setup is replayed.
+Specialized comment and preprocessor motions remain outside Unit 9.

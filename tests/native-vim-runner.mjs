@@ -5,9 +5,17 @@ import { join } from "node:path";
 
 const specialKeys = {
   "Ctrl-a": "\\<C-a>",
+  "Ctrl-b": "\\<C-b>",
+  "Ctrl-d": "\\<C-d>",
+  "Ctrl-e": "\\<C-e>",
+  "Ctrl-f": "\\<C-f>",
+  "Ctrl-i": "\\<C-i>",
+  "Ctrl-o": "\\<C-o>",
   "Ctrl-r": "\\<C-r>",
+  "Ctrl-u": "\\<C-u>",
   "Ctrl-v": "\\<C-v>",
   "Ctrl-x": "\\<C-x>",
+  "Ctrl-y": "\\<C-y>",
   "Ctrl-[": "\\<C-[>",
   Escape: "\\<Esc>",
   Enter: "\\<CR>",
@@ -39,16 +47,18 @@ function aliasRegisterKeys(keys, aliases) {
   });
 }
 
-export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth, registerNames = [], registerAliases = {} }) {
+export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth, viewportRows, viewportTop, registerNames = [], registerAliases = {} }) {
   const directory = mkdtempSync(join(tmpdir(), "vim-wilds-native-"));
   const output = join(directory, "result.json");
   const script = join(directory, "fixture.vim");
   const vimScript = [
     "set nomore",
     "set expandtab shiftwidth=2 tabstop=2",
+    ...(viewportRows === undefined ? [] : [`execute "resize ${viewportRows}"`]),
     ...(textWidth === undefined ? [] : [`set textwidth=${textWidth}`]),
     `call setline(1, ${JSON.stringify(initialCode)})`,
     `call cursor(${cursor[0] + 1}, ${cursor[1] + 1})`,
+    ...(viewportTop === undefined ? [] : [`call winrestview({"topline": ${viewportTop + 1}})`]),
     `call feedkeys("${toVimInput(aliasRegisterKeys([...setupKeys, ...keys], registerAliases))}", "xt")`,
     `let register_state = {}`,
     `for register_pair in ${JSON.stringify(registerNames.map(name => [name, registerAliases[name] || name]))}`,
@@ -57,7 +67,7 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     `  let register_type = getregtype(native_register_name)`,
     `  let register_state[register_name] = {"text": getreg(native_register_name), "type": register_type ==# 'V' ? 'linewise' : register_type[0] ==# "\\<C-v>" ? 'blockwise' : 'characterwise'}`,
     `endfor`,
-    `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state})], ${JSON.stringify(output)})`,
+    `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state, "viewport": {"topLine": line('w0') - 1, "bottomLine": line('w$') - 1, "totalLines": line('$')}})], ${JSON.stringify(output)})`,
     "qa!",
   ].join("\n");
 

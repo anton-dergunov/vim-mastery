@@ -13,6 +13,7 @@
     { "id": "text-objects", "unitNumber": 6, "title": "Text objects", "lessonCount": 9, "path": "content/units/06-text-objects.json" },
     { "id": "visual-selection", "unitNumber": 7, "title": "Visual selection", "lessonCount": 9, "path": "content/units/07-visual-selection.json" },
     { "id": "registers-putting", "unitNumber": 8, "title": "Registers and putting", "lessonCount": 9, "path": "content/units/08-registers-putting.json" },
+    { "id": "long-range-navigation", "unitNumber": 9, "title": "Long-range navigation", "lessonCount": 11, "path": "content/units/09-long-range-navigation.json" },
     { "id": "repeatable-editing", "unitNumber": 10, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/10-repeatable-editing.json" }
   ]
 }

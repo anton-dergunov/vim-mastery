@@ -86,6 +86,10 @@ Runnable activities may use the optional `editor` configuration:
   arrows, using CodeMirror's built-in whitespace highlighter. Use it only when
   visible whitespace is itself teaching evidence—for example, contrasting `$`
   with `g_` on a line with trailing spaces.
+- `editor.viewportRows` fixes the editor to that many 24px logical rows. Unit 9
+  uses seven rows so the middle row and every viewport command remain identical
+  at all supported phone widths. Initial states, targets, and checkpoints may
+  include a semantic `viewport` with zero-based `topLine` and `bottomLine`.
 
 Activities without these fields retain the normal unwrapped editor with
 whitespace hidden. Editor indentation is fixed at two spaces so shift and
@@ -97,12 +101,15 @@ must match it. Introductory content may use the reusable `mode-compass` or
 routes to alternate activities, and remediation references. These additions
 describe learning behavior rather than unit-specific DOM branches.
 
-A runnable or inspection state may begin outside Normal mode through
+A runnable or inspection state may seed otherwise invisible Vim state through
 `initial.setup`. Its cursor is the pre-setup Normal cursor and its steps are
-replayed silently before the activity begins. The surrounding `initial.cursor`
-and `initial.mode` are the expected learner-visible state after setup. Setup
-must not modify text, appear in attempt history, or replace a normal teaching
-script. Reset reconstructs and verifies the seeded state.
+replayed silently before the activity begins. The surrounding `initial.cursor`,
+`initial.mode`, and optional `initial.viewport` are the expected learner-visible
+state after setup. Setup may create marks, selections, jump/change history, and
+viewport position. Temporary edits are allowed only when the setup restores the
+authored visible text before control reaches the learner. Setup never appears in
+attempt history or replaces a normal teaching script. Reset reconstructs and
+verifies the seeded state.
 
 ## Scripts, playback, and reset
 

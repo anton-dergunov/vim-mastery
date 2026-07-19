@@ -117,12 +117,15 @@ function snapshotRegisters() {
  * this module reaches into EditorView, getCM, or Vim directly.
  */
 export class VimEngine {
-  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, textWidth, visualizeWhitespace = false, onEvent }) {
+  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, textWidth, viewportRows, visualizeWhitespace = false, onEvent }) {
     if (wrapColumns !== undefined && (!Number.isInteger(wrapColumns) || wrapColumns < 12 || wrapColumns > 80)) {
       throw new RangeError("wrapColumns must be an integer from 12 to 80");
     }
     if (textWidth !== undefined && (!Number.isInteger(textWidth) || textWidth < 20 || textWidth > 80)) {
       throw new RangeError("textWidth must be an integer from 20 to 80");
+    }
+    if (viewportRows !== undefined && (!Number.isInteger(viewportRows) || viewportRows < 5 || viewportRows > 12)) {
+      throw new RangeError("viewportRows must be an integer from 5 to 12");
     }
     if (typeof visualizeWhitespace !== "boolean") throw new TypeError("visualizeWhitespace must be a boolean");
     this.onEvent = onEvent;
@@ -135,6 +138,7 @@ export class VimEngine {
     this.lastSubstitution = null;
     this.lastSearchQuery = null;
     this.awaitingColonRegister = false;
+    this.viewportRows = viewportRows;
 
     const start = offsetForPosition(text, cursor);
     this.view = new EditorView({
@@ -163,6 +167,13 @@ export class VimEngine {
               },
             }),
           ] : []),
+          ...(viewportRows ? [EditorView.theme({
+            ".cm-line, .cm-gutterElement": {
+              minHeight: "24px",
+              height: "24px",
+              lineHeight: "24px",
+            },
+          })] : []),
           wildsHighlighting,
           EditorView.updateListener.of(update => {
             if (update.docChanged) this.emit("change");
@@ -181,6 +192,11 @@ export class VimEngine {
       this.disableNativeInput(input);
     };
     this.view.dom.addEventListener("focusin", this.onNativeInputFocus, true);
+    this.blockDirectScroll = event => event.preventDefault();
+    if (viewportRows) {
+      this.view.scrollDOM.addEventListener("wheel", this.blockDirectScroll, { passive: false });
+      this.view.scrollDOM.addEventListener("touchmove", this.blockDirectScroll, { passive: false });
+    }
     this.cm = getCM(this.view);
     if (textWidth !== undefined) this.cm?.setOption("textwidth", textWidth);
     this.onModeChange = event => {
@@ -198,13 +214,20 @@ export class VimEngine {
   getSnapshot() {
     const selection = this.view.state.selection.main;
     const { doc } = this.view.state;
+    const vimSelection = this.viewportRows && this.cm?.state?.vim?.visualMode ? this.cm.state.vim.sel : null;
+    const cursor = vimSelection
+      ? Math.max(0, Math.min(doc.length, offsetForPosition(doc.toString(), [vimSelection.head.line, vimSelection.head.ch])))
+      : selection.head;
+    const anchor = vimSelection
+      ? Math.max(0, Math.min(doc.length, offsetForPosition(doc.toString(), [vimSelection.anchor.line, vimSelection.anchor.ch])))
+      : selection.anchor;
     return {
       text: doc.toString(),
-      cursor: selection.head,
-      anchor: selection.anchor,
-      head: selection.head,
-      cursorPosition: positionForOffset(doc, selection.head),
-      anchorPosition: positionForOffset(doc, selection.anchor),
+      cursor,
+      anchor,
+      head: cursor,
+      cursorPosition: positionForOffset(doc, cursor),
+      anchorPosition: positionForOffset(doc, anchor),
       ranges: this.view.state.selection.ranges.map(range => ({
         anchor: positionForOffset(doc, range.anchor),
         head: positionForOffset(doc, range.head),
@@ -213,6 +236,20 @@ export class VimEngine {
       })),
       mode: normalizeMode(this.mode, this.subMode, this.cm, this.commandLine !== null),
       registers: snapshotRegisters(),
+      viewport: this.getViewport(),
+    };
+  }
+
+  getViewport() {
+    const totalLines = this.view.state.doc.lines;
+    if (!this.viewportRows) return { topLine: 0, bottomLine: totalLines - 1, totalLines };
+    const lineHeight = 24;
+    const maximumTop = Math.max(0, totalLines - this.viewportRows);
+    const topLine = Math.max(0, Math.min(maximumTop, Math.round(this.view.scrollDOM.scrollTop / lineHeight)));
+    return {
+      topLine,
+      bottomLine: Math.min(totalLines - 1, topLine + this.viewportRows - 1),
+      totalLines,
     };
   }
 
@@ -303,6 +340,7 @@ export class VimEngine {
       this.commandLine = "";
       this.commandPrefix = vimKey;
     }
+    if (this.viewportRows) this.cm.refresh?.();
     this.disableNativeInputs();
     this.emit("key", { key: canonicalKey, source });
     return Boolean(handled);
@@ -388,6 +426,8 @@ export class VimEngine {
 
   destroy() {
     this.view.dom.removeEventListener("focusin", this.onNativeInputFocus, true);
+    this.view.scrollDOM.removeEventListener("wheel", this.blockDirectScroll);
+    this.view.scrollDOM.removeEventListener("touchmove", this.blockDirectScroll);
     this.cm?.off("vim-mode-change", this.onModeChange);
     this.cm?.off("vim-keypress", this.onVimKey);
     this.cm?.off("vim-command-done", this.onCommandDone);

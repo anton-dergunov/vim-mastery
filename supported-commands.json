@@ -25,9 +25,13 @@
     "Visual Line indentation",
     "join lines with normalized or preserved whitespace (J, gJ)",
     "precision motions and search (f, F, t, T, ;, ,, /, ?, n, N, *, #, g*, g#, gn, gN, %, (, ), {, })",
+    "long-range viewport navigation (H, M, L, zt, zz, zb, Ctrl-f, Ctrl-b, Ctrl-d, Ctrl-u, Ctrl-e, Ctrl-y)",
+    "marks and navigation history (m{char}, quote and backtick marks, Ctrl-o, Ctrl-i, g;, g,, gi, gv)",
+    "special position marks (., ^, [, ] with linewise quote and exact backtick jumps)",
+    "structural bracket motions ([[, ]], [], ][, [{, ]}, [(, ]), [m, ]m, [M, ]M)",
     "yank and put"
   ],
   "pending": [
-    "full curriculum matrix: remaining advanced motions, history, advanced regex, Ex ranges, :normal, and :global"
+    "full curriculum matrix: specialized comment and preprocessor motions, advanced regex, Ex ranges, :normal, and :global"
   ]
 }
