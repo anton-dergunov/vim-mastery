@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "units": [
+    { "id": "modal-model", "unitNumber": 1, "title": "The modal model", "lessonCount": 5, "path": "content/units/01-modal-model.json" },
+    { "id": "cursor-movement", "unitNumber": 2, "title": "Cursor movement", "lessonCount": 7, "path": "content/units/02-cursor-movement.json" },
+    { "id": "entering-changing-text", "unitNumber": 3, "title": "Entering and changing text", "lessonCount": 9, "path": "content/units/03-entering-changing-text.json" },
+    { "id": "repeatable-editing", "unitNumber": 10, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/10-repeatable-editing.json" }
+  ]
+}

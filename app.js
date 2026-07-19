@@ -1,17 +1,41 @@
-import languageProfiles from "./content/language-profiles.json";
 import { spriteCells } from "./exercise-data.js";
 import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
+import { appUrl, appVersion, remoteMediaUrl } from "./app-version.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const urlParams = new URLSearchParams(window.location.search);
-const unitModules = import.meta.glob("./content/units/[0-9][0-9]-*.json", { eager: true, import: "default" });
-const units = Object.values(unitModules).sort((left, right) => left.unitNumber - right.unitNumber);
-const requestedUnitId = urlParams.get("unit");
-const unit = units.find(candidate => candidate.id === requestedUnitId) || units[0];
-const themePreferenceKey = "vim-wilds.theme";
+const sessionStateKey = "vim-wilds.session.v1";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
+
+function readSavedSession() {
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(sessionStateKey) || "null");
+    return saved && typeof saved === "object" ? saved : {};
+  } catch {
+    return {};
+  }
+}
+
+const savedSession = readSavedSession();
+const [languageProfiles, unitCatalog] = await Promise.all([
+  fetch(appUrl("content/language-profiles.json")).then(response => {
+    if (!response.ok) throw new Error(`Language profiles request failed (${response.status})`);
+    return response.json();
+  }),
+  fetch(appUrl("content/unit-index.json")).then(response => {
+    if (!response.ok) throw new Error(`Unit catalog request failed (${response.status})`);
+    return response.json();
+  }),
+]);
+const units = unitCatalog.units.sort((left, right) => left.unitNumber - right.unitNumber);
+const requestedUnitId = urlParams.get("unit") || (urlParams.has("activity") ? null : savedSession.unitId);
+const selectedUnit = units.find(candidate => candidate.id === requestedUnitId) || units[0];
+const unit = await fetch(appUrl(selectedUnit.path)).then(response => {
+  if (!response.ok) throw new Error(`Unit request failed (${response.status})`);
+  return response.json();
+});
 
 const elements = {
   phone: $("#phone"),
@@ -45,6 +69,10 @@ const elements = {
   tocLessons: $("#tocLessons"),
   settingsDialog: $("#settingsDialog"),
   themeOptions: $("#themeOptions"),
+  currentVersion: $("#currentVersion"),
+  updateStatus: $("#updateStatus"),
+  updateButton: $("#updateButton"),
+  restartUpdateButton: $("#restartUpdateButton"),
 };
 
 const presentations = [
@@ -94,14 +122,11 @@ let characterAssets = {
   },
 };
 const characterAssignments = new Map();
+let successMedia = null;
+let serviceWorkerRegistration = null;
 
 function storedThemePreference() {
-  try {
-    const value = window.localStorage.getItem(themePreferenceKey) || "auto";
-    return allowedThemes.has(value) ? value : "auto";
-  } catch {
-    return "auto";
-  }
+  return allowedThemes.has(savedSession.themePreference) ? savedSession.themePreference : "auto";
 }
 
 const state = {
@@ -124,6 +149,17 @@ const state = {
   errorTimer: null,
   remediationReturnId: null,
 };
+
+function persistSession() {
+  try {
+    window.localStorage.setItem(sessionStateKey, JSON.stringify({
+      unitId: unit.id,
+      activityId: currentActivity()?.id,
+      themePreference: state.themePreference,
+      savedAt: new Date().toISOString(),
+    }));
+  } catch {}
+}
 
 let vimEngine = null;
 let executionMeasurementFrame = null;
@@ -163,7 +199,7 @@ function characterAssignment(activity = currentActivity()) {
 
 async function loadCharacterAssets() {
   try {
-    const response = await fetch("assets/characters/manifest.json");
+    const response = await fetch(appUrl("assets/characters/manifest.json"));
     if (!response.ok) throw new Error(`manifest request failed (${response.status})`);
     const manifest = await response.json();
     characterAssets = Object.fromEntries(Object.entries(manifest.characters).map(([id, character]) => [id, character]));
@@ -174,6 +210,52 @@ async function loadCharacterAssets() {
     document.documentElement.dataset.charactersReady = "fallback";
     console.warn("Using the Nix-only character fallback:", error);
   }
+}
+
+function localAssetUrl(path) {
+  return appUrl(path);
+}
+
+function releaseSuccessMedia() {
+  if (successMedia?.objectUrl) URL.revokeObjectURL(successMedia.objectUrl);
+  successMedia?.controller?.abort();
+  successMedia = null;
+}
+
+function preloadSuccessMedia(activity = currentActivity()) {
+  if (!activity || !(isPractice(activity) || activity.type === "choice") || activity.inspection) return;
+  const assignment = characterAssignment(activity);
+  const asset = characterAssets[assignment.characterId] || characterAssets.nix;
+  const animation = asset?.animations?.[assignment.animationId];
+  if (!animation?.src) return;
+  const source = remoteMediaUrl(animation.src);
+  if (successMedia?.source === source) return;
+  releaseSuccessMedia();
+  const controller = new AbortController();
+  successMedia = { source, status: "loading", controller, objectUrl: null };
+  fetch(source, { cache: "no-store", mode: "cors", signal: controller.signal })
+    .then(response => {
+      if (!response.ok) throw new Error(`Celebration media request failed (${response.status})`);
+      return response.blob();
+    })
+    .then(blob => {
+      if (successMedia?.source !== source) return;
+      const objectUrl = URL.createObjectURL(blob);
+      const image = new Image();
+      image.src = objectUrl;
+      return image.decode().then(() => {
+        if (successMedia?.source !== source) {
+          URL.revokeObjectURL(objectUrl);
+          return;
+        }
+        successMedia.objectUrl = objectUrl;
+        successMedia.status = "ready";
+      });
+    })
+    .catch(error => {
+      if (error.name === "AbortError" || successMedia?.source !== source) return;
+      successMedia.status = "fallback";
+    });
 }
 
 function isRunnable(activity = currentActivity()) {
@@ -422,7 +504,7 @@ function renderWorld() {
   const character = characterAssets[assignment.characterId] || characterAssets.nix;
   const shouldShowCharacter = (isPractice(activity) || activity.type === "choice") && !activity.inspection;
   const characterMarkup = shouldShowCharacter
-    ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${character.idle}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
+    ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
     : "";
   const spriteMarkup = activity.inspection ? "" : renderSprites(presentation);
   elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}`;
@@ -627,6 +709,7 @@ function renderAll() {
   renderModifiers();
   renderCommand();
   renderActivityControls();
+  preloadSuccessMedia();
 }
 
 function activityTypeLabel(type) {
@@ -653,7 +736,7 @@ function renderTableOfContents() {
   }).join("");
   elements.tocLessons.innerHTML = units.map(candidate => {
     const isCurrent = candidate.id === unit.id;
-    const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong><small>${candidate.lessons.length} lessons</small>`;
+    const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong><small>${candidate.lessonCount} lessons</small>`;
     return isCurrent
       ? `<details class="toc-unit" open><summary>${summary}</summary><div class="toc-unit-lessons">${lessonMarkup}</div></details>`
       : `<div class="toc-unit toc-unit-link"><button type="button" data-unit-id="${escapeHtml(candidate.id)}">${summary}</button></div>`;
@@ -694,6 +777,7 @@ function goToActivity(index, { preserveRemediation = false } = {}) {
   if (!preserveRemediation) state.remediationReturnId = null;
   state.activityIndex = index;
   resetActivity({ vibrateReset: false });
+  persistSession();
 }
 
 function navigateToUnit(unitId) {
@@ -895,9 +979,9 @@ function playSuccessCharacter() {
   const character = $(".nix", elements.worldGrid);
   const asset = characterAssets[character?.dataset.character || ""];
   const animation = asset?.animations?.[character?.dataset.animation || ""];
-  if (!character || !animation?.src) return;
+  if (!character || !animation?.src || successMedia?.status !== "ready" || !successMedia.objectUrl) return;
   const celebrating = character.cloneNode();
-  celebrating.src = animation.src;
+  celebrating.src = successMedia.objectUrl;
   celebrating.alt = `${asset.name}, celebrating`;
   celebrating.style.setProperty("--success-canvas-scale", String(animation.css_scale || 1));
   let started = false;
@@ -1082,6 +1166,8 @@ elements.settingsButton?.addEventListener("click", () => {
   renderThemeOptions();
   elements.settingsDialog.showModal();
 });
+elements.updateButton?.addEventListener("click", applyUpdate);
+elements.restartUpdateButton?.addEventListener("click", applyUpdate);
 elements.tocLessons?.addEventListener("click", event => {
   const button = event.target.closest("[data-activity-index]");
   if (button) goToActivity(Number(button.dataset.activityIndex));
@@ -1092,7 +1178,7 @@ elements.themeOptions?.addEventListener("change", event => {
   const value = event.target.closest('input[name="theme"]')?.value;
   if (!allowedThemes.has(value)) return;
   state.themePreference = value;
-  try { window.localStorage.setItem(themePreferenceKey, value); } catch {}
+  persistSession();
   setTheme(presentationFor().theme);
 });
 $$('[data-close-dialog]').forEach(button => button.addEventListener("click", () => {
@@ -1115,6 +1201,45 @@ window.addEventListener("resize", () => {
   scheduleExecutionConsoleMeasurement();
 });
 document.fonts?.ready.then(scheduleExecutionConsoleMeasurement);
+
+function showUpdateReady(registration) {
+  serviceWorkerRegistration = registration;
+  elements.updateButton.hidden = false;
+  elements.restartUpdateButton.hidden = false;
+  elements.updateStatus.textContent = "A newer build has downloaded and is ready to restart.";
+}
+
+function registerServiceWorker() {
+  elements.currentVersion.textContent = `Build ${appVersion}`;
+  if (!import.meta.env.PROD || !("serviceWorker" in navigator)) {
+    elements.updateStatus.textContent = "Development build — updates come from the local Vite server.";
+    return;
+  }
+  const checkForUpdate = async () => {
+    try { await serviceWorkerRegistration?.update(); } catch {}
+  };
+  navigator.serviceWorker.register(appUrl("service-worker.js"), { scope: appUrl("") }).then(registration => {
+    serviceWorkerRegistration = registration;
+    if (registration.waiting && navigator.serviceWorker.controller) showUpdateReady(registration);
+    registration.addEventListener("updatefound", () => {
+      const worker = registration.installing;
+      worker?.addEventListener("statechange", () => {
+        if (worker.state === "installed" && navigator.serviceWorker.controller) showUpdateReady(registration);
+      });
+    });
+    window.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") void checkForUpdate();
+    });
+  }).catch(error => {
+    elements.updateStatus.textContent = "Offline support could not be enabled for this browser.";
+    console.warn("Service worker registration failed.", error);
+  });
+  navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload());
+}
+
+function applyUpdate() {
+  serviceWorkerRegistration?.waiting?.postMessage({ type: "SKIP_WAITING" });
+}
 
 window.VimWilds = Object.freeze({
   units: units.map(candidate => ({ id: candidate.id, unitNumber: candidate.unitNumber, title: candidate.title })),
@@ -1170,7 +1295,7 @@ window.VimWilds = Object.freeze({
   },
 });
 
-const requestedActivity = urlParams.get("activity");
+const requestedActivity = urlParams.get("activity") || (urlParams.has("unit") ? null : savedSession.activityId);
 const requestedIndex = activities.findIndex(activity => activity.id === requestedActivity || activity.sourceActivityId === requestedActivity);
 if (requestedIndex >= 0) state.activityIndex = requestedIndex;
 
@@ -1178,6 +1303,8 @@ assignCharacters();
 renderAll();
 renderThemeOptions();
 void loadCharacterAssets();
+persistSession();
+registerServiceWorker();
 
 if (urlParams.get("preview") === "complete") {
   if (isDemo()) while (stepDemo());

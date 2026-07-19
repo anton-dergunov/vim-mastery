@@ -1,0 +1,46 @@
+name: Deploy Vim Wilds
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/configure-pages@v5
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node --check app.js
+      - run: node --check exercise-data.js
+      - run: npm test
+      - name: Build the versioned PWA
+        env:
+          VITE_MEDIA_REVISION: ${{ github.sha }}
+        run: |
+          echo "VITE_APP_VERSION=$(node -p \"require('./package.json').version\")+${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+          npm run build
+      - run: git diff --check
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

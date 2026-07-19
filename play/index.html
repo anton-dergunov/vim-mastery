@@ -1,0 +1,182 @@
+<!doctype html>
+<html class="next-ui" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#071715">
+  <title>The Vim Wilds — Pocket Practice</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23071715'/%3E%3Cpath d='M16 15h10l7 29 7-29h9L38 51H27z' fill='%23ffc866'/%3E%3C/svg%3E">
+  <link rel="manifest" href="%BASE_URL%manifest.webmanifest">
+  <link rel="stylesheet" href="../styles.css">
+  <script>
+    window.setTimeout(() => {
+      if (window.VimWilds) return;
+      const world = document.getElementById("worldGrid");
+      if (!world) return;
+      world.innerHTML = '<div class="runtime-notice"><strong>The editor needs the local Vite server.</strong><span>Run <code>npm install</code>, then <code>npm run dev</code>, and open the address Vite prints.</span></div>';
+    }, 1800);
+  </script>
+</head>
+<body>
+  <main class="phone" id="phone" aria-label="The Vim Wilds bite-sized lesson">
+    <header class="next-topbar">
+      <button class="icon-button" id="tocButton" type="button" aria-label="Open table of contents" title="Contents">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="3" cy="6" r=".75"/><circle cx="3" cy="12" r=".75"/><circle cx="3" cy="18" r=".75"/></svg>
+      </button>
+      <strong class="lesson-label" id="lessonLabel">One change, many uses</strong>
+      <div class="mode-pill" id="nextModePill" aria-live="polite">Theory</div>
+      <button class="update-button" id="updateButton" type="button" hidden>Update</button>
+      <button class="icon-button next-reset-button" id="nextResetButton" type="button" aria-label="Reset activity" title="Reset">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 9A8 8 0 1 1 5 15.3"/><path d="M4.9 4.8V9h4.2"/></svg>
+      </button>
+      <button class="icon-button" id="settingsButton" type="button" aria-label="Open settings" title="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9 1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+      </button>
+    </header>
+
+    <section class="activity-intro" id="activityIntro" aria-labelledby="activityTitle">
+      <div class="activity-intro-row">
+        <div class="activity-kicker" id="activityKicker">Exercise · Python</div>
+        <button class="hint-button" id="hintButton" type="button" aria-label="Open hints" title="Hints">?</button>
+      </div>
+      <h1 id="activityTitle">Promote every cache mode</h1>
+      <p id="activityInstruction">Change the first draft to ready, then replay on the next rows.</p>
+    </section>
+
+    <section class="next-command-tray" id="nextCommandTray" aria-live="polite">
+      <div class="execution-copy">
+        <div class="command-explanation" id="commandExplanation">Create one complete quote change.</div>
+        <div class="command-history-label">History</div>
+        <div class="command-text" id="nextCommandText"><span class="ghost">waiting…</span></div>
+      </div>
+      <div class="execution-status" id="nextGuidance">
+        <span class="status-primary" id="statusPrimary">Next</span>
+        <span class="status-secondary" id="statusSecondary"></span>
+        <div class="status-key" id="statusKey"><kbd class="command-key">c</kbd></div>
+      </div>
+    </section>
+
+    <section class="game-area" id="gameArea" aria-label="Composable exercise world">
+      <div class="world theme-moonroot" id="world">
+        <div class="ground-grid" id="groundGrid" aria-hidden="true"></div>
+        <div class="world-grid" id="worldGrid"></div>
+
+        <aside class="help-card" id="helpCard" aria-hidden="true">
+          <div class="help-header">
+            <span class="help-orb">?</span>
+            <h2>The oracle whispers…</h2>
+            <button class="help-close" id="helpClose" type="button" aria-label="Close help">×</button>
+          </div>
+          <div class="hint-steps" id="hintSteps"></div>
+        </aside>
+
+      </div>
+    </section>
+
+    <section class="keyboard-panel" aria-label="Physical-style Vim keyboard">
+      <div class="activity-controls" id="activityControls"></div>
+      <div class="keyboard" id="keyboard">
+        <div class="key-row">
+          <button class="key utility u-115" data-key="Escape">Esc</button>
+          <button class="key" data-key="`" data-shift="~"><span class="stack"><span class="shifted">~</span><span class="base">`</span></span></button>
+          <button class="key" data-key="1" data-shift="!"><span class="stack"><span class="shifted">!</span><span class="base">1</span></span></button>
+          <button class="key" data-key="2" data-shift="@"><span class="stack"><span class="shifted">@</span><span class="base">2</span></span></button>
+          <button class="key" data-key="3" data-shift="#"><span class="stack"><span class="shifted">#</span><span class="base">3</span></span></button>
+          <button class="key" data-key="4" data-shift="$"><span class="stack"><span class="shifted">$</span><span class="base">4</span></span></button>
+          <button class="key" data-key="5" data-shift="%"><span class="stack"><span class="shifted">%</span><span class="base">5</span></span></button>
+          <button class="key" data-key="6" data-shift="^"><span class="stack"><span class="shifted">^</span><span class="base">6</span></span></button>
+          <button class="key" data-key="7" data-shift="&amp;"><span class="stack"><span class="shifted">&amp;</span><span class="base">7</span></span></button>
+          <button class="key" data-key="8" data-shift="*"><span class="stack"><span class="shifted">*</span><span class="base">8</span></span></button>
+          <button class="key" data-key="9" data-shift="("><span class="stack"><span class="shifted">(</span><span class="base">9</span></span></button>
+          <button class="key" data-key="0" data-shift=")"><span class="stack"><span class="shifted">)</span><span class="base">0</span></span></button>
+          <button class="key" data-key="-" data-shift="_"><span class="stack"><span class="shifted">_</span><span class="base">-</span></span></button>
+          <button class="key" data-key="=" data-shift="+"><span class="stack"><span class="shifted">+</span><span class="base">=</span></span></button>
+          <button class="key utility u-145" data-key="Backspace">⌫</button>
+        </div>
+
+        <div class="key-row">
+          <button class="key utility u-145" data-key="Tab">Tab</button>
+          <button class="key letter-key" data-key="q">q</button><button class="key letter-key" data-key="w">w</button><button class="key letter-key" data-key="e">e</button>
+          <button class="key letter-key" data-key="r">r</button><button class="key letter-key" data-key="t">t</button><button class="key letter-key" data-key="y">y</button>
+          <button class="key letter-key" data-key="u">u</button><button class="key letter-key" data-key="i">i</button><button class="key letter-key" data-key="o">o</button>
+          <button class="key letter-key" data-key="p">p</button>
+          <button class="key" data-key="[" data-shift="{"><span class="stack"><span class="shifted">{</span><span class="base">[</span></span></button>
+          <button class="key" data-key="]" data-shift="}"><span class="stack"><span class="shifted">}</span><span class="base">]</span></span></button>
+          <button class="key" data-key="\" data-shift="|"><span class="stack"><span class="shifted">|</span><span class="base">\</span></span></button>
+        </div>
+
+        <div class="key-row">
+          <button class="key utility u-17" data-key="CapsLock" aria-pressed="false">Caps</button>
+          <button class="key letter-key" data-key="a">a</button><button class="key letter-key" data-key="s">s</button><button class="key letter-key" data-key="d">d</button>
+          <button class="key letter-key" data-key="f">f</button><button class="key letter-key" data-key="g">g</button><button class="key letter-key" data-key="h">h</button>
+          <button class="key letter-key" data-key="j">j</button><button class="key letter-key" data-key="k">k</button><button class="key letter-key" data-key="l">l</button>
+          <button class="key" data-key=";" data-shift=":"><span class="stack"><span class="shifted">:</span><span class="base">;</span></span></button>
+          <button class="key" data-key="'" data-shift="&quot;"><span class="stack"><span class="shifted">&quot;</span><span class="base">'</span></span></button>
+          <button class="key utility u-2" data-key="Enter">Enter</button>
+        </div>
+
+        <div class="key-row">
+          <button class="key modifier u-2" data-mod="Shift">Shift</button>
+          <button class="key letter-key" data-key="z">z</button><button class="key letter-key" data-key="x">x</button><button class="key letter-key" data-key="c">c</button>
+          <button class="key letter-key" data-key="v">v</button><button class="key letter-key" data-key="b">b</button><button class="key letter-key" data-key="n">n</button><button class="key letter-key" data-key="m">m</button>
+          <button class="key" data-key="," data-shift="&lt;"><span class="stack"><span class="shifted">&lt;</span><span class="base">,</span></span></button>
+          <button class="key" data-key="." data-shift="&gt;"><span class="stack"><span class="shifted">&gt;</span><span class="base">.</span></span></button>
+          <button class="key" data-key="/" data-shift="?"><span class="stack"><span class="shifted">?</span><span class="base">/</span></span></button>
+          <button class="key modifier u-2" data-mod="Shift">Shift</button>
+        </div>
+
+        <div class="key-row">
+          <button class="key modifier u-145" data-mod="Ctrl">Ctrl</button>
+          <button class="key modifier u-145" data-mod="Alt">Alt</button>
+          <button class="key utility u-space" data-key=" ">Space</button>
+          <button class="key modifier u-145" data-mod="Alt">Alt</button>
+          <button class="key utility" data-key="ArrowLeft">←</button>
+          <button class="key utility" data-key="ArrowDown">↓</button>
+          <button class="key utility" data-key="ArrowUp">↑</button>
+          <button class="key utility" data-key="ArrowRight">→</button>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="app-dialog" id="tocDialog" aria-labelledby="tocTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Course map</span>
+          <h2 id="tocTitle">Table of contents</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="tocDialog" aria-label="Close table of contents">×</button>
+      </div>
+      <div class="dialog-body toc-lessons" id="tocLessons"></div>
+    </dialog>
+
+    <dialog class="app-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Appearance</span>
+          <h2 id="settingsTitle">Settings</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="settingsDialog" aria-label="Close settings">×</button>
+      </div>
+      <div class="dialog-body">
+        <fieldset class="theme-options" id="themeOptions">
+          <legend>World theme</legend>
+          <label><input type="radio" name="theme" value="auto"> <span><strong>Follow lesson</strong><small>Use the world chosen for each lesson.</small></span></label>
+          <label><input type="radio" name="theme" value="moonroot"> <span><strong>Moonroot Ruins</strong><small>Verdant stone and violet magic.</small></span></label>
+          <label><input type="radio" name="theme" value="ember"> <span><strong>Ember Vault</strong><small>Warm stone and beacon light.</small></span></label>
+          <label><input type="radio" name="theme" value="glass"> <span><strong>Hall of Mirrors</strong><small>Cool glass and reflected light.</small></span></label>
+          <label><input type="radio" name="theme" value="deepwater"> <span><strong>Deepwater Archive</strong><small>Dark water and archive blue.</small></span></label>
+        </fieldset>
+        <section class="app-version-panel" aria-label="Application version">
+          <strong>Application</strong>
+          <span id="currentVersion"></span>
+          <p id="updateStatus">Checking for updates when Vim Wilds opens.</p>
+          <button class="note-action" id="restartUpdateButton" type="button" hidden>Restart with update</button>
+        </section>
+      </div>
+    </dialog>
+
+  </main>
+
+  <script type="module" src="../app.js"></script>
+</body>
+</html>

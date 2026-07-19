@@ -11,14 +11,37 @@ const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.
 const cursorExercises = cursorActivities.filter(activity => activity.type === "exercise");
 const changingActivities = changingUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const changingExercises = changingActivities.filter(activity => activity.type === "exercise");
+const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
 
 async function state(page) {
+  await page.waitForFunction(() => window.VimWilds?.getState);
   return page.evaluate(() => window.VimWilds.getState());
 }
 
 test.describe("Production lesson flow", () => {
+  test.beforeEach(({ page }) => {
+    const goto = page.goto.bind(page);
+    Object.defineProperty(page, "goto", {
+      configurable: true,
+      value: async (url, options) => {
+        const response = await goto(url, options);
+        if (url !== "/") {
+          await page.waitForFunction(() => window.VimWilds?.getState && document.querySelector("#worldGrid")?.childElementCount > 0);
+        }
+        return response;
+      },
+    });
+  });
+
+  test("introduces the installable game at the root route", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "The Vim Wilds" })).toBeVisible();
+    await expect(page.getByRole("link", { name: /start or continue practice/i })).toHaveAttribute("href", "./play/");
+    await expect(page.locator("#appVersion")).toContainText("Build 0.1.0-dev.");
+  });
+
   test("uses the polished UI as the only route and derives 70 runtime activities", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     const runtime = await page.evaluate(() => ({
@@ -66,7 +89,7 @@ test.describe("Production lesson flow", () => {
   });
 
   test("starts at Unit 1 and exposes all numbered units through the course contents", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/play/");
     expect((await state(page))).toMatchObject({ unitId: "modal-model", unitNumber: 1, activityId: "welcome-to-modal-vim" });
     const catalog = await page.evaluate(() => ({ unit: window.VimWilds.unit, units: window.VimWilds.units }));
     expect(catalog.units).toEqual([
@@ -82,7 +105,7 @@ test.describe("Production lesson flow", () => {
   });
 
   test("routes confident learners into the recall-only quick check", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/play/");
     await page.getByRole("button", { name: "Take quick check" }).click();
     expect((await state(page))).toMatchObject({ activityId: "quick-exit-insert-recall", practiceMode: "recall", mode: "insert", history: [] });
     await page.evaluate(() => window.VimWilds.emit("Escape"));
@@ -265,6 +288,7 @@ test.describe("Production lesson flow", () => {
     await page.locator('.key[data-key="a"]').click();
     expect((await state(page))).toMatchObject({ complete: true, code: ["version = 20"], modifiers: [] });
     await page.goto("/?unit=entering-changing-text&activity=increment-version-number");
+    await page.locator(".cm-content").focus();
     await page.keyboard.press("Control+a");
     expect((await state(page))).toMatchObject({ complete: true, code: ["version = 20"] });
 
@@ -274,6 +298,7 @@ test.describe("Production lesson flow", () => {
     await page.locator('.key[data-key="x"]').click();
     expect((await state(page))).toMatchObject({ complete: true, code: ["retries = 3"], modifiers: [] });
     await page.goto("/?unit=entering-changing-text&activity=decrement-retry-count");
+    await page.locator(".cm-content").focus();
     await page.evaluate(() => window.VimWilds.emit("2"));
     await page.keyboard.press("Control+x");
     expect((await state(page))).toMatchObject({ complete: true, code: ["retries = 3"] });
@@ -284,6 +309,7 @@ test.describe("Production lesson flow", () => {
     await page.locator('.key[data-key="r"]').click();
     expect((await state(page))).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
     await page.goto("/?unit=entering-changing-text&activity=redo-substitution");
+    await page.locator(".cm-content").focus();
     for (const key of ["s", "r", "Escape", "u"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     await page.keyboard.press("Control+r");
     expect((await state(page))).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
@@ -364,7 +390,7 @@ test.describe("Production lesson flow", () => {
   });
 
   test("completes every Unit 1 runnable with its authored sequence", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/play/");
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -479,24 +505,38 @@ test.describe("Production lesson flow", () => {
   });
 
   test("shows characters only for practice and choices, with stable practice celebrations", async ({ page }) => {
+    await page.route("https://raw.githubusercontent.com/anton-dergunov/vim-mastery/**", route => route.fulfill({
+      contentType: "image/webp",
+      body: successAnimation,
+    }));
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.waitForFunction(() => document.documentElement.dataset.charactersReady === "true");
+    await page.waitForTimeout(120);
     const guidedCharacter = await page.locator(".nix").evaluate(node => ({ character: node.dataset.character, animation: node.dataset.animation }));
     await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "dot-python-values-recall")));
     await page.waitForFunction(() => document.querySelector(".nix")?.dataset.character);
     const recallCharacter = await page.locator(".nix").evaluate(node => ({ character: node.dataset.character, animation: node.dataset.animation }));
     expect(recallCharacter).toEqual(guidedCharacter);
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    await expect(page.locator('.nix.celebrating[src$=".webp"]')).toBeVisible();
+    await expect(page.locator('.nix.celebrating[src^="blob:"]')).toBeVisible();
     for (const id of ["dot-is-a-change", "dot-append-demo", "repeat-unit-summary"]) {
       await page.evaluate(activityId => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === activityId)), id);
       await expect(page.locator(".nix")).toHaveCount(0);
     }
     await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "repeat-is-wrong-choice")));
     await expect(page.locator(".nix")).toHaveCount(1);
+    await page.waitForTimeout(120);
     const correctOptionId = await page.evaluate(() => window.VimWilds.activities.find(activity => activity.id === "repeat-is-wrong-choice").correctOptionId);
     await page.locator(`[data-choice="${correctOptionId}"]`).click();
-    await expect(page.locator('.nix.celebrating[src$=".webp"]')).toBeVisible();
+    await expect(page.locator('.nix.celebrating[src^="blob:"]')).toBeVisible();
+  });
+
+  test("keeps the local idle character when remote celebration media is unavailable", async ({ page }) => {
+    await page.route("https://raw.githubusercontent.com/anton-dergunov/vim-mastery/**", route => route.abort());
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect(page.locator(".nix.celebrating")).toHaveCount(0);
+    await expect(page.locator('.nix[src*="assets/characters/"]')).toBeVisible();
   });
 
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {

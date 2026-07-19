@@ -8,9 +8,10 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "postinstall": "patch-package",
-    "test": "npm run test:content && npm run test:native && npm run test:browser",
+    "test": "npm run test:content && npm run test:native && npm run test:pwa && npm run test:browser",
     "test:content": "node --test tests/content-data.test.mjs",
     "test:native": "node --test tests/native-vim.test.mjs",
+    "test:pwa": "node --test tests/pwa-build.test.mjs",
     "test:browser": "playwright test"
   },
   "dependencies": {

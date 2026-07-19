@@ -1,0 +1,39 @@
+.landing-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+}
+
+.landing-card {
+  width: min(100%, 430px);
+  min-height: min(100dvh - 32px, 760px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 23px 20px;
+  border: 1px solid rgba(167, 255, 202, .14);
+  border-radius: 25px;
+  background: linear-gradient(155deg, #153d32, #091916 55%, #050d0c);
+  box-shadow: 0 22px 72px rgba(0, 0, 0, .48), inset 0 1px rgba(255, 255, 255, .05);
+}
+
+.landing-kicker { margin: 0; color: var(--amber); font: 700 11px/1 ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
+.landing-title { margin: 0; max-width: 8ch; font-size: clamp(40px, 12vw, 54px); line-height: .94; letter-spacing: -.055em; }
+.landing-lede { margin: 0; color: #bdd0c5; font-size: 16px; line-height: 1.45; }
+.landing-features { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.landing-features li { padding: 10px 12px; border-radius: 12px; background: rgba(2, 10, 8, .34); color: #dcebe1; font-size: 13px; }
+.landing-features strong { color: var(--amber); }
+.landing-primary, .landing-install { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; border: 0; border-radius: 14px; padding: 0 17px; color: #10201b; background: var(--amber); font-weight: 800; text-decoration: none; box-shadow: 0 5px 0 #ac752e; }
+.landing-install { width: 100%; margin-top: 10px; background: #b9f1ce; box-shadow: 0 5px 0 #6aaf85; }
+.landing-install[hidden] { display: none; }
+.landing-installation { margin-top: auto; padding: 14px; border: 1px solid rgba(185, 241, 206, .16); border-radius: 15px; background: rgba(6, 19, 16, .72); }
+.landing-installation strong { display: block; font-size: 13px; }
+.landing-installation p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.landing-footer { display: flex; justify-content: space-between; gap: 8px; color: #789287; font: 11px/1.3 ui-monospace, monospace; }
+
+@media (max-height: 720px) {
+  .landing-card { gap: 12px; padding-top: 20px; }
+  .landing-title { font-size: 38px; }
+  .landing-features li { padding: 7px 10px; }
+}
