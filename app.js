@@ -30,6 +30,7 @@ const [languageProfiles, unitCatalog] = await Promise.all([
   }),
 ]);
 const units = unitCatalog.units.sort((left, right) => left.unitNumber - right.unitNumber);
+const curriculumArcs = [...(unitCatalog.arcs || [])].sort((left, right) => left.arcNumber - right.arcNumber);
 const requestedUnitId = urlParams.get("unit") || (urlParams.has("activity") ? null : savedSession.unitId);
 const selectedUnit = units.find(candidate => candidate.id === requestedUnitId) || units[0];
 const unit = await fetch(appUrl(selectedUnit.path)).then(response => {
@@ -744,13 +745,29 @@ function renderTableOfContents() {
       <div class="toc-activities">${rows}</div>
     </details>`;
   }).join("");
-  elements.tocLessons.innerHTML = units.map(candidate => {
+  const renderUnit = candidate => {
     const isCurrent = candidate.id === unit.id;
     const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong><small>${candidate.lessonCount} lessons</small>`;
     return isCurrent
       ? `<details class="toc-unit" open><summary>${summary}</summary><div class="toc-unit-lessons">${lessonMarkup}</div></details>`
       : `<div class="toc-unit toc-unit-link"><button type="button" data-unit-id="${escapeHtml(candidate.id)}">${summary}</button></div>`;
+  };
+  const assignedUnits = new Set();
+  const arcMarkup = curriculumArcs.map(arc => {
+    const arcUnits = units.filter(candidate => arc.unitNumbers.includes(candidate.unitNumber));
+    if (!arcUnits.length) return "";
+    arcUnits.forEach(candidate => assignedUnits.add(candidate.id));
+    const headingId = `toc-arc-${arc.arcNumber}-${arc.id}`;
+    return `<section class="toc-arc" aria-labelledby="${escapeHtml(headingId)}">
+      <h3 class="toc-arc-heading" id="${escapeHtml(headingId)}"><span>Arc ${arc.arcNumber}</span><strong>${renderInline(arc.title)}</strong></h3>
+      <div class="toc-arc-units">${arcUnits.map(renderUnit).join("")}</div>
+    </section>`;
   }).join("");
+  const ungroupedUnits = units.filter(candidate => !assignedUnits.has(candidate.id));
+  const ungroupedMarkup = ungroupedUnits.length
+    ? `<section class="toc-arc" aria-labelledby="toc-arc-other"><h3 class="toc-arc-heading" id="toc-arc-other"><span>Course</span><strong>More units</strong></h3><div class="toc-arc-units">${ungroupedUnits.map(renderUnit).join("")}</div></section>`
+    : "";
+  elements.tocLessons.innerHTML = arcMarkup + ungroupedMarkup;
 }
 
 function renderThemeOptions() {
@@ -963,7 +980,7 @@ function playDemo(interval) {
       return;
     }
     const checkpoint = currentActivity().script.checkpoints?.find(item => item.afterStep === state.playbackStep);
-    const demonstratesIntermediateMode = unit.unitNumber === 1 && checkpoint?.mode && checkpoint.mode !== "normal";
+    const demonstratesIntermediateMode = checkpoint?.mode && checkpoint.mode !== "normal";
     const delay = demonstratesIntermediateMode ? Math.max(interval, 1200) : interval;
     state.playbackTimer = window.setTimeout(tick, delay);
     renderActivityControls();

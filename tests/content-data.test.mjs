@@ -15,6 +15,8 @@ const changingUnit = units.find(item => item.data.id === "entering-changing-text
 const operatorUnit = units.find(item => item.data.id === "operator-grammar").data;
 const precisionUnit = units.find(item => item.data.id === "precision-motions-search").data;
 const textObjectUnit = units.find(item => item.data.id === "text-objects").data;
+const visualUnit = units.find(item => item.data.id === "visual-selection").data;
+const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -44,7 +46,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -81,7 +83,32 @@ test("unit continuation requires the immediately following unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), changingUnit), operatorUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), operatorUnit), precisionUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), precisionUnit), textObjectUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), textObjectUnit), null, "Unit 6 must not skip to Unit 10");
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), textObjectUnit), visualUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), visualUnit), null, "Unit 7 must not skip to Unit 10");
+});
+
+test("unit catalog groups implemented units into curriculum arcs", () => {
+  assert.equal(unitCatalog.schemaVersion, 2);
+  assert.deepEqual(unitCatalog.arcs, [
+    { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
+    { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10] },
+  ]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 10]);
+  const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
+  assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
+});
+
+test("Unit 7 curriculum definition is preserved verbatim", () => {
+  assert.deepEqual(visualUnit.curriculumDefinition, {
+    unit: "7. Visual selection",
+    commandsAndConcepts: "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r`",
+    prerequisites: "Units 1–6",
+    learningOutcome: "Select character, line, and rectangular ranges; modify them; and decide when selection is clearer than operator-motion",
+    representativeExercises: "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection",
+    priorityAndPortability: "Core. `Ctrl-v` is semantically important even when a host reserves that chord; the app teaches Vim behavior",
+  });
+  assert.deepEqual(visualUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects"]);
+  assert.equal(visualUnit.lessons.length, 9);
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -594,6 +621,65 @@ for (const activity of textObjectRunnable) {
       if (checkpoint.mode && checkpoint.afterStep === keys.length) {
         assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
       }
+    }
+  });
+}
+
+const visualActivities = visualUnit.lessons.flatMap(lesson => lesson.activities);
+const visualRunnable = visualActivities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+test("Unit 7 covers the Visual curriculum with complete references and learning phases", () => {
+  assert.equal(visualRunnable.length, 37);
+  assert.deepEqual(visualUnit.coverage.map(item => item.concept), [
+    "Visual Character, Visual Line, and Visual Block",
+    "Visual selection d c y x r operations",
+    "Visual Line operations",
+    "o and O selection endpoints",
+    "gv reselection",
+    "selection case, shift, reindent, and gq",
+    "Visual Block c d x r",
+    "Visual Block I and A",
+    "Visual selection versus operator-motion",
+  ]);
+  const activityIds = new Set(visualActivities.map(activity => activity.id));
+  for (const lesson of visualUnit.lessons) {
+    const phases = new Set(lesson.activities.map(activity => activity.phase));
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
+    }
+  }
+  for (const entry of visualUnit.reference) {
+    for (const ref of entry.exampleActivityRefs) assert(activityIds.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  for (const entry of visualUnit.coverage) {
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(entry[phase].length, `${entry.concept} has no ${phase} coverage`);
+      for (const ref of entry[phase]) assert(activityIds.has(ref), `${entry.concept} references missing ${ref}`);
+    }
+  }
+});
+
+for (const activity of visualRunnable) {
+  test(`native Vim Unit 7 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const options = {
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+      textWidth: activity.editor?.textWidth,
+    };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+    const finalCheckpoint = activity.script.checkpoints.at(-1);
+    assert.equal(finalCheckpoint.afterStep, keys.length);
+    assert.deepEqual(finalCheckpoint.lines, activity.scenario.target.lines);
+    assert.deepEqual(finalCheckpoint.cursor, activity.scenario.target.cursor);
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
     }
   });
 }

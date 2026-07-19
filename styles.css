@@ -1654,6 +1654,33 @@ html.next-ui .dialog-body {
 
 html.next-ui .toc-lessons { display: block; }
 
+html.next-ui .toc-arc + .toc-arc { margin-top: 18px; }
+
+html.next-ui .toc-arc-heading {
+  margin: 0 0 7px;
+  padding: 0 3px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+html.next-ui .toc-arc-heading span {
+  color: var(--theme-warm);
+  font: 850 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+html.next-ui .toc-arc-heading strong {
+  color: #dce9e2;
+  font: 750 14px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.next-ui .toc-arc-units {
+  display: grid;
+  gap: 8px;
+}
+
 html.next-ui .toc-unit {
   border: 1px solid rgba(193, 220, 206, .24);
   border-radius: 12px;
@@ -1670,20 +1697,23 @@ html.next-ui .toc-unit > summary {
   cursor: pointer;
 }
 
-html.next-ui .toc-unit > summary > span {
+html.next-ui .toc-unit > summary > span,
+html.next-ui .toc-unit-link > button > span {
   color: var(--theme-warm);
   font: 850 12px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-html.next-ui .toc-unit > summary strong {
+html.next-ui .toc-unit > summary strong,
+html.next-ui .toc-unit-link > button strong {
   color: #fff7df;
   font: 750 16px/1.25 ui-monospace, SFMono-Regular, Menlo, monospace;
   overflow-wrap: anywhere;
 }
 
-html.next-ui .toc-unit > summary small {
+html.next-ui .toc-unit > summary small,
+html.next-ui .toc-unit-link > button small {
   color: #789487;
   font-size: 12px;
   line-height: 1.2;

@@ -19,3 +19,9 @@ around-quote text objects include trailing whitespace, or leading whitespace
 when no trailing whitespace is available, matching native Vim. It also parses
 the complete CodeMirror buffer before resolving an enclosing HTML tag, so
 `it`/`at` can see closing tags beyond the cursor.
+
+Unit 7 extends the patch for Visual-mode conformance. Visual Block `I` and `A`
+remember the original upper-left corner and restore it after the replicated
+insert finishes, block shifts use CodeMirror's configured indentation unit,
+and characterwise Visual `gq` treats the formatter's end row as exclusive so
+the cursor finishes at the start of the last formatted row.

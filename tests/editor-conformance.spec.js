@@ -8,6 +8,7 @@ const changingUnit = JSON.parse(readFileSync(new URL("../content/units/03-enteri
 const operatorUnit = JSON.parse(readFileSync(new URL("../content/units/04-operator-grammar.json", import.meta.url), "utf8"));
 const precisionUnit = JSON.parse(readFileSync(new URL("../content/units/05-precision-motions-search.json", import.meta.url), "utf8"));
 const textObjectUnit = JSON.parse(readFileSync(new URL("../content/units/06-text-objects.json", import.meta.url), "utf8"));
+const visualUnit = JSON.parse(readFileSync(new URL("../content/units/07-visual-selection.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -20,6 +21,8 @@ const precisionActivities = precisionUnit.lessons.flatMap(lesson => lesson.activ
 const precisionExercises = precisionActivities.filter(activity => activity.type === "exercise");
 const textObjectActivities = textObjectUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const textObjectExercises = textObjectActivities.filter(activity => activity.type === "exercise");
+const visualActivities = visualUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const visualExercises = visualActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
@@ -110,7 +113,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(7);
+    await expect(page.locator(".toc-unit")).toHaveCount(8);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -136,11 +139,16 @@ test.describe("Production lesson flow", () => {
       { id: "operator-grammar", unitNumber: 4, title: "Operator grammar" },
       { id: "precision-motions-search", unitNumber: 5, title: "Precision motions and search" },
       { id: "text-objects", unitNumber: 6, title: "Text objects" },
+      { id: "visual-selection", unitNumber: 7, title: "Visual selection" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(7);
+    await expect(page.locator(".toc-unit")).toHaveCount(8);
+    await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks"]);
+    await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
+    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(2);
     await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
+    await expect(page.locator('[data-unit-id="visual-selection"]')).toContainText("Unit 7");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
   });
 
@@ -359,7 +367,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "text-objects", unitNumber: 6, activityId: "inside-around-meaning" });
   });
 
-  test("runs every Unit 6 text-object activity and leaves Unit 7 unavailable", async ({ page }) => {
+  test("runs every Unit 6 text-object activity and continues to Unit 7", async ({ page }) => {
     await page.goto("/?unit=text-objects");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 95, exerciseCount: textObjectExercises.length });
@@ -378,7 +386,116 @@ test.describe("Production lesson flow", () => {
     });
     expect(failures).toEqual([]);
     await page.goto("/?unit=text-objects&activity=text-objects-unit-summary");
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 7 is next");
+    await expect(page.getByRole("button", { name: "Continue to Unit 7" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 7" }).click();
+    await page.waitForURL(/unit=visual-selection/);
+    expect((await state(page))).toMatchObject({ unitId: "visual-selection", unitNumber: 7, activityId: "visual-shapes-meaning" });
+  });
+
+  test("runs every Unit 7 Visual activity and leaves Unit 8 unavailable", async ({ page }) => {
+    await page.goto("/?unit=visual-selection");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 84, exerciseCount: visualExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        if (activity.type === "exercise" && !current.complete) result.push({ id: activity.id, current });
+        if (activity.type === "demo" && (JSON.stringify(current.code) !== JSON.stringify(activity.scenario.target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(activity.scenario.target.cursor))) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+    await page.goto("/?unit=visual-selection&activity=visual-selection-unit-summary");
+    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 8 is next");
+  });
+
+  test("matches native Visual Block insertion, block shifting, and characterwise gq", async ({ page }) => {
+    await page.goto("/?unit=visual-selection");
+    const results = await page.evaluate(async () => {
+      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const cases = [
+        { id: "block-I", lines: ["one", "two", "six"], cursor: [0, 0], keys: ["Ctrl-v", "2", "j", "I", ">", " ", "Escape"], code: ["> one", "> two", "> six"], finalCursor: [0, 0] },
+        { id: "block-A", lines: ["one", "two", "six"], cursor: [0, 2], keys: ["Ctrl-v", "2", "j", "A", "!", "Escape"], code: ["one!", "two!", "six!"], finalCursor: [0, 2] },
+        { id: "block-shift", lines: ["aa", "bb", "cc"], cursor: [0, 0], keys: ["Ctrl-v", "2", "j", ">"], code: ["  aa", "  bb", "  cc"], finalCursor: [0, 0] },
+        { id: "char-gq", lines: ["This compact paragraph contains several words for wrapping."], cursor: [0, 0], keys: ["v", "$", "g", "q"], code: ["This compact paragraph", "contains several words", "for wrapping."], finalCursor: [2, 0], textWidth: 24 },
+      ];
+      return cases.map(testCase => {
+        resetVimEngineState();
+        const host = document.createElement("div");
+        document.body.append(host);
+        const engine = new VimEngine({ parent: host, text: testCase.lines.join("\n"), cursor: testCase.cursor, textWidth: testCase.textWidth, onEvent() {} });
+        testCase.keys.forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+        const snapshot = engine.getSnapshot();
+        const result = { id: testCase.id, code: snapshot.text.split("\n"), cursor: snapshot.cursorPosition, mode: snapshot.mode };
+        engine.destroy();
+        host.remove();
+        return { ...result, expectedCode: testCase.code, expectedCursor: testCase.finalCursor };
+      });
+    });
+    for (const result of results) {
+      expect(result.code, result.id).toEqual(result.expectedCode);
+      expect(result.cursor, result.id).toEqual(result.expectedCursor);
+      expect(result.mode, result.id).toBe("normal");
+    }
+  });
+
+  test("reports Visual character, line, block, o/O, and gv geometry", async ({ page }) => {
+    await page.goto("/?unit=visual-selection&activity=select-character-range");
+    await page.evaluate(() => ["v", "e"].forEach(key => window.VimWilds.emit(key)));
+    expect((await state(page))).toMatchObject({ mode: "visual", selection: { kind: "linear", from: [0, 0], to: [0, 5] } });
+
+    await page.goto("/?unit=visual-selection&activity=select-line-range");
+    await page.evaluate(() => ["V", "j"].forEach(key => window.VimWilds.emit(key)));
+    expect((await state(page))).toMatchObject({ mode: "visual-line", selection: { kind: "linear", from: [0, 0] } });
+
+    await page.goto("/?unit=visual-selection&activity=select-block-range");
+    await page.evaluate(() => ["Ctrl-v", "2", "j"].forEach(key => window.VimWilds.emit(key)));
+    expect((await state(page))).toMatchObject({ mode: "visual-block", selection: { kind: "block", from: [0, 3], to: [2, 3] } });
+
+    await page.goto("/?unit=visual-selection&activity=swap-block-same-row-corner");
+    await page.evaluate(() => ["Ctrl-v", "2", "j", "2", "l", "O"].forEach(key => window.VimWilds.emit(key)));
+    expect((await state(page))).toMatchObject({ mode: "visual-block", cursor: [2, 1], selection: { kind: "block", from: [0, 1], to: [2, 3] } });
+
+    await page.goto("/?unit=visual-selection&activity=reselect-indent-demo");
+    for (let step = 0; step < 5; step += 1) await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page))).toMatchObject({ mode: "visual-line", selection: { kind: "linear", from: [0, 0] } });
+  });
+
+  test("enters Ctrl-v and shifted block insertion from touch and physical keyboards", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/?unit=visual-selection&activity=prepend-comment-markers-recall");
+    await page.locator('[data-mod="Ctrl"]').first().click();
+    await page.locator('.key[data-key="v"]').click();
+    await page.locator('.key[data-key="2"]').click();
+    await page.locator('.key[data-key="j"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="i"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="3"]').click();
+    await page.locator('.key[data-key=" "]').click();
+    await page.locator('.key[data-key="Escape"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ["# alpha", "# beta", "# gamma"], cursor: [0, 0], modifiers: [] });
+
+    await page.goto("/?unit=visual-selection&activity=append-block-demo-recall");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.press("Control+v");
+    await page.keyboard.type("2j");
+    await page.keyboard.press("Shift+A");
+    await page.keyboard.type("!");
+    await page.keyboard.press("Escape");
+    expect((await state(page))).toMatchObject({ complete: true, code: ["one!", "two!", "six!"], cursor: [0, 2] });
+  });
+
+  test("holds Unit 7 Visual demo checkpoints long enough to read", async ({ page }) => {
+    await page.goto("/?unit=visual-selection&activity=visual-shapes-demo");
+    await page.getByRole("button", { name: "Play" }).click();
+    await page.waitForTimeout(700);
+    expect((await state(page))).toMatchObject({ playbackStep: 1, mode: "visual" });
   });
 
   test("matches native around-quote whitespace and balanced HTML tag objects", async ({ page }) => {
@@ -987,7 +1104,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "repeatable-editing"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "repeatable-editing"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

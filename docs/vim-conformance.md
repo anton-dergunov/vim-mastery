@@ -56,3 +56,12 @@ preceding whitespace. The versioned compatibility patch applies that behavior
 to all three quote forms. Demo checkpoints may expose an `affectedRange`; the
 playback controller renders that range through the editor's existing preview
 decoration and clears it at the next checkpoint or reset.
+
+Unit 7 relies on CodeMirror multiple selections for Visual Block geometry and
+uses the existing latched Ctrl key to make `Ctrl-v` available on touch screens.
+The pinned adapter needed three native-conformance corrections: blockwise
+`I`/`A` now return the cursor to the original upper-left block corner after
+Escape, block shifts use the configured two-space indentation unit instead of
+the four-column tab size, and characterwise Visual `gq` lands at column zero of
+the final formatted row. Focused native and browser fixtures cover those
+cursor and text results in addition to `o`, `O`, and `gv` selection geometry.

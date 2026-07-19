@@ -28,6 +28,7 @@ function walk(directory) {
 function offlineAssets() {
   const units = walk(join(contentDirectory, "units")).filter(path => path.endsWith(".json"));
   const idleImages = walk(characterDirectory).filter(path => path.endsWith("idle.png"));
+  const catalogMetadata = JSON.parse(readFileSync(join(contentDirectory, "unit-index.json"), "utf8"));
   const catalog = units.map(path => {
     const unit = JSON.parse(readFileSync(path, "utf8"));
     return {
@@ -38,7 +39,7 @@ function offlineAssets() {
       path: `content/units/${relative(join(contentDirectory, "units"), path).replaceAll("\\", "/")}`,
     };
   }).sort((left, right) => left.unitNumber - right.unitNumber);
-  return { units, idleImages, catalog };
+  return { units, idleImages, catalog, arcs: catalogMetadata.arcs || [] };
 }
 
 function pwaBuildPlugin(base, version) {
@@ -57,10 +58,10 @@ function pwaBuildPlugin(base, version) {
       });
     },
     generateBundle() {
-      const { units, idleImages, catalog } = offlineAssets();
+      const { units, idleImages, catalog, arcs } = offlineAssets();
       const emit = (fileName, source) => this.emitFile({ type: "asset", fileName, source });
       units.forEach(path => emit(`content/units/${relative(join(contentDirectory, "units"), path)}`, readFileSync(path)));
-      emit("content/unit-index.json", JSON.stringify({ schemaVersion: 1, units: catalog }, null, 2));
+      emit("content/unit-index.json", JSON.stringify({ schemaVersion: 2, arcs, units: catalog }, null, 2));
       emit("content/language-profiles.json", readFileSync(join(contentDirectory, "language-profiles.json")));
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));

@@ -7,5 +7,6 @@ for (const fixture of [...lessonFixtures, ...inputFixtures]) {
   test(`native Vim: ${fixture.id}`, () => {
     const result = runNativeVim(fixture);
     assert.deepEqual(result.code, fixture.targetCode);
+    if (fixture.targetCursor) assert.deepEqual(result.cursor, fixture.targetCursor);
   });
 }

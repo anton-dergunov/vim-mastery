@@ -1,0 +1,4995 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 7,
+  "id": "visual-selection",
+  "title": "Visual selection",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "7. Visual selection",
+    "commandsAndConcepts": "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r`",
+    "prerequisites": "Units 1–6",
+    "learningOutcome": "Select character, line, and rectangular ranges; modify them; and decide when selection is clearer than operator-motion",
+    "representativeExercises": "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection",
+    "priorityAndPortability": "Core. `Ctrl-v` is semantically important even when a host reserves that chord; the app teaches Vim behavior"
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement",
+    "entering-changing-text",
+    "operator-grammar",
+    "precision-motions-search",
+    "text-objects"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "visual-selection-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "choose-selection-shape",
+      "title": "Choose the shape before the operation",
+      "objective": "Distinguish character, line, and rectangular selections and grow each with familiar motions.",
+      "activities": [
+        {
+          "id": "visual-shapes-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Three shapes, one workflow",
+          "body": "Visual mode makes a range visible before an operation. Use `v` for characters, `V` for whole lines, and `Ctrl-v` for a rectangle.",
+          "grammar": "v → characters · V → lines · Ctrl-v → columns",
+          "contrast": "Choose the geometry that matches the text, then reuse motions you already know.",
+          "demoRef": "visual-shapes-demo"
+        },
+        {
+          "id": "visual-shapes-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Compare all three selection shapes",
+          "instruction": "Enter each Visual mode, cancel the first two, then replace a two-column block.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name,state",
+                "a1,ready",
+                "b2,ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name,state",
+                "a1,xxady",
+                "b2,xxady"
+              ],
+              "cursor": [
+                1,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "Escape",
+              "V",
+              "j",
+              "Escape",
+              "Ctrl-v",
+              "2",
+              "j",
+              "1",
+              "l",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": "veEscVjEscCtrl-v2j1lrx",
+                "explanation": "Enter each Visual mode, cancel the first two, then replace a two-column block."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  1,
+                  3
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 11,
+                "cursor": [
+                  2,
+                  4
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "name,state",
+                  "a1,xxady",
+                  "b2,xxady"
+                ],
+                "cursor": [
+                  1,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-shape-choice"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned CSV rows make character, line, and block geometry unmistakable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-shape-choice"
+            ]
+          }
+        },
+        {
+          "id": "select-character-range",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete one visible word",
+          "instruction": "Select `alpha` by character and delete it.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha beta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                " beta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ved",
+                "explanation": "Select `alpha` by character and delete it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    5
+                  ]
+                }
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  " beta"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-character"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-character"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "select-line-range",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Delete two complete records",
+          "instruction": "Select the first two lines and delete them.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "Vjd",
+                "explanation": "Select the first two lines and delete them."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    0
+                  ]
+                }
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "gamma"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-line"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Short log-like records make whole-line selection visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "select-block-range",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replace a marker column",
+          "instruction": "Select the marker column and replace all three spaces with `x`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a [ ]",
+                "b [ ]",
+                "c [ ]"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a [x]",
+                "b [x]",
+                "c [x]"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "Ctrl-v2jrx",
+                "explanation": "Select the marker column and replace all three spaces with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  3
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "a [x]",
+                  "b [x]",
+                  "c [x]"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned markers form a natural one-column rectangle.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-selection-shape-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the matching geometry",
+          "prompt": "Which mode most directly targets one aligned marker column across several rows?",
+          "options": [
+            {
+              "id": "shape-character",
+              "label": "`v` — Visual Character"
+            },
+            {
+              "id": "shape-line",
+              "label": "`V` — Visual Line"
+            },
+            {
+              "id": "shape-block",
+              "label": "`Ctrl-v` — Visual Block"
+            }
+          ],
+          "correctOptionId": "shape-block",
+          "explanation": "A rectangular column is the defining use case for Visual Block.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "edit-character-selections",
+      "title": "Edit character selections",
+      "objective": "Apply delete, change, yank, x, and replace to an explicit character range.",
+      "activities": [
+        {
+          "id": "character-selection-operations",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Select first, then act",
+          "body": "Once a character range is visible, `d` and `x` delete it, `c` replaces it through Insert mode, `y` captures it, and `r{char}` fills it with one character.",
+          "grammar": "v + motion + d/c/y/x/r",
+          "contrast": "Visual selection is clearest when you need to inspect an irregular range before committing.",
+          "demoRef": "change-selected-word-demo"
+        },
+        {
+          "id": "change-selected-word-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Change an inspected word",
+          "instruction": "Select `draft`, change it to `live`, then return to Normal.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "live value"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "c",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "vecliveEsc",
+                "explanation": "Select `draft`, change it to `live`, then return to Normal."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "insert"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "live value"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-change"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A configuration value is a realistic small replacement target.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-change"
+            ]
+          }
+        },
+        {
+          "id": "delete-selected-token",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete the selected token",
+          "instruction": "Select `alpha` and delete it with `d`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha beta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                " beta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ved",
+                "explanation": "Select `alpha` and delete it with `d`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  " beta"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-delete"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "yank-selected-token",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Yank, move, and put",
+          "instruction": "Select `ready`, yank it, move to the end, and put the captured text.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready nowready"
+              ],
+              "cursor": [
+                0,
+                13
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "y",
+              "$",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "vey$p",
+                "explanation": "Select `ready`, yank it, move to the end, and put the captured text."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "ready nowready"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-yank"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Two shell-like status words make the yank and put result obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-yank"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "replace-selected-token",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Fill a selected word",
+          "instruction": "Select `ready` and replace every selected character with `x`.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "xxxxx now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "verx",
+                "explanation": "Select `ready` and replace every selected character with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "xxxxx now"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-replace"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A fixed-width status field makes fill replacement concrete.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-replace"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "character-operation-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose change or replace",
+          "prompt": "Which command should replace a selected five-character word with five copies of one marker?",
+          "options": [
+            {
+              "id": "use-change",
+              "label": "`c` then type text"
+            },
+            {
+              "id": "use-replace",
+              "label": "`r{char}`"
+            },
+            {
+              "id": "use-yank",
+              "label": "`y`"
+            }
+          ],
+          "correctOptionId": "use-replace",
+          "explanation": "Visual `r{char}` fills every selected character with the same replacement.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "work-with-line-selections",
+      "title": "Work with whole-line selections",
+      "objective": "Use Visual Line for indentation, capture, deletion, and replacement of complete records.",
+      "activities": [
+        {
+          "id": "line-selection-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Whole lines stay whole",
+          "body": "`V` selects complete logical lines regardless of the starting column. Linewise operations preserve line shape, which makes them useful for records, statements, and blocks.",
+          "grammar": "V + line motion + operation",
+          "contrast": "Use Visual Line when partial characters would only add noise.",
+          "demoRef": "indent-selected-lines-demo"
+        },
+        {
+          "id": "indent-selected-lines-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Indent two selected lines",
+          "instruction": "Select the first two lines and shift them right once.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "if ready:",
+                "run()",
+                "done()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "  if ready:",
+                "  run()",
+                "done()"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              ">"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "Vj>",
+                "explanation": "Select the first two lines and shift them right once."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "  if ready:",
+                  "  run()",
+                  "done()"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-line-indent"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Python-like indentation makes a linewise shift immediately visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line-indent"
+            ]
+          },
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "outdent-selected-lines",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Remove one indentation level",
+          "instruction": "Select the first two lines and shift them left.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "  alpha",
+                "  beta",
+                "gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              "<"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "Vj<",
+                "explanation": "Select the first two lines and shift them left."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "alpha",
+                  "beta",
+                  "gamma"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-line-outdent"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Two-space indentation gives deterministic shift evidence.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line-outdent"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "yank-selected-lines",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Duplicate two complete rows",
+          "instruction": "Select the first two rows, yank them, and put them below.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha",
+                "alpha",
+                "beta",
+                "beta",
+                "gamma"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              "y",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "Vjyp",
+                "explanation": "Select the first two rows, yank them, and put them below."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "alpha",
+                  "alpha",
+                  "beta",
+                  "beta",
+                  "gamma"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-line-yank"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "One-field CSV rows make the duplicated linewise register shape explicit.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line-yank"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-selected-lines",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Delete two selected lines",
+          "instruction": "Select the first two lines and delete them.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft",
+                "stale",
+                "keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "Vjd",
+                "explanation": "Select the first two lines and delete them."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "keep"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-line-delete"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Short configuration records keep linewise replacement focused.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "line-selection-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the whole-line tool",
+          "prompt": "You need to indent three complete statements. Which starting key makes the intended range clearest?",
+          "options": [
+            {
+              "id": "line-v",
+              "label": "`v`"
+            },
+            {
+              "id": "line-visual",
+              "label": "`V`"
+            },
+            {
+              "id": "line-block",
+              "label": "`Ctrl-v`"
+            }
+          ],
+          "correctOptionId": "line-visual",
+          "explanation": "Visual Line selects complete statements without managing first and last columns.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "control-selection-ends",
+      "title": "Move the active selection end",
+      "objective": "Use o and O to revise a selection from the opposite endpoint or block corner.",
+      "activities": [
+        {
+          "id": "selection-end-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The cursor marks the active end",
+          "body": "Press `o` to jump to the other end of a Visual selection. In Visual Block, `O` moves to the other corner on the same row, letting the next motion reshape a rectangle from a different edge.",
+          "grammar": "o → opposite end · O → opposite block corner",
+          "contrast": "Swap the active end instead of cancelling and rebuilding a nearly correct selection.",
+          "demoRef": "swap-character-end-demo"
+        },
+        {
+          "id": "swap-character-end-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Delete from the opposite end",
+          "instruction": "Build a cross-line selection, swap to its anchor with `o`, then delete.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha beta",
+                "gamma delta"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ama delta"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "j",
+              "l",
+              "o",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "vjlod",
+                "explanation": "Build a cross-line selection, swap to its anchor with `o`, then delete."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "ama delta"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-opposite-end"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-opposite-end"
+            ]
+          }
+        },
+        {
+          "id": "swap-block-opposite-end",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Move to the opposite block end",
+          "instruction": "Select a three-by-three block, press `o`, and fill it with `x`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "abcde",
+                "fghij",
+                "klmno"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "axxxe",
+                "fxxxj",
+                "kxxxo"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "2",
+              "l",
+              "o",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "Ctrl-v2j2lorx",
+                "explanation": "Select a three-by-three block, press `o`, and fill it with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  2,
+                  3
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "axxxe",
+                  "fxxxj",
+                  "kxxxo"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-opposite-end"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Uniform rows expose the selected rectangle and its opposite end.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-opposite-end"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "swap-block-same-row-corner",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Move to the other block corner",
+          "instruction": "Select a three-by-three block, press `O`, and fill it with `x`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "abcde",
+                "fghij",
+                "klmno"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "axxxe",
+                "fxxxj",
+                "kxxxo"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "2",
+              "l",
+              "O",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "Ctrl-v2j2lOrx",
+                "explanation": "Select a three-by-three block, press `O`, and fill it with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "cursor": [
+                  2,
+                  3
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "axxxe",
+                  "fxxxj",
+                  "kxxxo"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-same-row-corner"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Equal-width records make the same-row corner switch visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-same-row-corner"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "swap-character-end-recall",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Correct the active end before deleting",
+          "instruction": "Extend to the next line, use `o` to return to the start, then delete the visible range.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha beta",
+                "gamma delta"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ama delta"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "j",
+              "l",
+              "o",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "vjlod",
+                "explanation": "Extend to the next line, use `o` to return to the start, then delete the visible range."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "ama delta"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-opposite-end"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-opposite-end"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "selection-end-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the endpoint command",
+          "prompt": "In a rectangular selection, which key moves to the other corner on the same row?",
+          "options": [
+            {
+              "id": "end-o",
+              "label": "`o`"
+            },
+            {
+              "id": "end-capital-o",
+              "label": "`O`"
+            },
+            {
+              "id": "end-gv",
+              "label": "`gv`"
+            }
+          ],
+          "correctOptionId": "end-capital-o",
+          "explanation": "Capital `O` is the Visual Block corner-specific form.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "reselect-last-selection",
+      "title": "Restore the last selection",
+      "objective": "Use gv to revisit a previous Visual range and correct or extend the operation.",
+      "activities": [
+        {
+          "id": "reselection-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Selection history is reusable",
+          "body": "After a Visual operation, `gv` restores the last selected shape and extent. This is useful when the first operation needs correction or a second operation should affect exactly the same range.",
+          "grammar": "operation → gv → follow-up",
+          "contrast": "Reselect when the range is still right; rebuild it when the surrounding text changed too much.",
+          "demoRef": "reselect-indent-demo"
+        },
+        {
+          "id": "reselect-indent-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Undo an over-indent by reselection",
+          "instruction": "Indent two lines, restore the same line selection with `gv`, then shift it left.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              ">",
+              "g",
+              "v",
+              "<"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "Vj>gv<",
+                "explanation": "Indent two lines, restore the same line selection with `gv`, then shift it left."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "one",
+                  "two",
+                  "six"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-reselect"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-reselect"
+            ]
+          },
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "reselect-case-correction",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Reselect and correct case",
+          "instruction": "Toggle `ready`, reselect it with `gv`, then make it uppercase.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "READY now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "~",
+              "g",
+              "v",
+              "U"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "ve~gvU",
+                "explanation": "Toggle `ready`, reselect it with `gv`, then make it uppercase."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "READY now"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-reselect-case"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-reselect-case"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "reselect-yanked-word",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reselect a yanked word",
+          "instruction": "Yank `draft`, leave Visual mode, move away, then restore and delete the last selection.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                " value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "y",
+              "Escape",
+              "w",
+              "g",
+              "v",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "veyEscwgvd",
+                "explanation": "Yank `draft`, leave Visual mode, move away, then restore and delete the last selection."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  " value"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-reselect-delete"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A two-word configuration line keeps the restored range obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-reselect-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "reselect-line-correction",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Correct a selected line range",
+          "instruction": "Indent two lines, reselect them, and restore the original indentation.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              ">",
+              "g",
+              "v",
+              "<"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "Vj>gv<",
+                "explanation": "Indent two lines, reselect them, and restore the original indentation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "one",
+                  "two",
+                  "six"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-reselect"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Simple rows isolate the remembered linewise range.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-reselect"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "reselection-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Reuse or rebuild?",
+          "prompt": "The last Visual range is still exactly right, but the operation was wrong. What is the shortest clear recovery?",
+          "options": [
+            {
+              "id": "reselect-gv",
+              "label": "Press `gv`"
+            },
+            {
+              "id": "reselect-v",
+              "label": "Start again with `v`"
+            },
+            {
+              "id": "reselect-o",
+              "label": "Press `o`"
+            }
+          ],
+          "correctOptionId": "reselect-gv",
+          "explanation": "`gv` restores the previous Visual range and shape.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "transform-selected-text",
+      "title": "Transform and format selections",
+      "objective": "Apply case, indentation, reindentation, and formatting operations to visible ranges.",
+      "activities": [
+        {
+          "id": "selection-transform-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "One range, several transformations",
+          "body": "Visual selections accept case operations `~`, `u`, and `U`, shifts `>` and `<`, reindent `=`, and format `gq`. Choose a shape that matches the transformation.",
+          "grammar": "selection + ~ / u / U / > / < / = / gq",
+          "contrast": "Linewise selection is the natural shape for indentation, reindentation, and paragraph formatting.",
+          "demoRef": "uppercase-selection-demo"
+        },
+        {
+          "id": "uppercase-selection-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Uppercase one selected word",
+          "instruction": "Select `ready` and make it uppercase.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "READY now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "U"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "veU",
+                "explanation": "Select `ready` and make it uppercase."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "READY now"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-uppercase"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-uppercase"
+            ]
+          }
+        },
+        {
+          "id": "lowercase-selection",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Lowercase one selected word",
+          "instruction": "Select `READY` and make it lowercase.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "READY now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "u"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "veu",
+                "explanation": "Select `READY` and make it lowercase."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "ready now"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-lowercase"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-lowercase"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "toggle-selection-case",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Toggle the selected case",
+          "instruction": "Select `Ready` and toggle each letter's case.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Ready now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "rEADY now"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "~"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ve~",
+                "explanation": "Select `Ready` and toggle each letter's case."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "rEADY now"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-toggle-case"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-toggle-case"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "reindent-selected-lines",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reindent a visible code block",
+          "instruction": "Select the first three lines and apply `=`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "if (ready) {",
+                "run();",
+                "log();",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "if (ready) {",
+                "  run();",
+                "  log();",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "2",
+              "j",
+              "="
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "V2j=",
+                "explanation": "Select the first three lines and apply `=`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "if (ready) {",
+                  "  run();",
+                  "  log();",
+                  "}"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-reindent"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A JavaScript block gives the editor deterministic structural indentation.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-reindent"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "format-selected-lines",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Format selected prose lines",
+          "instruction": "Select both lines and reflow them with `gq`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "This compact paragraph contains",
+                "several words for wrapping."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "This compact paragraph",
+                "contains several words",
+                "for wrapping."
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              "g",
+              "q"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "Vjgq",
+                "explanation": "Select both lines and reflow them with `gq`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "This compact paragraph",
+                  "contains several words",
+                  "for wrapping."
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-format"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain prose gives `gq` a natural deterministic paragraph.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-format"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "textWidth": 24
+          }
+        },
+        {
+          "id": "selection-transform-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the formatting shape",
+          "prompt": "Which selection shape is clearest for reflowing several complete prose lines?",
+          "options": [
+            {
+              "id": "transform-character",
+              "label": "Visual Character"
+            },
+            {
+              "id": "transform-line",
+              "label": "Visual Line"
+            },
+            {
+              "id": "transform-block",
+              "label": "Visual Block"
+            }
+          ],
+          "correctOptionId": "transform-line",
+          "explanation": "Visual Line expresses a complete group of prose lines without fragile column endpoints.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "edit-rectangular-columns",
+      "title": "Edit rectangular columns",
+      "objective": "Use blockwise replace, change, delete, and x on aligned text.",
+      "activities": [
+        {
+          "id": "block-edit-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A rectangle is a first-class range",
+          "body": "Visual Block turns aligned columns into one range. `r` fills cells, `c` replaces the block through Insert mode, and `d` or `x` removes the selected columns.",
+          "grammar": "Ctrl-v + vertical/horizontal motion + c/d/x/r",
+          "contrast": "Block edits are precise when alignment carries meaning; irregular structure usually needs another tool.",
+          "demoRef": "replace-block-column-demo"
+        },
+        {
+          "id": "replace-block-column-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Replace a marker column",
+          "instruction": "Select the three marker cells and replace them with `x`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a [ ]",
+                "b [ ]",
+                "c [ ]"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a [x]",
+                "b [x]",
+                "c [x]"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "Ctrl-v2jrx",
+                "explanation": "Select the three marker cells and replace them with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  3
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "a [x]",
+                  "b [x]",
+                  "c [x]"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-replace"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned bracket markers are a realistic fixed column.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-replace"
+            ]
+          }
+        },
+        {
+          "id": "change-block-column",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Change one column through Insert mode",
+          "instruction": "Select the middle character on three rows and change it to `X`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "oXe",
+                "tXo",
+                "sXx"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "c",
+              "X",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "Ctrl-v2jcXEsc",
+                "explanation": "Select the middle character on three rows and change it to `X`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "insert"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "oXe",
+                  "tXo",
+                  "sXx"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-change"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Equal-width words make the changed middle column obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-change"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-block-column",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Delete one aligned column",
+          "instruction": "Select the middle character on three rows and delete it with `d`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "oe",
+                "to",
+                "sx"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "Ctrl-v2jd",
+                "explanation": "Select the middle character on three rows and delete it with `d`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "oe",
+                  "to",
+                  "sx"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-delete"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Equal-width records isolate one removable column.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "x-block-column",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Use x on a rectangular range",
+          "instruction": "Select the middle character on three rows and remove it with `x`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "oe",
+                "to",
+                "sx"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "Ctrl-v2jx",
+                "explanation": "Select the middle character on three rows and remove it with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "oe",
+                  "to",
+                  "sx"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-x"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A fixed-width column shows that Visual `x` acts like delete.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-x"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "block-edit-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the block operation",
+          "prompt": "You want every selected marker cell to become the same character. Which operation is most direct?",
+          "options": [
+            {
+              "id": "block-r",
+              "label": "`r{char}`"
+            },
+            {
+              "id": "block-c",
+              "label": "`c` and Insert mode"
+            },
+            {
+              "id": "block-d",
+              "label": "`d`"
+            }
+          ],
+          "correctOptionId": "block-r",
+          "explanation": "Visual Block `r{char}` fills the entire rectangle with one character.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "insert-across-rows",
+      "title": "Insert across several rows",
+      "objective": "Use Visual Block I and A to prepend or append text across aligned records.",
+      "activities": [
+        {
+          "id": "block-insert-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Type once at every selected row",
+          "body": "After making a block selection, `I` inserts at its left edge and `A` appends after its right edge. Type the text once and press Escape to apply it to every selected row.",
+          "grammar": "Ctrl-v + rows + I/A + text + Esc",
+          "contrast": "The final Escape commits the replicated insertion and returns to the block's upper-left origin.",
+          "demoRef": "prepend-block-demo"
+        },
+        {
+          "id": "prepend-block-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Prepend a quote marker",
+          "instruction": "Select the first column of three rows and insert `> ` before each.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "> one",
+                "> two",
+                "> six"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "I",
+              ">",
+              " ",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "Ctrl-v2jI> Esc",
+                "explanation": "Select the first column of three rows and insert `> ` before each."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "insert"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "> one",
+                  "> two",
+                  "> six"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-insert"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Markdown quote markers are a natural multi-line prefix.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-insert"
+            ]
+          },
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "append-block-demo",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Append a marker to every row",
+          "instruction": "Select the final character column and append `!` to all three rows.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "one!",
+                "two!",
+                "six!"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "A",
+              "!",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "Ctrl-v2jA!Esc",
+                "explanation": "Select the final character column and append `!` to all three rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "insert"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "one!",
+                  "two!",
+                  "six!"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-append"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-append"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "prepend-comment-markers",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Prepend comment markers",
+          "instruction": "Select the first column and insert `# ` on all three rows.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# alpha",
+                "# beta",
+                "# gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "I",
+              "#",
+              " ",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "Ctrl-v2jI# Esc",
+                "explanation": "Select the first column and insert `# ` on all three rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "insert"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "# alpha",
+                  "# beta",
+                  "# gamma"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-insert"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Python comment markers make a realistic repeated prefix.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-insert"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "append-csv-markers",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Append a status marker",
+          "instruction": "Select the last character column and append `!` to every row.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "one",
+                "two",
+                "six"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "one!",
+                "two!",
+                "six!"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "A",
+              "!",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "Ctrl-v2jA!Esc",
+                "explanation": "Select the last character column and append `!` to every row."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "one!",
+                  "two!",
+                  "six!"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-block-append"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Equal-width CSV-style fields provide a stable right edge.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-block-append"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "block-insert-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose I or A",
+          "prompt": "Which key inserts a prefix at the left edge of every selected block row?",
+          "options": [
+            {
+              "id": "block-insert-left",
+              "label": "`I`"
+            },
+            {
+              "id": "block-append-right",
+              "label": "`A`"
+            },
+            {
+              "id": "block-r-again",
+              "label": "`r`"
+            }
+          ],
+          "correctOptionId": "block-insert-left",
+          "explanation": "Visual Block `I` inserts once at the left edge and replicates on Escape.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "integrate-visual-selection",
+      "title": "Choose when selection is clearer",
+      "objective": "Combine selection shapes and operations, then choose Visual mode only when seeing the range improves confidence.",
+      "activities": [
+        {
+          "id": "visual-strategy-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Use visibility when it buys confidence",
+          "body": "Operator-motion grammar is concise for a range you can name immediately. Visual mode is valuable when you want to inspect an irregular range, compare shapes, or make a rectangular edit before committing.",
+          "grammar": "known range → operator-motion · inspect first → Visual · columns → Ctrl-v",
+          "contrast": "The best choice exposes intent without unnecessary setup.",
+          "demoRef": "visual-strategy-demo"
+        },
+        {
+          "id": "visual-strategy-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Inspect lines before indenting",
+          "instruction": "Select two complete statements and indent them after confirming the range.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "if ready:",
+                "run()",
+                "log()",
+                "done()"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "if ready:",
+                "  run()",
+                "  log()",
+                "done()"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              ">"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "Vj>",
+                "explanation": "Select two complete statements and indent them after confirming the range."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "if ready:",
+                  "  run()",
+                  "  log()",
+                  "done()"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-strategy"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A small Python-like block makes the inspected line range meaningful.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-strategy"
+            ]
+          },
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "integrated-column-marker",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Repair an aligned marker column",
+          "instruction": "Use a block selection to replace all three marker spaces with `x`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a [ ]",
+                "b [ ]",
+                "c [ ]"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a [x]",
+                "b [x]",
+                "c [x]"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "Ctrl-v",
+              "2",
+              "j",
+              "r",
+              "x"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "Ctrl-v2jrx",
+                "explanation": "Use a block selection to replace all three marker spaces with `x`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  2,
+                  3
+                ],
+                "mode": "visual-block"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "a [x]",
+                  "b [x]",
+                  "c [x]"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-strategy-block"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "The task is inherently rectangular, making Visual Block the clear choice.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-strategy-block"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "integrated-reselect-correction",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reselect and correct the last range",
+          "instruction": "Indent two rows, restore the same selection with `gv`, and correct it.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft",
+                "draft",
+                "keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft",
+                "draft",
+                "keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              ">",
+              "g",
+              "v",
+              "<"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "Vj>gv<",
+                "explanation": "Indent two rows, restore the same selection with `gv`, and correct it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "draft",
+                  "draft",
+                  "keep"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-strategy-reselect"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Repeated configuration rows make the corrected range easy to inspect.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-strategy-reselect"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "integrated-character-edit",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Inspect one word before deleting",
+          "instruction": "Select `alpha` visibly, then delete it.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha beta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                " beta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "v",
+              "e",
+              "d"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ved",
+                "explanation": "Select `alpha` visibly, then delete it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  " beta"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Choose the selection shape before moving.",
+            "Apply the operation only after the intended range is highlighted."
+          ],
+          "feedback": {
+            "success": "The intended range changed cleanly.",
+            "why": "The selection made the affected text explicit before the operation."
+          },
+          "skills": {
+            "primary": [
+              "visual-strategy-character"
+            ],
+            "supporting": [
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "selection-geometry"
+            ]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-strategy-character"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "visual-or-operator-choice",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the clearer method",
+          "prompt": "You know the exact text object for one quoted value and do not need to inspect it first. Which approach is usually clearer?",
+          "options": [
+            {
+              "id": "choose-operator",
+              "label": "Use an operator with the text object"
+            },
+            {
+              "id": "choose-visual",
+              "label": "Build a Visual selection first"
+            },
+            {
+              "id": "choose-block",
+              "label": "Use Visual Block"
+            }
+          ],
+          "correctOptionId": "choose-operator",
+          "explanation": "When the range is already precise and nameable, operator-motion or operator-object grammar is usually simpler.",
+          "questionKind": "generic"
+        },
+        {
+          "id": "visual-selection-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Select with a reason",
+          "body": "Choose a shape that matches the text, inspect the range, then apply one deliberate operation. Reuse `o`, `O`, and `gv` when the range—not the editing idea—needs adjustment.",
+          "takeaways": [
+            "`v`, `V`, and `Ctrl-v` select characters, lines, and rectangles.",
+            "`o` and `O` move the active endpoint; `gv` restores the last selection.",
+            "Visual Block `I` and `A` apply one insertion across several rows.",
+            "Prefer operator-motion when the range is already clear; use Visual mode when seeing it reduces risk."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "visual-modes-reference",
+      "command": "v / V / Ctrl-v",
+      "purpose": "Enter characterwise, linewise, or blockwise Visual mode.",
+      "notes": [
+        "The mode determines the geometry of the highlighted range."
+      ],
+      "exampleActivityRefs": [
+        "visual-shapes-demo",
+        "select-block-range"
+      ]
+    },
+    {
+      "id": "selection-ends-reference",
+      "command": "o / O",
+      "purpose": "Move the active end or block corner.",
+      "notes": [
+        "`O` is specifically useful in Visual Block."
+      ],
+      "exampleActivityRefs": [
+        "swap-character-end-demo",
+        "swap-block-same-row-corner"
+      ]
+    },
+    {
+      "id": "reselection-reference",
+      "command": "gv",
+      "purpose": "Restore the last Visual selection.",
+      "notes": [
+        "The previous shape and extent are restored."
+      ],
+      "exampleActivityRefs": [
+        "reselect-indent-demo",
+        "reselect-case-correction"
+      ]
+    },
+    {
+      "id": "visual-edit-reference",
+      "command": "d / c / y / x / r",
+      "purpose": "Delete, change, capture, remove, or fill the selected range.",
+      "notes": [
+        "The register shape follows the Visual selection shape."
+      ],
+      "exampleActivityRefs": [
+        "change-selected-word-demo",
+        "replace-block-column-demo"
+      ]
+    },
+    {
+      "id": "visual-case-reference",
+      "command": "~ / u / U",
+      "purpose": "Toggle, lowercase, or uppercase the selection.",
+      "notes": [
+        "In Visual mode, `u` lowercases rather than undoing."
+      ],
+      "exampleActivityRefs": [
+        "uppercase-selection-demo",
+        "toggle-selection-case"
+      ]
+    },
+    {
+      "id": "visual-format-reference",
+      "command": "> / < / = / gq",
+      "purpose": "Shift, reindent, or format selected lines.",
+      "notes": [
+        "Visual Line is the natural shape for these activities."
+      ],
+      "exampleActivityRefs": [
+        "indent-selected-lines-demo",
+        "format-selected-lines"
+      ]
+    },
+    {
+      "id": "block-insert-reference",
+      "command": "Ctrl-v … I / A",
+      "purpose": "Insert at the left or right edge of every block row.",
+      "notes": [
+        "Press Escape to replicate the typed insertion."
+      ],
+      "exampleActivityRefs": [
+        "prepend-block-demo",
+        "append-block-demo"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "Visual Character, Visual Line, and Visual Block",
+      "explain": [
+        "visual-shapes-meaning"
+      ],
+      "demonstrate": [
+        "visual-shapes-demo"
+      ],
+      "isolate": [
+        "select-character-range"
+      ],
+      "mix": [
+        "select-line-range",
+        "select-block-range"
+      ],
+      "challenge": [
+        "choose-selection-shape-check"
+      ]
+    },
+    {
+      "concept": "Visual selection d c y x r operations",
+      "explain": [
+        "character-selection-operations"
+      ],
+      "demonstrate": [
+        "change-selected-word-demo"
+      ],
+      "isolate": [
+        "delete-selected-token"
+      ],
+      "mix": [
+        "yank-selected-token",
+        "replace-selected-token"
+      ],
+      "challenge": [
+        "character-operation-check"
+      ]
+    },
+    {
+      "concept": "Visual Line operations",
+      "explain": [
+        "line-selection-meaning"
+      ],
+      "demonstrate": [
+        "indent-selected-lines-demo"
+      ],
+      "isolate": [
+        "outdent-selected-lines"
+      ],
+      "mix": [
+        "yank-selected-lines",
+        "change-selected-lines"
+      ],
+      "challenge": [
+        "line-selection-check"
+      ]
+    },
+    {
+      "concept": "o and O selection endpoints",
+      "explain": [
+        "selection-end-meaning"
+      ],
+      "demonstrate": [
+        "swap-character-end-demo"
+      ],
+      "isolate": [
+        "swap-block-opposite-end"
+      ],
+      "mix": [
+        "swap-block-same-row-corner",
+        "swap-character-end-recall"
+      ],
+      "challenge": [
+        "selection-end-check"
+      ]
+    },
+    {
+      "concept": "gv reselection",
+      "explain": [
+        "reselection-meaning"
+      ],
+      "demonstrate": [
+        "reselect-indent-demo"
+      ],
+      "isolate": [
+        "reselect-case-correction"
+      ],
+      "mix": [
+        "reselect-yanked-word",
+        "reselect-line-correction"
+      ],
+      "challenge": [
+        "reselection-check"
+      ]
+    },
+    {
+      "concept": "selection case, shift, reindent, and gq",
+      "explain": [
+        "selection-transform-meaning"
+      ],
+      "demonstrate": [
+        "uppercase-selection-demo"
+      ],
+      "isolate": [
+        "lowercase-selection"
+      ],
+      "mix": [
+        "toggle-selection-case",
+        "reindent-selected-lines",
+        "format-selected-lines"
+      ],
+      "challenge": [
+        "selection-transform-check"
+      ]
+    },
+    {
+      "concept": "Visual Block c d x r",
+      "explain": [
+        "block-edit-meaning"
+      ],
+      "demonstrate": [
+        "replace-block-column-demo"
+      ],
+      "isolate": [
+        "change-block-column"
+      ],
+      "mix": [
+        "delete-block-column",
+        "x-block-column"
+      ],
+      "challenge": [
+        "block-edit-check"
+      ]
+    },
+    {
+      "concept": "Visual Block I and A",
+      "explain": [
+        "block-insert-meaning"
+      ],
+      "demonstrate": [
+        "prepend-block-demo"
+      ],
+      "isolate": [
+        "append-block-demo"
+      ],
+      "mix": [
+        "prepend-comment-markers",
+        "append-csv-markers"
+      ],
+      "challenge": [
+        "block-insert-check"
+      ]
+    },
+    {
+      "concept": "Visual selection versus operator-motion",
+      "explain": [
+        "visual-strategy-meaning"
+      ],
+      "demonstrate": [
+        "visual-strategy-demo"
+      ],
+      "isolate": [
+        "integrated-column-marker"
+      ],
+      "mix": [
+        "integrated-reselect-correction",
+        "integrated-character-edit"
+      ],
+      "challenge": [
+        "visual-or-operator-choice"
+      ]
+    }
+  ]
+}
