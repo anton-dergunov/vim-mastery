@@ -304,7 +304,7 @@
                 "}"
               ],
               "cursor": [
-                12,
+                10,
                 0
               ],
               "mode": "normal",
@@ -319,7 +319,9 @@
                 ],
                 "steps": [
                   "z",
-                  "z"
+                  "z",
+                  "2",
+                  "k"
                 ]
               }
             },
@@ -7517,6 +7519,19 @@
             ],
             "checkpoints": [
               {
+                "afterStep": 2,
+                "cursor": [
+                  20,
+                  2
+                ],
+                "mode": "normal",
+                "viewport": {
+                  "topLine": 14,
+                  "bottomLine": 20
+                },
+                "caption": "The first g; visits the newest seeded change."
+              },
+              {
                 "afterStep": 4,
                 "lines": [
                   "import { loadConfig } from './config';",
@@ -7738,6 +7753,32 @@
               }
             ],
             "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  20,
+                  2
+                ],
+                "mode": "normal",
+                "viewport": {
+                  "topLine": 14,
+                  "bottomLine": 20
+                },
+                "caption": "The first g; visits the newest seeded change."
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  4,
+                  9
+                ],
+                "mode": "normal",
+                "viewport": {
+                  "topLine": 4,
+                  "bottomLine": 10
+                },
+                "caption": "The second g; visits the older seeded change."
+              },
               {
                 "afterStep": 6,
                 "lines": [

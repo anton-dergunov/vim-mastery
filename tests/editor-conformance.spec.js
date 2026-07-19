@@ -474,6 +474,15 @@ test.describe("Production lesson flow", () => {
     await page.evaluate(() => window.VimWilds.goToActivity(1));
     expect((await state(page)).registers["+"]).toEqual({ text: "", type: "characterwise" });
 
+    await page.goto("/?unit=registers-putting&activity=plus-word");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect(await state(page)).toMatchObject({
+      complete: true,
+      code: ["amber blue amber green"],
+      cursor: [0, 17],
+      history: ['"', "+", "y", "w", "w", "w", '"', "+", "g", "P"],
+    });
+
     await page.goto("/?unit=registers-putting&activity=inspect-plus-register");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect(page.locator(".cm-vim-message")).toContainText('"+    release = stable');
@@ -513,6 +522,25 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Continue to Unit 10" }).click();
     await page.waitForURL(/unit=repeatable-editing/);
     expect((await state(page))).toMatchObject({ unitId: "repeatable-editing", unitNumber: 10, activityId: "dot-is-a-change" });
+  });
+
+  test("makes the middle-row and change-list movements visibly observable", async ({ page }) => {
+    await page.goto("/?unit=long-range-navigation&activity=window-middle-isolate");
+    expect(await state(page)).toMatchObject({ cursor: [10, 0], viewport: { topLine: 9, bottomLine: 15, totalLines: 30 } });
+    await page.evaluate(() => window.VimWilds.emit("M"));
+    expect(await state(page)).toMatchObject({ complete: true, cursor: [12, 0], viewport: { topLine: 9, bottomLine: 15, totalLines: 30 } });
+
+    await page.goto("/?unit=long-range-navigation&activity=change-list-oldest-isolate");
+    for (const key of ["g", ";"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    expect(await state(page)).toMatchObject({ cursor: [20, 2], viewport: { topLine: 14, bottomLine: 20, totalLines: 30 } });
+    for (const key of ["g", ";"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    expect(await state(page)).toMatchObject({ complete: true, cursor: [4, 9], viewport: { topLine: 4, bottomLine: 10, totalLines: 30 } });
+
+    await page.goto("/?unit=long-range-navigation&activity=change-list-newer-mix");
+    for (const key of ["g", ";", "g", ";"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    expect(await state(page)).toMatchObject({ cursor: [4, 9], viewport: { topLine: 4, bottomLine: 10, totalLines: 30 } });
+    for (const key of ["g", ","]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    expect(await state(page)).toMatchObject({ complete: true, cursor: [20, 2], viewport: { topLine: 14, bottomLine: 20, totalLines: 30 } });
   });
 
   test("locks direct scrolling while Vim updates the Unit 9 position rail", async ({ page }) => {

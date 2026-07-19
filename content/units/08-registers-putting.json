@@ -5581,7 +5581,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Put a clipboard word",
-          "instruction": "Yank the first word into `+`, move forward, and use `\"+gp` to put it and continue after it.",
+          "instruction": "Yank the first word into `+`, move to `green`, and use `\"+gP` to put the word before it and continue at `green`.",
           "languageId": "python",
           "sourceKind": "neutral",
           "scenario": {
@@ -5597,11 +5597,11 @@
             },
             "target": {
               "lines": [
-                "amber bamber lue green"
+                "amber blue amber green"
               ],
               "cursor": [
                 0,
-                13
+                17
               ],
               "mode": "normal",
               "registers": {
@@ -5623,10 +5623,11 @@
               "y",
               "w",
               "w",
+              "w",
               "\"",
               "+",
               "g",
-              "p"
+              "P"
             ],
             "commandGroups": [
               {
@@ -5637,9 +5638,9 @@
               },
               {
                 "from": 4,
-                "to": 9,
-                "display": "w\"+gp",
-                "explanation": "Put after the next word and finish after the inserted text."
+                "to": 10,
+                "display": "ww\"+gP",
+                "explanation": "Move to green, put the yanked word before it, and continue at green."
               }
             ],
             "checkpoints": [
@@ -5666,13 +5667,13 @@
                 "caption": "Yank the first word into the plus register."
               },
               {
-                "afterStep": 9,
+                "afterStep": 10,
                 "lines": [
-                  "amber bamber lue green"
+                  "amber blue amber green"
                 ],
                 "cursor": [
                   0,
-                  13
+                  17
                 ],
                 "mode": "normal",
                 "registers": {
@@ -5685,17 +5686,17 @@
                     "text": "amber "
                   }
                 },
-                "caption": "Put after the next word and finish after the inserted text."
+                "caption": "The clipboard word appears intact between blue and green."
               }
             ]
           },
           "hints": [
             "Yank the first word into the plus register.",
-            "Use `\"+yw` then `w\"+gp`."
+            "Use `\"+yw`, then `ww\"+gP`."
           ],
           "feedback": {
-            "success": "The intended text and register state are exact.",
-            "why": "Yank the first word into `+`, move forward, and use `\"+gp` to put it and continue after it."
+            "success": "The copied word is visibly inserted between `blue` and `green`.",
+            "why": "`gP` puts before `green` and leaves the cursor after the inserted text, ready at `green`."
           },
           "skills": {
             "primary": [
