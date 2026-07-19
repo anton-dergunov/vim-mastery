@@ -36,7 +36,7 @@ jobs:
         env:
           VITE_MEDIA_REVISION: ${{ github.sha }}
         run: |
-          VERSION="$(node -p 'require(\"./package.json\").version')"
+          VERSION="$(node -p 'require("./package.json").version')"
           echo "VITE_APP_VERSION=${VERSION}+${GITHUB_SHA::8}" >> "$GITHUB_ENV"
           npm run build
       - run: git diff --check
