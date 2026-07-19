@@ -1094,7 +1094,10 @@ test.describe("Production lesson flow", () => {
   });
 
   test("keeps every production activity inside the target phone viewports without clipping", async ({ page }) => {
-    test.setTimeout(240000);
+    // This exhaustively renders every activity at every target viewport. Keep
+    // the budget proportional to the growing production curriculum so CI can
+    // complete the coverage rather than timing out mid-matrix.
+    test.setTimeout(600000);
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
     const textSelector = [
       ".lesson-label", ".activity-intro h1", ".activity-intro p", ".command-explanation", ".next-command-tray .command-text",
