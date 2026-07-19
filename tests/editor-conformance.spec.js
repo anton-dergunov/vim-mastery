@@ -335,12 +335,12 @@ test.describe("Production lesson flow", () => {
     for (const key of ["s", "r", "Escape", "u"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     await page.locator('[data-mod="Ctrl"]').click();
     await page.locator('.key[data-key="r"]').click();
-    expect((await state(page))).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
+    await expect.poll(() => state(page)).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
     await page.goto("/?unit=entering-changing-text&activity=redo-substitution");
     await page.locator(".cm-content").focus();
     for (const key of ["s", "r", "Escape", "u"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     await page.keyboard.press("Control+r");
-    expect((await state(page))).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
+    await expect.poll(() => state(page)).toMatchObject({ complete: true, code: ["frog"], modifiers: [] });
   });
 
   test("visualizes whitespace only where Unit 3 compares J with gJ", async ({ page }) => {
