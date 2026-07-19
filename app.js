@@ -523,6 +523,7 @@ function mountEditor() {
     cursor: startCursor,
     language: activity.languageId,
     wrapColumns: activity.editor?.wrapColumns,
+    textWidth: activity.editor?.textWidth,
     visualizeWhitespace: activity.editor?.visualizeWhitespace,
     onEvent: handleEngineEvent,
   });

@@ -12,6 +12,7 @@ const units = unitFiles.map(file => ({ file, data: JSON.parse(readFileSync(new U
 const modalUnit = units.find(item => item.data.id === "modal-model").data;
 const cursorUnit = units.find(item => item.data.id === "cursor-movement").data;
 const changingUnit = units.find(item => item.data.id === "entering-changing-text").data;
+const operatorUnit = units.find(item => item.data.id === "operator-grammar").data;
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -28,6 +29,8 @@ test("content files expose the expected schema versions", () => {
   assert.equal(unit.unitNumber, 10);
   assert.equal(cursorUnit.schemaVersion, 1);
   assert.equal(cursorUnit.unitNumber, 2);
+  assert.equal(operatorUnit.schemaVersion, 1);
+  assert.equal(operatorUnit.unitNumber, 4);
   assert.equal(registry.schemaVersion, 1);
   assert.equal(unit.releaseStatus, "authoring");
   assert.deepEqual(unit.playback, {
@@ -39,7 +42,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -73,7 +76,8 @@ test("unit continuation requires the immediately following unit", () => {
   const current = { unitNumber: 1 };
   assert.equal(findNextSequentialUnit(units.map(item => item.data), current), cursorUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), changingUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), changingUnit), null, "Unit 3 must not skip to Unit 10");
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), changingUnit), operatorUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), operatorUnit), null, "Unit 4 must not skip to Unit 10");
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -169,6 +173,39 @@ test("Unit 3 preserves the curriculum and covers every local-change family", () 
   assert(runnable.length >= 30);
   assert.deepEqual(runnable.filter(activity => activity.editor?.visualizeWhitespace).map(activity => activity.id), [
     "join-spacing-demo", "join-preserve-spaces",
+  ]);
+  for (const activity of runnable) {
+    assert.equal(activity.provenance.nativeValidation, "passed");
+    assert.equal(activity.provenance.browserConformance, "passed");
+    assert.equal(activity.provenance.reviewStatus, "draft");
+    assert.equal(activity.script.checkpoints.at(-1).afterStep, keysOf(activity).length);
+    assert.deepEqual(activity.script.checkpoints.at(-1).lines, activity.scenario.target.lines);
+    assert.deepEqual(activity.script.checkpoints.at(-1).cursor, activity.scenario.target.cursor);
+  }
+});
+
+test("Unit 4 preserves the curriculum and covers every operator family", () => {
+  assert.deepEqual(operatorUnit.curriculumDefinition, {
+    unit: "4. Operator grammar",
+    commandsAndConcepts: "`d c y`; `dd cc yy`; `D C Y`; `p P`; counts before operators or motions; linewise vs characterwise ranges; `> < =`; `gq gw`; `.`",
+    prerequisites: "Units 1–3",
+    learningOutcome: "Compose operators with motions, predict the affected range, put text, and make a change deliberately repeatable",
+    representativeExercises: "Delete two words; change to line end; duplicate a line; indent a block by motion; reflow a paragraph; repeat a prepared change",
+    priorityAndPortability: "Core. Host formatting may affect `=` and `gq`, so exercises use deterministic app behavior",
+  });
+  assert.deepEqual(operatorUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text"]);
+  assert.equal(operatorUnit.releaseStatus, "authoring");
+  assert.equal(operatorUnit.lessons.length, 9);
+  assert.deepEqual(operatorUnit.coverage.map(item => item.concept), [
+    "d c y with motions", "dd cc yy D C Y", "p P and register shape", "operator and motion counts",
+    "> and <", "= reindent", "gq and gw", "introductory dot repeat", "integrated operator grammar",
+  ]);
+  const activities = operatorUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert(runnable.length >= 35);
+  assert.deepEqual(runnable.filter(activity => activity.editor?.textWidth).map(activity => activity.editor.textWidth), [40, 40, 40, 40]);
+  assert.deepEqual(runnable.filter(activity => activity.editor?.visualizeWhitespace).map(activity => activity.id), [
+    "shift-motion-demo", "shift-current-line",
   ]);
   for (const activity of runnable) {
     assert.equal(activity.provenance.nativeValidation, "passed");
@@ -376,6 +413,37 @@ for (const activity of changingRunnable) {
       if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
       if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
       if (checkpoint.mode) assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+    }
+  });
+}
+
+const operatorRunnable = operatorUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of operatorRunnable) {
+  test(`native Vim Unit 4 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const options = {
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+      textWidth: activity.editor?.textWidth,
+    };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      // Headless feedkeys returns to Normal when an incomplete operator or
+      // change is the final queued input; browser fixtures own intermediate
+      // mode assertions while native Vim still verifies every text/cursor state.
+      if (checkpoint.mode && checkpoint.afterStep === keys.length) {
+        assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+      }
     }
   });
 }

@@ -87,6 +87,7 @@
       "type":"object","additionalProperties":false,
       "properties":{
         "wrapColumns":{"type":"integer","minimum":12,"maximum":80},
+        "textWidth":{"type":"integer","minimum":20,"maximum":80,"description":"Set Vim textwidth for deterministic gq/gw formatting."},
         "visualizeWhitespace":{"type":"boolean","description":"Render spaces as dots and tabs as arrows for this activity."}
       }
     },

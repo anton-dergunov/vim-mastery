@@ -2,7 +2,7 @@ import { EditorSelection, EditorState, StateEffect, StateField } from "@codemirr
 import { history } from "@codemirror/commands";
 import { Decoration, EditorView, drawSelection, highlightWhitespace, lineNumbers } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { HighlightStyle, indentUnit, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 import { Vim, getCM, vim } from "@replit/codemirror-vim";
 
@@ -108,9 +108,12 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
  * this module reaches into EditorView, getCM, or Vim directly.
  */
 export class VimEngine {
-  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, visualizeWhitespace = false, onEvent }) {
+  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, textWidth, visualizeWhitespace = false, onEvent }) {
     if (wrapColumns !== undefined && (!Number.isInteger(wrapColumns) || wrapColumns < 12 || wrapColumns > 80)) {
       throw new RangeError("wrapColumns must be an integer from 12 to 80");
+    }
+    if (textWidth !== undefined && (!Number.isInteger(textWidth) || textWidth < 20 || textWidth > 80)) {
+      throw new RangeError("textWidth must be an integer from 20 to 80");
     }
     if (typeof visualizeWhitespace !== "boolean") throw new TypeError("visualizeWhitespace must be a boolean");
     this.onEvent = onEvent;
@@ -132,6 +135,7 @@ export class VimEngine {
         extensions: [
           EditorState.allowMultipleSelections.of(true),
           history(),
+          indentUnit.of("  "),
           vim(),
           drawSelection(),
           lineNumbers(),
@@ -168,6 +172,7 @@ export class VimEngine {
     };
     this.view.dom.addEventListener("focusin", this.onNativeInputFocus, true);
     this.cm = getCM(this.view);
+    if (textWidth !== undefined) this.cm?.setOption("textwidth", textWidth);
     this.onModeChange = event => {
       this.mode = event.mode || "normal";
       this.subMode = event.subMode || "";

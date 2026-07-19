@@ -27,3 +27,10 @@ behavior while keeping the editor surface non-editable and preventing the phone
 keyboard from opening. The remaining Unit 3 families run through the pinned
 adapter without a dependency patch. Numeric fixtures use decimal values because
 other formats can depend on Vim's `nrformats` option.
+
+Unit 4 fixes CodeMirror's indentation unit at two spaces to match its native
+fixtures. Reflow activities also provide an explicit `editor.textWidth`, which
+is applied to both native Vim and the browser adapter so `gq` and `gw` produce
+the same phone-readable lines. The adapter supplies the operator, register,
+put, indentation, reindent, reflow, count, and dot semantics without a Unit 4
+compatibility patch.
