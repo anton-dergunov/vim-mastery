@@ -34,3 +34,12 @@ is applied to both native Vim and the browser adapter so `gq` and `gw` produce
 the same phone-readable lines. The adapter supplies the operator, register,
 put, indentation, reindent, reflow, count, and dot semantics without a Unit 4
 compatibility patch.
+
+Unit 5 uses the adapter's native find/till, explicit search, cursor-word search,
+delimiter matching, sentence, and paragraph motions. The pinned adapter's
+`gn`/`gN` implementation incorrectly inherited the direction of the previous
+`/` or `?` command and could choose the match on the wrong side when the cursor
+was between matches. The versioned compatibility patch makes `gn` unconditionally
+forward and `gN` unconditionally backward, matching Vim, while leaving the
+direction-sensitive `n`/`N` behavior unchanged. Browser fixtures also assert
+ordered, end-exclusive Visual match ranges for both directions.

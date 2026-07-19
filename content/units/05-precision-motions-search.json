@@ -1,0 +1,4770 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 5,
+  "id": "precision-motions-search",
+  "title": "Precision motions and search",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "5. Precision motions and search",
+    "commandsAndConcepts": "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
+    "prerequisites": "Units 1–4",
+    "learningOutcome": "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
+    "representativeExercises": "Delete until a quote; repeat a comma find; change the next search match; jump between brackets; move by paragraphs in prose or comments",
+    "priorityAndPortability": "Core. Search and pair matching remain text-based rather than IDE-semantic"
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement",
+    "entering-changing-text",
+    "operator-grammar"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "precision-motions-search-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "find-nearby-characters",
+      "title": "Aim at a nearby character",
+      "objective": "Choose between landing on a character and stopping just before it in either direction.",
+      "activities": [
+        {
+          "id": "find-and-till-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Find lands; till stops short",
+          "body": "`f` and `F` land on a chosen character. `t` and `T` stop one character before it, leaving a boundary untouched for a following operator.",
+          "grammar": "f{char} / F{char} → land · t{char} / T{char} → stop short",
+          "contrast": "`w` follows word rules; find and till aim at literal characters on the current line.",
+          "demoRef": "find-family-demo"
+        },
+        {
+          "id": "find-family-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Tour one call by punctuation",
+          "instruction": "Visit delimiters in both directions, sometimes landing and sometimes stopping short.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "call(one, two, three)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "call(one, two, three)"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "(",
+              "f",
+              ",",
+              "t",
+              ",",
+              "F",
+              "(",
+              "T",
+              "c"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f(",
+                "explanation": "Land on the opening parenthesis."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "f,",
+                "explanation": "Land on the first comma."
+              },
+              {
+                "from": 4,
+                "to": 6,
+                "display": "t,",
+                "explanation": "Stop before the next comma."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "F(",
+                "explanation": "Find the opening parenthesis backward."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "Tc",
+                "explanation": "Stop just after the earlier c."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "call(one, two, three)"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the target character after each motion.",
+            "`f` lands; `t` stops short."
+          ],
+          "feedback": {
+            "success": "Four precise motions, one short line.",
+            "why": "Literal-character motions reached punctuation without counting columns."
+          },
+          "skills": {
+            "primary": [
+              "find-till"
+            ],
+            "supporting": [
+              "normal-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "four-directions",
+              "land-versus-stop"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A JavaScript call provides natural parentheses and repeated commas.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-till"
+            ]
+          }
+        },
+        {
+          "id": "find-closing-paren",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Land on the call boundary",
+          "instruction": "Jump directly to the closing parenthesis.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "send(value, retries)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "send(value, retries)"
+              ],
+              "cursor": [
+                0,
+                19
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              ")"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f)",
+                "explanation": "Find the closing parenthesis on this line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "send(value, retries)"
+                ],
+                "cursor": [
+                  0,
+                  19
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the literal target.",
+            "Use `f)`."
+          ],
+          "feedback": {
+            "success": "You landed on the boundary.",
+            "why": "`f` includes the character it finds."
+          },
+          "skills": {
+            "primary": [
+              "find-forward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-line",
+              "punctuation-target"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Go-style call gives the closing delimiter a clear local purpose.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-forward"
+            ]
+          }
+        },
+        {
+          "id": "trim-debug-suffix",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Keep the safe mode",
+          "instruction": "Find the hyphen, then delete up to—but not including—the quote.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const mode = \"safe-debug\";"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const mode = \"safe\";"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "-",
+              "d",
+              "t",
+              "\""
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f-",
+                "explanation": "Land on the suffix boundary."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "dt\"",
+                "explanation": "Delete until the quote while preserving it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "const mode = \"safe\";"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Find `-` first.",
+            "Compose `d` with `t\"`."
+          ],
+          "feedback": {
+            "success": "The suffix is gone and the quote remains.",
+            "why": "`t\"` supplied exactly the characterwise range that `d` needed."
+          },
+          "skills": {
+            "primary": [
+              "till-forward"
+            ],
+            "supporting": [
+              "delete-operator",
+              "find-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "operator-motion",
+              "preserve-delimiter"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A TypeScript string makes preserving the closing quote meaningful.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "till-forward"
+            ]
+          }
+        },
+        {
+          "id": "change-after-colon",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replace only the status value",
+          "instruction": "Work backward from the line end, preserve the colon, and change the value to `ready`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status: pending"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "status: ready"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "$",
+              "T",
+              ":",
+              "l",
+              "c",
+              "$",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "$",
+                "explanation": "Move to the physical line end."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "T:",
+                "explanation": "Stop just after the colon."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "l",
+                "explanation": "Enter the value."
+              },
+              {
+                "from": 4,
+                "to": 12,
+                "display": "c$ready⎋",
+                "explanation": "Change the remaining value."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "status: ready"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Start at the end with `$`.",
+            "`T:` preserves the colon.",
+            "Move onto the value, then use `c$`."
+          ],
+          "feedback": {
+            "success": "Only the YAML value changed.",
+            "why": "Backward till found the structural boundary without disturbing it."
+          },
+          "skills": {
+            "primary": [
+              "till-backward"
+            ],
+            "supporting": [
+              "change-operator",
+              "line-end"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "backward-motion",
+              "operator-composition",
+              "literal-insert"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A YAML key/value pair gives the colon a stable boundary.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "till-backward"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "repeat-character-finds",
+      "title": "Echo a character find",
+      "objective": "Repeat or reverse the most recent character search without retyping its target.",
+      "activities": [
+        {
+          "id": "repeat-find-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Semicolon keeps direction; comma reverses it",
+          "body": "After `f`, `F`, `t`, or `T`, semicolon repeats the same character search in the same direction. Comma repeats it in the opposite direction.",
+          "grammar": "find once → ; continues → , reverses",
+          "contrast": "The repeat remembers both the target character and the direction of the original find.",
+          "demoRef": "repeat-find-demo"
+        },
+        {
+          "id": "repeat-find-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Walk a comma list",
+          "instruction": "Find the first comma, continue twice, then reverse once.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "route(a, b, c, d)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "route(a, b, c, d)"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              ",",
+              ";",
+              ";",
+              ","
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f,",
+                "explanation": "Find the first comma."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ";",
+                "explanation": "Repeat forward."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": ";",
+                "explanation": "Repeat forward again."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": ",",
+                "explanation": "Reverse to the previous comma."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "route(a, b, c, d)"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Only the first find names the comma.",
+            "Use `;` to continue and `,` to reverse."
+          ],
+          "feedback": {
+            "success": "The same comma target carried across the list.",
+            "why": "Find-repeat separates choosing the target from visiting its occurrences."
+          },
+          "skills": {
+            "primary": [
+              "repeat-find"
+            ],
+            "supporting": [
+              "find-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "repeated-punctuation",
+              "direction-reversal"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A JavaScript argument list naturally repeats commas.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-find"
+            ]
+          }
+        },
+        {
+          "id": "repeat-forward-commas",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Reach the second separator",
+          "instruction": "Find the first comma, then repeat the find once.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items = [one, two, three]"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items = [one, two, three]"
+              ],
+              "cursor": [
+                0,
+                17
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              ",",
+              ";"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f,",
+                "explanation": "Find the first comma."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ";",
+                "explanation": "Repeat to the second comma."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "items = [one, two, three]"
+                ],
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use `f,` once.",
+            "Then press `;`."
+          ],
+          "feedback": {
+            "success": "One target, two landings.",
+            "why": "Semicolon reused the comma and its forward direction."
+          },
+          "skills": {
+            "primary": [
+              "repeat-find-forward"
+            ],
+            "supporting": [
+              "find-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-repeat",
+              "list-punctuation"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Python list gives repeated separators without extra syntax.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-find-forward"
+            ]
+          }
+        },
+        {
+          "id": "repeat-separator-edit",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Repair both separators",
+          "instruction": "Replace the first semicolon with a comma, find the next semicolon by repetition, and replay the replacement.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "x=1; y=2; z=3"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "x=1, y=2, z=3"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              ";",
+              "r",
+              ",",
+              ";",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f;",
+                "explanation": "Find the first bad separator."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "r,",
+                "explanation": "Replace it with a comma."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": ";",
+                "explanation": "Repeat the semicolon find."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": ".",
+                "explanation": "Repeat the replacement."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "x=1, y=2; z=3"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "x=1, y=2, z=3"
+                ],
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Find `;` before replacing it.",
+            "`;` still remembers the character search.",
+            "Dot can replay `r,`."
+          ],
+          "feedback": {
+            "success": "Both separators now agree.",
+            "why": "The character search and the text change kept separate repeat histories."
+          },
+          "skills": {
+            "primary": [
+              "repeat-find-forward"
+            ],
+            "supporting": [
+              "replace-character",
+              "dot-repeat"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "find-plus-edit",
+              "two-repeat-histories"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A compact JavaScript fragment makes inconsistent separators obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-find-forward"
+            ]
+          }
+        },
+        {
+          "id": "reverse-repeated-find",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Backtrack through arguments",
+          "instruction": "Start at the line end, find a comma backward, continue backward once, then reverse to the later comma.",
+          "languageId": "rust",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "build(alpha, beta, gamma)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "build(alpha, beta, gamma)"
+              ],
+              "cursor": [
+                0,
+                17
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "$",
+              "F",
+              ",",
+              ";",
+              ","
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "$",
+                "explanation": "Reach the line end."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "F,",
+                "explanation": "Find a comma backward."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": ";",
+                "explanation": "Continue in the backward direction."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": ",",
+                "explanation": "Reverse toward the later comma."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  24
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "build(alpha, beta, gamma)"
+                ],
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use uppercase `F` from the end.",
+            "Semicolon preserves backward direction.",
+            "Comma reverses it."
+          ],
+          "feedback": {
+            "success": "You reversed the repeated find deliberately.",
+            "why": "The meaning of `;` and `,` comes from the original find direction."
+          },
+          "skills": {
+            "primary": [
+              "repeat-find-reverse"
+            ],
+            "supporting": [
+              "find-backward",
+              "line-end"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "backward-find",
+              "direction-reversal"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Rust-style call makes both comma targets unambiguous.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "repeat-find-reverse"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "search-explicit-patterns",
+      "title": "Search beyond the current line",
+      "objective": "Start forward or backward searches and repeat them in the intended direction.",
+      "activities": [
+        {
+          "id": "pattern-search-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A search establishes a direction",
+          "body": "`/` searches forward and `?` searches backward. Afterward, `n` repeats that search direction and `N` goes the opposite way.",
+          "grammar": "/pattern Enter or ?pattern Enter → n continues → N reverses",
+          "contrast": "Character finds stay on one line; pattern searches cross line boundaries and wrap the buffer.",
+          "demoRef": "pattern-search-demo"
+        },
+        {
+          "id": "pattern-search-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Inspect repeated deployment states",
+          "instruction": "Search forward for `draft`, move among matches, then search backward for `ready`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft alpha",
+                "ready",
+                "draft beta",
+                "draft gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft alpha",
+                "ready",
+                "draft beta",
+                "draft gamma"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "n",
+              "N",
+              "?",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/draft↵",
+                "explanation": "Search forward for draft."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "n",
+                "explanation": "Continue to the next draft."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "N",
+                "explanation": "Reverse to the previous draft."
+              },
+              {
+                "from": 9,
+                "to": 16,
+                "display": "?ready↵",
+                "explanation": "Start a backward search for ready."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "draft alpha",
+                  "ready",
+                  "draft beta",
+                  "draft gamma"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Enter confirms a typed search.",
+            "`n` follows the established direction; `N` opposes it."
+          ],
+          "feedback": {
+            "success": "You controlled both the pattern and its direction.",
+            "why": "Search history let short repeat keys navigate distant matches."
+          },
+          "skills": {
+            "primary": [
+              "pattern-search"
+            ],
+            "supporting": [
+              "search-repeat"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "multi-line",
+              "bidirectional-search"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "YAML-like state rows provide repeated, realistic search tokens.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "pattern-search"
+            ]
+          }
+        },
+        {
+          "id": "search-forward-timeout",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Find the first timeout",
+          "instruction": "Search forward for `timeout`.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "start",
+                "timeout = 10",
+                "retry",
+                "timeout = 20"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "start",
+                "timeout = 10",
+                "retry",
+                "timeout = 20"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "t",
+              "i",
+              "m",
+              "e",
+              "o",
+              "u",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "/timeout↵",
+                "explanation": "Search forward across the buffer."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "start",
+                  "timeout = 10",
+                  "retry",
+                  "timeout = 20"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Begin with `/`.",
+            "Type `timeout`, then Enter."
+          ],
+          "feedback": {
+            "success": "The first matching setting is selected.",
+            "why": "A pattern search crossed the line boundary directly."
+          },
+          "skills": {
+            "primary": [
+              "search-forward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "multi-line",
+              "literal-pattern"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "TOML-style settings make a repeated timeout key natural.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-forward"
+            ]
+          }
+        },
+        {
+          "id": "search-backward-error",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Return to the latest error",
+          "instruction": "Search backward for `ERROR` from the tail.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ERROR first",
+                "ok",
+                "ok",
+                "ERROR latest",
+                "tail"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ERROR first",
+                "ok",
+                "ok",
+                "ERROR latest",
+                "tail"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "?",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "?ERROR↵",
+                "explanation": "Search backward for the nearest error."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "ERROR first",
+                  "ok",
+                  "ok",
+                  "ERROR latest",
+                  "tail"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The target is above the cursor.",
+            "Use `?ERROR` and Enter."
+          ],
+          "feedback": {
+            "success": "You returned to the latest error.",
+            "why": "Backward search selected the nearest earlier match."
+          },
+          "skills": {
+            "primary": [
+              "search-backward"
+            ],
+            "supporting": [
+              "buffer-navigation"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "backward-search",
+              "log-buffer"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Logs naturally reward searching upward for the latest failure.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-backward"
+            ]
+          }
+        },
+        {
+          "id": "search-repeat-directions",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Advance, then reconsider",
+          "instruction": "Search for `cache`, continue once with `n`, then reverse once with `N`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache primary",
+                "skip",
+                "cache secondary",
+                "cache final"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cache primary",
+                "skip",
+                "cache secondary",
+                "cache final"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "c",
+              "a",
+              "c",
+              "h",
+              "e",
+              "Enter",
+              "n",
+              "N"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/cache↵",
+                "explanation": "Find the next cache row."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "n",
+                "explanation": "Continue forward."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "N",
+                "explanation": "Reverse once."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "cache primary",
+                  "skip",
+                  "cache secondary",
+                  "cache final"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Confirm the initial search.",
+            "`n` follows `/`.",
+            "`N` returns to the prior match."
+          ],
+          "feedback": {
+            "success": "You navigated search history in both directions.",
+            "why": "`n` and `N` reused one pattern without retyping it."
+          },
+          "skills": {
+            "primary": [
+              "search-repeat"
+            ],
+            "supporting": [
+              "search-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "three-matches",
+              "direction-choice"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Python-like cache rows make repeated identifiers easy to inspect.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-repeat"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "search-cursor-word",
+      "title": "Search the word under the cursor",
+      "objective": "Choose whole-word or substring matching without typing the pattern.",
+      "activities": [
+        {
+          "id": "cursor-word-search-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The cursor can supply the pattern",
+          "body": "`*` and `#` search forward or backward for the whole word under the cursor. `g*` and `g#` use the same text but also allow it inside a larger word.",
+          "grammar": "* / # → whole word · g* / g# → substring",
+          "contrast": "Whole-word search avoids matching `cat` inside `scatter`; the g-prefixed forms deliberately allow it.",
+          "demoRef": "cursor-word-search-demo"
+        },
+        {
+          "id": "cursor-word-search-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Compare whole words with substrings",
+          "instruction": "Search `cat` as a whole word in both directions, then include the occurrence inside `scatter`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cat scatter cat"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cat scatter cat"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "*",
+              "#",
+              "g",
+              "*",
+              "$",
+              "b",
+              "g",
+              "#"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "*",
+                "explanation": "Find the next whole word cat."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "#",
+                "explanation": "Return to the previous whole word cat."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "g*",
+                "explanation": "Allow the substring inside scatter."
+              },
+              {
+                "from": 4,
+                "to": 6,
+                "display": "$b",
+                "explanation": "Return to the final whole word."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "g#",
+                "explanation": "Search backward with substring matching."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "cat scatter cat"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Plain star commands respect word boundaries.",
+            "The `g` prefix permits substring matches."
+          ],
+          "feedback": {
+            "success": "Whole-word and substring searches are now distinct.",
+            "why": "The command variant expressed whether surrounding letters mattered."
+          },
+          "skills": {
+            "primary": [
+              "cursor-word-search"
+            ],
+            "supporting": [
+              "word-boundaries"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "whole-versus-substring",
+              "bidirectional"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Neutral text isolates the boundary difference between cat and scatter.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "cursor-word-search"
+            ]
+          }
+        },
+        {
+          "id": "search-next-token-word",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Find the next token declaration",
+          "instruction": "Search forward for the whole word under the cursor.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "token = one",
+                "other",
+                "token = two"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "token = one",
+                "other",
+                "token = two"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "*"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "*",
+                "explanation": "Search forward for the current whole word."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "token = one",
+                  "other",
+                  "token = two"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The cursor is already on the pattern.",
+            "Press `*`."
+          ],
+          "feedback": {
+            "success": "The next token declaration is selected.",
+            "why": "Star avoided opening and typing into the search prompt."
+          },
+          "skills": {
+            "primary": [
+              "word-search-forward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "multi-line",
+              "whole-word"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A repeated TypeScript identifier is a natural whole-word target.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "word-search-forward"
+            ]
+          }
+        },
+        {
+          "id": "search-previous-ready-word",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Return to the earlier ready state",
+          "instruction": "Search backward for the whole word under the cursor.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready",
+                "not",
+                "ready"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready",
+                "not",
+                "ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "#"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "#",
+                "explanation": "Search backward for the current whole word."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "ready",
+                  "not",
+                  "ready"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the backward star partner.",
+            "Press `#`."
+          ],
+          "feedback": {
+            "success": "You reached the earlier ready row.",
+            "why": "Hash reused the cursor word while searching backward."
+          },
+          "skills": {
+            "primary": [
+              "word-search-backward"
+            ],
+            "supporting": [
+              "search-backward"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "backward-search",
+              "whole-word"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Short YAML-like states keep the whole-word target clear.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "word-search-backward"
+            ]
+          }
+        },
+        {
+          "id": "search-previous-substring",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Find cat inside the larger word",
+          "instruction": "From the final `cat`, search backward while allowing substring matches.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cat scatter cat"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cat scatter cat"
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "g",
+              "#"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "g#",
+                "explanation": "Search backward without whole-word boundaries."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "cat scatter cat"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Plain `#` would prefer the earlier standalone word.",
+            "Use `g#`."
+          ],
+          "feedback": {
+            "success": "You found the embedded substring.",
+            "why": "`g#` deliberately ignored the larger word boundary."
+          },
+          "skills": {
+            "primary": [
+              "substring-search-backward"
+            ],
+            "supporting": [
+              "word-search-backward"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "substring-distractor",
+              "backward-search"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "The cat/scatter contrast makes substring matching immediately visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substring-search-backward"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "operate-on-search-matches",
+      "title": "Treat a match as a range",
+      "objective": "Select or change the next or previous search match with gn and gN.",
+      "activities": [
+        {
+          "id": "search-match-range-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A search match can be the motion",
+          "body": "`gn` selects the next match and `gN` selects the previous match. With an operator, forms such as `cgn` and `cgN` act on that exact match.",
+          "grammar": "search → gn / gN · operator + gn / gN",
+          "contrast": "Unlike `n` and `N`, the directions of `gn` and `gN` do not depend on whether the last search began with `/` or `?`.",
+          "demoRef": "search-match-range-demo"
+        },
+        {
+          "id": "search-match-range-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Select and change matches in both directions",
+          "instruction": "Search backward, select the previous match with `gN`, change it, then select the next match with `gn` and change that too.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft keep draft keep draft."
+              ],
+              "cursor": [
+                0,
+                27
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft keep live keep ready."
+              ],
+              "cursor": [
+                0,
+                25
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "?",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "b",
+              "g",
+              "N",
+              "c",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape",
+              "w",
+              "g",
+              "n",
+              "c",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "?draft↵",
+                "explanation": "Establish the draft pattern with a backward search."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "b",
+                "explanation": "Move between matches."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "gN",
+                "explanation": "Select the previous match, independent of the earlier search direction."
+              },
+              {
+                "from": 10,
+                "to": 16,
+                "display": "clive⎋",
+                "explanation": "Change the selected match."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "w",
+                "explanation": "Move between the remaining matches."
+              },
+              {
+                "from": 17,
+                "to": 19,
+                "display": "gn",
+                "explanation": "Select the next match."
+              },
+              {
+                "from": 19,
+                "to": 26,
+                "display": "cready⎋",
+                "explanation": "Change the selected match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  22
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "mode": "visual",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    11
+                  ],
+                  "to": [
+                    0,
+                    16
+                  ]
+                }
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "draft keep live keep draft."
+                ],
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "cursor": [
+                  0,
+                  16
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "mode": "visual",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    21
+                  ],
+                  "to": [
+                    0,
+                    26
+                  ]
+                }
+              },
+              {
+                "afterStep": 26,
+                "lines": [
+                  "draft keep live keep ready."
+                ],
+                "cursor": [
+                  0,
+                  25
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Move off a match before choosing its direction.",
+            "`gN` is always backward; `gn` is always forward.",
+            "A Visual match can be changed with `c`."
+          ],
+          "feedback": {
+            "success": "Two exact matches changed in opposite directions.",
+            "why": "Search supplied the pattern while gn and gN supplied deterministic ranges."
+          },
+          "skills": {
+            "primary": [
+              "search-match-motion"
+            ],
+            "supporting": [
+              "visual-character",
+              "change-operator",
+              "search-backward"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "standalone-selection",
+              "both-directions",
+              "prior-reversed-search"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Neutral repeated states expose match ranges without language syntax.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-match-motion"
+            ]
+          }
+        },
+        {
+          "id": "select-search-matches",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Select matches in both directions",
+          "instruction": "Search backward for `draft`, select the previous match with `gN`, cancel, then select the next match with `gn` and cancel again.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft keep draft keep draft."
+              ],
+              "cursor": [
+                0,
+                27
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft keep draft keep draft."
+              ],
+              "cursor": [
+                0,
+                26
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "?",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "b",
+              "g",
+              "N",
+              "Escape",
+              "w",
+              "g",
+              "n",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "?draft↵",
+                "explanation": "Search backward to the final draft."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "b",
+                "explanation": "Move between matches."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "gN",
+                "explanation": "Select the previous match."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "⎋",
+                "explanation": "Cancel the Visual selection."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "w",
+                "explanation": "Move between matches again."
+              },
+              {
+                "from": 12,
+                "to": 14,
+                "display": "gn",
+                "explanation": "Select the next match."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "⎋",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  22
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "mode": "visual",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    11
+                  ],
+                  "to": [
+                    0,
+                    16
+                  ]
+                }
+              },
+              {
+                "afterStep": 14,
+                "mode": "visual",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    22
+                  ],
+                  "to": [
+                    0,
+                    27
+                  ]
+                }
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "draft keep draft keep draft."
+                ],
+                "cursor": [
+                  0,
+                  26
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Move off the current match before choosing a direction.",
+            "`gN` is backward and `gn` is forward, regardless of the earlier `?`.",
+            "Escape cancels each Visual selection without changing text."
+          ],
+          "feedback": {
+            "success": "Both match directions selected exactly one result.",
+            "why": "The ordered match ranges stayed independent of the original search direction."
+          },
+          "skills": {
+            "primary": [
+              "search-match-selection"
+            ],
+            "supporting": [
+              "search-backward",
+              "visual-character",
+              "cancel-visual"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "standalone-selection",
+              "both-directions",
+              "no-edit"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Neutral repeated text exposes both Visual match ranges without an unrelated edit.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-match-selection"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "change-next-search-match",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Promote the next draft",
+          "instruction": "Search for `draft`, change the current match with `cgn`, and enter `live`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft keep draft keep draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft keep live keep draft"
+              ],
+              "cursor": [
+                0,
+                14
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "c",
+              "g",
+              "n",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/draft↵",
+                "explanation": "Find the next draft."
+              },
+              {
+                "from": 7,
+                "to": 15,
+                "display": "cgnlive⎋",
+                "explanation": "Change that exact search match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "draft keep live keep draft"
+                ],
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Establish the pattern first.",
+            "Use `cgn` as one operator-motion command.",
+            "Type `live`, then Escape."
+          ],
+          "feedback": {
+            "success": "Only the intended match changed.",
+            "why": "`gn` gave `c` the complete match range."
+          },
+          "skills": {
+            "primary": [
+              "change-next-match"
+            ],
+            "supporting": [
+              "search-forward",
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "operator-motion",
+              "literal-replacement"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Python-like state sequence makes one exact replacement easy to verify.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "change-next-match"
+            ]
+          }
+        },
+        {
+          "id": "change-previous-search-match",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Change the match behind you",
+          "instruction": "Search forward for `draft`, move between matches, then change the previous match to `live` with `cgN`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft keep draft keep draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft keep live keep draft"
+              ],
+              "cursor": [
+                0,
+                14
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "w",
+              "c",
+              "g",
+              "N",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/draft↵",
+                "explanation": "Find the middle draft."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "w",
+                "explanation": "Move between matches."
+              },
+              {
+                "from": 8,
+                "to": 16,
+                "display": "cgNlive⎋",
+                "explanation": "Change the previous match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "draft keep live keep draft"
+                ],
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Move onto the following `keep`.",
+            "`gN` points backward.",
+            "Compose it with `c`."
+          ],
+          "feedback": {
+            "success": "The previous match became live.",
+            "why": "`cgN` selected the nearest earlier match even though the cursor was between matches."
+          },
+          "skills": {
+            "primary": [
+              "change-previous-match"
+            ],
+            "supporting": [
+              "search-forward",
+              "word-motion"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "backward-match",
+              "cursor-between-matches"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A YAML-like repeated state keeps the backward target unambiguous.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "change-previous-match"
+            ]
+          }
+        },
+        {
+          "id": "match-direction-after-question-search",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Keep gn pointing forward",
+          "instruction": "Start with `?draft`, move between matches, then use `cgn` to change the next match to `live`.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft keep draft keep draft."
+              ],
+              "cursor": [
+                0,
+                27
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draft keep draft keep live."
+              ],
+              "cursor": [
+                0,
+                25
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "?",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              "b",
+              "c",
+              "g",
+              "n",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "?draft↵",
+                "explanation": "Search backward to the final draft."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "b",
+                "explanation": "Move between matches."
+              },
+              {
+                "from": 8,
+                "to": 16,
+                "display": "cgnlive⎋",
+                "explanation": "Change the next match; gn remains forward."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  22
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  17
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "draft keep draft keep live."
+                ],
+                "cursor": [
+                  0,
+                  25
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The earlier `?` does not reverse `gn`.",
+            "From `keep`, the next draft is to the right.",
+            "Use `cgnlive` and Escape."
+          ],
+          "feedback": {
+            "success": "gn stayed forward after a backward search.",
+            "why": "Match-motion direction is fixed by `n` versus `N` in the command itself."
+          },
+          "skills": {
+            "primary": [
+              "match-direction-independence"
+            ],
+            "supporting": [
+              "search-backward",
+              "change-next-match"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "reversed-search-history",
+              "operator-motion"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A log-like sequence isolates the direction rule that differs from ordinary n/N.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "match-direction-independence"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "match-delimiter-pairs",
+      "title": "Cross a matching pair",
+      "objective": "Use percent to reach or operate through an unambiguous paired delimiter.",
+      "activities": [
+        {
+          "id": "matching-pair-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Percent follows the matching delimiter",
+          "body": "On a parenthesis, bracket, or brace, `%` jumps to its partner. Before a delimiter, it finds the next delimiter on the line and follows that pair.",
+          "grammar": "% → matching (), [], or {} partner",
+          "contrast": "Percent is text-based pair matching, not an IDE-aware structural query.",
+          "demoRef": "matching-pair-demo"
+        },
+        {
+          "id": "matching-pair-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Cross nested call boundaries",
+          "instruction": "Find the outer parenthesis and cross it, then find the inner bracket backward and cross that pair.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "result = call(items[index])"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "result = call(items[index])"
+              ],
+              "cursor": [
+                0,
+                25
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "(",
+              "%",
+              "F",
+              "[",
+              "%"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f(",
+                "explanation": "Land on the outer opening parenthesis."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "%",
+                "explanation": "Jump to its closing partner."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "F[",
+                "explanation": "Find the inner opening bracket backward."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "%",
+                "explanation": "Jump to the closing bracket."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  26
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  0,
+                  19
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "result = call(items[index])"
+                ],
+                "cursor": [
+                  0,
+                  25
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Find a known delimiter first.",
+            "Percent chooses its matching partner, even with nesting."
+          ],
+          "feedback": {
+            "success": "Both nested pairs stayed correctly matched.",
+            "why": "Percent followed pair structure instead of searching for a literal closing symbol."
+          },
+          "skills": {
+            "primary": [
+              "matching-pair"
+            ],
+            "supporting": [
+              "find-forward",
+              "find-backward"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "nested-delimiters",
+              "two-pair-types"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A TypeScript call with indexed data provides clear nested parentheses and brackets.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "matching-pair"
+            ]
+          }
+        },
+        {
+          "id": "match-closing-brace",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Reach the block close",
+          "instruction": "Jump from the opening brace to its matching close.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "if ready {",
+                "  run();",
+                "}"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "if ready {",
+                "  run();",
+                "}"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "%"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "%",
+                "explanation": "Follow the opening brace to its partner."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "if ready {",
+                  "  run();",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The cursor is already on `{`.",
+            "Press `%`."
+          ],
+          "feedback": {
+            "success": "You reached the matching block boundary.",
+            "why": "Percent crossed lines while preserving delimiter nesting."
+          },
+          "skills": {
+            "primary": [
+              "matching-pair"
+            ],
+            "supporting": [
+              "multi-line-motion"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "multi-line-pair",
+              "braces"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A JavaScript block makes the brace relationship explicit.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "matching-pair"
+            ]
+          }
+        },
+        {
+          "id": "delete-delimited-call",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Remove the temporary argument list",
+          "instruction": "Delete from the opening parenthesis through its matching close.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "wrap(temp)"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "wrap"
+              ],
+              "cursor": [
+                0,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "%"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "d%",
+                "explanation": "Delete through the matching delimiter."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "wrap"
+                ],
+                "cursor": [
+                  0,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Percent can be an operator motion.",
+            "Use `d%` from the opening parenthesis."
+          ],
+          "feedback": {
+            "success": "The complete argument list is gone.",
+            "why": "The inclusive pair motion gave delete both delimiters and their contents."
+          },
+          "skills": {
+            "primary": [
+              "operator-matching-pair"
+            ],
+            "supporting": [
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "operator-motion",
+              "inclusive-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A minimal Go-style call makes the inclusive d% range obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "operator-matching-pair"
+            ]
+          }
+        },
+        {
+          "id": "match-next-delimiter-on-line",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Jump through the inline block",
+          "instruction": "From the line start, use percent to find the next delimiter and jump to its partner.",
+          "languageId": "c",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "if ready { run(); }"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "if ready { run(); }"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "%"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "%",
+                "explanation": "Find the next delimiter, then jump to its match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "if ready { run(); }"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "You do not have to stand on the brace.",
+            "Percent scans to the next delimiter on this line."
+          ],
+          "feedback": {
+            "success": "You crossed the inline block in one motion.",
+            "why": "Percent first located the opening brace and then resolved its pair."
+          },
+          "skills": {
+            "primary": [
+              "matching-pair-scan"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "delimiter-ahead",
+              "inline-block"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A compact C-style block demonstrates percent's next-delimiter behavior.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "matching-pair-scan"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "move-by-sentences-and-paragraphs",
+      "title": "Move through prose structure",
+      "objective": "Navigate sentence starts and blank-line paragraph boundaries in prose and comments.",
+      "activities": [
+        {
+          "id": "text-boundary-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Punctuation and blank lines form larger landmarks",
+          "body": "`(` and `)` move between sentence starts. `{` and `}` move between paragraph boundaries, usually marked by empty lines.",
+          "grammar": "( / ) → sentences · { / } → paragraphs",
+          "contrast": "These motions use Vim's text rules; they do not infer semantic paragraphs from code structure.",
+          "demoRef": "text-boundary-demo"
+        },
+        {
+          "id": "text-boundary-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Tour sentences and paragraphs",
+          "instruction": "Move to the next sentence and back, then cross paragraph boundaries in both directions.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "First sentence. Second sentence!",
+                "",
+                "Third paragraph starts here. Another ends?"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "First sentence. Second sentence!",
+                "",
+                "Third paragraph starts here. Another ends?"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ")",
+              "(",
+              "}",
+              "}",
+              "{"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ")",
+                "explanation": "Move to the next sentence start."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "(",
+                "explanation": "Return to the previous sentence start."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "}",
+                "explanation": "Move to the paragraph boundary."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "}",
+                "explanation": "Continue into the next paragraph."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "{",
+                "explanation": "Return to the prior boundary."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  16
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+            {
+              "afterStep": 4,
+              "cursor": [
+                2,
+                41
+              ],
+              "mode": "normal"
+            },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "First sentence. Second sentence!",
+                  "",
+                  "Third paragraph starts here. Another ends?"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Round brackets follow sentence punctuation.",
+            "Curly braces follow blank-line paragraph structure."
+          ],
+          "feedback": {
+            "success": "You navigated two levels of prose structure.",
+            "why": "Sentence and paragraph motions used landmarks larger than words or lines."
+          },
+          "skills": {
+            "primary": [
+              "sentence-motion",
+              "paragraph-motion"
+            ],
+            "supporting": [
+              "text-navigation"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "two-structure-levels",
+              "bidirectional"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Neutral prose exposes Vim's sentence punctuation and blank-line paragraph rules.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "sentence-motion",
+              "paragraph-motion"
+            ]
+          }
+        },
+        {
+          "id": "move-next-sentence",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Reach the next sentence",
+          "instruction": "Move to the beginning of the second sentence.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Alpha ends. Beta begins."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Alpha ends. Beta begins."
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ")"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ")",
+                "explanation": "Move to the next sentence start."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "Alpha ends. Beta begins."
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the forward round-bracket motion.",
+            "Press `)`."
+          ],
+          "feedback": {
+            "success": "You reached the next sentence start.",
+            "why": "The motion recognized punctuation followed by whitespace as a boundary."
+          },
+          "skills": {
+            "primary": [
+              "sentence-forward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "single-line-prose",
+              "punctuation-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Markdown sentence pair keeps the punctuation boundary compact.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "sentence-forward"
+            ]
+          }
+        },
+        {
+          "id": "move-previous-sentence",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Return to the earlier sentence",
+          "instruction": "Move from `Gamma` to the beginning of the previous sentence.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Alpha. Beta! Gamma?"
+              ],
+              "cursor": [
+                0,
+                13
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Alpha. Beta! Gamma?"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "("
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "(",
+                "explanation": "Move to the previous sentence start."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "Alpha. Beta! Gamma?"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use the backward round-bracket motion.",
+            "Press `(`."
+          ],
+          "feedback": {
+            "success": "You returned to the previous sentence.",
+            "why": "Backward sentence motion landed at the start after the earlier punctuation."
+          },
+          "skills": {
+            "primary": [
+              "sentence-backward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "backward-motion",
+              "mixed-punctuation"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Short neutral prose makes the previous sentence start unmistakable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "sentence-backward"
+            ]
+          }
+        },
+        {
+          "id": "move-two-paragraph-boundaries",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Cross two paragraph boundaries",
+          "instruction": "Use a count with the forward paragraph motion.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "first line",
+                "second line",
+                "",
+                "third line",
+                "fourth line",
+                "",
+                "last line"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "first line",
+                "second line",
+                "",
+                "third line",
+                "fourth line",
+                "",
+                "last line"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "2",
+              "}"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "2}",
+                "explanation": "Move forward across two paragraph boundaries."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "first line",
+                  "second line",
+                  "",
+                  "third line",
+                  "fourth line",
+                  "",
+                  "last line"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Counts work with paragraph motions.",
+            "Use `2}`."
+          ],
+          "feedback": {
+            "success": "You crossed the paragraph and reached the buffer end.",
+            "why": "The count repeated the structural motion rather than counting lines."
+          },
+          "skills": {
+            "primary": [
+              "paragraph-forward"
+            ],
+            "supporting": [
+              "counts"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "counted-motion",
+              "blank-line-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Markdown-like paragraphs provide a natural empty-line separator.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "paragraph-forward"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "integrate-precision-navigation",
+      "title": "Choose the smallest reliable target",
+      "objective": "Combine nearby character motions, searches, match ranges, and delimiter pairs deliberately.",
+      "activities": [
+        {
+          "id": "precision-navigation-rule",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Let distance and structure choose the motion",
+          "body": "Use find or till for a visible character on the current line, search for repeated text across the buffer, and percent for a known delimiter pair. Match motions are best when the search result itself is the range.",
+          "grammar": "nearby character → f/t · repeated text → search · paired delimiter → %",
+          "contrast": "The shortest command is not dependable if it targets the wrong kind of structure.",
+          "demoRef": "precision-navigation-demo"
+        },
+        {
+          "id": "precision-navigation-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Search for a call and inspect its boundary",
+          "instruction": "Search for `build`, find its opening parenthesis, then jump to the matching close.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const first = build(alpha);",
+                "const second = skip;",
+                "const third = build(beta);"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const first = build(alpha);",
+                "const second = skip;",
+                "const third = build(beta);"
+              ],
+              "cursor": [
+                0,
+                25
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "b",
+              "u",
+              "i",
+              "l",
+              "d",
+              "Enter",
+              "f",
+              "(",
+              "%"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/build↵",
+                "explanation": "Search for the call name."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "f(",
+                "explanation": "Find its nearby opening delimiter."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "%",
+                "explanation": "Follow the pair to the close."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "cursor": [
+                  0,
+                  19
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "const first = build(alpha);",
+                  "const second = skip;",
+                  "const third = build(beta);"
+                ],
+                "cursor": [
+                  0,
+                  25
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use search for the repeated name.",
+            "Use find within the line.",
+            "Use percent for the pair."
+          ],
+          "feedback": {
+            "success": "Three target shapes, three fitting motions.",
+            "why": "Each motion handled the structure it describes most reliably."
+          },
+          "skills": {
+            "primary": [
+              "integrated-precision"
+            ],
+            "supporting": [
+              "search-forward",
+              "find-forward",
+              "matching-pair"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "three-motion-families",
+              "real-code"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Repeated TypeScript calls support a natural search-find-pair workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "integrated-precision"
+            ]
+          }
+        },
+        {
+          "id": "cut-vine",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Cut the draft suffix cleanly",
+          "instruction": "Find the hyphen, then delete until the closing quote.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const slug = \"draft-post\";"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const slug = \"draft\";"
+              ],
+              "cursor": [
+                0,
+                19
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "-",
+              "d",
+              "t",
+              "\""
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f-",
+                "explanation": "Find the suffix boundary."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "dt\"",
+                "explanation": "Delete until the closing quote."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  0,
+                  19
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "const slug = \"draft\";"
+                ],
+                "cursor": [
+                  0,
+                  19
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Use `f-` to reach the suffix.",
+            "Use `dt\"` to preserve the quote."
+          ],
+          "feedback": {
+            "success": "The draft suffix remains and the extra suffix is gone.",
+            "why": "Find plus operator-till made a precise, delimiter-safe edit."
+          },
+          "skills": {
+            "primary": [
+              "find-till-integration"
+            ],
+            "supporting": [
+              "find-forward",
+              "till-forward",
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "legacy-scenario",
+              "operator-composition"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "The established JavaScript cut-vine scenario directly represents the curriculum example.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "find-till-integration"
+            ]
+          }
+        },
+        {
+          "id": "search-then-match-pair",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Inspect the build arguments",
+          "instruction": "Search for `build`, find its opening parenthesis, and jump to the matching close.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "prepare();",
+                "build(alpha, beta);",
+                "finish();"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "prepare();",
+                "build(alpha, beta);",
+                "finish();"
+              ],
+              "cursor": [
+                1,
+                17
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "b",
+              "u",
+              "i",
+              "l",
+              "d",
+              "Enter",
+              "f",
+              "(",
+              "%"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/build↵",
+                "explanation": "Search across lines for the call."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "f(",
+                "explanation": "Find its local opening delimiter."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "%",
+                "explanation": "Jump to the matching close."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 9,
+                "cursor": [
+                  1,
+                  5
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "prepare();",
+                  "build(alpha, beta);",
+                  "finish();"
+                ],
+                "cursor": [
+                  1,
+                  17
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Search gets to the correct line.",
+            "Find gets to the delimiter.",
+            "Percent resolves the pair."
+          ],
+          "feedback": {
+            "success": "You moved from global retrieval to local structure.",
+            "why": "The composed navigation avoided repeated horizontal and vertical taps."
+          },
+          "skills": {
+            "primary": [
+              "search-pair-integration"
+            ],
+            "supporting": [
+              "search-forward",
+              "find-forward",
+              "matching-pair"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "multi-line",
+              "motion-composition"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Python-like call list makes long-range search and local delimiter matching complementary.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-pair-integration"
+            ]
+          }
+        },
+        {
+          "id": "precision-search-edit",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replace the searched value",
+          "instruction": "Search for `legacy`, then change up to the closing quote to `ready`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode = \"legacy\";",
+                "next = true;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode = \"ready\";",
+                "next = true;"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "l",
+              "e",
+              "g",
+              "a",
+              "c",
+              "y",
+              "Enter",
+              "c",
+              "t",
+              "\"",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "/legacy↵",
+                "explanation": "Search for the value text."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "ct\"",
+                "explanation": "Change until the closing quote."
+              },
+              {
+                "from": 11,
+                "to": 17,
+                "display": "ready⎋",
+                "explanation": "Enter the replacement and return to Normal."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "mode = \"ready\";",
+                  "next = true;"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Search for the exact value.",
+            "The cursor lands inside the quotes.",
+            "Use `ct\"ready` and Escape."
+          ],
+          "feedback": {
+            "success": "The searched value changed without disturbing its quote.",
+            "why": "Search retrieved the target and till preserved its delimiter."
+          },
+          "skills": {
+            "primary": [
+              "precision-search-edit"
+            ],
+            "supporting": [
+              "search-forward",
+              "till-forward",
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "search-plus-operator",
+              "preserve-delimiter"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A JavaScript configuration value combines realistic retrieval with a precise quote boundary.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "precision-search-edit"
+            ]
+          }
+        },
+        {
+          "id": "choose-precision-tool",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the structural motion",
+          "prompt": "The cursor is on an opening parenthesis in a nested call. Which command most reliably reaches its matching close?",
+          "options": [
+            {
+              "id": "use-percent",
+              "label": "`%`"
+            },
+            {
+              "id": "use-find-close",
+              "label": "`f)`"
+            },
+            {
+              "id": "use-word",
+              "label": "`w`"
+            }
+          ],
+          "correctOptionId": "use-percent",
+          "explanation": "`%` follows the matching pair, while `f)` can stop at an inner closing parenthesis.",
+          "questionKind": "command-classification",
+          "remediationRef": "matching-pair-meaning"
+        },
+        {
+          "id": "precision-motions-search-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Target the text you can describe",
+          "body": "Nearby characters, repeated patterns, matching pairs, and prose boundaries each have a motion designed for their shape.",
+          "takeaways": [
+            "`f/F/t/T` target literal characters on the current line; `;` and `,` reuse that target.",
+            "`/`, `?`, `n`, `N`, and cursor-word searches retrieve text across the buffer.",
+            "`gn/gN` turn matches into ranges, `%` follows pairs, and sentence or paragraph motions follow text landmarks."
+          ],
+          "routes": [
+            {
+              "id": "review-precision-reference",
+              "label": "Review precision motions",
+              "activityRef": "find-and-till-meaning",
+              "emphasis": "secondary"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "find-till-reference",
+      "command": "f{char} F{char} t{char} T{char}",
+      "purpose": "Find a literal character on the current line, landing on it or stopping short.",
+      "notes": [
+        "Lowercase searches forward; uppercase searches backward.",
+        "Till motions preserve the target character."
+      ],
+      "exampleActivityRefs": [
+        "find-family-demo",
+        "trim-debug-suffix"
+      ]
+    },
+    {
+      "id": "repeat-find-reference",
+      "command": "; ,",
+      "purpose": "Repeat the last character find in the same or opposite direction.",
+      "notes": [
+        "Semicolon preserves direction.",
+        "Comma reverses direction."
+      ],
+      "exampleActivityRefs": [
+        "repeat-find-demo",
+        "reverse-repeated-find"
+      ]
+    },
+    {
+      "id": "pattern-search-reference",
+      "command": "/ ? n N",
+      "purpose": "Search for an explicit pattern and revisit its matches.",
+      "notes": [
+        "n follows the original search direction.",
+        "N uses the opposite direction."
+      ],
+      "exampleActivityRefs": [
+        "pattern-search-demo",
+        "search-repeat-directions"
+      ]
+    },
+    {
+      "id": "cursor-word-search-reference",
+      "command": "* # g* g#",
+      "purpose": "Search for the word under the cursor without typing it.",
+      "notes": [
+        "* and # require whole-word matches.",
+        "g* and g# also match inside larger words."
+      ],
+      "exampleActivityRefs": [
+        "cursor-word-search-demo",
+        "search-previous-substring"
+      ]
+    },
+    {
+      "id": "search-match-reference",
+      "command": "gn gN",
+      "purpose": "Select or operate on the next or previous search match.",
+      "notes": [
+        "gn is always forward and gN always backward.",
+        "They can complete operators such as cgn and cgN."
+      ],
+      "exampleActivityRefs": [
+        "search-match-range-demo",
+        "change-next-search-match",
+        "change-previous-search-match"
+      ]
+    },
+    {
+      "id": "matching-pair-reference",
+      "command": "%",
+      "purpose": "Jump to the matching parenthesis, bracket, or brace.",
+      "notes": [
+        "On earlier text, percent first finds the next delimiter on the line.",
+        "The behavior is text-based rather than IDE-semantic."
+      ],
+      "exampleActivityRefs": [
+        "matching-pair-demo",
+        "delete-delimited-call"
+      ]
+    },
+    {
+      "id": "sentence-reference",
+      "command": "( )",
+      "purpose": "Move to previous or next sentence starts.",
+      "notes": [
+        "Sentence boundaries follow Vim punctuation and whitespace rules."
+      ],
+      "exampleActivityRefs": [
+        "text-boundary-demo",
+        "move-next-sentence",
+        "move-previous-sentence"
+      ]
+    },
+    {
+      "id": "paragraph-reference",
+      "command": "{ }",
+      "purpose": "Move backward or forward across paragraph boundaries.",
+      "notes": [
+        "Empty lines form the dependable paragraph boundaries used in this unit.",
+        "Counts repeat the motion."
+      ],
+      "exampleActivityRefs": [
+        "text-boundary-demo",
+        "move-two-paragraph-boundaries"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "f F t T",
+      "explain": [
+        "find-and-till-meaning"
+      ],
+      "demonstrate": [
+        "find-family-demo"
+      ],
+      "isolate": [
+        "find-closing-paren"
+      ],
+      "mix": [
+        "trim-debug-suffix"
+      ],
+      "challenge": [
+        "change-after-colon"
+      ]
+    },
+    {
+      "concept": "; and ,",
+      "explain": [
+        "repeat-find-meaning"
+      ],
+      "demonstrate": [
+        "repeat-find-demo"
+      ],
+      "isolate": [
+        "repeat-forward-commas"
+      ],
+      "mix": [
+        "repeat-separator-edit"
+      ],
+      "challenge": [
+        "reverse-repeated-find"
+      ]
+    },
+    {
+      "concept": "/ ? n N",
+      "explain": [
+        "pattern-search-meaning"
+      ],
+      "demonstrate": [
+        "pattern-search-demo"
+      ],
+      "isolate": [
+        "search-forward-timeout"
+      ],
+      "mix": [
+        "search-backward-error"
+      ],
+      "challenge": [
+        "search-repeat-directions"
+      ]
+    },
+    {
+      "concept": "* # g* g#",
+      "explain": [
+        "cursor-word-search-meaning"
+      ],
+      "demonstrate": [
+        "cursor-word-search-demo"
+      ],
+      "isolate": [
+        "search-next-token-word"
+      ],
+      "mix": [
+        "search-previous-ready-word"
+      ],
+      "challenge": [
+        "search-previous-substring"
+      ]
+    },
+    {
+      "concept": "gn and gN",
+      "explain": [
+        "search-match-range-meaning"
+      ],
+      "demonstrate": [
+        "search-match-range-demo"
+      ],
+      "isolate": [
+        "change-next-search-match"
+      ],
+      "mix": [
+        "change-previous-search-match"
+      ],
+      "challenge": [
+        "match-direction-after-question-search"
+      ]
+    },
+    {
+      "concept": "% matching delimiters",
+      "explain": [
+        "matching-pair-meaning"
+      ],
+      "demonstrate": [
+        "matching-pair-demo"
+      ],
+      "isolate": [
+        "match-closing-brace"
+      ],
+      "mix": [
+        "delete-delimited-call"
+      ],
+      "challenge": [
+        "match-next-delimiter-on-line"
+      ]
+    },
+    {
+      "concept": "( and ) sentence motions",
+      "explain": [
+        "text-boundary-meaning"
+      ],
+      "demonstrate": [
+        "text-boundary-demo"
+      ],
+      "isolate": [
+        "move-next-sentence"
+      ],
+      "mix": [
+        "move-previous-sentence"
+      ],
+      "challenge": [
+        "precision-navigation-demo"
+      ]
+    },
+    {
+      "concept": "{ and } paragraph motions",
+      "explain": [
+        "text-boundary-meaning"
+      ],
+      "demonstrate": [
+        "text-boundary-demo"
+      ],
+      "isolate": [
+        "move-two-paragraph-boundaries"
+      ],
+      "mix": [
+        "text-boundary-demo"
+      ],
+      "challenge": [
+        "move-two-paragraph-boundaries"
+      ]
+    },
+    {
+      "concept": "integrated precision motion and search",
+      "explain": [
+        "precision-navigation-rule"
+      ],
+      "demonstrate": [
+        "precision-navigation-demo"
+      ],
+      "isolate": [
+        "cut-vine"
+      ],
+      "mix": [
+        "search-then-match-pair"
+      ],
+      "challenge": [
+        "precision-search-edit",
+        "choose-precision-tool"
+      ]
+    }
+  ]
+}

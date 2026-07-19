@@ -6,6 +6,7 @@ const modalUnit = JSON.parse(readFileSync(new URL("../content/units/01-modal-mod
 const cursorUnit = JSON.parse(readFileSync(new URL("../content/units/02-cursor-movement.json", import.meta.url), "utf8"));
 const changingUnit = JSON.parse(readFileSync(new URL("../content/units/03-entering-changing-text.json", import.meta.url), "utf8"));
 const operatorUnit = JSON.parse(readFileSync(new URL("../content/units/04-operator-grammar.json", import.meta.url), "utf8"));
+const precisionUnit = JSON.parse(readFileSync(new URL("../content/units/05-precision-motions-search.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -14,6 +15,8 @@ const changingActivities = changingUnit.lessons.flatMap(lesson => lesson.activit
 const changingExercises = changingActivities.filter(activity => activity.type === "exercise");
 const operatorActivities = operatorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const operatorExercises = operatorActivities.filter(activity => activity.type === "exercise");
+const precisionActivities = precisionUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const precisionExercises = precisionActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
@@ -104,7 +107,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(5);
+    await expect(page.locator(".toc-unit")).toHaveCount(6);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -128,10 +131,11 @@ test.describe("Production lesson flow", () => {
       { id: "cursor-movement", unitNumber: 2, title: "Cursor movement" },
       { id: "entering-changing-text", unitNumber: 3, title: "Entering and changing text" },
       { id: "operator-grammar", unitNumber: 4, title: "Operator grammar" },
+      { id: "precision-motions-search", unitNumber: 5, title: "Precision motions and search" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(5);
+    await expect(page.locator(".toc-unit")).toHaveCount(6);
     await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
   });
@@ -301,7 +305,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "operator-grammar", unitNumber: 4, activityId: "operator-sentence-meanings" });
   });
 
-  test("runs every Unit 4 operator activity and leaves Unit 5 unavailable", async ({ page }) => {
+  test("runs every Unit 4 operator activity and continues to Unit 5", async ({ page }) => {
     await page.goto("/?unit=operator-grammar");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 76, exerciseCount: operatorExercises.length });
@@ -320,7 +324,72 @@ test.describe("Production lesson flow", () => {
     });
     expect(failures).toEqual([]);
     await page.goto("/?unit=operator-grammar&activity=operator-grammar-unit-summary");
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 5 is next");
+    await expect(page.getByRole("button", { name: "Continue to Unit 5" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 5" }).click();
+    await page.waitForURL(/unit=precision-motions-search/);
+    expect((await state(page))).toMatchObject({ unitId: "precision-motions-search", unitNumber: 5, activityId: "find-and-till-meaning" });
+  });
+
+  test("runs every Unit 5 precision activity and leaves Unit 6 unavailable", async ({ page }) => {
+    await page.goto("/?unit=precision-motions-search");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 67, exerciseCount: precisionExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        if (activity.type === "exercise" && !current.complete) result.push({ id: activity.id, current });
+        if (activity.type === "demo" && (JSON.stringify(current.code) !== JSON.stringify(activity.scenario.target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(activity.scenario.target.cursor))) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+    await page.goto("/?unit=precision-motions-search&activity=precision-motions-search-unit-summary");
+    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 6 is next");
+  });
+
+  test("keeps gn forward and gN backward with ordered Visual match ranges", async ({ page }) => {
+    await page.goto("/?unit=precision-motions-search&activity=select-search-matches");
+    const keys = precisionActivities.find(activity => activity.id === "select-search-matches").script.steps;
+    await page.evaluate(tokens => tokens.slice(0, 10).forEach(token => window.VimWilds.emit(token)), keys);
+    expect((await state(page))).toMatchObject({
+      mode: "visual",
+      selection: { kind: "linear", from: [0, 11], to: [0, 16] },
+    });
+    await page.evaluate(tokens => tokens.slice(10, 14).forEach(token => window.VimWilds.emit(token)), keys);
+    expect((await state(page))).toMatchObject({
+      mode: "visual",
+      selection: { kind: "linear", from: [0, 22], to: [0, 27] },
+    });
+    await page.evaluate(token => window.VimWilds.emit(token), keys.at(-1));
+    expect((await state(page))).toMatchObject({ complete: true, code: ["draft keep draft keep draft."], cursor: [0, 26] });
+  });
+
+  test("enters Unit 5 shifted search and structure motions from touch and physical keyboards", async ({ page }) => {
+    await page.goto("/?unit=precision-motions-search&activity=search-previous-ready-word-recall");
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="3"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [0, 0], modifiers: [] });
+
+    await page.goto("/?unit=precision-motions-search&activity=match-closing-brace-recall");
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="5"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [2, 0], modifiers: [] });
+
+    await page.goto("/?unit=precision-motions-search&activity=move-next-sentence-recall");
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="0"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [0, 12], modifiers: [] });
+
+    await page.goto("/?unit=precision-motions-search&activity=search-backward-error");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.type("?ERROR");
+    await page.keyboard.press("Enter");
+    expect((await state(page))).toMatchObject({ complete: true, cursor: [3, 0] });
   });
 
   test("conforms Unit 4 operator state, formatting width, put shape, and repeat reset", async ({ page }) => {
@@ -826,7 +895,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "repeatable-editing"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "repeatable-editing"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

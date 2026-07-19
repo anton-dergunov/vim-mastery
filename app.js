@@ -849,6 +849,10 @@ function completeActivity() {
 }
 
 function handleEngineEvent(event) {
+  // The app injects every accepted physical key through processToken. Adapter
+  // keypress notifications are therefore duplicates, and search prompts can
+  // report them with a stale pre-search cursor after the real selection event.
+  if (event.kind === "key" && event.source === "physical") return;
   state.editorSnapshot = event.snapshot;
   // Only the gate's explicit injection is evidence of learner/demo progress.
   // CodeMirror can also report keypresses from its transient search prompt;
@@ -1093,12 +1097,14 @@ document.addEventListener("keydown", event => {
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
   if (event.key === "CapsLock") {
     event.preventDefault();
+    event.stopImmediatePropagation();
     if (isPractice()) state.capsLock = event.getModifierState("CapsLock");
     renderModifiers();
     return;
   }
   if (modifierMap[event.key]) {
     event.preventDefault();
+    event.stopImmediatePropagation();
     if (event.key === "Shift" && isPractice()) state.physicalShift = true;
     renderModifiers();
     return;
@@ -1106,9 +1112,14 @@ document.addEventListener("keydown", event => {
   if (event.repeat) return;
   if (!isPractice()) {
     event.preventDefault();
+    event.stopImmediatePropagation();
     return;
   }
   event.preventDefault();
+  // Physical keys are interpreted through processToken below. Do not also let
+  // CodeMirror's native key handlers see the same event; search prompts would
+  // otherwise consume Enter twice and advance to an extra match.
+  event.stopImmediatePropagation();
   let token = event.key;
   if (!event.ctrlKey && !event.altKey && event.shiftKey && token.length === 1) {
     const physicalKey = keyButtonsFor(token.toLowerCase()).find(button => button.dataset.key === token.toLowerCase());
@@ -1267,8 +1278,8 @@ window.VimWilds = Object.freeze({
       to: [ranges.at(-1).to[0], ranges.at(-1).to[1] - 1],
     } : hasSelection ? {
       kind: "linear",
-      from: snapshot.anchorPosition,
-      to: snapshot.cursorPosition,
+      from: ranges[0]?.from || snapshot.anchorPosition,
+      to: ranges[0]?.to || snapshot.cursorPosition,
     } : null;
     return {
       unitId: unit.id,

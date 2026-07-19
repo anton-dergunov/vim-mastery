@@ -13,6 +13,7 @@ const modalUnit = units.find(item => item.data.id === "modal-model").data;
 const cursorUnit = units.find(item => item.data.id === "cursor-movement").data;
 const changingUnit = units.find(item => item.data.id === "entering-changing-text").data;
 const operatorUnit = units.find(item => item.data.id === "operator-grammar").data;
+const precisionUnit = units.find(item => item.data.id === "precision-motions-search").data;
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -42,7 +43,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 10]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -77,7 +78,8 @@ test("unit continuation requires the immediately following unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), current), cursorUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), changingUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), changingUnit), operatorUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), operatorUnit), null, "Unit 4 must not skip to Unit 10");
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), operatorUnit), precisionUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), precisionUnit), null, "Unit 5 must not skip to Unit 10");
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -215,6 +217,50 @@ test("Unit 4 preserves the curriculum and covers every operator family", () => {
     assert.deepEqual(activity.script.checkpoints.at(-1).lines, activity.scenario.target.lines);
     assert.deepEqual(activity.script.checkpoints.at(-1).cursor, activity.scenario.target.cursor);
   }
+});
+
+test("Unit 5 preserves the curriculum and covers every precision-search family", () => {
+  assert.deepEqual(precisionUnit.curriculumDefinition, {
+    unit: "5. Precision motions and search",
+    commandsAndConcepts: "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
+    prerequisites: "Units 1–4",
+    learningOutcome: "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
+    representativeExercises: "Delete until a quote; repeat a comma find; change the next search match; jump between brackets; move by paragraphs in prose or comments",
+    priorityAndPortability: "Core. Search and pair matching remain text-based rather than IDE-semantic",
+  });
+  assert.deepEqual(precisionUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar"]);
+  assert.equal(precisionUnit.releaseStatus, "authoring");
+  assert.equal(precisionUnit.lessons.length, 8);
+  assert.deepEqual(precisionUnit.coverage.map(item => item.concept), [
+    "f F t T", "; and ,", "/ ? n N", "* # g* g#", "gn and gN", "% matching delimiters",
+    "( and ) sentence motions", "{ and } paragraph motions", "integrated precision motion and search",
+  ]);
+  const activities = precisionUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert.equal(runnable.length, 33);
+  for (const activity of runnable) {
+    assert(profileById.has(activity.languageId), `${activity.id} uses unknown language ${activity.languageId}`);
+    assert.equal(activity.provenance.nativeValidation, "passed");
+    assert.equal(activity.provenance.browserConformance, "passed");
+    assert.equal(activity.provenance.reviewStatus, "draft");
+    const keys = keysOf(activity);
+    let next = 0;
+    for (const group of activity.script.commandGroups) {
+      assert.equal(group.from, next, `${activity.id} command groups must be contiguous`);
+      assert(group.to > group.from && group.to <= keys.length, `${activity.id} has an invalid command group`);
+      next = group.to;
+    }
+    assert.equal(next, keys.length, `${activity.id} command groups must cover every key`);
+    const finalCheckpoint = activity.script.checkpoints.at(-1);
+    assert.equal(finalCheckpoint.afterStep, keys.length);
+    assert.deepEqual(finalCheckpoint.lines, activity.scenario.target.lines);
+    assert.deepEqual(finalCheckpoint.cursor, activity.scenario.target.cursor);
+  }
+  const selectionDemo = activities.find(activity => activity.id === "search-match-range-demo");
+  assert.deepEqual(selectionDemo.script.checkpoints.filter(checkpoint => checkpoint.affectedRange).map(checkpoint => checkpoint.affectedRange), [
+    { from: [0, 11], to: [0, 16] },
+    { from: [0, 21], to: [0, 26] },
+  ]);
 });
 
 test("language profiles are complete and uniquely addressable", () => {
@@ -442,6 +488,35 @@ for (const activity of operatorRunnable) {
       // change is the final queued input; browser fixtures own intermediate
       // mode assertions while native Vim still verifies every text/cursor state.
       if (checkpoint.mode && checkpoint.afterStep === keys.length) {
+        assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+      }
+    }
+  });
+}
+
+const precisionRunnable = precisionUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of precisionRunnable) {
+  test(`native Vim Unit 5 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const options = {
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+    };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      if (checkpoint.cursor) assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      // Headless feedkeys exits standalone Visual match selections before the
+      // assertion function runs; browser fixtures own those affected ranges.
+      if (checkpoint.mode && !checkpoint.affectedRange && checkpoint.afterStep === keys.length) {
         assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
       }
     }

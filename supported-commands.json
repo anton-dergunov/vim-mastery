@@ -22,10 +22,10 @@
     "substitution",
     "Visual Line indentation",
     "join lines with normalized or preserved whitespace (J, gJ)",
-    "find/till",
+    "precision motions and search (f, F, t, T, ;, ,, /, ?, n, N, *, #, g*, g#, gn, gN, %, (, ), {, })",
     "yank and put"
   ],
   "pending": [
-    "full curriculum matrix: advanced motions, registers, history, advanced regex, Ex ranges, :normal, :global, and host-dependent clipboard behavior"
+    "full curriculum matrix: remaining advanced motions, registers, history, advanced regex, Ex ranges, :normal, :global, and host-dependent clipboard behavior"
   ]
 }

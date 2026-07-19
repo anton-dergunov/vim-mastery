@@ -1,5 +1,5 @@
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.cjs b/node_modules/@replit/codemirror-vim/dist/index.cjs
-index 24368b8..05cef0b 100644
+index 24368b8..1116777 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.cjs
 +++ b/node_modules/@replit/codemirror-vim/dist/index.cjs
 @@ -167,6 +167,7 @@ function initVim(CM) {
@@ -10,7 +10,39 @@ index 24368b8..05cef0b 100644
      { keys: '+', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true }},
      { keys: '-', type: 'motion', motion: 'moveByLines', motionArgs: { forward: false, toFirstChar:true }},
      { keys: '_', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true, repeatOffset:-1 }},
-@@ -2559,6 +2560,15 @@ function initVim(CM) {
+@@ -2284,8 +2285,9 @@ function initVim(CM) {
+         return;
+       }
+
++      // Unlike n/N, gn/gN always search forward/backward respectively,
++      // independent of whether the previous search used / or ?.
+       var prev = !motionArgs.forward;
+-      prev = (state.isReversed()) ? !prev : prev;
+
+       // next: [from, to] | null
+       var next = findNextFromAndToInclusive(cm, prev, query, motionArgs.repeat, vim);
+@@ -2321,19 +2323,7 @@ function initVim(CM) {
+         // the search result.
+         var anchor = vim.sel.anchor;
+         if (anchor) {
+-          if (state.isReversed()) {
+-            if (motionArgs.forward) {
+-              return [anchor, from];
+-            }
+-
+-            return [anchor, to];
+-          } else {
+-            if (motionArgs.forward) {
+-              return [anchor, to];
+-            }
+-
+-            return [anchor, from];
+-          }
++          return motionArgs.forward ? [anchor, to] : [anchor, from];
+         }
+       } else {
+         // Let's turn visual mode on.
+@@ -2559,6 +2549,15 @@ function initVim(CM) {
        return new Pos(cursor.line,
                    findFirstNonWhiteSpaceCharacter(cm.getLine(cursor.line)));
      },
@@ -26,8 +58,66 @@ index 24368b8..05cef0b 100644
      moveToMatchedSymbol: function(cm, head) {
        var cursor = head;
        var line = cursor.line;
+@@ -5499,33 +5498,35 @@ function initVim(CM) {
+     return cm.operation(function() {
+       if (repeat === undefined) { repeat = 1; }
+       var pos = cm.getCursor();
+-      var cursor = cm.getSearchCursor(query, pos);
+-
+-      // Go back one result to ensure that if the cursor is currently a match, we keep it.
+-      var found = cursor.find(!prev);
+-
+-      // If we haven't moved, go back one more (similar to if i==0 logic in findNext).
+-      // @ts-ignore
+-      if (!vim.visualMode && found && cursorEqual(cursor.from(), pos)) {
+-        cursor.find(!prev);
++      var cursor = cm.getSearchCursor(query, new Pos(cm.firstLine(), 0));
++      var matches = [];
++      while (cursor.find(false)) {
++        var from = cursor.from();
++        var to = cursor.to();
++        if (from && to) matches.push([from, to]);
+       }
++      if (!matches.length) { return; }
+
+-      for (var i = 0; i < repeat; i++) {
+-        found = cursor.find(prev);
+-        if (!found) {
+-          // SearchCursor may have returned null because it hit EOF, wrap
+-          // around and try again.
+-          cursor = cm.getSearchCursor(query,
+-              // @ts-ignore
+-              (prev) ? new Pos(cm.lastLine()) : new Pos(cm.firstLine(), 0) );
+-          if (!cursor.find(prev)) {
+-            return;
++      var index = matches.findIndex(function(match) {
++        return !cursorIsBefore(pos, match[0]) && cursorIsBefore(pos, match[1]);
++      });
++      if (index < 0) {
++        if (prev) {
++          for (var i = matches.length - 1; i >= 0; i--) {
++            if (!cursorIsBefore(pos, matches[i][1])) {
++              index = i;
++              break;
++            }
+           }
++          if (index < 0) index = matches.length - 1;
++        } else {
++          index = matches.findIndex(function(match) { return cursorIsBefore(pos, match[0]); });
++          if (index < 0) index = 0;
+         }
+       }
+-      var from = cursor.from();
+-      var to = cursor.to();
+-      return from && to && [from, to];
++      var offset = Math.max(0, repeat - 1) * (prev ? -1 : 1);
++      index = (index + offset + matches.length * (repeat + 1)) % matches.length;
++      return matches[index];
+     });
+   }
+   /** @arg {CodeMirrorV} cm */
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.js b/node_modules/@replit/codemirror-vim/dist/index.js
-index 4d0faa1..40b9f72 100644
+index 4d0faa1..12d5ea1 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.js
 +++ b/node_modules/@replit/codemirror-vim/dist/index.js
 @@ -147,6 +147,7 @@ function initVim(CM) {
@@ -38,7 +128,39 @@ index 4d0faa1..40b9f72 100644
      { keys: '+', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true }},
      { keys: '-', type: 'motion', motion: 'moveByLines', motionArgs: { forward: false, toFirstChar:true }},
      { keys: '_', type: 'motion', motion: 'moveByLines', motionArgs: { forward: true, toFirstChar:true, repeatOffset:-1 }},
-@@ -2539,6 +2540,15 @@ function initVim(CM) {
+@@ -2264,8 +2265,9 @@ function initVim(CM) {
+         return;
+       }
+
++      // Unlike n/N, gn/gN always search forward/backward respectively,
++      // independent of whether the previous search used / or ?.
+       var prev = !motionArgs.forward;
+-      prev = (state.isReversed()) ? !prev : prev;
+
+       // next: [from, to] | null
+       var next = findNextFromAndToInclusive(cm, prev, query, motionArgs.repeat, vim);
+@@ -2301,19 +2303,7 @@ function initVim(CM) {
+         // the search result.
+         var anchor = vim.sel.anchor;
+         if (anchor) {
+-          if (state.isReversed()) {
+-            if (motionArgs.forward) {
+-              return [anchor, from];
+-            }
+-
+-            return [anchor, to];
+-          } else {
+-            if (motionArgs.forward) {
+-              return [anchor, to];
+-            }
+-
+-            return [anchor, from];
+-          }
++          return motionArgs.forward ? [anchor, to] : [anchor, from];
+         }
+       } else {
+         // Let's turn visual mode on.
+@@ -2539,6 +2529,15 @@ function initVim(CM) {
        return new Pos(cursor.line,
                    findFirstNonWhiteSpaceCharacter(cm.getLine(cursor.line)));
      },
@@ -54,3 +176,61 @@ index 4d0faa1..40b9f72 100644
      moveToMatchedSymbol: function(cm, head) {
        var cursor = head;
        var line = cursor.line;
+@@ -5479,33 +5478,35 @@ function initVim(CM) {
+     return cm.operation(function() {
+       if (repeat === undefined) { repeat = 1; }
+       var pos = cm.getCursor();
+-      var cursor = cm.getSearchCursor(query, pos);
+-
+-      // Go back one result to ensure that if the cursor is currently a match, we keep it.
+-      var found = cursor.find(!prev);
+-
+-      // If we haven't moved, go back one more (similar to if i==0 logic in findNext).
+-      // @ts-ignore
+-      if (!vim.visualMode && found && cursorEqual(cursor.from(), pos)) {
+-        cursor.find(!prev);
++      var cursor = cm.getSearchCursor(query, new Pos(cm.firstLine(), 0));
++      var matches = [];
++      while (cursor.find(false)) {
++        var from = cursor.from();
++        var to = cursor.to();
++        if (from && to) matches.push([from, to]);
+       }
++      if (!matches.length) { return; }
+
+-      for (var i = 0; i < repeat; i++) {
+-        found = cursor.find(prev);
+-        if (!found) {
+-          // SearchCursor may have returned null because it hit EOF, wrap
+-          // around and try again.
+-          cursor = cm.getSearchCursor(query,
+-              // @ts-ignore
+-              (prev) ? new Pos(cm.lastLine()) : new Pos(cm.firstLine(), 0) );
+-          if (!cursor.find(prev)) {
+-            return;
++      var index = matches.findIndex(function(match) {
++        return !cursorIsBefore(pos, match[0]) && cursorIsBefore(pos, match[1]);
++      });
++      if (index < 0) {
++        if (prev) {
++          for (var i = matches.length - 1; i >= 0; i--) {
++            if (!cursorIsBefore(pos, matches[i][1])) {
++              index = i;
++              break;
++            }
+           }
++          if (index < 0) index = matches.length - 1;
++        } else {
++          index = matches.findIndex(function(match) { return cursorIsBefore(pos, match[0]); });
++          if (index < 0) index = 0;
+         }
+       }
+-      var from = cursor.from();
+-      var to = cursor.to();
+-      return from && to && [from, to];
++      var offset = Math.max(0, repeat - 1) * (prev ? -1 : 1);
++      index = (index + offset + matches.length * (repeat + 1)) % matches.length;
++      return matches[index];
+     });
+   }
+   /** @arg {CodeMirrorV} cm */

@@ -10,4 +10,8 @@ smallest patch here and reference the fixture in its header and in
 `docs/vim-conformance.md`.
 
 `@replit+codemirror-vim+6.3.0.patch` adds the missing native `g_` motion used by
-Unit 2, including counted line movement and last-nonblank cursor placement.
+Unit 2, including counted line movement and last-nonblank cursor placement. It
+also restores native `gn`/`gN` behavior for Unit 5: match selection always
+moves forward/backward respectively, regardless of whether `/` or `?` created
+the previous search, and it chooses the correct neighboring match when the
+cursor sits between matches.
