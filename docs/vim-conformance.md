@@ -65,3 +65,15 @@ Escape, block shifts use the configured two-space indentation unit instead of
 the four-column tab size, and characterwise Visual `gq` lands at column zero of
 the final formatted row. Focused native and browser fixtures cover those
 cursor and text results in addition to `o`, `O`, and `gv` selection geometry.
+
+Unit 8 exposes register contents and characterwise, linewise, or blockwise
+shape through the `VimEngine` snapshot so register state can be part of an
+activity target rather than inferred only from final text. The adapter's
+unnamed, yank-zero, numbered, small-delete, black-hole, and named registers are
+reset for every activity. Its `+` register is intentionally part of the same
+internal register bank: Vim Wilds never reads or writes the device clipboard,
+while lesson copy explains that real Vim integrations connect `"+` to their
+host clipboard. The compatibility patch also adds native cursor placement for
+characterwise and linewise `gp` and `gP`. Native fixtures alias `+` to an
+ordinary named register solely to provide a deterministic oracle on headless
+systems where the OS clipboard is unavailable.

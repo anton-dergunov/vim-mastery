@@ -854,10 +854,15 @@ function returnFromRemediation() {
 
 function isTargetSnapshot(snapshot) {
   const target = currentActivity().scenario.target;
+  const registersMatch = Object.entries(target.registers || {}).every(([name, expected]) => {
+    const actual = snapshot.registers?.[name];
+    return actual?.text === expected.text && actual.type === expected.type;
+  });
   return snapshot.text === target.lines.join("\n")
     && snapshot.mode === target.mode
     && snapshot.cursorPosition[0] === target.cursor[0]
-    && snapshot.cursorPosition[1] === target.cursor[1];
+    && snapshot.cursorPosition[1] === target.cursor[1]
+    && registersMatch;
 }
 
 function completeActivity() {
@@ -1326,6 +1331,7 @@ window.VimWilds = Object.freeze({
       complete: state.complete,
       code: snapshot?.text.split("\n") || [],
       cursor: snapshot?.cursorPosition || [0, 0],
+      registers: snapshot?.registers || {},
       selection,
       mode: state.complete ? "Complete" : (snapshot?.mode || "normal"),
       modifiers: [...state.modifiers],

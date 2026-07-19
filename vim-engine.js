@@ -104,6 +104,14 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
   return "normal";
 }
 
+function snapshotRegisters() {
+  const registers = Vim.getRegisterController?.()?.registers || {};
+  return Object.fromEntries(Object.entries(registers).map(([name, register]) => [name, {
+    text: register.toString(),
+    type: register.blockwise ? "blockwise" : register.linewise ? "linewise" : "characterwise",
+  }]));
+}
+
 /**
  * The one boundary between the lesson UI and CodeMirror Vim. Nothing outside
  * this module reaches into EditorView, getCM, or Vim directly.
@@ -204,6 +212,7 @@ export class VimEngine {
         to: positionForOffset(doc, range.to),
       })),
       mode: normalizeMode(this.mode, this.subMode, this.cm, this.commandLine !== null),
+      registers: snapshotRegisters(),
     };
   }
 

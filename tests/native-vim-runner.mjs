@@ -32,7 +32,14 @@ function toVimInput(keys) {
   return keys.map(key => specialKeys[key] || key.replaceAll("\\", "\\\\").replaceAll('"', '\\"')).join("");
 }
 
-export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth }) {
+function aliasRegisterKeys(keys, aliases) {
+  return keys.map((key, index) => {
+    const previous = keys[index - 1];
+    return (previous === '"' || previous === "Ctrl-r") && aliases[key] ? aliases[key] : key;
+  });
+}
+
+export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth, registerNames = [], registerAliases = {} }) {
   const directory = mkdtempSync(join(tmpdir(), "vim-wilds-native-"));
   const output = join(directory, "result.json");
   const script = join(directory, "fixture.vim");
@@ -42,14 +49,21 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     ...(textWidth === undefined ? [] : [`set textwidth=${textWidth}`]),
     `call setline(1, ${JSON.stringify(initialCode)})`,
     `call cursor(${cursor[0] + 1}, ${cursor[1] + 1})`,
-    `call feedkeys("${toVimInput([...setupKeys, ...keys])}", "xt")`,
-    `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1)})], ${JSON.stringify(output)})`,
+    `call feedkeys("${toVimInput(aliasRegisterKeys([...setupKeys, ...keys], registerAliases))}", "xt")`,
+    `let register_state = {}`,
+    `for register_pair in ${JSON.stringify(registerNames.map(name => [name, registerAliases[name] || name]))}`,
+    `  let register_name = register_pair[0]`,
+    `  let native_register_name = register_pair[1]`,
+    `  let register_type = getregtype(native_register_name)`,
+    `  let register_state[register_name] = {"text": getreg(native_register_name), "type": register_type ==# 'V' ? 'linewise' : register_type[0] ==# "\\<C-v>" ? 'blockwise' : 'characterwise'}`,
+    `endfor`,
+    `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state})], ${JSON.stringify(output)})`,
     "qa!",
   ].join("\n");
 
   try {
     writeFileSync(script, vimScript);
-    execFileSync("vim", ["-Nu", "NONE", "-n", "-es", "-S", script], { stdio: "pipe" });
+    execFileSync("vim", ["-Nu", "NONE", "-i", "NONE", "-n", "-es", "-S", script], { stdio: "pipe" });
     const result = JSON.parse(readFileSync(output, "utf8"));
     return { ...result, mode: normalizeMode(result.mode) };
   } finally {
