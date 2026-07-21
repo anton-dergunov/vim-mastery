@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 
@@ -69,8 +69,10 @@ function pwaBuildPlugin(base, version) {
       emit("icons/icon-192.png", readFileSync(join(iconDirectory, "icon-192.png")));
       emit("icons/icon-512.png", readFileSync(join(iconDirectory, "icon-512.png")));
     },
-    closeBundle() {
-      const output = join(rootDirectory, "dist");
+    writeBundle(outputOptions) {
+      const output = outputOptions.dir
+        ? resolve(rootDirectory, outputOptions.dir)
+        : dirname(resolve(rootDirectory, outputOptions.file || "dist"));
       const serviceWorker = join(output, "service-worker.js");
       rmSync(serviceWorker, { force: true });
       const entries = walk(output)
