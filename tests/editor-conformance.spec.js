@@ -12,6 +12,7 @@ const visualUnit = JSON.parse(readFileSync(new URL("../content/units/07-visual-s
 const registerUnit = JSON.parse(readFileSync(new URL("../content/units/08-registers-putting.json", import.meta.url), "utf8"));
 const navigationUnit = JSON.parse(readFileSync(new URL("../content/units/09-long-range-navigation.json", import.meta.url), "utf8"));
 const rangeUnit = JSON.parse(readFileSync(new URL("../content/units/11-command-line-ranges-line-operations.json", import.meta.url), "utf8"));
+const substitutionUnit = JSON.parse(readFileSync(new URL("../content/units/12-substitution-practical-regex.json", import.meta.url), "utf8"));
 const macroUnit = JSON.parse(readFileSync(new URL("../content/units/13-macros.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
@@ -33,6 +34,8 @@ const navigationActivities = navigationUnit.lessons.flatMap(lesson => lesson.act
 const navigationExercises = navigationActivities.filter(activity => activity.type === "exercise");
 const rangeActivities = rangeUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const rangeExercises = rangeActivities.filter(activity => activity.type === "exercise");
+const substitutionActivities = substitutionUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const substitutionExercises = substitutionActivities.filter(activity => activity.type === "exercise");
 const macroActivities = macroUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const macroExercises = macroActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
@@ -125,7 +128,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(12);
+    await expect(page.locator(".toc-unit")).toHaveCount(13);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -156,14 +159,15 @@ test.describe("Production lesson flow", () => {
       { id: "long-range-navigation", unitNumber: 9, title: "Long-range navigation" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
       { id: "command-line-ranges-line-operations", unitNumber: 11, title: "Command-line ranges and line operations" },
+      { id: "substitution-practical-regex", unitNumber: 12, title: "Substitution and practical regex" },
       { id: "macros", unitNumber: 13, title: "Macros" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(12);
+    await expect(page.locator(".toc-unit")).toHaveCount(13);
     await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation"]);
     await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
     await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(4);
-    await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(2);
+    await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(3);
     await expect(page.locator(".toc-arc-divider")).toHaveCount(2);
     const arcPresentation = await page.evaluate(() => {
       const heading = document.querySelector(".toc-arc-heading");
@@ -184,6 +188,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator('[data-unit-id="long-range-navigation"]')).toContainText("Unit 9");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
     await expect(page.locator('[data-unit-id="command-line-ranges-line-operations"]')).toContainText("Unit 11");
+    await expect(page.locator('[data-unit-id="substitution-practical-regex"]')).toContainText("Unit 12");
     await expect(page.locator('[data-unit-id="macros"]')).toContainText("Unit 13");
   });
 
@@ -614,6 +619,100 @@ test.describe("Production lesson flow", () => {
     expect(failures).toEqual([]);
   });
 
+  test("runs every Unit 12 substitution activity with native-equivalent text and cursor state", async ({ page }) => {
+    await page.goto("/?unit=substitution-practical-regex");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 66, exerciseCount: substitutionExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        const target = activity.scenario.target;
+        if (JSON.stringify(current.code) !== JSON.stringify(target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(target.cursor)
+          || (activity.type === "exercise" && !current.complete)) result.push({ id: activity.id, current, target });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+  });
+
+  test("supports count-only and interactive confirmation through touch input", async ({ page }) => {
+    await page.goto("/?unit=substitution-practical-regex&activity=count-without-changing");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({ complete: true, code: ["WARN WARN", "WARN INFO"] });
+    await expect(page.locator(".cm-vim-message")).toContainText("3 matches on 2 lines");
+
+    await page.goto("/?unit=substitution-practical-regex&activity=confirm-all-remaining");
+    const acceptAll = substitutionActivities.find(activity => activity.id === "confirm-all-remaining");
+    await page.evaluate(keys => keys.slice(0, -1).forEach(key => window.VimWilds.emit(key)), keysFor(acceptAll));
+    expect((await state(page))).toMatchObject({ mode: "command-line", code: ["draft draft draft"] });
+    await page.locator('.key[data-key="a"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ["live live live"], mode: "Complete" });
+
+    await page.goto("/?unit=substitution-practical-regex&activity=confirm-skip-match");
+    const skip = substitutionActivities.find(activity => activity.id === "confirm-skip-match");
+    await page.evaluate(keys => keys.slice(0, -1).forEach(key => window.VimWilds.emit(key)), keysFor(skip));
+    await page.locator('.key[data-key="n"]').click();
+    expect((await state(page))).toMatchObject({ complete: true, code: ["old,keep"], modifiers: [] });
+
+    await page.goto("/?unit=substitution-practical-regex&activity=confirm-all-remaining");
+    await page.evaluate(keys => keys.slice(0, -1).forEach(key => window.VimWilds.emit(key)), keysFor(acceptAll));
+    await page.getByRole("button", { name: "Reset activity" }).click();
+    expect((await state(page))).toMatchObject({ complete: false, mode: "normal", code: ["draft draft draft"] });
+
+    await page.goto("/?unit=substitution-practical-regex&activity=confirm-skip-match");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.type(":s/old/new/c");
+    await page.keyboard.press("Enter");
+    expect((await state(page))).toMatchObject({ mode: "command-line", code: ["old,keep"] });
+    await page.keyboard.press("n");
+    expect((await state(page))).toMatchObject({ complete: true, mode: "Complete", code: ["old,keep"] });
+  });
+
+  test("matches native substitution case and replacement edge cases", async ({ page }) => {
+    await page.goto("/?unit=substitution-practical-regex");
+    const results = await page.evaluate(async () => {
+      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const cases = [
+        { id: "default-case", lines: ["Foo foo"], keys: [...":%s/foo/bar/g", "Enter"], expected: ["Foo bar"] },
+        { id: "i-and-I", lines: ["Foo foo", "Foo foo"], keys: [...":s/foo/bar/gi", "Enter", "j", ...":s/foo/baz/gI", "Enter"], expected: ["bar bar", "Foo baz"] },
+        {
+          id: "ampersand-zero-nine",
+          lines: ["cat", "abcdefghi"],
+          keys: [
+            ...":s/cat/&:\\0/", "Enter", "j",
+            ...":s/\\(a\\)\\(b\\)\\(c\\)\\(d\\)\\(e\\)\\(f\\)\\(g\\)\\(h\\)\\(i\\)/\\9\\1/", "Enter",
+          ],
+          expected: ["cat:cat", "ia"],
+        },
+        { id: "confirm-last", lines: ["draft draft"], keys: [...":s/draft/live/gc", "Enter", "l"], expected: ["live draft"] },
+        { id: "confirm-quit", lines: ["draft draft"], keys: [...":s/draft/live/gc", "Enter", "q"], expected: ["draft draft"] },
+        { id: "confirm-escape", lines: ["draft draft"], keys: [...":s/draft/live/gc", "Enter", "Escape"], expected: ["draft draft"] },
+        { id: "escaped-delimiter-history", lines: ["foo", "foo"], keys: [...":s#foo#bar\\#baz#", "Enter", "j", "&"], expected: ["bar#baz", "bar#baz"] },
+      ];
+      return cases.map(testCase => {
+        resetVimEngineState();
+        const host = document.createElement("div");
+        document.body.append(host);
+        const engine = new VimEngine({ parent: host, text: testCase.lines.join("\n"), cursor: [0, 0], onEvent() {} });
+        testCase.keys.forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+        const snapshot = engine.getSnapshot();
+        const actual = snapshot.text.split("\n");
+        engine.destroy();
+        host.remove();
+        return { id: testCase.id, actual, mode: snapshot.mode, expected: testCase.expected };
+      });
+    });
+    for (const result of results) {
+      expect(result.actual, result.id).toEqual(result.expected);
+      expect(result.mode, result.id).toBe("normal");
+    }
+  });
+
   test("shows recording state and enters @ from physical and touch keyboards", async ({ page }) => {
     await page.goto("/?unit=macros&activity=comment-python-jobs");
     await page.evaluate(() => { window.VimWilds.emit("q"); window.VimWilds.emit("a"); });
@@ -633,7 +732,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ modifiers: [], history: [...beforeReplay, "@"] });
   });
 
-  test("continues from Unit 10 through published Units 11 and 13", async ({ page }) => {
+  test("continues from Unit 10 through published Units 11, 12, and 13", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=repeat-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 11" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 11" }).click();
@@ -641,6 +740,12 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "command-line-ranges-line-operations", unitNumber: 11, activityId: "addresses-before-actions" });
 
     await page.goto("/?unit=command-line-ranges-line-operations&activity=command-line-ranges-unit-summary");
+    await expect(page.getByRole("button", { name: "Continue to Unit 12" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 12" }).click();
+    await page.waitForURL(/unit=substitution-practical-regex/);
+    expect((await state(page))).toMatchObject({ unitId: "substitution-practical-regex", unitNumber: 12, activityId: "substitution-parts" });
+
+    await page.goto("/?unit=substitution-practical-regex&activity=substitution-regex-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 13" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 13" }).click();
     await page.waitForURL(/unit=macros/);
@@ -1421,7 +1526,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "long-range-navigation", "repeatable-editing", "command-line-ranges-line-operations", "macros"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "long-range-navigation", "repeatable-editing", "command-line-ranges-line-operations", "substitution-practical-regex", "macros"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

@@ -19,6 +19,7 @@ const visualUnit = units.find(item => item.data.id === "visual-selection").data;
 const registerUnit = units.find(item => item.data.id === "registers-putting").data;
 const navigationUnit = units.find(item => item.data.id === "long-range-navigation").data;
 const rangeUnit = units.find(item => item.data.id === "command-line-ranges-line-operations").data;
+const substitutionUnit = units.find(item => item.data.id === "substitution-practical-regex").data;
 const macroUnit = units.find(item => item.data.id === "macros").data;
 const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
@@ -50,7 +51,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -97,7 +98,8 @@ test("unit continuation follows the next published catalog unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), registerUnit), navigationUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), navigationUnit)?.id, unit.id);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), unit), rangeUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), rangeUnit), macroUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), rangeUnit), substitutionUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), substitutionUnit), macroUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), macroUnit), null);
 });
 
@@ -106,9 +108,9 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
   assert.deepEqual(unitCatalog.arcs, [
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
     { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10] },
-    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [11, 13] },
+    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [11, 12, 13] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -263,6 +265,7 @@ test("Unit 11 preserves the command-line ranges curriculum and complete lesson f
   for (const activity of runnableActivities) {
     assert.equal(activity.provenance.nativeValidation, "passed", `${activity.id} native validation`);
     assert.equal(activity.provenance.browserConformance, "passed", `${activity.id} browser conformance`);
+    assert.equal(activity.provenance.browserConformance, "passed", `${activity.id} browser conformance`);
     const checkpoint = activity.script.checkpoints.at(-1);
     assert.equal(checkpoint.afterStep, keysOf(activity).length, `${activity.id} final checkpoint step`);
     assert.deepEqual(checkpoint.lines, activity.scenario.target.lines, `${activity.id} final checkpoint text`);
@@ -288,6 +291,49 @@ test("Unit 11 preserves the command-line ranges curriculum and complete lesson f
   for (const entry of rangeUnit.reference) {
     for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
   }
+});
+
+test("Unit 12 preserves the substitution curriculum and complete lesson flow", () => {
+  assert.deepEqual(substitutionUnit.curriculumDefinition, {
+    unit: "12. Substitution and practical regex",
+    commandsAndConcepts: "`:s/pattern/replacement/flags`; line, numeric, visual, and `%` ranges; flags `g c i I n`; empty/reused pattern or replacement; alternate delimiters; `. * \\+ \\? \\{m,n}`; `^ $`; classes and negation; Vim classes such as `\\d`, `\\w`, `\\s`; groups `\\(…\\)`; alternation `\\|`; word boundaries `\\< \\>`; captures; `\\zs \\ze`; very magic `\\v`; replacement `&`, `\\0`–`\\9`, `\\r`, case conversion, and `\\=` expressions",
+    prerequisites: "Unit 5 search; Unit 11 ranges",
+    learningOutcome: "Perform safe local and buffer-wide substitutions, capture structure, preview impact, and know when regex is too brittle",
+    representativeExercises: "Rename exact tokens; swap captured fields; edit only part of a match; normalize declarations; confirm replacements; count matches without changing them",
+    priorityAndPortability: "Core through captures and confirmation. `\\zs`, `\\ze`, case conversion, and expression replacement are advanced",
+  });
+  assert.deepEqual(substitutionUnit.prerequisiteSkillIds, ["precision-motions-search", "command-line-ranges-line-operations"]);
+  assert.equal(substitutionUnit.lessons.length, 8);
+  const activities = substitutionUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert.equal(runnableActivities.length, 32);
+  assert.equal(runnableActivities.filter(activity => activity.type === "exercise").length, 24);
+  for (const activity of runnableActivities) {
+    assert.equal(activity.provenance.nativeValidation, "passed", `${activity.id} native validation`);
+    const checkpoint = activity.script.checkpoints.at(-1);
+    assert.equal(checkpoint.afterStep, keysOf(activity).length, `${activity.id} final checkpoint step`);
+    assert.deepEqual(checkpoint.lines, activity.scenario.target.lines, `${activity.id} final checkpoint text`);
+    assert.deepEqual(checkpoint.cursor, activity.scenario.target.cursor, `${activity.id} final checkpoint cursor`);
+  }
+  assert.deepEqual(substitutionUnit.coverage.map(item => item.concept), [
+    "substitution sentence", "scope the lines", "control match flags", "preview and confirm",
+    "reuse and delimiters", "practical patterns", "capture structure", "precision and judgment",
+  ]);
+  for (const lesson of substitutionUnit.lessons) {
+    const phases = new Set(lesson.activities.map(activity => activity.phase));
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
+    }
+  }
+  const ids = new Set(activities.map(activity => activity.id));
+  for (const entry of substitutionUnit.reference) {
+    for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  const advancedTheory = activities.find(activity => activity.id === "advanced-regex-boundary").body;
+  assert.match(advancedTheory, /not executable in Vim Wilds yet/);
+  const runnableKeys = runnableActivities.flatMap(keysOf).join("");
+  assert(!runnableKeys.includes("\\="), "expression replacements remain theory-only");
+  assert(!/\\[uUlLE]/.test(runnableKeys), "replacement case conversion remains theory-only");
 });
 
 test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
@@ -1000,6 +1046,29 @@ for (const activity of rangeRunnable) {
       assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
       assert.deepEqual(checkpointResult.registers, checkpoint.registers || {}, `${activity.id} checkpoint ${checkpoint.afterStep} registers`);
     }
+  });
+}
+
+const substitutionRunnable = substitutionUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of substitutionRunnable) {
+  test(`native Vim Unit 12 content: ${activity.id}`, () => {
+    const keys = keysOf(activity);
+    const options = {
+      initialCode: activity.scenario.initial.lines,
+      cursor: activity.scenario.initial.cursor,
+      keys,
+    };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+    const checkpoint = activity.script.checkpoints.at(-1);
+    const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+    assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} final checkpoint text`);
+    assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} final checkpoint cursor`);
+    assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} final checkpoint mode`);
   });
 }
 

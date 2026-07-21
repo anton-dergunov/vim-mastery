@@ -3,7 +3,7 @@
   "arcs": [
     { "id": "foundations", "arcNumber": 1, "title": "Foundations", "unitNumbers": [1, 2, 3, 4, 5, 6] },
     { "id": "fluency-tracks", "arcNumber": 2, "title": "Fluency tracks", "unitNumbers": [7, 8, 9, 10] },
-    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [11, 13] }
+    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [11, 12, 13] }
   ],
   "units": [
     { "id": "modal-model", "unitNumber": 1, "title": "The modal model", "lessonCount": 5, "path": "content/units/01-modal-model.json" },
@@ -17,6 +17,7 @@
     { "id": "long-range-navigation", "unitNumber": 9, "title": "Long-range navigation", "lessonCount": 11, "path": "content/units/09-long-range-navigation.json" },
     { "id": "repeatable-editing", "unitNumber": 10, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/10-repeatable-editing.json" },
     { "id": "command-line-ranges-line-operations", "unitNumber": 11, "title": "Command-line ranges and line operations", "lessonCount": 8, "path": "content/units/11-command-line-ranges-line-operations.json" },
+    { "id": "substitution-practical-regex", "unitNumber": 12, "title": "Substitution and practical regex", "lessonCount": 8, "path": "content/units/12-substitution-practical-regex.json" },
     { "id": "macros", "unitNumber": 13, "title": "Macros", "lessonCount": 8, "path": "content/units/13-macros.json" }
   ]
 }

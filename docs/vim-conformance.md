@@ -95,6 +95,23 @@ boundaries. Activity reset clears marks, jump/change lists, insertion and
 selection history, and viewport state before deterministic setup is replayed.
 Specialized comment and preprocessor motions remain outside Unit 9.
 
+Unit 12 configures every editor instance with `nopcre`, making the adapter use
+Vim regular-expression syntax instead of its JavaScript-regex default. The
+versioned patch makes substitution case-sensitive by default, implements the
+`i`, `I`, and count-only `n` flags, and preserves `g` and interactive `c`.
+Confirmation choices (`y`, `n`, `a`, `q`, `l`, and Escape) pass through the
+same lesson input boundary for touch, demo playback, and physical keyboards;
+the reported mode remains Command-line until the prompt closes. Reset also
+disposes an active prompt with the rest of the editor instance.
+
+The verified replacement subset includes literal and alternate delimiters,
+empty pattern and replacement history, unescaped `&`, `\\0`–`\\9` captures,
+and line-breaking `\\r`. Its verified Vim-pattern subset includes the practical
+atoms, quantifiers, anchors, character classes, negation, `\\d`, `\\w`, `\\s`,
+groups, alternation, word boundaries, `\\v`, `\\zs`, and `\\ze` taught by the
+unit. Replacement case conversion and `\\=` expressions are intentionally
+orientation/reference material only and remain outside executable lessons.
+
 Unit 13 uses the adapter's named-register macro recorder for `q{register}…q`,
 `@{register}`, `@@`, and counted replay. The app buffers `@` for one key so its
 existing `@:` bridge can coexist with ordinary macro registers, and it detects

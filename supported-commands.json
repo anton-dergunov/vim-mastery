@@ -23,7 +23,7 @@
     "normal-mode indentation and reindent (>, <, =)",
     "hard reflow at an authored textwidth (gq, gw)",
     "macro recording and replay (q{register}…q, @{register}, @@, counts, uppercase append, inspection/repair, and failure stopping)",
-    "substitution",
+    "Vim-regex substitution with current-line, numeric, visual, and whole-buffer ranges; g/c/i/I/n flags; confirmation y/n/a/q/l/Escape; empty pattern and replacement reuse; alternate delimiters; atoms, quantifiers, anchors, classes, groups, alternation, word boundaries, captures, &, \\0-\\9, \\r, \\v, \\zs, and \\ze",
     "Visual Line indentation",
     "join lines with normalized or preserved whitespace (J, gJ)",
     "precision motions and search (f, F, t, T, ;, ,, /, ?, n, N, *, #, g*, g#, gn, gN, %, (, ), {, })",
@@ -34,6 +34,6 @@
     "yank and put"
   ],
   "pending": [
-    "full curriculum matrix: specialized comment and preprocessor motions, advanced regex, :normal, and :global"
+    "full curriculum matrix: specialized comment and preprocessor motions, replacement case conversion, \\= replacement expressions, :normal, and :global"
   ]
 }

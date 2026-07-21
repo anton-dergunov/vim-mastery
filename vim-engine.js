@@ -114,9 +114,30 @@ function snapshotRegisters() {
 
 function findUnescapedDelimiter(input, start, delimiter) {
   for (let index = start; index < input.length; index += 1) {
-    if (input[index] === delimiter && input[index - 1] !== "\\") return index;
+    if (input[index] !== delimiter) continue;
+    let backslashes = 0;
+    for (let previous = index - 1; previous >= start && input[previous] === "\\"; previous -= 1) backslashes += 1;
+    if (backslashes % 2 === 0) return index;
   }
   return -1;
+}
+
+function parseSubstitution(input) {
+  const command = input.match(/(?:^|[,%.'$+\-0-9?\/;>])s(?=[^A-Za-z0-9\s])/);
+  if (!command) return null;
+  const commandIndex = command.index + command[0].length - 1;
+  const delimiter = input[commandIndex + 1];
+  if (!delimiter || /[A-Za-z0-9\s]/.test(delimiter)) return null;
+  const patternEnd = findUnescapedDelimiter(input, commandIndex + 2, delimiter);
+  if (patternEnd < 0) return null;
+  const replacementEnd = findUnescapedDelimiter(input, patternEnd + 1, delimiter);
+  if (replacementEnd < 0) return null;
+  return {
+    delimiter,
+    pattern: input.slice(commandIndex + 2, patternEnd),
+    replacement: input.slice(patternEnd + 1, replacementEnd),
+    flags: input.slice(replacementEnd + 1).trim().split(/\s+/)[0] || "",
+  };
 }
 
 function lineForMark(cm, name) {
@@ -318,6 +339,9 @@ export class VimEngine {
       this.view.scrollDOM.addEventListener("touchmove", this.blockDirectScroll, { passive: false });
     }
     this.cm = getCM(this.view);
+    // The adapter defaults to JavaScript regular expressions. Lessons teach
+    // native Vim regex syntax, so every isolated exercise starts in Vim mode.
+    Vim.handleEx(this.cm, "set nopcre");
     if (textWidth !== undefined) this.cm?.setOption("textwidth", textWidth);
     this.onModeChange = event => {
       this.mode = event.mode || "normal";
@@ -354,7 +378,7 @@ export class VimEngine {
         from: positionForOffset(doc, range.from),
         to: positionForOffset(doc, range.to),
       })),
-      mode: normalizeMode(this.mode, this.subMode, this.cm, this.commandLine !== null),
+      mode: normalizeMode(this.mode, this.subMode, this.cm, this.commandLine !== null || Boolean(this.confirmationInput())),
       registers: snapshotRegisters(),
       viewport: this.getViewport(),
     };
@@ -378,6 +402,27 @@ export class VimEngine {
     const vimKey = toVimKey(key);
     const canonicalKey = canonicalKeyToken(vimKey);
 
+    const confirmationInput = this.confirmationInput();
+    if (confirmationInput) {
+      const promptKey = vimKey === "<Esc>" ? "Escape" : literalText(vimKey);
+      if (promptKey !== null) {
+        const event = new KeyboardEvent("keydown", {
+          key: promptKey,
+          code: promptKey.length === 1 ? `Key${promptKey.toUpperCase()}` : promptKey,
+          // The adapter listens on the prompt input itself. Do not bubble this
+          // synthetic event into the app's physical-key gate and recurse.
+          bubbles: false,
+          cancelable: true,
+        });
+        Object.defineProperty(event, "keyCode", { value: promptKey === "Escape" ? 27 : promptKey.toUpperCase().charCodeAt(0) });
+        Object.defineProperty(event, "vimWildsPrompt", { value: true });
+        confirmationInput.dispatchEvent(event);
+        this.disableNativeInputs();
+        this.emit("key", { key: canonicalKey, source });
+        return true;
+      }
+    }
+
     if (this.commandLine !== null) {
       if (vimKey === "<Esc>") {
         this.closeCommandLine();
@@ -385,14 +430,16 @@ export class VimEngine {
         this.commandLine = this.commandLine.slice(0, -1);
       } else if (vimKey === "<CR>") {
         if (this.commandPrefix === ":") {
-          this.lastExCommand = this.commandLine;
-          if (this.commandLine === "~" && this.lastSubstitution && this.lastSearchQuery !== null) {
-            this.executeEx(`s/${this.lastSearchQuery}/${this.lastSubstitution.replacement}/`);
-          } else {
-            this.rememberSubstitution(this.commandLine);
-            this.executeEx(this.commandLine);
-          }
+          const command = this.commandLine;
+          this.lastExCommand = command;
           this.closeCommandLine();
+          if (command === "~" && this.lastSubstitution && this.lastSearchQuery !== null) {
+            const delimiter = this.lastSubstitution.delimiter || "/";
+            this.executeEx(`s${delimiter}${this.lastSearchQuery}${delimiter}${this.lastSubstitution.replacement}${delimiter}`);
+          } else {
+            this.rememberSubstitution(command);
+            this.executeEx(command);
+          }
         } else {
           const input = this.cm?.state?.dialog?.querySelector("input");
           if (input) {
@@ -440,7 +487,8 @@ export class VimEngine {
     if (vimKey === "&" && this.lastSubstitution) {
       // `&` repeats the substitution pattern and replacement but intentionally
       // does not inherit flags such as `g`.
-      this.executeEx(`s/${this.lastSubstitution.pattern}/${this.lastSubstitution.replacement}/`);
+      const { delimiter, pattern, replacement } = this.lastSubstitution;
+      this.executeEx(`s${delimiter}${pattern}${delimiter}${replacement}${delimiter}`);
       this.emit("key", { key: canonicalKey, source });
       return true;
     }
@@ -482,6 +530,11 @@ export class VimEngine {
 
   disableNativeInputs() {
     this.view.dom.querySelectorAll("input, textarea").forEach(input => this.disableNativeInput(input));
+  }
+
+  confirmationInput() {
+    if (!this.cm?.state?.vim?.exMode || this.commandLine !== null) return null;
+    return this.view.dom.querySelector(".cm-vim-panel input, .cm-vim-panel textarea");
   }
 
   syncCommandInput() {
@@ -621,12 +674,8 @@ export class VimEngine {
   }
 
   rememberSubstitution(command) {
-    if (!command.startsWith("s") || command.length < 4) return;
-    const delimiter = command[1];
-    const parts = command.slice(2).split(delimiter);
-    if (parts.length < 3) return;
-    const [pattern, replacement, flags] = parts;
-    this.lastSubstitution = { pattern, replacement, flags };
+    const substitution = parseSubstitution(command);
+    if (substitution) this.lastSubstitution = substitution;
   }
 
   closeCommandLine() {

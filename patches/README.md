@@ -26,6 +26,13 @@ insert finishes, block shifts use CodeMirror's configured indentation unit,
 and characterwise Visual `gq` treats the formatter's end row as exclusive so
 the cursor finishes at the start of the last formatted row.
 
+Unit 12 extends the patch for substitution conformance. Vim regex is
+case-sensitive by default, `i` and `I` select case behavior explicitly, and
+`n` counts matches without editing. Confirmation keeps native `g`/`c`
+semantics and cursor placement, unescaped replacement `&` expands even in the
+first position, `\\r` advances replacement scanning across inserted lines, and
+patterns containing the active Ex delimiter remain valid with `nopcre`.
+
 Unit 13 extends the patch for macro conformance. Uppercase `qA` preserves and
 appends to the lowercase register, while a failed find or search aborts the
 rest of the macro and stops any remaining counted repetitions.

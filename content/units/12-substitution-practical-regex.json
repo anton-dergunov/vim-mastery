@@ -1,0 +1,4248 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 12,
+  "id": "substitution-practical-regex",
+  "title": "Substitution and practical regex",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "12. Substitution and practical regex",
+    "commandsAndConcepts": "`:s/pattern/replacement/flags`; line, numeric, visual, and `%` ranges; flags `g c i I n`; empty/reused pattern or replacement; alternate delimiters; `. * \\+ \\? \\{m,n}`; `^ $`; classes and negation; Vim classes such as `\\d`, `\\w`, `\\s`; groups `\\(…\\)`; alternation `\\|`; word boundaries `\\< \\>`; captures; `\\zs \\ze`; very magic `\\v`; replacement `&`, `\\0`–`\\9`, `\\r`, case conversion, and `\\=` expressions",
+    "prerequisites": "Unit 5 search; Unit 11 ranges",
+    "learningOutcome": "Perform safe local and buffer-wide substitutions, capture structure, preview impact, and know when regex is too brittle",
+    "representativeExercises": "Rename exact tokens; swap captured fields; edit only part of a match; normalize declarations; confirm replacements; count matches without changing them",
+    "priorityAndPortability": "Core through captures and confirmation. `\\zs`, `\\ze`, case conversion, and expression replacement are advanced"
+  },
+  "prerequisiteSkillIds": [
+    "precision-motions-search",
+    "command-line-ranges-line-operations"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "substitution-practical-regex-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "substitution-sentence",
+      "title": "Build a substitution",
+      "objective": "Read and execute the pattern, replacement, delimiter, and range as one Ex command.",
+      "activities": [
+        {
+          "id": "substitution-parts",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A substitution is a four-part sentence",
+          "body": "`:s/pattern/replacement/flags` searches the addressed lines, replaces matching text, and applies optional flags. Without a range, it acts only on the current line.",
+          "grammar": ":[range]s{delimiter}pattern{delimiter}replacement{delimiter}[flags]",
+          "contrast": "The pattern selects text; the range selects lines.",
+          "demoRef": "terminal-substitute-demo"
+        },
+        {
+          "id": "terminal-substitute-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Rewrite every declaration",
+          "instruction": "Replace `var` with `const` throughout the buffer.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "var port = 3000;",
+                "var host = getHost();",
+                "var secure = false;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const port = 3000;",
+                "const host = getHost();",
+                "const secure = false;"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "v",
+              "a",
+              "r",
+              "/",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 16,
+                "display": ":%s/var/const/g↵",
+                "explanation": "Replace `var` with `const` throughout the buffer."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 16,
+                "lines": [
+                  "const port = 3000;",
+                  "const host = getHost();",
+                  "const secure = false;"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/var/const/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace `var` with `const` throughout the buffer."
+          },
+          "skills": {
+            "primary": [
+              "literal-substitute",
+              "percent-range"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-1"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "javascript keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "literal-substitute",
+              "percent-range"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "rename-current-status",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Rename this status",
+          "instruction": "Replace `draft` with `live` on the current line.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status: draft",
+                "owner: moss"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "status: live",
+                "owner: moss"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "l",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":s/draft/live/↵",
+                "explanation": "Replace `draft` with `live` on the current line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "status: live",
+                  "owner: moss"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/draft/live/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace `draft` with `live` on the current line."
+          },
+          "skills": {
+            "primary": [
+              "literal-substitute"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-1"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "yaml keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "literal-substitute"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "replace-all-todos",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Finish every TODO",
+          "instruction": "Replace every `TODO` in the buffer with `DONE`.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TODO docs",
+                "TODO tests",
+                "TODO release"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "DONE docs",
+                "DONE tests",
+                "DONE release"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "/",
+              "D",
+              "O",
+              "N",
+              "E",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 16,
+                "display": ":%s/TODO/DONE/g↵",
+                "explanation": "Replace every `TODO` in the buffer with `DONE`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 16,
+                "lines": [
+                  "DONE docs",
+                  "DONE tests",
+                  "DONE release"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/TODO/DONE/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace every `TODO` in the buffer with `DONE`."
+          },
+          "skills": {
+            "primary": [
+              "literal-substitute",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-1"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "markdown keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "literal-substitute",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "literal-token-boundary",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Rename exact tokens",
+          "instruction": "Replace the lowercase token without changing the uppercase constant.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const mode = old;",
+                "const OLD = frozen;",
+                "return old;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const mode = new;",
+                "const OLD = frozen;",
+                "return new;"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "n",
+              "e",
+              "w",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":%s/old/new/g↵",
+                "explanation": "Replace the lowercase token without changing the uppercase constant."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "const mode = new;",
+                  "const OLD = frozen;",
+                  "return new;"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/old/new/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace the lowercase token without changing the uppercase constant."
+          },
+          "skills": {
+            "primary": [
+              "literal-substitute",
+              "case-sensitive"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-1"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "typescript keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "literal-substitute",
+              "case-sensitive"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "scope-the-lines",
+      "title": "Scope the line set",
+      "objective": "Apply substitutions to the current line, numeric ranges, Visual selections, and the whole buffer.",
+      "activities": [
+        {
+          "id": "substitution-ranges",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Address first, substitute second",
+          "body": "The same substitution can act on one line, a numeric range, a Visual range, or `%` for the whole buffer. A narrow range is easier to predict and review.",
+          "grammar": ":s… · :2,4s… · V…:s… · :%s…",
+          "contrast": "A `g` flag widens matches within each line; `%` widens the addressed line set.",
+          "demoRef": "numeric-range-demo"
+        },
+        {
+          "id": "numeric-range-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Update only the middle rows",
+          "instruction": "Replace `pending` on lines two through four.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name,state",
+                "Ada,pending",
+                "Bo,pending",
+                "Cy,pending",
+                "END,locked"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name,state",
+                "Ada,ready",
+                "Bo,ready",
+                "Cy,ready",
+                "END,locked"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "s",
+              "/",
+              "p",
+              "e",
+              "n",
+              "d",
+              "i",
+              "n",
+              "g",
+              "/",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 21,
+                "display": ":2,4s/pending/ready/↵",
+                "explanation": "Replace `pending` on lines two through four."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 21,
+                "lines": [
+                  "name,state",
+                  "Ada,ready",
+                  "Bo,ready",
+                  "Cy,ready",
+                  "END,locked"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :2,4s/pending/ready/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace `pending` on lines two through four."
+          },
+          "skills": {
+            "primary": [
+              "numeric-range",
+              "literal-substitute"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-2"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "csv keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "numeric-range",
+              "literal-substitute"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "single-line-scope",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Change only line three",
+          "instruction": "Address line three directly and update its value.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "north = false",
+                "east = false",
+                "south = false",
+                "west = false"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "north = false",
+                "east = false",
+                "south = true",
+                "west = false"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "3",
+              "s",
+              "/",
+              "f",
+              "a",
+              "l",
+              "s",
+              "e",
+              "/",
+              "t",
+              "r",
+              "u",
+              "e",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 16,
+                "display": ":3s/false/true/↵",
+                "explanation": "Address line three directly and update its value."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 16,
+                "lines": [
+                  "north = false",
+                  "east = false",
+                  "south = true",
+                  "west = false"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :3s/false/true/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Address line three directly and update its value."
+          },
+          "skills": {
+            "primary": [
+              "numeric-address",
+              "literal-substitute"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-2"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "toml keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "numeric-address",
+              "literal-substitute"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "visual-range-substitute",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Rename the selected pair",
+          "instruction": "Select the middle two lines and substitute only inside that Visual range.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "old = load()",
+                "old = parse()",
+                "old = render()",
+                "old = archive()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "old = load()",
+                "current = parse()",
+                "current = render()",
+                "old = archive()"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "V",
+              "j",
+              ":",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "c",
+              "u",
+              "r",
+              "r",
+              "e",
+              "n",
+              "t",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 19,
+                "display": "jVj:s/old/current/↵",
+                "explanation": "Select the middle two lines and substitute only inside that Visual range."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": [
+                  "old = load()",
+                  "current = parse()",
+                  "current = render()",
+                  "old = archive()"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use jVj:s/old/current/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Select the middle two lines and substitute only inside that Visual range."
+          },
+          "skills": {
+            "primary": [
+              "visual-range",
+              "literal-substitute"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-2"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "python keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-range",
+              "literal-substitute"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "range-versus-global",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Limit a repeated replacement",
+          "instruction": "Replace both `off` values, but only on lines two and three.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "off off keep",
+                "off off change",
+                "off off change",
+                "off off keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "off off keep",
+                "on on change",
+                "on on change",
+                "off off keep"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "s",
+              "/",
+              "o",
+              "f",
+              "f",
+              "/",
+              "o",
+              "n",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":2,3s/off/on/g↵",
+                "explanation": "Replace both `off` values, but only on lines two and three."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "off off keep",
+                  "on on change",
+                  "on on change",
+                  "off off keep"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :2,3s/off/on/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace both `off` values, but only on lines two and three."
+          },
+          "skills": {
+            "primary": [
+              "numeric-range",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-2"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "log keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "numeric-range",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "control-match-flags",
+      "title": "Control matches with flags",
+      "objective": "Distinguish one match from all matches and choose explicit case behavior.",
+      "activities": [
+        {
+          "id": "substitution-flags",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Flags change matching, not scope",
+          "body": "`g` replaces every match on each addressed line. `i` ignores case for this command, while `I` forces case-sensitive matching.",
+          "grammar": ":s/old/new/g · /i · /I",
+          "contrast": "Flags do not add lines to the range.",
+          "demoRef": "global-flag-demo"
+        },
+        {
+          "id": "global-flag-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Replace every tag",
+          "instruction": "Replace all three tags on the current line.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "tag tag tag"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "item item item"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "t",
+              "a",
+              "g",
+              "/",
+              "i",
+              "t",
+              "e",
+              "m",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":s/tag/item/g↵",
+                "explanation": "Replace all three tags on the current line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "item item item"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/tag/item/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace all three tags on the current line."
+          },
+          "skills": {
+            "primary": [
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-3"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "html keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-flag"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "first-match-only",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Change only the first match",
+          "instruction": "Run a substitution without `g` so the second value remains.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "old old"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "new old"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "n",
+              "e",
+              "w",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 12,
+                "display": ":s/old/new/↵",
+                "explanation": "Run a substitution without `g` so the second value remains."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "new old"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/old/new/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Run a substitution without `g` so the second value remains."
+          },
+          "skills": {
+            "primary": [
+              "first-match"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-3"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "json keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "first-match"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "ignore-case-flag",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Normalize mixed case",
+          "instruction": "Use `i` and `g` to replace every case variant.",
+          "languageId": "css",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "red RED Red"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "blue blue blue"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "r",
+              "e",
+              "d",
+              "/",
+              "b",
+              "l",
+              "u",
+              "e",
+              "/",
+              "g",
+              "i",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":s/red/blue/gi↵",
+                "explanation": "Use `i` and `g` to replace every case variant."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "blue blue blue"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/red/blue/giEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `i` and `g` to replace every case variant."
+          },
+          "skills": {
+            "primary": [
+              "ignore-case-flag",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-3"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "css keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ignore-case-flag",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "force-case-flag",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Protect the uppercase name",
+          "instruction": "Use `I` explicitly so only lowercase `foo` changes.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "foo FOO foo"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "bar FOO bar"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "f",
+              "o",
+              "o",
+              "/",
+              "b",
+              "a",
+              "r",
+              "/",
+              "g",
+              "I",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":s/foo/bar/gI↵",
+                "explanation": "Use `I` explicitly so only lowercase `foo` changes."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "bar FOO bar"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/foo/bar/gIEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `I` explicitly so only lowercase `foo` changes."
+          },
+          "skills": {
+            "primary": [
+              "force-case-flag",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-3"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "go keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "force-case-flag",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "preview-and-confirm",
+      "title": "Preview and confirm safely",
+      "objective": "Count impact before editing and make deliberate per-match confirmation decisions.",
+      "activities": [
+        {
+          "id": "safe-substitution-flags",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Count first, confirm when risk is uneven",
+          "body": "The `n` flag reports how many matches would be affected without changing text. The `c` flag pauses at each match for `y`, `n`, `a`, `q`, or `l`.",
+          "grammar": ":%s/pat/repl/gn → inspect → :%s/pat/repl/gc",
+          "contrast": "`a` accepts all remaining matches; `l` replaces the current match and stops.",
+          "demoRef": "confirm-selectively-demo"
+        },
+        {
+          "id": "confirm-selectively-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Accept a reviewed match",
+          "instruction": "Inspect the match and confirm its replacement with `y`.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "foo waits"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "bar waits"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "f",
+              "o",
+              "o",
+              "/",
+              "b",
+              "a",
+              "r",
+              "/",
+              "c",
+              "Enter",
+              "y"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":s/foo/bar/c↵y",
+                "explanation": "Inspect the match and confirm its replacement with `y`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "bar waits"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/foo/bar/cEntery."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Inspect the match and confirm its replacement with `y`."
+          },
+          "skills": {
+            "primary": [
+              "confirm-flag",
+              "confirm-yes"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-4"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "prose keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "confirm-flag",
+              "confirm-yes"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "count-without-changing",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Count before editing",
+          "instruction": "Use `n` with `g` to count every match without changing the buffer.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "WARN WARN",
+                "WARN INFO"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "WARN WARN",
+                "WARN INFO"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "W",
+              "A",
+              "R",
+              "N",
+              "/",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
+              "/",
+              "g",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":%s/WARN/ERROR/gn↵",
+                "explanation": "Use `n` with `g` to count every match without changing the buffer."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "WARN WARN",
+                  "WARN INFO"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/WARN/ERROR/gnEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `n` with `g` to count every match without changing the buffer."
+          },
+          "skills": {
+            "primary": [
+              "count-only-flag",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-4"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "log keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "count-only-flag",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "confirm-skip-match",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Skip a reviewed match",
+          "instruction": "Inspect the match and leave it unchanged with `n`.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "old,keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "old,keep"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "n",
+              "e",
+              "w",
+              "/",
+              "c",
+              "Enter",
+              "n"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":s/old/new/c↵n",
+                "explanation": "Inspect the match and leave it unchanged with `n`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "old,keep"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/old/new/cEntern."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Inspect the match and leave it unchanged with `n`."
+          },
+          "skills": {
+            "primary": [
+              "confirm-flag",
+              "confirm-no"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-4"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "csv keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "confirm-flag",
+              "confirm-no"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "confirm-all-remaining",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Accept all remaining matches",
+          "instruction": "Use `a` to accept every match after reviewing the first one.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft draft draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "live live live"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "l",
+              "i",
+              "v",
+              "e",
+              "/",
+              "g",
+              "c",
+              "Enter",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":s/draft/live/gc↵a",
+                "explanation": "Use `a` to accept every match after reviewing the first one."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "live live live"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/draft/live/gcEntera."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `a` to accept every match after reviewing the first one."
+          },
+          "skills": {
+            "primary": [
+              "confirm-flag",
+              "confirm-all"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-4"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "shell keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "confirm-flag",
+              "confirm-all"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "reuse-and-delimiters",
+      "title": "Reuse history and choose delimiters",
+      "objective": "Reuse search and substitution history while keeping delimiter-heavy commands readable.",
+      "activities": [
+        {
+          "id": "history-and-delimiters",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Empty fields can carry history",
+          "body": "An empty pattern reuses the latest search pattern. An empty replacement deletes matches. Alternate delimiters such as `#` avoid escaping `/` in paths and URLs.",
+          "grammar": "/pattern → :%s//new/g · :s/old// · :s#old#new#",
+          "contrast": "Empty pattern means reuse; empty replacement means remove.",
+          "demoRef": "empty-pattern-demo"
+        },
+        {
+          "id": "empty-pattern-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reuse the latest search",
+          "instruction": "Search for `cat`, then reuse that pattern in a whole-buffer substitution.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cat waits",
+                "dog sleeps",
+                "cat watches"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "wolf waits",
+                "dog sleeps",
+                "wolf watches"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "c",
+              "a",
+              "t",
+              "Enter",
+              ":",
+              "%",
+              "s",
+              "/",
+              "/",
+              "w",
+              "o",
+              "l",
+              "f",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 17,
+                "display": "/cat↵:%s//wolf/g↵",
+                "explanation": "Search for `cat`, then reuse that pattern in a whole-buffer substitution."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "lines": [
+                  "wolf waits",
+                  "dog sleeps",
+                  "wolf watches"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use /catEnter:%s//wolf/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Search for `cat`, then reuse that pattern in a whole-buffer substitution."
+          },
+          "skills": {
+            "primary": [
+              "empty-pattern",
+              "search-history"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-5"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "prose keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "empty-pattern",
+              "search-history"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "empty-replacement",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Remove the debug marker",
+          "instruction": "Use an empty replacement to delete every marker.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "DEBUG ready",
+                "DEBUG done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready",
+                "done"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "D",
+              "E",
+              "B",
+              "U",
+              "G",
+              " ",
+              "/",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": ":%s/DEBUG //↵",
+                "explanation": "Use an empty replacement to delete every marker."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "ready",
+                  "done"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/DEBUG //Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use an empty replacement to delete every marker."
+          },
+          "skills": {
+            "primary": [
+              "empty-replacement"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-5"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "log keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "empty-replacement"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "alternate-url-delimiter",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Upgrade URLs readably",
+          "instruction": "Use `#` as the delimiter so URL slashes stay readable.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "http://one.test",
+                "http://two.test"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "https://one.test",
+                "https://two.test"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "#",
+              "h",
+              "t",
+              "t",
+              "p",
+              ":",
+              "/",
+              "/",
+              "#",
+              "h",
+              "t",
+              "t",
+              "p",
+              "s",
+              ":",
+              "/",
+              "/",
+              "#",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 22,
+                "display": ":%s#http://#https://#↵",
+                "explanation": "Use `#` as the delimiter so URL slashes stay readable."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 22,
+                "lines": [
+                  "https://one.test",
+                  "https://two.test"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s#http://#https://#Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `#` as the delimiter so URL slashes stay readable."
+          },
+          "skills": {
+            "primary": [
+              "alternate-delimiter",
+              "percent-range"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-5"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "markdown keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "alternate-delimiter",
+              "percent-range"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "repeat-substitution-history",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Reuse the complete recipe",
+          "instruction": "Substitute once, move down, and use `&` to repeat the pattern and replacement.",
+          "languageId": "ruby",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "state = :draft",
+                "state = :draft"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "state = :live",
+                "state = :live"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "l",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter",
+              "j",
+              "&"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 17,
+                "display": ":s/draft/live/↵j&",
+                "explanation": "Substitute once, move down, and use `&` to repeat the pattern and replacement."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "lines": [
+                  "state = :live",
+                  "state = :live"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/draft/live/Enterj&."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Substitute once, move down, and use `&` to repeat the pattern and replacement."
+          },
+          "skills": {
+            "primary": [
+              "substitution-history",
+              "ampersand-repeat"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-5"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "ruby keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substitution-history",
+              "ampersand-repeat"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "practical-patterns",
+      "title": "Build practical patterns",
+      "objective": "Use anchors, classes, negation, quantifiers, and Vim character classes without turning the lesson into a general regex course.",
+      "activities": [
+        {
+          "id": "practical-regex-atoms",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Compose the smallest dependable pattern",
+          "body": "Vim patterns use `.`, `*`, escaped quantifiers such as `\\+`, `\\?`, and `\\{m,n}`, anchors `^` and `$`, bracket classes, negation, and classes such as `\\d`, `\\w`, and `\\s`.",
+          "grammar": "anchor + class + quantifier",
+          "contrast": "Prefer a literal when structure does not require a pattern.",
+          "demoRef": "trim-leading-space-demo"
+        },
+        {
+          "id": "trim-leading-space-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Trim leading whitespace",
+          "instruction": "Remove one or more leading whitespace characters from every line.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "  one",
+                "    two",
+                " three"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "one",
+                "two",
+                "three"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "^",
+              "\\",
+              "s",
+              "\\",
+              "+",
+              "/",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 12,
+                "display": ":%s/^\\s\\+//↵",
+                "explanation": "Remove one or more leading whitespace characters from every line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "one",
+                  "two",
+                  "three"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/^\\s\\+//Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Remove one or more leading whitespace characters from every line."
+          },
+          "skills": {
+            "primary": [
+              "anchor",
+              "vim-space-class",
+              "one-or-more"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-6"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "python keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "anchor",
+              "vim-space-class",
+              "one-or-more"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "normalize-digits",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Normalize numeric identifiers",
+          "instruction": "Replace each run of digits after `id-`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "id-12",
+                "id-307",
+                "id-4"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "id-N",
+                "id-N",
+                "id-N"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "i",
+              "d",
+              "-",
+              "\\",
+              "d",
+              "\\",
+              "+",
+              "/",
+              "i",
+              "d",
+              "-",
+              "N",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":%s/id-\\d\\+/id-N/↵",
+                "explanation": "Replace each run of digits after `id-`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "id-N",
+                  "id-N",
+                  "id-N"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/id-\\d\\+/id-N/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace each run of digits after `id-`."
+          },
+          "skills": {
+            "primary": [
+              "vim-digit-class",
+              "one-or-more"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-6"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "yaml keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "vim-digit-class",
+              "one-or-more"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "optional-spelling",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Match an optional letter",
+          "instruction": "Use `\\?` so both spellings become `tone`.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "color colour"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "tone tone"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "c",
+              "o",
+              "l",
+              "o",
+              "u",
+              "\\",
+              "?",
+              "r",
+              "/",
+              "t",
+              "o",
+              "n",
+              "e",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 19,
+                "display": ":s/colou\\?r/tone/g↵",
+                "explanation": "Use `\\?` so both spellings become `tone`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": [
+                  "tone tone"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/colou\\?r/tone/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `\\?` so both spellings become `tone`."
+          },
+          "skills": {
+            "primary": [
+              "optional-quantifier",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-6"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "prose keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "optional-quantifier",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "bounded-code-class",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Normalize bounded codes",
+          "instruction": "Replace uppercase codes containing two to four letters.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a = AB",
+                "b = WXYZ",
+                "c = Q"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a = CODE",
+                "b = CODE",
+                "c = Q"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "[",
+              "A",
+              "-",
+              "Z",
+              "]",
+              "\\",
+              "{",
+              "2",
+              ",",
+              "4",
+              "}",
+              "/",
+              "C",
+              "O",
+              "D",
+              "E",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 22,
+                "display": ":%s/[A-Z]\\{2,4}/CODE/↵",
+                "explanation": "Replace uppercase codes containing two to four letters."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 22,
+                "lines": [
+                  "a = CODE",
+                  "b = CODE",
+                  "c = Q"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/[A-Z]\\{2,4}/CODE/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Replace uppercase codes containing two to four letters."
+          },
+          "skills": {
+            "primary": [
+              "bracket-class",
+              "bounded-quantifier"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-6"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "toml keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "bracket-class",
+              "bounded-quantifier"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "capture-structure",
+      "title": "Capture and rebuild structure",
+      "objective": "Use grouping, alternation, boundaries, captures, whole matches, and line breaks in replacements.",
+      "activities": [
+        {
+          "id": "capture-and-replacement",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Capture structure, then rebuild it",
+          "body": "Vim groups use `\\(…\\)`, alternation uses `\\|`, and `\\<`/`\\>` mark word boundaries. Replacements can reuse the whole match with `&` or `\\0`, captures with `\\1`–`\\9`, and create a line break with `\\r`.",
+          "grammar": ":s/\\(left\\),\\(right\\)/\\2, \\1/",
+          "contrast": "Capture only the parts the replacement actually needs.",
+          "demoRef": "swap-captures-demo"
+        },
+        {
+          "id": "swap-captures-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Swap two fields",
+          "instruction": "Capture both CSV fields and rebuild them in reverse order.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "first,last"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "last,first"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "\\",
+              "(",
+              "\\",
+              "w",
+              "\\",
+              "+",
+              "\\",
+              ")",
+              ",",
+              "\\",
+              "(",
+              "\\",
+              "w",
+              "\\",
+              "+",
+              "\\",
+              ")",
+              "/",
+              "\\",
+              "2",
+              ",",
+              "\\",
+              "1",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 28,
+                "display": ":s/\\(\\w\\+\\),\\(\\w\\+\\)/\\2,\\1/↵",
+                "explanation": "Capture both CSV fields and rebuild them in reverse order."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 28,
+                "lines": [
+                  "last,first"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/\\(\\w\\+\\),\\(\\w\\+\\)/\\2,\\1/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Capture both CSV fields and rebuild them in reverse order."
+          },
+          "skills": {
+            "primary": [
+              "capture-groups",
+              "backreferences"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-7"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "csv keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "capture-groups",
+              "backreferences"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "alternation-alerts",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Normalize two alert levels",
+          "instruction": "Group two alternatives and replace either with `alert`.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "warn: disk",
+                "error: net",
+                "info: ok"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alert: disk",
+                "alert: net",
+                "info: ok"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "\\",
+              "(",
+              "w",
+              "a",
+              "r",
+              "n",
+              "\\",
+              "|",
+              "e",
+              "r",
+              "r",
+              "o",
+              "r",
+              "\\",
+              ")",
+              "/",
+              "a",
+              "l",
+              "e",
+              "r",
+              "t",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 27,
+                "display": ":%s/\\(warn\\|error\\)/alert/↵",
+                "explanation": "Group two alternatives and replace either with `alert`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 27,
+                "lines": [
+                  "alert: disk",
+                  "alert: net",
+                  "info: ok"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/\\(warn\\|error\\)/alert/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Group two alternatives and replace either with `alert`."
+          },
+          "skills": {
+            "primary": [
+              "grouping",
+              "alternation"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-7"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "log keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "grouping",
+              "alternation"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "whole-word-and-match",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Wrap only the whole word",
+          "instruction": "Use word boundaries and `&` so `cat` is wrapped but `catalog` is untouched.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cat catalog cat"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "[cat] catalog [cat]"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "\\",
+              "<",
+              "c",
+              "a",
+              "t",
+              "\\",
+              ">",
+              "/",
+              "[",
+              "&",
+              "]",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 17,
+                "display": ":s/\\<cat\\>/[&]/g↵",
+                "explanation": "Use word boundaries and `&` so `cat` is wrapped but `catalog` is untouched."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "lines": [
+                  "[cat] catalog [cat]"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/\\<cat\\>/[&]/gEnter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use word boundaries and `&` so `cat` is wrapped but `catalog` is untouched."
+          },
+          "skills": {
+            "primary": [
+              "word-boundaries",
+              "whole-match",
+              "global-flag"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-7"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "prose keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "word-boundaries",
+              "whole-match",
+              "global-flag"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "split-key-value",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Split a captured assignment",
+          "instruction": "Capture the key and value, then rebuild them on separate lines with `\\r`.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "MODE=production"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "MODE",
+                "production"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "^",
+              "\\",
+              "(",
+              "\\",
+              "w",
+              "\\",
+              "+",
+              "\\",
+              ")",
+              "=",
+              "\\",
+              "(",
+              ".",
+              "*",
+              "\\",
+              ")",
+              "$",
+              "/",
+              "\\",
+              "1",
+              "\\",
+              "r",
+              "\\",
+              "2",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 29,
+                "display": ":s/^\\(\\w\\+\\)=\\(.*\\)$/\\1\\r\\2/↵",
+                "explanation": "Capture the key and value, then rebuild them on separate lines with `\\r`."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 29,
+                "lines": [
+                  "MODE",
+                  "production"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/^\\(\\w\\+\\)=\\(.*\\)$/\\1\\r\\2/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Capture the key and value, then rebuild them on separate lines with `\\r`."
+          },
+          "skills": {
+            "primary": [
+              "capture-groups",
+              "backreferences",
+              "replacement-line-break"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-7"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "shell keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "capture-groups",
+              "backreferences",
+              "replacement-line-break"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "precision-and-judgment",
+      "title": "Use precision without brittleness",
+      "objective": "Apply very-magic and match-boundary tools, then recognize when regex is the wrong mechanism.",
+      "activities": [
+        {
+          "id": "advanced-regex-boundary",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Advanced patterns are precision tools",
+          "body": "`\\v` makes most punctuation special. `\\zs` starts the replaced portion inside a larger match, and `\\ze` ends it early. Vim also supports replacement case conversion and `\\=` expressions; those are advanced reference topics and are not executable in Vim Wilds yet.",
+          "grammar": "context\\zsreplace-me\\zecontext",
+          "contrast": "If a pattern needs fragile exceptions, prefer a structural edit, macro, or semantic refactor.",
+          "demoRef": "very-magic-demo"
+        },
+        {
+          "id": "very-magic-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Capture with very magic",
+          "instruction": "Use `\\v` to swap the two comma-separated fields with lighter punctuation.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "north,south"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "south,north"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "\\",
+              "v",
+              "(",
+              "\\",
+              "w",
+              "+",
+              ")",
+              ",",
+              "(",
+              "\\",
+              "w",
+              "+",
+              ")",
+              "/",
+              "\\",
+              "2",
+              ",",
+              "\\",
+              "1",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 24,
+                "display": ":s/\\v(\\w+),(\\w+)/\\2,\\1/↵",
+                "explanation": "Use `\\v` to swap the two comma-separated fields with lighter punctuation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 24,
+                "lines": [
+                  "south,north"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/\\v(\\w+),(\\w+)/\\2,\\1/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `\\v` to swap the two comma-separated fields with lighter punctuation."
+          },
+          "skills": {
+            "primary": [
+              "very-magic",
+              "capture-groups"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "command-line",
+              "lesson-8"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "csv keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "very-magic",
+              "capture-groups"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "start-match-late",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Replace only after a prefix",
+          "instruction": "Use `\\zs` so the prefix participates in the match but remains unchanged.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "env:development"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "env:production"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "e",
+              "n",
+              "v",
+              ":",
+              "\\",
+              "z",
+              "s",
+              ".",
+              "*",
+              "$",
+              "/",
+              "p",
+              "r",
+              "o",
+              "d",
+              "u",
+              "c",
+              "t",
+              "i",
+              "o",
+              "n",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 26,
+                "display": ":s/env:\\zs.*$/production/↵",
+                "explanation": "Use `\\zs` so the prefix participates in the match but remains unchanged."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 26,
+                "lines": [
+                  "env:production"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/env:\\zs.*$/production/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `\\zs` so the prefix participates in the match but remains unchanged."
+          },
+          "skills": {
+            "primary": [
+              "match-start",
+              "anchor"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "command-line",
+              "lesson-8"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "typescript keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "match-start",
+              "anchor"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "end-match-early",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Preserve the suffix",
+          "instruction": "Use `\\ze` so only the value before the suffix is replaced.",
+          "languageId": "html",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode=draft;locked"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode=live;locked"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "\\",
+              "z",
+              "e",
+              ";",
+              "l",
+              "o",
+              "c",
+              "k",
+              "e",
+              "d",
+              "/",
+              "l",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 25,
+                "display": ":s/draft\\ze;locked/live/↵",
+                "explanation": "Use `\\ze` so only the value before the suffix is replaced."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 25,
+                "lines": [
+                  "mode=live;locked"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :s/draft\\ze;locked/live/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Use `\\ze` so only the value before the suffix is replaced."
+          },
+          "skills": {
+            "primary": [
+              "match-end"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "command-line",
+              "lesson-8"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "html keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "match-end"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "precise-scoped-cleanup",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Normalize only exact IDs",
+          "instruction": "Combine `%`, `\\v`, boundaries, and captures for a controlled cleanup.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "id-12 ready",
+                "grid-12 keep",
+                "id-7 ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "item-12 ready",
+                "grid-12 keep",
+                "item-7 ready"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "\\",
+              "v",
+              "<",
+              "i",
+              "d",
+              "-",
+              "(",
+              "\\",
+              "d",
+              "+",
+              ")",
+              ">",
+              "/",
+              "i",
+              "t",
+              "e",
+              "m",
+              "-",
+              "\\",
+              "1",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 26,
+                "display": ":%s/\\v<id-(\\d+)>/item-\\1/↵",
+                "explanation": "Combine `%`, `\\v`, boundaries, and captures for a controlled cleanup."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 26,
+                "lines": [
+                  "item-12 ready",
+                  "grid-12 keep",
+                  "item-7 ready"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the addressed line set first.",
+            "Identify the pattern, replacement, and flags.",
+            "Use :%s/\\v<id-(\\d+)>/item-\\1/Enter."
+          ],
+          "feedback": {
+            "success": "The substitution produced the intended text.",
+            "why": "Combine `%`, `\\v`, boundaries, and captures for a controlled cleanup."
+          },
+          "skills": {
+            "primary": [
+              "very-magic",
+              "word-boundaries",
+              "capture-groups",
+              "percent-range"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "command-line",
+              "lesson-8"
+            ]
+          },
+          "portability": "Native Vim substitution behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "substitution-practical-regex-v1",
+            "languageRationale": "log keeps the transformation compact and realistic.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "very-magic",
+              "word-boundaries",
+              "capture-groups",
+              "percent-range"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "regex-or-structure",
+          "title": "Choose the lower-risk tool",
+          "prompt": "A rename depends on language scope and must avoid comments, strings, and unrelated identifiers. What should you use?",
+          "options": [
+            {
+              "id": "semantic-refactor",
+              "label": "Use a semantic refactor"
+            },
+            {
+              "id": "broad-substitute",
+              "label": "Use one broad substitution"
+            },
+            {
+              "id": "longer-regex",
+              "label": "Keep adding regex exceptions"
+            }
+          ],
+          "correctOptionId": "semantic-refactor",
+          "explanation": "A semantic rename needs language understanding; a text pattern is too brittle.",
+          "type": "choice",
+          "phase": "challenge",
+          "questionKind": "command-classification",
+          "remediationRef": "precise-scoped-cleanup"
+        },
+        {
+          "id": "substitution-regex-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Scope, preview, then transform",
+          "body": "You can now build local and ranged substitutions, control case and repetition, preview or confirm impact, and capture practical text structure. Keep patterns narrow, inspect broad edits, and switch tools when text matching becomes brittle.",
+          "takeaways": [
+            "Ranges select lines; patterns select text within them.",
+            "Use `n` to preview and `c` when matches need judgment.",
+            "Captures rebuild dependable textual structure.",
+            "Advanced syntax does not make a brittle regex safe."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "ref-substitution-sentence",
+      "command": ":s/pat/repl/",
+      "purpose": "Read and execute the pattern, replacement, delimiter, and range as one Ex command.",
+      "notes": [
+        "`:s/pattern/replacement/flags` searches the addressed lines, replaces matching text, and applies optional flags. Without a range, it acts only on the current line."
+      ],
+      "exampleActivityRefs": [
+        "terminal-substitute-demo",
+        "rename-current-status",
+        "replace-all-todos",
+        "literal-token-boundary"
+      ]
+    },
+    {
+      "id": "ref-scope-the-lines",
+      "command": ":[range]s/pat/repl/",
+      "purpose": "Apply substitutions to the current line, numeric ranges, Visual selections, and the whole buffer.",
+      "notes": [
+        "The same substitution can act on one line, a numeric range, a Visual range, or `%` for the whole buffer. A narrow range is easier to predict and review."
+      ],
+      "exampleActivityRefs": [
+        "numeric-range-demo",
+        "single-line-scope",
+        "visual-range-substitute",
+        "range-versus-global"
+      ]
+    },
+    {
+      "id": "ref-control-match-flags",
+      "command": "g i I",
+      "purpose": "Distinguish one match from all matches and choose explicit case behavior.",
+      "notes": [
+        "`g` replaces every match on each addressed line. `i` ignores case for this command, while `I` forces case-sensitive matching."
+      ],
+      "exampleActivityRefs": [
+        "global-flag-demo",
+        "first-match-only",
+        "ignore-case-flag",
+        "force-case-flag"
+      ]
+    },
+    {
+      "id": "ref-preview-and-confirm",
+      "command": "n c",
+      "purpose": "Count impact before editing and make deliberate per-match confirmation decisions.",
+      "notes": [
+        "The `n` flag reports how many matches would be affected without changing text. The `c` flag pauses at each match for `y`, `n`, `a`, `q`, or `l`."
+      ],
+      "exampleActivityRefs": [
+        "confirm-selectively-demo",
+        "count-without-changing",
+        "confirm-skip-match",
+        "confirm-all-remaining"
+      ]
+    },
+    {
+      "id": "ref-reuse-and-delimiters",
+      "command": "empty pattern and alternate delimiters",
+      "purpose": "Reuse search and substitution history while keeping delimiter-heavy commands readable.",
+      "notes": [
+        "An empty pattern reuses the latest search pattern. An empty replacement deletes matches. Alternate delimiters such as `#` avoid escaping `/` in paths and URLs."
+      ],
+      "exampleActivityRefs": [
+        "empty-pattern-demo",
+        "empty-replacement",
+        "alternate-url-delimiter",
+        "repeat-substitution-history"
+      ]
+    },
+    {
+      "id": "ref-practical-patterns",
+      "command": "Vim regex atoms",
+      "purpose": "Use anchors, classes, negation, quantifiers, and Vim character classes without turning the lesson into a general regex course.",
+      "notes": [
+        "Vim patterns use `.`, `*`, escaped quantifiers such as `\\+`, `\\?`, and `\\{m,n}`, anchors `^` and `$`, bracket classes, negation, and classes such as `\\d`, `\\w`, and `\\s`."
+      ],
+      "exampleActivityRefs": [
+        "trim-leading-space-demo",
+        "normalize-digits",
+        "optional-spelling",
+        "bounded-code-class"
+      ]
+    },
+    {
+      "id": "ref-capture-structure",
+      "command": "captures and replacement",
+      "purpose": "Use grouping, alternation, boundaries, captures, whole matches, and line breaks in replacements.",
+      "notes": [
+        "Vim groups use `\\(…\\)`, alternation uses `\\|`, and `\\<`/`\\>` mark word boundaries. Replacements can reuse the whole match with `&` or `\\0`, captures with `\\1`–`\\9`, and create a line break with `\\r`."
+      ],
+      "exampleActivityRefs": [
+        "swap-captures-demo",
+        "alternation-alerts",
+        "whole-word-and-match",
+        "split-key-value"
+      ]
+    },
+    {
+      "id": "ref-precision-and-judgment",
+      "command": "\\v \\zs \\ze",
+      "purpose": "Apply very-magic and match-boundary tools, then recognize when regex is the wrong mechanism.",
+      "notes": [
+        "`\\v` makes most punctuation special. `\\zs` starts the replaced portion inside a larger match, and `\\ze` ends it early. Vim also supports replacement case conversion and `\\=` expressions; those are advanced reference topics and are not executable in Vim Wilds yet."
+      ],
+      "exampleActivityRefs": [
+        "very-magic-demo",
+        "start-match-late",
+        "end-match-early",
+        "precise-scoped-cleanup"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "substitution sentence",
+      "explain": [
+        "substitution-parts"
+      ],
+      "demonstrate": [
+        "terminal-substitute-demo"
+      ],
+      "isolate": [
+        "rename-current-status"
+      ],
+      "mix": [
+        "replace-all-todos"
+      ],
+      "challenge": [
+        "literal-token-boundary"
+      ]
+    },
+    {
+      "concept": "scope the lines",
+      "explain": [
+        "substitution-ranges"
+      ],
+      "demonstrate": [
+        "numeric-range-demo"
+      ],
+      "isolate": [
+        "single-line-scope"
+      ],
+      "mix": [
+        "visual-range-substitute"
+      ],
+      "challenge": [
+        "range-versus-global"
+      ]
+    },
+    {
+      "concept": "control match flags",
+      "explain": [
+        "substitution-flags"
+      ],
+      "demonstrate": [
+        "global-flag-demo"
+      ],
+      "isolate": [
+        "first-match-only"
+      ],
+      "mix": [
+        "ignore-case-flag"
+      ],
+      "challenge": [
+        "force-case-flag"
+      ]
+    },
+    {
+      "concept": "preview and confirm",
+      "explain": [
+        "safe-substitution-flags"
+      ],
+      "demonstrate": [
+        "confirm-selectively-demo"
+      ],
+      "isolate": [
+        "count-without-changing"
+      ],
+      "mix": [
+        "confirm-skip-match"
+      ],
+      "challenge": [
+        "confirm-all-remaining"
+      ]
+    },
+    {
+      "concept": "reuse and delimiters",
+      "explain": [
+        "history-and-delimiters"
+      ],
+      "demonstrate": [
+        "empty-pattern-demo"
+      ],
+      "isolate": [
+        "empty-replacement"
+      ],
+      "mix": [
+        "alternate-url-delimiter"
+      ],
+      "challenge": [
+        "repeat-substitution-history"
+      ]
+    },
+    {
+      "concept": "practical patterns",
+      "explain": [
+        "practical-regex-atoms"
+      ],
+      "demonstrate": [
+        "trim-leading-space-demo"
+      ],
+      "isolate": [
+        "normalize-digits"
+      ],
+      "mix": [
+        "optional-spelling"
+      ],
+      "challenge": [
+        "bounded-code-class"
+      ]
+    },
+    {
+      "concept": "capture structure",
+      "explain": [
+        "capture-and-replacement"
+      ],
+      "demonstrate": [
+        "swap-captures-demo"
+      ],
+      "isolate": [
+        "alternation-alerts"
+      ],
+      "mix": [
+        "whole-word-and-match"
+      ],
+      "challenge": [
+        "split-key-value"
+      ]
+    },
+    {
+      "concept": "precision and judgment",
+      "explain": [
+        "advanced-regex-boundary"
+      ],
+      "demonstrate": [
+        "very-magic-demo"
+      ],
+      "isolate": [
+        "start-match-late"
+      ],
+      "mix": [
+        "end-match-early"
+      ],
+      "challenge": [
+        "precise-scoped-cleanup"
+      ]
+    }
+  ]
+}
