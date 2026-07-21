@@ -761,12 +761,13 @@ function renderTableOfContents() {
       : `<div class="toc-unit toc-unit-link"><button type="button" data-unit-id="${escapeHtml(candidate.id)}">${summary}</button></div>`;
   };
   const assignedUnits = new Set();
-  const arcMarkup = curriculumArcs.map(arc => {
+  const arcMarkup = curriculumArcs.map((arc, arcIndex) => {
     const arcUnits = units.filter(candidate => arc.unitNumbers.includes(candidate.unitNumber));
     if (!arcUnits.length) return "";
     arcUnits.forEach(candidate => assignedUnits.add(candidate.id));
     const headingId = `toc-arc-${arc.arcNumber}-${arc.id}`;
     return `<section class="toc-arc" aria-labelledby="${escapeHtml(headingId)}">
+      ${arcIndex ? '<div class="toc-arc-divider" aria-hidden="true"><span>❦</span></div>' : ""}
       <h3 class="toc-arc-heading" id="${escapeHtml(headingId)}"><span>Arc ${arc.arcNumber}</span><strong>${renderInline(arc.title)}</strong></h3>
       <div class="toc-arc-units">${arcUnits.map(renderUnit).join("")}</div>
     </section>`;

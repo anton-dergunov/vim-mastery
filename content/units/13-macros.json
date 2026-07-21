@@ -1,0 +1,5642 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 13,
+  "id": "macros",
+  "title": "Macros",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "13. Macros",
+    "commandsAndConcepts": "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors; deliberate final cursor position; stopping on failed motion/search; optional recursion",
+    "prerequisites": "Units 4, 5, 8, and 10",
+    "learningOutcome": "Record a robust transformation, replay it safely, inspect or repair it, and state the assumptions that make it valid",
+    "representativeExercises": "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion",
+    "priorityAndPortability": "Core automation. Recursive macros are optional and never required for normal progression"
+  },
+  "prerequisiteSkillIds": [
+    "operator-grammar",
+    "precision-motions-search",
+    "registers-putting",
+    "repeatable-editing"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "macros-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "record-and-replay",
+      "title": "Record once, replay deliberately",
+      "objective": "Record a complete transformation in a named register and replay it safely.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-recording-meaning",
+          "title": "A macro is recorded Normal-mode intent",
+          "body": "q followed by a register starts recording. Press q again in Normal mode to stop; @ followed by the register replays those keys from the current cursor.",
+          "grammar": "qa … q → @a",
+          "contrast": "A macro stores keys and their assumptions, not an abstract refactor.",
+          "demoRef": "beacon-macro-demo"
+        },
+        {
+          "id": "beacon-macro-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Silence three API calls",
+          "instruction": "Record adding \"// \" at the line start, then replay it on the next two rows.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fetchUser();",
+                "fetchTeam();",
+                "fetchAdmin();"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "// fetchUser();",
+                "// fetchTeam();",
+                "// fetchAdmin();"
+              ],
+              "cursor": [
+                2,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "/",
+              "/",
+              " ",
+              "Escape",
+              "q",
+              "j",
+              "@",
+              "a",
+              "j",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI// ⎋q",
+                "explanation": "Record one complete line-start insertion in register a."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "j@a",
+                "explanation": "Move to the next row and replay register a."
+              },
+              {
+                "from": 11,
+                "to": 14,
+                "display": "j@@",
+                "explanation": "Move once more and replay the latest macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "// fetchUser();",
+                  "fetchTeam();",
+                  "fetchAdmin();"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "// fetchUser();",
+                  "// fetchTeam();",
+                  "fetchAdmin();"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "// fetchUser();",
+                  "// fetchTeam();",
+                  "// fetchAdmin();"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-record-replay"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "javascript provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-record-replay"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "comment-python-jobs",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Comment queued jobs",
+          "instruction": "Record adding \"# \" at the line start, then replay it on the next two rows.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "run_alpha()",
+                "run_beta()",
+                "run_gamma()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# run_alpha()",
+                "# run_beta()",
+                "# run_gamma()"
+              ],
+              "cursor": [
+                2,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "#",
+              " ",
+              "Escape",
+              "q",
+              "j",
+              "@",
+              "a",
+              "j",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "qaI# ⎋q",
+                "explanation": "Record one complete line-start insertion in register a."
+              },
+              {
+                "from": 7,
+                "to": 10,
+                "display": "j@a",
+                "explanation": "Move to the next row and replay register a."
+              },
+              {
+                "from": 10,
+                "to": 13,
+                "display": "j@@",
+                "explanation": "Move once more and replay the latest macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "# run_alpha()",
+                  "run_beta()",
+                  "run_gamma()"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "# run_alpha()",
+                  "# run_beta()",
+                  "run_gamma()"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "# run_alpha()",
+                  "# run_beta()",
+                  "# run_gamma()"
+                ],
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-record-replay"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "python provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-record-replay"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "comment-sql-selects",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Mute three SQL statements",
+          "instruction": "Record adding \"-- \" at the line start, then replay it on the next two rows.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "SELECT alpha;",
+                "SELECT beta;",
+                "SELECT gamma;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "-- SELECT alpha;",
+                "-- SELECT beta;",
+                "-- SELECT gamma;"
+              ],
+              "cursor": [
+                2,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "-",
+              "-",
+              " ",
+              "Escape",
+              "q",
+              "j",
+              "@",
+              "a",
+              "j",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI-- ⎋q",
+                "explanation": "Record one complete line-start insertion in register a."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "j@a",
+                "explanation": "Move to the next row and replay register a."
+              },
+              {
+                "from": 11,
+                "to": 14,
+                "display": "j@@",
+                "explanation": "Move once more and replay the latest macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "-- SELECT alpha;",
+                  "SELECT beta;",
+                  "SELECT gamma;"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "-- SELECT alpha;",
+                  "-- SELECT beta;",
+                  "SELECT gamma;"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "-- SELECT alpha;",
+                  "-- SELECT beta;",
+                  "-- SELECT gamma;"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-record-replay"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "sql provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-record-replay"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "comment-yaml-flags",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Disable YAML flags",
+          "instruction": "Record adding \"# \" at the line start, then replay it on the next two rows.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha: true",
+                "beta: true",
+                "gamma: true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# alpha: true",
+                "# beta: true",
+                "# gamma: true"
+              ],
+              "cursor": [
+                2,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "#",
+              " ",
+              "Escape",
+              "q",
+              "j",
+              "@",
+              "a",
+              "j",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "qaI# ⎋q",
+                "explanation": "Record one complete line-start insertion in register a."
+              },
+              {
+                "from": 7,
+                "to": 10,
+                "display": "j@a",
+                "explanation": "Move to the next row and replay register a."
+              },
+              {
+                "from": 10,
+                "to": 13,
+                "display": "j@@",
+                "explanation": "Move once more and replay the latest macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "# alpha: true",
+                  "beta: true",
+                  "gamma: true"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "# alpha: true",
+                  "# beta: true",
+                  "gamma: true"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "# alpha: true",
+                  "# beta: true",
+                  "# gamma: true"
+                ],
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-record-replay"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "yaml provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-record-replay"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "latest-and-counted-replay",
+      "title": "Replay at useful scale",
+      "objective": "Use @@ and counts to repeat the latest macro without losing control.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-count-meaning",
+          "title": "Latest and counted replay remove ceremony",
+          "body": "@@ repeats the most recently executed macro. A count such as 10@a repeats register a ten times, so the macro must place the cursor correctly for every iteration.",
+          "grammar": "@a → @@ · count@a",
+          "contrast": "Counts are fast when every instance is trusted; separate replays are easier to inspect.",
+          "demoRef": "latest-macro-demo"
+        },
+        {
+          "id": "latest-macro-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Tag consecutive log rows",
+          "instruction": "Record a self-advancing \"! \" prefix and replay it with @a@@.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma",
+                "delta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "! alpha",
+                "! beta",
+                "! gamma",
+                "delta"
+              ],
+              "cursor": [
+                3,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "!",
+              " ",
+              "Escape",
+              "j",
+              "q",
+              "@",
+              "a",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI! ⎋jq",
+                "explanation": "Record the edit and the movement to the next row."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "@a@@",
+                "explanation": "Replay once by name and once as the latest macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "! alpha",
+                  "beta",
+                  "gamma",
+                  "delta"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "! alpha",
+                  "! beta",
+                  "! gamma",
+                  "delta"
+                ],
+                "cursor": [
+                  3,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-latest-count"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "log provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-latest-count"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "latest-markdown-items",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Continue the latest list macro",
+          "instruction": "Record a self-advancing \"- \" prefix and replay it with @a@@.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma",
+                "delta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "- alpha",
+                "- beta",
+                "- gamma",
+                "delta"
+              ],
+              "cursor": [
+                3,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "-",
+              " ",
+              "Escape",
+              "j",
+              "q",
+              "@",
+              "a",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI- ⎋jq",
+                "explanation": "Record the edit and the movement to the next row."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "@a@@",
+                "explanation": "Use the named macro, then repeat the latest one."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "- alpha",
+                  "beta",
+                  "gamma",
+                  "delta"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "- alpha",
+                  "- beta",
+                  "- gamma",
+                  "delta"
+                ],
+                "cursor": [
+                  3,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-latest-count"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "markdown provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-latest-count"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "count-python-guards",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Count three guard prefixes",
+          "instruction": "Record a self-advancing \"# \" prefix and replay it with 3@a.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta",
+                "gamma",
+                "delta",
+                "sentinel"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# alpha",
+                "# beta",
+                "# gamma",
+                "# delta",
+                "sentinel"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "#",
+              " ",
+              "Escape",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI# ⎋jq",
+                "explanation": "Record the edit and the movement to the next row."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "3@a",
+                "explanation": "Apply the self-advancing macro three more times."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "# alpha",
+                  "beta",
+                  "gamma",
+                  "delta",
+                  "sentinel"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "# alpha",
+                  "# beta",
+                  "# gamma",
+                  "# delta",
+                  "sentinel"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-latest-count"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "python provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-latest-count"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "count-ten-csv-rows",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replay across ten CSV records",
+          "instruction": "Record a self-advancing \">\" prefix and replay it with 10@a.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "row-1,ready",
+                "row-2,ready",
+                "row-3,ready",
+                "row-4,ready",
+                "row-5,ready",
+                "row-6,ready",
+                "row-7,ready",
+                "row-8,ready",
+                "row-9,ready",
+                "row-10,ready",
+                "row-11,ready",
+                "row-12,ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                ">row-1,ready",
+                ">row-2,ready",
+                ">row-3,ready",
+                ">row-4,ready",
+                ">row-5,ready",
+                ">row-6,ready",
+                ">row-7,ready",
+                ">row-8,ready",
+                ">row-9,ready",
+                ">row-10,ready",
+                ">row-11,ready",
+                "row-12,ready"
+              ],
+              "cursor": [
+                11,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              ">",
+              "Escape",
+              "j",
+              "q",
+              "1",
+              "0",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "qaI>⎋jq",
+                "explanation": "Record the edit and the movement to the next row."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "10@a",
+                "explanation": "Apply ten trusted consecutive replays."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  ">row-1,ready",
+                  "row-2,ready",
+                  "row-3,ready",
+                  "row-4,ready",
+                  "row-5,ready",
+                  "row-6,ready",
+                  "row-7,ready",
+                  "row-8,ready",
+                  "row-9,ready",
+                  "row-10,ready",
+                  "row-11,ready",
+                  "row-12,ready"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  ">row-1,ready",
+                  ">row-2,ready",
+                  ">row-3,ready",
+                  ">row-4,ready",
+                  ">row-5,ready",
+                  ">row-6,ready",
+                  ">row-7,ready",
+                  ">row-8,ready",
+                  ">row-9,ready",
+                  ">row-10,ready",
+                  ">row-11,ready",
+                  "row-12,ready"
+                ],
+                "cursor": [
+                  11,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-latest-count"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "csv provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-latest-count"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "stable-anchors",
+      "title": "Anchor macros to structure",
+      "objective": "Use textual structure instead of fragile absolute columns.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-anchor-meaning",
+          "title": "Structure survives uneven rows",
+          "body": "Start from a known edge, delimiter, search, or text object. Absolute columns break as soon as identifiers have different lengths.",
+          "grammar": "0 → find/search/text object → edit",
+          "contrast": "8l assumes a width; 0f: states what structure must exist.",
+          "demoRef": "anchor-colon-demo"
+        },
+        {
+          "id": "anchor-colon-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Normalize irregular mappings",
+          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a: one",
+                "long_name: two",
+                "mid: three",
+                "x: four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a= one",
+                "long_name= two",
+                "mid= three",
+                "x= four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "qa0f:r=jq",
+                "explanation": "Record a delimiter-anchored edit that advances one row."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "3@a",
+                "explanation": "Replay the anchored transformation across the next rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "a= one",
+                  "long_name: two",
+                  "mid: three",
+                  "x: four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "a= one",
+                  "long_name= two",
+                  "mid= three",
+                  "x= four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-stable-anchors"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "toml provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-stable-anchors"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "anchor-log-pipes",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Normalize log separators",
+          "instruction": "Use | as a stable anchor, replace it with ,, and advance through the irregular rows.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "A|ready",
+                "LONG|ready",
+                "MID|ready",
+                "Z|ready",
+                "END|hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "A,ready",
+                "LONG,ready",
+                "MID,ready",
+                "Z,ready",
+                "END|hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f|r,j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              "|",
+              "r",
+              ",",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "qa0f|r,jq",
+                "explanation": "Record a delimiter-anchored edit that advances one row."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "3@a",
+                "explanation": "Replay the anchored transformation across the next rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "A,ready",
+                  "LONG|ready",
+                  "MID|ready",
+                  "Z|ready",
+                  "END|hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r,j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "A,ready",
+                  "LONG,ready",
+                  "MID,ready",
+                  "Z,ready",
+                  "END|hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r,j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-stable-anchors"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "log provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-stable-anchors"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "anchor-call-arguments",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Clear irregular call arguments",
+          "instruction": "Anchor on each opening parenthesis, clear its contents, and advance.",
+          "languageId": "java",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a(old);",
+                "longCall(stale);",
+                "mid(legacy);",
+                "z(remove);",
+                "sentinel(keep);"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a();",
+                "longCall();",
+                "mid();",
+                "z();",
+                "sentinel(keep);"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              "(",
+              "d",
+              "i",
+              "(",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "qa0f(di(jq",
+                "explanation": "Record a parenthesis text-object edit and advance."
+              },
+              {
+                "from": 10,
+                "to": 13,
+                "display": "3@a",
+                "explanation": "Replay against three differently sized calls."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "a();",
+                  "longCall(stale);",
+                  "mid(legacy);",
+                  "z(remove);",
+                  "sentinel(keep);"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "a();",
+                  "longCall();",
+                  "mid();",
+                  "z();",
+                  "sentinel(keep);"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-stable-anchors"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "java provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-stable-anchors"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "anchor-search-todos",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Let search choose each TODO",
+          "instruction": "Record a search-anchored punctuation change and replay it across later TODO rows.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "header",
+                "TODO: alpha",
+                "skip",
+                "TODO: beta",
+                "TODO: gamma",
+                "end"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "header",
+                "TODO! alpha",
+                "skip",
+                "TODO! beta",
+                "TODO! gamma",
+                "end"
+              ],
+              "cursor": [
+                4,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "Enter",
+              "0",
+              "f",
+              ":",
+              "r",
+              "!",
+              "q",
+              "@",
+              "a",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": "qa/TODO↵0f:r!q",
+                "explanation": "Record the search and delimiter edit together."
+              },
+              {
+                "from": 14,
+                "to": 18,
+                "display": "@a@@",
+                "explanation": "Replay the search-driven macro twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "header",
+                  "TODO! alpha",
+                  "skip",
+                  "TODO: beta",
+                  "TODO: gamma",
+                  "end"
+                ],
+                "cursor": [
+                  1,
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "lines": [
+                  "header",
+                  "TODO! alpha",
+                  "skip",
+                  "TODO! beta",
+                  "TODO! gamma",
+                  "end"
+                ],
+                "cursor": [
+                  4,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-stable-anchors"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "typescript provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-stable-anchors"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "final-cursor-position",
+      "title": "Finish where the next replay begins",
+      "objective": "Design the last motion as part of the macro's contract.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-final-position-meaning",
+          "title": "The ending cursor is an output",
+          "body": "A robust macro leaves the cursor at a deliberate next starting point. Record the movement when every replay should advance; leave it out when you want to inspect between runs.",
+          "grammar": "transformation + final motion",
+          "contrast": "Movement outside the recording must be repeated manually.",
+          "demoRef": "final-row-demo"
+        },
+        {
+          "id": "final-row-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Advance after each Rust field",
+          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "languageId": "rust",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a: one",
+                "long_field: two",
+                "mid: three",
+                "z: four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a= one",
+                "long_field= two",
+                "mid= three",
+                "z= four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "qa0f:r=jq",
+                "explanation": "Record a delimiter-anchored edit that advances one row."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "3@a",
+                "explanation": "Replay the anchored transformation across the next rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "a= one",
+                  "long_field: two",
+                  "mid: three",
+                  "z: four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "a= one",
+                  "long_field= two",
+                  "mid= three",
+                  "z= four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-final-position"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "rust provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-final-position"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "final-go-fields",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Land on the next Go field",
+          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "A: one",
+                "LongField: two",
+                "Mid: three",
+                "Z: four",
+                "Sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "A= one",
+                "LongField= two",
+                "Mid= three",
+                "Z= four",
+                "Sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "qa0f:r=jq",
+                "explanation": "Record a delimiter-anchored edit that advances one row."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "3@a",
+                "explanation": "Replay the anchored transformation across the next rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "A= one",
+                  "LongField: two",
+                  "Mid: three",
+                  "Z: four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "A= one",
+                  "LongField= two",
+                  "Mid= three",
+                  "Z= four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-final-position"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "go provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-final-position"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "final-php-records",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Carry the cursor through records",
+          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "languageId": "php",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "$a: one",
+                "$longName: two",
+                "$mid: three",
+                "$z: four",
+                "$sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "$a= one",
+                "$longName= two",
+                "$mid= three",
+                "$z= four",
+                "$sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "qa0f:r=jq",
+                "explanation": "Record a delimiter-anchored edit that advances one row."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "3@a",
+                "explanation": "Replay the anchored transformation across the next rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "$a= one",
+                  "$longName: two",
+                  "$mid: three",
+                  "$z: four",
+                  "$sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "$a= one",
+                  "$longName= two",
+                  "$mid= three",
+                  "$z= four",
+                  "$sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-final-position"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "php provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-final-position"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "final-prose-labels",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Advance through uneven labels",
+          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "A: one",
+                "A longer label: two",
+                "Medium: three",
+                "Z: four",
+                "Sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "A= one",
+                "A longer label= two",
+                "Medium= three",
+                "Z= four",
+                "Sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "qa0f:r=jq",
+                "explanation": "Record a delimiter-anchored edit that advances one row."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "3@a",
+                "explanation": "Replay the anchored transformation across the next rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "A= one",
+                  "A longer label: two",
+                  "Medium: three",
+                  "Z: four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "A= one",
+                  "A longer label= two",
+                  "Medium= three",
+                  "Z= four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-final-position"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "prose provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-final-position"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "failure-as-guard",
+      "title": "Let broken assumptions stop replay",
+      "objective": "Use failed motions and searches as safe stopping conditions.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-failure-meaning",
+          "title": "Failure is a guardrail",
+          "body": "When a recorded motion or search cannot find its target, Vim stops the rest of that macro invocation. Counted replay must also stop instead of continuing into later rows.",
+          "grammar": "anchor fails → macro stops",
+          "contrast": "A motion that still succeeds at the wrong place is more dangerous than an explicit failure.",
+          "demoRef": "failed-semicolon-demo"
+        },
+        {
+          "id": "failed-semicolon-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Stop at the malformed record",
+          "instruction": "Record deleting ;, then confirm replay stops at the first row where that anchor is absent.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a;b",
+                "no delimiter",
+                "c;d",
+                "e;f"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ab",
+                "no delimiter",
+                "c;d",
+                "e;f"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ";",
+              "x",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f;xjq",
+                "explanation": "Record an anchored deletion and advance."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "3@a",
+                "explanation": "Attempt counted replay; the failed find must stop the macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "ab",
+                  "no delimiter",
+                  "c;d",
+                  "e;f"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "ab",
+                  "no delimiter",
+                  "c;d",
+                  "e;f"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-failure-stop"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "javascript provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-failure-stop"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "failed-pipe-log",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Stop before a broken log row",
+          "instruction": "Record deleting |, then confirm replay stops at the first row where that anchor is absent.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "A|ok",
+                "BROKEN",
+                "B|ok",
+                "C|ok"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Aok",
+                "BROKEN",
+                "B|ok",
+                "C|ok"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              "|",
+              "x",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f|xjq",
+                "explanation": "Record an anchored deletion and advance."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "3@a",
+                "explanation": "Attempt counted replay; the failed find must stop the macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "Aok",
+                  "BROKEN",
+                  "B|ok",
+                  "C|ok"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "Aok",
+                  "BROKEN",
+                  "B|ok",
+                  "C|ok"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-failure-stop"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "log provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-failure-stop"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "failed-search-python",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Stop when search runs out",
+          "instruction": "Record a search-driven deletion, then replay after the final match and preserve the trailing row.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "header",
+                "TARGET one",
+                "plain_tail"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "header",
+                "ARGET one",
+                "plain_tail"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "/",
+              "T",
+              "A",
+              "R",
+              "G",
+              "E",
+              "T",
+              "Enter",
+              "0",
+              "x",
+              "q",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": "qa/TARGET↵0xq",
+                "explanation": "Record a successful search and deletion."
+              },
+              {
+                "from": 13,
+                "to": 15,
+                "display": "@a",
+                "explanation": "Replay when no TARGET remains; the macro must stop before 0x."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "header",
+                  "ARGET one",
+                  "plain_tail"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "header",
+                  "ARGET one",
+                  "plain_tail"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-failure-stop"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "python provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-failure-stop"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "failed-counted-csv",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Cancel remaining counted replays",
+          "instruction": "Record deleting ,, then confirm replay stops at the first row where that anchor is absent.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a,b",
+                "broken",
+                "c,d",
+                "e,f",
+                "g,h"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ab",
+                "broken",
+                "c,d",
+                "e,f",
+                "g,h"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ",",
+              "x",
+              "j",
+              "q",
+              "4",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f,xjq",
+                "explanation": "Record an anchored deletion and advance."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "4@a",
+                "explanation": "Attempt counted replay; the failed find must stop the macro."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "ab",
+                  "broken",
+                  "c,d",
+                  "e,f",
+                  "g,h"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "ab",
+                  "broken",
+                  "c,d",
+                  "e,f",
+                  "g,h"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-failure-stop"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "csv provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-failure-stop"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "append-a-macro",
+      "title": "Extend a useful recording",
+      "objective": "Append keys with an uppercase register instead of rerecording from scratch.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-append-meaning",
+          "title": "Uppercase recording appends",
+          "body": "qA records additional keys onto register a. Lowercase qa replaces it, while uppercase qA preserves the existing command and extends it.",
+          "grammar": "qa…q → qA…q",
+          "contrast": "Appending is safest after inspecting what the register already contains.",
+          "demoRef": "append-colon-demo"
+        },
+        {
+          "id": "append-colon-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Add the missing final movement",
+          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a: one",
+                "longName: two",
+                "mid: three",
+                "z: four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a= one",
+                "longName= two",
+                "mid= three",
+                "z= four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "q",
+              "q",
+              "A",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f:r=q",
+                "explanation": "Record the transformation without movement."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "qAjq",
+                "explanation": "Append a downward movement to register a."
+              },
+              {
+                "from": 12,
+                "to": 15,
+                "display": "3@a",
+                "explanation": "Replay the extended macro across the following rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "a= one",
+                  "longName: two",
+                  "mid: three",
+                  "z: four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r="
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "a= one",
+                  "longName: two",
+                  "mid: three",
+                  "z: four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "a= one",
+                  "longName= two",
+                  "mid= three",
+                  "z= four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-append"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "typescript provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-append"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "append-shell-pipes",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Extend a shell-record macro",
+          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "A|one",
+                "LONG|two",
+                "MID|three",
+                "Z|four",
+                "END|hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "A:one",
+                "LONG:two",
+                "MID:three",
+                "Z:four",
+                "END|hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f|r:j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              "|",
+              "r",
+              ":",
+              "q",
+              "q",
+              "A",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f|r:q",
+                "explanation": "Record the transformation without movement."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "qAjq",
+                "explanation": "Append a downward movement to register a."
+              },
+              {
+                "from": 12,
+                "to": 15,
+                "display": "3@a",
+                "explanation": "Replay the extended macro across the following rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "A:one",
+                  "LONG|two",
+                  "MID|three",
+                  "Z|four",
+                  "END|hold"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r:"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "A:one",
+                  "LONG|two",
+                  "MID|three",
+                  "Z|four",
+                  "END|hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r:j"
+                  }
+                }
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "A:one",
+                  "LONG:two",
+                  "MID:three",
+                  "Z:four",
+                  "END|hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r:j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-append"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "shell provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-append"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "append-csharp-fields",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Extend a C# field macro",
+          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "languageId": "csharp",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "A: one",
+                "LongName: two",
+                "Mid: three",
+                "Z: four",
+                "Sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "A= one",
+                "LongName= two",
+                "Mid= three",
+                "Z= four",
+                "Sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "q",
+              "q",
+              "A",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f:r=q",
+                "explanation": "Record the transformation without movement."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "qAjq",
+                "explanation": "Append a downward movement to register a."
+              },
+              {
+                "from": 12,
+                "to": 15,
+                "display": "3@a",
+                "explanation": "Replay the extended macro across the following rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "A= one",
+                  "LongName: two",
+                  "Mid: three",
+                  "Z: four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r="
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "A= one",
+                  "LongName: two",
+                  "Mid: three",
+                  "Z: four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "A= one",
+                  "LongName= two",
+                  "Mid= three",
+                  "Z= four",
+                  "Sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-append"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "csharp provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-append"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "append-xml-attributes",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Extend an attribute cleanup macro",
+          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "languageId": "xml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a: one",
+                "long-attr: two",
+                "mid: three",
+                "z: four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "a= one",
+                "long-attr= two",
+                "mid= three",
+                "z= four",
+                "sentinel: hold"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "f",
+              ":",
+              "r",
+              "=",
+              "q",
+              "q",
+              "A",
+              "j",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qa0f:r=q",
+                "explanation": "Record the transformation without movement."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "qAjq",
+                "explanation": "Append a downward movement to register a."
+              },
+              {
+                "from": 12,
+                "to": 15,
+                "display": "3@a",
+                "explanation": "Replay the extended macro across the following rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "a= one",
+                  "long-attr: two",
+                  "mid: three",
+                  "z: four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r="
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "a= one",
+                  "long-attr: two",
+                  "mid: three",
+                  "z: four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  1,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "a= one",
+                  "long-attr= two",
+                  "mid= three",
+                  "z= four",
+                  "sentinel: hold"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-append"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "xml provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-append"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "inspect-and-repair",
+      "title": "Treat a macro as editable text",
+      "objective": "Put macro text into the buffer, repair it, and write it back to its register.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-inspection-meaning",
+          "title": "Registers make macros inspectable",
+          "body": "A Normal-mode macro is register text. Put it into a scratch line, edit the keys, then yank the repaired text back into the named register before replaying it.",
+          "grammar": "\"ap → edit → \"ay$ → @a",
+          "contrast": "Recorded Insert text contains control characters; these lessons repair command-only macros for clarity.",
+          "demoRef": "put-macro-demo"
+        },
+        {
+          "id": "put-macro-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Put a macro beside its data",
+          "instruction": "Put register a onto the scratch row so its command text becomes visible.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "0f:r=",
+                "alpha: one",
+                "macro="
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "\"",
+                  "a",
+                  "y",
+                  "$",
+                  "j"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "0f:r=",
+                "alpha: one",
+                "macro=0f:r="
+              ],
+              "cursor": [
+                2,
+                10
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r="
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "$",
+              "\"",
+              "a",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "j$\"ap",
+                "explanation": "Move to the scratch row and put the macro text."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "0f:r=",
+                  "alpha: one",
+                  "macro=0f:r="
+                ],
+                "cursor": [
+                  2,
+                  10
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r="
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-inspect-repair"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "markdown provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-inspect-repair"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "put-log-macro",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Inspect a log macro",
+          "instruction": "Put the stored pipe-replacement macro on the scratch row for inspection.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "0f|r,",
+                "A|ready",
+                "macro="
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "\"",
+                  "a",
+                  "y",
+                  "$",
+                  "j"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "0f|r,",
+                "A|ready",
+                "macro=0f|r,"
+              ],
+              "cursor": [
+                2,
+                10
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f|r,"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "$",
+              "\"",
+              "a",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "j$\"ap",
+                "explanation": "Put the recorded keys for inspection."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "0f|r,",
+                  "A|ready",
+                  "macro=0f|r,"
+                ],
+                "cursor": [
+                  2,
+                  10
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r,"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-inspect-repair"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "log provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-inspect-repair"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "repair-colon-macro",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Repair a bad delimiter",
+          "instruction": "Repair the visible macro text, yank it back into register a, and replay the corrected command.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "0f;r=j",
+                "alpha: one",
+                "longer: two",
+                "final: hold"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "\"",
+                  "a",
+                  "y",
+                  "$",
+                  "j"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "0f:r=j",
+                "alpha= one",
+                "longer= two",
+                "final: hold"
+              ],
+              "cursor": [
+                3,
+                6
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f:r=j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "k",
+              "0",
+              "f",
+              ";",
+              "r",
+              ":",
+              "0",
+              "\"",
+              "a",
+              "y",
+              "$",
+              "j",
+              "@",
+              "a",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "k0f;r:",
+                "explanation": "Return to the macro text and repair its bad anchor."
+              },
+              {
+                "from": 6,
+                "to": 12,
+                "display": "0\"ay$j",
+                "explanation": "Yank the repaired command text into register a and return to the data."
+              },
+              {
+                "from": 12,
+                "to": 16,
+                "display": "@a@@",
+                "explanation": "Replay the repaired macro twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 6,
+                "lines": [
+                  "0f:r=j",
+                  "alpha: one",
+                  "longer: two",
+                  "final: hold"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f;r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "0f:r=j",
+                  "alpha: one",
+                  "longer: two",
+                  "final: hold"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "0f:r=j",
+                  "alpha= one",
+                  "longer= two",
+                  "final: hold"
+                ],
+                "cursor": [
+                  3,
+                  6
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f:r=j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The intended macro text is 0f:r=j.",
+            "Edit the visible command text, then use \"ay$ to replace register a.",
+            "Return to the first data row and use @a followed by @@."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-inspect-repair"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "python provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-inspect-repair"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "repair-pipe-macro",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Repair and replay a pipe macro",
+          "instruction": "Repair the visible macro text, yank it back into register a, and replay the corrected command.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "0f;r,j",
+                "A|one",
+                "LONG|two",
+                "FINAL|hold"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "\"",
+                  "a",
+                  "y",
+                  "$",
+                  "j"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "0f|r,j",
+                "A,one",
+                "LONG,two",
+                "FINAL|hold"
+              ],
+              "cursor": [
+                3,
+                4
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "0f|r,j"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "k",
+              "0",
+              "f",
+              ";",
+              "r",
+              "|",
+              "0",
+              "\"",
+              "a",
+              "y",
+              "$",
+              "j",
+              "@",
+              "a",
+              "@",
+              "@"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "k0f;r|",
+                "explanation": "Return to the macro text and repair its bad anchor."
+              },
+              {
+                "from": 6,
+                "to": 12,
+                "display": "0\"ay$j",
+                "explanation": "Yank the repaired command text into register a and return to the data."
+              },
+              {
+                "from": 12,
+                "to": 16,
+                "display": "@a@@",
+                "explanation": "Replay the repaired macro twice."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 6,
+                "lines": [
+                  "0f|r,j",
+                  "A|one",
+                  "LONG|two",
+                  "FINAL|hold"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f;r,j"
+                  }
+                }
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "0f|r,j",
+                  "A|one",
+                  "LONG|two",
+                  "FINAL|hold"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r,j"
+                  }
+                }
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "0f|r,j",
+                  "A,one",
+                  "LONG,two",
+                  "FINAL|hold"
+                ],
+                "cursor": [
+                  3,
+                  4
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "0f|r,j"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The intended macro text is 0f|r,j.",
+            "Edit the visible command text, then use \"ay$ to replace register a.",
+            "Return to the first data row and use @a followed by @@."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-inspect-repair"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "csv provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-inspect-repair"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "selective-macro-workflows",
+      "title": "Apply macros only where they fit",
+      "objective": "Choose instances deliberately and explain the macro's assumptions.",
+      "activities": [
+        {
+          "type": "theory",
+          "phase": "explain",
+          "id": "macro-selection-meaning",
+          "title": "Search can select the instances",
+          "body": "A macro handles the local transformation; search decides which rows receive it. This keeps nonmatching rows untouched and makes the macro's assumptions visible.",
+          "grammar": "record local edit → search → @a → n@a",
+          "contrast": "Use dot for one simple repeat and substitution for a direct textual replacement.",
+          "demoRef": "selective-todo-demo"
+        },
+        {
+          "id": "selective-todo-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Comment only TODO rows",
+          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to TODO rows.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TODO alpha();",
+                "keep();",
+                "TODO beta();",
+                "skip();",
+                "TODO gamma();"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "// TODO alpha();",
+                "keep();",
+                "// TODO beta();",
+                "skip();",
+                "// TODO gamma();"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "/",
+              "/",
+              " ",
+              "Escape",
+              "q",
+              "/",
+              "^",
+              "T",
+              "O",
+              "D",
+              "O",
+              "Enter",
+              "@",
+              "a",
+              "n",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI// ⎋q",
+                "explanation": "Record the local prefix transformation."
+              },
+              {
+                "from": 8,
+                "to": 17,
+                "display": "/^TODO↵@a",
+                "explanation": "Search for the next qualifying row and replay."
+              },
+              {
+                "from": 17,
+                "to": 20,
+                "display": "n@a",
+                "explanation": "Continue the same search and replay only at the next match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "// TODO alpha();",
+                  "keep();",
+                  "TODO beta();",
+                  "skip();",
+                  "TODO gamma();"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "// TODO alpha();",
+                  "keep();",
+                  "// TODO beta();",
+                  "skip();",
+                  "TODO gamma();"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "// TODO alpha();",
+                  "keep();",
+                  "// TODO beta();",
+                  "skip();",
+                  "// TODO gamma();"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-selective-application"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "typescript provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-selective-application"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "selective-fixme-python",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Select FIXME rows",
+          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to FIXME rows.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "FIXME alpha()",
+                "keep()",
+                "FIXME beta()",
+                "skip()",
+                "FIXME gamma()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# FIXME alpha()",
+                "keep()",
+                "# FIXME beta()",
+                "skip()",
+                "# FIXME gamma()"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "#",
+              " ",
+              "Escape",
+              "q",
+              "/",
+              "^",
+              "F",
+              "I",
+              "X",
+              "M",
+              "E",
+              "Enter",
+              "@",
+              "a",
+              "n",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "qaI# ⎋q",
+                "explanation": "Record the local prefix transformation."
+              },
+              {
+                "from": 7,
+                "to": 17,
+                "display": "/^FIXME↵@a",
+                "explanation": "Search for the next qualifying row and replay."
+              },
+              {
+                "from": 17,
+                "to": 20,
+                "display": "n@a",
+                "explanation": "Continue the same search and replay only at the next match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "# FIXME alpha()",
+                  "keep()",
+                  "FIXME beta()",
+                  "skip()",
+                  "FIXME gamma()"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "# FIXME alpha()",
+                  "keep()",
+                  "# FIXME beta()",
+                  "skip()",
+                  "FIXME gamma()"
+                ],
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "# FIXME alpha()",
+                  "keep()",
+                  "# FIXME beta()",
+                  "skip()",
+                  "# FIXME gamma()"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-selective-application"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "python provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-selective-application"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "selective-error-log",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Mark only error records",
+          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to ERROR rows.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ERROR alpha",
+                "INFO keep",
+                "ERROR beta",
+                "DEBUG skip",
+                "ERROR gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "! ERROR alpha",
+                "INFO keep",
+                "! ERROR beta",
+                "DEBUG skip",
+                "! ERROR gamma"
+              ],
+              "cursor": [
+                4,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "!",
+              " ",
+              "Escape",
+              "q",
+              "/",
+              "^",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
+              "Enter",
+              "@",
+              "a",
+              "n",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "qaI! ⎋q",
+                "explanation": "Record the local prefix transformation."
+              },
+              {
+                "from": 7,
+                "to": 17,
+                "display": "/^ERROR↵@a",
+                "explanation": "Search for the next qualifying row and replay."
+              },
+              {
+                "from": 17,
+                "to": 20,
+                "display": "n@a",
+                "explanation": "Continue the same search and replay only at the next match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "! ERROR alpha",
+                  "INFO keep",
+                  "ERROR beta",
+                  "DEBUG skip",
+                  "ERROR gamma"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "! ERROR alpha",
+                  "INFO keep",
+                  "! ERROR beta",
+                  "DEBUG skip",
+                  "ERROR gamma"
+                ],
+                "cursor": [
+                  2,
+                  1
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "! ERROR alpha",
+                  "INFO keep",
+                  "! ERROR beta",
+                  "DEBUG skip",
+                  "! ERROR gamma"
+                ],
+                "cursor": [
+                  4,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-selective-application"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "visible-structure"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "log provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-selective-application"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "selective-sql-updates",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Mute selected SQL updates",
+          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to UPDATE rows.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "UPDATE alpha;",
+                "SELECT keep;",
+                "UPDATE beta;",
+                "SELECT skip;",
+                "UPDATE gamma;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "-- UPDATE alpha;",
+                "SELECT keep;",
+                "-- UPDATE beta;",
+                "SELECT skip;",
+                "-- UPDATE gamma;"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "I",
+              "-",
+              "-",
+              " ",
+              "Escape",
+              "q",
+              "/",
+              "^",
+              "U",
+              "P",
+              "D",
+              "A",
+              "T",
+              "E",
+              "Enter",
+              "@",
+              "a",
+              "n",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "qaI-- ⎋q",
+                "explanation": "Record the local prefix transformation."
+              },
+              {
+                "from": 8,
+                "to": 19,
+                "display": "/^UPDATE↵@a",
+                "explanation": "Search for the next qualifying row and replay."
+              },
+              {
+                "from": 19,
+                "to": 22,
+                "display": "n@a",
+                "explanation": "Continue the same search and replay only at the next match."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "-- UPDATE alpha;",
+                  "SELECT keep;",
+                  "UPDATE beta;",
+                  "SELECT skip;",
+                  "UPDATE gamma;"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "-- UPDATE alpha;",
+                  "SELECT keep;",
+                  "-- UPDATE beta;",
+                  "SELECT skip;",
+                  "UPDATE gamma;"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 22,
+                "lines": [
+                  "-- UPDATE alpha;",
+                  "SELECT keep;",
+                  "-- UPDATE beta;",
+                  "SELECT skip;",
+                  "-- UPDATE gamma;"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Name the register and decide exactly where replay should begin.",
+            "Record one complete, repeatable transformation before replaying it.",
+            "Watch the final cursor position: it becomes the next replay's starting point."
+          ],
+          "feedback": {
+            "success": "The macro completed the intended transformation.",
+            "why": "The recorded keys reused a named register while preserving a predictable starting point.",
+            "contrast": "A brittle macro would depend on a column or continue after its assumptions stopped matching."
+          },
+          "skills": {
+            "primary": [
+              "macro-selective-application"
+            ],
+            "supporting": [
+              "normal-mode",
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "macro-length",
+              "replay-count",
+              "reduced-guidance"
+            ]
+          },
+          "portability": "Uses named-register macro behavior shared by Vim and conforming Vim integrations.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "macros-v1",
+            "languageRationale": "sql provides a realistic repeated structure for this macro workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-selective-application"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-macro-or-smaller-tool",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the smallest safe automation",
+          "prompt": "Several nonadjacent rows need the same multi-step structural edit, and each has the same reliable anchor. Which tool should you try first?",
+          "options": [
+            {
+              "id": "macro",
+              "label": "A search-selected macro"
+            },
+            {
+              "id": "dot",
+              "label": "Dot without positioning"
+            },
+            {
+              "id": "count",
+              "label": "One adjacent count"
+            }
+          ],
+          "correctOptionId": "macro",
+          "explanation": "The transformation is multi-step and structural, while search can deliberately select its nonadjacent instances.",
+          "questionKind": "command-classification"
+        },
+        {
+          "id": "macros-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Macros are tiny programs with contracts",
+          "body": "Record from a stable start, finish at a deliberate cursor position, replay only where the assumptions hold, and inspect the register when the program needs repair. Recursive macros exist, but they remain optional because safe ordinary replay is the core skill.",
+          "takeaways": [
+            "qa…q records; @a replays; @@ repeats the latest macro.",
+            "Counts scale trusted self-advancing macros.",
+            "qA appends, and register text can be put, edited, and yanked back.",
+            "A failed anchor should stop replay before later keys can cause damage."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "ref-record",
+      "command": "q{register}…q",
+      "purpose": "Record Normal-mode keys into a named register.",
+      "notes": [
+        "Lowercase recording replaces the register."
+      ],
+      "exampleActivityRefs": [
+        "beacon-macro-demo"
+      ]
+    },
+    {
+      "id": "ref-replay",
+      "command": "@{register} / @@",
+      "purpose": "Replay a named macro or the latest replayed macro.",
+      "notes": [
+        "Replay starts at the current cursor."
+      ],
+      "exampleActivityRefs": [
+        "latest-macro-demo"
+      ]
+    },
+    {
+      "id": "ref-counted",
+      "command": "count@{register}",
+      "purpose": "Repeat a self-advancing macro a trusted number of times.",
+      "notes": [
+        "A failed anchor stops remaining iterations."
+      ],
+      "exampleActivityRefs": [
+        "count-ten-csv-rows"
+      ]
+    },
+    {
+      "id": "ref-anchors",
+      "command": "0, find, search, text objects",
+      "purpose": "Build macro steps around durable textual structure.",
+      "notes": [
+        "Avoid absolute columns across irregular rows."
+      ],
+      "exampleActivityRefs": [
+        "anchor-colon-demo",
+        "anchor-search-todos"
+      ]
+    },
+    {
+      "id": "ref-final-position",
+      "command": "final cursor motion",
+      "purpose": "Choose where the next replay begins.",
+      "notes": [
+        "Record movement only when every replay should advance."
+      ],
+      "exampleActivityRefs": [
+        "final-row-demo"
+      ]
+    },
+    {
+      "id": "ref-append",
+      "command": "qA…q",
+      "purpose": "Append keys to register a without replacing it.",
+      "notes": [
+        "Inspect before extending an unfamiliar macro."
+      ],
+      "exampleActivityRefs": [
+        "append-colon-demo"
+      ]
+    },
+    {
+      "id": "ref-inspect",
+      "command": "\"ap / \"ay$",
+      "purpose": "Put macro text, edit it, and write it back.",
+      "notes": [
+        "Practice uses command-only macros so every key is readable."
+      ],
+      "exampleActivityRefs": [
+        "put-macro-demo",
+        "repair-colon-macro"
+      ]
+    },
+    {
+      "id": "ref-recursion",
+      "command": "recursive @{register}",
+      "purpose": "Allow a macro to invoke a macro, including itself.",
+      "notes": [
+        "Optional and never required for normal progression.",
+        "Prefer counted or search-selected replay while learning."
+      ],
+      "exampleActivityRefs": [
+        "choose-macro-or-smaller-tool"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "record and replay named macros",
+      "explain": [
+        "macro-recording-meaning"
+      ],
+      "demonstrate": [
+        "beacon-macro-demo"
+      ],
+      "isolate": [
+        "comment-python-jobs"
+      ],
+      "mix": [
+        "comment-sql-selects"
+      ],
+      "challenge": [
+        "comment-yaml-flags"
+      ]
+    },
+    {
+      "concept": "@@ and counted macro replay",
+      "explain": [
+        "macro-count-meaning"
+      ],
+      "demonstrate": [
+        "latest-macro-demo"
+      ],
+      "isolate": [
+        "latest-markdown-items"
+      ],
+      "mix": [
+        "count-python-guards"
+      ],
+      "challenge": [
+        "count-ten-csv-rows"
+      ]
+    },
+    {
+      "concept": "stable macro anchors",
+      "explain": [
+        "macro-anchor-meaning"
+      ],
+      "demonstrate": [
+        "anchor-colon-demo"
+      ],
+      "isolate": [
+        "anchor-log-pipes"
+      ],
+      "mix": [
+        "anchor-call-arguments"
+      ],
+      "challenge": [
+        "anchor-search-todos"
+      ]
+    },
+    {
+      "concept": "deliberate final cursor position",
+      "explain": [
+        "macro-final-position-meaning"
+      ],
+      "demonstrate": [
+        "final-row-demo"
+      ],
+      "isolate": [
+        "final-go-fields"
+      ],
+      "mix": [
+        "final-php-records"
+      ],
+      "challenge": [
+        "final-prose-labels"
+      ]
+    },
+    {
+      "concept": "stop on failed motion or search",
+      "explain": [
+        "macro-failure-meaning"
+      ],
+      "demonstrate": [
+        "failed-semicolon-demo"
+      ],
+      "isolate": [
+        "failed-pipe-log"
+      ],
+      "mix": [
+        "failed-search-python"
+      ],
+      "challenge": [
+        "failed-counted-csv"
+      ]
+    },
+    {
+      "concept": "append with qA",
+      "explain": [
+        "macro-append-meaning"
+      ],
+      "demonstrate": [
+        "append-colon-demo"
+      ],
+      "isolate": [
+        "append-shell-pipes"
+      ],
+      "mix": [
+        "append-csharp-fields"
+      ],
+      "challenge": [
+        "append-xml-attributes"
+      ]
+    },
+    {
+      "concept": "inspect put and repair macro text",
+      "explain": [
+        "macro-inspection-meaning"
+      ],
+      "demonstrate": [
+        "put-macro-demo"
+      ],
+      "isolate": [
+        "put-log-macro"
+      ],
+      "mix": [
+        "repair-colon-macro"
+      ],
+      "challenge": [
+        "repair-pipe-macro"
+      ]
+    },
+    {
+      "concept": "selective macro application and tool choice",
+      "explain": [
+        "macro-selection-meaning"
+      ],
+      "demonstrate": [
+        "selective-todo-demo"
+      ],
+      "isolate": [
+        "selective-fixme-python"
+      ],
+      "mix": [
+        "selective-error-log"
+      ],
+      "challenge": [
+        "selective-sql-updates",
+        "choose-macro-or-smaller-tool"
+      ]
+    }
+  ]
+}

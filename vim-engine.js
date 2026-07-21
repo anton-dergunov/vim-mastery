@@ -298,9 +298,10 @@ export class VimEngine {
       return true;
     }
 
-    // The CodeMirror Vim adapter does not implement Vim's colon register.
-    // Keep the authored `@` and `:` tokens visible to the lesson while
-    // executing the same saved Ex line in the current line context.
+    // Keep the authored `@` and `:` tokens visible while preserving the
+    // app-owned Ex history bridge. Other registers receive the buffered `@`
+    // and their register key together through the adapter's macro engine.
+    let pendingAtPrefix = false;
     if (this.awaitingColonRegister) {
       this.awaitingColonRegister = false;
       if (vimKey === ":" && this.lastExCommand !== null) {
@@ -309,8 +310,9 @@ export class VimEngine {
         this.emit("key", { key: canonicalKey, source });
         return true;
       }
+      pendingAtPrefix = true;
     }
-    if (vimKey === "@") {
+    if (vimKey === "@" && !pendingAtPrefix) {
       this.awaitingColonRegister = true;
       this.emit("key", { key: canonicalKey, source });
       return true;
@@ -324,6 +326,7 @@ export class VimEngine {
     }
 
     const wasInsert = Boolean(this.cm.state.vim?.insertMode);
+    if (pendingAtPrefix) Vim.multiSelectHandleKey(this.cm, "@", source);
     const handled = Vim.multiSelectHandleKey(this.cm, vimKey, source);
     // `handleKey` owns Vim interpretation. In Insert mode, a browser would
     // normally perform the subsequent contenteditable insertion; touch input
@@ -336,7 +339,8 @@ export class VimEngine {
         else this.cm.replaceSelection(text);
       }
     }
-    if ((vimKey === ":" || vimKey === "/" || vimKey === "?") && this.cm.state.dialog) {
+    const commandInput = this.view.dom.querySelector(".cm-vim-panel input, .cm-vim-panel textarea");
+    if (!wasInsert && (vimKey === ":" || vimKey === "/" || vimKey === "?") && commandInput) {
       this.commandLine = "";
       this.commandPrefix = vimKey;
     }

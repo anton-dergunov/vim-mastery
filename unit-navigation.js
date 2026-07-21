@@ -1,3 +1,5 @@
 export function findNextSequentialUnit(units, currentUnit) {
-  return units.find(candidate => candidate.unitNumber === currentUnit.unitNumber + 1) || null;
+  const ordered = [...units].sort((left, right) => left.unitNumber - right.unitNumber);
+  const currentIndex = ordered.findIndex(candidate => candidate.unitNumber === currentUnit.unitNumber);
+  return currentIndex >= 0 ? ordered[currentIndex + 1] || null : null;
 }

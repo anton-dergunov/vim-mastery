@@ -20,7 +20,7 @@
     "register inspection (:registers)",
     "normal-mode indentation and reindent (>, <, =)",
     "hard reflow at an authored textwidth (gq, gw)",
-    "macros",
+    "macro recording and replay (q{register}…q, @{register}, @@, counts, uppercase append, inspection/repair, and failure stopping)",
     "substitution",
     "Visual Line indentation",
     "join lines with normalized or preserved whitespace (J, gJ)",

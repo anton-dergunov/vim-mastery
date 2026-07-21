@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -65,7 +65,8 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     `  let register_name = register_pair[0]`,
     `  let native_register_name = register_pair[1]`,
     `  let register_type = getregtype(native_register_name)`,
-    `  let register_state[register_name] = {"text": getreg(native_register_name), "type": register_type ==# 'V' ? 'linewise' : register_type[0] ==# "\\<C-v>" ? 'blockwise' : 'characterwise'}`,
+    `  let register_text = substitute(getreg(native_register_name), '[\\x80][\\xfd]5', "", "g")`,
+    `  let register_state[register_name] = {"text": register_text, "type": register_type ==# 'V' ? 'linewise' : register_type[0] ==# "\\<C-v>" ? 'blockwise' : 'characterwise'}`,
     `endfor`,
     `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state, "viewport": {"topLine": line('w0') - 1, "bottomLine": line('w$') - 1, "totalLines": line('$')}})], ${JSON.stringify(output)})`,
     "qa!",
@@ -73,7 +74,13 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
 
   try {
     writeFileSync(script, vimScript);
-    execFileSync("vim", ["-Nu", "NONE", "-i", "NONE", "-n", "-es", "-S", script], { stdio: "pipe" });
+    try {
+      execFileSync("vim", ["-Nu", "NONE", "-i", "NONE", "-n", "-es", "-S", script], { stdio: "pipe" });
+    } catch (error) {
+      // Expected failed motions/searches can make headless Vim exit non-zero
+      // even though the fixture continued and exported its authoritative state.
+      if (!existsSync(output)) throw error;
+    }
     const result = JSON.parse(readFileSync(output, "utf8"));
     return { ...result, mode: normalizeMode(result.mode) };
   } finally {

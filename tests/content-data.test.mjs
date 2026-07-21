@@ -18,6 +18,7 @@ const textObjectUnit = units.find(item => item.data.id === "text-objects").data;
 const visualUnit = units.find(item => item.data.id === "visual-selection").data;
 const registerUnit = units.find(item => item.data.id === "registers-putting").data;
 const navigationUnit = units.find(item => item.data.id === "long-range-navigation").data;
+const macroUnit = units.find(item => item.data.id === "macros").data;
 const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
@@ -48,7 +49,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -66,8 +67,10 @@ test("numbered unit catalog is ordered and internally linked", () => {
       for (const route of activity.routes || []) assert(activityIds.has(route.activityRef), `${activity.id} routes to missing ${route.activityRef}`);
       if (activity.remediationRef) assert(activityIds.has(activity.remediationRef), `${activity.id} remediates to missing ${activity.remediationRef}`);
       if (activity.scenario?.initial.setup) {
+        const setupKeys = activity.scenario.initial.setup.steps.map(step => typeof step === "string" ? step : step.key);
+        const seedsHiddenEditorState = setupKeys.some(key => ["\"", "m", "q", "/", "?"].includes(key));
         assert(
-          activity.scenario.initial.mode !== "normal" || activity.editor?.viewportRows,
+          activity.scenario.initial.mode !== "normal" || activity.editor?.viewportRows || seedsHiddenEditorState,
           `${activity.id} should not seed an unnecessary Normal state`,
         );
       }
@@ -81,7 +84,7 @@ test("numbered unit catalog is ordered and internally linked", () => {
   }
 });
 
-test("unit continuation requires the immediately following unit", () => {
+test("unit continuation follows the next published catalog unit", () => {
   const current = { unitNumber: 1 };
   assert.equal(findNextSequentialUnit(units.map(item => item.data), current), cursorUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), cursorUnit), changingUnit);
@@ -92,7 +95,8 @@ test("unit continuation requires the immediately following unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), visualUnit), registerUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), registerUnit), navigationUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), navigationUnit)?.id, unit.id);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), unit), null);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), unit), macroUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), macroUnit), null);
 });
 
 test("unit catalog groups implemented units into curriculum arcs", () => {
@@ -100,8 +104,9 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
   assert.deepEqual(unitCatalog.arcs, [
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
     { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10] },
+    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [13] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -235,6 +240,50 @@ test("Unit 10 curriculum definition is preserved verbatim", () => {
     representativeExercises: "Change one field and repeat on later rows; search for a token and apply the same edit; compare `3dd` with repeated `dd`; rerun a recent Ex change",
     priorityAndPortability: "Core. `@:`, `&`, and `:~` bridge into Arc 3 and appear only after basic Command-line use",
   });
+});
+
+test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
+  assert.deepEqual(macroUnit.curriculumDefinition, {
+    unit: "13. Macros",
+    commandsAndConcepts: "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors; deliberate final cursor position; stopping on failed motion/search; optional recursion",
+    prerequisites: "Units 4, 5, 8, and 10",
+    learningOutcome: "Record a robust transformation, replay it safely, inspect or repair it, and state the assumptions that make it valid",
+    representativeExercises: "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion",
+    priorityAndPortability: "Core automation. Recursive macros are optional and never required for normal progression",
+  });
+  assert.deepEqual(macroUnit.prerequisiteSkillIds, ["operator-grammar", "precision-motions-search", "registers-putting", "repeatable-editing"]);
+  assert.equal(macroUnit.lessons.length, 8);
+  const activities = macroUnit.lessons.flatMap(lesson => lesson.activities);
+  const exercises = activities.filter(activity => activity.type === "exercise");
+  const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert.equal(exercises.length, 24);
+  assert.equal(runnableActivities.length, 32);
+  assert.deepEqual(macroUnit.coverage.map(item => item.concept), [
+    "record and replay named macros",
+    "@@ and counted macro replay",
+    "stable macro anchors",
+    "deliberate final cursor position",
+    "stop on failed motion or search",
+    "append with qA",
+    "inspect put and repair macro text",
+    "selective macro application and tool choice",
+  ]);
+  const ids = new Set(activities.map(activity => activity.id));
+  for (const lesson of macroUnit.lessons) {
+    const phases = new Set(lesson.activities.map(activity => activity.phase));
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
+    }
+  }
+  for (const entry of macroUnit.reference) {
+    for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  const languages = new Map();
+  for (const activity of runnableActivities) languages.set(activity.languageId, (languages.get(activity.languageId) || 0) + 1);
+  assert(languages.size >= 12);
+  assert((languages.get("python") || 0) >= 3);
+  assert.equal(activities.find(activity => activity.id === "count-ten-csv-rows").editor.viewportRows, 7);
+  assert.match(activities.find(activity => activity.id === "macros-unit-summary").body, /Recursive macros exist, but they remain optional/);
 });
 
 test("Unit 2 curriculum definition is preserved verbatim", () => {
@@ -869,6 +918,50 @@ for (const activity of navigationRunnable) {
     }
   });
 }
+
+const macroRunnable = macroUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of macroRunnable) {
+  test(`native Vim Unit 13 content: ${activity.id}`, () => {
+    const setup = activity.scenario.initial.setup;
+    const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
+    const cursor = setup?.cursor || activity.scenario.initial.cursor;
+    const keys = keysOf(activity);
+    const registerNames = Object.keys(activity.scenario.target.registers || {});
+    if (setup) {
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+      assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
+      assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
+    }
+    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys, registerNames };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+    assert.deepEqual(result.registers, activity.scenario.target.registers || {});
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointNames = Object.keys(checkpoint.registers || {});
+      const checkpointResult = runNativeVim({
+        ...options,
+        keys: keys.slice(0, checkpoint.afterStep),
+        registerNames: checkpointNames,
+      });
+      assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+      assert.deepEqual(checkpointResult.registers, checkpoint.registers || {}, `${activity.id} checkpoint ${checkpoint.afterStep} registers`);
+    }
+  });
+}
+
+test("Unit 13 failure guards stop before later macro keys", () => {
+  const byId = new Map(macroRunnable.map(activity => [activity.id, activity]));
+  assert.deepEqual(byId.get("failed-semicolon-demo").scenario.target.lines, ["ab", "no delimiter", "c;d", "e;f"]);
+  assert.deepEqual(byId.get("failed-search-python").scenario.target.lines, ["header", "ARGET one", "plain_tail"]);
+  assert.equal(byId.get("append-colon-demo").scenario.target.registers.a.text, "0f:r=j");
+  assert.equal(byId.get("repair-colon-macro").scenario.target.registers.a.text, "0f:r=j");
+});
 
 test("native Vim method-boundary fixture covers all four directions", () => {
   const lines = navigationRunnable.find(activity => activity.id === "method-start-mix").scenario.initial.lines;

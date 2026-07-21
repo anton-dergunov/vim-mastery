@@ -2,7 +2,8 @@
   "schemaVersion": 2,
   "arcs": [
     { "id": "foundations", "arcNumber": 1, "title": "Foundations", "unitNumbers": [1, 2, 3, 4, 5, 6] },
-    { "id": "fluency-tracks", "arcNumber": 2, "title": "Fluency tracks", "unitNumbers": [7, 8, 9, 10] }
+    { "id": "fluency-tracks", "arcNumber": 2, "title": "Fluency tracks", "unitNumbers": [7, 8, 9, 10] },
+    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [13] }
   ],
   "units": [
     { "id": "modal-model", "unitNumber": 1, "title": "The modal model", "lessonCount": 5, "path": "content/units/01-modal-model.json" },
@@ -14,6 +15,7 @@
     { "id": "visual-selection", "unitNumber": 7, "title": "Visual selection", "lessonCount": 9, "path": "content/units/07-visual-selection.json" },
     { "id": "registers-putting", "unitNumber": 8, "title": "Registers and putting", "lessonCount": 9, "path": "content/units/08-registers-putting.json" },
     { "id": "long-range-navigation", "unitNumber": 9, "title": "Long-range navigation", "lessonCount": 11, "path": "content/units/09-long-range-navigation.json" },
-    { "id": "repeatable-editing", "unitNumber": 10, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/10-repeatable-editing.json" }
+    { "id": "repeatable-editing", "unitNumber": 10, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/10-repeatable-editing.json" },
+    { "id": "macros", "unitNumber": 13, "title": "Macros", "lessonCount": 8, "path": "content/units/13-macros.json" }
   ]
 }

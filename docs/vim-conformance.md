@@ -94,3 +94,17 @@ It also corrects odd-row centering, page-size movement, and nested method
 boundaries. Activity reset clears marks, jump/change lists, insertion and
 selection history, and viewport state before deterministic setup is replayed.
 Specialized comment and preprocessor motions remain outside Unit 9.
+
+Unit 13 uses the adapter's named-register macro recorder for `q{register}…q`,
+`@{register}`, `@@`, and counted replay. The app buffers `@` for one key so its
+existing `@:` bridge can coexist with ordinary macro registers, and it detects
+real search inputs rather than mistaking the recorder's `recording @a` message
+for a search prompt. The versioned adapter patch preserves existing register
+contents for uppercase `qA` recording and aborts the current macro plus any
+remaining counted iterations when a find or search motion fails. Fixtures
+cover Insert text containing `/`, touch and physical entry of `@`, reset
+isolation, and command-only macro text put/edit/yank workflows. Insert-heavy
+macros are validated through their text and cursor results because the adapter
+stores recorded Insert changes separately from its printable register text.
+Recursive macros remain optional explanatory material and are not part of the
+supported progression.

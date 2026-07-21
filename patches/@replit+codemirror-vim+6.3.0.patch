@@ -1,5 +1,5 @@
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.cjs b/node_modules/@replit/codemirror-vim/dist/index.cjs
-index 24368b8..0812f98 100644
+index 24368b8..1f9d048 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.cjs
 +++ b/node_modules/@replit/codemirror-vim/dist/index.cjs
 @@ -167,6 +167,7 @@ function initVim(CM) {
@@ -37,7 +37,26 @@ index 24368b8..0812f98 100644
    var validRegisters = ['-', '"', '.', ':', '_', '/', '+'];
    var latinCharRegex = /^\w$/;
    var upperCaseChars = /^[A-Z]$/;
-@@ -753,6 +758,8 @@ function initVim(CM) {
+@@ -686,6 +691,7 @@ function initVim(CM) {
+       this.latestRegister = undefined;
+       this.isPlaying = false;
+       this.isRecording = false;
++      this.replayFailed = false;
+       /** @type {string[]}*/
+       this.replaySearchQueries = [];
+       this.onRecordingDone = undefined;
+@@ -706,7 +712,9 @@ function initVim(CM) {
+     enterMacroRecordMode(cm, registerName) {
+       var register = vimGlobalState.registerController.getRegister(registerName);
+       if (register) {
+-        register.clear();
++        if (!isUpperCase(registerName)) {
++          register.clear();
++        }
+         this.latestRegister = registerName;
+         if (cm.openDialog) {
+           var template = dom('span', {class: 'cm-vim-message'}, 'recording @' + registerName);
+@@ -753,6 +761,8 @@ function initVim(CM) {
          visualLine: false,
          visualBlock: false,
          lastSelection: /**@type{vimState["lastSelection"]}*/( /**@type{unknown}*/(null)),
@@ -46,7 +65,7 @@ index 24368b8..0812f98 100644
          lastPastedText: undefined,
          sel: {anchor: new Pos(0, 0), head: new Pos(0, 0)},
          // Buffer-local/window-local values of vim options.
-@@ -1536,9 +1543,6 @@ function initVim(CM) {
+@@ -1536,9 +1546,6 @@ function initVim(CM) {
        } else {
          register.setText(text, linewise, blockwise);
        }
@@ -56,7 +75,7 @@ index 24368b8..0812f98 100644
        // The unnamed register always has the same value as the last used
        // register.
        this.unnamedRegister.setText(register.toString(), linewise);
-@@ -1762,7 +1766,7 @@ function initVim(CM) {
+@@ -1762,7 +1769,7 @@ function initVim(CM) {
        clearInputState(cm);
        vim.lastMotion = null;
        if (command.isEdit) {
@@ -65,7 +84,7 @@ index 24368b8..0812f98 100644
        }
        actions[command.action](cm, actionArgs, vim);
      },
-@@ -2032,7 +2036,7 @@ function initVim(CM) {
+@@ -2032,7 +2039,7 @@ function initVim(CM) {
        var newHead, newAnchor;
        var repeat;
        if (operator) {
@@ -74,7 +93,17 @@ index 24368b8..0812f98 100644
        }
        if (inputState.repeatOverride !== undefined) {
          // If repeatOverride is specified, that takes precedence over the
-@@ -2195,6 +2199,10 @@ function initVim(CM) {
+@@ -2059,6 +2066,9 @@ function initVim(CM) {
+         var motionResult = motions[motion](cm, origHead, motionArgs, vim, inputState);
+         vim.lastMotion = motions[motion];
+         if (!motionResult) {
++          if (vimGlobalState.macroModeState.isPlaying) {
++            vimGlobalState.macroModeState.replayFailed = true;
++          }
+           return;
+         }
+         if (motionArgs.toJumplist) {
+@@ -2195,6 +2205,10 @@ function initVim(CM) {
              head: newPositions.end
            }, mode, exclusive);
          }
@@ -85,7 +114,7 @@ index 24368b8..0812f98 100644
          cm.setSelections(cmSel.ranges, cmSel.primary);
          vim.lastMotion = null;
          operatorArgs.repeat = repeat; // For indent in visual mode.
-@@ -2211,15 +2219,27 @@ function initVim(CM) {
+@@ -2211,15 +2225,27 @@ function initVim(CM) {
          }
        }
      },
@@ -116,7 +145,7 @@ index 24368b8..0812f98 100644
      }
    };
 
-@@ -2284,8 +2304,9 @@ function initVim(CM) {
+@@ -2284,8 +2310,9 @@ function initVim(CM) {
          return;
        }
 
@@ -127,7 +156,7 @@ index 24368b8..0812f98 100644
 
        // next: [from, to] | null
        var next = findNextFromAndToInclusive(cm, prev, query, motionArgs.repeat, vim);
-@@ -2321,19 +2342,7 @@ function initVim(CM) {
+@@ -2321,19 +2348,7 @@ function initVim(CM) {
          // the search result.
          var anchor = vim.sel.anchor;
          if (anchor) {
@@ -148,7 +177,7 @@ index 24368b8..0812f98 100644
          }
        } else {
          // Let's turn visual mode on.
-@@ -2483,13 +2492,17 @@ function initVim(CM) {
+@@ -2483,13 +2498,17 @@ function initVim(CM) {
        vim.lastHPos = res.ch;
        return res;
      },
@@ -173,7 +202,7 @@ index 24368b8..0812f98 100644
      },
      moveByParagraph: function(cm, head, motionArgs) {
        var dir = motionArgs.forward ? 1 : -1;
-@@ -2504,7 +2517,7 @@ function initVim(CM) {
+@@ -2504,7 +2523,7 @@ function initVim(CM) {
        var curEnd = null;
        var repeat = motionArgs.repeat;
        if (!repeat) {
@@ -182,7 +211,12 @@ index 24368b8..0812f98 100644
        }
        var orig = cm.charCoords(head, 'local');
        motionArgs.repeat = repeat;
-@@ -2538,6 +2551,10 @@ function initVim(CM) {
+@@ -2534,10 +2553,14 @@ function initVim(CM) {
+       var repeat = motionArgs.repeat;
+       recordLastCharacterSearch(0, motionArgs);
+       return moveToCharacter(cm, repeat, motionArgs.forward,
+-          motionArgs.selectedCharacter, head) || head;
++          motionArgs.selectedCharacter, head);
      },
      moveToSymbol: function(cm, head, motionArgs) {
        var repeat = motionArgs.repeat;
@@ -193,7 +227,7 @@ index 24368b8..0812f98 100644
        return motionArgs.selectedCharacter
         && findSymbol(cm, repeat, motionArgs.forward,
            motionArgs.selectedCharacter) || head;
-@@ -2559,6 +2576,15 @@ function initVim(CM) {
+@@ -2559,6 +2582,15 @@ function initVim(CM) {
        return new Pos(cursor.line,
                    findFirstNonWhiteSpaceCharacter(cm.getLine(cursor.line)));
      },
@@ -209,7 +243,7 @@ index 24368b8..0812f98 100644
      moveToMatchedSymbol: function(cm, head) {
        var cursor = head;
        var line = cursor.line;
-@@ -2819,8 +2845,8 @@ function initVim(CM) {
+@@ -2819,8 +2851,8 @@ function initVim(CM) {
        // shifting n lines right once.
        var repeat = vim.visualMode ? args.repeat || 1 : 1;
        if (vim.visualBlock) {
@@ -220,7 +254,7 @@ index 24368b8..0812f98 100644
          var cursor;
          for (var i = ranges.length - 1; i >= 0; i--) {
            cursor = cursorMin(ranges[i].anchor, ranges[i].head);
-@@ -2882,7 +2908,10 @@ function initVim(CM) {
+@@ -2882,7 +2914,10 @@ function initVim(CM) {
        var to = ranges[0].head.line;
        if (operatorArgs.linewise) to--;
        var endRow = cm.hardWrap({from: from, to: to});
@@ -232,7 +266,7 @@ index 24368b8..0812f98 100644
        return operatorArgs.keepCursor ? oldAnchor : new Pos(endRow, 0);
      },
      changeCase: function(cm, args, ranges, oldAnchor, newHead) {
-@@ -2966,6 +2995,18 @@ function initVim(CM) {
+@@ -2966,6 +3001,18 @@ function initVim(CM) {
 
    /** @type {import("./types").vimActions} */
    var actions = {
@@ -251,7 +285,7 @@ index 24368b8..0812f98 100644
      jumpListWalk: function(cm, actionArgs, vim) {
        if (vim.visualMode) {
          return;
-@@ -3020,15 +3061,14 @@ function initVim(CM) {
+@@ -3020,15 +3067,14 @@ function initVim(CM) {
        var lineNum = cm.getCursor().line;
        var charCoords = cm.charCoords(new Pos(lineNum, 0), 'local');
        var height = cm.getScrollInfo().clientHeight;
@@ -271,7 +305,18 @@ index 24368b8..0812f98 100644
            break;
        }
        cm.scrollTo(null, y);
-@@ -3117,7 +3157,7 @@ function initVim(CM) {
+@@ -3043,7 +3089,9 @@ function initVim(CM) {
+         macroModeState.latestRegister = registerName;
+       }
+       while(repeat--){
+-        executeMacroRegister(cm, vim, macroModeState, registerName);
++        if (!executeMacroRegister(cm, vim, macroModeState, registerName)) {
++          break;
++        }
+       }
+     },
+     enterMacroRecordMode: function(cm, actionArgs) {
+@@ -3117,7 +3165,7 @@ function initVim(CM) {
            return;
          }
        } else if (insertAt == 'lastEdit') {
@@ -280,7 +325,7 @@ index 24368b8..0812f98 100644
        }
        cm.setOption('disableInput', false);
        if (actionArgs && actionArgs.replace) {
-@@ -3135,6 +3175,8 @@ function initVim(CM) {
+@@ -3135,6 +3183,8 @@ function initVim(CM) {
          cm.on('change', onChange);
          if (vim.insertEnd) vim.insertEnd.clear();
          vim.insertEnd = cm.setBookmark(head, {insertLeft: true});
@@ -289,7 +334,7 @@ index 24368b8..0812f98 100644
          CM.on(cm.getInputField(), 'keydown', onKeyEventTargetKeyDown);
        }
        if (vim.visualMode) {
-@@ -3267,14 +3309,8 @@ function initVim(CM) {
+@@ -3267,14 +3317,8 @@ function initVim(CM) {
      paste: function(cm, actionArgs, vim) {
        var register = vimGlobalState.registerController.getRegister(
            actionArgs.registerName);
@@ -306,7 +351,7 @@ index 24368b8..0812f98 100644
      },
      continuePaste: function(cm, actionArgs, vim, text, register) {
        var cur = copyCursor(cm.getCursor());
-@@ -3410,11 +3446,20 @@ function initVim(CM) {
+@@ -3410,11 +3454,20 @@ function initVim(CM) {
            } else {
              curPosFinal = copyCursor(cur);
              if (!/\n/.test(text)) {
@@ -328,7 +373,7 @@ index 24368b8..0812f98 100644
        if (vim.visualMode) {
          exitVisualMode(cm, false);
        }
-@@ -4255,6 +4300,34 @@ function initVim(CM) {
+@@ -4255,6 +4308,34 @@ function initVim(CM) {
        }
      }
    };
@@ -363,7 +408,7 @@ index 24368b8..0812f98 100644
    /** @arg {CodeMirrorV} cm  @arg {number} repeat  @arg {boolean|undefined} forward  @arg {string} symb */
    function findSymbol(cm, repeat, forward, symb) {
      var cur = copyCursor(cm.getCursor());
-@@ -5024,6 +5097,17 @@ function initVim(CM) {
+@@ -5024,6 +5105,17 @@ function initVim(CM) {
      // include the symbols
      if (inclusive) {
        --start; ++end;
@@ -381,7 +426,7 @@ index 24368b8..0812f98 100644
      }
 
      return {
-@@ -5499,33 +5583,35 @@ function initVim(CM) {
+@@ -5499,33 +5591,35 @@ function initVim(CM) {
      return cm.operation(function() {
        if (repeat === undefined) { repeat = 1; }
        var pos = cm.getCursor();
@@ -439,7 +484,7 @@ index 24368b8..0812f98 100644
      });
    }
    /** @arg {CodeMirrorV} cm */
-@@ -5597,7 +5683,8 @@ function initVim(CM) {
+@@ -5597,7 +5691,8 @@ function initVim(CM) {
    /** @arg {CodeMirror} cm */
    function getLastEditPos(cm) {
      if (cm.getLastEditEnd) {
@@ -449,7 +494,7 @@ index 24368b8..0812f98 100644
      }
      // for old cm
      var done = /**@type{any}*/(cm).doc.history.done;
-@@ -6645,9 +6732,14 @@ function initVim(CM) {
+@@ -6645,9 +6740,14 @@ function initVim(CM) {
      }
      delete vim.insertModeRepeat;
      vim.insertMode = false;
@@ -464,7 +509,42 @@ index 24368b8..0812f98 100644
      cm.setOption('keyMap', 'vim');
      cm.setOption('disableInput', true);
      cm.toggleOverwrite(false); // exit replace mode if we were in it.
-@@ -7041,6 +7133,8 @@ function initVim(CM) {
+@@ -6719,13 +6819,14 @@ function initVim(CM) {
+         exCommandDispatcher.processCommand(cm, register.keyBuffer[0]);
+       }
+       macroModeState.isPlaying = false;
+-      return;
++      return true;
+     }
+     var keyBuffer = register.keyBuffer;
+     var imc = 0;
+     macroModeState.isPlaying = true;
++    macroModeState.replayFailed = false;
+     macroModeState.replaySearchQueries = register.searchQueries.slice(0);
+-    for (var i = 0; i < keyBuffer.length; i++) {
++    replay: for (var i = 0; i < keyBuffer.length; i++) {
+       var text = keyBuffer[i];
+       var match, key;
+       var keyRe = /<(?:[CSMA]-)*\w+>|./gi;
+@@ -6734,6 +6835,9 @@ function initVim(CM) {
+         // or a special sequence wrapped in '<' and '>', e.g. '<Space>'.
+         key = match[0];
+         vimApi.handleKey(cm, key, 'macro');
++        if (macroModeState.replayFailed) {
++          break replay;
++        }
+         if (vim.insertMode) {
+           var changes = register.insertModeChanges[imc++].changes;
+           vimGlobalState.macroModeState.lastInsertModeChanges.changes = changes;
+@@ -6743,6 +6847,7 @@ function initVim(CM) {
+       }
+     }
+     macroModeState.isPlaying = false;
++    return !macroModeState.replayFailed;
+   }
+
+   /** @arg {MacroModeState} macroModeState @arg {any} key */
+@@ -7041,6 +7146,8 @@ function initVim(CM) {
      var isHandled = false;
      var vim = vimApi.maybeInitVimState_(cm);
      var visualBlock = vim.visualBlock || vim.wasInVisualBlock;
@@ -473,7 +553,7 @@ index 24368b8..0812f98 100644
 
      if (cm.state.closeVimNotification) {
        var close = cm.state.closeVimNotification;
-@@ -7102,6 +7196,9 @@ function initVim(CM) {
+@@ -7102,6 +7209,9 @@ function initVim(CM) {
      if (isHandled && !vim.visualMode && !vim.insertMode && vim.visualMode != cm.somethingSelected()) {
        handleExternalSelection(cm, vim);
      }
@@ -483,7 +563,7 @@ index 24368b8..0812f98 100644
      return isHandled;
    }
    resetVimGlobalState();
-@@ -8072,7 +8169,9 @@ function findEnclosingTag(cm, pos) {
+@@ -8072,7 +8182,9 @@ function findEnclosingTag(cm, pos) {
          if (text == "<")
              offset++;
      }
@@ -495,7 +575,7 @@ index 24368b8..0812f98 100644
      while (node) {
          if (((_a = node.firstChild) === null || _a === void 0 ? void 0 : _a.type.name) == 'OpenTag'
 diff --git a/node_modules/@replit/codemirror-vim/dist/index.js b/node_modules/@replit/codemirror-vim/dist/index.js
-index 4d0faa1..e52f022 100644
+index 4d0faa1..86d8d6f 100644
 --- a/node_modules/@replit/codemirror-vim/dist/index.js
 +++ b/node_modules/@replit/codemirror-vim/dist/index.js
 @@ -147,6 +147,7 @@ function initVim(CM) {
@@ -533,7 +613,26 @@ index 4d0faa1..e52f022 100644
    var validRegisters = ['-', '"', '.', ':', '_', '/', '+'];
    var latinCharRegex = /^\w$/;
    var upperCaseChars = /^[A-Z]$/;
-@@ -733,6 +738,8 @@ function initVim(CM) {
+@@ -666,6 +671,7 @@ function initVim(CM) {
+       this.latestRegister = undefined;
+       this.isPlaying = false;
+       this.isRecording = false;
++      this.replayFailed = false;
+       /** @type {string[]}*/
+       this.replaySearchQueries = [];
+       this.onRecordingDone = undefined;
+@@ -686,7 +692,9 @@ function initVim(CM) {
+     enterMacroRecordMode(cm, registerName) {
+       var register = vimGlobalState.registerController.getRegister(registerName);
+       if (register) {
+-        register.clear();
++        if (!isUpperCase(registerName)) {
++          register.clear();
++        }
+         this.latestRegister = registerName;
+         if (cm.openDialog) {
+           var template = dom('span', {class: 'cm-vim-message'}, 'recording @' + registerName);
+@@ -733,6 +741,8 @@ function initVim(CM) {
          visualLine: false,
          visualBlock: false,
          lastSelection: /**@type{vimState["lastSelection"]}*/( /**@type{unknown}*/(null)),
@@ -542,7 +641,7 @@ index 4d0faa1..e52f022 100644
          lastPastedText: undefined,
          sel: {anchor: new Pos(0, 0), head: new Pos(0, 0)},
          // Buffer-local/window-local values of vim options.
-@@ -1516,9 +1523,6 @@ function initVim(CM) {
+@@ -1516,9 +1526,6 @@ function initVim(CM) {
        } else {
          register.setText(text, linewise, blockwise);
        }
@@ -552,7 +651,7 @@ index 4d0faa1..e52f022 100644
        // The unnamed register always has the same value as the last used
        // register.
        this.unnamedRegister.setText(register.toString(), linewise);
-@@ -1742,7 +1746,7 @@ function initVim(CM) {
+@@ -1742,7 +1749,7 @@ function initVim(CM) {
        clearInputState(cm);
        vim.lastMotion = null;
        if (command.isEdit) {
@@ -561,7 +660,7 @@ index 4d0faa1..e52f022 100644
        }
        actions[command.action](cm, actionArgs, vim);
      },
-@@ -2012,7 +2016,7 @@ function initVim(CM) {
+@@ -2012,7 +2019,7 @@ function initVim(CM) {
        var newHead, newAnchor;
        var repeat;
        if (operator) {
@@ -570,7 +669,17 @@ index 4d0faa1..e52f022 100644
        }
        if (inputState.repeatOverride !== undefined) {
          // If repeatOverride is specified, that takes precedence over the
-@@ -2175,6 +2179,10 @@ function initVim(CM) {
+@@ -2039,6 +2046,9 @@ function initVim(CM) {
+         var motionResult = motions[motion](cm, origHead, motionArgs, vim, inputState);
+         vim.lastMotion = motions[motion];
+         if (!motionResult) {
++          if (vimGlobalState.macroModeState.isPlaying) {
++            vimGlobalState.macroModeState.replayFailed = true;
++          }
+           return;
+         }
+         if (motionArgs.toJumplist) {
+@@ -2175,6 +2185,10 @@ function initVim(CM) {
              head: newPositions.end
            }, mode, exclusive);
          }
@@ -581,7 +690,7 @@ index 4d0faa1..e52f022 100644
          cm.setSelections(cmSel.ranges, cmSel.primary);
          vim.lastMotion = null;
          operatorArgs.repeat = repeat; // For indent in visual mode.
-@@ -2191,15 +2199,27 @@ function initVim(CM) {
+@@ -2191,15 +2205,27 @@ function initVim(CM) {
          }
        }
      },
@@ -612,7 +721,7 @@ index 4d0faa1..e52f022 100644
      }
    };
 
-@@ -2264,8 +2284,9 @@ function initVim(CM) {
+@@ -2264,8 +2290,9 @@ function initVim(CM) {
          return;
        }
 
@@ -623,7 +732,7 @@ index 4d0faa1..e52f022 100644
 
        // next: [from, to] | null
        var next = findNextFromAndToInclusive(cm, prev, query, motionArgs.repeat, vim);
-@@ -2301,19 +2322,7 @@ function initVim(CM) {
+@@ -2301,19 +2328,7 @@ function initVim(CM) {
          // the search result.
          var anchor = vim.sel.anchor;
          if (anchor) {
@@ -644,7 +753,7 @@ index 4d0faa1..e52f022 100644
          }
        } else {
          // Let's turn visual mode on.
-@@ -2463,13 +2472,17 @@ function initVim(CM) {
+@@ -2463,13 +2478,17 @@ function initVim(CM) {
        vim.lastHPos = res.ch;
        return res;
      },
@@ -669,7 +778,7 @@ index 4d0faa1..e52f022 100644
      },
      moveByParagraph: function(cm, head, motionArgs) {
        var dir = motionArgs.forward ? 1 : -1;
-@@ -2484,7 +2497,7 @@ function initVim(CM) {
+@@ -2484,7 +2503,7 @@ function initVim(CM) {
        var curEnd = null;
        var repeat = motionArgs.repeat;
        if (!repeat) {
@@ -678,7 +787,12 @@ index 4d0faa1..e52f022 100644
        }
        var orig = cm.charCoords(head, 'local');
        motionArgs.repeat = repeat;
-@@ -2518,6 +2531,10 @@ function initVim(CM) {
+@@ -2514,10 +2533,14 @@ function initVim(CM) {
+       var repeat = motionArgs.repeat;
+       recordLastCharacterSearch(0, motionArgs);
+       return moveToCharacter(cm, repeat, motionArgs.forward,
+-          motionArgs.selectedCharacter, head) || head;
++          motionArgs.selectedCharacter, head);
      },
      moveToSymbol: function(cm, head, motionArgs) {
        var repeat = motionArgs.repeat;
@@ -689,7 +803,7 @@ index 4d0faa1..e52f022 100644
        return motionArgs.selectedCharacter
         && findSymbol(cm, repeat, motionArgs.forward,
            motionArgs.selectedCharacter) || head;
-@@ -2539,6 +2556,15 @@ function initVim(CM) {
+@@ -2539,6 +2562,15 @@ function initVim(CM) {
        return new Pos(cursor.line,
                    findFirstNonWhiteSpaceCharacter(cm.getLine(cursor.line)));
      },
@@ -705,7 +819,7 @@ index 4d0faa1..e52f022 100644
      moveToMatchedSymbol: function(cm, head) {
        var cursor = head;
        var line = cursor.line;
-@@ -2799,8 +2825,8 @@ function initVim(CM) {
+@@ -2799,8 +2831,8 @@ function initVim(CM) {
        // shifting n lines right once.
        var repeat = vim.visualMode ? args.repeat || 1 : 1;
        if (vim.visualBlock) {
@@ -716,7 +830,7 @@ index 4d0faa1..e52f022 100644
          var cursor;
          for (var i = ranges.length - 1; i >= 0; i--) {
            cursor = cursorMin(ranges[i].anchor, ranges[i].head);
-@@ -2862,7 +2888,10 @@ function initVim(CM) {
+@@ -2862,7 +2894,10 @@ function initVim(CM) {
        var to = ranges[0].head.line;
        if (operatorArgs.linewise) to--;
        var endRow = cm.hardWrap({from: from, to: to});
@@ -728,7 +842,7 @@ index 4d0faa1..e52f022 100644
        return operatorArgs.keepCursor ? oldAnchor : new Pos(endRow, 0);
      },
      changeCase: function(cm, args, ranges, oldAnchor, newHead) {
-@@ -2946,6 +2975,18 @@ function initVim(CM) {
+@@ -2946,6 +2981,18 @@ function initVim(CM) {
 
    /** @type {import("./types").vimActions} */
    var actions = {
@@ -747,7 +861,7 @@ index 4d0faa1..e52f022 100644
      jumpListWalk: function(cm, actionArgs, vim) {
        if (vim.visualMode) {
          return;
-@@ -3000,15 +3041,14 @@ function initVim(CM) {
+@@ -3000,15 +3047,14 @@ function initVim(CM) {
        var lineNum = cm.getCursor().line;
        var charCoords = cm.charCoords(new Pos(lineNum, 0), 'local');
        var height = cm.getScrollInfo().clientHeight;
@@ -767,7 +881,18 @@ index 4d0faa1..e52f022 100644
            break;
        }
        cm.scrollTo(null, y);
-@@ -3097,7 +3137,7 @@ function initVim(CM) {
+@@ -3023,7 +3069,9 @@ function initVim(CM) {
+         macroModeState.latestRegister = registerName;
+       }
+       while(repeat--){
+-        executeMacroRegister(cm, vim, macroModeState, registerName);
++        if (!executeMacroRegister(cm, vim, macroModeState, registerName)) {
++          break;
++        }
+       }
+     },
+     enterMacroRecordMode: function(cm, actionArgs) {
+@@ -3097,7 +3145,7 @@ function initVim(CM) {
            return;
          }
        } else if (insertAt == 'lastEdit') {
@@ -776,7 +901,7 @@ index 4d0faa1..e52f022 100644
        }
        cm.setOption('disableInput', false);
        if (actionArgs && actionArgs.replace) {
-@@ -3115,6 +3155,8 @@ function initVim(CM) {
+@@ -3115,6 +3163,8 @@ function initVim(CM) {
          cm.on('change', onChange);
          if (vim.insertEnd) vim.insertEnd.clear();
          vim.insertEnd = cm.setBookmark(head, {insertLeft: true});
@@ -785,7 +910,7 @@ index 4d0faa1..e52f022 100644
          CM.on(cm.getInputField(), 'keydown', onKeyEventTargetKeyDown);
        }
        if (vim.visualMode) {
-@@ -3247,14 +3289,8 @@ function initVim(CM) {
+@@ -3247,14 +3297,8 @@ function initVim(CM) {
      paste: function(cm, actionArgs, vim) {
        var register = vimGlobalState.registerController.getRegister(
            actionArgs.registerName);
@@ -802,7 +927,7 @@ index 4d0faa1..e52f022 100644
      },
      continuePaste: function(cm, actionArgs, vim, text, register) {
        var cur = copyCursor(cm.getCursor());
-@@ -3390,11 +3426,20 @@ function initVim(CM) {
+@@ -3390,11 +3434,20 @@ function initVim(CM) {
            } else {
              curPosFinal = copyCursor(cur);
              if (!/\n/.test(text)) {
@@ -824,7 +949,7 @@ index 4d0faa1..e52f022 100644
        if (vim.visualMode) {
          exitVisualMode(cm, false);
        }
-@@ -4235,6 +4280,34 @@ function initVim(CM) {
+@@ -4235,6 +4288,34 @@ function initVim(CM) {
        }
      }
    };
@@ -859,7 +984,7 @@ index 4d0faa1..e52f022 100644
    /** @arg {CodeMirrorV} cm  @arg {number} repeat  @arg {boolean|undefined} forward  @arg {string} symb */
    function findSymbol(cm, repeat, forward, symb) {
      var cur = copyCursor(cm.getCursor());
-@@ -5004,6 +5077,17 @@ function initVim(CM) {
+@@ -5004,6 +5085,17 @@ function initVim(CM) {
      // include the symbols
      if (inclusive) {
        --start; ++end;
@@ -877,7 +1002,7 @@ index 4d0faa1..e52f022 100644
      }
 
      return {
-@@ -5479,33 +5563,35 @@ function initVim(CM) {
+@@ -5479,33 +5571,35 @@ function initVim(CM) {
      return cm.operation(function() {
        if (repeat === undefined) { repeat = 1; }
        var pos = cm.getCursor();
@@ -935,7 +1060,7 @@ index 4d0faa1..e52f022 100644
      });
    }
    /** @arg {CodeMirrorV} cm */
-@@ -5577,7 +5663,8 @@ function initVim(CM) {
+@@ -5577,7 +5671,8 @@ function initVim(CM) {
    /** @arg {CodeMirror} cm */
    function getLastEditPos(cm) {
      if (cm.getLastEditEnd) {
@@ -945,7 +1070,7 @@ index 4d0faa1..e52f022 100644
      }
      // for old cm
      var done = /**@type{any}*/(cm).doc.history.done;
-@@ -6625,9 +6712,14 @@ function initVim(CM) {
+@@ -6625,9 +6720,14 @@ function initVim(CM) {
      }
      delete vim.insertModeRepeat;
      vim.insertMode = false;
@@ -960,7 +1085,42 @@ index 4d0faa1..e52f022 100644
      cm.setOption('keyMap', 'vim');
      cm.setOption('disableInput', true);
      cm.toggleOverwrite(false); // exit replace mode if we were in it.
-@@ -7021,6 +7113,8 @@ function initVim(CM) {
+@@ -6699,13 +6799,14 @@ function initVim(CM) {
+         exCommandDispatcher.processCommand(cm, register.keyBuffer[0]);
+       }
+       macroModeState.isPlaying = false;
+-      return;
++      return true;
+     }
+     var keyBuffer = register.keyBuffer;
+     var imc = 0;
+     macroModeState.isPlaying = true;
++    macroModeState.replayFailed = false;
+     macroModeState.replaySearchQueries = register.searchQueries.slice(0);
+-    for (var i = 0; i < keyBuffer.length; i++) {
++    replay: for (var i = 0; i < keyBuffer.length; i++) {
+       var text = keyBuffer[i];
+       var match, key;
+       var keyRe = /<(?:[CSMA]-)*\w+>|./gi;
+@@ -6714,6 +6815,9 @@ function initVim(CM) {
+         // or a special sequence wrapped in '<' and '>', e.g. '<Space>'.
+         key = match[0];
+         vimApi.handleKey(cm, key, 'macro');
++        if (macroModeState.replayFailed) {
++          break replay;
++        }
+         if (vim.insertMode) {
+           var changes = register.insertModeChanges[imc++].changes;
+           vimGlobalState.macroModeState.lastInsertModeChanges.changes = changes;
+@@ -6723,6 +6827,7 @@ function initVim(CM) {
+       }
+     }
+     macroModeState.isPlaying = false;
++    return !macroModeState.replayFailed;
+   }
+
+   /** @arg {MacroModeState} macroModeState @arg {any} key */
+@@ -7021,6 +7126,8 @@ function initVim(CM) {
      var isHandled = false;
      var vim = vimApi.maybeInitVimState_(cm);
      var visualBlock = vim.visualBlock || vim.wasInVisualBlock;
@@ -969,7 +1129,7 @@ index 4d0faa1..e52f022 100644
 
      if (cm.state.closeVimNotification) {
        var close = cm.state.closeVimNotification;
-@@ -7082,6 +7176,9 @@ function initVim(CM) {
+@@ -7082,6 +7189,9 @@ function initVim(CM) {
      if (isHandled && !vim.visualMode && !vim.insertMode && vim.visualMode != cm.somethingSelected()) {
        handleExternalSelection(cm, vim);
      }
@@ -979,7 +1139,7 @@ index 4d0faa1..e52f022 100644
      return isHandled;
    }
    resetVimGlobalState();
-@@ -8052,7 +8149,9 @@ function findEnclosingTag(cm, pos) {
+@@ -8052,7 +8162,9 @@ function findEnclosingTag(cm, pos) {
          if (text == "<")
              offset++;
      }

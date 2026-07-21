@@ -25,3 +25,7 @@ remember the original upper-left corner and restore it after the replicated
 insert finishes, block shifts use CodeMirror's configured indentation unit,
 and characterwise Visual `gq` treats the formatter's end row as exclusive so
 the cursor finishes at the start of the last formatted row.
+
+Unit 13 extends the patch for macro conformance. Uppercase `qA` preserves and
+appends to the lowercase register, while a failed find or search aborts the
+rest of the macro and stops any remaining counted repetitions.
