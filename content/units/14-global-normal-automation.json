@@ -1,0 +1,4485 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 14,
+  "id": "global-normal-automation",
+  "title": "Global and Normal automation",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "14. Global and Normal automation",
+    "commandsAndConcepts": "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; combined predicates and transformations",
+    "prerequisites": "Units 11–13",
+    "learningOutcome": "Apply Normal-mode edits across a controlled line set and choose the lowest-risk automation mechanism",
+    "representativeExercises": "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches",
+    "priorityAndPortability": "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope"
+  },
+  "prerequisiteSkillIds": [
+    "command-line-ranges-line-operations",
+    "substitution-practical-regex",
+    "macros"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "global-normal-automation-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "normal-over-ranges",
+      "title": "Run Normal commands over ranges",
+      "objective": "Apply one Normal-mode command independently to every addressed line.",
+      "activities": [
+        {
+          "id": "normal-range-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A range turns one Normal command into a line-wise loop",
+          "body": "`:normal` places the cursor at the start of each addressed line and executes the supplied Normal-mode keys independently. Each line gets a fresh execution; an unfinished Insert-mode command ends before the next line.",
+          "grammar": "[range]normal {keys}",
+          "contrast": "Use a range when the line set is already known; use a predicate when membership depends on text.",
+          "demoRef": "normal-range-demo"
+        },
+        {
+          "id": "normal-range-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Finish selected declarations",
+          "instruction": "Append a semicolon to lines 2 and 3 with one ranged Normal command.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "// settings",
+                "const port = 3000",
+                "const host = getHost()",
+                "boot()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "// settings",
+                "const port = 3000;",
+                "const host = getHost();",
+                "boot()"
+              ],
+              "cursor": [
+                2,
+                22
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              ";",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":2,3normal A;↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "// settings",
+                  "const port = 3000;",
+                  "const host = getHost();",
+                  "boot()"
+                ],
+                "cursor": [
+                  2,
+                  22
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,3normal A;`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-range"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-range"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "normal-python-comments",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Comment a known block",
+          "instruction": "Prefix lines 2 through 4 with `# ` using `:normal`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ready = True",
+                "draft = False",
+                "stale = True",
+                "legacy = False",
+                "publish()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ready = True",
+                "# draft = False",
+                "# stale = True",
+                "# legacy = False",
+                "publish()"
+              ],
+              "cursor": [
+                3,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "I",
+              "#",
+              " ",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":2,4normal I# ↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "ready = True",
+                  "# draft = False",
+                  "# stale = True",
+                  "# legacy = False",
+                  "publish()"
+                ],
+                "cursor": [
+                  3,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,4normal I# `."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-range"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "python makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-range"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "normal-css-terminators",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Terminate every declaration",
+          "instruction": "Append a semicolon to every CSS declaration with `%normal`.",
+          "languageId": "css",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "color: red",
+                "display: grid",
+                "gap: 8px"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "color: red;",
+                "display: grid;",
+                "gap: 8px;"
+              ],
+              "cursor": [
+                2,
+                8
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              ";",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 12,
+                "display": ":%normal A;↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "color: red;",
+                  "display: grid;",
+                  "gap: 8px;"
+                ],
+                "cursor": [
+                  2,
+                  8
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:%normal A;`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-range"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "css makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-range"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "normal-csv-delimiters",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Repair a fixed CSV range",
+          "instruction": "Replace the final semicolon on lines 2 and 3 with a comma.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name;",
+                "alpha;",
+                "beta;",
+                "done;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name;",
+                "alpha,",
+                "beta,",
+                "done;"
+              ],
+              "cursor": [
+                2,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "$",
+              "r",
+              ",",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":2,3normal $r,↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "name;",
+                  "alpha,",
+                  "beta,",
+                  "done;"
+                ],
+                "cursor": [
+                  2,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,3normal $r,`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-range"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "csv makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-range"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "normal-bang-and-visual",
+      "title": "Control mappings and visual scope",
+      "objective": "Use `:normal!` and the automatic visual range deliberately.",
+      "activities": [
+        {
+          "id": "normal-bang-visual-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Bang controls mappings; Visual mode controls scope",
+          "body": "`:normal` honors Normal-mode mappings in full Vim. `:normal!` uses built-in keys, making automation less dependent on configuration. Vim Wilds has no user mappings, so both spellings behave alike here. From Visual mode, `:` supplies `'<,'>` automatically.",
+          "grammar": "V… :normal! {keys}",
+          "contrast": "Mappings stay out of scope; the portability lesson is to prefer `:normal!` when built-in key meaning is required.",
+          "demoRef": "normal-bang-demo"
+        },
+        {
+          "id": "normal-bang-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Comment with built-in keys",
+          "instruction": "Use `%normal!` to prefix every call with `// `.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fetchUser();",
+                "fetchTeam();",
+                "fetchAdmin();"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "// fetchUser();",
+                "// fetchTeam();",
+                "// fetchAdmin();"
+              ],
+              "cursor": [
+                2,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              "!",
+              " ",
+              "I",
+              "/",
+              "/",
+              " ",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":%normal! I// ↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "// fetchUser();",
+                  "// fetchTeam();",
+                  "// fetchAdmin();"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:%normal! I// `."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-bang-visual"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-bang-visual"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "visual-normal-commas",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Transform a visual range",
+          "instruction": "Select the middle two YAML lines and append commas through `:normal`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fixed: true",
+                "alpha: one",
+                "beta: two",
+                "tail: true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fixed: true",
+                "alpha: one,",
+                "beta: two,",
+                "tail: true"
+              ],
+              "cursor": [
+                2,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "V",
+              "j",
+              ":",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              ",",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": "jVj:normal A,↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "fixed: true",
+                  "alpha: one,",
+                  "beta: two,",
+                  "tail: true"
+                ],
+                "cursor": [
+                  2,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `jVj:normal A,`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-bang-visual"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-bang-visual"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "normal-bang-colons",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replace aligned delimiters",
+          "instruction": "Use built-in Normal keys to replace `=` with `:` on lines 2 through 4.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "header",
+                "alpha = 1",
+                "beta = 2",
+                "gamma = 3",
+                "footer"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "header",
+                "alpha : 1",
+                "beta : 2",
+                "gamma : 3",
+                "footer"
+              ],
+              "cursor": [
+                3,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              "!",
+              " ",
+              "0",
+              "f",
+              "=",
+              "r",
+              ":",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":2,4normal! 0f=r:↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "header",
+                  "alpha : 1",
+                  "beta : 2",
+                  "gamma : 3",
+                  "footer"
+                ],
+                "cursor": [
+                  3,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,4normal! 0f=r:`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-bang-visual"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "toml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-bang-visual"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "normal-bang-markers",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove list markers",
+          "instruction": "Use `%normal!` and first-nonblank movement to remove every dash.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "  - alpha",
+                "  - beta",
+                "  - gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "   alpha",
+                "   beta",
+                "   gamma"
+              ],
+              "cursor": [
+                2,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              "!",
+              " ",
+              "^",
+              "x",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": ":%normal! ^x↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "   alpha",
+                  "   beta",
+                  "   gamma"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:%normal! ^x`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "normal-bang-visual"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "markdown makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "normal-bang-visual"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "global-delete",
+      "title": "Delete lines by predicate",
+      "objective": "Use `:global` to remove only lines matching a pattern.",
+      "activities": [
+        {
+          "id": "global-delete-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Global selects lines before it runs a command",
+          "body": "`:global` (short form `:g`) finds matching lines in its range, then runs an Ex command on each selected line. With no range it scans the whole buffer. Global delete is concise, so inspect the predicate before pressing Enter.",
+          "grammar": "[range]g/pattern/delete",
+          "contrast": "The `g` in `:global` selects lines; it is unrelated to the `g` substitution flag.",
+          "demoRef": "global-delete-demo"
+        },
+        {
+          "id": "global-delete-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Remove debug records",
+          "instruction": "Delete every line containing `DEBUG` with `:global`.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO start",
+                "DEBUG cache miss",
+                "INFO retry",
+                "DEBUG payload",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "INFO start",
+                "INFO retry",
+                "INFO done"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "D",
+              "E",
+              "B",
+              "U",
+              "G",
+              "/",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 16,
+                "display": ":g/DEBUG/delete↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 16,
+                "lines": [
+                  "INFO start",
+                  "INFO retry",
+                  "INFO done"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/DEBUG/delete`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-delete"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-delete"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "global-delete-comments",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete comment-only lines",
+          "instruction": "Delete every Python line beginning with `#`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "value = 1",
+                "# stale note",
+                "next_value = 2",
+                "# remove me",
+                "return next_value"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "value = 1",
+                "next_value = 2",
+                "return next_value"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "#",
+              "/",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": ":g/^#/d↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "value = 1",
+                  "next_value = 2",
+                  "return next_value"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^#/d`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-delete"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "python makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "range-global-delete",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Limit the predicate scan",
+          "instruction": "Within lines 2 through 6, delete only lines containing `TEMP`.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TEMP outside",
+                "keep one",
+                "TEMP inner",
+                "keep two",
+                "TEMP inner two",
+                "keep three",
+                "TEMP outside"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "TEMP outside",
+                "keep one",
+                "keep two",
+                "keep three",
+                "TEMP outside"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "6",
+              "g",
+              "/",
+              "T",
+              "E",
+              "M",
+              "P",
+              "/",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": ":2,6g/TEMP/d↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "TEMP outside",
+                  "keep one",
+                  "keep two",
+                  "keep three",
+                  "TEMP outside"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,6g/TEMP/d`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-delete"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "global-delete-alternation",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove two debt markers",
+          "instruction": "Use one Vim alternation to delete `TODO` and `FIXME` lines.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ship()",
+                "TODO remove shim",
+                "keep()",
+                "FIXME old branch",
+                "done()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ship()",
+                "keep()",
+                "done()"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "\\",
+              "|",
+              "F",
+              "I",
+              "X",
+              "M",
+              "E",
+              "/",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 17,
+                "display": ":g/TODO\\|FIXME/d↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "lines": [
+                  "ship()",
+                  "keep()",
+                  "done()"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/TODO\\|FIXME/d`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-delete"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "vglobal-inversion",
+      "title": "Invert the predicate",
+      "objective": "Use `:vglobal` to act on nonmatching lines.",
+      "activities": [
+        {
+          "id": "vglobal-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Vglobal keeps the other side",
+          "body": "`:vglobal` (short form `:v`) selects lines that do not match the pattern. It is often clearer than inventing a complicated negative regular expression.",
+          "grammar": "[range]v/pattern/command",
+          "contrast": "State the lines you intend to preserve before using inverse deletion.",
+          "demoRef": "vglobal-demo"
+        },
+        {
+          "id": "vglobal-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Keep only approved rows",
+          "instruction": "Delete every row that does not contain `keep`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "keep alpha",
+                "drop beta",
+                "keep gamma",
+                "gone delta"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "keep alpha",
+                "keep gamma"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "k",
+              "e",
+              "e",
+              "p",
+              "/",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":v/keep/delete↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "keep alpha",
+                  "keep gamma"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:v/keep/delete`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "vglobal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "prose makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "vglobal"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "vglobal-exports",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Keep exported declarations",
+          "instruction": "Delete every JavaScript line that does not begin with `export`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export const api = 1",
+                "const local = 2",
+                "export const ui = 3",
+                "function helper() {}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export const api = 1",
+                "export const ui = 3"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "^",
+              "e",
+              "x",
+              "p",
+              "o",
+              "r",
+              "t",
+              "/",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":v/^export/delete↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "export const api = 1",
+                  "export const ui = 3"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:v/^export/delete`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "vglobal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "vglobal"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "range-vglobal-enabled",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Invert inside a range",
+          "instruction": "Within lines 2 through 5, delete rows that do not contain `enabled`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "header",
+                "alpha enabled",
+                "beta disabled",
+                "gamma enabled",
+                "delta disabled",
+                "footer"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "header",
+                "alpha enabled",
+                "gamma enabled",
+                "footer"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "5",
+              "v",
+              "/",
+              "e",
+              "n",
+              "a",
+              "b",
+              "l",
+              "e",
+              "d",
+              "/",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 16,
+                "display": ":2,5v/enabled/d↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 16,
+                "lines": [
+                  "header",
+                  "alpha enabled",
+                  "gamma enabled",
+                  "footer"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,5v/enabled/d`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "vglobal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "vglobal"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "vglobal-errors",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Retain only errors",
+          "instruction": "Use `:vglobal` to remove every non-error log row.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO start",
+                "ERROR disk",
+                "DEBUG retry",
+                "ERROR network",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ERROR disk",
+                "ERROR network"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
+              "/",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": ":v/ERROR/d↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "ERROR disk",
+                  "ERROR network"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:v/ERROR/d`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "vglobal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "vglobal"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "global-substitution",
+      "title": "Substitute inside matching lines",
+      "objective": "Separate the outer line predicate from the inner text replacement.",
+      "activities": [
+        {
+          "id": "global-substitute-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Two filters can cooperate",
+          "body": "In `:g/predicate/s/old/new/`, the global pattern chooses lines and the substitute pattern chooses text inside those lines. Keeping those jobs separate can make a transformation easier to audit.",
+          "grammar": "g/line-pattern/s/text/replacement/",
+          "contrast": "A single ranged substitution is simpler when the replacement pattern alone identifies every safe match.",
+          "demoRef": "global-substitute-demo"
+        },
+        {
+          "id": "global-substitute-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Activate ready flags",
+          "instruction": "On `ready` lines only, substitute `enabled` with `active`.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "enabled ready",
+                "enabled draft",
+                "enabled ready"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "active ready",
+                "enabled draft",
+                "active ready"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "/",
+              "s",
+              "/",
+              "e",
+              "n",
+              "a",
+              "b",
+              "l",
+              "e",
+              "d",
+              "/",
+              "a",
+              "c",
+              "t",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 27,
+                "display": ":g/ready/s/enabled/active/↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 27,
+                "lines": [
+                  "active ready",
+                  "enabled draft",
+                  "active ready"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/ready/s/enabled/active/`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-substitute"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "toml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-substitute"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "global-substitute-const",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Rename only constants",
+          "instruction": "On lines beginning with `const`, substitute `old` with `new`.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const old = 1",
+                "let old = 2",
+                "const old = 3"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const new = 1",
+                "let old = 2",
+                "const new = 3"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              "/",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "n",
+              "e",
+              "w",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 21,
+                "display": ":g/^const/s/old/new/↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 21,
+                "lines": [
+                  "const new = 1",
+                  "let old = 2",
+                  "const new = 3"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^const/s/old/new/`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-substitute"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-substitute"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "range-global-substitute",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Combine range and predicate",
+          "instruction": "Inside lines 2 through 4, close `open` only on `ERROR` rows.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "ERROR open",
+                "INFO open",
+                "ERROR open",
+                "WARN open",
+                "ERROR open"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ERROR open",
+                "INFO open",
+                "ERROR closed",
+                "WARN open",
+                "ERROR open"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "g",
+              "/",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
+              "/",
+              "s",
+              "/",
+              "o",
+              "p",
+              "e",
+              "n",
+              "/",
+              "c",
+              "l",
+              "o",
+              "s",
+              "e",
+              "d",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 27,
+                "display": ":2,4g/ERROR/s/open/closed/↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 27,
+                "lines": [
+                  "ERROR open",
+                  "INFO open",
+                  "ERROR closed",
+                  "WARN open",
+                  "ERROR open"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,4g/ERROR/s/open/closed/`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-substitute"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-substitute"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inverse-global-substitute",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Update non-archive rows",
+          "instruction": "On lines not containing `archive`, substitute `draft` with `live`.",
+          "languageId": "csv",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft active",
+                "draft archive",
+                "draft current",
+                "draft archive"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "live active",
+                "draft archive",
+                "live current",
+                "draft archive"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "a",
+              "r",
+              "c",
+              "h",
+              "i",
+              "v",
+              "e",
+              "/",
+              "s",
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "/",
+              "l",
+              "i",
+              "v",
+              "e",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 25,
+                "display": ":v/archive/s/draft/live/↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 25,
+                "lines": [
+                  "live active",
+                  "draft archive",
+                  "live current",
+                  "draft archive"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:v/archive/s/draft/live/`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-substitute"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "csv makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-substitute"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "global-normal",
+      "title": "Run structural edits on matches",
+      "objective": "Combine a line predicate with a Normal-mode transformation.",
+      "activities": [
+        {
+          "id": "global-normal-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Predicates can drive structural commands",
+          "body": "Use `:g/pattern/normal {keys}` when text chooses the rows but a Normal-mode motion or edit describes the local transformation more clearly than a replacement pattern.",
+          "grammar": "g/pattern/normal {keys}",
+          "contrast": "Keep the Normal command line-local and test it on one representative row first.",
+          "demoRef": "global-normal-demo"
+        },
+        {
+          "id": "global-normal-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Terminate constants only",
+          "instruction": "Append semicolons only to lines beginning with `const`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const a = 1",
+                "let b = 2",
+                "const c = 3"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const a = 1;",
+                "let b = 2",
+                "const c = 3;"
+              ],
+              "cursor": [
+                2,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              ";",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 20,
+                "display": ":g/^const/normal A;↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 20,
+                "lines": [
+                  "const a = 1;",
+                  "let b = 2",
+                  "const c = 3;"
+                ],
+                "cursor": [
+                  2,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^const/normal A;`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-normal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-normal"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "global-normal-todos",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Comment matching tasks",
+          "instruction": "Prefix only `TODO` rows with `// ` using a Global-Normal composition.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TODO alpha",
+                "ready beta",
+                "TODO gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "// TODO alpha",
+                "ready beta",
+                "// TODO gamma"
+              ],
+              "cursor": [
+                2,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "I",
+              "/",
+              "/",
+              " ",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 20,
+                "display": ":g/TODO/normal I// ↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 20,
+                "lines": [
+                  "// TODO alpha",
+                  "ready beta",
+                  "// TODO gamma"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/TODO/normal I// `."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-normal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-normal"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "inverse-global-normal",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Annotate uncommented calls",
+          "instruction": "Append ` # reviewed` only to lines not beginning with `#`.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha()",
+                "# beta()",
+                "gamma()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha() # reviewed",
+                "# beta()",
+                "gamma() # reviewed"
+              ],
+              "cursor": [
+                2,
+                17
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "^",
+              "#",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              " ",
+              "#",
+              " ",
+              "r",
+              "e",
+              "v",
+              "i",
+              "e",
+              "w",
+              "e",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 26,
+                "display": ":v/^#/normal A # reviewed↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 26,
+                "lines": [
+                  "alpha() # reviewed",
+                  "# beta()",
+                  "gamma() # reviewed"
+                ],
+                "cursor": [
+                  2,
+                  17
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:v/^#/normal A # reviewed`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-normal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "python makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-normal"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "global-normal-delimiters",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Change structural delimiters",
+          "instruction": "On `enabled` rows, use a find-and-replace Normal command to change `=` to `:`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha = enabled",
+                "beta = disabled",
+                "gamma = enabled"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha : enabled",
+                "beta = disabled",
+                "gamma : enabled"
+              ],
+              "cursor": [
+                2,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "e",
+              "n",
+              "a",
+              "b",
+              "l",
+              "e",
+              "d",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "0",
+              "f",
+              "=",
+              "r",
+              ":",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 24,
+                "display": ":g/enabled/normal 0f=r:↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 24,
+                "lines": [
+                  "alpha : enabled",
+                  "beta = disabled",
+                  "gamma : enabled"
+                ],
+                "cursor": [
+                  2,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/enabled/normal 0f=r:`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-normal"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-normal"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "global-macros",
+      "title": "Execute macros over matches",
+      "objective": "Replay an already-tested macro only on qualifying lines.",
+      "activities": [
+        {
+          "id": "global-macro-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Global can schedule a macro",
+          "body": "A macro can express a multi-step local edit while `:global` chooses where it runs. Record and test the macro first, then apply `:g/pattern/normal @a` when every matching line satisfies its assumptions.",
+          "grammar": "g/pattern/normal @a",
+          "contrast": "The predicate does not make a brittle macro safe; every selected line must still fit the macro's anchors.",
+          "demoRef": "global-macro-demo"
+        },
+        {
+          "id": "global-macro-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Replay a comment macro selectively",
+          "instruction": "Use the prepared register `a` macro only on lines beginning with `target`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "target alpha",
+                "skip beta",
+                "target gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "q",
+                  "a",
+                  "I",
+                  "/",
+                  "/",
+                  " ",
+                  "Escape",
+                  "q",
+                  "u"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "// target alpha",
+                "skip beta",
+                "// target gamma"
+              ],
+              "cursor": [
+                2,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "t",
+              "a",
+              "r",
+              "g",
+              "e",
+              "t",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "@",
+              "a",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 21,
+                "display": ":g/^target/normal @a↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 21,
+                "lines": [
+                  "// target alpha",
+                  "skip beta",
+                  "// target gamma"
+                ],
+                "cursor": [
+                  2,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^target/normal @a`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-macro"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "prose makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-macro"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "global-macro-semicolons",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Replay an append macro",
+          "instruction": "Use the prepared macro to append semicolons only to constants.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const a = 1",
+                "let b = 2",
+                "const c = 3"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "q",
+                  "a",
+                  "A",
+                  ";",
+                  "Escape",
+                  "q",
+                  "u"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "const a = 1;",
+                "let b = 2",
+                "const c = 3;"
+              ],
+              "cursor": [
+                2,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "@",
+              "a",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 20,
+                "display": ":g/^const/normal @a↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 20,
+                "lines": [
+                  "const a = 1;",
+                  "let b = 2",
+                  "const c = 3;"
+                ],
+                "cursor": [
+                  2,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^const/normal @a`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-macro"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-macro"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "global-macro-colons",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replay an anchored delimiter macro",
+          "instruction": "Use the prepared find-and-replace macro only on `enabled` rows.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha = enabled",
+                "beta = disabled",
+                "gamma = enabled"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "q",
+                  "a",
+                  "0",
+                  "f",
+                  "=",
+                  "r",
+                  ":",
+                  "q",
+                  "u"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "alpha : enabled",
+                "beta = disabled",
+                "gamma : enabled"
+              ],
+              "cursor": [
+                2,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "e",
+              "n",
+              "a",
+              "b",
+              "l",
+              "e",
+              "d",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "@",
+              "a",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 21,
+                "display": ":g/enabled/normal @a↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 21,
+                "lines": [
+                  "alpha : enabled",
+                  "beta = disabled",
+                  "gamma : enabled"
+                ],
+                "cursor": [
+                  2,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/enabled/normal @a`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-macro"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-macro"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "global-macro-status",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replay a text-object macro",
+          "instruction": "Use the prepared macro to change the first word only on `TODO` rows.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "TODO alpha",
+                "ready beta",
+                "TODO gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "q",
+                  "a",
+                  "c",
+                  "i",
+                  "w",
+                  "D",
+                  "O",
+                  "N",
+                  "E",
+                  "Escape",
+                  "q",
+                  "u"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "DONE alpha",
+                "ready beta",
+                "DONE gamma"
+              ],
+              "cursor": [
+                2,
+                3
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "@",
+              "a",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":g/TODO/normal @a↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "DONE alpha",
+                  "ready beta",
+                  "DONE gamma"
+                ],
+                "cursor": [
+                  2,
+                  3
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/TODO/normal @a`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "global-macro"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-macro"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "choose-automation",
+      "title": "Choose the lowest-risk automation",
+      "objective": "Select among ranges, predicates, substitutions, Normal commands, and macros.",
+      "activities": [
+        {
+          "id": "automation-choice-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Choose from the shape of the task",
+          "body": "Start with the smallest mechanism that expresses the intent: a range for known lines, substitution for textual replacement, `:normal` for one structural command, `:global` for a line predicate, and a macro only for a genuine multi-step edit.",
+          "grammar": "scope → predicate → transformation",
+          "contrast": "Advanced commands are valuable because they clarify intent, not because they are advanced.",
+          "demoRef": "integrated-range-normal"
+        },
+        {
+          "id": "integrated-range-normal",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Choose a known range",
+          "instruction": "The three item rows are adjacent and known; append commas with ranged `:normal`.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "items:",
+                "  alpha",
+                "  beta",
+                "  gamma",
+                "done: true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "items:",
+                "  alpha,",
+                "  beta,",
+                "  gamma,",
+                "done: true"
+              ],
+              "cursor": [
+                3,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              ",",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":2,4normal A,↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "items:",
+                  "  alpha,",
+                  "  beta,",
+                  "  gamma,",
+                  "done: true"
+                ],
+                "cursor": [
+                  3,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:2,4normal A,`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "automation-choice"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "automation-choice"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "integrated-global-delete",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Choose predicate deletion",
+          "instruction": "Delete only rows marked `obsolete`.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "active one",
+                "obsolete two",
+                "active three",
+                "obsolete four"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "active one",
+                "active three"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "o",
+              "b",
+              "s",
+              "o",
+              "l",
+              "e",
+              "t",
+              "e",
+              "/",
+              "d",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":g/obsolete/d↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "active one",
+                  "active three"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/obsolete/d`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "automation-choice"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "prose makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "automation-choice"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "integrated-global-substitute",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Choose predicate substitution",
+          "instruction": "On exported rows, substitute `internal` with `public`.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export internal alpha",
+                "const internal beta",
+                "export internal gamma"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export public alpha",
+                "const internal beta",
+                "export public gamma"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "e",
+              "x",
+              "p",
+              "o",
+              "r",
+              "t",
+              "/",
+              "s",
+              "/",
+              "i",
+              "n",
+              "t",
+              "e",
+              "r",
+              "n",
+              "a",
+              "l",
+              "/",
+              "p",
+              "u",
+              "b",
+              "l",
+              "i",
+              "c",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 30,
+                "display": ":g/^export/s/internal/public/↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 30,
+                "lines": [
+                  "export public alpha",
+                  "const internal beta",
+                  "export public gamma"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^export/s/internal/public/`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "automation-choice"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "automation-choice"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "integrated-combined-normal",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Combine predicates carefully",
+          "instruction": "Append semicolons to `const` and `let` declarations, leaving other rows unchanged.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const a = 1",
+                "var b = 2",
+                "let c = 3",
+                "return c"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const a = 1;",
+                "var b = 2",
+                "let c = 3;",
+                "return c"
+              ],
+              "cursor": [
+                2,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              "\\",
+              "|",
+              "^",
+              "l",
+              "e",
+              "t",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              ";",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 26,
+                "display": ":g/^const\\|^let/normal A;↩",
+                "explanation": "Choose the line set first, then run one deterministic transformation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 26,
+                "lines": [
+                  "const a = 1;",
+                  "var b = 2",
+                  "let c = 3;",
+                  "return c"
+                ],
+                "cursor": [
+                  2,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Identify the exact line set before choosing the transformation.",
+            "Read the outer range or predicate separately from the inner command.",
+            "Use `:g/^const\\|^let/normal A;`."
+          ],
+          "feedback": {
+            "success": "The automation changed only the intended lines.",
+            "why": "The scope selected the rows and the nested command described one repeatable transformation."
+          },
+          "skills": {
+            "primary": [
+              "automation-choice"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "nested-command",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "automation-choice"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-lowest-risk-tool",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the simplest safe mechanism",
+          "prompt": "The same short Normal-mode edit must run on lines 12 through 15, and those line numbers are already verified. What should you start with?",
+          "options": [
+            {
+              "id": "ranged-normal",
+              "label": "A ranged `:normal` command"
+            },
+            {
+              "id": "global-macro",
+              "label": "A `:global` command that replays a macro"
+            },
+            {
+              "id": "semantic-refactor",
+              "label": "A host semantic refactor"
+            }
+          ],
+          "correctOptionId": "ranged-normal",
+          "explanation": "A known contiguous line set plus one local Normal command needs neither a predicate nor a macro.",
+          "questionKind": "command-classification"
+        },
+        {
+          "id": "global-normal-automation-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Scope first, transform second",
+          "body": "Use `:normal` for one Normal command across known lines, `:global` or `:vglobal` when text decides membership, substitution for clear textual replacement, and a macro only when the local edit is genuinely multi-step. Prefer the lowest-risk command that states the intent.",
+          "takeaways": [
+            "Verify the range or predicate before Enter.",
+            "Keep nested Normal commands line-local.",
+            "Test macros on representative rows before global replay.",
+            "Use `:normal!` when automation must ignore mappings."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "normal-range-reference",
+      "command": "[range]:normal {keys}",
+      "purpose": "Apply one Normal-mode command independently to every addressed line.",
+      "notes": [
+        "[range]normal {keys}",
+        "Use a range when the line set is already known; use a predicate when membership depends on text."
+      ],
+      "exampleActivityRefs": [
+        "normal-range-demo",
+        "normal-python-comments",
+        "normal-css-terminators",
+        "normal-csv-delimiters"
+      ]
+    },
+    {
+      "id": "normal-bang-visual-reference",
+      "command": "[range]:normal! {keys}",
+      "purpose": "Use `:normal!` and the automatic visual range deliberately.",
+      "notes": [
+        "V… :normal! {keys}",
+        "Mappings stay out of scope; the portability lesson is to prefer `:normal!` when built-in key meaning is required."
+      ],
+      "exampleActivityRefs": [
+        "normal-bang-demo",
+        "visual-normal-commas",
+        "normal-bang-colons",
+        "normal-bang-markers"
+      ]
+    },
+    {
+      "id": "global-delete-reference",
+      "command": "[range]:global/pattern/command",
+      "purpose": "Use `:global` to remove only lines matching a pattern.",
+      "notes": [
+        "[range]g/pattern/delete",
+        "The `g` in `:global` selects lines; it is unrelated to the `g` substitution flag."
+      ],
+      "exampleActivityRefs": [
+        "global-delete-demo",
+        "global-delete-comments",
+        "range-global-delete",
+        "global-delete-alternation"
+      ]
+    },
+    {
+      "id": "vglobal-reference",
+      "command": "[range]:vglobal/pattern/command",
+      "purpose": "Use `:vglobal` to act on nonmatching lines.",
+      "notes": [
+        "[range]v/pattern/command",
+        "State the lines you intend to preserve before using inverse deletion."
+      ],
+      "exampleActivityRefs": [
+        "vglobal-demo",
+        "vglobal-exports",
+        "range-vglobal-enabled",
+        "vglobal-errors"
+      ]
+    },
+    {
+      "id": "global-substitute-reference",
+      "command": ":g/pattern/s/old/new/",
+      "purpose": "Separate the outer line predicate from the inner text replacement.",
+      "notes": [
+        "g/line-pattern/s/text/replacement/",
+        "A single ranged substitution is simpler when the replacement pattern alone identifies every safe match."
+      ],
+      "exampleActivityRefs": [
+        "global-substitute-demo",
+        "global-substitute-const",
+        "range-global-substitute",
+        "inverse-global-substitute"
+      ]
+    },
+    {
+      "id": "global-normal-reference",
+      "command": ":g/pattern/normal {keys}",
+      "purpose": "Combine a line predicate with a Normal-mode transformation.",
+      "notes": [
+        "g/pattern/normal {keys}",
+        "Keep the Normal command line-local and test it on one representative row first."
+      ],
+      "exampleActivityRefs": [
+        "global-normal-demo",
+        "global-normal-todos",
+        "inverse-global-normal",
+        "global-normal-delimiters"
+      ]
+    },
+    {
+      "id": "global-macro-reference",
+      "command": ":g/pattern/normal @a",
+      "purpose": "Replay an already-tested macro only on qualifying lines.",
+      "notes": [
+        "g/pattern/normal @a",
+        "The predicate does not make a brittle macro safe; every selected line must still fit the macro's anchors."
+      ],
+      "exampleActivityRefs": [
+        "global-macro-demo",
+        "global-macro-semicolons",
+        "global-macro-colons",
+        "global-macro-status"
+      ]
+    },
+    {
+      "id": "automation-choice-reference",
+      "command": "range, substitute, normal, global, or macro",
+      "purpose": "Select among ranges, predicates, substitutions, Normal commands, and macros.",
+      "notes": [
+        "scope → predicate → transformation",
+        "Advanced commands are valuable because they clarify intent, not because they are advanced."
+      ],
+      "exampleActivityRefs": [
+        "integrated-range-normal",
+        "integrated-global-delete",
+        "integrated-global-substitute",
+        "integrated-combined-normal"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "range application with :normal",
+      "explain": [
+        "normal-range-meaning"
+      ],
+      "demonstrate": [
+        "normal-range-demo"
+      ],
+      "isolate": [
+        "normal-python-comments"
+      ],
+      "mix": [
+        "normal-css-terminators"
+      ],
+      "challenge": [
+        "normal-csv-delimiters"
+      ]
+    },
+    {
+      "concept": ":normal! and visual application",
+      "explain": [
+        "normal-bang-visual-meaning"
+      ],
+      "demonstrate": [
+        "normal-bang-demo"
+      ],
+      "isolate": [
+        "visual-normal-commas"
+      ],
+      "mix": [
+        "normal-bang-colons"
+      ],
+      "challenge": [
+        "normal-bang-markers"
+      ]
+    },
+    {
+      "concept": ":global delete",
+      "explain": [
+        "global-delete-meaning"
+      ],
+      "demonstrate": [
+        "global-delete-demo"
+      ],
+      "isolate": [
+        "global-delete-comments"
+      ],
+      "mix": [
+        "range-global-delete"
+      ],
+      "challenge": [
+        "global-delete-alternation"
+      ]
+    },
+    {
+      "concept": ":vglobal inversion",
+      "explain": [
+        "vglobal-meaning"
+      ],
+      "demonstrate": [
+        "vglobal-demo"
+      ],
+      "isolate": [
+        "vglobal-exports"
+      ],
+      "mix": [
+        "range-vglobal-enabled"
+      ],
+      "challenge": [
+        "vglobal-errors"
+      ]
+    },
+    {
+      "concept": "global substitution",
+      "explain": [
+        "global-substitute-meaning"
+      ],
+      "demonstrate": [
+        "global-substitute-demo"
+      ],
+      "isolate": [
+        "global-substitute-const"
+      ],
+      "mix": [
+        "range-global-substitute"
+      ],
+      "challenge": [
+        "inverse-global-substitute"
+      ]
+    },
+    {
+      "concept": "global Normal commands",
+      "explain": [
+        "global-normal-meaning"
+      ],
+      "demonstrate": [
+        "global-normal-demo"
+      ],
+      "isolate": [
+        "global-normal-todos"
+      ],
+      "mix": [
+        "inverse-global-normal"
+      ],
+      "challenge": [
+        "global-normal-delimiters"
+      ]
+    },
+    {
+      "concept": "global macro execution",
+      "explain": [
+        "global-macro-meaning"
+      ],
+      "demonstrate": [
+        "global-macro-demo"
+      ],
+      "isolate": [
+        "global-macro-semicolons"
+      ],
+      "mix": [
+        "global-macro-colons"
+      ],
+      "challenge": [
+        "global-macro-status"
+      ]
+    },
+    {
+      "concept": "combined automation and tool choice",
+      "explain": [
+        "automation-choice-meaning"
+      ],
+      "demonstrate": [
+        "integrated-range-normal"
+      ],
+      "isolate": [
+        "integrated-global-delete"
+      ],
+      "mix": [
+        "integrated-global-substitute"
+      ],
+      "challenge": [
+        "integrated-combined-normal"
+      ]
+    }
+  ]
+}

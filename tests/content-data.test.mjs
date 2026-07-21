@@ -21,6 +21,7 @@ const navigationUnit = units.find(item => item.data.id === "long-range-navigatio
 const rangeUnit = units.find(item => item.data.id === "command-line-ranges-line-operations").data;
 const substitutionUnit = units.find(item => item.data.id === "substitution-practical-regex").data;
 const macroUnit = units.find(item => item.data.id === "macros").data;
+const automationUnit = units.find(item => item.data.id === "global-normal-automation").data;
 const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
@@ -51,7 +52,7 @@ test("content files expose the expected schema versions", () => {
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -100,7 +101,8 @@ test("unit continuation follows the next published catalog unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), unit), rangeUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), rangeUnit), substitutionUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), substitutionUnit), macroUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), macroUnit), null);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), macroUnit), automationUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), automationUnit), null);
 });
 
 test("unit catalog groups implemented units into curriculum arcs", () => {
@@ -108,9 +110,9 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
   assert.deepEqual(unitCatalog.arcs, [
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
     { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10] },
-    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [11, 12, 13] },
+    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [11, 12, 13, 14] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -378,6 +380,47 @@ test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
   assert((languages.get("python") || 0) >= 3);
   assert.equal(activities.find(activity => activity.id === "count-ten-csv-rows").editor.viewportRows, 7);
   assert.match(activities.find(activity => activity.id === "macros-unit-summary").body, /Recursive macros exist, but they remain optional/);
+});
+
+test("Unit 14 preserves the Global-Normal curriculum and complete lesson flow", () => {
+  assert.deepEqual(automationUnit.curriculumDefinition, {
+    unit: "14. Global and Normal automation",
+    commandsAndConcepts: "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; combined predicates and transformations",
+    prerequisites: "Units 11–13",
+    learningOutcome: "Apply Normal-mode edits across a controlled line set and choose the lowest-risk automation mechanism",
+    representativeExercises: "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches",
+    priorityAndPortability: "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope",
+  });
+  assert.deepEqual(automationUnit.prerequisiteSkillIds, [
+    "command-line-ranges-line-operations", "substitution-practical-regex", "macros",
+  ]);
+  assert.equal(automationUnit.lessons.length, 8);
+  const activities = automationUnit.lessons.flatMap(lesson => lesson.activities);
+  const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
+  assert.equal(runnableActivities.length, 32);
+  assert.equal(runnableActivities.filter(activity => activity.type === "exercise").length, 24);
+  assert.deepEqual(automationUnit.coverage.map(item => item.concept), [
+    "range application with :normal", ":normal! and visual application", ":global delete", ":vglobal inversion",
+    "global substitution", "global Normal commands", "global macro execution", "combined automation and tool choice",
+  ]);
+  for (const lesson of automationUnit.lessons) {
+    const phases = new Set(lesson.activities.map(activity => activity.phase));
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
+    }
+  }
+  const ids = new Set(activities.map(activity => activity.id));
+  for (const entry of automationUnit.reference) {
+    for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  for (const activity of runnableActivities) {
+    assert.equal(activity.provenance.nativeValidation, "passed", `${activity.id} native validation`);
+    assert.equal(activity.provenance.browserConformance, "passed", `${activity.id} browser conformance`);
+    const checkpoint = activity.script.checkpoints.at(-1);
+    assert.equal(checkpoint.afterStep, keysOf(activity).length, `${activity.id} final checkpoint step`);
+    assert.deepEqual(checkpoint.lines, activity.scenario.target.lines, `${activity.id} final checkpoint text`);
+    assert.deepEqual(checkpoint.cursor, activity.scenario.target.cursor, `${activity.id} final checkpoint cursor`);
+  }
 });
 
 test("Unit 2 curriculum definition is preserved verbatim", () => {
@@ -1104,6 +1147,34 @@ for (const activity of macroRunnable) {
       assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
       assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
       assert.deepEqual(checkpointResult.registers, checkpoint.registers || {}, `${activity.id} checkpoint ${checkpoint.afterStep} registers`);
+    }
+  });
+}
+
+const automationRunnable = automationUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of automationRunnable) {
+  test(`native Vim Unit 14 content: ${activity.id}`, () => {
+    const setup = activity.scenario.initial.setup;
+    const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
+    const cursor = setup?.cursor || activity.scenario.initial.cursor;
+    const keys = keysOf(activity);
+    if (setup) {
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+      assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
+      assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
+    }
+    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
     }
   });
 }

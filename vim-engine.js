@@ -249,6 +249,89 @@ function parseLineOperation(cm, input) {
   return { lines, start, end, explicitRange, command, bang: match[2] === "!", argument };
 }
 
+function parseRangePrefix(cm, input, { defaultWholeBuffer = false } = {}) {
+  const lines = cm.getValue().split("\n");
+  const originalCurrent = cm.getCursor().line;
+  let index = 0;
+  let start = defaultWholeBuffer ? 0 : originalCurrent;
+  let end = defaultWholeBuffer ? lines.length - 1 : originalCurrent;
+  let explicitRange = false;
+
+  if (input[index] === "%") {
+    start = 0;
+    end = lines.length - 1;
+    index += 1;
+    explicitRange = true;
+  } else {
+    const first = parseAddress(input, index, { cm, lines, currentLine: originalCurrent });
+    if (first) {
+      start = first.line;
+      end = first.line;
+      index = first.index;
+      explicitRange = true;
+      if (input[index] === "," || input[index] === ";") {
+        const separator = input[index];
+        index += 1;
+        const second = parseAddress(input, index, {
+          cm,
+          lines,
+          currentLine: separator === ";" ? start : originalCurrent,
+        });
+        if (!second) return null;
+        end = second.line;
+        index = second.index;
+      }
+    }
+  }
+
+  return { lines, start, end, index, explicitRange };
+}
+
+function parseNormalOperation(cm, input) {
+  const range = parseRangePrefix(cm, input);
+  if (!range) return null;
+  const commandText = input.slice(range.index).trimStart();
+  const match = commandText.match(/^(normal|norm)(!?)[ \t]+([\s\S]+)$/);
+  if (!match) return null;
+  return { ...range, bang: match[2] === "!", keys: match[3] };
+}
+
+function parseGlobalOperation(cm, input) {
+  const range = parseRangePrefix(cm, input, { defaultWholeBuffer: true });
+  if (!range) return null;
+  const commandText = input.slice(range.index).trimStart();
+  const match = commandText.match(/^(global|g|vglobal|v)(!?)/);
+  if (!match) return null;
+  let index = match[0].length;
+  const delimiter = commandText[index];
+  if (!delimiter || /[A-Za-z0-9\s]/.test(delimiter)) return null;
+  const patternEnd = findUnescapedDelimiter(commandText, index + 1, delimiter);
+  if (patternEnd < 0) return null;
+  const pattern = commandText.slice(index + 1, patternEnd);
+  const nestedCommand = commandText.slice(patternEnd + 1).trimStart();
+  const inverted = match[1].startsWith("v") || match[2] === "!";
+  return { ...range, pattern, nestedCommand, inverted };
+}
+
+function compileGlobalPattern(pattern) {
+  // Unit 14 uses Vim's practical, line-oriented regex subset. Translate the
+  // Vim-only magic spellings while leaving anchors, dots, and classes intact.
+  const source = pattern
+    .replaceAll("\\<", "\\b")
+    .replaceAll("\\>", "\\b")
+    .replaceAll("\\+", "+")
+    .replaceAll("\\?", "?")
+    .replaceAll("\\|", "|")
+    .replaceAll("\\(", "(")
+    .replaceAll("\\)", ")")
+    .replace(/\\([/#!;,:])/g, "$1");
+  try {
+    return new RegExp(source);
+  } catch {
+    return null;
+  }
+}
+
 function offsetForLineStart(lines, line) {
   return lines.slice(0, line).reduce((total, value) => total + value.length + 1, 0);
 }
@@ -564,9 +647,85 @@ export class VimEngine {
   }
 
   executeEx(command) {
+    if (this.executeGlobalOperation(command)) return;
+    if (this.executeNormalOperation(command)) return;
     if (this.executeLineOperation(command)) return;
     Vim.handleEx(this.cm, command);
     this.moveCursorToLineStart();
+  }
+
+  executeNormalKeys(keys, line) {
+    this.cm.setCursor(line, 0);
+    for (const key of keys) {
+      const wasInsert = Boolean(this.cm.state.vim?.insertMode);
+      const handled = Vim.multiSelectHandleKey(this.cm, toVimKey(key), "ex-normal");
+      if (!handled && wasInsert && this.cm.state.vim?.insertMode) {
+        const text = literalText(toVimKey(key));
+        if (text !== null) {
+          if (this.cm.state.overwrite && !text.includes("\n")) this.cm.overWriteSelection(text);
+          else this.cm.replaceSelection(text);
+        }
+      }
+    }
+    if (this.cm.state.vim?.insertMode) Vim.multiSelectHandleKey(this.cm, "<Esc>", "ex-normal");
+  }
+
+  executeNormalOperation(input) {
+    const operation = parseNormalOperation(this.cm, input);
+    if (!operation) return false;
+    const { lines, start, end, keys } = operation;
+    if (start < 0 || end < start || end >= lines.length) return true;
+    for (let line = start; line <= end; line += 1) this.executeNormalKeys(keys, line);
+    return true;
+  }
+
+  executeGlobalOperation(input) {
+    const operation = parseGlobalOperation(this.cm, input);
+    if (!operation) return false;
+    const { lines, start, end, pattern, nestedCommand, inverted } = operation;
+    if (start < 0 || end < start || end >= lines.length) return true;
+    const expression = compileGlobalPattern(pattern);
+    if (!expression) return true;
+    const matchingLines = [];
+    for (let line = start; line <= end; line += 1) {
+      expression.lastIndex = 0;
+      if (expression.test(lines[line]) !== inverted) matchingLines.push(line);
+    }
+    if (!matchingLines.length || !nestedCommand) return true;
+
+    if (/^(delete|d)(?:\s+["0-9a-z+_-])?$/.test(nestedCommand)) {
+      const register = nestedCommand.trim().split(/\s+/)[1]?.[0] || null;
+      const controller = Vim.getRegisterController?.();
+      for (const line of matchingLines) controller?.pushText(register, "delete", `${lines[line]}\n`, true);
+      const removed = new Set(matchingLines);
+      const nextLines = lines.filter((_, line) => !removed.has(line));
+      if (!nextLines.length) nextLines.push("");
+      const cursorLine = Math.min(
+        nextLines.length - 1,
+        matchingLines.at(-1) - (matchingLines.length - 1),
+      );
+      const cursorColumn = Math.max(0, nextLines[cursorLine].search(/\S/));
+      this.view.dispatch({
+        changes: { from: 0, to: this.view.state.doc.length, insert: nextLines.join("\n") },
+        selection: EditorSelection.cursor(offsetForLineStart(nextLines, cursorLine) + cursorColumn),
+      });
+      return true;
+    }
+
+    if (/^(normal|norm)!?[ \t]+/.test(nestedCommand)) {
+      const normal = nestedCommand.match(/^(?:normal|norm)!?[ \t]+([\s\S]+)$/);
+      if (!normal) return true;
+      for (const line of matchingLines) this.executeNormalKeys(normal[1], line);
+      return true;
+    }
+
+    if (/^(substitute|s)(?=[^A-Za-z0-9\s])/.test(nestedCommand)) {
+      for (const line of matchingLines) Vim.handleEx(this.cm, `${line + 1}${nestedCommand}`);
+      this.moveCursorToLineStart();
+      return true;
+    }
+
+    return true;
   }
 
   executeLineOperation(input) {
