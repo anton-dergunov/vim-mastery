@@ -53,6 +53,7 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
   const script = join(directory, "fixture.vim");
   const vimScript = [
     "set nomore",
+    "set cpo&vim",
     "set expandtab shiftwidth=2 tabstop=2",
     ...(viewportRows === undefined ? [] : [`execute "resize ${viewportRows}"`]),
     ...(textWidth === undefined ? [] : [`set textwidth=${textWidth}`]),
@@ -65,7 +66,10 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     `  let register_name = register_pair[0]`,
     `  let native_register_name = register_pair[1]`,
     `  let register_type = getregtype(native_register_name)`,
-    `  let register_text = substitute(getreg(native_register_name), '[\\x80][\\xfd]5', "", "g")`,
+    // Vim records a K_SPECIAL prefix before some macro keys. The prefix's
+    // final byte differs across supported Vim builds, but is not part of the
+    // command a learner recorded.
+    `  let register_text = substitute(getreg(native_register_name), '[\\x80][\\xfd].', "", "g")`,
     `  let register_state[register_name] = {"text": register_text, "type": register_type ==# 'V' ? 'linewise' : register_type[0] ==# "\\<C-v>" ? 'blockwise' : 'characterwise'}`,
     `endfor`,
     `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state, "viewport": {"topLine": line('w0') - 1, "bottomLine": line('w$') - 1, "totalLines": line('$')}})], ${JSON.stringify(output)})`,
