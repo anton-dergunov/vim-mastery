@@ -112,6 +112,126 @@ function snapshotRegisters() {
   }]));
 }
 
+function findUnescapedDelimiter(input, start, delimiter) {
+  for (let index = start; index < input.length; index += 1) {
+    if (input[index] === delimiter && input[index - 1] !== "\\") return index;
+  }
+  return -1;
+}
+
+function lineForMark(cm, name) {
+  const marker = cm?.state?.vim?.marks?.[name];
+  const position = marker?.find?.() || marker;
+  return Number.isInteger(position?.line) ? position.line : undefined;
+}
+
+function searchAddress(lines, pattern, origin, backwards) {
+  let expression;
+  try {
+    expression = new RegExp(pattern);
+  } catch {
+    return undefined;
+  }
+  for (let distance = 1; distance <= lines.length; distance += 1) {
+    const line = (origin + (backwards ? -distance : distance) + lines.length) % lines.length;
+    expression.lastIndex = 0;
+    if (expression.test(lines[line])) return line;
+  }
+  return undefined;
+}
+
+function parseAddress(input, start, { cm, lines, currentLine }) {
+  let index = start;
+  while (input[index] === " ") index += 1;
+  let line;
+  const number = input.slice(index).match(/^\d+/)?.[0];
+  if (number) {
+    line = Number(number) - 1;
+    index += number.length;
+  } else if (input[index] === ".") {
+    line = currentLine;
+    index += 1;
+  } else if (input[index] === "$") {
+    line = lines.length - 1;
+    index += 1;
+  } else if (input[index] === "'") {
+    const name = input[index + 1];
+    line = lineForMark(cm, name);
+    if (line === undefined) return null;
+    index += 2;
+  } else if (input[index] === "/" || input[index] === "?") {
+    const delimiter = input[index];
+    const end = findUnescapedDelimiter(input, index + 1, delimiter);
+    if (end < 0) return null;
+    const pattern = input.slice(index + 1, end);
+    line = searchAddress(lines, pattern, currentLine, delimiter === "?");
+    if (line === undefined) return null;
+    index = end + 1;
+  } else if (input[index] === "+" || input[index] === "-") {
+    line = currentLine;
+  } else {
+    return null;
+  }
+
+  while (input[index] === "+" || input[index] === "-") {
+    const direction = input[index] === "+" ? 1 : -1;
+    index += 1;
+    const offset = input.slice(index).match(/^\d+/)?.[0];
+    line += direction * (offset ? Number(offset) : 1);
+    index += offset?.length || 0;
+  }
+  return { line, index };
+}
+
+function parseLineOperation(cm, input) {
+  const lines = cm.getValue().split("\n");
+  const originalCurrent = cm.getCursor().line;
+  let index = 0;
+  let start = originalCurrent;
+  let end = originalCurrent;
+  let explicitRange = false;
+
+  if (input[index] === "%") {
+    start = 0;
+    end = lines.length - 1;
+    index += 1;
+    explicitRange = true;
+  } else {
+    const first = parseAddress(input, index, { cm, lines, currentLine: originalCurrent });
+    if (first) {
+      start = first.line;
+      end = first.line;
+      index = first.index;
+      explicitRange = true;
+      if (input[index] === "," || input[index] === ";") {
+        const separator = input[index];
+        index += 1;
+        const second = parseAddress(input, index, {
+          cm,
+          lines,
+          currentLine: separator === ";" ? start : originalCurrent,
+        });
+        if (!second) return null;
+        end = second.line;
+        index = second.index;
+      }
+    }
+  }
+
+  const commandText = input.slice(index).trimStart();
+  const match = commandText.match(/^(delete|d|yank|y|put|pu|copy|co|t|move|m|join|j|sort)(!?)(.*)$/);
+  if (!match) return null;
+  const argument = match[3]?.trim() || "";
+  const command = match[1];
+  if (["delete", "d", "yank", "y", "put", "pu"].includes(command) && argument.length > 1) return null;
+  if (["join", "j", "sort"].includes(command) && argument) return null;
+  return { lines, start, end, explicitRange, command, bang: match[2] === "!", argument };
+}
+
+function offsetForLineStart(lines, line) {
+  return lines.slice(0, line).reduce((total, value) => total + value.length + 1, 0);
+}
+
 /**
  * The one boundary between the lesson UI and CodeMirror Vim. Nothing outside
  * this module reaches into EditorView, getCM, or Vim directly.
@@ -341,7 +461,10 @@ export class VimEngine {
     }
     const commandInput = this.view.dom.querySelector(".cm-vim-panel input, .cm-vim-panel textarea");
     if (!wasInsert && (vimKey === ":" || vimKey === "/" || vimKey === "?") && commandInput) {
-      this.commandLine = "";
+      // Visual-mode `:` starts with Vim's `'<,'>` range. Preserve that
+      // generated prefix so touch input can execute the same command that a
+      // physical Vim command line would show.
+      this.commandLine = commandInput.value || "";
       this.commandPrefix = vimKey;
     }
     if (this.viewportRows) this.cm.refresh?.();
@@ -388,8 +511,113 @@ export class VimEngine {
   }
 
   executeEx(command) {
+    if (this.executeLineOperation(command)) return;
     Vim.handleEx(this.cm, command);
     this.moveCursorToLineStart();
+  }
+
+  executeLineOperation(input) {
+    const operation = parseLineOperation(this.cm, input);
+    if (!operation) return false;
+    const { lines, command, argument } = operation;
+    let { start, end } = operation;
+    const isDestinationOnly = command.startsWith("pu");
+    const validSource = start >= 0 && end >= start && end < lines.length;
+    if ((!isDestinationOnly && !validSource) || (isDestinationOnly && (end < -1 || end >= lines.length))) return true;
+
+    const controller = Vim.getRegisterController?.();
+    const selected = validSource ? lines.slice(start, end + 1) : [];
+    const selectedText = `${selected.join("\n")}\n`;
+    const setDocument = (nextLines, cursorLine) => {
+      const text = nextLines.join("\n");
+      const safeLine = Math.max(0, Math.min(nextLines.length - 1, cursorLine));
+      const firstNonblank = nextLines[safeLine].search(/\S/);
+      this.view.dispatch({
+        changes: { from: 0, to: this.view.state.doc.length, insert: text },
+        selection: EditorSelection.cursor(offsetForLineStart(nextLines, safeLine) + Math.max(0, firstNonblank)),
+      });
+    };
+
+    if (command.startsWith("d")) {
+      controller?.pushText(argument[0] || null, "delete", selectedText, true);
+      const next = lines.toSpliced(start, selected.length);
+      if (!next.length) next.push("");
+      const cursorLine = Math.min(start, next.length - 1);
+      const firstNonblank = next[cursorLine].search(/\S/);
+      const cursor = offsetForLineStart(next, cursorLine) + Math.max(0, firstNonblank);
+      const first = this.view.state.doc.line(start + 1);
+      const hasFollowingLine = end < lines.length - 1;
+      const from = hasFollowingLine || start === 0 ? first.from : this.view.state.doc.line(start).to;
+      const to = hasFollowingLine ? this.view.state.doc.line(end + 2).from : this.view.state.doc.length;
+      this.view.dispatch({ changes: { from, to, insert: "" }, selection: EditorSelection.cursor(cursor) });
+      return true;
+    }
+
+    if (command.startsWith("y")) {
+      controller?.pushText(argument[0] || null, "yank", selectedText, true);
+      return true;
+    }
+
+    if (command.startsWith("pu")) {
+      const register = controller?.getRegister(argument[0] || '"');
+      const text = register?.toString?.() || "";
+      if (!text) return true;
+      const inserted = text.replace(/\n$/, "").split("\n");
+      const destination = end;
+      const next = [...lines];
+      next.splice(destination + 1, 0, ...inserted);
+      setDocument(next, destination + inserted.length);
+      return true;
+    }
+
+    if (command.startsWith("co") || command === "t") {
+      const destinationAddress = parseAddress(argument, 0, { cm: this.cm, lines, currentLine: this.cm.getCursor().line });
+      if (!destinationAddress || destinationAddress.index !== argument.length) return true;
+      const destination = destinationAddress.line;
+      if (destination < -1 || destination >= lines.length) return true;
+      const next = [...lines];
+      next.splice(destination + 1, 0, ...selected);
+      setDocument(next, destination + selected.length);
+      return true;
+    }
+
+    if (command.startsWith("m")) {
+      const destinationAddress = parseAddress(argument, 0, { cm: this.cm, lines, currentLine: this.cm.getCursor().line });
+      if (!destinationAddress || destinationAddress.index !== argument.length) return true;
+      let destination = destinationAddress.line;
+      if (destination < -1 || destination >= lines.length || (destination >= start && destination <= end)) return true;
+      const next = [...lines];
+      next.splice(start, selected.length);
+      if (destination > end) destination -= selected.length;
+      next.splice(destination + 1, 0, ...selected);
+      setDocument(next, destination + selected.length);
+      return true;
+    }
+
+    if (command.startsWith("j")) {
+      if (!operation.explicitRange) end = Math.min(lines.length - 1, start + 1);
+      const joined = lines.slice(start, end + 1).reduce((text, line, index) => {
+        if (!index) return line.replace(/\s+$/, "");
+        const next = line.replace(/^\s+/, "");
+        return `${text}${text && next ? " " : ""}${next}`;
+      }, "");
+      const next = [...lines];
+      next.splice(start, end - start + 1, joined);
+      setDocument(next, start);
+      return true;
+    }
+
+    if (command.startsWith("sor")) {
+      const compare = (left, right) => left < right ? -1 : left > right ? 1 : 0;
+      const sorted = [...selected].sort(compare);
+      if (operation.bang) sorted.reverse();
+      const next = [...lines];
+      next.splice(start, selected.length, ...sorted);
+      setDocument(next, start);
+      return true;
+    }
+
+    return false;
   }
 
   rememberSubstitution(command) {

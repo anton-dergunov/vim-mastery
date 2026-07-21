@@ -11,6 +11,7 @@ const textObjectUnit = JSON.parse(readFileSync(new URL("../content/units/06-text
 const visualUnit = JSON.parse(readFileSync(new URL("../content/units/07-visual-selection.json", import.meta.url), "utf8"));
 const registerUnit = JSON.parse(readFileSync(new URL("../content/units/08-registers-putting.json", import.meta.url), "utf8"));
 const navigationUnit = JSON.parse(readFileSync(new URL("../content/units/09-long-range-navigation.json", import.meta.url), "utf8"));
+const rangeUnit = JSON.parse(readFileSync(new URL("../content/units/11-command-line-ranges-line-operations.json", import.meta.url), "utf8"));
 const macroUnit = JSON.parse(readFileSync(new URL("../content/units/13-macros.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
@@ -30,6 +31,8 @@ const registerActivities = registerUnit.lessons.flatMap(lesson => lesson.activit
 const registerExercises = registerActivities.filter(activity => activity.type === "exercise");
 const navigationActivities = navigationUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const navigationExercises = navigationActivities.filter(activity => activity.type === "exercise");
+const rangeActivities = rangeUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const rangeExercises = rangeActivities.filter(activity => activity.type === "exercise");
 const macroActivities = macroUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const macroExercises = macroActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
@@ -122,7 +125,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(11);
+    await expect(page.locator(".toc-unit")).toHaveCount(12);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(70);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -152,14 +155,15 @@ test.describe("Production lesson flow", () => {
       { id: "registers-putting", unitNumber: 8, title: "Registers and putting" },
       { id: "long-range-navigation", unitNumber: 9, title: "Long-range navigation" },
       { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
+      { id: "command-line-ranges-line-operations", unitNumber: 11, title: "Command-line ranges and line operations" },
       { id: "macros", unitNumber: 13, title: "Macros" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(11);
+    await expect(page.locator(".toc-unit")).toHaveCount(12);
     await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation"]);
     await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
     await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(4);
-    await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(1);
+    await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(2);
     await expect(page.locator(".toc-arc-divider")).toHaveCount(2);
     const arcPresentation = await page.evaluate(() => {
       const heading = document.querySelector(".toc-arc-heading");
@@ -179,6 +183,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator('[data-unit-id="registers-putting"]')).toContainText("Unit 8");
     await expect(page.locator('[data-unit-id="long-range-navigation"]')).toContainText("Unit 9");
     await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
+    await expect(page.locator('[data-unit-id="command-line-ranges-line-operations"]')).toContainText("Unit 11");
     await expect(page.locator('[data-unit-id="macros"]')).toContainText("Unit 13");
   });
 
@@ -584,6 +589,31 @@ test.describe("Production lesson flow", () => {
     expect((await state(page)).registers.a?.text || "").toBe("");
   });
 
+  test("runs every Unit 11 Ex range activity with native-equivalent line and register state", async ({ page }) => {
+    await page.goto("/?unit=command-line-ranges-line-operations");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    expect(runtime).toEqual({ activityCount: 66, exerciseCount: rangeExercises.length });
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        const target = activity.scenario.target;
+        const registersMatch = Object.entries(target.registers || {}).every(([name, expected]) => (
+          current.registers[name]?.text === expected.text && current.registers[name]?.type === expected.type
+        ));
+        if (JSON.stringify(current.code) !== JSON.stringify(target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(target.cursor)
+          || !registersMatch
+          || (activity.type === "exercise" && !current.complete)) result.push({ id: activity.id, current });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+  });
+
   test("shows recording state and enters @ from physical and touch keyboards", async ({ page }) => {
     await page.goto("/?unit=macros&activity=comment-python-jobs");
     await page.evaluate(() => { window.VimWilds.emit("q"); window.VimWilds.emit("a"); });
@@ -603,8 +633,14 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ modifiers: [], history: [...beforeReplay, "@"] });
   });
 
-  test("continues from Unit 10 to the next published Unit 13", async ({ page }) => {
+  test("continues from Unit 10 through published Units 11 and 13", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=repeat-unit-summary");
+    await expect(page.getByRole("button", { name: "Continue to Unit 11" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 11" }).click();
+    await page.waitForURL(/unit=command-line-ranges-line-operations/);
+    expect((await state(page))).toMatchObject({ unitId: "command-line-ranges-line-operations", unitNumber: 11, activityId: "addresses-before-actions" });
+
+    await page.goto("/?unit=command-line-ranges-line-operations&activity=command-line-ranges-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 13" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 13" }).click();
     await page.waitForURL(/unit=macros/);
@@ -1385,7 +1421,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "long-range-navigation", "repeatable-editing", "macros"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "long-range-navigation", "repeatable-editing", "command-line-ranges-line-operations", "macros"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

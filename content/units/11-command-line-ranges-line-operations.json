@@ -1,0 +1,4455 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 11,
+  "id": "command-line-ranges-line-operations",
+  "title": "Command-line ranges and line operations",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "11. Command-line ranges and line operations",
+    "commandsAndConcepts": "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort`; safe undo and preview habits",
+    "prerequisites": "Units 1–6",
+    "learningOutcome": "Read and construct a range, then apply a deterministic line operation to it",
+    "representativeExercises": "Move a helper below another function; copy a fixture; delete matching line numbers; sort selected imports; join a range",
+    "priorityAndPortability": "Core automation. Command availability and undo grouping can vary in reimplementations, so the app defines and tests its supported behavior"
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement",
+    "entering-changing-text",
+    "operator-grammar",
+    "precision-motions-search",
+    "text-objects"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-key",
+    "reset": "initial-state",
+    "backwardStep": "deferred"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "command-line-ranges-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "address-the-line-set",
+      "title": "Address the line set",
+      "objective": "Use current, final, numeric, and whole-buffer addresses before an Ex command.",
+      "activities": [
+        {
+          "id": "addresses-before-actions",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The address comes first",
+          "body": "An Ex command reads left to right: an optional address or range chooses lines, then the command acts. `.` is current, `$` is final, a number names one line, and `%` means the whole buffer.",
+          "grammar": "[address][,address]command",
+          "contrast": "Without an address, a line command starts from the current line.",
+          "demoRef": "numeric-range-delete-demo"
+        },
+        {
+          "id": "numeric-range-delete-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Delete a numbered range",
+          "instruction": "Remove lines 2 through 3 with one Ex command.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "import app",
+                "debug boot",
+                "trace ready",
+                "app.start()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "import app",
+                "app.start()"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "text": "debug boot\ntrace ready\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "debug boot\ntrace ready\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": ":2,3delete↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "import app",
+                  "app.start()"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "text": "debug boot\ntrace ready\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "debug boot\ntrace ready\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3delete`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "numeric-ranges"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact typescript fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "numeric-ranges"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "current-range-join",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Join from current",
+          "instruction": "Join the current row with the next row using dot addresses.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def total():",
+                "  return sum(",
+                "    values)",
+                "print(total())"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def total():",
+                "  return sum( values)",
+                "print(total())"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              ".",
+              ",",
+              ".",
+              "+",
+              "1",
+              "j",
+              "o",
+              "i",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": ":.,.+1join↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "def total():",
+                  "  return sum( values)",
+                  "print(total())"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:.,.+1join`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "dot-offset-addresses"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact python fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "dot-offset-addresses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "move-number-to-end",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Move one numbered line",
+          "instruction": "Move line 2 below the final line.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const input = read()",
+                "const helper = normalize(input)",
+                "render(helper)",
+                "report()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const input = read()",
+                "render(helper)",
+                "report()",
+                "const helper = normalize(input)"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              "m",
+              "o",
+              "v",
+              "e",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": ":2move$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "const input = read()",
+                  "render(helper)",
+                  "report()",
+                  "const helper = normalize(input)"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2move$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "line-move"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact javascript fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-move"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "sort-whole-buffer",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Sort every entry",
+          "instruction": "Sort the whole buffer with the percent range.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "zebra: true",
+                "amber: true",
+                "moss: true",
+                "cobalt: true"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "amber: true",
+                "cobalt: true",
+                "moss: true",
+                "zebra: true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": ":%sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "amber: true",
+                  "cobalt: true",
+                  "moss: true",
+                  "zebra: true"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:%sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "percent-range"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact yaml fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "percent-range"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "compose-ranges",
+      "title": "Compose ranges",
+      "objective": "Distinguish comma from semicolon and place offsets on either address.",
+      "activities": [
+        {
+          "id": "comma-semicolon-offsets",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Comma and semicolon set context differently",
+          "body": "Comma evaluates both addresses from the original cursor. Semicolon makes its left address temporary current context, then evaluates the right. Offsets such as `+2` refine either endpoint.",
+          "grammar": "address,address | address;address",
+          "contrast": "Use semicolon when the right side is relative to the left endpoint.",
+          "demoRef": "semicolon-range-demo"
+        },
+        {
+          "id": "semicolon-range-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Build a relative range",
+          "instruction": "Join line 2 through two lines after it.",
+          "languageId": "json",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "{",
+                "  \"name\":",
+                "    \"wilds\",",
+                "  \"ready\": true",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "{",
+                "  \"name\": \"wilds\", \"ready\": true",
+                "}"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ";",
+              "+",
+              "2",
+              "j",
+              "o",
+              "i",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": ":2;+2join↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "{",
+                  "  \"name\": \"wilds\", \"ready\": true",
+                  "}"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2;+2join`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "semicolon-ranges"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact json fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "semicolon-ranges"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "relative-delete",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete two lines ahead",
+          "instruction": "Delete the row two lines below the cursor.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO start",
+                "INFO cache",
+                "DEBUG payload",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "INFO start",
+                "INFO cache",
+                "INFO done"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "text": "DEBUG payload\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "DEBUG payload\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "+",
+              "2",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": ":+2delete↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "INFO start",
+                  "INFO cache",
+                  "INFO done"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "text": "DEBUG payload\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "DEBUG payload\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:+2delete`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "address-offsets"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact log fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "address-offsets"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "copy-range-to-end",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Copy a range to the end",
+          "instruction": "Duplicate lines 2 through 4 beneath the final line.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name,role",
+                "Ada,admin",
+                "Bo,editor",
+                "Cy,viewer",
+                "END,END"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name,role",
+                "Ada,admin",
+                "Bo,editor",
+                "Cy,viewer",
+                "END,END",
+                "Ada,admin",
+                "Bo,editor",
+                "Cy,viewer"
+              ],
+              "cursor": [
+                7,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "c",
+              "o",
+              "p",
+              "y",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": ":2,4copy$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "name,role",
+                  "Ada,admin",
+                  "Bo,editor",
+                  "Cy,viewer",
+                  "END,END",
+                  "Ada,admin",
+                  "Bo,editor",
+                  "Cy,viewer"
+                ],
+                "cursor": [
+                  7,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,4copy$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "line-copy"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact csv fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-copy"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "sort-around-cursor",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Sort around the cursor",
+          "instruction": "Sort the line above, current line, and line below.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fixed = true",
+                "z = 3",
+                "a = 1",
+                "m = 2",
+                "tail = true"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fixed = true",
+                "a = 1",
+                "m = 2",
+                "z = 3",
+                "tail = true"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              ".",
+              "-",
+              "1",
+              ",",
+              ".",
+              "+",
+              "1",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": ":.-1,.+1sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "fixed = true",
+                  "a = 1",
+                  "m = 2",
+                  "z = 3",
+                  "tail = true"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:.-1,.+1sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "offset-ranges"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact toml fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "offset-ranges"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "symbolic-addresses",
+      "title": "Symbolic addresses",
+      "objective": "Target lines by marks and search patterns rather than fragile numbers.",
+      "activities": [
+        {
+          "id": "marks-and-search-addresses",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Stable anchors can be addresses",
+          "body": "A mark such as `'a` names its line. `/pattern/` searches forward and `?pattern?` searches backward for an address. These anchors survive better than memorized line numbers.",
+          "grammar": "'a | /pattern/ | ?pattern?",
+          "contrast": "Search addresses select lines; Normal-mode search moves the cursor.",
+          "demoRef": "marked-join-demo"
+        },
+        {
+          "id": "marked-join-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Join from a saved mark",
+          "instruction": "Join the marked line with the line after it.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def load():",
+                "  return parse(",
+                "    source)",
+                "emit(load())"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  1,
+                  2
+                ],
+                "steps": [
+                  "m",
+                  "a",
+                  "g",
+                  "g"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "def load():",
+                "  return parse( source)",
+                "emit(load())"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "'",
+              "a",
+              ",",
+              "'",
+              "a",
+              "+",
+              "1",
+              "j",
+              "o",
+              "i",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": ":'a,'a+1join↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "def load():",
+                  "  return parse( source)",
+                  "emit(load())"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:'a,'a+1join`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "mark-addresses"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact python fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "mark-addresses"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "delete-search-address",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete a searched line",
+          "instruction": "Delete the next line containing obsolete.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name: wilds",
+                "mode: active",
+                "obsolete: true",
+                "theme: moss"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name: wilds",
+                "mode: active",
+                "theme: moss"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "text": "obsolete: true\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "obsolete: true\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "/",
+              "o",
+              "b",
+              "s",
+              "o",
+              "l",
+              "e",
+              "t",
+              "e",
+              "/",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":/obsolete/delete↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "name: wilds",
+                  "mode: active",
+                  "theme: moss"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "text": "obsolete: true\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "obsolete: true\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:/obsolete/delete`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "search-addresses"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact yaml fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-addresses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "sort-between-searches",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Sort between searches",
+          "instruction": "Sort the lines from beta through omega.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "HEADER",
+                "beta",
+                "delta",
+                "charlie",
+                "omega",
+                "FOOTER"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "HEADER",
+                "beta",
+                "charlie",
+                "delta",
+                "omega",
+                "FOOTER"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "/",
+              "b",
+              "e",
+              "t",
+              "a",
+              "/",
+              ",",
+              "/",
+              "o",
+              "m",
+              "e",
+              "g",
+              "a",
+              "/",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 20,
+                "display": ":/beta/,/omega/sort↩",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 20,
+                "lines": [
+                  "HEADER",
+                  "beta",
+                  "charlie",
+                  "delta",
+                  "omega",
+                  "FOOTER"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:/beta/,/omega/sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "search-ranges"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact log fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-ranges"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "move-marked-helper",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Move a marked helper",
+          "instruction": "Move the marked helper beneath the rest of the buffer.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "package main",
+                "func helper() {}",
+                "func main() {}",
+                "func report() {}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  1,
+                  0
+                ],
+                "steps": [
+                  "m",
+                  "a",
+                  "g",
+                  "g"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "package main",
+                "func main() {}",
+                "func report() {}",
+                "func helper() {}"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "'",
+              "a",
+              "m",
+              "o",
+              "v",
+              "e",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": ":'amove$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "package main",
+                  "func main() {}",
+                  "func report() {}",
+                  "func helper() {}"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:'amove$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "mark-addresses"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact go fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "mark-addresses"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "register-line-operations",
+      "title": "Delete, yank, and put by range",
+      "objective": "Use Ex line operations while predicting their register effects.",
+      "activities": [
+        {
+          "id": "delete-yank-put",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Ranges and registers work together",
+          "body": "`:delete` removes addressed lines. `:yank` stores addressed lines without moving the cursor. `:put` inserts a register after its address. A register name may follow the command.",
+          "grammar": "range delete | range yank [reg] | address put [reg]",
+          "contrast": "Copy and move do not overwrite the unnamed register; delete and yank do.",
+          "demoRef": "range-yank-put-demo"
+        },
+        {
+          "id": "range-yank-put-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Yank then put a fixture",
+          "instruction": "Yank lines 2 and 3, then put them after line 4.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def test_all():",
+                "  prepare()",
+                "  execute()",
+                "  assert_done()",
+                "cleanup()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def test_all():",
+                "  prepare()",
+                "  execute()",
+                "  assert_done()",
+                "  prepare()",
+                "  execute()",
+                "cleanup()"
+              ],
+              "cursor": [
+                5,
+                2
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "text": "  prepare()\n  execute()\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "  prepare()\n  execute()\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "y",
+              "a",
+              "n",
+              "k",
+              "Enter",
+              ":",
+              "4",
+              "p",
+              "u",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":2,3yank↩ :4put↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "def test_all():",
+                  "  prepare()",
+                  "  execute()",
+                  "  assert_done()",
+                  "  prepare()",
+                  "  execute()",
+                  "cleanup()"
+                ],
+                "cursor": [
+                  5,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "text": "  prepare()\n  execute()\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "  prepare()\n  execute()\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3yank`, then `:4put`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "ex-yank-put"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact python fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ex-yank-put"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "delete-debug-range",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete a debug range",
+          "instruction": "Delete the two debug rows as one range.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO ready",
+                "DEBUG one",
+                "DEBUG two",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "INFO ready",
+                "INFO done"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "text": "DEBUG one\nDEBUG two\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "DEBUG one\nDEBUG two\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": ":2,3delete↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "INFO ready",
+                  "INFO done"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "text": "DEBUG one\nDEBUG two\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "DEBUG one\nDEBUG two\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3delete`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "ex-delete"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact log fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ex-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "named-yank-and-put",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Use a named line register",
+          "instruction": "Yank lines 2 and 3 into register a, then put it at the end.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "set -e",
+                "build",
+                "verify",
+                "deploy"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "set -e",
+                "build",
+                "verify",
+                "deploy",
+                "build",
+                "verify"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "text": "build\nverify\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "build\nverify\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "y",
+              "a",
+              "n",
+              "k",
+              " ",
+              "a",
+              "Enter",
+              ":",
+              "$",
+              "p",
+              "u",
+              "t",
+              " ",
+              "a",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 19,
+                "display": ":2,3yank a↩ :$put a↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": [
+                  "set -e",
+                  "build",
+                  "verify",
+                  "deploy",
+                  "build",
+                  "verify"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "text": "build\nverify\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "build\nverify\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3yank a`, then `:$put a`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "named-ex-registers"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact shell fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "named-ex-registers"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "undo-range-delete",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Undo a risky line command",
+          "instruction": "Delete lines 2 and 3, inspect, then undo the command.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "SELECT id",
+                "DEBUG PLAN",
+                "DEBUG COST",
+                "FROM users;"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "SELECT id",
+                "DEBUG PLAN",
+                "DEBUG COST",
+                "FROM users;"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter",
+              "u"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 12,
+                "display": ":2,3delete↩ u",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "SELECT id",
+                  "DEBUG PLAN",
+                  "DEBUG COST",
+                  "FROM users;"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3delete`, then `u`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "safe-ex-undo"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact sql fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "safe-ex-undo"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "relocate-with-copy-and-move",
+      "title": "Copy and move ranges",
+      "objective": "Choose duplication or relocation and use their short forms.",
+      "activities": [
+        {
+          "id": "copy-versus-move",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Copy duplicates; move relocates",
+          "body": "`:copy` or `:t` duplicates a range after a destination. `:move` or `:m` removes it from the old location and inserts it after the destination. Neither changes yank registers.",
+          "grammar": "range copy destination | range move destination",
+          "contrast": "Destination zero means before the first line; `$` means after the last.",
+          "demoRef": "copy-lines-demo"
+        },
+        {
+          "id": "copy-lines-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Copy a two-line fixture",
+          "instruction": "Copy lines 2 and 3 after the final line.",
+          "languageId": "ruby",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "describe 'total'",
+                "  let a",
+                "  let b",
+                "  expect total",
+                "end"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "describe 'total'",
+                "  let a",
+                "  let b",
+                "  expect total",
+                "end",
+                "  let a",
+                "  let b"
+              ],
+              "cursor": [
+                6,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "c",
+              "o",
+              "p",
+              "y",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": ":2,3copy$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "describe 'total'",
+                  "  let a",
+                  "  let b",
+                  "  expect total",
+                  "end",
+                  "  let a",
+                  "  let b"
+                ],
+                "cursor": [
+                  6,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3copy$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "line-copy"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact ruby fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-copy"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "transpose-one-line",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Use the short copy form",
+          "instruction": "Copy line 2 after line 4 with :t.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# Checklist",
+                "- build",
+                "- test",
+                "- ship"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# Checklist",
+                "- build",
+                "- test",
+                "- ship",
+                "- build"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              "t",
+              "4",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": ":2t4↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "# Checklist",
+                  "- build",
+                  "- test",
+                  "- ship",
+                  "- build"
+                ],
+                "cursor": [
+                  4,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2t4`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "copy-short-form"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact markdown fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "copy-short-form"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "move-range-to-bottom",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Relocate a helper block",
+          "instruction": "Move lines 2 and 3 to the bottom.",
+          "languageId": "java",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "class App {",
+                "  void helperA() {}",
+                "  void helperB() {}",
+                "  void run() {}",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "class App {",
+                "  void run() {}",
+                "}",
+                "  void helperA() {}",
+                "  void helperB() {}"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "m",
+              "o",
+              "v",
+              "e",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": ":2,3move$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "class App {",
+                  "  void run() {}",
+                  "}",
+                  "  void helperA() {}",
+                  "  void helperB() {}"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3move$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "line-move"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact java fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "line-move"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "move-range-to-top",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Move setup before the header",
+          "instruction": "Move lines 2 and 3 before line 1 using destination zero.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "service: api",
+                "env: test",
+                "debug: false",
+                "replicas: 2"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "env: test",
+                "debug: false",
+                "service: api",
+                "replicas: 2"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "m",
+              "0",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": ":2,3m0↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "env: test",
+                  "debug: false",
+                  "service: api",
+                  "replicas: 2"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3m0`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "move-short-form"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact yaml fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "move-short-form"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "join-and-sort-ranges",
+      "title": "Join and sort ranges",
+      "objective": "Transform complete line sets with deterministic join and sort operations.",
+      "activities": [
+        {
+          "id": "join-and-sort",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Transform line structure as a set",
+          "body": "`:join` combines an addressed range and normalizes boundary whitespace. `:sort` orders addressed lines; `:sort!` reverses them. Keep ranges narrow so unrelated lines stay fixed.",
+          "grammar": "range join | range sort[!]",
+          "contrast": "`J` is local; Ex ranges make a multi-line boundary explicit.",
+          "demoRef": "join-range-demo"
+        },
+        {
+          "id": "join-range-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Join a wrapped call",
+          "instruction": "Join lines 2 through 4.",
+          "languageId": "kotlin",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fun run() {",
+                "  publish(",
+                "    report,",
+                "    channel)",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fun run() {",
+                "  publish( report, channel)",
+                "}"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "j",
+              "o",
+              "i",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": ":2,4join↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "fun run() {",
+                  "  publish( report, channel)",
+                  "}"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,4join`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "ex-join"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact kotlin fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ex-join"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "sort-import-range",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Sort only imports",
+          "instruction": "Sort lines 2 through 4 and leave the rest fixed.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# generated",
+                "import zebra",
+                "import alpha",
+                "import moss",
+                "run()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# generated",
+                "import alpha",
+                "import moss",
+                "import zebra",
+                "run()"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "4",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": ":2,4sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "# generated",
+                  "import alpha",
+                  "import moss",
+                  "import zebra",
+                  "run()"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,4sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "ex-sort"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact python fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ex-sort"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "reverse-priority-range",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reverse-sort priorities",
+          "instruction": "Reverse-sort lines 2 through 5.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[priority]",
+                "amber = 1",
+                "zinc = 4",
+                "moss = 2",
+                "cobalt = 3",
+                "locked = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "[priority]",
+                "zinc = 4",
+                "moss = 2",
+                "cobalt = 3",
+                "amber = 1",
+                "locked = true"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "5",
+              "s",
+              "o",
+              "r",
+              "t",
+              "!",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": ":2,5sort!↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "[priority]",
+                  "zinc = 4",
+                  "moss = 2",
+                  "cobalt = 3",
+                  "amber = 1",
+                  "locked = true"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,5sort!`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "reverse-sort"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact toml fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "reverse-sort"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "join-then-sort",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Join then sort",
+          "instruction": "Join lines 2 and 3, then sort lines 2 through 4.",
+          "languageId": "css",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "/* tokens */",
+                "--zeta:",
+                "  #fff;",
+                "--alpha: #000;",
+                "--moss: #284;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "/* tokens */",
+                "--alpha: #000;",
+                "--moss: #284;",
+                "--zeta: #fff;"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "j",
+              "o",
+              "i",
+              "n",
+              "Enter",
+              ":",
+              "2",
+              ",",
+              "4",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 18,
+                "display": ":2,3join↩ :2,4sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "/* tokens */",
+                  "--alpha: #000;",
+                  "--moss: #284;",
+                  "--zeta: #fff;"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3join`, then `:2,4sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "composed-line-operations"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact css fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "composed-line-operations"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "visual-ranges",
+      "title": "Use a visual range",
+      "objective": "Carry a line selection into Ex as the automatic `'<,'>` range.",
+      "activities": [
+        {
+          "id": "visual-range-prefix",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Visual selection writes its range",
+          "body": "Pressing `:` from Visual mode opens `'<,'>` automatically. Those marks mean the first and last selected lines. Type the command after the generated prefix; do not retype it.",
+          "grammar": "V… : -> :'<,'>command",
+          "contrast": "The marks address whole lines even after a characterwise selection.",
+          "demoRef": "visual-sort-demo"
+        },
+        {
+          "id": "visual-sort-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Sort selected lines",
+          "instruction": "Select lines 2 through 4 and sort the visual range.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fixed: true",
+                "zeta: 3",
+                "alpha: 1",
+                "moss: 2",
+                "tail: true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fixed: true",
+                "alpha: 1",
+                "moss: 2",
+                "zeta: 3",
+                "tail: true"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "V",
+              "2",
+              "j",
+              ":",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "jV2j:sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "fixed: true",
+                  "alpha: 1",
+                  "moss: 2",
+                  "zeta: 3",
+                  "tail: true"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `jV2j:sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "visual-ex-range"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact yaml fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-ex-range"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "visual-delete-lines",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete selected lines",
+          "instruction": "Select two debug lines and delete the visual range.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO start",
+                "DEBUG one",
+                "DEBUG two",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "INFO start",
+                "INFO done"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "text": "DEBUG one\nDEBUG two\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "DEBUG one\nDEBUG two\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "V",
+              "j",
+              ":",
+              "d",
+              "e",
+              "l",
+              "e",
+              "t",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": "jVj:delete↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "INFO start",
+                  "INFO done"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "text": "DEBUG one\nDEBUG two\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "DEBUG one\nDEBUG two\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `jVj:delete`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "visual-ex-delete"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact log fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-ex-delete"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "visual-move-lines",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Move a selected block",
+          "instruction": "Select lines 2 and 3 and move the range to the end.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "package main",
+                "func helperA() {}",
+                "func helperB() {}",
+                "func main() {}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "package main",
+                "func main() {}",
+                "func helperA() {}",
+                "func helperB() {}"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "V",
+              "j",
+              ":",
+              "m",
+              "o",
+              "v",
+              "e",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "jVj:move$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "package main",
+                  "func main() {}",
+                  "func helperA() {}",
+                  "func helperB() {}"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `jVj:move$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "visual-ex-move"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact go fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-ex-move"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "visual-join-lines",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Join a visual range",
+          "instruction": "Select the three wrapped lines and join through Ex.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "send(",
+                "  payload,",
+                "  channel,",
+                "  options)",
+                "done()"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "send(",
+                "  payload, channel, options)",
+                "done()"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "j",
+              "V",
+              "2",
+              "j",
+              ":",
+              "j",
+              "o",
+              "i",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 10,
+                "display": "jV2j:join↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "send(",
+                  "  payload, channel, options)",
+                  "done()"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `jV2j:join`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "visual-ex-join"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact javascript fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-ex-join"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        }
+      ]
+    },
+    {
+      "id": "controlled-line-workflows",
+      "title": "Controlled line workflows",
+      "objective": "Combine range operations while keeping changes inspectable and recoverable.",
+      "activities": [
+        {
+          "id": "safe-line-automation",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Narrow, inspect, execute, recover",
+          "body": "Before Enter, read the range and predict its lines. Prefer marks, searches, or a visual range when numbers are fragile. Inspect after execution; one `u` can undo one completed line command.",
+          "grammar": "anchor -> range -> operation -> inspect",
+          "contrast": "A shorter command is not safer when its range is hard to verify.",
+          "demoRef": "copy-and-sort-demo"
+        },
+        {
+          "id": "copy-and-sort-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Copy then normalize",
+          "instruction": "Copy lines 2 and 3 to the end, then sort only the copy.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "name,score",
+                "Bo,2",
+                "Ada,1",
+                "END,0"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name,score",
+                "Bo,2",
+                "Ada,1",
+                "END,0",
+                "Ada,1",
+                "Bo,2"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "c",
+              "o",
+              "p",
+              "y",
+              "$",
+              "Enter",
+              ":",
+              "5",
+              ",",
+              "$",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 19,
+                "display": ":2,3copy$↩ :5,$sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": [
+                  "name,score",
+                  "Bo,2",
+                  "Ada,1",
+                  "END,0",
+                  "Ada,1",
+                  "Bo,2"
+                ],
+                "cursor": [
+                  4,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3copy$`, then `:5,$sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "controlled-ex-workflow"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact csv fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "controlled-ex-workflow"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "search-and-move-helper",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Move a searched helper",
+          "instruction": "Address helper by backward search and move it to the end.",
+          "languageId": "rust",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fn main() {}",
+                "fn helper() {}",
+                "fn report() {}",
+                "fn test() {}"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fn main() {}",
+                "fn report() {}",
+                "fn test() {}",
+                "fn helper() {}"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "?",
+              "h",
+              "e",
+              "l",
+              "p",
+              "e",
+              "r",
+              "?",
+              "m",
+              "o",
+              "v",
+              "e",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 15,
+                "display": ":?helper?move$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 15,
+                "lines": [
+                  "fn main() {}",
+                  "fn report() {}",
+                  "fn test() {}",
+                  "fn helper() {}"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:?helper?move$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "search-address-workflow"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact rust fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-address-workflow"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "copy-marked-pair",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Copy from a durable mark",
+          "instruction": "Copy the marked line and the next line to the bottom.",
+          "languageId": "csharp",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "class App {",
+                "  void SetUp() {}",
+                "  void Seed() {}",
+                "  void Run() {}",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  1,
+                  2
+                ],
+                "steps": [
+                  "m",
+                  "a",
+                  "g",
+                  "g"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "class App {",
+                "  void SetUp() {}",
+                "  void Seed() {}",
+                "  void Run() {}",
+                "}",
+                "  void SetUp() {}",
+                "  void Seed() {}"
+              ],
+              "cursor": [
+                6,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "'",
+              "a",
+              ",",
+              "'",
+              "a",
+              "+",
+              "1",
+              "c",
+              "o",
+              "p",
+              "y",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 14,
+                "display": ":'a,'a+1copy$↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "class App {",
+                  "  void SetUp() {}",
+                  "  void Seed() {}",
+                  "  void Run() {}",
+                  "}",
+                  "  void SetUp() {}",
+                  "  void Seed() {}"
+                ],
+                "cursor": [
+                  6,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:'a,'a+1copy$`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "mark-range-workflow"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact csharp fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "mark-range-workflow"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "yank-put-sort-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Reuse and normalize",
+          "instruction": "Yank lines 2 and 3, put at the end, then sort the copy.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "-- fields",
+                "zeta",
+                "alpha",
+                "FROM source"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "-- fields",
+                "zeta",
+                "alpha",
+                "FROM source",
+                "alpha",
+                "zeta"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "text": "zeta\nalpha\n",
+                  "type": "linewise"
+                },
+                "\"": {
+                  "text": "zeta\nalpha\n",
+                  "type": "linewise"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "2",
+              ",",
+              "3",
+              "y",
+              "a",
+              "n",
+              "k",
+              "Enter",
+              ":",
+              "$",
+              "p",
+              "u",
+              "t",
+              "Enter",
+              ":",
+              "5",
+              ",",
+              "6",
+              "s",
+              "o",
+              "r",
+              "t",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 24,
+                "display": ":2,3yank↩ :$put↩ :5,6sort↩ ",
+                "explanation": "Read the address first, then apply the line operation."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 24,
+                "lines": [
+                  "-- fields",
+                  "zeta",
+                  "alpha",
+                  "FROM source",
+                  "alpha",
+                  "zeta"
+                ],
+                "cursor": [
+                  4,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "text": "zeta\nalpha\n",
+                    "type": "linewise"
+                  },
+                  "\"": {
+                    "text": "zeta\nalpha\n",
+                    "type": "linewise"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Read the address or range before the command.",
+            "Predict the affected whole lines before Enter.",
+            "Use `:2,3yank`, then `:$put`, then `:5,6sort`."
+          ],
+          "feedback": {
+            "success": "The intended line set changed as one deterministic operation.",
+            "why": "The address selected the lines; the Ex command acted on that set."
+          },
+          "skills": {
+            "primary": [
+              "integrated-line-automation"
+            ],
+            "supporting": [
+              "command-line-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-addressing",
+              "deterministic-operation"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "command-line-ranges-v1",
+            "languageRationale": "The compact sql fixture makes line boundaries and ordering visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "integrated-line-automation"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-copy-not-move",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the lower-risk operation",
+          "prompt": "A fixture must remain in place and also appear below the final test. Which command family fits?",
+          "options": [
+            {
+              "id": "copy",
+              "label": "Use `:copy` or `:t`"
+            },
+            {
+              "id": "move",
+              "label": "Use `:move` or `:m`"
+            },
+            {
+              "id": "delete-put",
+              "label": "Delete it, then put"
+            }
+          ],
+          "correctOptionId": "copy",
+          "explanation": "Copy duplicates the lines without disturbing the original or overwriting yank registers.",
+          "questionKind": "command-classification",
+          "remediationRef": "copy-lines-demo"
+        },
+        {
+          "id": "command-line-ranges-unit-summary",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Address first, operate second",
+          "body": "You can now construct deterministic line operations from numeric, current, final, mark, search, whole-buffer, and visual addresses. Keep the range narrow, predict it before Enter, inspect the result, and undo a wrong prediction.",
+          "takeaways": [
+            "`,` keeps original context; `;` makes the left endpoint temporary current context.",
+            "Delete, yank, and put interact with registers; copy and move do not yank.",
+            "Join and sort transform an explicit line set.",
+            "Marks, searches, and visual ranges are more durable than memorized numbers."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "line-address-reference",
+      "command": ". $ {number} %",
+      "purpose": "Address current, final, numbered, or all lines.",
+      "notes": [
+        "Addresses are one-based.",
+        "Percent expands to first through final."
+      ],
+      "exampleActivityRefs": [
+        "numeric-range-delete-demo",
+        "sort-whole-buffer"
+      ]
+    },
+    {
+      "id": "range-separator-reference",
+      "command": "{a},{b} {a};{b}",
+      "purpose": "Build an inclusive line range.",
+      "notes": [
+        "Comma retains original context.",
+        "Semicolon changes context for the right address."
+      ],
+      "exampleActivityRefs": [
+        "semicolon-range-demo",
+        "sort-around-cursor"
+      ]
+    },
+    {
+      "id": "symbolic-address-reference",
+      "command": "'a /pattern/ ?pattern?",
+      "purpose": "Address lines through marks or searches.",
+      "notes": [
+        "Offsets may follow symbolic addresses."
+      ],
+      "exampleActivityRefs": [
+        "marked-join-demo",
+        "delete-search-address"
+      ]
+    },
+    {
+      "id": "delete-yank-put-reference",
+      "command": ":delete / :yank / :put",
+      "purpose": "Remove, store, or insert complete lines.",
+      "notes": [
+        "Delete and yank update registers.",
+        "Put inserts after its address."
+      ],
+      "exampleActivityRefs": [
+        "range-yank-put-demo",
+        "delete-debug-range"
+      ]
+    },
+    {
+      "id": "copy-move-reference",
+      "command": ":copy :t / :move :m",
+      "purpose": "Duplicate or relocate after a destination.",
+      "notes": [
+        "Destination 0 means before line 1.",
+        "These commands do not yank."
+      ],
+      "exampleActivityRefs": [
+        "copy-lines-demo",
+        "move-range-to-top"
+      ]
+    },
+    {
+      "id": "join-sort-reference",
+      "command": ":join / :sort / :sort!",
+      "purpose": "Join or order an addressed line set.",
+      "notes": [
+        "Sort bang reverses order in these lessons."
+      ],
+      "exampleActivityRefs": [
+        "join-range-demo",
+        "reverse-priority-range"
+      ]
+    },
+    {
+      "id": "visual-range-reference",
+      "command": ":'<,'>",
+      "purpose": "Use the first and last Visual selection lines.",
+      "notes": [
+        "Vim inserts this prefix after Visual colon."
+      ],
+      "exampleActivityRefs": [
+        "visual-sort-demo",
+        "visual-delete-lines"
+      ]
+    },
+    {
+      "id": "safe-ex-reference",
+      "command": "u",
+      "purpose": "Undo one completed line operation.",
+      "notes": [
+        "Predict and inspect before continuing."
+      ],
+      "exampleActivityRefs": [
+        "undo-range-delete",
+        "copy-and-sort-demo"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "line addresses and percent range",
+      "explain": [
+        "addresses-before-actions"
+      ],
+      "demonstrate": [
+        "numeric-range-delete-demo"
+      ],
+      "isolate": [
+        "current-range-join"
+      ],
+      "mix": [
+        "move-number-to-end"
+      ],
+      "challenge": [
+        "sort-whole-buffer"
+      ]
+    },
+    {
+      "concept": "comma semicolon and offsets",
+      "explain": [
+        "comma-semicolon-offsets"
+      ],
+      "demonstrate": [
+        "semicolon-range-demo"
+      ],
+      "isolate": [
+        "relative-delete"
+      ],
+      "mix": [
+        "copy-range-to-end"
+      ],
+      "challenge": [
+        "sort-around-cursor"
+      ]
+    },
+    {
+      "concept": "mark and search addresses",
+      "explain": [
+        "marks-and-search-addresses"
+      ],
+      "demonstrate": [
+        "marked-join-demo"
+      ],
+      "isolate": [
+        "delete-search-address"
+      ],
+      "mix": [
+        "sort-between-searches"
+      ],
+      "challenge": [
+        "move-marked-helper"
+      ]
+    },
+    {
+      "concept": "delete yank and put",
+      "explain": [
+        "delete-yank-put"
+      ],
+      "demonstrate": [
+        "range-yank-put-demo"
+      ],
+      "isolate": [
+        "delete-debug-range"
+      ],
+      "mix": [
+        "named-yank-and-put"
+      ],
+      "challenge": [
+        "undo-range-delete"
+      ]
+    },
+    {
+      "concept": "copy t move and m",
+      "explain": [
+        "copy-versus-move"
+      ],
+      "demonstrate": [
+        "copy-lines-demo"
+      ],
+      "isolate": [
+        "transpose-one-line"
+      ],
+      "mix": [
+        "move-range-to-bottom"
+      ],
+      "challenge": [
+        "move-range-to-top"
+      ]
+    },
+    {
+      "concept": "join and sort",
+      "explain": [
+        "join-and-sort"
+      ],
+      "demonstrate": [
+        "join-range-demo"
+      ],
+      "isolate": [
+        "sort-import-range"
+      ],
+      "mix": [
+        "reverse-priority-range"
+      ],
+      "challenge": [
+        "join-then-sort"
+      ]
+    },
+    {
+      "concept": "visual range",
+      "explain": [
+        "visual-range-prefix"
+      ],
+      "demonstrate": [
+        "visual-sort-demo"
+      ],
+      "isolate": [
+        "visual-delete-lines"
+      ],
+      "mix": [
+        "visual-move-lines"
+      ],
+      "challenge": [
+        "visual-join-lines"
+      ]
+    },
+    {
+      "concept": "safe integrated line workflows",
+      "explain": [
+        "safe-line-automation"
+      ],
+      "demonstrate": [
+        "copy-and-sort-demo"
+      ],
+      "isolate": [
+        "search-and-move-helper"
+      ],
+      "mix": [
+        "copy-marked-pair"
+      ],
+      "challenge": [
+        "yank-put-sort-challenge"
+      ]
+    }
+  ]
+}
