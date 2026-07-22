@@ -621,12 +621,16 @@ test.describe("Production lesson flow", () => {
   });
 
   test("keeps Ex command text visible while Unit 14 range commands are entered", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/?unit=global-normal-automation&activity=normal-range-demo");
     await page.locator('.demo-controls [data-action="step"]').click();
     await expect(page.locator(".cm-vim-panel")).toBeVisible();
     await page.locator('.demo-controls [data-action="step"]').click();
     await expect(page.locator(".cm-vim-panel")).toBeVisible();
-    await expect(page.locator(".cm-vim-panel input, .cm-vim-panel textarea")).toHaveValue("2");
+    const demoCommandInput = page.locator(".cm-vim-panel input, .cm-vim-panel textarea");
+    await expect(demoCommandInput).toHaveValue("2");
+    await expect(demoCommandInput).toHaveCSS("color", "rgb(246, 237, 218)");
+    await expect(demoCommandInput).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
 
     await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "normal-python-comments")));
     await page.evaluate(() => { window.VimWilds.emit(":"); window.VimWilds.emit("2"); });
