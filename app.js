@@ -8,6 +8,7 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const urlParams = new URLSearchParams(window.location.search);
 const sessionStateKey = "vim-wilds.session.v1";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
+const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 
 function readSavedSession() {
   try {
@@ -69,10 +70,10 @@ const elements = {
   tocDialog: $("#tocDialog"),
   tocLessons: $("#tocLessons"),
   settingsDialog: $("#settingsDialog"),
+  keyboardOptions: $("#keyboardOptions"),
   themeOptions: $("#themeOptions"),
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
-  updateButton: $("#updateButton"),
   restartUpdateButton: $("#restartUpdateButton"),
 };
 
@@ -130,6 +131,19 @@ function storedThemePreference() {
   return allowedThemes.has(savedSession.themePreference) ? savedSession.themePreference : "auto";
 }
 
+function defaultKeyboardVisibility() {
+  // This deliberately describes the viewport experience, not whether a
+  // physical keyboard happens to be attached. Touch-first devices start with
+  // the on-screen keyboard; conventional desktop pointers start without it.
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches ? "hidden" : "visible";
+}
+
+function storedKeyboardVisibility() {
+  return keyboardVisibilityValues.has(savedSession.keyboardVisibility)
+    ? savedSession.keyboardVisibility
+    : defaultKeyboardVisibility();
+}
+
 const state = {
   activityIndex: 0,
   progress: 0,
@@ -144,6 +158,7 @@ const state = {
   playbackTimer: null,
   playbackMode: null,
   themePreference: storedThemePreference(),
+  keyboardVisibility: storedKeyboardVisibility(),
   hintLevel: 0,
   consecutiveMistakes: 0,
   recallFeedback: null,
@@ -157,6 +172,7 @@ function persistSession() {
       unitId: unit.id,
       activityId: currentActivity()?.id,
       themePreference: state.themePreference,
+      keyboardVisibility: state.keyboardVisibility,
       savedAt: new Date().toISOString(),
     }));
   } catch {}
@@ -482,7 +498,7 @@ function renderActivityIntro() {
   elements.activityIntro.hidden = !show;
   if (!show) return;
   const practiceLabel = activity.practiceMode === "guided" ? "Guided practice" : activity.practiceMode === "recall" ? "Recall practice" : "Demo";
-  elements.activityKicker.textContent = `${practiceLabel} · ${languageLabel(activity)}`;
+  elements.activityKicker.innerHTML = `<span class="activity-kind">${escapeHtml(practiceLabel)}</span><span class="activity-language">${escapeHtml(languageLabel(activity))}</span>`;
   elements.activityTitle.innerHTML = renderInline(activity.title);
   elements.activityInstruction.innerHTML = renderInline(activity.instruction);
   elements.hintButton.hidden = !isPractice(activity);
@@ -595,8 +611,9 @@ function executionContent(activity, step, history, complete = false) {
   return {
     explanation: group?.explanation || "Follow the authored command sequence.",
     history,
-    primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? `Step ${step + 1} of ${keys.length}` : retry ? "Try" : reveal ? "Next" : recall ? "Recall" : "Next",
-    secondary: done ? "Complete" : retry ? "Again" : reveal ? "A clue" : recall ? "From memory" : "",
+    primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? "Step" : retry ? "Try" : reveal ? "Next" : recall ? "Recall" : "Next",
+    secondary: done ? "Complete" : activity.type === "demo" ? `${step + 1} / ${keys.length}` : retry ? "Again" : reveal ? "A clue" : recall ? "From memory" : "",
+    stepStatus: !done && activity.type === "demo",
     key: done || (recall && !reveal) ? null : keys[step],
     assembly: structured.length ? activity.script.steps.map((item, index) => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind)
       ? { key: item.key, kind: item.kind, cue: item.cue, active: index < step || done }
@@ -610,6 +627,7 @@ function applyExecutionContent(root, content) {
   $(".command-text", root).innerHTML = renderHistory(content.history);
   $(".status-primary", root).textContent = content.primary;
   $(".status-secondary", root).textContent = content.secondary;
+  root.classList.toggle("is-step-status", content.stepStatus);
   const key = $(".status-key", root);
   key.innerHTML = content.key ? renderKeycap(content.key, "status-command-key") : "";
   key.hidden = !content.key;
@@ -672,6 +690,7 @@ function renderActivityControls() {
   elements.keyboardPanel.classList.remove("controls-only");
   elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity));
   elements.keyboardPanel.classList.toggle("completed", isPractice(activity) && state.complete);
+  elements.keyboardPanel.classList.toggle("keyboard-hidden-by-user", isPractice(activity) && !state.complete && state.keyboardVisibility === "hidden");
   elements.keyboard.classList.toggle("hidden", !isPractice(activity));
   elements.keyboard.toggleAttribute("inert", isPractice(activity) && state.complete);
   if (isPractice(activity) && state.complete) elements.keyboard.setAttribute("aria-hidden", "true");
@@ -706,6 +725,11 @@ function renderActivityControls() {
   elements.activityControls.innerHTML = "";
 }
 
+function renderKeyboardOptions() {
+  const selected = $(`input[name="keyboard-visibility"][value="${state.keyboardVisibility}"]`, elements.keyboardOptions);
+  if (selected) selected.checked = true;
+}
+
 function renderModifiers() {
   const shiftActive = state.modifiers.has("Shift") || state.physicalShift;
   $$('[data-mod]', elements.keyboard).forEach(button => {
@@ -728,6 +752,7 @@ function renderAll() {
   renderModifiers();
   renderCommand();
   renderActivityControls();
+  renderKeyboardOptions();
   preloadSuccessMedia();
 }
 
@@ -1242,11 +1267,29 @@ elements.tocButton?.addEventListener("click", () => {
   openTableOfContents();
 });
 elements.settingsButton?.addEventListener("click", () => {
+  renderKeyboardOptions();
   renderThemeOptions();
   elements.settingsDialog.showModal();
 });
-elements.updateButton?.addEventListener("click", applyUpdate);
 elements.restartUpdateButton?.addEventListener("click", applyUpdate);
+elements.keyboardOptions?.addEventListener("change", event => {
+  const value = event.target.closest('input[name="keyboard-visibility"]')?.value;
+  if (!keyboardVisibilityValues.has(value)) return;
+  state.keyboardVisibility = value;
+  persistSession();
+  renderActivityControls();
+  scheduleExecutionConsoleMeasurement();
+});
+$(".landscape-controls")?.addEventListener("click", event => {
+  const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
+  if (action === "toc") openTableOfContents();
+  if (action === "reset") resetActivity();
+  if (action === "settings") {
+    renderKeyboardOptions();
+    renderThemeOptions();
+    elements.settingsDialog.showModal();
+  }
+});
 elements.tocLessons?.addEventListener("click", event => {
   const button = event.target.closest("[data-activity-index]");
   if (button) goToActivity(Number(button.dataset.activityIndex));
@@ -1283,7 +1326,9 @@ document.fonts?.ready.then(scheduleExecutionConsoleMeasurement);
 
 function showUpdateReady(registration) {
   serviceWorkerRegistration = registration;
-  elements.updateButton.hidden = false;
+  elements.settingsButton?.classList.add("update-ready");
+  elements.settingsButton?.setAttribute("aria-label", "Open settings — update ready");
+  $("[data-layout-action=\"settings\"]")?.classList.add("update-ready");
   elements.restartUpdateButton.hidden = false;
   elements.updateStatus.textContent = "A newer build has downloaded and is ready to restart.";
 }

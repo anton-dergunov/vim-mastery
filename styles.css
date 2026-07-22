@@ -2171,3 +2171,268 @@ html.next-ui .keyboard.shift-layer .key .base {
   html.next-ui .editor-stack { margin-top: 7px; }
   html.next-ui .key { height: 30px; }
 }
+
+/* Adaptive canvas --------------------------------------------------------- */
+html.next-ui .phone {
+  width: 100%;
+  max-width: none;
+  height: var(--app-viewport-height, 100dvh);
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+html.next-ui .lesson-workspace {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+html.next-ui .lesson-context { display: contents; }
+html.next-ui .landscape-controls { display: none; }
+
+html.next-ui .activity-kicker {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: .55em;
+}
+
+html.next-ui .activity-intro { position: relative; }
+
+html.next-ui .activity-language::before { content: "·"; margin-right: .55em; }
+
+html.next-ui .next-command-tray.is-step-status .status-primary,
+html.next-ui .next-command-tray.is-step-status .status-secondary {
+  margin: 0;
+  font: 850 12px/1.15 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .035em;
+}
+
+html.next-ui .next-command-tray.is-step-status .execution-status { gap: 3px; }
+
+html.next-ui .keyboard-hidden-by-user { display: none !important; }
+
+html.next-ui .settingsButton.update-ready,
+html.next-ui #settingsButton.update-ready { position: relative; }
+html.next-ui #settingsButton.update-ready::after,
+html.next-ui .landscape-controls .icon-button.update-ready::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #0b1815;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px rgba(255, 200, 102, .6);
+}
+
+html.next-ui .keyboard-options {
+  margin: 0 0 16px;
+  padding: 0 0 16px;
+  display: grid;
+  gap: 8px;
+  border: 0;
+  border-bottom: 1px solid rgba(166, 219, 192, .12);
+}
+
+html.next-ui .keyboard-options legend {
+  margin-bottom: 10px;
+  color: #fff7df;
+  font: 700 20px/1.2 Georgia, serif;
+}
+
+html.next-ui .keyboard-options label {
+  min-height: 58px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(160, 199, 180, .16);
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+  cursor: pointer;
+}
+
+html.next-ui .keyboard-options label:has(input:checked) {
+  border-color: color-mix(in srgb, var(--theme-bright) 60%, transparent);
+  background: color-mix(in srgb, var(--theme-mid) 28%, rgba(4, 13, 12, .75));
+}
+
+html.next-ui .keyboard-options input { accent-color: var(--theme-bright); }
+html.next-ui .keyboard-options span { min-width: 0; display: grid; gap: 4px; }
+html.next-ui .keyboard-options strong { font-size: 15px; line-height: 1.25; }
+html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-height: 1.3; }
+
+/* Compact portrait keeps the reading sequence vertical while moving only the
+   low-priority activity kind to the left edge. */
+@media (max-width: 599px) and (orientation: portrait) {
+  html.next-ui .activity-intro {
+    min-height: 96px;
+    padding: 10px 13px 10px 34px;
+  }
+
+  html.next-ui .activity-intro-row { display: contents; }
+  html.next-ui .activity-kicker {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 9px;
+    z-index: 1;
+    color: var(--theme-bright);
+    font-size: 10px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  html.next-ui .activity-language { display: none; }
+  html.next-ui .hint-button { position: absolute; top: 9px; right: 10px; }
+  html.next-ui .activity-intro h1 { max-width: calc(100% - 36px); margin-top: 0; font-size: clamp(20px, 5.7vw, 23px); }
+  html.next-ui .activity-intro p { max-width: 100%; margin-top: 4px; padding-bottom: 3px; font-size: 14px; line-height: 18px; }
+  html.next-ui .next-command-tray { --status-rail-width: 76px; height: 94px; }
+  html.next-ui .execution-copy { padding: 8px 10px 7px 13px; gap: 4px; }
+  html.next-ui .command-explanation { font-size: 14px; line-height: 1.28; }
+  html.next-ui .command-history-label { display: none; }
+  html.next-ui .next-command-tray .command-text { grid-row: 2; align-self: start; font-size: 13px; }
+  html.next-ui .execution-copy { grid-template-rows: minmax(0, 1fr) auto; }
+  html.next-ui .world { min-height: 220px; }
+  html.next-ui .editor-stack {
+    grid-row: 1 / 8;
+    align-self: stretch;
+    margin: 8px 13px 0;
+  }
+  html.next-ui .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); min-height: 0; }
+  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
+  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
+  html.next-ui .nix { width: clamp(58px, 19vw, 78px); grid-row: 8 / 10; }
+  html.next-ui .nix.left { grid-column: 1 / span 3; }
+  html.next-ui .nix.right { grid-column: 10 / span 3; }
+  html.next-ui .field-note-wrap,
+  html.next-ui .inspection-layout { grid-row: 1 / 10; }
+}
+
+/* The short phone landscape arrangement is intentionally height-led. Tablets
+   retain the normal stacked sequence even in landscape. */
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  html.next-ui .phone { padding-top: 0; }
+  html.next-ui .next-topbar { display: none; }
+  html.next-ui .landscape-controls {
+    position: absolute;
+    z-index: 40;
+    top: max(6px, env(safe-area-inset-top));
+    left: max(6px, env(safe-area-inset-left));
+    display: flex;
+    gap: 5px;
+  }
+  html.next-ui .landscape-controls .icon-button { width: 30px; height: 30px; flex-basis: 30px; border-radius:8px; }
+  html.next-ui .landscape-controls .icon-button svg { width: 17px; height: 17px; }
+  html.next-ui .lesson-workspace {
+    display: grid;
+    grid-template-columns: minmax(145px, 34%) minmax(0, 66%);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  html.next-ui .lesson-context {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(166, 219, 192, .12);
+  }
+  html.next-ui .activity-intro { min-height: 0; flex: 1 1 auto; padding: 42px 10px 7px; }
+  html.next-ui .activity-intro-row { display: block; }
+  html.next-ui .activity-kicker { display: block; font-size: 9px; }
+  html.next-ui .activity-language { display: none; }
+  html.next-ui .hint-button { position: absolute; top: 5px; right: 5px; width: 27px; height: 27px; flex-basis: 27px; font-size: 14px; }
+  html.next-ui .activity-intro h1 { margin-top: 5px; font-size: clamp(16px, 3.1vw, 20px); line-height: 1.06; }
+  html.next-ui .activity-intro p { margin-top: 4px; font-size: 11px; line-height: 1.25; }
+  html.next-ui .next-command-tray { --status-rail-width: 66px; height: 78px; flex: 0 0 auto; }
+  html.next-ui .execution-copy { padding: 7px 8px; gap: 3px; }
+  html.next-ui .command-explanation { font-size: 11px; line-height: 1.2; }
+  html.next-ui .command-history-label { display: none; }
+  html.next-ui .next-command-tray .command-text { grid-row: 2; font-size: 10px; line-height: 1.2; }
+  html.next-ui .execution-copy { grid-template-rows: minmax(0, 1fr) auto; }
+  html.next-ui .next-command-tray.is-step-status .status-primary,
+  html.next-ui .next-command-tray.is-step-status .status-secondary { font-size: 10px; }
+  html.next-ui .status-key { min-height: 19px; padding-top: 2px; }
+  html.next-ui .status-command-key { min-height: 23px; height: 23px; font-size: 12px; }
+  html.next-ui .game-area { min-height: 0; padding: 6px; }
+  html.next-ui .world { min-height: 0; }
+  html.next-ui .editor-stack { grid-row: 1 / 10; margin: 7px 9px; }
+  html.next-ui .next-code-slab { height: min(var(--editor-height), 100%); min-height: 0; }
+  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
+  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
+  html.next-ui .code-head { height: 24px; flex-basis: 24px; font-size: 9px; }
+  html.next-ui .next-code-slab .code-body { padding: 3px; }
+  html.next-ui .code-body .cm-scroller { font-size: 14px; line-height: 1.3; }
+  html.next-ui .nix { display: none; }
+  html.next-ui .keyboard-panel { padding: 4px 5px calc(4px + env(safe-area-inset-bottom)); }
+  html.next-ui .key { height: clamp(25px, 7.1dvh, 30px); }
+}
+
+/* Tablet and desktop use the entire canvas, but preserve the vertical reading
+   order and cap the editor so reclaimed space becomes game board. */
+@media (min-width: 600px) {
+  html.next-ui .phone { height: var(--app-viewport-height, 100dvh); margin: 0; border: 0; border-radius: 0; }
+  html.next-ui .next-topbar { min-height: 60px; padding-right: clamp(16px, 3vw, 42px); padding-left: clamp(16px, 3vw, 42px); }
+  html.next-ui .lesson-label { font-size: clamp(13px, 1.7vw, 16px); }
+  html.next-ui .activity-intro { padding: 15px clamp(24px, 7vw, 11vw) 14px; }
+  html.next-ui .activity-intro-row,
+  html.next-ui .activity-intro h1,
+  html.next-ui .activity-intro p { width: min(100%, 920px); margin-right: auto; margin-left: auto; }
+  html.next-ui .activity-intro h1 { font-size: clamp(25px, 3.2vw, 34px); }
+  html.next-ui .activity-intro p { font-size: clamp(15px, 1.8vw, 18px); }
+  html.next-ui .next-command-tray { --status-rail-width: 128px; min-height: 116px; height: var(--execution-console-height, 116px); }
+  html.next-ui .execution-copy { width: min(100%, 900px); margin-left: max(0px, calc((100vw - 1120px) / 2)); padding-left: clamp(24px, 7vw, 11vw); }
+  html.next-ui .command-explanation { font-size: clamp(15px, 1.8vw, 18px); }
+  html.next-ui .next-command-tray .command-text { font-size: 14px; }
+  html.next-ui .game-area { padding: clamp(10px, 1.7vw, 20px); }
+  html.next-ui .world { min-height: 280px; }
+  /* Keep the authored visual-line semantics stable as the board widens. */
+  html.next-ui .editor-stack { width: min(404px, calc(100% - 110px)); grid-row: 1 / 10; justify-self: center; margin: clamp(18px, 4vh, 34px) 0 0; }
+  html.next-ui .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); max-height: 228px; }
+  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
+  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
+  html.next-ui .nix { width: clamp(100px, 13vw, 160px); grid-row: 8 / 10; }
+  html.next-ui .nix.left { grid-column: 2 / span 3; }
+  html.next-ui .nix.right { grid-column: 9 / span 3; }
+  html.next-ui .field-note-wrap { width: min(760px, calc(100% - 60px)); justify-self: center; margin: 24px 0; }
+  html.next-ui .field-note { max-height: 100%; }
+  html.next-ui .inspection-layout { width: min(760px, calc(100% - 60px)); justify-self: center; margin: 20px 0; }
+  html.next-ui .keyboard-panel { padding-right: clamp(12px, 3vw, 28px); padding-left: clamp(12px, 3vw, 28px); }
+  html.next-ui .keyboard { width: 100%; }
+  html.next-ui .app-dialog[open] { width: min(calc(100% - 48px), 920px); }
+  html.next-ui #tocDialog[open] { height: min(calc(100% - 48px), 820px); }
+  html.next-ui .toc-lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  html.next-ui .toc-arc + .toc-arc { margin-top: 0; }
+}
+
+@media (min-width: 1024px) {
+  html.next-ui .next-topbar { min-height:64px; }
+  html.next-ui .activity-intro { padding-right: max(42px, calc((100vw - 1120px) / 2)); padding-left: max(42px, calc((100vw - 1120px) / 2)); }
+  html.next-ui .execution-copy { padding-left: max(42px, calc((100vw - 1120px) / 2)); }
+  html.next-ui .world { min-height: 320px; }
+  html.next-ui .editor-stack { width: min(404px, 62vw); max-height: 360px; }
+  html.next-ui .keyboard { width: min(1080px, 100%); margin: 0 auto; }
+  html.next-ui .field-note-wrap,
+  html.next-ui .inspection-layout { width: min(820px, calc(100% - 100px)); }
+}
+
+/* This follows the broad tablet rules above so a wide-but-short touch phone
+   retains its dedicated landscape composition. */
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  html.next-ui .activity-intro { min-height: 0; padding: 42px 10px 7px; }
+  html.next-ui .activity-intro h1 { width: auto; max-width: none; margin: 5px 0 0; font-size: clamp(16px, 3.1vw, 20px); line-height: 1.06; }
+  html.next-ui .activity-intro p { width: auto; margin: 4px 0 0; font-size: 11px; line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  html.next-ui .next-command-tray { --status-rail-width: 66px; min-height: 78px; height: 78px; }
+  html.next-ui .execution-copy { width: auto; margin: 0; padding: 7px 8px; }
+  html.next-ui .command-explanation { font-size: 11px; line-height: 1.2; }
+  html.next-ui .next-command-tray .command-text { font-size: 10px; line-height: 1.2; }
+  html.next-ui .game-area { padding: 6px; }
+  html.next-ui .world { min-height: 0; }
+  html.next-ui .editor-stack { width: auto; max-height: none; grid-row: 1 / 10; justify-self: stretch; margin: 7px 9px; }
+  html.next-ui .next-code-slab { height: min(var(--editor-height), 100%); max-height: none; }
+  html.next-ui .nix { display: none; }
+  html.next-ui .keyboard { width: 100%; }
+}

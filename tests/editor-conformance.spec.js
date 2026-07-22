@@ -51,7 +51,14 @@ async function state(page) {
 }
 
 test.describe("Production lesson flow", () => {
-  test.beforeEach(({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    // Interaction coverage deliberately opts into the touch keyboard. Product
+    // defaults remain responsive (hidden on desktop, shown on touch devices).
+    await page.addInitScript(() => {
+      const key = "vim-wilds.session.v1";
+      const existing = JSON.parse(window.localStorage.getItem(key) || "{}");
+      window.localStorage.setItem(key, JSON.stringify({ ...existing, keyboardVisibility: "visible" }));
+    });
     const goto = page.goto.bind(page);
     Object.defineProperty(page, "goto", {
       configurable: true,

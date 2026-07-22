@@ -54,7 +54,6 @@
       </button>
       <strong class="lesson-label" id="lessonLabel">One change, many uses</strong>
       <div class="mode-pill" id="nextModePill" aria-live="polite">Theory</div>
-      <button class="update-button" id="updateButton" type="button" hidden>Update</button>
       <button class="icon-button next-reset-button" id="nextResetButton" type="button" aria-label="Reset activity" title="Reset">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 9A8 8 0 1 1 5 15.3"/><path d="M4.9 4.8V9h4.2"/></svg>
       </button>
@@ -63,6 +62,20 @@
       </button>
     </header>
 
+    <nav class="landscape-controls" aria-label="Lesson controls">
+      <button class="icon-button" data-layout-action="toc" type="button" aria-label="Open table of contents" title="Contents">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="3" cy="6" r=".75"/><circle cx="3" cy="12" r=".75"/><circle cx="3" cy="18" r=".75"/></svg>
+      </button>
+      <button class="icon-button" data-layout-action="reset" type="button" aria-label="Reset activity" title="Reset">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 9A8 8 0 1 1 5 15.3"/><path d="M4.9 4.8V9h4.2"/></svg>
+      </button>
+      <button class="icon-button" data-layout-action="settings" type="button" aria-label="Open settings" title="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9a1.7 1.7 0 0 0 1.55 1H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+      </button>
+    </nav>
+
+    <div class="lesson-workspace">
+    <div class="lesson-context">
     <section class="activity-intro" id="activityIntro" aria-labelledby="activityTitle">
       <div class="activity-intro-row">
         <div class="activity-kicker" id="activityKicker">Exercise · Python</div>
@@ -84,6 +97,7 @@
         <div class="status-key" id="statusKey"><kbd class="command-key">c</kbd></div>
       </div>
     </section>
+    </div>
 
     <section class="game-area" id="gameArea" aria-label="Composable exercise world">
       <div class="world theme-moonroot" id="world">
@@ -101,6 +115,7 @@
 
       </div>
     </section>
+    </div>
 
     <section class="keyboard-panel" aria-label="Physical-style Vim keyboard">
       <div class="activity-controls" id="activityControls"></div>
@@ -187,6 +202,11 @@
         <button class="dialog-close" type="button" data-close-dialog="settingsDialog" aria-label="Close settings">×</button>
       </div>
       <div class="dialog-body">
+        <fieldset class="keyboard-options" id="keyboardOptions">
+          <legend>On-screen keyboard</legend>
+          <label><input type="radio" name="keyboard-visibility" value="visible"> <span><strong>Show keyboard</strong><small>Keep the physical-style keys available on screen.</small></span></label>
+          <label><input type="radio" name="keyboard-visibility" value="hidden"> <span><strong>Hide keyboard</strong><small>Physical keyboard input still controls the lesson.</small></span></label>
+        </fieldset>
         <fieldset class="theme-options" id="themeOptions">
           <legend>World theme</legend>
           <label><input type="radio" name="theme" value="auto"> <span><strong>Follow lesson</strong><small>Use the world chosen for each lesson.</small></span></label>
