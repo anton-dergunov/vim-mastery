@@ -2436,3 +2436,151 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .nix { display: none; }
   html.next-ui .keyboard { width: 100%; }
 }
+
+/* Refinement pass: keep the reading surfaces deliberately bounded on larger
+   canvases, while allowing the world around them to use the remaining room. */
+@media (min-width: 600px) {
+  html.next-ui .ground-grid {
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    grid-template-columns: repeat(var(--ground-columns, 12), var(--ground-tile-size, 1fr));
+    grid-template-rows: repeat(var(--ground-rows, 9), var(--ground-tile-size, 1fr));
+    transform: translate(-50%, -50%);
+  }
+
+  html.next-ui .next-topbar {
+    min-height: 64px;
+  }
+
+  html.next-ui .lesson-label { font-size: clamp(14px, 1.8vw, 17px); }
+  html.next-ui .activity-intro h1 { font-size: clamp(27px, 3.4vw, 36px); }
+  html.next-ui .activity-intro p { font-size: clamp(16px, 1.95vw, 19px); }
+  html.next-ui .command-explanation { font-size: clamp(16px, 1.95vw, 19px); }
+  html.next-ui .next-command-tray .command-text { font-size: 15px; }
+
+  html.next-ui .editor-stack:not(.has-viewport) .next-code-slab {
+    max-height: 250px;
+  }
+
+  html.next-ui .nix { width: clamp(118px, 15vw, 180px); }
+
+  html.next-ui .keyboard-panel {
+    padding-top: 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+  html.next-ui .keyboard { gap: 5px; }
+  html.next-ui .key-row { gap: 5px; }
+  html.next-ui .key { height: clamp(36px, 4.9dvh, 46px); }
+
+  /* Fixed top and bottom edges avoid Safari resolving percentage dialog
+     heights against an anonymous, zero-height dialog containing block. */
+  html.next-ui .app-dialog[open],
+  html.next-ui #tocDialog[open] {
+    position: fixed;
+    top: calc(12px + env(safe-area-inset-top));
+    right: auto;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    left: 50%;
+    width: min(calc(100% - 48px), 920px);
+    height: auto;
+    max-height: none;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  html.next-ui .toc-lessons {
+    display: block;
+  }
+  html.next-ui .toc-arc + .toc-arc { margin-top: 20px; }
+}
+
+@media (max-width: 599px) and (orientation: portrait) {
+  /* The metadata is useful again now that the panels have room for it. */
+  html.next-ui .activity-intro {
+    min-height: 0;
+    padding: 9px 13px 8px;
+  }
+  html.next-ui .activity-intro-row { display: flex; }
+  html.next-ui .activity-kicker {
+    position: static;
+    display: flex;
+    font-size: 10px;
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+  html.next-ui .activity-language { display: inline; }
+  html.next-ui .hint-button { position: static; }
+  html.next-ui .activity-intro h1 { max-width: none; margin-top: 4px; }
+  html.next-ui .activity-intro p { margin-top: 3px; }
+}
+
+@media (max-width: 599px) {
+  html.next-ui .app-dialog[open],
+  html.next-ui #tocDialog[open] {
+    position: fixed;
+    top: calc(10px + env(safe-area-inset-top));
+    right: auto;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 50%;
+    width: min(calc(100% - 20px), 410px);
+    height: auto;
+    max-height: none;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1024px) {
+  html.next-ui .next-topbar,
+  html.next-ui .activity-intro,
+  html.next-ui .next-command-tray {
+    width: min(calc(100% - 48px), 1040px);
+    align-self: center;
+    box-sizing: border-box;
+  }
+
+  html.next-ui .next-topbar {
+    margin: 12px auto 0;
+    border: 1px solid rgba(166, 219, 192, .12);
+    border-radius: 12px;
+  }
+
+  html.next-ui .activity-intro {
+    margin: 10px auto 0;
+    padding: 15px clamp(28px, 5vw, 64px) 14px;
+    border: 1px solid rgba(166, 219, 192, .1);
+    border-radius: 12px;
+  }
+  html.next-ui .activity-intro-row,
+  html.next-ui .activity-intro h1,
+  html.next-ui .activity-intro p { width: 100%; }
+
+  html.next-ui .next-command-tray {
+    margin: 10px auto 0;
+    border: 1px solid rgba(153, 198, 177, .13);
+    border-radius: 12px;
+  }
+  html.next-ui .execution-copy {
+    width: auto;
+    margin: 0;
+    padding-left: clamp(22px, 4vw, 48px);
+  }
+
+  html.next-ui .keyboard-panel.completed {
+    padding: 0 0 18px;
+    border-top: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  html.next-ui .keyboard-panel.completed .keyboard { display: none; }
+  html.next-ui .keyboard-panel.completed .activity-controls {
+    position: static;
+    width: min(calc(100% - 48px), 720px);
+    margin: 0 auto;
+  }
+  html.next-ui .keyboard-panel.completed .completion-panel {
+    min-height: 126px;
+  }
+}

@@ -1410,13 +1410,19 @@ test.describe("Production lesson flow", () => {
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect(page.locator(".keyboard")).toHaveCSS("visibility", "hidden");
     const geometry = await page.evaluate(() => ({
+      desktop: innerWidth >= 1024,
       panel: document.querySelector(".keyboard-panel").getBoundingClientRect().height,
       completion: document.querySelector(".completion-panel").getBoundingClientRect().height,
       keyboard: document.querySelector(".keyboard").getBoundingClientRect().height,
       next: document.querySelector(".completion-panel button").getBoundingClientRect().toJSON(),
     }));
-    expect(geometry.panel).toBeCloseTo(keyboardHeight, 0);
-    expect(geometry.completion).toBeCloseTo(geometry.keyboard, 0);
+    if (geometry.desktop) {
+      expect(geometry.panel).toBeCloseTo(geometry.completion + 18, 0);
+      expect(geometry.panel).toBeLessThan(keyboardHeight);
+    } else {
+      expect(geometry.panel).toBeCloseTo(keyboardHeight, 0);
+      expect(geometry.completion).toBeCloseTo(geometry.keyboard, 0);
+    }
     expect(geometry.next.height).toBe(44);
     expect(geometry.next.width).toBeLessThanOrEqual(104);
   });

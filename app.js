@@ -378,14 +378,42 @@ function groundType(template, row, col) {
 }
 
 function renderGround(presentation) {
+  const largeCanvas = window.matchMedia("(min-width: 600px)").matches;
+  const bounds = elements.world.getBoundingClientRect();
+  // On larger canvases, keep the terrain made of actual square tiles rather
+  // than stretching the original 12 × 9 phone grid. The interaction layer
+  // remains a stable 12 × 9 coordinate system, so sprite and editor placement
+  // do not change with the available scenic space.
+  const tileSize = largeCanvas
+    ? Math.max(28, Math.min(54, Math.min(bounds.width / 12, bounds.height / 9)))
+    : 0;
+  const columns = largeCanvas && tileSize ? Math.max(12, Math.floor(bounds.width / tileSize)) : 12;
+  const rows = largeCanvas && tileSize ? Math.max(9, Math.floor(bounds.height / tileSize)) : 9;
+  if (largeCanvas && tileSize) {
+    elements.groundGrid.style.setProperty("--ground-columns", String(columns));
+    elements.groundGrid.style.setProperty("--ground-rows", String(rows));
+    elements.groundGrid.style.setProperty("--ground-tile-size", `${tileSize}px`);
+    elements.groundGrid.style.width = `${columns * tileSize}px`;
+    elements.groundGrid.style.height = `${rows * tileSize}px`;
+  } else {
+    elements.groundGrid.removeAttribute("style");
+  }
   const cells = [];
-  for (let row = 1; row <= 9; row += 1) {
-    for (let col = 1; col <= 12; col += 1) {
+  for (let row = 1; row <= rows; row += 1) {
+    for (let col = 1; col <= columns; col += 1) {
+      const templateRow = Math.min(9, Math.max(1, Math.ceil(row * 9 / rows)));
+      const templateColumn = Math.min(12, Math.max(1, Math.ceil(col * 12 / columns)));
       const glow = ((row * 13 + col * 7 + currentActivity().lessonIndex) % 29 === 0) ? " glow" : "";
-      cells.push(`<div class="ground-cell ${groundType(presentation.template, row, col)}${glow}"></div>`);
+      cells.push(`<div class="ground-cell ${groundType(presentation.template, templateRow, templateColumn)}${glow}"></div>`);
     }
   }
   elements.groundGrid.innerHTML = cells.join("");
+}
+
+let groundRedrawFrame = null;
+function scheduleGroundRedraw() {
+  window.cancelAnimationFrame(groundRedrawFrame);
+  groundRedrawFrame = window.requestAnimationFrame(() => renderGround(presentationFor(currentActivity())));
 }
 
 function renderSprites(presentation) {
@@ -1428,6 +1456,11 @@ if (requestedIndex >= 0) state.activityIndex = requestedIndex;
 assignCharacters();
 renderAll();
 renderThemeOptions();
+if ("ResizeObserver" in window) {
+  new ResizeObserver(scheduleGroundRedraw).observe(elements.world);
+} else {
+  window.addEventListener("resize", scheduleGroundRedraw);
+}
 void loadCharacterAssets();
 persistSession();
 registerServiceWorker();
