@@ -1036,7 +1036,7 @@ button { font: inherit; }
 
 html.next-ui .phone {
   --text-meta: 11px;
-  --text-context: 13px;
+  --text-context: 12px;
   --text-editor: clamp(14px, 3.8vw, 16px);
   --text-body: 16px;
   --text-guidance: clamp(16px, 4.25vw, 18px);
@@ -2583,4 +2583,82 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .keyboard-panel.completed .completion-panel {
     min-height: 126px;
   }
+}
+
+/* Follow the available input mode at completion: replace visible keys, or
+   reserve a separate, clear continuation area in the world when they are off. */
+html.next-ui .completion-panel.in-world {
+  z-index: 8;
+  grid-column: 3 / 11;
+  grid-row: 7 / 10;
+  align-self: end;
+  height: auto;
+  min-height: 126px;
+}
+
+html.next-ui .toc-unit-launch {
+  padding: 4px 4px 2px;
+  display: grid;
+  gap: 10px;
+}
+html.next-ui .toc-unit-launch p {
+  margin: 0;
+  color: #91aa9d;
+  font-size: 13px;
+  line-height: 1.35;
+}
+html.next-ui .toc-unit-launch button {
+  min-height: 40px;
+  padding: 8px 12px;
+  justify-self: start;
+  border: 1px solid rgba(182, 216, 199, .2);
+  border-radius: 8px;
+  color: #d9eadf;
+  background: linear-gradient(#2c443a, #18251f);
+  box-shadow: 0 2px 0 #07100e;
+  font: 800 13px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (max-width: 599px) and (orientation: portrait) {
+  html.next-ui .activity-intro { padding-top: 5px; padding-bottom: 6px; }
+  html.next-ui .activity-kicker { line-height: 1.1; }
+  html.next-ui .world:has(.completion-panel.in-world) .nix { display: none; }
+}
+
+@media (min-width: 600px) {
+  html.next-ui .lesson-label { font-size: clamp(12px, 1.4vw, 14px); }
+  html.next-ui .world:has(.completion-panel.in-world) .nix { grid-row: 2 / span 3; }
+}
+
+@media (min-width: 1024px) {
+  html.next-ui .game-area {
+    width: min(calc(100% - 48px), 1040px);
+    align-self: center;
+    box-sizing: border-box;
+    margin: 10px auto 0;
+    border: 1px solid rgba(166, 219, 192, .1);
+    border-radius: 12px;
+  }
+
+  html.next-ui .phone.keyboard-visible .nix {
+    width: clamp(92px, 9vw, 126px);
+    grid-row: 5 / span 3;
+  }
+
+  /* A visible keyboard retains the original replacement panel. The hidden
+     keyboard's completion panel renders inside the world instead. */
+  html.next-ui .keyboard-panel.completed {
+    padding: 10px clamp(12px, 3vw, 28px) calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(153, 198, 177, .13);
+    background: linear-gradient(180deg, rgba(22, 36, 32, .98), rgba(7, 13, 12, .995));
+    box-shadow: 0 -9px 24px rgba(0,0,0,.34);
+  }
+  html.next-ui .keyboard-panel.completed .keyboard { display: flex; }
+  html.next-ui .keyboard-panel.completed .activity-controls {
+    position: absolute;
+    inset: 10px clamp(12px, 3vw, 28px) calc(10px + env(safe-area-inset-bottom));
+    width: auto;
+    margin: 0;
+  }
+  html.next-ui .keyboard-panel.completed.completion-in-world { display: none; }
 }

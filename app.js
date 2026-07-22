@@ -532,6 +532,20 @@ function renderActivityIntro() {
   elements.hintButton.hidden = !isPractice(activity);
 }
 
+function completionRendersInWorld() {
+  return isPractice() && state.complete && state.keyboardVisibility === "hidden";
+}
+
+function completionPanelMarkup(activity, { inWorld = false } = {}) {
+  const feedback = activity.feedback || {};
+  return `<section class="completion-panel${inWorld ? " in-world" : ""}" role="status">
+    <span>${activity.practiceMode === "recall" ? "Recall complete" : "Guided practice complete"}</span>
+    <strong>${renderInline(feedback.success || "Practice complete.")}</strong>
+    <p>${renderInline(feedback.why || "Continue when you are ready.")}</p>
+    <button class="primary-action" data-action="next" type="button">Next →</button>
+  </section>`;
+}
+
 function renderWorld() {
   const activity = currentActivity();
   const presentation = presentationFor(activity);
@@ -565,7 +579,8 @@ function renderWorld() {
     ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
     : "";
   const spriteMarkup = activity.inspection ? "" : renderSprites(presentation);
-  elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}`;
+  const completionMarkup = completionRendersInWorld() ? completionPanelMarkup(activity, { inWorld: true }) : "";
+  elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}${completionMarkup}`;
   if (hasEditor(activity)) mountEditor();
 }
 
@@ -715,10 +730,14 @@ function renderHints() {
 
 function renderActivityControls() {
   const activity = currentActivity();
+  const completionInWorld = completionRendersInWorld();
   elements.keyboardPanel.classList.remove("controls-only");
-  elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity));
+  elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity) || completionInWorld);
   elements.keyboardPanel.classList.toggle("completed", isPractice(activity) && state.complete);
+  elements.keyboardPanel.classList.toggle("completion-in-world", completionInWorld);
   elements.keyboardPanel.classList.toggle("keyboard-hidden-by-user", isPractice(activity) && !state.complete && state.keyboardVisibility === "hidden");
+  elements.phone.classList.toggle("keyboard-visible", isPractice(activity) && state.keyboardVisibility === "visible");
+  elements.phone.classList.toggle("keyboard-hidden", isPractice(activity) && state.keyboardVisibility === "hidden");
   elements.keyboard.classList.toggle("hidden", !isPractice(activity));
   elements.keyboard.toggleAttribute("inert", isPractice(activity) && state.complete);
   if (isPractice(activity) && state.complete) elements.keyboard.setAttribute("aria-hidden", "true");
@@ -737,13 +756,7 @@ function renderActivityControls() {
     return;
   }
   if (isPractice(activity) && state.complete) {
-    const feedback = activity.feedback || {};
-    elements.activityControls.innerHTML = `<section class="completion-panel" role="status">
-      <span>${activity.practiceMode === "recall" ? "Recall complete" : "Guided practice complete"}</span>
-      <strong>${renderInline(feedback.success || "Practice complete.")}</strong>
-      <p>${renderInline(feedback.why || "Continue when you are ready.")}</p>
-      <button class="primary-action" data-action="next" type="button">Next →</button>
-    </section>`;
+    elements.activityControls.innerHTML = completionInWorld ? "" : completionPanelMarkup(activity);
     return;
   }
   if (isPractice(activity) && state.recallFeedback === "reveal" && activity.remediationRef) {
@@ -809,9 +822,10 @@ function renderTableOfContents() {
   const renderUnit = candidate => {
     const isCurrent = candidate.id === unit.id;
     const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong><small>${candidate.lessonCount} lessons</small>`;
-    return isCurrent
-      ? `<details class="toc-unit" open><summary>${summary}</summary><div class="toc-unit-lessons">${lessonMarkup}</div></details>`
-      : `<div class="toc-unit toc-unit-link"><button type="button" data-unit-id="${escapeHtml(candidate.id)}">${summary}</button></div>`;
+    const content = isCurrent
+      ? lessonMarkup
+      : `<div class="toc-unit-launch"><p>Open this unit when you are ready to begin.</p><button type="button" data-unit-id="${escapeHtml(candidate.id)}">Open Unit ${candidate.unitNumber} →</button></div>`;
+    return `<details class="toc-unit" ${isCurrent ? "open" : ""}><summary>${summary}</summary><div class="toc-unit-lessons">${content}</div></details>`;
   };
   const assignedUnits = new Set();
   const arcMarkup = curriculumArcs.map((arc, arcIndex) => {
@@ -1206,6 +1220,12 @@ elements.keyboard.addEventListener("pointerdown", event => {
 
 document.addEventListener("keydown", event => {
   if (event.vimWildsPrompt) return;
+  if (isPractice() && state.complete && state.keyboardVisibility === "hidden") {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    nextActivity();
+    return;
+  }
   if (event.target.closest?.("select, button:not(.key)")) return;
   const modifierMap = { Control: "Ctrl", Shift: "Shift", Alt: "Alt" };
   if (event.key === "CapsLock") {
@@ -1305,6 +1325,7 @@ elements.keyboardOptions?.addEventListener("change", event => {
   if (!keyboardVisibilityValues.has(value)) return;
   state.keyboardVisibility = value;
   persistSession();
+  if (state.complete) renderWorld();
   renderActivityControls();
   scheduleExecutionConsoleMeasurement();
 });
