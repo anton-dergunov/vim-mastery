@@ -1205,6 +1205,13 @@ document.addEventListener("keyup", event => {
   }
 });
 
+// Demo controls advance the editor through a transient CodeMirror prompt.
+// Keep touch/pointer activation from moving focus to the button: the adapter
+// closes its prompt on blur, even though the next authored key belongs there.
+elements.worldGrid.addEventListener("pointerdown", event => {
+  if (event.target.closest(".demo-controls button")) event.preventDefault();
+});
+
 elements.worldGrid.addEventListener("click", event => {
   const action = event.target.closest("[data-action]")?.dataset.action;
   if (action === "help") setHelp(!elements.helpCard.classList.contains("open"));

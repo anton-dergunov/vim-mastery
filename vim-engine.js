@@ -577,6 +577,19 @@ export class VimEngine {
     }
 
     const wasInsert = Boolean(this.cm.state.vim?.insertMode);
+    const pendingKeys = this.cm.state.vim?.inputState?.keyBuffer || [];
+    const opensCommandLine = !wasInsert && pendingKeys.length === 0 && (vimKey === ":" || vimKey === "/" || vimKey === "?");
+    // Claim command-line input before asking the adapter to open its panel.
+    // The panel can mount after handleKey() returns; otherwise the very next
+    // lesson/demo key is interpreted as Normal-mode input and the Ex prompt
+    // disappears. Do this only from an idle Vim state: `:` and `/` can also
+    // be character arguments to pending Normal-mode commands. The adapter
+    // still creates the native panel, while this bridge owns its text from
+    // the first key onward.
+    if (opensCommandLine) {
+      this.commandLine = "";
+      this.commandPrefix = vimKey;
+    }
     if (pendingAtPrefix) Vim.multiSelectHandleKey(this.cm, "@", source);
     const handled = Vim.multiSelectHandleKey(this.cm, vimKey, source);
     // `handleKey` owns Vim interpretation. In Insert mode, a browser would
@@ -591,12 +604,12 @@ export class VimEngine {
       }
     }
     const commandInput = this.view.dom.querySelector(".cm-vim-panel input, .cm-vim-panel textarea");
-    if (!wasInsert && (vimKey === ":" || vimKey === "/" || vimKey === "?") && commandInput) {
+    if (opensCommandLine && commandInput) {
       // Visual-mode `:` starts with Vim's `'<,'>` range. Preserve that
       // generated prefix so touch input can execute the same command that a
       // physical Vim command line would show.
       this.commandLine = commandInput.value || "";
-      this.commandPrefix = vimKey;
+      this.syncCommandInput();
     }
     if (this.viewportRows) this.cm.refresh?.();
     this.disableNativeInputs();

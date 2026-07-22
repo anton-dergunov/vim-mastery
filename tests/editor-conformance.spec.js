@@ -620,6 +620,20 @@ test.describe("Production lesson flow", () => {
     expect(failures).toEqual([]);
   });
 
+  test("keeps Ex command text visible while Unit 14 range commands are entered", async ({ page }) => {
+    await page.goto("/?unit=global-normal-automation&activity=normal-range-demo");
+    await page.locator('.demo-controls [data-action="step"]').click();
+    await expect(page.locator(".cm-vim-panel")).toBeVisible();
+    await page.locator('.demo-controls [data-action="step"]').click();
+    await expect(page.locator(".cm-vim-panel")).toBeVisible();
+    await expect(page.locator(".cm-vim-panel input, .cm-vim-panel textarea")).toHaveValue("2");
+
+    await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "normal-python-comments")));
+    await page.evaluate(() => { window.VimWilds.emit(":"); window.VimWilds.emit("2"); });
+    await expect(page.locator(".cm-vim-panel")).toBeVisible();
+    await expect(page.locator(".cm-vim-panel input, .cm-vim-panel textarea")).toHaveValue("2");
+  });
+
   test("runs every Unit 11 Ex range activity with native-equivalent line and register state", async ({ page }) => {
     await page.goto("/?unit=command-line-ranges-line-operations");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
