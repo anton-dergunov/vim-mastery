@@ -2636,8 +2636,6 @@ html.next-ui .toc-unit-launch button {
     align-self: center;
     box-sizing: border-box;
     margin: 10px auto 0;
-    border: 1px solid rgba(166, 219, 192, .1);
-    border-radius: 12px;
   }
 
   html.next-ui .phone.keyboard-visible .nix {
@@ -2656,9 +2654,24 @@ html.next-ui .toc-unit-launch button {
   html.next-ui .keyboard-panel.completed .keyboard { display: flex; }
   html.next-ui .keyboard-panel.completed .activity-controls {
     position: absolute;
-    inset: 10px clamp(12px, 3vw, 28px) calc(10px + env(safe-area-inset-bottom));
-    width: auto;
+    top: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 50%;
+    width: min(calc(100% - 48px), 1040px);
     margin: 0;
+    transform: translateX(-50%);
   }
   html.next-ui .keyboard-panel.completed.completion-in-world { display: none; }
+
+  /* The keyboard-hidden continuation belongs beneath the editor, inside the
+     world itself, not in the removed keyboard panel. */
+  html.next-ui .completion-panel.in-world {
+    position: absolute;
+    right: auto;
+    bottom: 24px;
+    left: 50%;
+    width: min(calc(100% - 96px), 680px);
+    min-height: 126px;
+    transform: translateX(-50%);
+  }
 }
