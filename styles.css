@@ -2596,6 +2596,14 @@ html.next-ui .completion-panel.in-world {
   min-height: 126px;
 }
 
+html.next-ui .completion-host {
+  position: absolute;
+  z-index: 9;
+  inset: 0;
+  pointer-events: none;
+}
+html.next-ui .completion-host .completion-panel { pointer-events: auto; }
+
 html.next-ui .toc-unit-launch {
   padding: 4px 4px 2px;
   display: grid;
@@ -2636,6 +2644,8 @@ html.next-ui .toc-unit-launch button {
     align-self: center;
     box-sizing: border-box;
     margin: 10px auto 0;
+    padding: 0;
+    background: transparent;
   }
 
   html.next-ui .phone.keyboard-visible .nix {
@@ -2665,7 +2675,7 @@ html.next-ui .toc-unit-launch button {
 
   /* The keyboard-hidden continuation belongs beneath the editor, inside the
      world itself, not in the removed keyboard panel. */
-  html.next-ui .completion-panel.in-world {
+  html.next-ui .completion-host .completion-panel.in-world {
     position: absolute;
     right: auto;
     bottom: 24px;

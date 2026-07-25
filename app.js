@@ -54,6 +54,7 @@ const elements = {
   world: $("#world"),
   groundGrid: $("#groundGrid"),
   worldGrid: $("#worldGrid"),
+  completionHost: $("#completionHost"),
   helpCard: $("#helpCard"),
   helpClose: $("#helpClose"),
   hintSteps: $("#hintSteps"),
@@ -579,8 +580,8 @@ function renderWorld() {
     ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
     : "";
   const spriteMarkup = activity.inspection ? "" : renderSprites(presentation);
-  const completionMarkup = completionRendersInWorld() ? completionPanelMarkup(activity, { inWorld: true }) : "";
-  elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}${completionMarkup}`;
+  elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}`;
+  elements.completionHost.innerHTML = completionRendersInWorld() ? completionPanelMarkup(activity, { inWorld: true }) : "";
   if (hasEditor(activity)) mountEditor();
 }
 
@@ -1301,6 +1302,9 @@ elements.worldGrid.addEventListener("click", event => {
   if (route) goToActivityId(route);
   const unitId = event.target.closest("[data-unit-id]")?.dataset.unitId;
   if (unitId) navigateToUnit(unitId);
+});
+elements.completionHost.addEventListener("click", event => {
+  handleActivityAction(event.target.closest("[data-action]")?.dataset.action);
 });
 const editorPointerEvents = ["pointerdown", "mousedown", "dblclick", "selectstart", "contextmenu"];
 editorPointerEvents.forEach(type => elements.worldGrid.addEventListener(type, event => {

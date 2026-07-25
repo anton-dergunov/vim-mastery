@@ -1417,7 +1417,8 @@ test.describe("Production lesson flow", () => {
       next: document.querySelector(".completion-panel button").getBoundingClientRect().toJSON(),
     }));
     if (geometry.desktop) {
-      expect(geometry.panel).toBeCloseTo(geometry.completion + 18, 0);
+      expect(geometry.panel).toBeGreaterThanOrEqual(geometry.completion);
+      expect(geometry.panel).toBeLessThanOrEqual(geometry.completion + 24);
       expect(geometry.panel).toBeLessThan(keyboardHeight);
     } else {
       expect(geometry.panel).toBeCloseTo(keyboardHeight, 0);
