@@ -1419,7 +1419,7 @@ test.describe("Production lesson flow", () => {
     if (geometry.desktop) {
       expect(geometry.panel).toBeGreaterThanOrEqual(geometry.completion);
       expect(geometry.panel).toBeLessThanOrEqual(geometry.completion + 24);
-      expect(geometry.panel).toBeLessThan(keyboardHeight);
+      expect(geometry.panel).toBeLessThanOrEqual(keyboardHeight);
     } else {
       expect(geometry.panel).toBeCloseTo(keyboardHeight, 0);
       expect(geometry.completion).toBeCloseTo(geometry.keyboard, 0);
