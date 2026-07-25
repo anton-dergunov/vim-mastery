@@ -2635,7 +2635,7 @@ html.next-ui .toc-unit-launch button {
 
 @media (min-width: 600px) {
   html.next-ui .lesson-label { font-size: clamp(12px, 1.4vw, 14px); }
-  html.next-ui .world:has(.completion-panel.in-world) .nix { grid-row: 2 / span 3; }
+  html.next-ui .world:has(.completion-panel.in-world) .nix { grid-row: 8 / 10; }
 }
 
 @media (min-width: 1024px) {
@@ -2678,7 +2678,8 @@ html.next-ui .toc-unit-launch button {
   html.next-ui .completion-host .completion-panel.in-world {
     position: absolute;
     right: auto;
-    bottom: 24px;
+    top: min(196px, calc(100% - 160px));
+    bottom: auto;
     left: 50%;
     width: min(calc(100% - 96px), 680px);
     min-height: 126px;
