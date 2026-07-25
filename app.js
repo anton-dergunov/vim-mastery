@@ -547,6 +547,12 @@ function completionPanelMarkup(activity, { inWorld = false } = {}) {
   </section>`;
 }
 
+function renderCompletionHost() {
+  elements.completionHost.innerHTML = completionRendersInWorld()
+    ? completionPanelMarkup(currentActivity(), { inWorld: true })
+    : "";
+}
+
 function renderWorld() {
   const activity = currentActivity();
   const presentation = presentationFor(activity);
@@ -581,7 +587,7 @@ function renderWorld() {
     : "";
   const spriteMarkup = activity.inspection ? "" : renderSprites(presentation);
   elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}`;
-  elements.completionHost.innerHTML = completionRendersInWorld() ? completionPanelMarkup(activity, { inWorld: true }) : "";
+  renderCompletionHost();
   if (hasEditor(activity)) mountEditor();
 }
 
@@ -966,6 +972,7 @@ function completeActivity() {
   setTheme(presentationFor().theme);
   $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
   if (currentActivity().type === "choice") renderWorld();
+  else renderCompletionHost();
   if (isPractice() || currentActivity().type === "choice") playSuccessCharacter();
   renderMode();
   renderCommand();
@@ -1329,7 +1336,7 @@ elements.keyboardOptions?.addEventListener("change", event => {
   if (!keyboardVisibilityValues.has(value)) return;
   state.keyboardVisibility = value;
   persistSession();
-  if (state.complete) renderWorld();
+  if (state.complete) renderCompletionHost();
   renderActivityControls();
   scheduleExecutionConsoleMeasurement();
 });
