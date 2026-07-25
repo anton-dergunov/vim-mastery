@@ -1580,7 +1580,10 @@ test.describe("Production lesson flow", () => {
     // This exhaustively renders every activity at every target viewport. Keep
     // the budget proportional to the growing production curriculum so CI can
     // complete the coverage rather than timing out mid-matrix.
-    test.setTimeout(900000);
+    // The matrix mounts every activity for five physical phone viewports.
+    // Keep this intentionally exhaustive regression check independent of the
+    // default test timeout as the published curriculum grows.
+    test.setTimeout(1500000);
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
     const textSelector = [
       ".lesson-label", ".activity-intro h1", ".activity-intro p", ".command-explanation", ".next-command-tray .command-text",

@@ -413,6 +413,10 @@ function renderGround(presentation) {
 
 let groundRedrawFrame = null;
 function scheduleGroundRedraw() {
+  // Phone terrain is the fixed 12 × 9 source grid. Only wider canvases use
+  // resize-driven tile density, so avoid redundant full-grid DOM rebuilds
+  // while exhaustive phone viewport checks cycle through activities.
+  if (!window.matchMedia("(min-width: 600px)").matches) return;
   window.cancelAnimationFrame(groundRedrawFrame);
   groundRedrawFrame = window.requestAnimationFrame(() => renderGround(presentationFor(currentActivity())));
 }
