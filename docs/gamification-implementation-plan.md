@@ -1,0 +1,1497 @@
+# Living Wilds Gamification Implementation Plan
+
+## Status
+
+This document turns the selected gamification direction into independently assignable implementation work. It is an execution plan, not a general visual-design exploration.
+
+The decisions recorded here are:
+
+- Keep the editor, keyboard, task description, command tray, completion panel, and top row structurally intact.
+- Replace the repetitive tile board with richer, generated worlds composed around the editor.
+- Restore one landmark after completion of each unit.
+- Add selective, exact Vim-action visualization where it clarifies ranges, capture, placement, selection, or repetition.
+- Start character behavior with attentive and repeated-mistake reactions.
+- Use larger character actions only at unit boundaries.
+- Introduce a short continuous story on first launch and advance it after each unit.
+- Do not add more story language to individual exercise instructions.
+- Do not replace the existing exercise-completion panel or hide the final code.
+- Generate graphics with Gemini Nano Banana models, then animate still assets with CSS, SVG, masks, and the existing character media system.
+- Keep essential practice local, deterministic, responsive, and usable when decorative media is missing.
+
+The implementation should be delivered in small work packages. A coding session should normally receive one work package, its prerequisites, and the repository `AGENTS.md`.
+
+## Recommended starting point
+
+Start with the board visualization, but build one vertical slice rather than generating every world first:
+
+1. Generate and approve the Moonroot Ruins master backdrop and prop sheet.
+2. Implement the presentation data contract and layered world renderer.
+3. Integrate Moonroot Ruins for Units 1–4 and validate it at all target sizes.
+4. Decide whether the art direction is strong enough before producing the other three worlds.
+
+This is the best starting point because it is highly visible, has little risk to Vim correctness, and establishes the art bible needed by landmarks, story scenes, and character poses.
+
+Do not begin by generating all 14 landmarks or all character reactions. A weak master world would make those batches expensive to redo.
+
+## Product experience
+
+The intended rhythm has three distinct timescales.
+
+### During an exercise
+
+- Real code remains the visual priority.
+- A rich but quiet world is visible wherever space exists around the editor.
+- Characters remain idle or attentive.
+- Only semantically valuable Vim events receive an effect.
+- Effects never delay input and normally finish within 120–280ms.
+- Incorrect input uses the existing functional feedback first; character reaction appears only after repeated difficulty.
+
+### After an exercise
+
+- Preserve the current completed code and completion panel.
+- Preserve the explanation of why the command worked.
+- Preserve immediate continuation.
+- Do not run a full-screen world transformation.
+- The existing short character celebration may remain.
+
+### After a unit
+
+- Open a skippable illustrated transition.
+- The unit guide performs one meaningful action.
+- The unit landmark changes from dormant to restored.
+- Show one or two short lines of story.
+- Offer Continue immediately.
+- Navigate to the next unit only after the user continues or skips.
+
+## Non-goals
+
+- No navigable overworld.
+- No character movement controlled by Vim keys.
+- No unique board image for each exercise.
+- No generated text, code, keyboard legends, or UI controls inside raster art.
+- No full-screen takeover after ordinary exercises.
+- No currencies, energy, loot, punitive streaks, or global leaderboard.
+- No requirement for video.
+- No new game engine.
+- No runtime image generation.
+- No visual effect for every key.
+- No dependency of validation, cursor movement, or lesson progression on decorative animation.
+
+## Current implementation facts
+
+Implementation sessions must account for the following existing architecture:
+
+- `app.js` fetches the unit catalog and active unit, derives activities, renders the board, and owns unit navigation.
+- The current scene system is `presentationFor()`, `renderGround()`, `renderSprites()`, and `renderWorld()` in `app.js`.
+- The current ground is a dynamically repeated 12 × 9 tile grid. It expands to more square tiles on wider screens.
+- The editor and character already live in a stable 12 × 9 overlay grid.
+- The four current theme IDs are `moonroot`, `ember`, `glass`, and `deepwater`.
+- User theme preference should continue to control functional UI colors. World identity is selected by unit and must not be replaced by the theme preference.
+- `VimEngine` already emits change, selection, mode, key, and command-complete events with editor snapshots.
+- The activity scripts expose exact keys, command groups, checkpoints, and occasional authored `affectedRange` data.
+- The app already tracks `consecutiveMistakes`, but only recall mistakes currently increment it.
+- A final unit summary already renders a continuation action to the next unit.
+- The production PWA currently emits unit JSON and idle character PNGs locally but deliberately excludes the large animated character WebPs from the precache.
+- `window.VimWilds` must remain compatible.
+
+The curriculum currently contains 14 units, 362 authored exercises, 116 demonstrations, and approximately 300 granular primary skill labels. The action-effect system must therefore classify reusable semantic events; it must not map one animation to every skill ID.
+
+## Architecture target
+
+### Presentation manifest
+
+Add a declarative presentation file, recommended as:
+
+`content/presentation.json`
+
+It should contain:
+
+```json
+{
+  "schemaVersion": 1,
+  "worlds": {},
+  "units": {},
+  "story": {
+    "intro": [],
+    "ending": {}
+  }
+}
+```
+
+Each world entry defines:
+
+- Stable world ID.
+- Display name.
+- Existing functional theme ID used when theme preference is `auto`.
+- Portrait-board backdrop.
+- Wide-board backdrop.
+- Optional foreground edge layer.
+- Optional prop list.
+- Ambient-effect vocabulary.
+- Fallback gradient.
+
+Each unit entry defines:
+
+- Unit ID.
+- World ID.
+- Guide character ID.
+- Landmark ID.
+- Dormant and restored landmark assets.
+- Landmark placement for phone, tablet, and wide layouts.
+- Unit-completion action ID.
+- Exact story copy.
+- Next-location hook.
+
+The presentation manifest should be validated by an explicit schema and content test. It should not be added to every unit JSON file: keeping it separate allows visual work to evolve without touching validated lesson content.
+
+### New modules
+
+Prefer extracting these modules instead of further expanding `app.js`:
+
+- `world-presentation.js`
+  - Loads and resolves the active world and unit presentation.
+  - Produces backdrop, foreground, prop, and landmark markup.
+  - Provides a legacy/fallback presentation when media is absent.
+
+- `vim-effects.js`
+  - Classifies semantic events from before/after snapshots and accepted keys.
+  - Owns transient CodeMirror decorations or effect overlays.
+  - Implements reduced-motion equivalents.
+
+- `character-reactions.js`
+  - Owns reaction state, thresholds, pose selection, cancellation, and fallback.
+
+- `story-transitions.js`
+  - Owns first-launch intro, unit-completion transitions, replay, skip, and persistence.
+
+Keep navigation, lesson validation, and Vim interpretation in their existing owners.
+
+### State and persistence
+
+Extend the existing local session state carefully. Recommended independent keys:
+
+- `vim-wilds.story.v1`
+  - `introSeen`
+  - `completedUnitStoryIds`
+
+- Existing `vim-wilds.session.v1`
+  - Continue storing active unit/activity and user UI preferences.
+
+Story state must never be evidence of curriculum completion. Replaying or clearing story state must not change exercise progress.
+
+### Offline policy
+
+Classify media into two tiers:
+
+1. **Core local media**
+   - Four world backdrops and wide variants.
+   - Four foreground edge layers.
+   - Landmark dormant/restored states.
+   - Approved reaction stills.
+   - Story light/mask assets if raster assets are required.
+   - These are emitted by the Vite PWA plugin and available offline.
+
+2. **Optional remote media**
+   - Existing multi-megabyte animated character WebPs.
+   - Any future cinematic media.
+   - Story and landmark restoration must still work without these files.
+
+Add a build test that reports and enforces the total core-media budget. Initial target:
+
+- World and story media: no more than 7MB total.
+- Reaction pose stills: no more than 3MB total for the first supported cast.
+- Any single board backdrop: no more than 450KB.
+- Any isolated landmark state: no more than 160KB.
+- No required individual file above 600KB.
+
+These are targets, not excuses to reduce visible quality. Review assets at rendered size before accepting compression artifacts.
+
+## Story bible
+
+### Premise
+
+The Wilds were shaped by a precise command language. An unfinished command fractured that language: paths shifted, stored memories scattered, and mechanisms stopped mid-action. The language was not destroyed; its grammar remains embedded in the world. Learning Vim restores the capabilities required to reconnect it.
+
+The story is about learning and restoration, not prophecy, combat, or saving helpless characters. The learner becomes capable because they understand the language.
+
+### Tone
+
+- Mysterious, warm, concise, and intelligent.
+- Never mock the learner.
+- Avoid excessive fantasy nouns in instructional UI.
+- Story copy appears only in the intro, unit transitions, and optional replay gallery.
+- Ordinary exercise titles and instructions remain code-first.
+- No generated raster text. All copy is real HTML.
+
+### Exact first-launch introduction
+
+Use three panels. Each panel contains one illustration layer and one sentence.
+
+1. **Panel 1**
+   - Copy: “Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range.”
+   - Visual: The four worlds connected by lines of amber and cyan light; landmarks active but distant.
+
+2. **Panel 2**
+   - Copy: “Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent.”
+   - Visual: The same landscape with one incomplete current of light, dormant landmarks, and drifting fragments. Do not depict destruction or characters in danger.
+
+3. **Panel 3**
+   - Speaker: Nix.
+   - Copy: “The language was not lost—only forgotten. Learn it with us, and the Wilds will remember.”
+   - Visual: Nix at the Moonroot threshold holding the lantern toward the dormant Mode Lantern.
+
+The intro is skippable from the first panel, replayable from the table of contents or settings, and shown only once by default.
+
+### Exact unit story
+
+| Unit | Guide | World | Landmark | Completion action | Exact completion copy | Next hook |
+|---|---|---|---|---|---|---|
+| 1. The modal model | Nix | Moonroot Ruins | Mode Lantern | Nix lifts the lantern; four nested rings settle into distinct colors | “The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.” | “A path glimmers beyond camp.” |
+| 2. Cursor movement | Vela | Moonroot Ruins | Wayfinder | Vela turns the central compass; four paths align | “Vela aligns the Wayfinder. North, south, east, and west settle back into place.” | “The path ends at a page of broken words.” |
+| 3. Entering and changing text | Tatter | Moonroot Ruins | Scribe’s Spring | Tatter repairs a split channel; luminous ink begins to flow | “Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.” | “A sealed gate waits for both an action and a range.” |
+| 4. Operator grammar | Cinder | Moonroot Ruins | Grammar Gate | Cinder joins two halves of a mechanism; the gate opens | “Cinder joins action to range. The Grammar Gate opens, and the first road out of Moonroot is restored.” | “Starlight flickers beyond the gate.” |
+| 5. Precision motions and search | Orin | Starwater Sanctuary | Starneedle Observatory | Orin focuses a floating lens; distant points illuminate | “Orin focuses the Starneedle. Distant signs and exact characters become visible across the dark.” | “The signal points inward, toward structures hidden in plain sight.” |
+| 6. Text objects | Bramble | Starwater Sanctuary | Nested Garden | Bramble touches the outer arch; nested arches bloom from outside inward | “Bramble wakes the Nested Garden. Words, quotes, brackets, and blocks reveal the shapes they contain.” | “Three panes of light rise from the water.” |
+| 7. Visual selection | Prism | Starwater Sanctuary | Prism Crossing | Prism aligns three glass panes: ribbon, row, and rectangle | “Prism aligns the three panes. Character, line, and block become distinct paths through the same code.” | “Behind the final pane, a sealed archive begins to glow.” |
+| 8. Registers and putting | Mica | Archive of Echoes | Memory Archive | Mica places a captured crystal into a drawer; several drawers illuminate | “Mica reopens the Memory Archive. What is captured can be kept, chosen, and placed where it belongs.” | “One memory points to a beacon far beyond the shelves.” |
+| 9. Long-range navigation | Luma | Archive of Echoes | Far Beacons | Luma sends a thread of light between two distant beacons | “Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.” | “Across the causeway, a stopped clock begins to tick.” |
+| 10. Repeatable editing | Tock | Archive of Echoes | Echo Clock | Tock starts one wheel; its motion propagates through matching wheels | “Tock restarts the Echo Clock. A well-shaped change can now travel farther than a single moment.” | “The echo reaches a brass city beneath the ridge.” |
+| 11. Command-line ranges and line operations | Cinder | Brass Meridian | Meridian Table | Cinder places two endpoints; a current follows the exact route between them | “Cinder sets the Meridian Table. Lines and ranges become routes that the command current can follow.” | “A broken loom is repeating the wrong pattern.” |
+| 12. Substitution and practical regex | Puddle | Brass Meridian | Mirror Loom | Puddle retunes a lens; only matching threads transform | “Puddle retunes the Mirror Loom. Patterns can be found, tested, and transformed without touching what does not match.” | “The repaired thread leads into a silent foundry.” |
+| 13. Macros | Tock | Brass Meridian | Echo Foundry | Tock records one movement into a cylinder; three mechanisms replay it | “Tock records the first true echo. The Foundry can repeat a complete sequence without forgetting a step.” | “Only the World Engine remains dark.” |
+| 14. Global and Normal automation | Cairn | Brass Meridian | Meridian Engine | Cairn connects the restored systems; energy crosses all four worlds | “Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.” | Nix: “The language is alive. What you restore next is up to you.” |
+
+The story copy is approved content. Implementation sessions should not rewrite it without an explicit copy-review task.
+
+## World art bible
+
+### Shared rendering language
+
+- Polished original 2D pixel-art fantasy suitable for a premium mobile game.
+- Painterly pixel clusters, crisp silhouettes, and restrained texture.
+- Rich at large size but readable when cropped to a 390px-wide board.
+- Deep navy and near-black foundations with controlled amber, turquoise, violet, and warm cream light.
+- Slightly elevated side-on environmental perspective, not a top-down navigable game map.
+- Atmospheric depth through three clear planes: background, middle ground, foreground.
+- No copied characters, logos, maps, or compositions from another game.
+- No UI, code, keyboard keys, letters, pseudo-writing, signs, captions, or generated text.
+- No important object in the central editor-safe area.
+- No high-frequency contrast behind where code or the completion panel may appear.
+
+### Responsive composition contract
+
+Every world needs:
+
+- A 2K 16:9 board master.
+- A 2K 4:1 wide outpaint made from the approved master.
+- A foreground/edge layer with isolated visual interest at the left, right, and upper edge.
+- A fallback CSS gradient using the current theme palette.
+
+For the 16:9 master:
+
+- Central 76% of width and central 62% of height: calm, low-contrast environmental surface.
+- Outer 12% on each side: primary environmental detail.
+- Upper 18%: one readable skyline, canopy, architecture, or distant light.
+- Lower 20%: quiet foreground material that can be cropped.
+- Landmarks are separate assets and must not be painted into the backdrop.
+- Characters are separate assets and must not be painted into the backdrop.
+
+For the 4:1 outpaint:
+
+- Preserve the center of the approved 16:9 scene.
+- Extend environmental storytelling into the outer thirds.
+- Keep the center low contrast.
+- Do not scale or stretch the original pixels.
+
+### World 1: Moonroot Ruins
+
+Units: 1–4  
+Functional theme in `auto`: `moonroot`
+
+Visual identity:
+
+- Ancient forest sanctuary at blue-green moonlit dusk.
+- Mossy dark stone, enormous roots, shallow still water, small amber lanterns.
+- Violet spores and turquoise mineral veins as restrained accents.
+- Friendly and mysterious, never threatening.
+- Landmarks feel handcrafted by a lost culture and partially reclaimed by plants.
+
+Prop vocabulary:
+
+- Root arch.
+- Mossy broken pillar.
+- Hanging amber lantern.
+- Moonflower cluster.
+- Turquoise mineral seam.
+- Stone causeway edge.
+
+### World 2: Starwater Sanctuary
+
+Units: 5–7  
+Functional theme in `auto`: `deepwater`
+
+Visual identity:
+
+- Nocturnal sanctuary built across dark reflective water.
+- Glass observatory pieces, slim stone islands, star reflections, translucent reeds.
+- Cyan and pale violet light with sparse warm gold navigation points.
+- More precise and spacious than Moonroot.
+- Structures suggest lenses, nesting, alignment, and reflection without literal command symbols.
+
+Prop vocabulary:
+
+- Floating star lens.
+- Translucent reed cluster.
+- Mirror-stone edge.
+- Slim observatory pillar.
+- Prism shard group.
+- Small bridge of glass panes.
+
+### World 3: Archive of Echoes
+
+Units: 8–10  
+Functional theme in `auto`: `glass`
+
+Visual identity:
+
+- Warm subterranean archive carved into dark stone.
+- Crystal drawers, suspended shelves, distant beacons, quiet clockwork.
+- Teal glass, muted brass, amber memory lights, violet shadows.
+- Cozy and wondrous rather than dusty or academic.
+- Repetition appears through rhythm and repeated forms, not copied text.
+
+Prop vocabulary:
+
+- Crystal drawer stack.
+- Suspended shelf.
+- Memory vial cluster.
+- Brass beacon.
+- Causeway railing.
+- Clock wheel group.
+
+### World 4: Brass Meridian
+
+Units: 11–14  
+Functional theme in `auto`: `ember`
+
+Visual identity:
+
+- Vast precision workshop and command observatory beneath a dark ridge.
+- Brass rails, copper conduits, glass lenses, controlled ember light, cyan current.
+- Powerful but not grim, industrial, smoky, or militaristic.
+- Spatial motifs emphasize endpoints, routes, pattern matching, recording, and coordinated mechanisms.
+- The final Meridian Engine visually incorporates subtle material echoes from all prior worlds.
+
+Prop vocabulary:
+
+- Copper conduit arch.
+- Brass endpoint rail.
+- Pattern lens.
+- Recorder cylinder.
+- Selector fork.
+- Engine current junction.
+
+## Exact asset inventory and naming
+
+Runtime assets should use this structure:
+
+```text
+assets/worlds/
+  moonroot-ruins/
+    backdrop-16x9.webp
+    backdrop-4x1.webp
+    foreground.webp
+    props/
+      root-arch.webp
+      mossy-pillar.webp
+      hanging-lantern.webp
+      moonflowers.webp
+      mineral-seam.webp
+      causeway-edge.webp
+  starwater-sanctuary/
+    backdrop-16x9.webp
+    backdrop-4x1.webp
+    foreground.webp
+    props/...
+  archive-of-echoes/
+    backdrop-16x9.webp
+    backdrop-4x1.webp
+    foreground.webp
+    props/...
+  brass-meridian/
+    backdrop-16x9.webp
+    backdrop-4x1.webp
+    foreground.webp
+    props/...
+  landmarks/
+    mode-lantern-dormant.webp
+    mode-lantern-restored.webp
+    ...
+    meridian-engine-dormant.webp
+    meridian-engine-restored.webp
+  story/
+    intro-connected.webp
+    intro-interrupted.webp
+    intro-nix-threshold.webp
+```
+
+Reaction assets should use:
+
+```text
+assets/characters/<character-id>/reactions/
+  attentive.webp
+  puzzled.webp
+  encouraging.webp
+```
+
+Required generated source outputs:
+
+| Asset class | Source count | Runtime count | Notes |
+|---|---:|---:|---|
+| World 16:9 masters | 4 | 4 | One approved master per world |
+| World 4:1 outpaints | 4 | 4 | Conversational edits of the masters |
+| Foreground edge layers | 4 | 4 | Matte removed locally |
+| Six-prop source sheets | 4 | 0 | Generation/production sources, not runtime files |
+| Extracted props | 24 | Up to 24 | Include only props actually used |
+| Dormant landmarks | 14 | 14 | One per unit |
+| Restored landmarks | 14 | 14 | Registered edit of dormant state |
+| Intro story images | 3 | 3 | Shared first-launch story |
+| Nix reaction poses | 3 | 3 | First reaction vertical slice |
+| Remaining phase-one guide poses | 33 | Up to 33 | Eleven guides × three poses; generate only after Nix approval |
+
+The initial Moonroot vertical slice therefore needs only:
+
+- `moonroot-ruins/backdrop-16x9.webp`
+- `moonroot-ruins/backdrop-4x1.webp`
+- `moonroot-ruins/foreground.webp`
+- The Moonroot prop sheet and whichever extracted props are used
+- Optionally the four dormant Moonroot landmarks; CSS placeholders are acceptable until story work
+
+Do not put prompt experiments, rejected candidates, uncompressed 2K/4K masters, or prop sheets into the production asset tree. Keep generation metadata and prompts under `scripts/world-art/`; keep large source masters in the chosen external art archive unless a separate repository policy explicitly adds them.
+
+## Nano Banana production workflow
+
+### Model selection
+
+As of July 2026:
+
+- Use **Nano Banana Pro / `gemini-3-pro-image`** for the first master composition of each world, the final intro key art, and difficult landmark designs. Google positions it for professional asset production, complex instructions, and precision control.
+- Use **Nano Banana 2 / `gemini-3.1-flash-image`** for alternative compositions, controlled edits, outpainting, prop sheets, dormant/restored variants, and character poses. Google positions it as the general workhorse with strong multiple-reference and consistency support.
+- Do not build a new Imagen workflow. Google recommends Nano Banana for image generation and lists Imagen shutdown for August 17, 2026.
+- Generate master art at 2K. Use 4K only when a selected image genuinely needs local cropping or cleanup; runtime files should be downscaled and compressed.
+
+Official references:
+
+- [Nano Banana image generation, editing, prompting, references, and model selection](https://ai.google.dev/gemini-api/docs/image-generation)
+- [Gemini 3.1 Flash Image model](https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image)
+
+Google’s current guidance supports multi-turn editing, detailed context-rich prompts, stepwise instructions, and multiple reference images. Nano Banana 2 supports high-fidelity object references and character consistency references. Use a conversational edit of the approved result for variants instead of regenerating each state from an unrelated prompt.
+
+### Reference bundle
+
+Before generating world assets, prepare:
+
+1. `assets/enchanted-ruins.png` as the strongest existing mood reference.
+2. `assets/world-kit.png` as the existing material and palette reference.
+3. Two representative idle characters from `assets/characters/` to communicate rendering scale only.
+4. A simple 16:9 layout mask showing the central editor-safe area and outer interest areas.
+
+For a world-generation request, attach the ruins, world kit, and layout mask. Do not attach more references merely because the model permits them.
+
+For character poses, attach only the canonical idle PNG for that character plus one approved pose from the same production batch when available.
+
+### Generation acceptance loop
+
+For every asset:
+
+1. Generate four materially different candidates.
+2. Reject candidates with pseudo-text, inconsistent perspective, noisy central regions, or recognizable borrowed imagery.
+3. Select one candidate rather than blending several incompatible directions.
+4. Continue editing from the selected interaction.
+5. Generate the required state or aspect variants in that same conversation.
+6. Downscale to runtime dimensions with nearest-neighbor or a pixel-art-aware method.
+7. Export WebP or AVIF for opaque scenes and PNG/WebP for transparency.
+8. Inspect the alpha channel. “Transparent background” is a request, not a guarantee.
+9. Test at actual phone size before accepting detail.
+10. Record model ID, prompt, references, date, source dimensions, runtime dimensions, and approval state in the world manifest.
+
+### Master world prompt
+
+Use this exact structure. Replace only the bracketed world specification with the corresponding world paragraph below.
+
+```text
+The attached images are reference material for the original Vim Wilds mobile
+learning game. Preserve their original art language: polished 2D pixel-art
+fantasy, crisp readable silhouettes, painterly pixel clusters, deep dark
+foundations, restrained amber, turquoise and violet magic, and a premium but
+quiet atmosphere. Do not reproduce the composition of a reference image.
+
+Create a production environmental backdrop for the live exercise board of a
+mobile-first Vim learning game. Real HTML code will be placed over the centre,
+so the environment must frame the interface rather than compete with it.
+
+Composition, in order:
+1. Establish a coherent background, middle ground and foreground.
+2. Keep the central 76 percent of the width and central 62 percent of the
+   height calm, dark, low contrast and free of focal objects.
+3. Concentrate readable environmental detail in the outer 12 percent on the
+   left and right and in the upper 18 percent.
+4. Keep the lower foreground quiet and crop-safe.
+5. Leave all characters and landmarks out; they will be composited separately.
+
+[WORLD SPECIFICATION]
+
+The intended result is an original game environment, not a screenshot and not
+a navigable tile map. It contains an empty, naturally textured central stage
+with no writing or interface elements. It contains no letters, code, keyboard
+keys, signs, captions, logos, pseudo-text, watermarks or recognizable franchise
+imagery. Lighting remains subdued enough for a readable code editor overlay.
+
+Output one 2K 16:9 image.
+```
+
+World substitutions:
+
+**Moonroot Ruins**
+
+```text
+An ancient forest sanctuary at blue-green moonlit dusk: enormous roots framing
+the sides, moss-covered dark stone, shallow still water, a few tiny amber
+lanterns, restrained violet spores and narrow turquoise mineral veins. The mood
+is warm, mysterious and safe. Handcrafted ruins are partially reclaimed by
+plants. Avoid horror, dense jungle clutter, bright daylight and top-down map
+perspective.
+```
+
+**Starwater Sanctuary**
+
+```text
+A nocturnal sanctuary built across dark reflective water: distant glass
+observatory structures, slim stone islands, star reflections, translucent
+reeds, pale cyan and violet light, and sparse warm-gold navigation points. The
+space feels precise, open and contemplative. Suggest lenses, alignment and
+reflection through architecture without symbols or writing. Avoid outer space,
+modern science equipment and neon cyberpunk clutter.
+```
+
+**Archive of Echoes**
+
+```text
+A warm subterranean archive carved into dark stone: crystal drawers, suspended
+shelves, distant beacons and quiet clockwork forms. Use teal glass, muted brass,
+amber memory lights and violet shadows. The place is cozy, wondrous and ordered,
+with repeated architectural rhythms. Avoid readable books, labels, dusty realism
+and steampunk clutter.
+```
+
+**Brass Meridian**
+
+```text
+A vast precision workshop and command observatory beneath a dark ridge: brass
+rails, copper conduits, glass lenses, controlled ember light and narrow cyan
+currents. The space feels powerful, exact and welcoming. Use endpoints, routes,
+pattern alignment and coordinated mechanisms as abstract spatial motifs. Avoid
+smoke, weapons, factories, grim industrial decay and excessive gears.
+```
+
+### Wide outpaint prompt
+
+Run this as a conversational edit of the approved 16:9 master:
+
+```text
+Keep the approved scene, palette, lighting, pixel-art rendering, perspective and
+central composition unchanged. Extend the canvas horizontally to a 4:1 aspect
+ratio by continuing the same environment into both outer sides. Add the richest
+new storytelling details only in the new outer thirds. Preserve a calm,
+low-contrast centre for an HTML code editor. Do not stretch, rescale or redraw
+the approved central scene. Add no characters, landmarks, writing, symbols,
+interface elements or text. Output at 2K.
+```
+
+### Prop-sheet prompt
+
+Use Nano Banana 2 with the approved world master as the reference. Replace the bracketed list.
+
+```text
+Using the attached approved Vim Wilds world as the exact style, material,
+palette, lighting and perspective reference, create a production prop sheet
+containing exactly six separate environmental props:
+
+[PROP LIST]
+
+Arrange them as a clean 3 by 2 grid. Each prop is fully visible, front or
+three-quarter view consistent with the world, at a compatible scale, and has
+clear empty separation from every other prop. Use a single flat saturated
+magenta background (#ff00ff) with no texture and no cast shadows touching the
+background so it can be removed locally. Include no labels, letters, numbers,
+captions, UI, code, symbols, borders or watermark. Preserve crisp 2D pixel-art
+edges. Output one 2K 4:3 image.
+```
+
+Use the exact prop lists from the four world sections above.
+
+### Foreground edge-layer prompt
+
+Use Nano Banana 2 with the approved 16:9 world master and approved prop sheet as references:
+
+```text
+Using the attached approved Vim Wilds world and prop sheet as exact references,
+create one sparse foreground framing layer for compositing over the outer edges
+of the exercise board.
+
+Build a connected but lightweight arrangement using only materials and props
+already present in the references. Concentrate forms in the outer 12 percent on
+the left and right and along a narrow lower edge. Keep the central 76 percent
+completely empty. Keep the upper centre empty. The layer must frame a real HTML
+code editor without covering it.
+
+Render the foreground at the same camera, 16:9 composition, lighting, pixel-art
+scale and palette as the approved world. Use a single flat saturated magenta
+background (#ff00ff) everywhere that should become transparent. Keep all forms
+fully connected to an outer edge so they never appear as floating stickers.
+Include no landmark, character, writing, letters, code, UI, symbols, captions,
+logo, watermark or cast shadow on the magenta area. Output one 2K 16:9 image.
+```
+
+After background removal, register the foreground to the approved 16:9 backdrop. The wide layout may reuse this layer with cropping; do not generate a separate 4:1 foreground unless the Moonroot vertical slice proves that one is necessary.
+
+### Landmark-generation method
+
+Generate each dormant landmark with Nano Banana Pro or Nano Banana 2 using the approved world master as reference. Then create the restored state through a conversational edit of the approved dormant result.
+
+Dormant prompt:
+
+```text
+Using the attached approved Vim Wilds world as the exact style, palette,
+material, lighting and perspective reference, create one isolated production
+landmark asset for compositing into that world.
+
+Landmark: [DORMANT SPECIFICATION]
+
+The landmark is dormant but intact enough to understand. Centre the complete
+object in a square canvas with generous empty space around it. Use the same
+slightly elevated side-on perspective as the reference world. Preserve a strong
+silhouette at 96 CSS pixels. Use a single flat saturated magenta background
+(#ff00ff), with no texture and no cast shadow touching it, for local background
+removal. Include no characters, labels, letters, numbers, code, keyboard keys,
+captions, pseudo-writing, logos or watermark. Output one 1K square image.
+```
+
+Restored conversational edit:
+
+```text
+Keep the landmark's exact geometry, silhouette, camera, scale, position,
+materials and pixel-art rendering. Change only its state from dormant to fully
+restored according to this specification:
+
+[RESTORED SPECIFICATION]
+
+Keep the same flat magenta background and identical canvas registration so the
+dormant and restored images can crossfade without jumping. Add no text, symbols,
+characters or new unrelated objects. Output one 1K square image.
+```
+
+### Exact landmark specifications
+
+| ID | Dormant specification | Restored specification |
+|---|---|---|
+| `mode-lantern` | A waist-high ancient lantern with four nested glass rings around one dim amber core; rings misaligned and differently oriented; moss at the stone base | Four rings align concentrically but remain visually distinct through amber, cyan, violet, and warm-cream edge light; the central flame becomes steady |
+| `wayfinder` | A circular stone-and-brass wayfinder with four disconnected path arms; central needle resting diagonally; thin roots across two arms | Four arms align into a clear cross of paths; the needle stands centred; restrained cyan light reaches each endpoint |
+| `scribes-spring` | A small stone spring shaped around a suspended quill-like crystal; one channel split; liquid light stopped below the break | The channel joins cleanly; turquoise liquid light flows through it; the suspended crystal gains a soft amber edge |
+| `grammar-gate` | A compact arch gate made of two visibly complementary halves with a gap at the centre; left half suggests stored force, right half a path-like channel | The halves lock together at the centre; one controlled line of light travels through the arch; the opening is clear and calm |
+| `starneedle` | A floating observatory lens above a slim stone stand; lens tilted away; only two faint distant points visible | Lens faces forward; several precise star points come into focus; one narrow cyan beam connects the lens and stand |
+| `nested-garden` | Three concentric botanical arches, outer arch dormant, inner forms closed and tangled | Outer, middle, and inner arches become clearly readable; restrained growth blooms from outside inward while preserving all boundaries |
+| `prism-crossing` | Three separated translucent panes: a narrow ribbon, a horizontal row, and a rectangle; panes cloudy and misaligned | The three panes align into a traversable glass crossing while retaining their distinct shapes; crisp cyan-violet edges illuminate |
+| `memory-archive` | A compact cabinet of crystal drawers; one captured crystal rests outside; most drawers dark | The crystal is seated in one drawer; several deliberately different drawers illuminate; no labels or writing appear |
+| `far-beacons` | Two miniature distant beacons on separate stone bases with a broken dark span between them | A thin continuous thread of amber-cyan light connects the beacons; both lights become steady; bases remain unchanged |
+| `echo-clock` | A compact clockwork assembly with one primary wheel and three matching secondary wheels; all stopped at different angles | The first wheel becomes active and the same phase propagates through the three matching wheels; add restrained repeated amber highlights |
+| `meridian-table` | A brass cartographic table with two unlit endpoint pins and several disconnected route rails | Both endpoints illuminate and exactly one continuous cyan route connects them; unrelated rails stay dark |
+| `mirror-loom` | A glass-and-brass loom with several threads passing through a tilted pattern lens; matching threads are dim and misrouted | The lens aligns; only a repeated subset of threads changes to amber while nonmatching threads remain cyan and untouched |
+| `echo-foundry` | A compact recorder cylinder facing three silent mechanisms; the cylinder slot is empty | One luminous movement pattern is stored in the cylinder and replayed as the same three-stage light sequence across all mechanisms |
+| `meridian-engine` | A large but compact engine core with four material quadrants—rooted stone, star glass, memory crystal, and brass conduit—disconnected around a dark centre | All four quadrants connect without losing their material identities; one controlled current circulates through the complete engine; centre becomes warm white |
+
+### Intro key-art prompts
+
+Generate Panel 1 with Nano Banana Pro using the four approved world masters as references:
+
+```text
+Create a cinematic but restrained 2D pixel-art story illustration for the
+original Vim Wilds mobile learning game. Show a distant connected panorama of
+four regions: Moonroot Ruins, Starwater Sanctuary, Archive of Echoes and Brass
+Meridian, using the attached approved world images as exact references. Connect
+their restored landmarks with thin amber and cyan currents. Compose for 16:9,
+with broad dark negative space in the lower third for real HTML story copy.
+Include no characters, text, letters, code, UI, symbols, captions or watermark.
+This is a unified original landscape, not four screenshots and not a map.
+Output at 2K.
+```
+
+Create Panel 2 as a conversational edit:
+
+```text
+Keep the exact panorama, camera, region geometry, palette and composition.
+Change the world to its dormant state: one current ends before reaching its
+destination, landmarks become dim, several light connections drift slightly
+out of alignment, and the mechanisms are quiet. Depict interruption rather than
+destruction. Preserve the broad dark lower-third space. Add no characters,
+text, symbols, UI, disaster, fire or threatening imagery. Output at 2K 16:9.
+```
+
+Create Panel 3 with the approved Moonroot master and canonical Nix idle PNG:
+
+```text
+Create a cinematic 2D pixel-art story illustration for the original Vim Wilds
+mobile learning game. Preserve the attached Moonroot Ruins world and the exact
+canonical design, silhouette, colors, clothing, staff, wings, antennae and
+rendering of Nix. Place Nix at the Moonroot threshold, small in the scene but
+clearly readable, holding the lantern toward the dormant Mode Lantern. A narrow
+warm light connects Nix and the landmark. Compose for 16:9 with broad dark
+negative space in the lower third for real HTML story copy. Include no generated
+text, code, UI, captions, logos, extra characters or watermark. Output at 2K.
+```
+
+### Character reaction-pose prompt
+
+Start with Nix only. Once the pose language is approved, repeat for the selected unit guides. Use Nano Banana 2 with the character’s canonical idle PNG and the approved Nix pose as references.
+
+Generate three poses per supported character:
+
+```text
+The first attached image is the canonical production reference for an original
+Vim Wilds character. The second image, when supplied, is an approved pose-style
+reference from the same game.
+
+Create exactly the same character in a new [POSE] production pose. Preserve the
+exact species, face, silhouette, proportions, costume, permanent props, number
+of limbs, wings and antennae, pixel-art rendering, outline treatment, palette,
+camera angle and scale. This is a pose change, not a redesign.
+
+[POSE ACTION]
+
+Keep the full body visible and centred in a 1:1 canvas with generous margins.
+Make the silhouette readable at 96 CSS pixels. Use a single flat saturated
+magenta background (#ff00ff) with no texture or cast shadow for local background
+removal. Include one character only, with the canonical props attached. Include
+no text, letters, code, UI, symbols, captions, watermark, scenery or additional
+objects. Output one 1K square image.
+```
+
+Pose substitutions:
+
+- `attentive`
+  - “The character leans forward very slightly, gaze focused inward toward the editor, permanent prop held steady, alert and interested rather than excited.”
+
+- `puzzled`
+  - “The character makes a small thoughtful head tilt and one restrained questioning gesture. The emotion is curious and supportive, never disappointed, sad, mocking or alarmed.”
+
+- `encouraging`
+  - “The character settles into a calm open posture with a small approving gesture toward the learner. The emotion is patient confidence, not celebration.”
+
+Phase-one supported cast:
+
+- Nix
+- Vela
+- Tatter
+- Cinder
+- Orin
+- Bramble
+- Prism
+- Mica
+- Luma
+- Tock
+- Puddle
+- Cairn
+
+The remaining characters keep the idle-image fallback until a later batch. Do not block the reaction system on a complete 15-character pose library.
+
+## Animation specification
+
+All durations are targets and may be tuned after device testing. No animation may serialize behind input or block the next key.
+
+### Board ambience
+
+- Background drift: optional 2–4px transform over 12–18s, alternating, only on larger canvases.
+- Fog or water overlay: opacity variation between 0.12 and 0.22 over 8–12s.
+- Motes: no more than 8 visible particles; 6–10s lifetimes.
+- Landmark dormant pulse: 3.2s opacity/glow cycle, no scale pumping.
+- Foreground parallax: no more than 3px and disabled on coarse pointers by default.
+- Character idle: retain the existing small 3px bob.
+
+Reduced motion:
+
+- No drift, particles, parallax, or spatial travel.
+- Keep a static backdrop, static landmark, and state crossfades.
+
+### Vim effects
+
+- Operator-pending tension: editor edge glow appears in 90ms and remains static until resolution or cancellation.
+- Range-resolution wave: 180–240ms across the exact changed range.
+- Visual Character: existing selection plus a subtle continuous linear edge.
+- Visual Line: existing selection plus a row-wide top/bottom edge.
+- Visual Block: crisp rectangular perimeter; no bloom over code glyphs.
+- Yank capture: 160–220ms contraction toward the register/status area; code remains unchanged.
+- Put materialization: 180–260ms highlight of inserted range.
+- Dot-repeat: reuse the previous change’s effect with 70% duration and 70% intensity.
+- Macro replay: one small record pulse while recording; replay effects use the ordinary command effects at reduced intensity.
+- Substitution/global: affected matches illuminate together for 100ms, then transformed ranges resolve within 260ms.
+
+Reduced motion:
+
+- Replace travel with a 100–160ms range-color crossfade.
+- Preserve exact affected-range information.
+
+### Character reactions
+
+- First incorrect key: no character reaction.
+- Second consecutive incorrect key: `puzzled` pose for 600ms.
+- Third consecutive incorrect key: `encouraging` pose for 900ms and the existing hint affordance may become more visually available.
+- Accepted progress: cancel the reaction immediately and return to attentive or idle.
+- Operator-pending: attentive pose may remain while waiting.
+- No reaction loops.
+- Reactions never move the character over code.
+
+Reduced motion:
+
+- Instant pose swap with a 100ms opacity crossfade.
+
+### Unit-completion transition
+
+Normal choreography:
+
+1. Transition surface fades in over 220ms; Continue and Skip are already available.
+2. World backdrop drifts by at most 2% over the full scene.
+3. Dormant landmark is visible immediately.
+4. Guide action begins at 300ms.
+5. A code-native light path reaches the landmark between 700 and 1,200ms.
+6. Dormant and restored landmark states crossfade with a masked glow over 700–1,000ms.
+7. Completion copy appears at 900ms.
+8. Next hook appears with the Continue action at 1,400ms.
+9. Scene settles by 4s.
+
+Existing character animations may enhance step 4 when already downloaded. Required fallback:
+
+- Idle or attentive still.
+- One 4–8px CSS movement.
+- Prop/hand glow.
+- Landmark restoration proceeds without animated WebP.
+
+Recommended existing action mapping:
+
+- `magic-flourish`: Mode Lantern, Starneedle, Nested Garden, Prism Crossing.
+- `project-reveal`: Wayfinder, Scribe’s Spring, Grammar Gate, Memory Archive, Meridian Table, Mirror Loom, Meridian Engine.
+- `prop-trick`: Far Beacons, Echo Clock, Echo Foundry.
+
+Reduced motion:
+
+- 150ms surface fade.
+- Immediate guide still.
+- 200ms dormant/restored landmark crossfade.
+- Copy visible immediately.
+
+## Selective Vim-action system
+
+### Principle
+
+Do not visualize commands because they exist. Visualize semantics that are difficult, invisible, or especially satisfying:
+
+- The range consumed by an operator.
+- The geometry of a selection.
+- A yank that changes no text.
+- The exact location and shape of a put.
+- Reapplication through dot-repeat.
+- Reapplication through a macro.
+- Multiple matches transformed by substitution or global operations.
+
+Simple `h`, `j`, `k`, `l`, literal Insert-mode typing, `Escape`, and most single-character edits require no additional effect.
+
+### Event classification
+
+Classify an event using:
+
+- Snapshot before a command or command group.
+- Snapshot after completion.
+- Document change ranges.
+- Selection shape before/after.
+- Register deltas.
+- Accepted keys in the active command group.
+- Current and prior mode.
+
+Recommended semantic event contract:
+
+```js
+{
+  type: "range-change" | "selection" | "capture" | "materialize" |
+        "repeat" | "matches" | "jump" | "rewind",
+  operation: "delete" | "change" | "indent" | "format" | "case" |
+             "yank" | "put" | "dot" | "macro" | "substitute" | null,
+  ranges: [{ from: [line, column], to: [line, column] }],
+  selectionKind: "character" | "line" | "block" | null,
+  source: "lesson" | "demo" | "physical",
+  reducedMotion: false
+}
+```
+
+Do not require hand-authored effect metadata for all 478 demonstrations and exercises. Optional metadata may override classification for genuinely ambiguous advanced commands.
+
+### First release coverage
+
+Implement in this order:
+
+1. Operator and text-object range changes.
+2. Visual Character, Visual Line, and Visual Block geometry.
+3. Yank capture.
+4. Characterwise and linewise put materialization.
+5. Dot-repeat echo.
+
+Validate first against Units 4, 6, 7, 8, and 10.
+
+Second release:
+
+6. Search match activation.
+7. Substitution/global multi-range resolution.
+8. Macro recording and replay.
+9. Marks and long-range jump trace.
+10. Undo/redo crossfade.
+
+Validate against Units 5, 9, 11, 12, 13, and 14.
+
+## Work packages
+
+### WP-01 — Presentation data contract
+
+**Recommended model:** Sol  
+**Dependencies:** None  
+**Visible change:** None  
+**Risk:** Low
+
+**Session brief**
+
+Implement only the declarative presentation contract described in this document.
+
+**Work**
+
+- Add `content/presentation.schema.json`.
+- Add `content/presentation.json` with all four worlds and all 14 unit mappings.
+- Use the exact story copy and landmark IDs in this document.
+- Load the presentation data with the existing unit catalog.
+- Add a small resolver module or pure functions without changing current rendering.
+- Extend content tests to validate IDs, asset fields, unit coverage, character IDs, story fields, and world references.
+- Extend the PWA build to emit the presentation JSON.
+- Preserve current output when the manifest is missing or invalid.
+
+**Acceptance**
+
+- Every unit maps to exactly one world, guide, landmark, and story beat.
+- No lesson JSON changes.
+- Existing app looks and behaves exactly the same.
+- Content and PWA tests pass.
+
+**Human validation**
+
+- Open `content/presentation.json`.
+- Confirm that unit order, guide, landmark, completion copy, and next hook match the story table.
+- Temporarily rename one world ID in a local copy and confirm the content test explains the broken reference clearly.
+
+### WP-02 — Layered world renderer infrastructure
+
+**Recommended model:** Sol  
+**Dependencies:** WP-01  
+**Visible change:** Fallback layers only  
+**Risk:** Medium
+
+**Session brief**
+
+Replace the tile-specific renderer with a layered, manifest-driven renderer while keeping a legacy fallback and without changing editor geometry.
+
+**Work**
+
+- Add `world-presentation.js`.
+- Render backdrop, ambient overlay, edge/foreground layer, dormant landmark, props, editor, and character as separate layers.
+- Keep decorative layers non-interactive and clipped.
+- Preserve the existing 12 × 9 placement grid for editor and character.
+- Stop rebuilding hundreds of ground cells when a layered world is available.
+- Keep `renderGround()` and the tile system as a temporary fallback.
+- Separate world identity from functional theme preference.
+- Expose stable data attributes for world ID, unit ID, landmark ID, mode, and reduced-motion state.
+- Add a CSS-only placeholder for each world so final generated images are not required to test the renderer.
+
+**Acceptance**
+
+- Editor, completion panel, keyboard, hints, and character placement do not shift.
+- Missing images fall back to the CSS world and never show broken-image icons.
+- Landscape and reduced-motion modes work.
+- `window.VimWilds` remains compatible.
+- No extra document scrolling or overflow.
+
+**Human validation**
+
+- Disable images in browser developer tools: the app must remain attractive and fully usable.
+- Inspect Units 1, 5, 8, and 11 to confirm each resolves a different world.
+- Change theme preference and confirm UI colors change without changing the unit’s world identity.
+- Inspect 360×740, 390×844, 412×915, 430×932, 432×960, tablet, and desktop.
+
+### WP-03 — Moonroot board vertical slice
+
+**Recommended model:** Terra  
+**Dependencies:** WP-02 and approved Moonroot master assets  
+**Visible change:** High  
+**Risk:** Medium
+
+**Session brief**
+
+Integrate only Moonroot Ruins for Units 1–4 and tune the responsive composition. Do not add story transitions or Vim effects.
+
+**Work**
+
+- Add approved Moonroot 16:9, 4:1, foreground, and prop assets.
+- Position visual interest around the editor without changing its width or height.
+- Add dormant placeholder positions for the first four landmarks.
+- Use responsive image selection rather than stretching one asset.
+- Tune backdrop focal position for phone, tablet, and desktop.
+- Ensure theory, demo, exercise, choice, summary, completion, and keyboard-hidden states remain readable.
+- Remove tile sprites only for Moonroot units; other units retain the legacy board.
+
+**Acceptance**
+
+- Moonroot feels meaningfully richer on tablet and desktop.
+- On small phones, cropping is intentional even when very little world is visible.
+- No landmark is required to remain visible behind the editor.
+- Code contrast does not depend on the image.
+- Core Moonroot media fits its assigned budget.
+
+**Human validation**
+
+- Compare Unit 1 and Unit 5 side by side: Unit 1 should clearly show the new board while Unit 5 remains the legacy control.
+- On every target phone size, solve an exercise and inspect the completed-code state.
+- On desktop, confirm the outer scene adds meaningful detail rather than repeated wallpaper.
+- Toggle each theme preference.
+- Test with slow network and offline mode.
+
+### WP-04A — Starwater world expansion
+
+**Recommended model:** Terra  
+**Dependencies:** Approved WP-03 and Starwater assets  
+**Visible change:** High  
+**Risk:** Low
+
+Integrate the approved Starwater backdrop, foreground, props, and dormant landmarks for Units 5–7. Reuse the renderer unchanged. If renderer changes are necessary, stop and return the requirement to a Sol architecture session.
+
+Human validation focuses on search, text-object, and Visual Block exercises at every target viewport.
+
+### WP-04B — Archive world expansion
+
+**Recommended model:** Terra  
+**Dependencies:** Approved WP-03 and Archive assets  
+**Visible change:** High  
+**Risk:** Low
+
+Integrate the approved Archive backdrop, foreground, props, and dormant landmarks for Units 8–10. Reuse the renderer unchanged.
+
+Human validation focuses on register indicators, long buffers, hidden keyboard layout, and dot-repeat exercises.
+
+### WP-04C — Meridian world expansion
+
+**Recommended model:** Terra  
+**Dependencies:** Approved WP-03 and Meridian assets  
+**Visible change:** High  
+**Risk:** Low
+
+Integrate the approved Meridian backdrop, foreground, props, and dormant landmarks for Units 11–14. Reuse the renderer unchanged.
+
+Human validation focuses on Command-line UI, confirmation prompts, macros, substitution, and the densest buffers.
+
+### WP-05 — Core-media offline and budget policy
+
+**Recommended model:** Sol  
+**Dependencies:** WP-03; may run before WP-04 expansions  
+**Visible change:** None  
+**Risk:** Medium
+
+**Work**
+
+- Extend the Vite PWA plugin to emit approved world, landmark, story, and reaction stills.
+- Keep large animation WebPs optional unless explicitly reclassified.
+- Add deterministic media-budget tests.
+- Verify update-cache versioning when generated assets change.
+- Document compression commands or a repeatable asset-normalization script.
+- Fail the build on missing manifest assets.
+- Do not silently precache source masters.
+
+**Human validation**
+
+- Install the PWA, go offline, restart, and visit one unit in each implemented world.
+- Confirm backdrops, dormant landmarks, intro/story fallback, and reaction stills load.
+- Confirm an unavailable large animation degrades to a still without a broken element.
+- Inspect installed-cache size.
+
+### WP-06 — Vim semantic-effect event contract
+
+**Recommended model:** Sol  
+**Dependencies:** None; independent of board work  
+**Visible change:** None  
+**Risk:** High
+
+**Session brief**
+
+Add a tested semantic-effect event contract without rendering effects and without changing Vim behavior.
+
+**Work**
+
+- Capture stable before/after snapshots at command or command-group boundaries.
+- Include document change ranges and register deltas.
+- Classify selection shape and mode transitions.
+- Use accepted lesson/demo keys to identify dot and macro replay.
+- Avoid emitting one semantic effect for every Insert-mode character.
+- Add unit tests for classification.
+- Add browser assertions that emitted effects match exact ranges for representative canonical solutions.
+- Keep the public `window.VimWilds` interface unchanged; an additional diagnostic getter may be added if useful.
+
+**Acceptance**
+
+- No change to editor results, cursor, mode, registers, checkpoints, or timing.
+- Representative events classify correctly for `dw`, `di(`, `yy`, `p`, `Ctrl-v`, `.`, substitution, and macro replay.
+- Event ranges use document coordinates, not guessed DOM rectangles.
+
+**Human validation**
+
+- Enable a temporary diagnostic log.
+- Complete one representative exercise from Units 4, 6, 7, 8, 10, 12, and 13.
+- Confirm event type and range in the log.
+- Disable the diagnostic log before handoff.
+
+### WP-07 — Core Vim effects
+
+**Recommended model:** Sol  
+**Dependencies:** WP-06  
+**Visible change:** High  
+**Risk:** High
+
+**Work**
+
+- Implement operator/text-object range resolution.
+- Implement distinct Visual Character, Visual Line, and Visual Block geometry.
+- Implement yank capture.
+- Implement put materialization.
+- Implement dot-repeat echo.
+- Use CodeMirror decorations or a view-owned overlay, not absolute positions guessed by `app.js`.
+- Implement cancellation and cleanup on reset, activity navigation, undo, help, and completion.
+- Add reduced-motion forms.
+- Keep all effects below the timing limits in this document.
+
+**Acceptance**
+
+- Effects never change selections or documents.
+- Rapid canonical input is not delayed.
+- Effects clip within the editor and do not obscure glyphs.
+- Every canonical solution still reaches the exact target state.
+
+**Human validation**
+
+- Use Units 4, 6, 7, 8, and 10.
+- Test characterwise, linewise, and blockwise cases.
+- Enter commands rapidly instead of waiting for effects.
+- Reset during an effect.
+- Navigate away during an effect.
+- Enable reduced motion and repeat.
+- Decide whether the effect explains the range at a glance; reject effects that merely look decorative.
+
+### WP-08 — Advanced Vim effects
+
+**Recommended model:** Sol  
+**Dependencies:** Approved WP-07  
+**Visible change:** High  
+**Risk:** High
+
+**Work**
+
+- Search-match activation.
+- Substitution/global multi-range resolution.
+- Macro record and replay vocabulary.
+- Mark and jump trace.
+- Undo/redo state crossfade.
+- Preserve prompt and confirmation readability.
+
+**Human validation**
+
+- Use Units 5, 9, 11, 12, 13, and 14.
+- Confirm nonmatching text never receives a substitution effect.
+- Confirm macros reuse normal command effects rather than playing one opaque animation.
+- Confirm `u` and `Ctrl-r` remain instant.
+
+### WP-09 — Character reaction state machine
+
+**Recommended model:** Terra  
+**Dependencies:** Approved Nix reaction poses; independent of Vim effects  
+**Visible change:** Medium  
+**Risk:** Medium
+
+**Work**
+
+- Add `character-reactions.js`.
+- Support idle, attentive, puzzled, encouraging, and celebrating states.
+- First incorrect input remains functional-only.
+- Second consecutive mistake triggers puzzled.
+- Third triggers encouraging.
+- Correct progress cancels the reaction.
+- Operator-pending may trigger attentive.
+- Apply to guided and recall practice without altering accepted-input rules.
+- Fall back to idle image when a pose is missing.
+- Keep existing success animations.
+- Add reduced-motion crossfades.
+
+**Acceptance**
+
+- No reaction to a single ordinary mistake.
+- No mockery, sadness, or punishment.
+- Reaction timers cannot leak into another activity.
+- Missing pose assets are harmless.
+- Characters never cover code.
+
+**Human validation**
+
+- Make one mistake, then recover.
+- Make two consecutive mistakes.
+- Make three consecutive mistakes.
+- Alternate correct and wrong keys.
+- Open a hint and reset during a reaction.
+- Repeat with touch and physical keyboard.
+- Verify the reaction feels supportive after repeated use, not merely charming once.
+
+### WP-10 — Story and unit-transition infrastructure
+
+**Recommended model:** Sol  
+**Dependencies:** WP-01; can use CSS placeholders  
+**Visible change:** High  
+**Risk:** High
+
+**Session brief**
+
+Implement first-launch story and unit-completion transitions with placeholder art. Do not integrate final generated imagery in this package.
+
+**Work**
+
+- Add an accessible story surface to `play/index.html`.
+- Implement the exact three-panel intro.
+- Persist `introSeen`.
+- Add Replay Story entry to settings or the table of contents.
+- Intercept the final unit continuation action and show the unit story before navigating.
+- Persist completed unit-story IDs only to control default replay.
+- Add replay for completed unit stories.
+- Render real HTML copy over placeholder layers.
+- Continue and Skip are available immediately.
+- Handle deep links: a direct `?unit=` or `?activity=` link should not be blocked by first-launch story unless it targets Unit 1 without an activity.
+- Add reduced-motion behavior.
+- Do not infer educational completion from story state.
+
+**Acceptance**
+
+- Existing ordinary exercise completion is unchanged.
+- Intro appears once and is replayable.
+- Unit story appears at the final continuation boundary, not after every lesson or exercise.
+- Skip and Continue navigate correctly.
+- Refreshing during a transition is safe.
+- Story remains usable offline with placeholders.
+
+**Human validation**
+
+- Clear storage and open the default play URL.
+- Skip from each intro panel.
+- Finish or jump to the final summary of a unit and continue.
+- Refresh during the transition.
+- Deep-link to a later unit and to a specific activity.
+- Replay the intro and a completed unit scene.
+- Enable reduced motion and a screen reader.
+
+### WP-11 — Landmark restoration and final story art
+
+**Recommended model:** Terra  
+**Dependencies:** WP-10 and the approved world/landmark assets for the units being integrated. Final intro art requires all four approved world masters.  
+**Visible change:** Very high  
+**Risk:** Medium
+
+**Work**
+
+- Add the three approved intro images.
+- Add all approved dormant/restored landmarks.
+- Implement the exact unit choreography.
+- Map existing character animations to actions with still/CSS fallbacks.
+- Add per-world light colors and masks.
+- Add story copy and next hooks from the manifest.
+- Ensure dormant/restored assets share registration and do not jump.
+- Do not change story copy.
+
+**Human validation**
+
+- Watch all three intro panels.
+- Watch all 14 unit transitions using a test navigation helper.
+- Check every landmark for crossfade registration.
+- Test with animations available, blocked, slow, and offline.
+- Confirm the character action supports the landmark rather than drawing attention away from the copy.
+- Confirm every scene can be understood from still states.
+
+### WP-12 — Final accessibility, performance, and regression audit
+
+**Recommended model:** Sol  
+**Dependencies:** All selected packages  
+**Visible change:** Possible polish only  
+**Risk:** High
+
+**Work**
+
+- Run all validation required by `AGENTS.md`.
+- Add browser coverage for story state, world fallback, effects, reactions, reduced motion, and offline media.
+- Audit focus, dialog semantics, announcements, and skip/continue controls.
+- Measure load, decoding, memory, and animation frame stability on representative mobile emulation.
+- Verify asset budgets.
+- Verify no leftover Playwright/Vite processes.
+- Remove diagnostic flags.
+
+**Human validation**
+
+- Complete one full unit normally on a phone.
+- Complete one unit with reduced motion.
+- Complete one unit offline.
+- Complete one unit using a physical keyboard with the virtual keyboard hidden.
+- Decide whether the game remains calmer during thinking than during success.
+- Confirm story and visual effects can be ignored without losing educational information.
+
+## Dependency graph
+
+```text
+WP-01 Presentation data
+ ├─ WP-02 World renderer
+ │   └─ WP-03 Moonroot slice
+ │       ├─ WP-04A Starwater
+ │       ├─ WP-04B Archive
+ │       ├─ WP-04C Meridian
+ │       └─ WP-05 Offline/media policy
+ └─ WP-10 Story infrastructure
+     └─ WP-11 Story art + landmarks
+
+WP-06 Semantic effect events
+ └─ WP-07 Core Vim effects
+     └─ WP-08 Advanced Vim effects
+
+Approved reaction poses
+ └─ WP-09 Character reactions
+
+All selected packages
+ └─ WP-12 Final audit
+```
+
+Parallelism guidance:
+
+- WP-01 and Nano Banana Moonroot exploration can run in parallel.
+- WP-06 can run independently of all board and story work.
+- Reaction-pose generation can run independently after the Moonroot art direction is approved.
+- WP-04A, WP-04B, and WP-04C are conceptually independent but all touch shared manifests/styles; run sequentially unless separate branches are used.
+- WP-09 and WP-10 both touch `app.js`/UI state and should not be implemented concurrently in one working tree.
+
+## Sol versus Terra routing
+
+Use **Sol** when correctness depends on cross-cutting architecture, editor semantics, state transitions, PWA behavior, or extensive test design:
+
+- WP-01
+- WP-02
+- WP-05
+- WP-06
+- WP-07
+- WP-08
+- WP-10
+- WP-12
+
+Use **Terra** when the architecture is already established and the work is bounded visual integration, declarative expansion, CSS tuning, or a small state machine:
+
+- WP-03
+- WP-04A
+- WP-04B
+- WP-04C
+- WP-09
+- WP-11
+
+If a Terra session discovers that it must change the data contract, Vim event semantics, navigation model, or PWA architecture, stop that package and move the architectural decision to a Sol session.
+
+## Suggested execution order
+
+### Milestone 1 — Prove the new board
+
+1. Generate Moonroot master candidates with Nano Banana Pro.
+2. Approve one and create the 4:1 outpaint and prop sheet with Nano Banana 2.
+3. WP-01 with Sol.
+4. WP-02 with Sol.
+5. WP-03 with Terra.
+6. Validate personally before generating more worlds.
+
+Exit question:
+
+> Does Unit 1 feel like it inhabits a memorable world on desktop/tablet while remaining just as readable and fast on a 360×740 phone?
+
+If no, revise the master composition or renderer before proceeding.
+
+### Milestone 2 — Prove learning-enhancing motion
+
+1. WP-06 with Sol.
+2. WP-07 with Sol.
+3. Test operators, text objects, Visual Block, yank/put, and dot-repeat personally.
+
+Exit question:
+
+> Does the effect make the exact Vim range or invisible operation easier to understand, or is it only decoration?
+
+Remove any effect that fails this test.
+
+### Milestone 3 — Prove character reactions
+
+1. Generate Nix attentive, puzzled, and encouraging poses.
+2. WP-09 with Terra using Nix and idle fallbacks for other characters.
+3. Use the game repeatedly before generating the remaining cast.
+
+Exit question:
+
+> After ten deliberately difficult exercises, do the reactions still feel supportive rather than repetitive?
+
+### Milestone 4 — Prove story cadence
+
+1. WP-10 with Sol using placeholders.
+2. Generate the first four Moonroot landmarks.
+3. Run a limited WP-11 with Terra for Units 1–4 while keeping placeholder intro art.
+4. Complete Unit 1 naturally and judge the interruption cost.
+
+Exit question:
+
+> Does the unit transition feel earned and memorable while letting the learner continue immediately?
+
+### Milestone 5 — Expand
+
+1. Generate and integrate Starwater.
+2. Generate and integrate Archive.
+3. Generate and integrate Meridian.
+4. Generate the three intro images now that all four master worlds are approved.
+5. Generate remaining landmarks and approved guide poses.
+6. Complete WP-11 across all units.
+7. Add advanced Vim effects.
+8. Complete the final audit.
+
+## Session invocation template
+
+For a coding session, use:
+
+```text
+Implement WP-XX from docs/gamification-implementation-plan.md.
+Read the whole work-package section, its dependencies, the shared architecture
+target, and AGENTS.md before changing files. Keep the scope to this package.
+Preserve unrelated user changes. Run every validation required by the package
+and AGENTS.md. Do not commit.
+```
+
+For a Nano Banana asset session, use the exact prompt and references specified in this document, preserve the interaction ID for controlled edits, and record every accepted asset in the presentation manifest or accompanying generation metadata.
+
+## Final recommendation
+
+Yes: start with the board visualization.
+
+The first concrete move is not “implement all four worlds.” It is:
+
+> Generate one excellent Moonroot Ruins 16:9 master, outpaint it to 4:1, create one prop sheet, then implement WP-01 through WP-03.
+
+This provides the fastest trustworthy answer to the central visual question while leaving the editor, curriculum, character system, and completion feedback untouched.
