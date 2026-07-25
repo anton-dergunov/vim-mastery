@@ -24,7 +24,7 @@ The implementation should be delivered in small work packages. A coding session 
 
 Start with the board visualization, but build one vertical slice rather than generating every world first:
 
-1. Generate and approve the Moonroot Ruins master backdrop and prop sheet.
+1. Generate and approve the Moonroot Ruins square master, portrait and wide expansions, and prop sheet.
 2. Implement the presentation data contract and layered world renderer.
 3. Integrate Moonroot Ruins for Units 1–4 and validate it at all target sizes.
 4. Decide whether the art direction is strong enough before producing the other three worlds.
@@ -45,6 +45,10 @@ The intended rhythm has three distinct timescales.
 - Only semantically valuable Vim events receive an effect.
 - Effects never delay input and normally finish within 120–280ms.
 - Incorrect input uses the existing functional feedback first; character reaction appears only after repeated difficulty.
+
+The same experience must survive live changes between portrait, square, wide,
+and shallow boards. Decorative assets may reposition, crop, simplify, or
+disappear; editor and input behavior may not.
 
 ### After an exercise
 
@@ -123,10 +127,9 @@ Each world entry defines:
 - Stable world ID.
 - Display name.
 - Existing functional theme ID used when theme preference is `auto`.
-- Portrait-board backdrop.
-- Wide-board backdrop.
-- Optional foreground edge layer.
+- Portrait, square, and wide board backdrops.
 - Optional prop list.
+- Prop and landmark placement for portrait, square, wide, and shallow boards.
 - Ambient-effect vocabulary.
 - Fallback gradient.
 
@@ -137,7 +140,7 @@ Each unit entry defines:
 - Guide character ID.
 - Landmark ID.
 - Dormant and restored landmark assets.
-- Landmark placement for phone, tablet, and wide layouts.
+- Landmark placement for portrait, square, wide, and shallow board layouts.
 - Unit-completion action ID.
 - Exact story copy.
 - Next-location hook.
@@ -150,7 +153,8 @@ Prefer extracting these modules instead of further expanding `app.js`:
 
 - `world-presentation.js`
   - Loads and resolves the active world and unit presentation.
-  - Produces backdrop, foreground, prop, and landmark markup.
+  - Measures the board container and selects portrait, square, wide, or shallow presentation.
+  - Produces backdrop, prop, and landmark markup.
   - Provides a legacy/fallback presentation when media is absent.
 
 - `vim-effects.js`
@@ -184,9 +188,9 @@ Story state must never be evidence of curriculum completion. Replaying or cleari
 Classify media into two tiers:
 
 1. **Core local media**
-   - Four world backdrops and wide variants.
-   - Four foreground edge layers.
+   - Portrait, square, and wide backdrop variants for four worlds.
    - Landmark dormant/restored states.
+   - Reusable isolated edge props.
    - Approved reaction stills.
    - Story light/mask assets if raster assets are required.
    - These are emitted by the Vite PWA plugin and available offline.
@@ -198,7 +202,7 @@ Classify media into two tiers:
 
 Add a build test that reports and enforces the total core-media budget. Initial target:
 
-- World and story media: no more than 7MB total.
+- World and story media: no more than 10MB total.
 - Reaction pose stills: no more than 3MB total for the first supported cast.
 - Any single board backdrop: no more than 450KB.
 - Any isolated landmark state: no more than 160KB.
@@ -280,28 +284,73 @@ The story copy is approved content. Implementation sessions should not rewrite i
 
 ### Responsive composition contract
 
+Responsiveness follows the **rendered board container**, not a device label. A
+narrow laptop window may produce the same portrait board as a tablet; a phone in
+landscape may produce a much shallower board than a desktop.
+
+The renderer should observe the board’s actual width and height and assign one
+of four layout shapes. Initial thresholds, to be tuned against screenshots:
+
+| Shape | Initial board width ÷ height | Expected situations | Backdrop |
+|---|---:|---|---|
+| `portrait` | below 0.85 | Narrow browser, portrait phone/tablet when the world receives more height | 4:5 portrait |
+| `square` | 0.85–1.35 | Default desktop canvas, some tablets | 1:1 master |
+| `wide` | 1.35–2.4 | Wide browser and ordinary landscape tablet | 16:9 wide |
+| `shallow` | above 2.4 | Landscape phone or very short window | 16:9 wide, deliberately cropped and simplified |
+
+Use a `ResizeObserver` on `.world` or an equivalent container-owned mechanism.
+Do not choose art from user-agent strings. Update the shape without a page
+reload when the browser is resized or device orientation changes.
+
 Every world needs:
 
-- A 2K 16:9 board master.
-- A 2K 4:1 wide outpaint made from the approved master.
-- A foreground/edge layer with isolated visual interest at the left, right, and upper edge.
+- A 2K 1:1 square master.
+- A 2K 4:5 portrait expansion made from the approved square master.
+- A 2K 16:9 wide expansion made from the same square master.
+- Isolated props that can be repositioned or hidden per shape.
 - A fallback CSS gradient using the current theme palette.
 
-For the 16:9 master:
+Do not create one fixed full-canvas foreground overlay. It would bind prop
+placement to one aspect ratio. Compose the foreground from isolated props and
+landmarks with declarative anchors instead.
 
-- Central 76% of width and central 62% of height: calm, low-contrast environmental surface.
-- Outer 12% on each side: primary environmental detail.
-- Upper 18%: one readable skyline, canopy, architecture, or distant light.
-- Lower 20%: quiet foreground material that can be cropped.
-- Landmarks are separate assets and must not be painted into the backdrop.
-- Characters are separate assets and must not be painted into the backdrop.
+Square master:
 
-For the 4:1 outpaint:
+- Central 68% of width and central 58% of height: calm and low contrast.
+- Outer sides and upper 20%: primary environmental detail.
+- Lower 18%: crop-safe foreground.
 
-- Preserve the center of the approved 16:9 scene.
-- Extend environmental storytelling into the outer thirds.
-- Keep the center low contrast.
-- Do not scale or stretch the original pixels.
+Portrait expansion:
+
+- Preserve the square master’s central identity.
+- Extend vertically, placing the strongest additional detail above and below
+  the editor-safe region.
+- Keep side details narrow because the editor uses almost the full width.
+- Provide safe top and bottom positions for a landmark or character, but never
+  require both to remain visible on the shortest phone.
+
+Wide expansion:
+
+- Preserve the square master’s centre and extend horizontally.
+- Put meaningful scenery and large props into the outer thirds, where desktop
+  and landscape tablet layouts have room.
+- Keep the editor region calm.
+
+Shallow layout:
+
+- Reuse and crop the wide backdrop initially.
+- Hide nonessential props and the character when height is insufficient,
+  matching the existing landscape-phone behavior.
+- Never shrink the editor, command tray, or keyboard merely to preserve art.
+- A dedicated 4:1 shallow asset may be added only if viewport validation proves
+  that the wide crop is consistently poor.
+
+Across all variants:
+
+- Landmarks and characters are separate from the backdrop.
+- Art may crop; functional UI may not.
+- The same semantic scene must be recognizable in each variant.
+- Switching variants must not visibly stretch an image or move the editor.
 
 ### World 1: Moonroot Ruins
 
@@ -398,9 +447,9 @@ Runtime assets should use this structure:
 ```text
 assets/worlds/
   moonroot-ruins/
-    backdrop-16x9.webp
-    backdrop-4x1.webp
-    foreground.webp
+    backdrop-portrait.webp
+    backdrop-square.webp
+    backdrop-wide.webp
     props/
       root-arch.webp
       mossy-pillar.webp
@@ -409,19 +458,19 @@ assets/worlds/
       mineral-seam.webp
       causeway-edge.webp
   starwater-sanctuary/
-    backdrop-16x9.webp
-    backdrop-4x1.webp
-    foreground.webp
+    backdrop-portrait.webp
+    backdrop-square.webp
+    backdrop-wide.webp
     props/...
   archive-of-echoes/
-    backdrop-16x9.webp
-    backdrop-4x1.webp
-    foreground.webp
+    backdrop-portrait.webp
+    backdrop-square.webp
+    backdrop-wide.webp
     props/...
   brass-meridian/
-    backdrop-16x9.webp
-    backdrop-4x1.webp
-    foreground.webp
+    backdrop-portrait.webp
+    backdrop-square.webp
+    backdrop-wide.webp
     props/...
   landmarks/
     mode-lantern-dormant.webp
@@ -448,9 +497,9 @@ Required generated source outputs:
 
 | Asset class | Source count | Runtime count | Notes |
 |---|---:|---:|---|
-| World 16:9 masters | 4 | 4 | One approved master per world |
-| World 4:1 outpaints | 4 | 4 | Conversational edits of the masters |
-| Foreground edge layers | 4 | 4 | Matte removed locally |
+| World 1:1 masters | 4 | 4 | One approved master per world |
+| World 4:5 portrait expansions | 4 | 4 | Conversational edits of the masters |
+| World 16:9 wide expansions | 4 | 4 | Conversational edits of the masters |
 | Six-prop source sheets | 4 | 0 | Generation/production sources, not runtime files |
 | Extracted props | 24 | Up to 24 | Include only props actually used |
 | Dormant landmarks | 14 | 14 | One per unit |
@@ -461,9 +510,9 @@ Required generated source outputs:
 
 The initial Moonroot vertical slice therefore needs only:
 
-- `moonroot-ruins/backdrop-16x9.webp`
-- `moonroot-ruins/backdrop-4x1.webp`
-- `moonroot-ruins/foreground.webp`
+- `moonroot-ruins/backdrop-square.webp`
+- `moonroot-ruins/backdrop-portrait.webp`
+- `moonroot-ruins/backdrop-wide.webp`
 - The Moonroot prop sheet and whichever extracted props are used
 - Optionally the four dormant Moonroot landmarks; CSS placeholders are acceptable until story work
 
@@ -494,7 +543,7 @@ Before generating world assets, prepare:
 1. `assets/enchanted-ruins.png` as the strongest existing mood reference.
 2. `assets/world-kit.png` as the existing material and palette reference.
 3. Two representative idle characters from `assets/characters/` to communicate rendering scale only.
-4. A simple 16:9 layout mask showing the central editor-safe area and outer interest areas.
+4. Simple 1:1, 4:5, and 16:9 layout masks showing the editor-safe area and permitted interest areas.
 
 For a world-generation request, attach the ruins, world kit, and layout mask. Do not attach more references merely because the model permits them.
 
@@ -532,10 +581,10 @@ so the environment must frame the interface rather than compete with it.
 
 Composition, in order:
 1. Establish a coherent background, middle ground and foreground.
-2. Keep the central 76 percent of the width and central 62 percent of the
+2. Keep the central 68 percent of the width and central 58 percent of the
    height calm, dark, low contrast and free of focal objects.
-3. Concentrate readable environmental detail in the outer 12 percent on the
-   left and right and in the upper 18 percent.
+3. Concentrate readable environmental detail at the outer sides and in the
+   upper 20 percent.
 4. Keep the lower foreground quiet and crop-safe.
 5. Leave all characters and landmarks out; they will be composited separately.
 
@@ -547,7 +596,8 @@ with no writing or interface elements. It contains no letters, code, keyboard
 keys, signs, captions, logos, pseudo-text, watermarks or recognizable franchise
 imagery. Lighting remains subdued enough for a readable code editor overlay.
 
-Output one 2K 16:9 image.
+Output one 2K 1:1 square image. This is the canonical composition from which
+portrait and wide versions will be expanded.
 ```
 
 World substitutions:
@@ -594,28 +644,48 @@ pattern alignment and coordinated mechanisms as abstract spatial motifs. Avoid
 smoke, weapons, factories, grim industrial decay and excessive gears.
 ```
 
-### Wide outpaint prompt
+### Portrait expansion prompt
 
-Run this as a conversational edit of the approved 16:9 master:
+Run this as a conversational edit of the approved 1:1 master:
 
 ```text
 Keep the approved scene, palette, lighting, pixel-art rendering, perspective and
-central composition unchanged. Extend the canvas horizontally to a 4:1 aspect
-ratio by continuing the same environment into both outer sides. Add the richest
-new storytelling details only in the new outer thirds. Preserve a calm,
-low-contrast centre for an HTML code editor. Do not stretch, rescale or redraw
-the approved central scene. Add no characters, landmarks, writing, symbols,
+central identity unchanged. Expand the canvas vertically to a 4:5 portrait
+aspect ratio by continuing the same environment above and below. Place the
+strongest new environmental detail in the upper and lower additions. Keep the
+central editor-safe region calm and low contrast and keep side details narrow,
+because a real HTML code editor will occupy almost the full width. Do not
+stretch or rescale the approved scene. Add no characters, landmarks, writing,
+symbols, interface elements or text. Output at 2K.
+```
+
+### Wide expansion prompt
+
+Run this as a separate conversational edit of the approved 1:1 master:
+
+```text
+Keep the approved scene, palette, lighting, pixel-art rendering, perspective and
+central identity unchanged. Expand the canvas horizontally to a 16:9 aspect
+ratio by continuing the same environment into both outer sides. Put meaningful
+new scenery and the richest environmental details into the outer thirds. Keep
+the central editor-safe region calm and low contrast. Do not stretch, rescale or
+redraw the approved centre. Add no characters, landmarks, writing, symbols,
 interface elements or text. Output at 2K.
 ```
 
+For a shallow landscape-phone board, first test a deliberate centre crop of the
+16:9 output. Only if that fails, make a further conversational 4:1 expansion
+whose central identity and low-contrast editor region remain unchanged.
+
 ### Prop-sheet prompt
 
-Use Nano Banana 2 with the approved world master as the reference. Replace the bracketed list.
+Use Nano Banana 2 with all three approved backdrop variants as references. Replace the bracketed list.
 
 ```text
-Using the attached approved Vim Wilds world as the exact style, material,
-palette, lighting and perspective reference, create a production prop sheet
-containing exactly six separate environmental props:
+Using the attached approved portrait, square and wide Vim Wilds world variants
+as the exact style, material, palette, lighting and perspective references,
+create a production prop sheet containing exactly six separate environmental
+props:
 
 [PROP LIST]
 
@@ -630,30 +700,9 @@ edges. Output one 2K 4:3 image.
 
 Use the exact prop lists from the four world sections above.
 
-### Foreground edge-layer prompt
-
-Use Nano Banana 2 with the approved 16:9 world master and approved prop sheet as references:
-
-```text
-Using the attached approved Vim Wilds world and prop sheet as exact references,
-create one sparse foreground framing layer for compositing over the outer edges
-of the exercise board.
-
-Build a connected but lightweight arrangement using only materials and props
-already present in the references. Concentrate forms in the outer 12 percent on
-the left and right and along a narrow lower edge. Keep the central 76 percent
-completely empty. Keep the upper centre empty. The layer must frame a real HTML
-code editor without covering it.
-
-Render the foreground at the same camera, 16:9 composition, lighting, pixel-art
-scale and palette as the approved world. Use a single flat saturated magenta
-background (#ff00ff) everywhere that should become transparent. Keep all forms
-fully connected to an outer edge so they never appear as floating stickers.
-Include no landmark, character, writing, letters, code, UI, symbols, captions,
-logo, watermark or cast shadow on the magenta area. Output one 2K 16:9 image.
-```
-
-After background removal, register the foreground to the approved 16:9 backdrop. The wide layout may reuse this layer with cropping; do not generate a separate 4:1 foreground unless the Moonroot vertical slice proves that one is necessary.
+Extract the props as separate transparent runtime files. The renderer positions
+or hides them independently for portrait, square, wide, and shallow layouts.
+Do not generate a fixed full-board foreground overlay.
 
 ### Landmark-generation method
 
@@ -888,6 +937,22 @@ Reduced motion:
 - 200ms dormant/restored landmark crossfade.
 - Copy visible immediately.
 
+### Responsive story presentation
+
+The three first-launch illustrations remain 16:9 media panels rather than
+full-bleed backgrounds. This lets one approved image work consistently:
+
+- Portrait phone/tablet: contained 16:9 image above HTML copy and actions.
+- Square canvas: contained image above a compact copy block.
+- Wide desktop/tablet: image and copy may use a balanced two-column layout.
+- Shallow phone landscape: image on one side, copy/actions on the other; omit
+  nonessential ambience and keep Skip/Continue visible without document scroll.
+
+Unit-completion scenes use the active world’s portrait, square, or wide
+backdrop plus the separate landmark, so they follow the same board-shape
+selection as exercises. Story text is always HTML and must never depend on a
+particular crop.
+
 ## Selective Vim-action system
 
 ### Principle
@@ -1006,13 +1071,15 @@ Replace the tile-specific renderer with a layered, manifest-driven renderer whil
 **Work**
 
 - Add `world-presentation.js`.
-- Render backdrop, ambient overlay, edge/foreground layer, dormant landmark, props, editor, and character as separate layers.
+- Observe the rendered `.world` bounds and assign portrait, square, wide, or shallow layout from container aspect ratio.
+- Update the layout live on browser resize and `orientationchange` without rebuilding lesson state.
+- Render backdrop, ambient overlay, dormant landmark, isolated props, editor, and character as separate layers.
 - Keep decorative layers non-interactive and clipped.
 - Preserve the existing 12 × 9 placement grid for editor and character.
 - Stop rebuilding hundreds of ground cells when a layered world is available.
 - Keep `renderGround()` and the tile system as a temporary fallback.
 - Separate world identity from functional theme preference.
-- Expose stable data attributes for world ID, unit ID, landmark ID, mode, and reduced-motion state.
+- Expose stable data attributes for world ID, unit ID, landmark ID, board shape, mode, and reduced-motion state.
 - Add a CSS-only placeholder for each world so final generated images are not required to test the renderer.
 
 **Acceptance**
@@ -1020,6 +1087,7 @@ Replace the tile-specific renderer with a layered, manifest-driven renderer whil
 - Editor, completion panel, keyboard, hints, and character placement do not shift.
 - Missing images fall back to the CSS world and never show broken-image icons.
 - Landscape and reduced-motion modes work.
+- Dragging a desktop browser through shape thresholds swaps composition without stretching art or resetting the activity.
 - `window.VimWilds` remains compatible.
 - No extra document scrolling or overflow.
 
@@ -1043,11 +1111,11 @@ Integrate only Moonroot Ruins for Units 1–4 and tune the responsive compositio
 
 **Work**
 
-- Add approved Moonroot 16:9, 4:1, foreground, and prop assets.
+- Add approved Moonroot square, portrait, wide, and prop assets.
 - Position visual interest around the editor without changing its width or height.
 - Add dormant placeholder positions for the first four landmarks.
-- Use responsive image selection rather than stretching one asset.
-- Tune backdrop focal position for phone, tablet, and desktop.
+- Use board-container shape selection rather than stretching one asset or detecting device type.
+- Tune backdrop focal position and prop visibility for portrait, square, wide, and shallow boards.
 - Ensure theory, demo, exercise, choice, summary, completion, and keyboard-hidden states remain readable.
 - Remove tile sprites only for Moonroot units; other units retain the legacy board.
 
@@ -1064,6 +1132,8 @@ Integrate only Moonroot Ruins for Units 1–4 and tune the responsive compositio
 - Compare Unit 1 and Unit 5 side by side: Unit 1 should clearly show the new board while Unit 5 remains the legacy control.
 - On every target phone size, solve an exercise and inspect the completed-code state.
 - On desktop, confirm the outer scene adds meaningful detail rather than repeated wallpaper.
+- Slowly resize the desktop window from wide through square to portrait without reloading.
+- Rotate a phone and a tablet in both directions and confirm that the editor state is preserved.
 - Toggle each theme preference.
 - Test with slow network and offline mode.
 
@@ -1074,7 +1144,7 @@ Integrate only Moonroot Ruins for Units 1–4 and tune the responsive compositio
 **Visible change:** High  
 **Risk:** Low
 
-Integrate the approved Starwater backdrop, foreground, props, and dormant landmarks for Units 5–7. Reuse the renderer unchanged. If renderer changes are necessary, stop and return the requirement to a Sol architecture session.
+Integrate the approved Starwater portrait, square, and wide backdrops, isolated props, and dormant landmarks for Units 5–7. Reuse the renderer unchanged. If renderer changes are necessary, stop and return the requirement to a Sol architecture session.
 
 Human validation focuses on search, text-object, and Visual Block exercises at every target viewport.
 
@@ -1085,7 +1155,7 @@ Human validation focuses on search, text-object, and Visual Block exercises at e
 **Visible change:** High  
 **Risk:** Low
 
-Integrate the approved Archive backdrop, foreground, props, and dormant landmarks for Units 8–10. Reuse the renderer unchanged.
+Integrate the approved Archive portrait, square, and wide backdrops, isolated props, and dormant landmarks for Units 8–10. Reuse the renderer unchanged.
 
 Human validation focuses on register indicators, long buffers, hidden keyboard layout, and dot-repeat exercises.
 
@@ -1096,7 +1166,7 @@ Human validation focuses on register indicators, long buffers, hidden keyboard l
 **Visible change:** High  
 **Risk:** Low
 
-Integrate the approved Meridian backdrop, foreground, props, and dormant landmarks for Units 11–14. Reuse the renderer unchanged.
+Integrate the approved Meridian portrait, square, and wide backdrops, isolated props, and dormant landmarks for Units 11–14. Reuse the renderer unchanged.
 
 Human validation focuses on Command-line UI, confirmation prompts, macros, substitution, and the densest buffers.
 
@@ -1279,6 +1349,8 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Add replay for completed unit stories.
 - Render real HTML copy over placeholder layers.
 - Continue and Skip are available immediately.
+- Implement portrait/stacked, square/stacked, wide/two-column, and shallow/two-column story layouts.
+- Preserve the active story panel and unit navigation target through orientation changes.
 - Handle deep links: a direct `?unit=` or `?activity=` link should not be blocked by first-launch story unless it targets Unit 1 without an activity.
 - Add reduced-motion behavior.
 - Do not infer educational completion from story state.
@@ -1298,6 +1370,8 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Skip from each intro panel.
 - Finish or jump to the final summary of a unit and continue.
 - Refresh during the transition.
+- Resize the desktop window through portrait, square, and wide while each story panel is open.
+- Rotate phone and tablet during the intro and a unit transition.
 - Deep-link to a later unit and to a specific activity.
 - Replay the intro and a completed unit scene.
 - Enable reduced motion and a screen reader.
@@ -1318,6 +1392,7 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Add per-world light colors and masks.
 - Add story copy and next hooks from the manifest.
 - Ensure dormant/restored assets share registration and do not jump.
+- Use the current board-shape backdrop and landmark placement for unit transitions.
 - Do not change story copy.
 
 **Human validation**
@@ -1342,6 +1417,7 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Add browser coverage for story state, world fallback, effects, reactions, reduced motion, and offline media.
 - Audit focus, dialog semantics, announcements, and skip/continue controls.
 - Measure load, decoding, memory, and animation frame stability on representative mobile emulation.
+- Test live shape changes, not only fixed viewport screenshots.
 - Verify asset budgets.
 - Verify no leftover Playwright/Vite processes.
 - Remove diagnostic flags.
@@ -1416,7 +1492,7 @@ If a Terra session discovers that it must change the data contract, Vim event se
 ### Milestone 1 — Prove the new board
 
 1. Generate Moonroot master candidates with Nano Banana Pro.
-2. Approve one and create the 4:1 outpaint and prop sheet with Nano Banana 2.
+2. Approve one square master and create its 4:5 portrait expansion, 16:9 wide expansion, and prop sheet with Nano Banana 2.
 3. WP-01 with Sol.
 4. WP-02 with Sol.
 5. WP-03 with Terra.
@@ -1492,6 +1568,7 @@ Yes: start with the board visualization.
 
 The first concrete move is not “implement all four worlds.” It is:
 
-> Generate one excellent Moonroot Ruins 16:9 master, outpaint it to 4:1, create one prop sheet, then implement WP-01 through WP-03.
+> Generate one excellent Moonroot Ruins square master, expand it to portrait
+> and wide variants, create one prop sheet, then implement WP-01 through WP-03.
 
 This provides the fastest trustworthy answer to the central visual question while leaving the editor, curriculum, character system, and completion feedback untouched.
