@@ -2686,3 +2686,185 @@ html.next-ui .toc-unit-launch button {
     transform: translateX(-50%);
   }
 }
+
+/* iPhone landscape proof of concept ---------------------------------------
+   Keep the lesson essentials and editor above an always-reachable keyboard.
+   Installed iPhones have a sizeable left safe area around the sensor housing,
+   so the lesson rail owns that inset instead of letting text sit beneath it. */
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  html.next-ui .phone {
+    height: var(--app-viewport-height, 100dvh);
+  }
+
+  html.next-ui .lesson-workspace {
+    min-height: 0;
+    grid-template-columns: clamp(190px, 35vw, 290px) minmax(0, 1fr);
+  }
+
+  html.next-ui .lesson-context {
+    min-width: 0;
+    padding-left: env(safe-area-inset-left);
+    overflow: hidden;
+  }
+
+  html.next-ui .landscape-controls {
+    top: max(5px, env(safe-area-inset-top));
+    left: max(5px, env(safe-area-inset-left));
+    gap: 4px;
+  }
+
+  html.next-ui .landscape-controls .icon-button {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+  }
+
+  html.next-ui .activity-intro {
+    min-height: 0;
+    flex: 0 0 auto;
+    padding: 40px 7px 7px;
+  }
+
+  html.next-ui .activity-kicker,
+  html.next-ui .activity-intro h1 {
+    display: none;
+  }
+
+  html.next-ui .activity-intro p {
+    width: auto;
+    margin: 0;
+    color: #c6d6cd;
+    font-size: 12px;
+    line-height: 1.25;
+    -webkit-line-clamp: 3;
+  }
+
+  html.next-ui .hint-button {
+    top: 5px;
+    right: 5px;
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+  }
+
+  html.next-ui .next-command-tray {
+    --status-rail-width: 58px;
+    min-height: 0;
+    height: auto;
+    flex: 1 1 0;
+  }
+
+  html.next-ui .execution-copy {
+    grid-template-rows: minmax(0, 1fr) auto minmax(18px, auto);
+    gap: 2px;
+    padding: 5px 6px;
+  }
+
+  html.next-ui .command-explanation {
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.18;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  html.next-ui .command-history-label {
+    display: block;
+    margin: 0;
+    font-size: 8px;
+    line-height: 1;
+  }
+
+  html.next-ui .next-command-tray .command-text {
+    grid-row: 3;
+    align-self: start;
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  html.next-ui .execution-status {
+    padding: 5px 3px;
+  }
+
+  html.next-ui .next-command-tray.is-step-status .status-primary,
+  html.next-ui .next-command-tray.is-step-status .status-secondary,
+  html.next-ui .status-primary,
+  html.next-ui .status-secondary {
+    font-size: 9px;
+  }
+
+  html.next-ui .status-key {
+    min-height: 20px;
+    padding-top: 3px;
+  }
+
+  html.next-ui .status-command-key {
+    min-height: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+
+  /* When the editor consumes the available world height, remove the scenic
+     board rather than squeezing both surfaces into the same narrow strip. */
+  html.next-ui .phone.keyboard-visible .game-area {
+    padding: 4px max(4px, env(safe-area-inset-right)) 4px 4px;
+    background: #06110f;
+  }
+
+  html.next-ui .phone.keyboard-visible .world {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  html.next-ui .phone.keyboard-visible .world::before,
+  html.next-ui .phone.keyboard-visible .ground-grid,
+  html.next-ui .phone.keyboard-visible .world-grid > .sprite {
+    display: none;
+  }
+
+  html.next-ui .phone.keyboard-visible .editor-stack {
+    width: auto;
+    max-height: none;
+    grid-row: 1 / 10;
+    align-self: stretch;
+    justify-self: stretch;
+    margin: 0;
+  }
+
+  html.next-ui .phone.keyboard-visible .next-code-slab {
+    height: 100%;
+    max-height: none;
+  }
+
+  html.next-ui .keyboard-panel {
+    padding: 3px max(4px, env(safe-area-inset-right))
+      calc(3px + env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
+  }
+
+  html.next-ui .keyboard {
+    gap: 2px;
+  }
+
+  html.next-ui .key-row {
+    gap: 2px;
+  }
+
+  html.next-ui .key {
+    height: clamp(24px, 6.1dvh, 27px);
+    font-size: clamp(11px, 1.8vw, 14px);
+  }
+
+  html.next-ui .key.modifier,
+  html.next-ui .key.utility {
+    font-size: clamp(8px, 1.35vw, 10px);
+  }
+
+  html.next-ui .help-card {
+    inset: 4px;
+    overflow-y: auto;
+  }
+}
