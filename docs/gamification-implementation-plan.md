@@ -50,27 +50,41 @@ WP-04 generation.
 
 ### July 2026 patch-production correction
 
-The registered renderer is retained, but the first proof patches do not create
-meaningful scene changes. This correction supersedes the earlier contract of
-three deterministic learning-phase patches:
+The registered renderer is retained, but crop-only generation did not preserve
+the scene geometry at the crop boundary. This correction supersedes both the
+first subtle proof patches and the later crop-and-paste review batch:
 
 - Keep the approved Moonroot base scenes unchanged.
+- Generate patch candidates only with Gemini Nano Banana through Vertex AI and
+  application-default credentials. Do not use an OpenAI image generator.
 - Author ten named environmental patch slots per scene. A slot is a semantic
   detail such as a particular pool edge, lantern, root shelf, crystal seam, or
   stone surface—not one normalized rectangle reused blindly across profiles.
-- Give every slot profile-specific bounds for `tall`, `compact`, and `wide`.
-  Choose those bounds from measured editor occlusion, character exclusion
-  zones, and the renderer's real cover transform. Prefer grounded lower-third
-  locations when they remain visible, but do not assume that “bottom” is safe.
-- Generate five materially different candidates for each slot in the compact
-  profile. After personal approval of one candidate, recreate that approved
-  semantic change for tall and wide in their corresponding registered bounds.
-- Produce review artifacts as the complete scene with the candidate applied,
-  its exact patch bounds outlined, and stable scene/slot/candidate labels.
-  Preserve the unmarked composite and patch asset beside each review image.
-- A person selects the winner. Automation may reject dimension errors,
-  out-of-bounds changes, empty diffs, or excessive unrelated changes, but
-  Codex does not make the aesthetic selection.
+- Calculate visibility atlases from real phone, tablet, landscape-phone, and
+  desktop boards. Include the renderer's cover transform, editor occlusion,
+  guide-character exclusion, hidden-backdrop states, and tall/compact/wide
+  profile selection. Bounds describe the compact source only; never reuse them
+  blindly for a responsive profile.
+- Build a Gemini-oriented object inventory containing the target object's
+  location, appearance, support surface, compact bounds, measured visibility,
+  and five substantial site-specific transformation ideas.
+- For each compact candidate, send the lossless complete board as Image 1 and a
+  small boxed locator crop as Image 2. The locator is reference markup only.
+  Ask Gemini for a complete-board edit that changes the named object
+  substantially while preserving the remainder of the board.
+- Do not crop, stretch, paste, mask, or extract patches during WP-03P-A. The
+  complete Gemini output is the unmarked review source; create a separate boxed
+  and labelled copy for selection.
+- Run only decoding, dimension, aspect-ratio, hash, and missing-output checks.
+  Preserve all mechanically readable candidates. A person performs all
+  aesthetic, integration, and winner selection.
+- The product owner selects any ten candidates explicitly; the winners do not
+  need to be one per inventory site. Multiple useful states of one object may
+  all become runtime variants.
+- Only after selection, use the original and selected complete boards to derive
+  conservative changed-pixel masks, inspect the extracted full-canvas RGBA
+  patches, and recreate the same semantic changes against authored tall and
+  wide profile locations.
 - During ordinary activities, render exactly one approved environmental patch,
   selected from a shuffled per-unit bag when the activity is entered. Hold the
   selection stable throughout that activity visit. Do not redraw on editor
@@ -103,10 +117,12 @@ The implementation should be delivered in small work packages. A coding session 
 Continue from the approved WP-03R Moonroot scenes:
 
 1. Run WP-03P-A for one Moonroot scene only.
-2. Measure cross-profile visibility and define ten semantic patch slots.
-3. Generate five compact-profile candidates per slot at 1K.
-4. Export 50 full-scene, bounding-box review composites and stop for personal
-   selection.
+2. Measure cross-profile visibility and inventory ten compact-board objects or
+   surfaces.
+3. Generate five complete-board Gemini edits per site at 1K, using the lossless
+   full board plus a boxed locator crop.
+4. Export the 50 unmarked outputs and 50 boxed review copies, then stop for
+   personal selection without automated ranking or patch extraction.
 5. After ten winners are recorded explicitly, run WP-03P-B to recreate those
    changes for tall and wide, integrate session-stable per-activity selection,
    and validate the scene.
@@ -770,36 +786,35 @@ whose central identity and low-contrast editor region remain unchanged.
 Do not generate structural prop sheets. For each approved scene and profile:
 
 1. Calculate a cross-profile visibility heatmap from the actual CSS cover
-   transforms, DOM editor masks, guide-character exclusion zones, and
-   representative board bounds.
-2. Define ten semantic compact-profile slots anchored to real surfaces or
-   features. Record corresponding tall and wide bounds separately. Slots do
-   not need to be mutually non-overlapping because only one environmental patch
-   is active, but they must not conflict with the landmark region.
-3. For each compact slot, generate five meaningfully different local changes:
-   flowers opening, a perched creature, water movement, spores, a lantern
-   state, crystal growth, vines, mist, environmental illumination, or another
-   surface-attached detail. A mere brightness/tint adjustment is not a valid
-   candidate.
-4. Send the crop with 20–35% contextual margin and the approved full scene.
-   Mask only the intended editable region. Ask the model to preserve the
-   surroundings, perspective, palette, and estimated local illumination.
-5. Extract changed pixels inside the declared region and restore them to the
-   exact source-canvas registration.
-6. Automatically reject empty diffs, dimension mismatches, unrelated changes
-   outside the allowed region, or excessive changes within the contextual
-   margin. Contact, perspective, and visual plausibility remain human review
-   decisions.
-7. Export one review image per candidate showing the complete scene with the
-   patch applied, a visible bounding box, and stable scene/slot/candidate ID.
-   Also retain an unmarked full-scene composite for close comparison.
-8. Stop for personal selection. Record one approved candidate and its hash for
-   every slot; do not infer approval from a filename or candidate number.
-9. Recreate each approved semantic change for tall and wide in their authored
-   profile-specific regions, then repeat the automated checks and full-scene
-   human review.
-10. Store each winner as a full-canvas transparent asset with dimensions
-    exactly matching its corresponding base.
+   transforms, DOM editor masks, guide-character exclusion zones,
+   hidden-backdrop states, and representative phone/tablet/desktop bounds.
+2. Inventory ten semantic compact-profile objects or surfaces. Record exact
+   visual descriptions, support surfaces, bounds, measured visibility, and five
+   substantial transformation ideas. Exclude the authored landmark.
+3. Decode the shipped compact board once to a lossless PNG. For every
+   candidate, send that complete PNG as the first Gemini image and a small
+   contextual crop with a high-contrast locator box as the second image.
+4. State explicitly that Image 1 is the exact edit target, Image 2 is
+   measurement-only locator markup, the output must be a complete board, the
+   target needs a new readable silhouette, and all other board geometry and
+   content must remain as close to Image 1 as possible.
+5. Generate five 1K complete-board edits for every inventory site. Keep all
+   decodable results and export a separate boxed/labelled review copy for each.
+   Do not locally paste a generated crop into the scene.
+6. During WP-03P-A, run mechanical checks only and do not infer an aesthetic
+   verdict from a computer-vision diff. Do not extract or promote patch pixels.
+7. Stop for personal selection. Record exactly ten explicit winners, their
+   hashes, model, prompts, source hashes, and date. Winners may share a site.
+8. During WP-03P-B, compare each selected complete edit with the exact full
+   board input, derive a conservative changed-pixel mask, discard low-level
+   preservation noise, feather only where inspection supports it, and export a
+   full-canvas RGBA compact patch for human review.
+9. Locate a semantically corresponding supported site separately in tall and
+   wide. Recreate the approved change by sending that complete profile board
+   plus its own locator crop to Gemini; never reuse compact normalized bounds.
+10. Repeat diff derivation, registration checks, and full-scene human review,
+    then store every approved winner as a full-canvas transparent asset whose
+    dimensions exactly match its profile base.
 
 Perfect physical lighting is unnecessary; consistent attachment, perspective,
 and local material logic are mandatory.
@@ -826,8 +841,10 @@ promoted, renamed, or counted as approved patch art.
 
 ### Patch-generation cost envelope
 
-Use 1K Nano Banana 2 outputs for local patch crops; the full-scene review
-composite is assembled locally and costs no additional generation call. Current
+Use 1K Nano Banana 2 outputs for complete-board edits; the boxed review copy is
+assembled locally and costs no additional generation call. The additional
+full-board and locator inputs add only image/text input tokens; 1K image output
+still dominates the request cost. Current
 Vertex AI standard pricing lists a 1K output at approximately `$0.067`, 2K at
 `$0.101`, and Flex/Batch at roughly half those rates. Input-image and text
 tokens add a small variable amount.
@@ -1325,44 +1342,50 @@ environmental art and are superseded by WP-03P.
 **Session brief**
 
 Work on exactly one Moonroot scene. Build the mechanical patch-site,
-generation, validation, and review workflow; generate 50 compact-profile
-candidates; then stop for personal selection. Do not change runtime selection,
-promote candidates, derive responsive winners, or begin another scene.
+generation, validation, and review workflow; generate 50 complete compact-board
+edits; then stop for personal selection. Use Gemini Nano Banana through Vertex
+AI only. Do not change runtime selection, extract or promote patches, derive
+responsive winners, or begin another scene.
 
 **Work**
 
-- Recalculate tall, compact, and wide visibility using the real board cover
-  transforms, DOM occlusion masks, and guide-character exclusion zones.
-- Define ten semantic patch slots with profile-specific bounds. Prefer visible
-  grounded lower-third surfaces, water, roots, ledges, crystals, and lanterns.
-- Exclude the authored landmark area. Record visibility/eligibility per profile.
-- Generate five 1K Nano Banana 2 candidates for each compact slot using the
-  approved scene, masked crop, and contextual margin.
+- Recalculate tall, compact, and wide visibility across the target phone sizes,
+  a landscape phone, portrait and landscape tablets, and desktop using the real
+  board cover transforms, hidden-backdrop states, DOM occlusion masks, and
+  guide-character exclusion zones.
+- Define ten semantic compact-board inventory sites. Exclude the landmark and
+  record each object's exact location, current appearance, support surface,
+  bounds, measured visibility, and five site-specific transformation ideas.
+- Decode the approved shipped board to lossless PNG. Generate five 1K Nano
+  Banana 2 candidates per site through Vertex AI using the complete board as
+  the exact edit target and a separate boxed locator crop as reference.
 - Require a visible content change attached to the scene. Brightness-only,
-  tint-only, floating, unsupported, or unrelated edits fail.
-- Create complete-scene review composites with the candidate applied, exact
-  bounding box, and stable IDs. Also save the unmarked composites.
-- Run only mechanical validation. Do not use Codex aesthetic ranking.
+  tint-only, floating, or unsupported changes are prohibited by the prompt,
+  but do not auto-reject readable Gemini outputs on aesthetic grounds.
+- Preserve each complete Gemini result unchanged and create a separate review
+  copy with the intended target box and stable ID. Do not composite a crop.
+- Run decoding, aspect-ratio, dimension, missing-output, and hash validation
+  only. Do not use Codex aesthetic ranking or automated diff-based rejection.
 - Emit an approval manifest with all 50 entries pending and make every
-  derivative/promote command fail until the relevant winner is explicitly
-  recorded.
+  derivative/promote command fail until ten winners are explicitly recorded.
 
 **Acceptance**
 
 - There are exactly ten slots and five candidates per slot for one scene.
-- Every review artifact shows the complete scene, applied candidate, box, and
-  unambiguous ID.
-- Candidate images and full-scene composites are reproducible from metadata.
+- Every unmarked output is a complete Gemini-edited board. Every review copy
+  shows the complete output, intended target box, and unambiguous ID.
+- Candidate images, full-board input, locator input, prompts, and hashes are
+  reproducible from metadata.
 - No output is written to the shipped PWA asset tree.
 - No candidate is treated as approved automatically.
 
 **Human gate**
 
-The product owner selects exactly one candidate per slot or rejects the slot.
-Record the selection, notes, source hash, model ID, prompt, and date. A rejected
-slot may be regenerated before the gate closes. Do not continue to WP-03P-B
-until ten winners are explicitly approved, unless the product owner reduces the
-slot count.
+The product owner selects exactly ten candidates in total. They may select
+multiple different states for one site and no state for another. Record each
+selection, notes, full-board source hash, locator hash, generated hash, model
+ID, prompt, and date. Do not continue to WP-03P-B until ten winners are
+explicitly approved, unless the product owner reduces the winner count.
 
 ### WP-03P-B — Responsive patch integration and activity variety
 
@@ -1384,7 +1407,10 @@ Stop after validation and personal review.
 **Work**
 
 - Generate one tall and one wide recreation for each approved compact patch
-  using its profile-specific bounds and the approved base profile.
+  using a newly authored profile-specific locator and the complete approved
+  profile base. Never reuse compact normalized bounds.
+- Derive the compact registered patch from the selected complete-board edit
+  only now, using conservative diff isolation followed by human inspection.
 - Run dimension, alpha, bounds, outside-diff, visibility, and missing-media
   checks; export full-scene responsive review composites.
 - Promote only explicitly approved compact, tall, and wide assets.
@@ -1792,7 +1818,7 @@ If a Terra session discovers that it must change the data contract, Vim event se
    scenes and profiles.
 2. Run WP-03P-A with Terra for one Moonroot scene and generate its 50 review
    candidates.
-3. Personally choose one winner for each of the ten slots.
+3. Personally choose exactly ten winners; multiple winners may use one site.
 4. Run WP-03P-B with Terra for that scene.
 5. Validate patch visibility, registration, responsive continuity, and
    per-activity shuffled selection in the live game.
@@ -1862,6 +1888,54 @@ and AGENTS.md. Do not commit.
 ```
 
 For a Nano Banana asset session, use the exact prompt and references specified in this document, preserve the interaction ID for controlled edits, and record every accepted asset in the presentation manifest or accompanying generation metadata.
+
+### Exact Terra continuation prompt for one Moonroot scene
+
+Start a fresh Terra session only after the previous scene has either completed
+WP-03P-B or is deliberately paused. Replace both bracketed values and use this
+instruction verbatim:
+
+```text
+Proceed with WP-03P-A from docs/gamification-implementation-plan.md for exactly
+one Moonroot scene: unit [UNIT_ID], scene [SCENE_ID].
+
+Read AGENTS.md, the whole WP-03P-A section, the Registered-patch method, and the
+existing Wayfinder round-03 scripts and manifests before changing files. Reuse
+the established workflow, but author a new scene-specific object inventory and
+do not copy Wayfinder coordinates or descriptions.
+
+Use only Gemini Nano Banana 2 / gemini-3.1-flash-image through Google Vertex AI
+with application-default credentials. Never use an OpenAI image generator.
+Capture the real phone, landscape-phone, tablet, and desktop visibility atlas.
+Inventory ten compact-board objects or supported surfaces outside the landmark.
+For each site, define five substantially different, scene-specific magical
+transformations. Send Gemini the complete lossless compact board as Image 1 and
+the boxed locator crop as Image 2, and request a complete-board edit.
+
+Run the dry plan, report the exact paid-call count and budget cap, then execute
+exactly 50 1K candidates. Preserve every decodable full-board output, make a
+separate boxed review copy, perform no aesthetic ranking and no patch
+extraction, update generation metadata and this plan only if the reusable
+contract changed, and stop for my review. Do not start WP-03P-B, another scene,
+or WP-04. Do not commit.
+```
+
+After the owner supplies ten filenames, start a separate Terra session with:
+
+```text
+Proceed with WP-03P-B from docs/gamification-implementation-plan.md for exactly
+unit [UNIT_ID], scene [SCENE_ID], using only the ten winners I list below.
+Record those explicit approvals first. Derive and inspect compact registered
+patches from the selected complete-board edits, author new tall and wide
+locators per semantic change, recreate them with Gemini Nano Banana 2 through
+Vertex AI using each complete profile board plus its locator, and integrate
+session-seeded no-repeat activity selection. Preserve the semantic winner ID
+across profiles and activity rerenders. Run all package and AGENTS.md
+validation, stop for review, do not start another scene or WP-04, and do not
+commit.
+
+[PASTE EXACTLY TEN WINNER FILENAMES HERE]
+```
 
 ## Final recommendation
 
