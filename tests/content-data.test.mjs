@@ -7,6 +7,7 @@ import {
   validatePresentationManifest,
 } from "../presentation-data.js";
 import { findNextSequentialUnit } from "../unit-navigation.js";
+import { backdropShapeForBoard, boardShapeForBounds } from "../world-presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -105,6 +106,17 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
       assert.match(prop.asset, new RegExp(`^assets/worlds/${worldId}/props/`));
     }
   }
+});
+
+test("world presentation shape thresholds follow rendered board aspect ratio", () => {
+  assert.equal(boardShapeForBounds({ width: 84, height: 100 }), "portrait");
+  assert.equal(boardShapeForBounds({ width: 85, height: 100 }), "square");
+  assert.equal(boardShapeForBounds({ width: 135, height: 100 }), "square");
+  assert.equal(boardShapeForBounds({ width: 136, height: 100 }), "wide");
+  assert.equal(boardShapeForBounds({ width: 240, height: 100 }), "wide");
+  assert.equal(boardShapeForBounds({ width: 241, height: 100 }), "shallow");
+  assert.equal(backdropShapeForBoard("shallow"), "wide");
+  assert.equal(backdropShapeForBoard("portrait"), "portrait");
 });
 
 test("presentation manifest preserves the approved unit story table", () => {

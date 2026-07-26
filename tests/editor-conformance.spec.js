@@ -1396,6 +1396,113 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator('.nix[src*="assets/characters/"]')).toBeVisible();
   });
 
+  test("renders each manifest world as clipped, non-interactive layers with stable identity", async ({ page }) => {
+    const worlds = [
+      ["modal-model", "moonroot-ruins", "mode-lantern", "theme-moonroot"],
+      ["precision-motions-search", "starwater-sanctuary", "starneedle", "theme-deepwater"],
+      ["registers-putting", "archive-of-echoes", "memory-archive", "theme-glass"],
+      ["command-line-ranges-line-operations", "brass-meridian", "meridian-table", "theme-ember"],
+    ];
+    for (const [unitId, worldId, landmarkId, themeClass] of worlds) {
+      await page.goto(`/?unit=${unitId}`);
+      const rendered = await page.locator("#world").evaluate(node => ({
+        data: { ...node.dataset },
+        classes: [...node.classList],
+        groundCells: node.querySelectorAll(".ground-cell").length,
+        ambientEffects: node.querySelectorAll(".world-ambient-effect").length,
+        props: node.querySelectorAll(".world-prop").length,
+        landmarks: node.querySelectorAll(".world-landmark").length,
+        decorativeImages: node.querySelectorAll(".world-backdrop img, .world-ambient img, .world-prop-layer img, .world-landmark-layer img").length,
+        backdrop: getComputedStyle(node.querySelector(".world-backdrop")).backgroundImage,
+        pointerEvents: [".world-backdrop", ".world-ambient", ".world-prop-layer", ".world-landmark-layer"]
+          .map(selector => getComputedStyle(node.querySelector(selector)).pointerEvents),
+      }));
+      expect(rendered.data).toMatchObject({
+        renderer: "layered",
+        unitId,
+        worldId,
+        landmarkId,
+        mode: "normal",
+        reducedMotion: "false",
+      });
+      expect(["portrait", "square", "wide", "shallow"]).toContain(rendered.data.boardShape);
+      expect(rendered.classes).toContain(themeClass);
+      expect(rendered.groundCells).toBe(0);
+      expect(rendered.ambientEffects).toBeGreaterThan(0);
+      expect(rendered.props).toBeGreaterThan(0);
+      expect(rendered.landmarks).toBe(1);
+      expect(rendered.decorativeImages).toBe(0);
+      expect(rendered.backdrop).toContain("gradient");
+      expect(rendered.pointerEvents).toEqual(["none", "none", "none", "none"]);
+
+      await page.evaluate(() => window.VimWilds.goTo(0));
+      await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
+      await expect(page.locator("#worldGrid > .nix")).toHaveCount(0);
+    }
+
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await page.getByLabel("Moonroot Ruins").check();
+    await expect(page.locator("#world")).toHaveClass(/theme-moonroot/);
+    await expect(page.locator("#world")).toHaveAttribute("data-world-id", "brass-meridian");
+  });
+
+  test("switches board composition live without resetting the active Vim activity", async ({ page }) => {
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
+    await page.evaluate(() => window.VimWilds.emit("c"));
+    const before = await state(page);
+    for (const [width, height, shape, backdropShape] of [
+      [320, 400, "portrait", "portrait"],
+      [400, 400, "square", "square"],
+      [720, 400, "wide", "wide"],
+      [1000, 400, "shallow", "wide"],
+    ]) {
+      await page.locator("#world").evaluate((node, size) => {
+        Object.assign(node.style, {
+          position: "fixed",
+          inset: "auto",
+          top: "0",
+          left: "0",
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+        });
+        window.dispatchEvent(new Event("orientationchange"));
+      }, { width, height });
+      await expect(page.locator("#world")).toHaveAttribute("data-board-shape", shape);
+      await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-backdrop-shape", backdropShape);
+      expect(await state(page)).toMatchObject({
+        activityId: before.activityId,
+        progress: before.progress,
+        history: before.history,
+        code: before.code,
+        cursor: before.cursor,
+      });
+    }
+  });
+
+  test("marks reduced motion and keeps the layered fallback static", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/?unit=modal-model");
+    await expect(page.locator("#world")).toHaveAttribute("data-reduced-motion", "true");
+    const animations = await page.evaluate(() => ({
+      ambient: getComputedStyle(document.querySelector(".world-ambient-effect")).animationName,
+      landmark: getComputedStyle(document.querySelector(".world-landmark"), "::before").animationName,
+    }));
+    expect(animations).toEqual({ ambient: "none", landmark: "none" });
+  });
+
+  test("uses the legacy tile renderer when presentation data is invalid", async ({ page }) => {
+    await page.route("**/content/presentation.json", route => route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({ schemaVersion: 1, worlds: {}, units: {}, story: {} }),
+    }));
+    await page.goto("/?unit=modal-model");
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "legacy");
+    await expect(page.locator("#world")).toHaveAttribute("data-unit-id", "modal-model");
+    await expect(page.locator("#world")).toHaveAttribute("data-world-id", "legacy");
+    expect(await page.locator(".ground-cell").count()).toBeGreaterThanOrEqual(108);
+    await expect(page.locator(".world-prop, .world-landmark, .world-ambient-effect")).toHaveCount(0);
+  });
+
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open settings" }).click();

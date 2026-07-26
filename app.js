@@ -2,7 +2,8 @@ import { spriteCells } from "./exercise-data.js";
 import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 import { appUrl, appVersion, remoteMediaUrl } from "./app-version.js";
-import { loadUnitCatalogWithPresentation } from "./presentation-data.js";
+import { loadUnitCatalogWithPresentation, resolveUnitPresentation } from "./presentation-data.js";
+import { WorldPresentationRenderer } from "./world-presentation.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -40,6 +41,7 @@ const unit = await fetch(appUrl(selectedUnit.path)).then(response => {
   if (!response.ok) throw new Error(`Unit request failed (${response.status})`);
   return response.json();
 });
+const unitPresentation = resolveUnitPresentation(catalogData.presentation, unit.id);
 
 const elements = {
   phone: $("#phone"),
@@ -54,8 +56,13 @@ const elements = {
   activityInstruction: $("#activityInstruction"),
   hintButton: $("#hintButton"),
   world: $("#world"),
+  worldBackdrop: $("#worldBackdrop"),
   groundGrid: $("#groundGrid"),
+  worldAmbient: $("#worldAmbient"),
+  worldPropLayer: $("#worldPropLayer"),
+  worldLandmarkLayer: $("#worldLandmarkLayer"),
   worldGrid: $("#worldGrid"),
+  characterLayer: $("#characterLayer"),
   completionHost: $("#completionHost"),
   helpCard: $("#helpCard"),
   helpClose: $("#helpClose"),
@@ -227,7 +234,7 @@ async function loadCharacterAssets() {
     document.documentElement.dataset.charactersReady = "true";
     const assignment = characterAssignment();
     const character = characterAssets[assignment.characterId] || characterAssets.nix;
-    const image = $(".nix", elements.worldGrid);
+    const image = $(".nix", elements.characterLayer);
     if (image && character) {
       image.dataset.character = assignment.characterId;
       image.dataset.animation = assignment.animationId;
@@ -358,9 +365,17 @@ function presentationFor(activity = currentActivity()) {
   return presentations[activity.lessonIndex % presentations.length];
 }
 
+function functionalThemeFor(activity = currentActivity()) {
+  return unitPresentation?.world.autoThemeId || presentationFor(activity).theme;
+}
+
 function setTheme(theme) {
   const activeTheme = state.themePreference !== "auto" ? state.themePreference : theme;
-  elements.world.className = `world theme-${activeTheme}${state.complete ? " complete" : ""}`;
+  allowedThemes.forEach(candidate => {
+    if (candidate !== "auto") elements.world.classList.remove(`theme-${candidate}`);
+  });
+  elements.world.classList.add(`theme-${activeTheme}`);
+  elements.world.classList.toggle("complete", state.complete);
   const [dark, mid, bright, magic, warm] = themeColors[activeTheme];
   elements.phone.style.setProperty("--theme-dark", dark);
   elements.phone.style.setProperty("--theme-mid", mid);
@@ -422,6 +437,16 @@ function scheduleGroundRedraw() {
   window.cancelAnimationFrame(groundRedrawFrame);
   groundRedrawFrame = window.requestAnimationFrame(() => renderGround(presentationFor(currentActivity())));
 }
+
+const worldRenderer = new WorldPresentationRenderer({
+  world: elements.world,
+  backdropLayer: elements.worldBackdrop,
+  ambientLayer: elements.worldAmbient,
+  landmarkLayer: elements.worldLandmarkLayer,
+  propLayer: elements.worldPropLayer,
+  assetUrl: localAssetUrl,
+  onLegacyResize: scheduleGroundRedraw,
+});
 
 function renderSprites(presentation) {
   return presentation.blocks.map((type, index) => {
@@ -567,8 +592,14 @@ function renderWorld() {
     vimEngine = null;
     resetVimEngineState();
   }
-  setTheme(presentation.theme);
-  renderGround(presentation);
+  setTheme(functionalThemeFor(activity));
+  const layeredWorld = worldRenderer.setPresentation(unitPresentation, { unitId: unit.id });
+  if (layeredWorld) {
+    elements.groundGrid.replaceChildren();
+    elements.groundGrid.removeAttribute("style");
+  } else {
+    renderGround(presentation);
+  }
   const initialState = initialStateFor(activity);
   const viewportRows = activity.editor?.viewportRows;
   const editorStyle = viewportRows
@@ -591,8 +622,9 @@ function renderWorld() {
   const characterMarkup = shouldShowCharacter
     ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
     : "";
-  const spriteMarkup = activity.inspection ? "" : renderSprites(presentation);
-  elements.worldGrid.innerHTML = `${spriteMarkup}${content}${characterMarkup}`;
+  const spriteMarkup = activity.inspection || layeredWorld ? "" : renderSprites(presentation);
+  elements.worldGrid.innerHTML = `${spriteMarkup}${content}`;
+  elements.characterLayer.innerHTML = characterMarkup;
   renderCompletionHost();
   if (hasEditor(activity)) mountEditor();
 }
@@ -975,7 +1007,7 @@ function completeActivity() {
   state.complete = true;
   clearPlayback();
   vimEngine?.setLocked(true);
-  setTheme(presentationFor().theme);
+  setTheme(functionalThemeFor());
   $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
   if (currentActivity().type === "choice") renderWorld();
   else renderCompletionHost();
@@ -1122,7 +1154,7 @@ function setHelp(open) {
 
 function playSuccessCharacter() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const character = $(".nix", elements.worldGrid);
+  const character = $(".nix", elements.characterLayer);
   const asset = characterAssets[character?.dataset.character || ""];
   const animation = asset?.animations?.[character?.dataset.animation || ""];
   if (!character || !animation?.src || successMedia?.status !== "ready" || !successMedia.objectUrl) return;
@@ -1313,7 +1345,7 @@ elements.worldGrid.addEventListener("click", event => {
   if (remediation) goToRemediation(remediation);
   const route = event.target.closest("[data-route]")?.dataset.route;
   if (route) goToActivityId(route);
-  const unitId = event.target.closest("[data-unit-id]")?.dataset.unitId;
+  const unitId = event.target.closest("button[data-unit-id]")?.dataset.unitId;
   if (unitId) navigateToUnit(unitId);
 });
 elements.completionHost.addEventListener("click", event => {
@@ -1359,7 +1391,7 @@ $(".landscape-controls")?.addEventListener("click", event => {
 elements.tocLessons?.addEventListener("click", event => {
   const button = event.target.closest("[data-activity-index]");
   if (button) goToActivity(Number(button.dataset.activityIndex));
-  const unitButton = event.target.closest("[data-unit-id]");
+  const unitButton = event.target.closest("button[data-unit-id]");
   if (unitButton) navigateToUnit(unitButton.dataset.unitId);
 });
 elements.themeOptions?.addEventListener("change", event => {
@@ -1367,7 +1399,7 @@ elements.themeOptions?.addEventListener("change", event => {
   if (!allowedThemes.has(value)) return;
   state.themePreference = value;
   persistSession();
-  setTheme(presentationFor().theme);
+  setTheme(functionalThemeFor());
 });
 $$('[data-close-dialog]').forEach(button => button.addEventListener("click", () => {
   $("#" + button.dataset.closeDialog)?.close();
@@ -1494,11 +1526,7 @@ if (requestedIndex >= 0) state.activityIndex = requestedIndex;
 assignCharacters();
 renderAll();
 renderThemeOptions();
-if ("ResizeObserver" in window) {
-  new ResizeObserver(scheduleGroundRedraw).observe(elements.world);
-} else {
-  window.addEventListener("resize", scheduleGroundRedraw);
-}
+worldRenderer.start();
 void loadCharacterAssets();
 persistSession();
 registerServiceWorker();
