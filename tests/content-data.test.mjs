@@ -7,7 +7,7 @@ import {
   validatePresentationManifest,
 } from "../presentation-data.js";
 import { findNextSequentialUnit } from "../unit-navigation.js";
-import { boardProfileForBounds, sceneProfileForBoard } from "../world-presentation.js";
+import { boardProfileForBounds, remoteVariantPaths, sceneProfileForBoard } from "../world-presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -118,6 +118,14 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   }
   assert.equal(presentation.worlds["moonroot-ruins"].props, undefined);
   assert.equal(presentation.worlds["moonroot-ruins"].backdrops, undefined);
+
+  const variants = resolveUnitPresentation(presentation, "cursor-movement").scene.remoteVariants;
+  assert.equal(variants.profile, "compact");
+  assert.equal(variants.timing.initialDelayMs, 15_000);
+  assert.equal(variants.timing.gapMs, 15_000);
+  assert.equal(variants.siteIds.length, 10);
+  assert.equal(remoteVariantPaths(variants).length, 50);
+  assert.match(remoteVariantPaths(variants)[0], /wayfinder-crossroads\/variants\/.*-c01\.png$/);
 });
 
 test("registered scene profiles follow the rendered board aspect ratio", () => {

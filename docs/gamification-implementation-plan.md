@@ -78,20 +78,21 @@ first subtle proof patches and the later crop-and-paste review batch:
 - Run only decoding, dimension, aspect-ratio, hash, and missing-output checks.
   Preserve all mechanically readable candidates. A person performs all
   aesthetic, integration, and winner selection.
-- The product owner selects any ten candidates explicitly; the winners do not
-  need to be one per inventory site. Multiple useful states of one object may
-  all become runtime variants.
-- Only after selection, use the original and selected complete boards to derive
-  conservative changed-pixel masks, inspect the extracted full-canvas RGBA
-  patches, and recreate the same semantic changes against authored tall and
-  wide profile locations.
-- During ordinary activities, render exactly one approved environmental patch,
-  selected from a shuffled per-unit bag when the activity is entered. Hold the
-  selection stable throughout that activity visit. Do not redraw on editor
-  updates, resize, reset, or profile switching.
-- Avoid repetition until all eligible patches have been used. Tests inject a
-  fixed seed; production uses a session seed. Landmark dormant/restored state
-  remains independent and may render alongside the environmental patch.
+- The product owner explicitly approves any useful subset of candidates. The
+  approval set does not need to contain one item per inventory site; multiple
+  useful states of one object may all become runtime variants. If all fifty are
+  approved, integrate all fifty.
+- After the owner approves the batch, retain every complete-board edit as a
+  remote scene variant. Do not extract a crop or derive a full-canvas RGBA
+  patch: a complete-board transition is the deliberate presentation effect.
+- Stream one random remote variant at a time from GitHub Pages. It is never a
+  PWA precache entry. Start 15 seconds after entering the scene; fade in, hold,
+  fade out, wait 15 seconds, then draw the next item from a shuffled no-repeat
+  bag. The base board remains local and stable underneath.
+- A remote variant is eligible only for the authored profile. Until a scene has
+  separately generated tall or wide full-board variants, those profiles retain
+  their local base board unchanged. Landmark dormant/restored state remains
+  independent beneath the optional variant layer.
 - Retain reduced-motion, shallow-profile, missing-media, and CSS-fallback
   behavior. A patch that is not sufficiently visible in the active profile may
   be skipped without drawing another during the same activity.
@@ -123,9 +124,8 @@ Continue from the approved WP-03R Moonroot scenes:
    full board plus a boxed locator crop.
 4. Export the 50 unmarked outputs and 50 boxed review copies, then stop for
    personal selection without automated ranking or patch extraction.
-5. After ten winners are recorded explicitly, run WP-03P-B to recreate those
-   changes for tall and wide, integrate session-stable per-activity selection,
-   and validate the scene.
+5. After personal approval, run WP-03P-B to publish and integrate all 50
+   complete-board variants as remote optional media, then validate the scene.
 6. Repeat WP-03P-A and WP-03P-B for the other three Moonroot scenes one scene at
    a time.
 7. Stop for personal review before any WP-04 expansion.
@@ -306,8 +306,13 @@ Classify media into two tiers:
    - These are emitted by the Vite PWA plugin and available offline.
 
 2. **Optional remote media**
-   - Existing multi-megabyte animated character WebPs.
-   - Any future cinematic media.
+   - Existing multi-megabyte animated character WebPs and reviewed remote
+     full-board scene variants.
+   - Publish all optional media under the GitHub Pages asset path, not
+     `raw.githubusercontent.com`, so the application has one production media
+     origin. Emit it into the deployment but explicitly exclude it from the
+     service-worker precache.
+   - Any future cinematic media follows the same GitHub Pages-only path.
    - Story and landmark restoration must still work without these files.
 
 Add a build test that reports and enforces the total core-media budget:
@@ -803,18 +808,20 @@ Do not generate structural prop sheets. For each approved scene and profile:
    Do not locally paste a generated crop into the scene.
 6. During WP-03P-A, run mechanical checks only and do not infer an aesthetic
    verdict from a computer-vision diff. Do not extract or promote patch pixels.
-7. Stop for personal selection. Record exactly ten explicit winners, their
-   hashes, model, prompts, source hashes, and date. Winners may share a site.
-8. During WP-03P-B, compare each selected complete edit with the exact full
-   board input, derive a conservative changed-pixel mask, discard low-level
-   preservation noise, feather only where inspection supports it, and export a
-   full-canvas RGBA compact patch for human review.
-9. Locate a semantically corresponding supported site separately in tall and
-   wide. Recreate the approved change by sending that complete profile board
-   plus its own locator crop to Gemini; never reuse compact normalized bounds.
-10. Repeat diff derivation, registration checks, and full-scene human review,
-    then store every approved winner as a full-canvas transparent asset whose
-    dimensions exactly match its profile base.
+7. Stop for personal review. Record every approved candidate and retain every
+   candidate's hashes, model, prompts, source hashes, and date.
+8. During WP-03P-B, copy every approved complete-board output into the scene's
+   `variants/` directory and register the compact profile, semantic site IDs,
+   and timing metadata in the presentation manifest.
+9. Emit those PNGs into the GitHub Pages build but exclude them explicitly from
+   the service-worker precache. Fetch them only at display time through the
+   remote media URL, decode them to an object URL, and revoke that object URL
+   after fade-out.
+10. Keep the local base board visible on fetch error, offline, shallow, or
+    reduced-motion states. Abort an in-flight request when offline and resume
+    immediately on the browser `online` event. Add tall or wide remote variants
+    only after separately generating and reviewing full-board edits for those
+    profiles.
 
 Perfect physical lighting is unnecessary; consistent attachment, perspective,
 and local material logic are mandatory.
@@ -824,20 +831,23 @@ locally with feathered brightness, saturation, contrast, and tint adjustments.
 They prove exact registration and alpha compositing only. They must not be
 promoted, renamed, or counted as approved patch art.
 
-### Patch selection at runtime
+### Remote-variant presentation at runtime
 
-- On activity entry, draw one eligible patch from a shuffled bag scoped to the
-  unit and session.
-- Keep that patch ID stable while the activity is rendered, reset, solved, or
-  resized. Profile changes resolve the same semantic ID to another profile
-  asset.
-- Do not repeat a patch until the bag is exhausted; then reshuffle.
-- A direct deep link initializes a bag and selection normally.
-- Tests inject a fixed random seed and assert selection stability, no-repeat
-  behavior, profile continuity, and safe handling of missing/ineligible media.
-- Learning phase remains available as presentation metadata but does not drive
-  patch selection.
-- Dormant/restored landmark state remains controlled only by unit completion.
+- The local scene base, editor, guide, landmark state, and proof overlays remain
+  the functional offline composition. Remote variants are an opaque backdrop
+  layer below the editor and guide, not an editor-covering overlay.
+- On new-scene entry, wait 15 seconds. Fetch one random no-repeat variant for
+  the matching authored profile, fade it in for 1.4 seconds, hold it for seven
+  seconds, fade it out for 1.4 seconds, then wait 15 seconds before the next.
+- Fetch with `cache: no-store` and CORS from the GitHub Pages asset URL. The
+  service worker must never precache or synthesize an error for this media.
+- On offline, fetch failure, shallow layout, or reduced motion, remove any
+  active variant and show only the local base without messaging the learner.
+  On `online`, resume an eligible scene immediately rather than waiting for a
+  new activity.
+- Shuffle the complete approved batch and do not repeat an item until the bag
+  is exhausted. Activity renders, typing, reset, solve, and completion do not
+  restart the scene timer or replace the active image.
 
 ### Patch-generation cost envelope
 
@@ -1367,7 +1377,8 @@ responsive winners, or begin another scene.
 - Run decoding, aspect-ratio, dimension, missing-output, and hash validation
   only. Do not use Codex aesthetic ranking or automated diff-based rejection.
 - Emit an approval manifest with all 50 entries pending and make every
-  derivative/promote command fail until ten winners are explicitly recorded.
+  derivative/promote command fail until the approved entries are explicitly
+  recorded.
 
 **Acceptance**
 
@@ -1381,13 +1392,19 @@ responsive winners, or begin another scene.
 
 **Human gate**
 
-The product owner selects exactly ten candidates in total. They may select
-multiple different states for one site and no state for another. Record each
-selection, notes, full-board source hash, locator hash, generated hash, model
-ID, prompt, and date. Do not continue to WP-03P-B until ten winners are
-explicitly approved, unless the product owner reduces the winner count.
+The product owner approves a useful subset of the fifty candidates, including
+all fifty when they work well together. They may approve multiple different
+states for one site and no state for another. Record each selection, notes,
+full-board source hash, locator hash, generated hash, model ID, prompt, and
+date. Do not continue to WP-03P-B until the approved set is explicitly
+recorded.
 
-### WP-03P-B — Responsive patch integration and activity variety
+**Wayfinder Crossroads status:** Complete. The owner approved all fifty
+round-03 complete-board edits for the compact profile; WP-03P-B streams all
+fifty as optional remote variants. The next Moonroot scene must repeat this
+same approval gate before integration.
+
+### WP-03P-B — Remote full-board variant integration and activity variety
 
 **Recommended model:** Terra
 
@@ -1399,46 +1416,45 @@ explicitly approved, unless the product owner reduces the winner count.
 
 **Session brief**
 
-For exactly one approved Moonroot scene, recreate its ten selected semantic
-changes for tall and wide, integrate the registered winners, replace the
-brightness/tint proof overlays, and add stable randomized activity selection.
-Stop after validation and personal review.
+For exactly one personally approved Moonroot scene, publish all 50 reviewed
+compact full-board edits as optional remote variants, integrate the timed
+shuffled presentation layer, and keep tall and wide boards on their local base
+until profile-specific full-board variants are generated. Stop after validation
+and personal review.
 
 **Work**
 
-- Generate one tall and one wide recreation for each approved compact patch
-  using a newly authored profile-specific locator and the complete approved
-  profile base. Never reuse compact normalized bounds.
-- Derive the compact registered patch from the selected complete-board edit
-  only now, using conservative diff isolation followed by human inspection.
-- Run dimension, alpha, bounds, outside-diff, visibility, and missing-media
-  checks; export full-scene responsive review composites.
-- Promote only explicitly approved compact, tall, and wide assets.
-- Replace the three proof overlay entries with ten semantic patch IDs and their
-  per-profile metadata.
-- On activity entry, select one eligible patch from a session-seeded,
-  no-repeat shuffled bag. Hold it stable through all renders and profile
-  changes.
-- Add a deterministic seed hook for tests without changing
-  `window.VimWilds` compatibility.
+- Copy all approved candidate PNGs to the source scene's `variants/` directory,
+  register their ten semantic site IDs and five variants per site, and stage the
+  image files for git without committing.
+- Emit the variant PNGs into the GitHub Pages deployment but exclude them from
+  the PWA service-worker precache and from local/offline asset budgets. Use the
+  same GitHub Pages remote-media URL for character animations and every future
+  optional visual asset; do not mix raw-GitHub and Pages origins.
+- Add one remote variant layer below the editor and guide. It must use the
+  configured 15-second initial delay and gap, 1.4-second fades, seven-second
+  hold, and a shuffled no-repeat bag across all 50 assets.
+- Fetch one image only when it is due to display. Decode into an object URL,
+  revoke it after fade-out, abort it on offline, and silently retain the base
+  board on failure. Resume immediately when connectivity returns.
+- Keep compact-only assets hidden on tall, wide, shallow, keyboard-suppressed,
+  and reduced-motion presentations until corresponding profile variants exist.
 - Keep landmark state, CSS ambience, unit reveal, editor geometry, lesson data,
   command behavior, keyboard behavior, and functional theme selection
   unchanged.
 
 **Acceptance**
 
-- One real content-changing patch is visible during an ordinary activity when
-  its active profile is eligible.
-- The selected patch cannot change because of typing, reset, solve, resize,
-  completion rendering, or unrelated state updates.
-- Re-entering or entering another activity advances the shuffled bag; no patch
-  repeats before exhaustion.
-- Switching tall/compact/wide preserves the semantic patch ID and uses the
-  corresponding registered asset.
-- Every patch matches its base dimensions and has no changed pixels outside its
-  declared region.
-- Missing media, shallow layouts, reduced motion, offline loading, and direct
-  deep links remain safe.
+- One approved full-board variant appears only after the configured initial
+  delay in an eligible compact presentation and never covers editor or guide.
+- The active variant completes its fade/hold/fade cycle even when typing,
+  resetting, solving, or changing completion state. Ordinary activity renders
+  never restart it.
+- No item repeats before all 50 have appeared. Tall/wide/shallow and
+  reduced-motion layouts retain the base board until those profiles have their
+  own reviewed remote variants.
+- Missing media, offline loading, browser reconnection, direct deep links, and
+  service-worker operation remain silent and safe.
 
 Repeat WP-03P-A, its human gate, and WP-03P-B scene by scene for the remaining
 Moonroot units. Do not batch all four scenes before the first integrated scene
@@ -1818,10 +1834,11 @@ If a Terra session discovers that it must change the data contract, Vim event se
    scenes and profiles.
 2. Run WP-03P-A with Terra for one Moonroot scene and generate its 50 review
    candidates.
-3. Personally choose exactly ten winners; multiple winners may use one site.
+3. Personally approve the useful subset of its fifty candidates; multiple
+   approved candidates may use one site, and all fifty may be approved.
 4. Run WP-03P-B with Terra for that scene.
-5. Validate patch visibility, registration, responsive continuity, and
-   per-activity shuffled selection in the live game.
+5. Validate remote-variant visibility, responsive continuity, and the
+   timed shuffled selection in the live game.
 6. Repeat WP-03P-A and WP-03P-B one Moonroot scene at a time.
 7. Stop for personal review before generating another region.
 
@@ -1920,21 +1937,22 @@ contract changed, and stop for my review. Do not start WP-03P-B, another scene,
 or WP-04. Do not commit.
 ```
 
-After the owner supplies ten filenames, start a separate Terra session with:
+After the owner approves the full review batch, start a separate Terra session with:
 
 ```text
 Proceed with WP-03P-B from docs/gamification-implementation-plan.md for exactly
-unit [UNIT_ID], scene [SCENE_ID], using only the ten winners I list below.
-Record those explicit approvals first. Derive and inspect compact registered
-patches from the selected complete-board edits, author new tall and wide
-locators per semantic change, recreate them with Gemini Nano Banana 2 through
-Vertex AI using each complete profile board plus its locator, and integrate
-session-seeded no-repeat activity selection. Preserve the semantic winner ID
-across profiles and activity rerenders. Run all package and AGENTS.md
+unit [UNIT_ID], scene [SCENE_ID], using the entire personally approved 50-image
+batch. Copy the complete-board PNGs to the scene's variants directory and stage
+them for git. Publish them and all character animations through the GitHub Pages
+asset path, but exclude both classes from the service-worker precache. Add the
+delayed remote variant layer: wait 15 seconds on scene entry, fade in for 1.4
+seconds, hold seven seconds, fade out for 1.4 seconds, wait 15 seconds, and use
+a shuffled no-repeat bag. Keep the local base scene on any offline/fetch-error/
+shallow/reduced-motion state and resume immediately on browser online. Do not
+derive crop patches. Keep tall and wide bases unchanged until those profiles
+have their own reviewed full-board variants. Run all package and AGENTS.md
 validation, stop for review, do not start another scene or WP-04, and do not
 commit.
-
-[PASTE EXACTLY TEN WINNER FILENAMES HERE]
 ```
 
 ## Final recommendation
@@ -1942,10 +1960,12 @@ commit.
 The Moonroot base-scene direction is approved. The immediate move is:
 
 > Run WP-03P-A with Terra for one Moonroot scene, review its 50 full-scene
-> boxed patch candidates personally, and only then run WP-03P-B to integrate
-> the ten winners.
+> boxed candidates personally, and only then run WP-03P-B to integrate the
+> personally approved complete-board variants.
 
-Repeat this one scene at a time and stop before WP-04.
+Repeat this one scene at a time and stop before WP-04. Wayfinder Crossroads is
+the completed reference implementation: all fifty of its approved complete
+board edits are served from GitHub Pages, never PWA-precached.
 
 This provides the fastest trustworthy answer to the central visual question
 while leaving the editor, curriculum, keyboard, character assignment logic, and

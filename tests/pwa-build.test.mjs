@@ -14,7 +14,7 @@ function files(directory) {
   });
 }
 
-test("production PWA precaches all local lessons and excludes animation WebPs", () => {
+test("production PWA precaches core media and streams GitHub Pages animation and scene variants", () => {
   execFileSync("npm", ["run", "build"], { cwd: rootPath, stdio: "inherit" });
   const dist = join(rootPath, "dist");
   const output = files(dist);
@@ -48,6 +48,23 @@ test("production PWA precaches all local lessons and excludes animation WebPs", 
   moonrootMedia.forEach(file => {
     assert.equal(existsSync(join(dist, file)), true);
     assert.equal(worker.includes(file), true);
+  });
+  const remoteVariantRoot = join(moonrootRoot, "scenes", "wayfinder-crossroads", "variants");
+  const remoteVariants = files(remoteVariantRoot)
+    .filter(file => file.endsWith(".png"))
+    .map(file => `assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/${file.split("/").at(-1)}`);
+  assert.equal(remoteVariants.length, 50);
+  remoteVariants.forEach(file => {
+    assert.equal(existsSync(join(dist, file)), true);
+    assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
+  });
+  const characterAnimations = files(join(rootPath, "assets", "characters"))
+    .filter(file => file.includes("/animations/") && file.endsWith(".webp"))
+    .map(file => `assets/characters/${file.slice(join(rootPath, "assets", "characters").length + 1)}`);
+  assert.equal(characterAnimations.length, 150);
+  characterAnimations.forEach(file => {
+    assert.equal(existsSync(join(dist, file)), true);
+    assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
   });
   for (const retiredAsset of [
     "assets/worlds/moonroot-ruins/backdrop-square.webp",

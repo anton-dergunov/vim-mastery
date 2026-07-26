@@ -107,3 +107,33 @@ test("cancels the unit-entry reveal on input", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(world).not.toHaveClass(/scene-reveal-active/);
 });
+
+test("streams compact Wayfinder variants after the delay and silently falls back offline", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
+  });
+  await page.route("https://anton-dergunov.github.io/vim-mastery/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => route.fulfill({
+    path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+    contentType: "image/png",
+    headers: { "access-control-allow-origin": "*" },
+  }));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
+  await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "compact");
+
+  const variant = page.locator(".world-remote-variant");
+  await expect(variant).toHaveCount(0);
+  await expect(variant).toHaveCount(1, { timeout: 17_000 });
+  await expect(variant).toHaveClass(/is-visible/);
+  expect(await page.locator("#worldGrid").evaluate(element => Number(getComputedStyle(element).zIndex))).toBeGreaterThan(
+    await variant.evaluate(element => Number(getComputedStyle(element.parentElement).zIndex)),
+  );
+
+  await page.context().setOffline(true);
+  await page.evaluate(() => window.dispatchEvent(new Event("offline")));
+  await expect(variant).toHaveCount(0);
+
+  await page.context().setOffline(false);
+  await page.evaluate(() => window.dispatchEvent(new Event("online")));
+  await expect(variant).toHaveCount(1, { timeout: 3_000 });
+});

@@ -33,20 +33,32 @@ function activePatchIds(scene, phase, landmarkState) {
   return landmarkId ? [...phaseIds, landmarkId] : [...phaseIds];
 }
 
+export function remoteVariantPaths(config) {
+  if (!config?.assetRoot || !Array.isArray(config.siteIds) || !Number.isInteger(config.variantsPerSite)) return [];
+  return config.siteIds.flatMap(siteId => Array.from(
+    { length: config.variantsPerSite },
+    (_, index) => `${config.assetRoot}/${siteId}-c${String(index + 1).padStart(2, "0")}.png`,
+  ));
+}
+
 export class WorldPresentationRenderer {
   constructor({
     world,
     backdropLayer,
     ambientLayer,
     patchLayer,
+    remoteVariantLayer,
     assetUrl = value => value,
+    remoteAssetUrl = value => value,
     onLegacyResize = () => {},
   }) {
     this.world = world;
     this.backdropLayer = backdropLayer;
     this.ambientLayer = ambientLayer;
     this.patchLayer = patchLayer;
+    this.remoteVariantLayer = remoteVariantLayer;
     this.assetUrl = assetUrl;
+    this.remoteAssetUrl = remoteAssetUrl;
     this.onLegacyResize = onLegacyResize;
     this.presentation = null;
     this.presentationKey = null;
@@ -60,6 +72,13 @@ export class WorldPresentationRenderer {
     this.revealLoadTimer = null;
     this.revealHoldTimer = null;
     this.revealImage = null;
+    this.remoteVariantTimer = null;
+    this.remoteVariantFadeTimer = null;
+    this.remoteVariantController = null;
+    this.remoteVariantObjectUrl = null;
+    this.remoteVariantBag = [];
+    this.remoteVariantCandidate = null;
+    this.remoteVariantPausedOffline = false;
     this.handleResize = () => {
       if (boardProfileForBounds(this.world.getBoundingClientRect()) !== this.profile) {
         this.cancelReveal();
@@ -73,8 +92,17 @@ export class WorldPresentationRenderer {
     this.handleReducedMotion = event => {
       this.world.dataset.reducedMotion = String(event.matches);
       if (event.matches) this.cancelReveal();
+      this.syncRemoteVariants();
     };
     this.handleRevealInput = () => this.cancelReveal();
+    this.handleOnline = () => {
+      this.remoteVariantPausedOffline = false;
+      this.syncRemoteVariants({ resumeImmediately: true });
+    };
+    this.handleOffline = () => {
+      this.remoteVariantPausedOffline = true;
+      this.cancelRemoteVariants({ clearLayer: true });
+    };
   }
 
   setPresentation(presentation, {
@@ -96,12 +124,14 @@ export class WorldPresentationRenderer {
 
     if (!valid) {
       this.cancelReveal();
+      this.cancelRemoteVariants({ clearLayer: true, resetBag: true });
       this.presentationKey = null;
       this.world.style.removeProperty("--world-fallback");
       this.backdropLayer.style.removeProperty("--world-asset");
       this.backdropLayer.removeAttribute("data-scene-profile");
       this.ambientLayer.replaceChildren();
       this.patchLayer.replaceChildren();
+      this.remoteVariantLayer?.replaceChildren();
       this.updateLayout();
       return false;
     }
@@ -110,7 +140,9 @@ export class WorldPresentationRenderer {
     const key = `${presentation.world.id}:${presentation.unit.id}:${scene.id}`;
     if (key !== this.presentationKey) {
       this.cancelReveal();
+      this.cancelRemoteVariants({ clearLayer: true, resetBag: true });
       this.presentationKey = key;
+      this.remoteVariantPausedOffline = !navigator.onLine;
       this.buildAmbientLayer();
     }
     this.updateLayout(true);
@@ -145,6 +177,123 @@ export class WorldPresentationRenderer {
     this.patchLayer.replaceChildren(...elements);
   }
 
+  remoteVariantsAreEligible() {
+    const config = this.presentation?.scene?.remoteVariants;
+    return Boolean(
+      config
+      && this.remoteVariantLayer
+      && sceneProfileForBoard(this.profile) === config.profile
+      && this.profile !== "shallow"
+      && !this.reducedMotionQuery?.matches
+      && navigator.onLine
+      && !this.remoteVariantPausedOffline,
+    );
+  }
+
+  cancelRemoteVariants({ clearLayer = false, resetBag = false } = {}) {
+    clearTimeout(this.remoteVariantTimer);
+    clearTimeout(this.remoteVariantFadeTimer);
+    this.remoteVariantTimer = null;
+    this.remoteVariantFadeTimer = null;
+    this.remoteVariantController?.abort();
+    this.remoteVariantController = null;
+    if (this.remoteVariantObjectUrl) URL.revokeObjectURL(this.remoteVariantObjectUrl);
+    this.remoteVariantObjectUrl = null;
+    if (clearLayer) this.remoteVariantLayer?.replaceChildren();
+    if (resetBag) {
+      this.remoteVariantBag = [];
+      this.remoteVariantCandidate = null;
+    }
+  }
+
+  scheduleRemoteVariant(delay) {
+    if (!this.remoteVariantsAreEligible() || this.remoteVariantTimer || this.remoteVariantController || this.remoteVariantLayer?.childElementCount) return;
+    this.remoteVariantTimer = window.setTimeout(() => {
+      this.remoteVariantTimer = null;
+      this.showRemoteVariant();
+    }, delay);
+  }
+
+  nextRemoteVariant(config) {
+    if (this.remoteVariantCandidate) return this.remoteVariantCandidate;
+    if (!this.remoteVariantBag.length) {
+      this.remoteVariantBag = remoteVariantPaths(config);
+      for (let index = this.remoteVariantBag.length - 1; index > 0; index -= 1) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [this.remoteVariantBag[index], this.remoteVariantBag[other]] = [this.remoteVariantBag[other], this.remoteVariantBag[index]];
+      }
+    }
+    this.remoteVariantCandidate = this.remoteVariantBag.shift() || null;
+    return this.remoteVariantCandidate;
+  }
+
+  async showRemoteVariant() {
+    const config = this.presentation?.scene?.remoteVariants;
+    if (!config || !this.remoteVariantsAreEligible()) return;
+    const asset = this.nextRemoteVariant(config);
+    if (!asset) return;
+    const source = this.remoteAssetUrl(asset);
+    const controller = new AbortController();
+    this.remoteVariantController = controller;
+    let pendingObjectUrl = null;
+    try {
+      const response = await fetch(source, {
+        cache: "no-store",
+        mode: "cors",
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error(`Remote scene variant request failed (${response.status})`);
+      const objectUrl = URL.createObjectURL(await response.blob());
+      pendingObjectUrl = objectUrl;
+      const image = new Image();
+      image.src = objectUrl;
+      await image.decode();
+      if (controller.signal.aborted || !this.remoteVariantsAreEligible()) {
+        URL.revokeObjectURL(objectUrl);
+        return;
+      }
+      this.remoteVariantController = null;
+      this.remoteVariantObjectUrl = objectUrl;
+      pendingObjectUrl = null;
+      const variant = document.createElement("div");
+      variant.className = "world-remote-variant";
+      variant.dataset.asset = asset;
+      variant.style.setProperty("--world-asset", `url("${objectUrl}")`);
+      variant.style.setProperty("--remote-variant-fade", `${config.timing.fadeMs}ms`);
+      this.remoteVariantLayer.replaceChildren(variant);
+      requestAnimationFrame(() => variant.classList.add("is-visible"));
+      this.remoteVariantFadeTimer = window.setTimeout(() => {
+        variant.classList.remove("is-visible");
+        this.remoteVariantFadeTimer = window.setTimeout(() => {
+          if (variant.isConnected) variant.remove();
+          if (this.remoteVariantObjectUrl === objectUrl) {
+            URL.revokeObjectURL(objectUrl);
+            this.remoteVariantObjectUrl = null;
+          }
+          this.remoteVariantCandidate = null;
+          this.remoteVariantFadeTimer = null;
+          this.scheduleRemoteVariant(config.timing.gapMs);
+        }, config.timing.fadeMs);
+      }, config.timing.fadeMs + config.timing.holdMs);
+    } catch (error) {
+      if (pendingObjectUrl) URL.revokeObjectURL(pendingObjectUrl);
+      if (error.name === "AbortError" || controller.signal.aborted) return;
+      this.remoteVariantController = null;
+      // Remote art is strictly optional: retain the base board and retry later.
+      this.scheduleRemoteVariant(config.timing.gapMs);
+    }
+  }
+
+  syncRemoteVariants({ resumeImmediately = false } = {}) {
+    const config = this.presentation?.scene?.remoteVariants;
+    if (!config || !this.remoteVariantsAreEligible()) {
+      this.cancelRemoteVariants({ clearLayer: true });
+      return;
+    }
+    const delay = resumeImmediately ? 0 : config.timing.initialDelayMs;
+    this.scheduleRemoteVariant(delay);
+  }
+
   updateLayout(force = false) {
     const nextProfile = boardProfileForBounds(this.world.getBoundingClientRect());
     if (!force && nextProfile === this.profile) {
@@ -169,6 +318,7 @@ export class WorldPresentationRenderer {
     const focalPosition = profileData?.focalPosition || "50% 50%";
     this.world.style.setProperty("--scene-focal-position", focalPosition);
     this.buildPatchLayer(sceneProfile);
+    this.syncRemoteVariants();
   }
 
   considerUnitReveal() {
@@ -234,17 +384,22 @@ export class WorldPresentationRenderer {
     window.addEventListener("orientationchange", this.handleOrientationChange);
     window.addEventListener("keydown", this.handleRevealInput, true);
     window.addEventListener("pointerdown", this.handleRevealInput, true);
+    window.addEventListener("online", this.handleOnline);
+    window.addEventListener("offline", this.handleOffline);
     this.updateLayout(true);
   }
 
   stop() {
     this.cancelReveal();
+    this.cancelRemoteVariants({ clearLayer: true, resetBag: true });
     cancelAnimationFrame(this.layoutFrame);
     this.resizeObserver?.disconnect();
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("orientationchange", this.handleOrientationChange);
     window.removeEventListener("keydown", this.handleRevealInput, true);
     window.removeEventListener("pointerdown", this.handleRevealInput, true);
+    window.removeEventListener("online", this.handleOnline);
+    window.removeEventListener("offline", this.handleOffline);
     if (this.reducedMotionQuery?.removeEventListener) {
       this.reducedMotionQuery.removeEventListener("change", this.handleReducedMotion);
     } else {

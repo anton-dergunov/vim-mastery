@@ -60,6 +60,7 @@ const elements = {
   groundGrid: $("#groundGrid"),
   worldAmbient: $("#worldAmbient"),
   worldPatchLayer: $("#worldPatchLayer"),
+  worldRemoteVariantLayer: $("#worldRemoteVariantLayer"),
   worldGrid: $("#worldGrid"),
   characterLayer: $("#characterLayer"),
   completionHost: $("#completionHost"),
@@ -442,7 +443,9 @@ const worldRenderer = new WorldPresentationRenderer({
   backdropLayer: elements.worldBackdrop,
   ambientLayer: elements.worldAmbient,
   patchLayer: elements.worldPatchLayer,
+  remoteVariantLayer: elements.worldRemoteVariantLayer,
   assetUrl: localAssetUrl,
+  remoteAssetUrl: remoteMediaUrl,
   onLegacyResize: scheduleGroundRedraw,
 });
 

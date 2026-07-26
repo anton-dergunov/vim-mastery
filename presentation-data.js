@@ -2,6 +2,7 @@ export const PRESENTATION_SCHEMA_VERSION = 2;
 
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const assetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
+const assetDirectoryPattern = /^assets\/[a-z0-9][a-z0-9./-]*$/;
 const sceneProfiles = ["tall", "compact", "wide"];
 const learningPhases = ["explain", "demonstrate", "isolate", "mix", "challenge", "summary"];
 
@@ -15,6 +16,28 @@ function validateId(value, path, errors) {
 
 function validateAsset(value, path, errors) {
   if (!assetPattern.test(value || "")) errors.push(`${path} must be a local presentation asset path`);
+}
+
+function validateRemoteVariants(value, path, errors) {
+  if (!object(value)) {
+    errors.push(`${path} must define remote variant metadata`);
+    return;
+  }
+  if (!sceneProfiles.includes(value.profile)) errors.push(`${path}.profile must be a supported scene profile`);
+  if (!assetDirectoryPattern.test(value.assetRoot || "")) errors.push(`${path}.assetRoot must be an assets directory path`);
+  if (!Array.isArray(value.siteIds) || !value.siteIds.length) {
+    errors.push(`${path}.siteIds must contain at least one semantic site ID`);
+  } else {
+    value.siteIds.forEach((siteId, index) => validateId(siteId, `${path}.siteIds[${index}]`, errors));
+  }
+  if (!Number.isInteger(value.variantsPerSite) || value.variantsPerSite < 1 || value.variantsPerSite > 20) {
+    errors.push(`${path}.variantsPerSite must be an integer between 1 and 20`);
+  }
+  for (const field of ["initialDelayMs", "fadeMs", "holdMs", "gapMs"]) {
+    if (!Number.isFinite(value.timing?.[field]) || value.timing[field] < 0) {
+      errors.push(`${path}.timing.${field} must be a non-negative number`);
+    }
+  }
 }
 
 function validatePatchBounds(value, path, errors) {
@@ -38,6 +61,7 @@ function validateScene(scene, path, errors) {
     return;
   }
   validateId(scene.id, `${path}.id`, errors);
+  if (scene.remoteVariants !== undefined) validateRemoteVariants(scene.remoteVariants, `${path}.remoteVariants`, errors);
   const regionIds = new Set(Object.keys(object(scene.patchRegions) ? scene.patchRegions : {}));
   if (regionIds.size !== 3) errors.push(`${path}.patchRegions must define exactly three registered regions`);
   for (const [patchId, bounds] of Object.entries(scene.patchRegions || {})) {

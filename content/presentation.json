@@ -239,6 +239,29 @@
               }
             }
           },
+          "remoteVariants": {
+            "profile": "compact",
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants",
+            "siteIds": [
+              "northwest-hanging-lantern",
+              "north-root-mushroom-shelf",
+              "east-bridge-travel-cache",
+              "west-crystal-bank",
+              "west-stair-satchel",
+              "southwest-open-rucksack",
+              "left-water-lily-drift",
+              "east-river-current",
+              "east-crystal-bank",
+              "southeast-lantern-ledge"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 1400,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          },
           "phasePatches": {
             "explain": [],
             "demonstrate": ["phase-a"],

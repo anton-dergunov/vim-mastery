@@ -374,6 +374,7 @@ button { font: inherit; }
 .ground-grid,
 .world-ambient,
 .world-patch-layer,
+.world-remote-variant-layer,
 .world-grid,
 .character-layer {
   position: absolute;
@@ -388,14 +389,15 @@ button { font: inherit; }
 }
 .ground-grid { z-index: 0; }
 .world[data-renderer="registered-scenes"] .ground-grid { display: none; }
-.world[data-renderer="legacy"] :is(.world-backdrop, .world-ambient, .world-patch-layer) { display: none; }
+.world[data-renderer="legacy"] :is(.world-backdrop, .world-ambient, .world-patch-layer, .world-remote-variant-layer) { display: none; }
 .world-grid,
 .character-layer { pointer-events: none; }
 .world-grid > * { pointer-events: auto; }
 
 .world-backdrop,
 .world-ambient,
-.world-patch-layer {
+.world-patch-layer,
+.world-remote-variant-layer {
   overflow: hidden;
   pointer-events: none;
 }
@@ -471,6 +473,7 @@ button { font: inherit; }
 .world-ambient-effect:nth-child(3) { right: 24%; bottom: 18%; animation-delay: -5.2s; }
 
 .world-patch-layer { z-index: 2; }
+.world-remote-variant-layer { z-index: 3; }
 .world-scene-patch {
   position: absolute;
   inset: -4px;
@@ -479,11 +482,24 @@ button { font: inherit; }
   background-repeat: no-repeat;
   background-size: cover;
 }
-.world[data-board-profile="shallow"] :is(.world-ambient, .world-patch-layer) { display: none; }
+.world-remote-variant {
+  position: absolute;
+  inset: -4px;
+  opacity: 0;
+  background-image: var(--world-asset, none);
+  background-position: var(--scene-focal-position, 50% 50%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: opacity var(--remote-variant-fade, 1400ms) ease-in-out;
+}
+.world-remote-variant.is-visible { opacity: 1; }
+.world[data-board-profile="shallow"] :is(.world-ambient, .world-patch-layer, .world-remote-variant-layer) { display: none; }
 .world[data-reduced-motion="true"] .world-ambient-effect { animation: none; }
+.world[data-reduced-motion="true"] .world-remote-variant-layer { display: none; }
 
 .world-grid,
 .character-layer {
+  z-index: 4;
   opacity: 1;
   transition: opacity 140ms ease;
 }
@@ -2983,6 +2999,7 @@ html.next-ui .toc-unit-launch button {
   html.next-ui .phone.keyboard-visible .world-backdrop,
   html.next-ui .phone.keyboard-visible .world-ambient,
   html.next-ui .phone.keyboard-visible .world-patch-layer,
+  html.next-ui .phone.keyboard-visible .world-remote-variant-layer,
   html.next-ui .phone.keyboard-visible .ground-grid,
   html.next-ui .phone.keyboard-visible .world-grid > .sprite {
     display: none;
