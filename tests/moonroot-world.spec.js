@@ -122,6 +122,8 @@ test("streams compact Wayfinder variants after the delay and silently falls back
   await expect(variant).toHaveCount(1, { timeout: 17_000 });
   await expect(variant).toHaveClass(/is-visible/);
   expect(new URL(requests[0]).origin).toBe(new URL(page.url()).origin);
+  expect(await variant.evaluate(element => getComputedStyle(element, "::before").filter)).toContain("brightness(0.82)");
+  expect(await variant.evaluate(element => element.style.getPropertyValue("--remote-variant-fade"))).toBe("2600ms");
   expect(await page.locator("#worldGrid").evaluate(element => Number(getComputedStyle(element).zIndex))).toBeGreaterThan(
     await variant.evaluate(element => Number(getComputedStyle(element.parentElement).zIndex)),
   );
@@ -159,4 +161,26 @@ test("falls back to GitHub Pages when a local development variant is missing", a
   await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 17_000 });
   expect(new URL(requests[0]).origin).toBe(localOrigin);
   expect(new URL(requests[1]).origin).toBe("https://anton-dergunov.github.io");
+});
+
+test("uses the approved compact Wayfinder source and variants on a wide board", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
+  });
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => route.fulfill({
+    path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+    contentType: "image/png",
+    headers: { "access-control-allow-origin": "*" },
+  }));
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
+  await page.locator("#world").evaluate(node => {
+    Object.assign(node.style, { position: "fixed", inset: "0 auto auto 0", width: "1024px", height: "600px" });
+    window.dispatchEvent(new Event("orientationchange"));
+  });
+  await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "wide");
+
+  expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+    .toContain("wayfinder-crossroads/compact/base.webp");
+  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 17_000 });
 });

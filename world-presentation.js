@@ -156,7 +156,7 @@ export class WorldPresentationRenderer {
     return Boolean(
       config
       && this.remoteVariantLayer
-      && sceneProfileForBoard(this.profile) === config.profile
+      && config.profiles?.includes(sceneProfileForBoard(this.profile))
       && this.profile !== "shallow"
       && !this.reducedMotionQuery?.matches
       && navigator.onLine
@@ -249,7 +249,10 @@ export class WorldPresentationRenderer {
       variant.style.setProperty("--world-asset", `url("${objectUrl}")`);
       variant.style.setProperty("--remote-variant-fade", `${config.timing.fadeMs}ms`);
       this.remoteVariantLayer.replaceChildren(variant);
-      requestAnimationFrame(() => variant.classList.add("is-visible"));
+      // Force the zero-opacity state to paint before beginning the transition.
+      // A single animation frame is not reliable after a freshly decoded image.
+      void variant.offsetWidth;
+      requestAnimationFrame(() => requestAnimationFrame(() => variant.classList.add("is-visible")));
       this.remoteVariantFadeTimer = window.setTimeout(() => {
         variant.classList.remove("is-visible");
         this.remoteVariantFadeTimer = window.setTimeout(() => {

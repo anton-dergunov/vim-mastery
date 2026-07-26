@@ -104,9 +104,10 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert.deepEqual(Object.keys(resolved.scene.profiles), ["tall", "compact", "wide"]);
     assert.deepEqual(Object.keys(resolved.scene.patchRegions), ["phase-a", "phase-b", "phase-c"]);
     for (const profile of ["tall", "compact", "wide"]) {
+      const baseProfile = unitId === "cursor-movement" && profile === "wide" ? "compact" : profile;
       assert.match(
         resolved.scene.profiles[profile].base,
-        new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${profile}/base\\.webp$`),
+        new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${baseProfile}/base\\.webp$`),
       );
       for (const patchId of ["phase-a", "phase-b", "phase-c", "landmark-dormant", "landmark-restored"]) {
         assert.match(
@@ -120,8 +121,9 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   assert.equal(presentation.worlds["moonroot-ruins"].backdrops, undefined);
 
   const variants = resolveUnitPresentation(presentation, "cursor-movement").scene.remoteVariants;
-  assert.equal(variants.profile, "compact");
+  assert.deepEqual(variants.profiles, ["compact", "wide"]);
   assert.equal(variants.timing.initialDelayMs, 15_000);
+  assert.equal(variants.timing.fadeMs, 2_600);
   assert.equal(variants.timing.gapMs, 15_000);
   assert.equal(variants.siteIds.length, 10);
   assert.equal(remoteVariantPaths(variants).length, 50);

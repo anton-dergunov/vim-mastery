@@ -475,11 +475,28 @@ button { font: inherit; }
   position: absolute;
   inset: -4px;
   opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--remote-variant-fade, 2600ms) ease-in-out;
+}
+.world-remote-variant::before,
+.world-remote-variant::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.world-remote-variant::before {
+  inset: 0;
   background-image: var(--world-asset, none);
   background-position: var(--scene-focal-position, 50% 50%);
   background-repeat: no-repeat;
   background-size: cover;
-  transition: opacity var(--remote-variant-fade, 1400ms) ease-in-out;
+  filter: saturate(.88) brightness(.82);
+}
+.world-remote-variant::after {
+  inset: 4px;
+  background:
+    linear-gradient(90deg, rgba(2, 8, 8, .32), transparent 24%, transparent 76%, rgba(2, 8, 8, .32)),
+    linear-gradient(0deg, rgba(2, 8, 8, .34), transparent 30%);
 }
 .world-remote-variant.is-visible { opacity: 1; }
 .world[data-board-profile="shallow"] :is(.world-ambient, .world-remote-variant-layer) { display: none; }

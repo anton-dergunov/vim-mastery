@@ -228,7 +228,7 @@
               }
             },
             "wide": {
-              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/base.webp",
+              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
                 "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-a.webp",
@@ -240,7 +240,7 @@
             }
           },
           "remoteVariants": {
-            "profile": "compact",
+            "profiles": ["compact", "wide"],
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants",
             "siteIds": [
               "northwest-hanging-lantern",
@@ -257,7 +257,7 @@
             "variantsPerSite": 5,
             "timing": {
               "initialDelayMs": 15000,
-              "fadeMs": 1400,
+              "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
             }

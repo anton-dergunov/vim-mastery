@@ -840,8 +840,9 @@ renamed, or counted as approved patch art.
   and guide, not an editor-covering overlay. The retired local proof-overlay
   layer is not rendered.
 - On new-scene entry, wait 15 seconds. Fetch one random no-repeat variant for
-  the matching authored profile, fade it in for 1.4 seconds, hold it for seven
-  seconds, fade it out for 1.4 seconds, then wait 15 seconds before the next.
+  the matching authored profile, fade it in for 2.6 seconds, hold it for seven
+  seconds, fade it out for 2.6 seconds, then wait 15 seconds before the next.
+  Force the initial zero-opacity frame before starting the transition.
 - Fetch with `cache: no-store` and CORS from the GitHub Pages asset URL in
   production. In local Vite development, request the matching project asset
   first, then fall back to GitHub Pages if it is missing or cannot be fetched.
@@ -1405,9 +1406,11 @@ date. Do not continue to WP-03P-B until the approved set is explicitly
 recorded.
 
 **Wayfinder Crossroads status:** Complete. The owner approved all fifty
-round-03 complete-board edits for the compact profile; WP-03P-B streams all
-fifty as optional remote variants. The next Moonroot scene must repeat this
-same approval gate before integration.
+round-03 complete-board edits. WP-03P-B streams all fifty as optional remote
+variants for compact and wide boards. Its supplied wide base duplicated a
+left-side structure, so Wayfinder deliberately uses the approved compact base
+cropped at wide aspect ratios until a separately reviewed wide board exists.
+The next Moonroot scene must repeat this same approval gate before integration.
 
 ### WP-03P-B — Remote full-board variant integration and activity variety
 
@@ -1438,13 +1441,15 @@ and personal review.
   future optional visual asset; local Vite development requests project assets
   first and falls back to Pages. Do not mix raw-GitHub and Pages origins.
 - Add one remote variant layer below the editor and guide. It must use the
-  configured 15-second initial delay and gap, 1.4-second fades, seven-second
+  configured 15-second initial delay and gap, 2.6-second fades, seven-second
   hold, and a shuffled no-repeat bag across all 50 assets.
 - Fetch one image only when it is due to display. Decode into an object URL,
   revoke it after fade-out, abort it on offline, and silently retain the base
   board on failure. Resume immediately when connectivity returns.
-- Keep compact-only assets hidden on tall, wide, shallow, keyboard-suppressed,
-  and reduced-motion presentations until corresponding profile variants exist.
+- Keep assets hidden on tall, shallow, keyboard-suppressed, and reduced-motion
+  presentations until corresponding profile variants exist. A reviewed compact
+  source may also serve wide by intentional cover cropping when the wide base
+  is visibly invalid, as in Wayfinder; record that exception in the manifest.
 - Keep landmark state, CSS ambience, unit reveal, editor geometry, lesson data,
   command behavior, keyboard behavior, and functional theme selection
   unchanged.
@@ -1456,9 +1461,9 @@ and personal review.
 - The active variant completes its fade/hold/fade cycle even when typing,
   resetting, solving, or changing completion state. Ordinary activity renders
   never restart it.
-- No item repeats before all 50 have appeared. Tall/wide/shallow and
-  reduced-motion layouts retain the base board until those profiles have their
-  own reviewed remote variants.
+- No item repeats before all 50 have appeared. Tall/shallow and reduced-motion
+  layouts retain the base board until those profiles have their own reviewed
+  remote variants. Wide may use an explicitly approved compact-source fallback.
 - Missing media, offline loading, browser reconnection, direct deep links, and
   service-worker operation remain silent and safe.
 
@@ -1951,8 +1956,8 @@ unit [UNIT_ID], scene [SCENE_ID], using the entire personally approved 50-image
 batch. Copy the complete-board PNGs to the scene's variants directory and stage
 them for git. Publish them and all character animations through the GitHub Pages
 asset path, but exclude both classes from the service-worker precache. Add the
-delayed remote variant layer: wait 15 seconds on scene entry, fade in for 1.4
-seconds, hold seven seconds, fade out for 1.4 seconds, wait 15 seconds, and use
+delayed remote variant layer: wait 15 seconds on scene entry, fade in for 2.6
+seconds, hold seven seconds, fade out for 2.6 seconds, wait 15 seconds, and use
 a shuffled no-repeat bag. Keep the local base scene on any offline/fetch-error/
 shallow/reduced-motion state and resume immediately on browser online. Do not
 derive crop patches. Keep tall and wide bases unchanged until those profiles

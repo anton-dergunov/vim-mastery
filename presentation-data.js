@@ -23,7 +23,9 @@ function validateRemoteVariants(value, path, errors) {
     errors.push(`${path} must define remote variant metadata`);
     return;
   }
-  if (!sceneProfiles.includes(value.profile)) errors.push(`${path}.profile must be a supported scene profile`);
+  if (!Array.isArray(value.profiles) || !value.profiles.length || value.profiles.some(profile => !sceneProfiles.includes(profile))) {
+    errors.push(`${path}.profiles must contain supported scene profiles`);
+  }
   if (!assetDirectoryPattern.test(value.assetRoot || "")) errors.push(`${path}.assetRoot must be an assets directory path`);
   if (!Array.isArray(value.siteIds) || !value.siteIds.length) {
     errors.push(`${path}.siteIds must contain at least one semantic site ID`);
