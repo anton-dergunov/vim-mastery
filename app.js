@@ -2,6 +2,7 @@ import { spriteCells } from "./exercise-data.js";
 import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 import { appUrl, appVersion, remoteMediaUrl } from "./app-version.js";
+import { loadUnitCatalogWithPresentation } from "./presentation-data.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -20,16 +21,17 @@ function readSavedSession() {
 }
 
 const savedSession = readSavedSession();
-const [languageProfiles, unitCatalog] = await Promise.all([
+const [languageProfiles, catalogData] = await Promise.all([
   fetch(appUrl("content/language-profiles.json")).then(response => {
     if (!response.ok) throw new Error(`Language profiles request failed (${response.status})`);
     return response.json();
   }),
-  fetch(appUrl("content/unit-index.json")).then(response => {
-    if (!response.ok) throw new Error(`Unit catalog request failed (${response.status})`);
-    return response.json();
+  loadUnitCatalogWithPresentation({
+    catalogUrl: appUrl("content/unit-index.json"),
+    presentationUrl: appUrl("content/presentation.json"),
   }),
 ]);
+const { unitCatalog } = catalogData;
 const units = unitCatalog.units.sort((left, right) => left.unitNumber - right.unitNumber);
 const curriculumArcs = [...(unitCatalog.arcs || [])].sort((left, right) => left.arcNumber - right.arcNumber);
 const requestedUnitId = urlParams.get("unit") || (urlParams.has("activity") ? null : savedSession.unitId);

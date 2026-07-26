@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
+import {
+  loadUnitCatalogWithPresentation,
+  resolveUnitPresentation,
+  validatePresentationManifest,
+} from "../presentation-data.js";
 import { findNextSequentialUnit } from "../unit-navigation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
@@ -25,6 +30,9 @@ const automationUnit = units.find(item => item.data.id === "global-normal-automa
 const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
+const presentation = readJson("../content/presentation.json");
+const presentationSchema = readJson("../content/presentation.schema.json");
+const characterManifest = readJson("../assets/characters/manifest.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const activities = unit.lessons.flatMap(lesson => lesson.activities);
@@ -35,6 +43,9 @@ const keysOf = activity => activity.script.steps.map(step => typeof step === "st
 
 test("content files expose the expected schema versions", () => {
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
+  assert.equal(presentationSchema.$schema, "https://json-schema.org/draft/2020-12/schema");
+  assert.equal(presentationSchema.$id, "https://vimwilds.local/schemas/presentation.schema.json");
+  assert.equal(presentation.schemaVersion, 1);
   assert.equal(unit.schemaVersion, 1);
   assert.equal(unit.unitNumber, 10);
   assert.equal(cursorUnit.schemaVersion, 1);
@@ -49,6 +60,205 @@ test("content files expose the expected schema versions", () => {
     reset: "initial-state",
     backwardStep: "deferred",
   });
+});
+
+test("presentation manifest covers the catalog with valid worlds, characters, and assets", () => {
+  const validation = validatePresentationManifest(presentation, {
+    unitCatalog,
+    characterIds: Object.keys(characterManifest.characters),
+  });
+  assert.deepEqual(validation.errors, []);
+  assert.equal(validation.valid, true);
+  assert.deepEqual(Object.keys(presentation.worlds), [
+    "moonroot-ruins",
+    "starwater-sanctuary",
+    "archive-of-echoes",
+    "brass-meridian",
+  ]);
+  assert.deepEqual(Object.keys(presentation.units), unitCatalog.units.map(item => item.id));
+
+  const landmarkIds = new Set();
+  for (const catalogUnit of unitCatalog.units) {
+    const resolved = resolveUnitPresentation(presentation, catalogUnit.id);
+    assert(resolved, `${catalogUnit.id} must resolve a presentation`);
+    assert.equal(resolved.unit.id, catalogUnit.id);
+    assert.equal(resolved.world.id, resolved.unit.worldId);
+    assert(characterManifest.characters[resolved.unit.guideCharacterId], `${catalogUnit.id} guide must exist`);
+    assert(!landmarkIds.has(resolved.unit.landmark.id), `${resolved.unit.landmark.id} must belong to one unit`);
+    landmarkIds.add(resolved.unit.landmark.id);
+    assert.equal(
+      resolved.unit.landmark.assets.dormant,
+      `assets/worlds/landmarks/${resolved.unit.landmark.id}-dormant.webp`,
+    );
+    assert.equal(
+      resolved.unit.landmark.assets.restored,
+      `assets/worlds/landmarks/${resolved.unit.landmark.id}-restored.webp`,
+    );
+  }
+
+  for (const [worldId, world] of Object.entries(presentation.worlds)) {
+    for (const shape of ["portrait", "square", "wide"]) {
+      assert.equal(world.backdrops[shape], `assets/worlds/${worldId}/backdrop-${shape}.webp`);
+    }
+    for (const prop of world.props) {
+      assert(idPattern.test(prop.id), `${worldId} prop ID ${prop.id}`);
+      assert.match(prop.asset, new RegExp(`^assets/worlds/${worldId}/props/`));
+    }
+  }
+});
+
+test("presentation manifest preserves the approved unit story table", () => {
+  const storyRows = Object.values(presentation.units).map(item => ({
+    id: item.id,
+    guide: item.guideCharacterId,
+    world: item.worldId,
+    landmark: item.landmark.id,
+    action: item.completion.action,
+    copy: item.completion.copy,
+    nextSpeaker: item.completion.nextHook.speaker || null,
+    nextHook: item.completion.nextHook.copy,
+  }));
+  assert.deepEqual(storyRows, [
+    {
+      id: "modal-model", guide: "nix", world: "moonroot-ruins", landmark: "mode-lantern",
+      action: "Nix lifts the lantern; four nested rings settle into distinct colors",
+      copy: "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
+      nextSpeaker: null, nextHook: "A path glimmers beyond camp.",
+    },
+    {
+      id: "cursor-movement", guide: "vela", world: "moonroot-ruins", landmark: "wayfinder",
+      action: "Vela turns the central compass; four paths align",
+      copy: "Vela aligns the Wayfinder. North, south, east, and west settle back into place.",
+      nextSpeaker: null, nextHook: "The path ends at a page of broken words.",
+    },
+    {
+      id: "entering-changing-text", guide: "tatter", world: "moonroot-ruins", landmark: "scribes-spring",
+      action: "Tatter repairs a split channel; luminous ink begins to flow",
+      copy: "Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.",
+      nextSpeaker: null, nextHook: "A sealed gate waits for both an action and a range.",
+    },
+    {
+      id: "operator-grammar", guide: "cinder", world: "moonroot-ruins", landmark: "grammar-gate",
+      action: "Cinder joins two halves of a mechanism; the gate opens",
+      copy: "Cinder joins action to range. The Grammar Gate opens, and the first road out of Moonroot is restored.",
+      nextSpeaker: null, nextHook: "Starlight flickers beyond the gate.",
+    },
+    {
+      id: "precision-motions-search", guide: "orin", world: "starwater-sanctuary", landmark: "starneedle",
+      action: "Orin focuses a floating lens; distant points illuminate",
+      copy: "Orin focuses the Starneedle. Distant signs and exact characters become visible across the dark.",
+      nextSpeaker: null, nextHook: "The signal points inward, toward structures hidden in plain sight.",
+    },
+    {
+      id: "text-objects", guide: "bramble", world: "starwater-sanctuary", landmark: "nested-garden",
+      action: "Bramble touches the outer arch; nested arches bloom from outside inward",
+      copy: "Bramble wakes the Nested Garden. Words, quotes, brackets, and blocks reveal the shapes they contain.",
+      nextSpeaker: null, nextHook: "Three panes of light rise from the water.",
+    },
+    {
+      id: "visual-selection", guide: "prism", world: "starwater-sanctuary", landmark: "prism-crossing",
+      action: "Prism aligns three glass panes: ribbon, row, and rectangle",
+      copy: "Prism aligns the three panes. Character, line, and block become distinct paths through the same code.",
+      nextSpeaker: null, nextHook: "Behind the final pane, a sealed archive begins to glow.",
+    },
+    {
+      id: "registers-putting", guide: "mica", world: "archive-of-echoes", landmark: "memory-archive",
+      action: "Mica places a captured crystal into a drawer; several drawers illuminate",
+      copy: "Mica reopens the Memory Archive. What is captured can be kept, chosen, and placed where it belongs.",
+      nextSpeaker: null, nextHook: "One memory points to a beacon far beyond the shelves.",
+    },
+    {
+      id: "long-range-navigation", guide: "luma", world: "archive-of-echoes", landmark: "far-beacons",
+      action: "Luma sends a thread of light between two distant beacons",
+      copy: "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
+      nextSpeaker: null, nextHook: "Across the causeway, a stopped clock begins to tick.",
+    },
+    {
+      id: "repeatable-editing", guide: "tock", world: "archive-of-echoes", landmark: "echo-clock",
+      action: "Tock starts one wheel; its motion propagates through matching wheels",
+      copy: "Tock restarts the Echo Clock. A well-shaped change can now travel farther than a single moment.",
+      nextSpeaker: null, nextHook: "The echo reaches a brass city beneath the ridge.",
+    },
+    {
+      id: "command-line-ranges-line-operations", guide: "cinder", world: "brass-meridian", landmark: "meridian-table",
+      action: "Cinder places two endpoints; a current follows the exact route between them",
+      copy: "Cinder sets the Meridian Table. Lines and ranges become routes that the command current can follow.",
+      nextSpeaker: null, nextHook: "A broken loom is repeating the wrong pattern.",
+    },
+    {
+      id: "substitution-practical-regex", guide: "puddle", world: "brass-meridian", landmark: "mirror-loom",
+      action: "Puddle retunes a lens; only matching threads transform",
+      copy: "Puddle retunes the Mirror Loom. Patterns can be found, tested, and transformed without touching what does not match.",
+      nextSpeaker: null, nextHook: "The repaired thread leads into a silent foundry.",
+    },
+    {
+      id: "macros", guide: "tock", world: "brass-meridian", landmark: "echo-foundry",
+      action: "Tock records one movement into a cylinder; three mechanisms replay it",
+      copy: "Tock records the first true echo. The Foundry can repeat a complete sequence without forgetting a step.",
+      nextSpeaker: null, nextHook: "Only the World Engine remains dark.",
+    },
+    {
+      id: "global-normal-automation", guide: "cairn", world: "brass-meridian", landmark: "meridian-engine",
+      action: "Cairn connects the restored systems; energy crosses all four worlds",
+      copy: "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
+      nextSpeaker: "Nix", nextHook: "The language is alive. What you restore next is up to you.",
+    },
+  ]);
+});
+
+test("presentation manifest preserves the approved introduction and ending", () => {
+  assert.deepEqual(presentation.story, {
+    intro: [
+      {
+        id: "connected-wilds",
+        asset: "assets/worlds/story/intro-connected.webp",
+        copy: "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range.",
+      },
+      {
+        id: "interrupted-command",
+        asset: "assets/worlds/story/intro-interrupted.webp",
+        copy: "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent.",
+      },
+      {
+        id: "nix-at-the-threshold",
+        asset: "assets/worlds/story/intro-nix-threshold.webp",
+        speaker: "Nix",
+        copy: "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember.",
+      },
+    ],
+    ending: {
+      speaker: "Nix",
+      copy: "The language is alive. What you restore next is up to you.",
+    },
+  });
+});
+
+test("presentation loading falls back cleanly when the optional manifest is missing or invalid", async () => {
+  const response = (data, { ok = true, status = 200 } = {}) => ({
+    ok,
+    status,
+    json: async () => structuredClone(data),
+  });
+  const missing = await loadUnitCatalogWithPresentation({
+    catalogUrl: "catalog",
+    presentationUrl: "presentation",
+    fetchImpl: async url => url === "catalog" ? response(unitCatalog) : response(null, { ok: false, status: 404 }),
+  });
+  assert.equal(missing.unitCatalog.units.length, 14);
+  assert.equal(missing.presentation, null);
+
+  const invalidPresentation = structuredClone(presentation);
+  invalidPresentation.units["modal-model"].worldId = "renamed-moonroot";
+  const invalid = await loadUnitCatalogWithPresentation({
+    catalogUrl: "catalog",
+    presentationUrl: "presentation",
+    fetchImpl: async url => response(url === "catalog" ? unitCatalog : invalidPresentation),
+  });
+  assert.equal(invalid.presentation, null);
+  assert(
+    invalid.presentationErrors.includes('units.modal-model.worldId references missing world "renamed-moonroot"'),
+    "a broken world reference should identify the unit and missing world",
+  );
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {

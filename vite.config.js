@@ -63,6 +63,7 @@ function pwaBuildPlugin(base, version) {
       units.forEach(path => emit(`content/units/${relative(join(contentDirectory, "units"), path)}`, readFileSync(path)));
       emit("content/unit-index.json", JSON.stringify({ schemaVersion: 2, arcs, units: catalog }, null, 2));
       emit("content/language-profiles.json", readFileSync(join(contentDirectory, "language-profiles.json")));
+      emit("content/presentation.json", readFileSync(join(contentDirectory, "presentation.json")));
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       idleImages.forEach(path => emit(`assets/characters/${relative(characterDirectory, path)}`, readFileSync(path)));

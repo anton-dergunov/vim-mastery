@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vimwilds.local/schemas/presentation.schema.json",
+  "title": "Vim Wilds presentation manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "worlds", "units", "story"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "worlds": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": { "$ref": "#/$defs/world" }
+    },
+    "units": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": { "$ref": "#/$defs/unit" }
+    },
+    "story": { "$ref": "#/$defs/story" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "asset": {
+      "type": "string",
+      "pattern": "^assets/[a-z0-9][a-z0-9./-]*\\.(?:png|webp|svg)$"
+    },
+    "placement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "scale"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 100 },
+        "y": { "type": "number", "minimum": 0, "maximum": 100 },
+        "scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 3 },
+        "hidden": { "type": "boolean" }
+      }
+    },
+    "placements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["portrait", "square", "wide", "shallow"],
+      "properties": {
+        "portrait": { "$ref": "#/$defs/placement" },
+        "square": { "$ref": "#/$defs/placement" },
+        "wide": { "$ref": "#/$defs/placement" },
+        "shallow": { "$ref": "#/$defs/placement" }
+      }
+    },
+    "world": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "displayName", "autoThemeId", "backdrops", "props", "ambientEffects", "fallbackGradient"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "displayName": { "type": "string", "minLength": 1 },
+        "autoThemeId": { "enum": ["moonroot", "ember", "glass", "deepwater"] },
+        "backdrops": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["portrait", "square", "wide"],
+          "properties": {
+            "portrait": { "$ref": "#/$defs/asset" },
+            "square": { "$ref": "#/$defs/asset" },
+            "wide": { "$ref": "#/$defs/asset" }
+          }
+        },
+        "props": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "asset", "placements"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "asset": { "$ref": "#/$defs/asset" },
+              "placements": { "$ref": "#/$defs/placements" }
+            }
+          }
+        },
+        "ambientEffects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "fallbackGradient": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "worldId", "guideCharacterId", "landmark", "completion"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "worldId": { "$ref": "#/$defs/id" },
+        "guideCharacterId": { "$ref": "#/$defs/id" },
+        "landmark": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "assets", "placements"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "assets": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["dormant", "restored"],
+              "properties": {
+                "dormant": { "$ref": "#/$defs/asset" },
+                "restored": { "$ref": "#/$defs/asset" }
+              }
+            },
+            "placements": { "$ref": "#/$defs/placements" }
+          }
+        },
+        "completion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["actionId", "action", "copy", "nextHook"],
+          "properties": {
+            "actionId": { "$ref": "#/$defs/id" },
+            "action": { "type": "string", "minLength": 1 },
+            "copy": { "type": "string", "minLength": 1 },
+            "nextHook": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["copy"],
+              "properties": {
+                "speaker": { "type": "string", "minLength": 1 },
+                "copy": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "storyPanel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "asset", "copy"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "asset": { "$ref": "#/$defs/asset" },
+        "speaker": { "type": "string", "minLength": 1 },
+        "copy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "story": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intro", "ending"],
+      "properties": {
+        "intro": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/storyPanel" }
+        },
+        "ending": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["speaker", "copy"],
+          "properties": {
+            "speaker": { "type": "string", "minLength": 1 },
+            "copy": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

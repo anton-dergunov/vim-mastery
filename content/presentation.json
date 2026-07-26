@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "worlds": {
+    "moonroot-ruins": {
+      "id": "moonroot-ruins",
+      "displayName": "Moonroot Ruins",
+      "autoThemeId": "moonroot",
+      "backdrops": {
+        "portrait": "assets/worlds/moonroot-ruins/backdrop-portrait.webp",
+        "square": "assets/worlds/moonroot-ruins/backdrop-square.webp",
+        "wide": "assets/worlds/moonroot-ruins/backdrop-wide.webp"
+      },
+      "props": [
+        {
+          "id": "root-arch",
+          "asset": "assets/worlds/moonroot-ruins/props/root-arch.webp",
+          "placements": {
+            "portrait": { "x": 10, "y": 17, "scale": 0.78 },
+            "square": { "x": 8, "y": 22, "scale": 0.9 },
+            "wide": { "x": 6, "y": 28, "scale": 1 },
+            "shallow": { "x": 4, "y": 32, "scale": 0.84, "hidden": true }
+          }
+        },
+        {
+          "id": "hanging-lantern",
+          "asset": "assets/worlds/moonroot-ruins/props/hanging-lantern.webp",
+          "placements": {
+            "portrait": { "x": 86, "y": 12, "scale": 0.62 },
+            "square": { "x": 89, "y": 17, "scale": 0.7 },
+            "wide": { "x": 92, "y": 20, "scale": 0.78 },
+            "shallow": { "x": 94, "y": 24, "scale": 0.62 }
+          }
+        }
+      ],
+      "ambientEffects": ["violet-spores", "water-shimmer", "lantern-glow"],
+      "fallbackGradient": "linear-gradient(165deg, #071d18 0%, #123b35 54%, #1c533d 100%)"
+    },
+    "starwater-sanctuary": {
+      "id": "starwater-sanctuary",
+      "displayName": "Starwater Sanctuary",
+      "autoThemeId": "deepwater",
+      "backdrops": {
+        "portrait": "assets/worlds/starwater-sanctuary/backdrop-portrait.webp",
+        "square": "assets/worlds/starwater-sanctuary/backdrop-square.webp",
+        "wide": "assets/worlds/starwater-sanctuary/backdrop-wide.webp"
+      },
+      "props": [
+        {
+          "id": "floating-star-lens",
+          "asset": "assets/worlds/starwater-sanctuary/props/floating-star-lens.webp",
+          "placements": {
+            "portrait": { "x": 12, "y": 18, "scale": 0.66 },
+            "square": { "x": 9, "y": 22, "scale": 0.78 },
+            "wide": { "x": 7, "y": 27, "scale": 0.88 },
+            "shallow": { "x": 5, "y": 32, "scale": 0.72, "hidden": true }
+          }
+        },
+        {
+          "id": "prism-shard-group",
+          "asset": "assets/worlds/starwater-sanctuary/props/prism-shards.webp",
+          "placements": {
+            "portrait": { "x": 88, "y": 80, "scale": 0.58 },
+            "square": { "x": 91, "y": 75, "scale": 0.7 },
+            "wide": { "x": 94, "y": 70, "scale": 0.8 },
+            "shallow": { "x": 95, "y": 66, "scale": 0.62 }
+          }
+        }
+      ],
+      "ambientEffects": ["star-reflections", "reed-shimmer", "lens-glint"],
+      "fallbackGradient": "linear-gradient(165deg, #07151d 0%, #123f4e 58%, #1d5262 100%)"
+    },
+    "archive-of-echoes": {
+      "id": "archive-of-echoes",
+      "displayName": "Archive of Echoes",
+      "autoThemeId": "glass",
+      "backdrops": {
+        "portrait": "assets/worlds/archive-of-echoes/backdrop-portrait.webp",
+        "square": "assets/worlds/archive-of-echoes/backdrop-square.webp",
+        "wide": "assets/worlds/archive-of-echoes/backdrop-wide.webp"
+      },
+      "props": [
+        {
+          "id": "crystal-drawer-stack",
+          "asset": "assets/worlds/archive-of-echoes/props/crystal-drawers.webp",
+          "placements": {
+            "portrait": { "x": 9, "y": 20, "scale": 0.7 },
+            "square": { "x": 7, "y": 25, "scale": 0.82 },
+            "wide": { "x": 5, "y": 30, "scale": 0.94 },
+            "shallow": { "x": 4, "y": 34, "scale": 0.76 }
+          }
+        },
+        {
+          "id": "brass-beacon",
+          "asset": "assets/worlds/archive-of-echoes/props/brass-beacon.webp",
+          "placements": {
+            "portrait": { "x": 88, "y": 17, "scale": 0.6 },
+            "square": { "x": 91, "y": 22, "scale": 0.7 },
+            "wide": { "x": 94, "y": 28, "scale": 0.8 },
+            "shallow": { "x": 96, "y": 32, "scale": 0.62, "hidden": true }
+          }
+        }
+      ],
+      "ambientEffects": ["memory-glow", "crystal-drift", "clock-pulse"],
+      "fallbackGradient": "linear-gradient(165deg, #0b1722 0%, #17394c 56%, #234f68 100%)"
+    },
+    "brass-meridian": {
+      "id": "brass-meridian",
+      "displayName": "Brass Meridian",
+      "autoThemeId": "ember",
+      "backdrops": {
+        "portrait": "assets/worlds/brass-meridian/backdrop-portrait.webp",
+        "square": "assets/worlds/brass-meridian/backdrop-square.webp",
+        "wide": "assets/worlds/brass-meridian/backdrop-wide.webp"
+      },
+      "props": [
+        {
+          "id": "copper-conduit-arch",
+          "asset": "assets/worlds/brass-meridian/props/conduit-arch.webp",
+          "placements": {
+            "portrait": { "x": 10, "y": 18, "scale": 0.72 },
+            "square": { "x": 8, "y": 23, "scale": 0.84 },
+            "wide": { "x": 5, "y": 29, "scale": 0.96 },
+            "shallow": { "x": 3, "y": 34, "scale": 0.78 }
+          }
+        },
+        {
+          "id": "pattern-lens",
+          "asset": "assets/worlds/brass-meridian/props/pattern-lens.webp",
+          "placements": {
+            "portrait": { "x": 88, "y": 15, "scale": 0.6 },
+            "square": { "x": 91, "y": 20, "scale": 0.72 },
+            "wide": { "x": 94, "y": 25, "scale": 0.82 },
+            "shallow": { "x": 96, "y": 30, "scale": 0.64, "hidden": true }
+          }
+        }
+      ],
+      "ambientEffects": ["ember-pulse", "cyan-current", "lens-glint"],
+      "fallbackGradient": "linear-gradient(165deg, #20120e 0%, #4b281c 56%, #683420 100%)"
+    }
+  },
+  "units": {
+    "modal-model": {
+      "id": "modal-model",
+      "worldId": "moonroot-ruins",
+      "guideCharacterId": "nix",
+      "landmark": {
+        "id": "mode-lantern",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/mode-lantern-dormant.webp",
+          "restored": "assets/worlds/landmarks/mode-lantern-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
+          "square": { "x": 84, "y": 70, "scale": 0.74 },
+          "wide": { "x": 88, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "lift-mode-lantern",
+        "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
+        "copy": "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
+        "nextHook": { "copy": "A path glimmers beyond camp." }
+      }
+    },
+    "cursor-movement": {
+      "id": "cursor-movement",
+      "worldId": "moonroot-ruins",
+      "guideCharacterId": "vela",
+      "landmark": {
+        "id": "wayfinder",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/wayfinder-dormant.webp",
+          "restored": "assets/worlds/landmarks/wayfinder-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
+          "square": { "x": 16, "y": 70, "scale": 0.74 },
+          "wide": { "x": 12, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "align-wayfinder",
+        "action": "Vela turns the central compass; four paths align",
+        "copy": "Vela aligns the Wayfinder. North, south, east, and west settle back into place.",
+        "nextHook": { "copy": "The path ends at a page of broken words." }
+      }
+    },
+    "entering-changing-text": {
+      "id": "entering-changing-text",
+      "worldId": "moonroot-ruins",
+      "guideCharacterId": "tatter",
+      "landmark": {
+        "id": "scribes-spring",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/scribes-spring-dormant.webp",
+          "restored": "assets/worlds/landmarks/scribes-spring-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 76, "scale": 0.62 },
+          "square": { "x": 84, "y": 69, "scale": 0.74 },
+          "wide": { "x": 88, "y": 63, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 57, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "repair-scribes-spring",
+        "action": "Tatter repairs a split channel; luminous ink begins to flow",
+        "copy": "Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.",
+        "nextHook": { "copy": "A sealed gate waits for both an action and a range." }
+      }
+    },
+    "operator-grammar": {
+      "id": "operator-grammar",
+      "worldId": "moonroot-ruins",
+      "guideCharacterId": "cinder",
+      "landmark": {
+        "id": "grammar-gate",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/grammar-gate-dormant.webp",
+          "restored": "assets/worlds/landmarks/grammar-gate-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 76, "scale": 0.62 },
+          "square": { "x": 16, "y": 69, "scale": 0.74 },
+          "wide": { "x": 12, "y": 63, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 57, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "join-grammar-gate",
+        "action": "Cinder joins two halves of a mechanism; the gate opens",
+        "copy": "Cinder joins action to range. The Grammar Gate opens, and the first road out of Moonroot is restored.",
+        "nextHook": { "copy": "Starlight flickers beyond the gate." }
+      }
+    },
+    "precision-motions-search": {
+      "id": "precision-motions-search",
+      "worldId": "starwater-sanctuary",
+      "guideCharacterId": "orin",
+      "landmark": {
+        "id": "starneedle",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/starneedle-dormant.webp",
+          "restored": "assets/worlds/landmarks/starneedle-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
+          "square": { "x": 84, "y": 70, "scale": 0.74 },
+          "wide": { "x": 88, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "focus-starneedle",
+        "action": "Orin focuses a floating lens; distant points illuminate",
+        "copy": "Orin focuses the Starneedle. Distant signs and exact characters become visible across the dark.",
+        "nextHook": { "copy": "The signal points inward, toward structures hidden in plain sight." }
+      }
+    },
+    "text-objects": {
+      "id": "text-objects",
+      "worldId": "starwater-sanctuary",
+      "guideCharacterId": "bramble",
+      "landmark": {
+        "id": "nested-garden",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/nested-garden-dormant.webp",
+          "restored": "assets/worlds/landmarks/nested-garden-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
+          "square": { "x": 16, "y": 70, "scale": 0.74 },
+          "wide": { "x": 12, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "wake-nested-garden",
+        "action": "Bramble touches the outer arch; nested arches bloom from outside inward",
+        "copy": "Bramble wakes the Nested Garden. Words, quotes, brackets, and blocks reveal the shapes they contain.",
+        "nextHook": { "copy": "Three panes of light rise from the water." }
+      }
+    },
+    "visual-selection": {
+      "id": "visual-selection",
+      "worldId": "starwater-sanctuary",
+      "guideCharacterId": "prism",
+      "landmark": {
+        "id": "prism-crossing",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/prism-crossing-dormant.webp",
+          "restored": "assets/worlds/landmarks/prism-crossing-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 76, "scale": 0.62 },
+          "square": { "x": 84, "y": 69, "scale": 0.74 },
+          "wide": { "x": 88, "y": 63, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 57, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "align-prism-crossing",
+        "action": "Prism aligns three glass panes: ribbon, row, and rectangle",
+        "copy": "Prism aligns the three panes. Character, line, and block become distinct paths through the same code.",
+        "nextHook": { "copy": "Behind the final pane, a sealed archive begins to glow." }
+      }
+    },
+    "registers-putting": {
+      "id": "registers-putting",
+      "worldId": "archive-of-echoes",
+      "guideCharacterId": "mica",
+      "landmark": {
+        "id": "memory-archive",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/memory-archive-dormant.webp",
+          "restored": "assets/worlds/landmarks/memory-archive-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
+          "square": { "x": 16, "y": 70, "scale": 0.74 },
+          "wide": { "x": 12, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "restore-memory-archive",
+        "action": "Mica places a captured crystal into a drawer; several drawers illuminate",
+        "copy": "Mica reopens the Memory Archive. What is captured can be kept, chosen, and placed where it belongs.",
+        "nextHook": { "copy": "One memory points to a beacon far beyond the shelves." }
+      }
+    },
+    "long-range-navigation": {
+      "id": "long-range-navigation",
+      "worldId": "archive-of-echoes",
+      "guideCharacterId": "luma",
+      "landmark": {
+        "id": "far-beacons",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/far-beacons-dormant.webp",
+          "restored": "assets/worlds/landmarks/far-beacons-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
+          "square": { "x": 84, "y": 70, "scale": 0.74 },
+          "wide": { "x": 88, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "connect-far-beacons",
+        "action": "Luma sends a thread of light between two distant beacons",
+        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
+        "nextHook": { "copy": "Across the causeway, a stopped clock begins to tick." }
+      }
+    },
+    "repeatable-editing": {
+      "id": "repeatable-editing",
+      "worldId": "archive-of-echoes",
+      "guideCharacterId": "tock",
+      "landmark": {
+        "id": "echo-clock",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/echo-clock-dormant.webp",
+          "restored": "assets/worlds/landmarks/echo-clock-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 76, "scale": 0.62 },
+          "square": { "x": 16, "y": 69, "scale": 0.74 },
+          "wide": { "x": 12, "y": 63, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 57, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "restart-echo-clock",
+        "action": "Tock starts one wheel; its motion propagates through matching wheels",
+        "copy": "Tock restarts the Echo Clock. A well-shaped change can now travel farther than a single moment.",
+        "nextHook": { "copy": "The echo reaches a brass city beneath the ridge." }
+      }
+    },
+    "command-line-ranges-line-operations": {
+      "id": "command-line-ranges-line-operations",
+      "worldId": "brass-meridian",
+      "guideCharacterId": "cinder",
+      "landmark": {
+        "id": "meridian-table",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/meridian-table-dormant.webp",
+          "restored": "assets/worlds/landmarks/meridian-table-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
+          "square": { "x": 84, "y": 70, "scale": 0.74 },
+          "wide": { "x": 88, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "set-meridian-table",
+        "action": "Cinder places two endpoints; a current follows the exact route between them",
+        "copy": "Cinder sets the Meridian Table. Lines and ranges become routes that the command current can follow.",
+        "nextHook": { "copy": "A broken loom is repeating the wrong pattern." }
+      }
+    },
+    "substitution-practical-regex": {
+      "id": "substitution-practical-regex",
+      "worldId": "brass-meridian",
+      "guideCharacterId": "puddle",
+      "landmark": {
+        "id": "mirror-loom",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/mirror-loom-dormant.webp",
+          "restored": "assets/worlds/landmarks/mirror-loom-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
+          "square": { "x": 16, "y": 70, "scale": 0.74 },
+          "wide": { "x": 12, "y": 64, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "retune-mirror-loom",
+        "action": "Puddle retunes a lens; only matching threads transform",
+        "copy": "Puddle retunes the Mirror Loom. Patterns can be found, tested, and transformed without touching what does not match.",
+        "nextHook": { "copy": "The repaired thread leads into a silent foundry." }
+      }
+    },
+    "macros": {
+      "id": "macros",
+      "worldId": "brass-meridian",
+      "guideCharacterId": "tock",
+      "landmark": {
+        "id": "echo-foundry",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/echo-foundry-dormant.webp",
+          "restored": "assets/worlds/landmarks/echo-foundry-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 82, "y": 76, "scale": 0.62 },
+          "square": { "x": 84, "y": 69, "scale": 0.74 },
+          "wide": { "x": 88, "y": 63, "scale": 0.86 },
+          "shallow": { "x": 91, "y": 57, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "record-echo-foundry",
+        "action": "Tock records one movement into a cylinder; three mechanisms replay it",
+        "copy": "Tock records the first true echo. The Foundry can repeat a complete sequence without forgetting a step.",
+        "nextHook": { "copy": "Only the World Engine remains dark." }
+      }
+    },
+    "global-normal-automation": {
+      "id": "global-normal-automation",
+      "worldId": "brass-meridian",
+      "guideCharacterId": "cairn",
+      "landmark": {
+        "id": "meridian-engine",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/meridian-engine-dormant.webp",
+          "restored": "assets/worlds/landmarks/meridian-engine-restored.webp"
+        },
+        "placements": {
+          "portrait": { "x": 18, "y": 76, "scale": 0.62 },
+          "square": { "x": 16, "y": 69, "scale": 0.74 },
+          "wide": { "x": 12, "y": 63, "scale": 0.86 },
+          "shallow": { "x": 9, "y": 57, "scale": 0.66 }
+        }
+      },
+      "completion": {
+        "actionId": "open-meridian-engine",
+        "action": "Cairn connects the restored systems; energy crosses all four worlds",
+        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
+        "nextHook": {
+          "speaker": "Nix",
+          "copy": "The language is alive. What you restore next is up to you."
+        }
+      }
+    }
+  },
+  "story": {
+    "intro": [
+      {
+        "id": "connected-wilds",
+        "asset": "assets/worlds/story/intro-connected.webp",
+        "copy": "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range."
+      },
+      {
+        "id": "interrupted-command",
+        "asset": "assets/worlds/story/intro-interrupted.webp",
+        "copy": "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent."
+      },
+      {
+        "id": "nix-at-the-threshold",
+        "asset": "assets/worlds/story/intro-nix-threshold.webp",
+        "speaker": "Nix",
+        "copy": "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember."
+      }
+    ],
+    "ending": {
+      "speaker": "Nix",
+      "copy": "The language is alive. What you restore next is up to you."
+    }
+  }
+}

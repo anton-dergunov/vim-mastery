@@ -22,6 +22,7 @@ test("production PWA precaches all local lessons and excludes animation WebPs", 
   const manifest = JSON.parse(readFileSync(join(dist, "manifest.webmanifest"), "utf8"));
   const landing = readFileSync(join(dist, "index.html"), "utf8");
   const play = readFileSync(join(dist, "play", "index.html"), "utf8");
+  const presentation = readFileSync(join(rootPath, "content", "presentation.json"), "utf8");
   const unitFiles = files(join(rootPath, "content", "units")).map(path => path.split("/").at(-1));
 
   assert.equal(existsSync(join(dist, "play", "index.html")), true);
@@ -37,6 +38,8 @@ test("production PWA precaches all local lessons and excludes animation WebPs", 
     assert.equal(existsSync(join(dist, "content", "units", file)), true);
     assert.match(worker, new RegExp(`content/units/${file.replace(".", "\\.")}`));
   });
+  assert.equal(readFileSync(join(dist, "content", "presentation.json"), "utf8"), presentation);
+  assert.match(worker, /content\/presentation\.json/);
   assert.equal(output.some(path => path.endsWith(".webp")), false);
   assert.doesNotMatch(worker, /raw\.githubusercontent\.com|\.webp/);
 });
