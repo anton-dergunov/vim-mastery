@@ -1389,7 +1389,7 @@ test.describe("Production lesson flow", () => {
   });
 
   test("keeps the local idle character when remote celebration media is unavailable", async ({ page }) => {
-    await page.route("https://raw.githubusercontent.com/anton-dergunov/vim-mastery/**", route => route.abort());
+    await page.route("**/assets/characters/**/animations/*.webp", route => route.abort());
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await expect(page.locator(".nix.celebrating")).toHaveCount(0);
@@ -1410,11 +1410,10 @@ test.describe("Production lesson flow", () => {
         classes: [...node.classList],
         groundCells: node.querySelectorAll(".ground-cell").length,
         ambientEffects: node.querySelectorAll(".world-ambient-effect").length,
-        patches: node.querySelectorAll(".world-scene-patch").length,
         props: node.querySelectorAll(".world-prop").length,
-        decorativeImages: node.querySelectorAll(".world-backdrop img, .world-ambient img, .world-patch-layer img").length,
+        decorativeImages: node.querySelectorAll(".world-backdrop img, .world-ambient img").length,
         backdrop: getComputedStyle(node.querySelector(".world-backdrop")).backgroundImage,
-        pointerEvents: [".world-backdrop", ".world-ambient", ".world-patch-layer"]
+        pointerEvents: [".world-backdrop", ".world-ambient"]
           .map(selector => getComputedStyle(node.querySelector(selector)).pointerEvents),
       }));
       expect(rendered.data).toMatchObject({
@@ -1430,11 +1429,10 @@ test.describe("Production lesson flow", () => {
       expect(rendered.classes).toContain("theme-moonroot");
       expect(rendered.groundCells).toBe(0);
       expect(rendered.ambientEffects).toBeGreaterThan(0);
-      expect(rendered.patches).toBeGreaterThanOrEqual(1);
       expect(rendered.props).toBe(0);
       expect(rendered.decorativeImages).toBe(0);
       expect(rendered.backdrop).toContain("gradient");
-      expect(rendered.pointerEvents).toEqual(["none", "none", "none"]);
+      expect(rendered.pointerEvents).toEqual(["none", "none"]);
 
       await page.evaluate(() => window.VimWilds.goTo(0));
       await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
@@ -1498,7 +1496,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator("#world")).toHaveAttribute("data-unit-id", "modal-model");
     await expect(page.locator("#world")).toHaveAttribute("data-world-id", "legacy");
     expect(await page.locator(".ground-cell").count()).toBeGreaterThanOrEqual(108);
-    await expect(page.locator(".world-scene-patch, .world-ambient-effect")).toHaveCount(0);
+    await expect(page.locator(".world-ambient-effect")).toHaveCount(0);
   });
 
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {

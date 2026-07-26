@@ -1,7 +1,7 @@
 import { spriteCells } from "./exercise-data.js";
 import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
-import { appUrl, appVersion, remoteMediaUrl } from "./app-version.js";
+import { appUrl, appVersion, remoteMediaUrls } from "./app-version.js";
 import { loadUnitCatalogWithPresentation, resolveUnitPresentation } from "./presentation-data.js";
 import { WorldPresentationRenderer } from "./world-presentation.js";
 
@@ -59,7 +59,6 @@ const elements = {
   worldBackdrop: $("#worldBackdrop"),
   groundGrid: $("#groundGrid"),
   worldAmbient: $("#worldAmbient"),
-  worldPatchLayer: $("#worldPatchLayer"),
   worldRemoteVariantLayer: $("#worldRemoteVariantLayer"),
   worldGrid: $("#worldGrid"),
   characterLayer: $("#characterLayer"),
@@ -258,29 +257,42 @@ function releaseSuccessMedia() {
   successMedia = null;
 }
 
+async function fetchOptionalMedia(sources, options) {
+  let lastError = null;
+  for (const source of sources) {
+    try {
+      const response = await fetch(source, options);
+      if (response.ok) return response;
+      lastError = new Error(`Optional media request failed (${response.status})`);
+    } catch (error) {
+      if (error.name === "AbortError" || options.signal?.aborted) throw error;
+      lastError = error;
+    }
+  }
+  throw lastError || new Error("Optional media request failed");
+}
+
 function preloadSuccessMedia(activity = currentActivity()) {
   if (!activity || !(isPractice(activity) || activity.type === "choice") || activity.inspection) return;
   const assignment = characterAssignment(activity);
   const asset = characterAssets[assignment.characterId] || characterAssets.nix;
   const animation = asset?.animations?.[assignment.animationId];
   if (!animation?.src) return;
-  const source = remoteMediaUrl(animation.src);
-  if (successMedia?.source === source) return;
+  const sources = remoteMediaUrls(animation.src);
+  const sourceKey = sources.join("|");
+  if (successMedia?.sourceKey === sourceKey) return;
   releaseSuccessMedia();
   const controller = new AbortController();
-  successMedia = { source, status: "loading", controller, objectUrl: null };
-  fetch(source, { cache: "no-store", mode: "cors", signal: controller.signal })
-    .then(response => {
-      if (!response.ok) throw new Error(`Celebration media request failed (${response.status})`);
-      return response.blob();
-    })
+  successMedia = { sourceKey, status: "loading", controller, objectUrl: null };
+  fetchOptionalMedia(sources, { cache: "no-store", mode: "cors", signal: controller.signal })
+    .then(response => response.blob())
     .then(blob => {
-      if (successMedia?.source !== source) return;
+      if (successMedia?.sourceKey !== sourceKey) return;
       const objectUrl = URL.createObjectURL(blob);
       const image = new Image();
       image.src = objectUrl;
       return image.decode().then(() => {
-        if (successMedia?.source !== source) {
+        if (successMedia?.sourceKey !== sourceKey) {
           URL.revokeObjectURL(objectUrl);
           return;
         }
@@ -289,7 +301,7 @@ function preloadSuccessMedia(activity = currentActivity()) {
       });
     })
     .catch(error => {
-      if (error.name === "AbortError" || successMedia?.source !== source) return;
+      if (error.name === "AbortError" || successMedia?.sourceKey !== sourceKey) return;
       successMedia.status = "fallback";
     });
 }
@@ -442,10 +454,9 @@ const worldRenderer = new WorldPresentationRenderer({
   world: elements.world,
   backdropLayer: elements.worldBackdrop,
   ambientLayer: elements.worldAmbient,
-  patchLayer: elements.worldPatchLayer,
   remoteVariantLayer: elements.worldRemoteVariantLayer,
   assetUrl: localAssetUrl,
-  remoteAssetUrl: remoteMediaUrl,
+  remoteAssetUrls: remoteMediaUrls,
   onLegacyResize: scheduleGroundRedraw,
 });
 

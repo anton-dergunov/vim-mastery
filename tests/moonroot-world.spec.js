@@ -20,7 +20,7 @@ test("renders the four registered Moonroot scenes while later units retain the l
   await expect(moonroot).toHaveAttribute("data-scene-id", "mode-lantern-grounds");
   await expect(page.locator(".ground-grid .ground-cell")).toHaveCount(0);
   await expect(page.locator(".world-prop, .world-landmark")).toHaveCount(0);
-  await expect(page.locator(".world-scene-patch")).toHaveCount(4);
+  await expect(page.locator(".world-scene-patch")).toHaveCount(0);
   expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
     .toContain("scenes/mode-lantern-grounds/");
   await expect(moonroot).not.toHaveClass(/scene-reveal-active/, { timeout: 1_500 });
@@ -39,14 +39,6 @@ test("renders the four registered Moonroot scenes while later units retain the l
       && document.documentElement.scrollHeight <= window.innerHeight
     ))).toBe(true);
   }
-
-  const guidePlate = await page.locator("#characterLayer").evaluate(element => {
-    const style = getComputedStyle(element, "::before");
-    return { display: style.display, background: style.backgroundImage, opacity: style.opacity };
-  });
-  expect(guidePlate.display).not.toBe("none");
-  expect(guidePlate.background).toContain("gradient");
-  expect(Number(guidePlate.opacity)).toBeGreaterThan(0);
 
   for (const [unitId, sceneId] of Object.entries(moonrootScenes)) {
     await page.goto(`/play/?unit=${unitId}`);
@@ -78,24 +70,24 @@ test("renders the four registered Moonroot scenes while later units retain the l
   await expect(page.locator(".world-scene-patch")).toHaveCount(0);
 });
 
-test("maps learning phases to deterministic registered patches", async ({ page }) => {
+test("keeps retired proof overlays absent across learning phases", async ({ page }) => {
   const cases = [
-    ["welcome-to-modal-vim", "explain", 1],
-    ["insert-return-demo", "demonstrate", 2],
-    ["escape-seeded-insert", "isolate", 2],
-    ["ctrl-bracket-seeded-replace", "mix", 3],
-    ["identify-insert-mode", "challenge", 4],
-    ["modal-model-core-summary", "summary", 3],
+    ["welcome-to-modal-vim", "explain"],
+    ["insert-return-demo", "demonstrate"],
+    ["escape-seeded-insert", "isolate"],
+    ["ctrl-bracket-seeded-replace", "mix"],
+    ["identify-insert-mode", "challenge"],
+    ["modal-model-core-summary", "summary"],
   ];
   await page.goto("/play/?unit=modal-model");
   await page.waitForFunction(() => window.VimWilds?.activities);
-  for (const [activityId, phase, patchCount] of cases) {
+  for (const [activityId, phase] of cases) {
     await page.evaluate(id => {
       const index = window.VimWilds.activities.findIndex(activity => activity.id === id);
       window.VimWilds.goToActivity(index);
     }, activityId);
     await expect(page.locator("#world")).toHaveAttribute("data-learning-phase", phase);
-    await expect(page.locator(".world-scene-patch")).toHaveCount(patchCount);
+    await expect(page.locator(".world-scene-patch")).toHaveCount(0);
   }
 });
 
@@ -112,11 +104,15 @@ test("streams compact Wayfinder variants after the delay and silently falls back
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
   });
-  await page.route("https://anton-dergunov.github.io/vim-mastery/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => route.fulfill({
-    path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
-    contentType: "image/png",
-    headers: { "access-control-allow-origin": "*" },
-  }));
+  const requests = [];
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => {
+    requests.push(route.request().url());
+    return route.fulfill({
+      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+      contentType: "image/png",
+      headers: { "access-control-allow-origin": "*" },
+    });
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
   await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "compact");
@@ -125,6 +121,7 @@ test("streams compact Wayfinder variants after the delay and silently falls back
   await expect(variant).toHaveCount(0);
   await expect(variant).toHaveCount(1, { timeout: 17_000 });
   await expect(variant).toHaveClass(/is-visible/);
+  expect(new URL(requests[0]).origin).toBe(new URL(page.url()).origin);
   expect(await page.locator("#worldGrid").evaluate(element => Number(getComputedStyle(element).zIndex))).toBeGreaterThan(
     await variant.evaluate(element => Number(getComputedStyle(element.parentElement).zIndex)),
   );
@@ -136,4 +133,30 @@ test("streams compact Wayfinder variants after the delay and silently falls back
   await page.context().setOffline(false);
   await page.evaluate(() => window.dispatchEvent(new Event("online")));
   await expect(variant).toHaveCount(1, { timeout: 3_000 });
+});
+
+test("falls back to GitHub Pages when a local development variant is missing", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
+  await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "compact");
+
+  const localOrigin = new URL(page.url()).origin;
+  const requests = [];
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => {
+    const source = route.request().url();
+    requests.push(source);
+    if (new URL(source).origin === localOrigin) return route.fulfill({ status: 404 });
+    return route.fulfill({
+      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+      contentType: "image/png",
+      headers: { "access-control-allow-origin": "*" },
+    });
+  });
+
+  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 17_000 });
+  expect(new URL(requests[0]).origin).toBe(localOrigin);
+  expect(new URL(requests[1]).origin).toBe("https://anton-dergunov.github.io");
 });

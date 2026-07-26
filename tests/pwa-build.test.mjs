@@ -42,9 +42,9 @@ test("production PWA precaches core media and streams GitHub Pages animation and
   assert.match(worker, /content\/presentation\.json/);
   const moonrootRoot = join(rootPath, "assets", "worlds", "moonroot-ruins");
   const moonrootMedia = files(join(moonrootRoot, "scenes"))
-    .filter(file => file.endsWith(".webp"))
+    .filter(file => file.endsWith("/base.webp"))
     .map(file => `assets/worlds/moonroot-ruins/${file.slice(moonrootRoot.length + 1)}`);
-  assert.equal(moonrootMedia.length, 72);
+  assert.equal(moonrootMedia.length, 12);
   moonrootMedia.forEach(file => {
     assert.equal(existsSync(join(dist, file)), true);
     assert.equal(worker.includes(file), true);

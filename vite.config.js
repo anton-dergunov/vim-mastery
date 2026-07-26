@@ -34,7 +34,8 @@ function offlineAssets() {
   const idleImages = walk(characterDirectory).filter(path => path.endsWith("idle.png"));
   const remoteCharacterAnimations = walk(characterDirectory)
     .filter(path => path.includes(`${sep}animations${sep}`) && path.endsWith(".webp"));
-  const moonrootMedia = walk(join(worldDirectory, "moonroot-ruins", "scenes")).filter(path => path.endsWith(".webp"));
+  const moonrootMedia = walk(join(worldDirectory, "moonroot-ruins", "scenes"))
+    .filter(path => path.endsWith(`${sep}base.webp`));
   const remoteSceneVariants = walk(remoteVariantDirectory)
     .filter(assetPath => assetPath.includes(`${sep}variants${sep}`) && assetPath.endsWith(".png"));
   const catalogMetadata = JSON.parse(readFileSync(join(contentDirectory, "unit-index.json"), "utf8"));

@@ -32,9 +32,9 @@ central editor cavities, or one scene per region:
 - Add environmental variation only as exact-canvas registered patches authored
   against real surfaces in the approved scene. Runtime environmental art has no
   free placement coordinates.
-- Keep characters as deliberate guide overlays during exercises, with a small
-  rune plate/contact shadow. Reserve physically staged character actions for
-  unit transitions.
+- Keep characters as deliberate guide overlays during exercises without a
+  decorative rune plate or ground-ring treatment. Reserve physically staged
+  character actions for unit transitions.
 - On first entry to a unit, permit a loaded backdrop-first reveal for 450–600ms.
   Any input cancels it; reduced motion, slow/missing media, resize, direct
   activity changes, and shallow layouts skip it.
@@ -42,11 +42,10 @@ central editor cavities, or one scene per region:
   Moonroot proof before generating Starwater, Archive, or Meridian.
 
 Current checkpoint: WP-01R through WP-03R are implemented and the four Moonroot
-base scenes and responsive profiles are personally approved. Their current
-`phase-a` through `phase-c` overlays are local brightness/tint proofs used to
-validate registration and rendering; they are not approved environmental art.
-The next authorized action is WP-03P-A, the authored-patch review batch, not
-WP-04 generation.
+base scenes and responsive profiles are personally approved. The old local
+brightness/tint proof-overlay renderer has been removed; it is not approved
+environmental art and must not return. Wayfinder's reviewed complete-board
+variants are the replacement. WP-04 generation remains paused.
 
 ### July 2026 patch-production correction
 
@@ -310,9 +309,12 @@ Classify media into two tiers:
      full-board scene variants.
    - Publish all optional media under the GitHub Pages asset path, not
      `raw.githubusercontent.com`, so the application has one production media
-     origin. Emit it into the deployment but explicitly exclude it from the
+     origin. In local Vite development, request the project asset first and
+     transparently fall back to that same GitHub Pages URL when it is missing.
+     Emit it into the deployment but explicitly exclude it from the
      service-worker precache.
-   - Any future cinematic media follows the same GitHub Pages-only path.
+   - Any future cinematic media follows the same production Pages path and
+     local-first development fallback.
    - Story and landmark restoration must still work without these files.
 
 Add a build test that reports and enforces the total core-media budget:
@@ -826,21 +828,24 @@ Do not generate structural prop sheets. For each approved scene and profile:
 Perfect physical lighting is unnecessary; consistent attachment, perspective,
 and local material logic are mandatory.
 
-The existing Moonroot `phase-a`, `phase-b`, and `phase-c` assets were generated
+The retired Moonroot `phase-a`, `phase-b`, and `phase-c` assets were generated
 locally with feathered brightness, saturation, contrast, and tint adjustments.
-They prove exact registration and alpha compositing only. They must not be
-promoted, renamed, or counted as approved patch art.
+They are not rendered or emitted to the PWA build, and must not be promoted,
+renamed, or counted as approved patch art.
 
 ### Remote-variant presentation at runtime
 
-- The local scene base, editor, guide, landmark state, and proof overlays remain
-  the functional offline composition. Remote variants are an opaque backdrop
-  layer below the editor and guide, not an editor-covering overlay.
+- The local scene base, editor, and guide remain the functional offline
+  composition. Remote variants are an opaque backdrop layer below the editor
+  and guide, not an editor-covering overlay. The retired local proof-overlay
+  layer is not rendered.
 - On new-scene entry, wait 15 seconds. Fetch one random no-repeat variant for
   the matching authored profile, fade it in for 1.4 seconds, hold it for seven
   seconds, fade it out for 1.4 seconds, then wait 15 seconds before the next.
-- Fetch with `cache: no-store` and CORS from the GitHub Pages asset URL. The
-  service worker must never precache or synthesize an error for this media.
+- Fetch with `cache: no-store` and CORS from the GitHub Pages asset URL in
+  production. In local Vite development, request the matching project asset
+  first, then fall back to GitHub Pages if it is missing or cannot be fetched.
+  The service worker must never precache or synthesize an error for this media.
 - On offline, fetch failure, shallow layout, or reduced motion, remove any
   active variant and show only the local base without messaging the learner.
   On `online`, resume an eligible scene immediately rather than waiting for a
@@ -1336,8 +1341,8 @@ transition, or Vim effect.
 **Status**
 
 Implemented. The four Moonroot base scenes and responsive profiles are
-personally approved. The local brightness/tint proof overlays are not approved
-environmental art and are superseded by WP-03P.
+personally approved. The local brightness/tint proof overlays have been
+removed and are superseded by WP-03P remote complete-board variants.
 
 ### WP-03P-A — Moonroot patch candidates and personal approval gate
 
@@ -1429,8 +1434,9 @@ and personal review.
   image files for git without committing.
 - Emit the variant PNGs into the GitHub Pages deployment but exclude them from
   the PWA service-worker precache and from local/offline asset budgets. Use the
-  same GitHub Pages remote-media URL for character animations and every future
-  optional visual asset; do not mix raw-GitHub and Pages origins.
+  same GitHub Pages production-media URL for character animations and every
+  future optional visual asset; local Vite development requests project assets
+  first and falls back to Pages. Do not mix raw-GitHub and Pages origins.
 - Add one remote variant layer below the editor and guide. It must use the
   configured 15-second initial delay and gap, 1.4-second fades, seven-second
   hold, and a shuffled no-repeat bag across all 50 assets.

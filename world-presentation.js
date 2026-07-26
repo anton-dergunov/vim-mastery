@@ -27,12 +27,6 @@ function setAsset(element, asset, assetUrl) {
   element.style.setProperty("--world-asset", `url("${assetUrl(asset)}")`);
 }
 
-function activePatchIds(scene, phase, landmarkState) {
-  const phaseIds = scene.phasePatches?.[phase] || scene.phasePatches?.explain || [];
-  const landmarkId = scene.landmarkPatches?.[landmarkState];
-  return landmarkId ? [...phaseIds, landmarkId] : [...phaseIds];
-}
-
 export function remoteVariantPaths(config) {
   if (!config?.assetRoot || !Array.isArray(config.siteIds) || !Number.isInteger(config.variantsPerSite)) return [];
   return config.siteIds.flatMap(siteId => Array.from(
@@ -46,19 +40,17 @@ export class WorldPresentationRenderer {
     world,
     backdropLayer,
     ambientLayer,
-    patchLayer,
     remoteVariantLayer,
     assetUrl = value => value,
-    remoteAssetUrl = value => value,
+    remoteAssetUrls = value => [value],
     onLegacyResize = () => {},
   }) {
     this.world = world;
     this.backdropLayer = backdropLayer;
     this.ambientLayer = ambientLayer;
-    this.patchLayer = patchLayer;
     this.remoteVariantLayer = remoteVariantLayer;
     this.assetUrl = assetUrl;
-    this.remoteAssetUrl = remoteAssetUrl;
+    this.remoteAssetUrls = remoteAssetUrls;
     this.onLegacyResize = onLegacyResize;
     this.presentation = null;
     this.presentationKey = null;
@@ -130,7 +122,6 @@ export class WorldPresentationRenderer {
       this.backdropLayer.style.removeProperty("--world-asset");
       this.backdropLayer.removeAttribute("data-scene-profile");
       this.ambientLayer.replaceChildren();
-      this.patchLayer.replaceChildren();
       this.remoteVariantLayer?.replaceChildren();
       this.updateLayout();
       return false;
@@ -158,23 +149,6 @@ export class WorldPresentationRenderer {
       return element;
     });
     this.ambientLayer.replaceChildren(...effects);
-  }
-
-  buildPatchLayer(profile) {
-    const profileData = this.presentation.scene.profiles[profile];
-    const patches = profileData?.patches || {};
-    const elements = activePatchIds(this.presentation.scene, this.phase, this.landmarkState)
-      .map(patchId => {
-        const asset = patches[patchId];
-        if (!asset) return null;
-        const element = document.createElement("div");
-        element.className = "world-scene-patch";
-        element.dataset.patchId = patchId;
-        setAsset(element, asset, this.assetUrl);
-        return element;
-      })
-      .filter(Boolean);
-    this.patchLayer.replaceChildren(...elements);
   }
 
   remoteVariantsAreEligible() {
@@ -232,17 +206,31 @@ export class WorldPresentationRenderer {
     if (!config || !this.remoteVariantsAreEligible()) return;
     const asset = this.nextRemoteVariant(config);
     if (!asset) return;
-    const source = this.remoteAssetUrl(asset);
+    const sources = this.remoteAssetUrls(asset);
     const controller = new AbortController();
     this.remoteVariantController = controller;
     let pendingObjectUrl = null;
     try {
-      const response = await fetch(source, {
-        cache: "no-store",
-        mode: "cors",
-        signal: controller.signal,
-      });
-      if (!response.ok) throw new Error(`Remote scene variant request failed (${response.status})`);
+      let response = null;
+      let lastError = null;
+      for (const source of sources) {
+        try {
+          const candidate = await fetch(source, {
+            cache: "no-store",
+            mode: "cors",
+            signal: controller.signal,
+          });
+          if (candidate.ok) {
+            response = candidate;
+            break;
+          }
+          lastError = new Error(`Remote scene variant request failed (${candidate.status})`);
+        } catch (error) {
+          if (error.name === "AbortError" || controller.signal.aborted) throw error;
+          lastError = error;
+        }
+      }
+      if (!response) throw lastError || new Error("Remote scene variant request failed");
       const objectUrl = URL.createObjectURL(await response.blob());
       pendingObjectUrl = objectUrl;
       const image = new Image();
@@ -317,7 +305,6 @@ export class WorldPresentationRenderer {
     this.backdropLayer.dataset.backdropShape = sceneProfile;
     const focalPosition = profileData?.focalPosition || "50% 50%";
     this.world.style.setProperty("--scene-focal-position", focalPosition);
-    this.buildPatchLayer(sceneProfile);
     this.syncRemoteVariants();
   }
 
