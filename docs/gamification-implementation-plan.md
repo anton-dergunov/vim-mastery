@@ -41,9 +41,46 @@ central editor cavities, or one scene per region:
 - Pause WP-04A through WP-04C. Revise and personally approve the four-unit
   Moonroot proof before generating Starwater, Archive, or Meridian.
 
-Current checkpoint: WP-01R through WP-03R are implemented for the four Moonroot
-units and await personal product review. The next authorized action is
-iteration on that proof, not WP-04 generation.
+Current checkpoint: WP-01R through WP-03R are implemented and the four Moonroot
+base scenes and responsive profiles are personally approved. Their current
+`phase-a` through `phase-c` overlays are local brightness/tint proofs used to
+validate registration and rendering; they are not approved environmental art.
+The next authorized action is WP-03P-A, the authored-patch review batch, not
+WP-04 generation.
+
+### July 2026 patch-production correction
+
+The registered renderer is retained, but the first proof patches do not create
+meaningful scene changes. This correction supersedes the earlier contract of
+three deterministic learning-phase patches:
+
+- Keep the approved Moonroot base scenes unchanged.
+- Author ten named environmental patch slots per scene. A slot is a semantic
+  detail such as a particular pool edge, lantern, root shelf, crystal seam, or
+  stone surface—not one normalized rectangle reused blindly across profiles.
+- Give every slot profile-specific bounds for `tall`, `compact`, and `wide`.
+  Choose those bounds from measured editor occlusion, character exclusion
+  zones, and the renderer's real cover transform. Prefer grounded lower-third
+  locations when they remain visible, but do not assume that “bottom” is safe.
+- Generate five materially different candidates for each slot in the compact
+  profile. After personal approval of one candidate, recreate that approved
+  semantic change for tall and wide in their corresponding registered bounds.
+- Produce review artifacts as the complete scene with the candidate applied,
+  its exact patch bounds outlined, and stable scene/slot/candidate labels.
+  Preserve the unmarked composite and patch asset beside each review image.
+- A person selects the winner. Automation may reject dimension errors,
+  out-of-bounds changes, empty diffs, or excessive unrelated changes, but
+  Codex does not make the aesthetic selection.
+- During ordinary activities, render exactly one approved environmental patch,
+  selected from a shuffled per-unit bag when the activity is entered. Hold the
+  selection stable throughout that activity visit. Do not redraw on editor
+  updates, resize, reset, or profile switching.
+- Avoid repetition until all eligible patches have been used. Tests inject a
+  fixed seed; production uses a session seed. Landmark dormant/restored state
+  remains independent and may render alongside the environmental patch.
+- Retain reduced-motion, shallow-profile, missing-media, and CSS-fallback
+  behavior. A patch that is not sufficiently visible in the active profile may
+  be skipped without drawing another during the same activity.
 
 The decisions recorded here are:
 
@@ -63,19 +100,19 @@ The implementation should be delivered in small work packages. A coding session 
 
 ## Recommended starting point
 
-Continue from the implemented WP-01 through WP-03 proof by rebuilding only
-Moonroot:
+Continue from the approved WP-03R Moonroot scenes:
 
-1. Disable the six freely positioned Moonroot structural props immediately.
-2. Capture real tall, compact, and wide editor-occlusion masks from the DOM.
-3. Generate five different `4:3` candidates for each of Units 1–4.
-4. Review all 20 candidates as real game composites and explicitly approve one
-   location per unit.
-5. Derive tall and wide profiles only from those approved sources.
-6. Add three registered phase details and dormant/restored registered landmark
-   edits per scene.
-7. Integrate and validate the revised Moonroot slice, then stop for personal
-   review before any WP-04 expansion.
+1. Run WP-03P-A for one Moonroot scene only.
+2. Measure cross-profile visibility and define ten semantic patch slots.
+3. Generate five compact-profile candidates per slot at 1K.
+4. Export 50 full-scene, bounding-box review composites and stop for personal
+   selection.
+5. After ten winners are recorded explicitly, run WP-03P-B to recreate those
+   changes for tall and wide, integrate session-stable per-activity selection,
+   and validate the scene.
+6. Repeat WP-03P-A and WP-03P-B for the other three Moonroot scenes one scene at
+   a time.
+7. Stop for personal review before any WP-04 expansion.
 
 This is the best starting point because it is highly visible, has little risk to Vim correctness, and establishes the art bible needed by landmarks, story scenes, and character poses.
 
@@ -119,8 +156,8 @@ editor and input behavior may not.
 
 - No navigable overworld.
 - No character movement controlled by Vim keys.
-- No unique board image for each exercise; there is one canonical scene per
-  unit, with deterministic learning-phase patches.
+- No unique base board image for each exercise; there is one canonical scene
+  per unit, with one session-stable approved detail patch selected per activity.
 - No generated text, code, keyboard legends, or UI controls inside raster art.
 - No full-screen takeover after ordinary exercises.
 - No currencies, energy, loot, punitive streaks, or global leaderboard.
@@ -189,10 +226,13 @@ Each unit entry defines:
   without changing the renderer. Ship exactly one selected scene per unit in
   this tranche.
 - Tall, compact, and wide profiles. Each profile owns one base asset and the
-  same named set of full-registration patch assets.
-- Three non-overlapping patch regions and deterministic phase-to-patch mappings:
-  `explain` base; `demonstrate` A; `isolate` B; `mix` A+B;
-  `challenge` A+B+C; `summary` settled A+C.
+  same ten semantic patch IDs as full-registration assets.
+- Ten named environmental patch slots. Each slot has profile-specific bounds,
+  eligibility/visibility metadata, and one explicitly approved asset per
+  profile.
+- Per-unit shuffled-bag selection metadata. One environmental patch is sampled
+  on activity entry and remains stable for that activity visit; learning phase
+  does not select environmental art.
 - Dormant and restored landmark patch IDs registered to the same source canvas.
 - Unit-completion action ID.
 - Exact story copy.
@@ -363,9 +403,11 @@ Every unit scene needs:
 - One explicitly approved 2K `4:3` canonical composition.
 - One 2K `4:5` tall derivative and one 2K `16:9` wide derivative from that
   approved source.
-- Three named, non-overlapping patch regions attached to real surfaces or
-  environmental features.
-- One full-registration asset per named patch and profile.
+- Ten named semantic patch slots attached to real surfaces or environmental
+  features.
+- Profile-specific bounds and one full-registration asset per named patch and
+  profile. The same patch ID represents the same kind of local event across
+  profiles; it need not use the same normalized rectangle.
 - Dormant/restored landmark patches at a fixed authored scene location.
 - A fallback CSS gradient using the regional palette.
 
@@ -387,6 +429,12 @@ Across all variants:
 - Registered patches and base use exactly the same cover transform and focal
   position.
 - Environmental art has no arbitrary runtime `x`, `y`, or `scale`.
+- Patch-site planning uses a visibility heatmap calculated from real cover
+  transforms, DOM occlusion masks, character exclusion zones, and representative
+  board bounds. Favor the lower third only where that evidence supports it.
+- A semantic slot may be ineligible for a profile if no plausible,
+  sufficiently visible surface exists. Runtime skips it instead of moving it
+  freely.
 - Characters remain a separate intentional guide overlay.
 - Art may crop; functional UI may not.
 - The same semantic scene must be recognizable in each variant.
@@ -541,7 +589,9 @@ Required generated source outputs:
 | Unit `4:3` candidate compositions | 70 | 14 | Five materially different candidates per unit; one explicitly approved |
 | Approved `4:5` tall profiles | 14 | 14 | Conversational responsive edits |
 | Approved `16:9` wide profiles | 14 | 14 | Conversational responsive edits |
-| Registered phase patch sources | 126 | Up to 126 | Three patches × three profiles × 14 units |
+| Compact patch candidates | 700 | 0 | Ten slots × five candidates × 14 units; review artifacts only |
+| Approved responsive patch derivatives | 280 | Up to 280 | Two derived profiles × ten approved slots × 14 units |
+| Approved registered patch assets | — | Up to 420 | Ten approved slots × three profiles × 14 units |
 | Dormant/restored landmark patches | 84 | Up to 84 | Two states × three profiles × 14 units |
 | Intro story images | 3 | 3 | Shared first-launch story |
 | Nix reaction poses | 3 | 3 | First reaction vertical slice |
@@ -551,7 +601,7 @@ The initial Moonroot vertical slice therefore needs only:
 
 - Four approved canonical scenes, one for each of Units 1–4.
 - Tall, compact, and wide bases for those four scenes.
-- Three registered environmental detail patches per profile.
+- Ten approved registered environmental detail patches per profile.
 - Registered dormant/restored landmark patches per profile.
 - Regional CSS ambient effects and fallback gradient.
 
@@ -607,7 +657,9 @@ For every unit scene:
    bounds before reviewing it.
 5. Record exactly one explicit approval with candidate ID, source hash, date,
    and review notes.
-6. Generate aspect and patch derivatives only when the approval gate succeeds.
+6. Generate aspect derivatives only when the scene approval gate succeeds.
+   Generate responsive patch derivatives only when the corresponding compact
+   patch candidate is explicitly approved.
 7. Downscale to runtime dimensions with nearest-neighbor or a pixel-art-aware method.
 8. Export WebP or AVIF for opaque scenes and PNG/WebP for transparency.
 9. Inspect the alpha channel. “Transparent background” is a request, not a guarantee.
@@ -717,19 +769,82 @@ whose central identity and low-contrast editor region remain unchanged.
 
 Do not generate structural prop sheets. For each approved scene and profile:
 
-1. Define three non-overlapping regions anchored to real surfaces or features.
-2. Send the crop plus contextual margin and request one local, plausible change:
+1. Calculate a cross-profile visibility heatmap from the actual CSS cover
+   transforms, DOM editor masks, guide-character exclusion zones, and
+   representative board bounds.
+2. Define ten semantic compact-profile slots anchored to real surfaces or
+   features. Record corresponding tall and wide bounds separately. Slots do
+   not need to be mutually non-overlapping because only one environmental patch
+   is active, but they must not conflict with the landmark region.
+3. For each compact slot, generate five meaningfully different local changes:
    flowers opening, a perched creature, water movement, spores, a lantern
-   state, crystal growth, vines, mist, or environmental illumination.
-3. Extract changed pixels inside the declared region and restore them to the
+   state, crystal growth, vines, mist, environmental illumination, or another
+   surface-attached detail. A mere brightness/tint adjustment is not a valid
+   candidate.
+4. Send the crop with 20–35% contextual margin and the approved full scene.
+   Mask only the intended editable region. Ask the model to preserve the
+   surroundings, perspective, palette, and estimated local illumination.
+5. Extract changed pixels inside the declared region and restore them to the
    exact source-canvas registration.
-4. Reject the edit if unrelated pixels change outside the region, contact or
-   perspective breaks, or an object appears unsupported.
-5. Store each patch as a full-canvas transparent asset with dimensions exactly
-   matching the corresponding base.
+6. Automatically reject empty diffs, dimension mismatches, unrelated changes
+   outside the allowed region, or excessive changes within the contextual
+   margin. Contact, perspective, and visual plausibility remain human review
+   decisions.
+7. Export one review image per candidate showing the complete scene with the
+   patch applied, a visible bounding box, and stable scene/slot/candidate ID.
+   Also retain an unmarked full-scene composite for close comparison.
+8. Stop for personal selection. Record one approved candidate and its hash for
+   every slot; do not infer approval from a filename or candidate number.
+9. Recreate each approved semantic change for tall and wide in their authored
+   profile-specific regions, then repeat the automated checks and full-scene
+   human review.
+10. Store each winner as a full-canvas transparent asset with dimensions
+    exactly matching its corresponding base.
 
 Perfect physical lighting is unnecessary; consistent attachment, perspective,
 and local material logic are mandatory.
+
+The existing Moonroot `phase-a`, `phase-b`, and `phase-c` assets were generated
+locally with feathered brightness, saturation, contrast, and tint adjustments.
+They prove exact registration and alpha compositing only. They must not be
+promoted, renamed, or counted as approved patch art.
+
+### Patch selection at runtime
+
+- On activity entry, draw one eligible patch from a shuffled bag scoped to the
+  unit and session.
+- Keep that patch ID stable while the activity is rendered, reset, solved, or
+  resized. Profile changes resolve the same semantic ID to another profile
+  asset.
+- Do not repeat a patch until the bag is exhausted; then reshuffle.
+- A direct deep link initializes a bag and selection normally.
+- Tests inject a fixed random seed and assert selection stability, no-repeat
+  behavior, profile continuity, and safe handling of missing/ineligible media.
+- Learning phase remains available as presentation metadata but does not drive
+  patch selection.
+- Dormant/restored landmark state remains controlled only by unit completion.
+
+### Patch-generation cost envelope
+
+Use 1K Nano Banana 2 outputs for local patch crops; the full-scene review
+composite is assembled locally and costs no additional generation call. Current
+Vertex AI standard pricing lists a 1K output at approximately `$0.067`, 2K at
+`$0.101`, and Flex/Batch at roughly half those rates. Input-image and text
+tokens add a small variable amount.
+
+For one scene:
+
+- 50 compact candidates: about `$3.35` standard at 1K.
+- 20 tall/wide winner recreations: about `$1.34` standard at 1K.
+- Total after ten approvals: about `$4.69`, plus input tokens and retries.
+
+For all four Moonroot scenes, the same 280-output funnel is about `$18.76`
+standard or `$9.52` with Flex/Batch, plus input and retries. Generating five
+candidates independently for all three profiles would require 600 outputs and
+is deliberately avoided.
+
+Pricing reference:
+[Vertex AI generative AI pricing](https://cloud.google.com/vertex-ai/generative-ai/pricing).
 
 ### Landmark-generation method
 
@@ -1067,7 +1182,8 @@ story data and the legacy board for unconverted regions.
 - Keep regional identity, palette, ambient vocabulary, guide, landmark ID, and
   exact story copy.
 - Add `sceneId`, a future-compatible `scenes` map, tall/compact/wide profiles,
-  registered patch assets, phase mappings, and landmark patch states.
+  registered patch assets, activity-selection metadata, and landmark patch
+  states.
 - Require an explicitly approved source before derivative generation.
 - Require one selected scene for every unit whose region is converted.
 - Preserve current output when the manifest is missing, invalid, or the unit is
@@ -1110,7 +1226,9 @@ while keeping a legacy fallback and unchanged editor geometry.
 - Render base, active full-registration patches, optional CSS ambience, editor,
   and character as separate layers.
 - Apply one identical cover transform and focal position to base and patches.
-- Add the deterministic phase mapping.
+- Resolve the active environmental patch through a replaceable selection
+  policy. WP-03P-B replaces the initial phase-based proof policy with the
+  session-stable activity shuffle bag.
 - Add a rune plate/contact shadow under the existing guide overlay.
 - Add a loaded, cancellable 450–600ms reveal on unit entry only.
 - Keep decorative layers non-interactive and clipped.
@@ -1158,8 +1276,10 @@ transition, or Vim effect.
 - Generate five composition directions per Moonroot unit and review all 20 in
   live composites.
 - Record one explicit approval per unit, then derive tall and wide profiles.
-- Add three registered local phase changes and dormant/restored landmark patches
-  per approved scene.
+- Add temporary registered proof overlays and dormant/restored landmark patches
+  per approved scene. The proof overlays validate only dimensions,
+  registration, alpha compositing, and profile switching; WP-03P replaces them
+  with authored scene changes.
 - Use board-container profile selection without device detection.
 - Ensure theory, demo, exercise, choice, summary, completion, and keyboard-hidden states remain readable.
 - Remove tile sprites only for Moonroot units; other units retain the legacy board.
@@ -1186,14 +1306,127 @@ transition, or Vim effect.
 - Toggle each theme preference.
 - Test with slow network and offline mode.
 
+**Status**
+
+Implemented. The four Moonroot base scenes and responsive profiles are
+personally approved. The local brightness/tint proof overlays are not approved
+environmental art and are superseded by WP-03P.
+
+### WP-03P-A — Moonroot patch candidates and personal approval gate
+
+**Recommended model:** Terra
+
+**Dependencies:** Personally approved WP-03R Moonroot base scenes
+
+**Visible change:** None in production; review artifacts only
+
+**Risk:** Low
+
+**Session brief**
+
+Work on exactly one Moonroot scene. Build the mechanical patch-site,
+generation, validation, and review workflow; generate 50 compact-profile
+candidates; then stop for personal selection. Do not change runtime selection,
+promote candidates, derive responsive winners, or begin another scene.
+
+**Work**
+
+- Recalculate tall, compact, and wide visibility using the real board cover
+  transforms, DOM occlusion masks, and guide-character exclusion zones.
+- Define ten semantic patch slots with profile-specific bounds. Prefer visible
+  grounded lower-third surfaces, water, roots, ledges, crystals, and lanterns.
+- Exclude the authored landmark area. Record visibility/eligibility per profile.
+- Generate five 1K Nano Banana 2 candidates for each compact slot using the
+  approved scene, masked crop, and contextual margin.
+- Require a visible content change attached to the scene. Brightness-only,
+  tint-only, floating, unsupported, or unrelated edits fail.
+- Create complete-scene review composites with the candidate applied, exact
+  bounding box, and stable IDs. Also save the unmarked composites.
+- Run only mechanical validation. Do not use Codex aesthetic ranking.
+- Emit an approval manifest with all 50 entries pending and make every
+  derivative/promote command fail until the relevant winner is explicitly
+  recorded.
+
+**Acceptance**
+
+- There are exactly ten slots and five candidates per slot for one scene.
+- Every review artifact shows the complete scene, applied candidate, box, and
+  unambiguous ID.
+- Candidate images and full-scene composites are reproducible from metadata.
+- No output is written to the shipped PWA asset tree.
+- No candidate is treated as approved automatically.
+
+**Human gate**
+
+The product owner selects exactly one candidate per slot or rejects the slot.
+Record the selection, notes, source hash, model ID, prompt, and date. A rejected
+slot may be regenerated before the gate closes. Do not continue to WP-03P-B
+until ten winners are explicitly approved, unless the product owner reduces the
+slot count.
+
+### WP-03P-B — Responsive patch integration and activity variety
+
+**Recommended model:** Terra
+
+**Dependencies:** One scene's completed WP-03P-A approval manifest
+
+**Visible change:** Medium
+
+**Risk:** Medium
+
+**Session brief**
+
+For exactly one approved Moonroot scene, recreate its ten selected semantic
+changes for tall and wide, integrate the registered winners, replace the
+brightness/tint proof overlays, and add stable randomized activity selection.
+Stop after validation and personal review.
+
+**Work**
+
+- Generate one tall and one wide recreation for each approved compact patch
+  using its profile-specific bounds and the approved base profile.
+- Run dimension, alpha, bounds, outside-diff, visibility, and missing-media
+  checks; export full-scene responsive review composites.
+- Promote only explicitly approved compact, tall, and wide assets.
+- Replace the three proof overlay entries with ten semantic patch IDs and their
+  per-profile metadata.
+- On activity entry, select one eligible patch from a session-seeded,
+  no-repeat shuffled bag. Hold it stable through all renders and profile
+  changes.
+- Add a deterministic seed hook for tests without changing
+  `window.VimWilds` compatibility.
+- Keep landmark state, CSS ambience, unit reveal, editor geometry, lesson data,
+  command behavior, keyboard behavior, and functional theme selection
+  unchanged.
+
+**Acceptance**
+
+- One real content-changing patch is visible during an ordinary activity when
+  its active profile is eligible.
+- The selected patch cannot change because of typing, reset, solve, resize,
+  completion rendering, or unrelated state updates.
+- Re-entering or entering another activity advances the shuffled bag; no patch
+  repeats before exhaustion.
+- Switching tall/compact/wide preserves the semantic patch ID and uses the
+  corresponding registered asset.
+- Every patch matches its base dimensions and has no changed pixels outside its
+  declared region.
+- Missing media, shallow layouts, reduced motion, offline loading, and direct
+  deep links remain safe.
+
+Repeat WP-03P-A, its human gate, and WP-03P-B scene by scene for the remaining
+Moonroot units. Do not batch all four scenes before the first integrated scene
+has been personally reviewed.
+
 ### WP-04A — Starwater unit-scene expansion — PAUSED
 
 **Recommended model:** Terra  
-**Dependencies:** Personally approved WP-03R and Starwater candidate approvals
+**Dependencies:** Personally approved WP-03P for all four Moonroot scenes and
+Starwater candidate approvals
 **Visible change:** High  
 **Risk:** Low
 
-Do not start until WP-03R is personally approved. Then generate and integrate
+Do not start until all Moonroot WP-03P work is personally approved. Then generate and integrate
 one distinct registered scene for each of Units 5–7, one unit at a time, using
 the five-candidate and explicit-approval funnel. Reuse the renderer unchanged.
 
@@ -1202,11 +1435,12 @@ Human validation focuses on search, text-object, and Visual Block exercises at e
 ### WP-04B — Archive unit-scene expansion — PAUSED
 
 **Recommended model:** Terra  
-**Dependencies:** Personally approved WP-03R and Archive candidate approvals
+**Dependencies:** Personally approved WP-03P for all four Moonroot scenes and
+Archive candidate approvals
 **Visible change:** High  
 **Risk:** Low
 
-Do not start until WP-03R is personally approved. Then generate and integrate
+Do not start until all Moonroot WP-03P work is personally approved. Then generate and integrate
 one distinct registered scene for each of Units 8–10, one unit at a time.
 
 Human validation focuses on register indicators, long buffers, hidden keyboard layout, and dot-repeat exercises.
@@ -1214,11 +1448,12 @@ Human validation focuses on register indicators, long buffers, hidden keyboard l
 ### WP-04C — Meridian unit-scene expansion — PAUSED
 
 **Recommended model:** Terra  
-**Dependencies:** Personally approved WP-03R and Meridian candidate approvals
+**Dependencies:** Personally approved WP-03P for all four Moonroot scenes and
+Meridian candidate approvals
 **Visible change:** High  
 **Risk:** Low
 
-Do not start until WP-03R is personally approved. Then generate and integrate
+Do not start until all Moonroot WP-03P work is personally approved. Then generate and integrate
 one distinct registered scene for each of Units 11–14, one unit at a time.
 
 Human validation focuses on Command-line UI, confirmation prompts, macros, substitution, and the densest buffers.
@@ -1490,9 +1725,13 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 WP-01R Registered-scene data
  ├─ WP-02R Registered-scene renderer
  │   └─ WP-03R Moonroot proof + personal approval gate
- │       ├─ WP-04A Starwater
- │       ├─ WP-04B Archive
- │       ├─ WP-04C Meridian
+ │       ├─ WP-03P-A one-scene patch candidates
+ │       │   └─ Personal patch approval gate
+ │       │       └─ WP-03P-B responsive patch integration
+ │       │           ├─ repeat WP-03P-A/B for remaining Moonroot scenes
+ │       │           ├─ WP-04A Starwater
+ │       │           ├─ WP-04B Archive
+ │       │           └─ WP-04C Meridian
  │       └─ WP-05 Offline/media policy
  └─ WP-10 Story infrastructure
      └─ WP-11 Story art + landmarks
@@ -1514,6 +1753,8 @@ Parallelism guidance:
   derivatives cannot run before explicit candidate approvals.
 - WP-06 can run independently of all board and story work.
 - Reaction-pose generation can run independently after the Moonroot art direction is approved.
+- Run WP-03P-A and WP-03P-B on one scene before starting the next; every
+  WP-03P-A batch contains a blocking personal approval gate.
 - WP-04A, WP-04B, and WP-04C are conceptually independent but all touch shared manifests/styles; run sequentially unless separate branches are used.
 - WP-09 and WP-10 both touch `app.js`/UI state and should not be implemented concurrently in one working tree.
 
@@ -1533,6 +1774,8 @@ Use **Sol** when correctness depends on cross-cutting architecture, editor seman
 Use **Terra** when the architecture is already established and the work is bounded visual integration, declarative expansion, CSS tuning, or a small state machine:
 
 - WP-03R
+- WP-03P-A
+- WP-03P-B
 - WP-04A
 - WP-04B
 - WP-04C
@@ -1545,15 +1788,16 @@ If a Terra session discovers that it must change the data contract, Vim event se
 
 ### Milestone 1 — Prove the new board
 
-1. Disable the old Moonroot structural props.
-2. Capture DOM-derived occlusion masks.
-3. Generate five `4:3` candidates for each of Units 1–4 with Nano Banana 2.
-4. Review all 20 as live composites and record one explicit approval per unit.
-5. Complete WP-01R and WP-02R.
-6. Derive `4:5` and `16:9` profiles and registered patches only from approved
-   sources.
-7. Complete WP-03R.
-8. Validate personally and stop before generating another region.
+1. WP-01R, WP-02R, and WP-03R are complete; retain their approved Moonroot
+   scenes and profiles.
+2. Run WP-03P-A with Terra for one Moonroot scene and generate its 50 review
+   candidates.
+3. Personally choose one winner for each of the ten slots.
+4. Run WP-03P-B with Terra for that scene.
+5. Validate patch visibility, registration, responsive continuity, and
+   per-activity shuffled selection in the live game.
+6. Repeat WP-03P-A and WP-03P-B one Moonroot scene at a time.
+7. Stop for personal review before generating another region.
 
 Exit question:
 
@@ -1621,13 +1865,13 @@ For a Nano Banana asset session, use the exact prompt and references specified i
 
 ## Final recommendation
 
-Yes: start with the board visualization.
+The Moonroot base-scene direction is approved. The immediate move is:
 
-The immediate move is not “implement all four regions.” It is:
+> Run WP-03P-A with Terra for one Moonroot scene, review its 50 full-scene
+> boxed patch candidates personally, and only then run WP-03P-B to integrate
+> the ten winners.
 
-> Finish and personally approve four distinct registered Moonroot unit scenes,
-> with approval-gated responsive profiles and surface-attached patches, then
-> stop before WP-04.
+Repeat this one scene at a time and stop before WP-04.
 
 This provides the fastest trustworthy answer to the central visual question
 while leaving the editor, curriculum, keyboard, character assignment logic, and
