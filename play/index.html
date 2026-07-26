@@ -13,6 +13,16 @@
   <link rel="apple-touch-icon" href="%BASE_URL%icons/icon-192.png">
   <script>
     (() => {
+      const allowAndroidRotation = () => {
+        if (!/Android/i.test(navigator.userAgent) || !window.screen.orientation?.lock) return;
+        try {
+          window.screen.orientation.lock("any").catch(() => {
+            try { window.screen.orientation.unlock?.(); } catch {}
+          });
+        } catch {
+          try { window.screen.orientation.unlock?.(); } catch {}
+        }
+      };
       const updateViewportHeight = () => {
         const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent)
           || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -34,8 +44,13 @@
       window.visualViewport?.addEventListener("resize", scheduleViewportHeight);
       window.visualViewport?.addEventListener("scroll", scheduleViewportHeight);
       document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) scheduleViewportHeight();
+        if (!document.hidden) {
+          allowAndroidRotation();
+          scheduleViewportHeight();
+        }
       });
+      document.addEventListener("pointerdown", allowAndroidRotation, { capture: true, once: true });
+      allowAndroidRotation();
       updateViewportHeight();
       window.setTimeout(scheduleViewportHeight, 250);
       window.setTimeout(scheduleViewportHeight, 1000);

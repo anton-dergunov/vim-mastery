@@ -336,9 +336,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim's command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 9,
+                "display": "/TODO/",
+                "explanation": "Set `TODO` as the search pattern."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "DONE/",
+                "explanation": "Set `DONE` as the replacement."
+              },
+              {
+                "from": 14,
                 "to": 16,
-                "display": ":%s/TODO/DONE/g↵",
-                "explanation": "Replace every `TODO` in the buffer with `DONE`."
+                "display": "g↵",
+                "explanation": "Apply it to every match, then run the command."
               }
             ],
             "checkpoints": [

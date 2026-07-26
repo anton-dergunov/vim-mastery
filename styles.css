@@ -2698,7 +2698,7 @@ html.next-ui .toc-unit-launch button {
 
   html.next-ui .lesson-workspace {
     min-height: 0;
-    grid-template-columns: clamp(190px, 35vw, 290px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
   }
 
   html.next-ui .lesson-context {
@@ -2734,9 +2734,27 @@ html.next-ui .toc-unit-launch button {
     width: auto;
     margin: 0;
     color: #c6d6cd;
-    font-size: 12px;
-    line-height: 1.25;
+    font-size: 14px;
+    line-height: 1.28;
     -webkit-line-clamp: 3;
+  }
+
+  html.next-ui .activity-intro p::before,
+  html.next-ui .command-explanation::before {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--theme-bright);
+    font: 800 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+  }
+
+  html.next-ui .activity-intro p::before {
+    content: "Task";
+  }
+
+  html.next-ui .command-explanation::before {
+    content: "Step";
   }
 
   html.next-ui .hint-button {
@@ -2762,11 +2780,11 @@ html.next-ui .toc-unit-launch button {
 
   html.next-ui .command-explanation {
     overflow: hidden;
-    font-size: 11px;
-    line-height: 1.18;
+    font-size: 13px;
+    line-height: 1.22;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
   }
 
   html.next-ui .command-history-label {
@@ -2779,8 +2797,8 @@ html.next-ui .toc-unit-launch button {
   html.next-ui .next-command-tray .command-text {
     grid-row: 3;
     align-self: start;
-    font-size: 11px;
-    line-height: 1.25;
+    font-size: 13px;
+    line-height: 1.3;
   }
 
   html.next-ui .execution-status {
@@ -2837,6 +2855,16 @@ html.next-ui .toc-unit-launch button {
   html.next-ui .phone.keyboard-visible .next-code-slab {
     height: 100%;
     max-height: none;
+  }
+
+  html.next-ui .phone.keyboard-visible .code-body .cm-scroller {
+    font-size: 12px;
+    line-height: 1.28;
+  }
+
+  html.next-ui .phone.keyboard-visible .code-body .cm-content {
+    padding-top: 2px;
+    padding-bottom: 3px;
   }
 
   html.next-ui .keyboard-panel {
