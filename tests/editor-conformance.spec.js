@@ -1396,44 +1396,45 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator('.nix[src*="assets/characters/"]')).toBeVisible();
   });
 
-  test("renders each manifest world as clipped, non-interactive layers with stable identity", async ({ page }) => {
-    const worlds = [
-      ["modal-model", "moonroot-ruins", "mode-lantern", "theme-moonroot"],
-      ["precision-motions-search", "starwater-sanctuary", "starneedle", "theme-deepwater"],
-      ["registers-putting", "archive-of-echoes", "memory-archive", "theme-glass"],
-      ["command-line-ranges-line-operations", "brass-meridian", "meridian-table", "theme-ember"],
+  test("renders each Moonroot unit as a clipped registered scene with stable identity", async ({ page }) => {
+    const scenes = [
+      ["modal-model", "mode-lantern-grounds", "mode-lantern"],
+      ["cursor-movement", "wayfinder-crossroads", "wayfinder"],
+      ["entering-changing-text", "scribes-spring", "scribes-spring"],
+      ["operator-grammar", "grammar-gate-court", "grammar-gate"],
     ];
-    for (const [unitId, worldId, landmarkId, themeClass] of worlds) {
+    for (const [unitId, sceneId, landmarkId] of scenes) {
       await page.goto(`/?unit=${unitId}`);
       const rendered = await page.locator("#world").evaluate(node => ({
         data: { ...node.dataset },
         classes: [...node.classList],
         groundCells: node.querySelectorAll(".ground-cell").length,
         ambientEffects: node.querySelectorAll(".world-ambient-effect").length,
+        patches: node.querySelectorAll(".world-scene-patch").length,
         props: node.querySelectorAll(".world-prop").length,
-        landmarks: node.querySelectorAll(".world-landmark").length,
-        decorativeImages: node.querySelectorAll(".world-backdrop img, .world-ambient img, .world-prop-layer img, .world-landmark-layer img").length,
+        decorativeImages: node.querySelectorAll(".world-backdrop img, .world-ambient img, .world-patch-layer img").length,
         backdrop: getComputedStyle(node.querySelector(".world-backdrop")).backgroundImage,
-        pointerEvents: [".world-backdrop", ".world-ambient", ".world-prop-layer", ".world-landmark-layer"]
+        pointerEvents: [".world-backdrop", ".world-ambient", ".world-patch-layer"]
           .map(selector => getComputedStyle(node.querySelector(selector)).pointerEvents),
       }));
       expect(rendered.data).toMatchObject({
-        renderer: "layered",
+        renderer: "registered-scenes",
         unitId,
-        worldId,
+        worldId: "moonroot-ruins",
+        sceneId,
         landmarkId,
         mode: "normal",
         reducedMotion: "false",
       });
-      expect(["portrait", "square", "wide", "shallow"]).toContain(rendered.data.boardShape);
-      expect(rendered.classes).toContain(themeClass);
+      expect(["tall", "compact", "wide", "shallow"]).toContain(rendered.data.boardProfile);
+      expect(rendered.classes).toContain("theme-moonroot");
       expect(rendered.groundCells).toBe(0);
       expect(rendered.ambientEffects).toBeGreaterThan(0);
-      expect(rendered.props).toBeGreaterThan(0);
-      expect(rendered.landmarks).toBe(1);
+      expect(rendered.patches).toBeGreaterThanOrEqual(1);
+      expect(rendered.props).toBe(0);
       expect(rendered.decorativeImages).toBe(0);
       expect(rendered.backdrop).toContain("gradient");
-      expect(rendered.pointerEvents).toEqual(["none", "none", "none", "none"]);
+      expect(rendered.pointerEvents).toEqual(["none", "none", "none"]);
 
       await page.evaluate(() => window.VimWilds.goTo(0));
       await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
@@ -1443,17 +1444,17 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Open settings" }).click();
     await page.getByLabel("Moonroot Ruins").check();
     await expect(page.locator("#world")).toHaveClass(/theme-moonroot/);
-    await expect(page.locator("#world")).toHaveAttribute("data-world-id", "brass-meridian");
+    await expect(page.locator("#world")).toHaveAttribute("data-world-id", "moonroot-ruins");
   });
 
   test("switches board composition live without resetting the active Vim activity", async ({ page }) => {
-    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
-    await page.evaluate(() => window.VimWilds.emit("c"));
+    await page.goto("/?unit=modal-model&activity=practice-two-delete-words");
+    await page.evaluate(() => window.VimWilds.emit("d"));
     const before = await state(page);
-    for (const [width, height, shape, backdropShape] of [
-      [320, 400, "portrait", "portrait"],
-      [400, 400, "square", "square"],
-      [720, 400, "wide", "wide"],
+    for (const [width, height, profile, sceneProfile] of [
+      [320, 400, "tall", "tall"],
+      [480, 400, "compact", "compact"],
+      [800, 400, "wide", "wide"],
       [1000, 400, "shallow", "wide"],
     ]) {
       await page.locator("#world").evaluate((node, size) => {
@@ -1467,8 +1468,8 @@ test.describe("Production lesson flow", () => {
         });
         window.dispatchEvent(new Event("orientationchange"));
       }, { width, height });
-      await expect(page.locator("#world")).toHaveAttribute("data-board-shape", shape);
-      await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-backdrop-shape", backdropShape);
+      await expect(page.locator("#world")).toHaveAttribute("data-board-profile", profile);
+      await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", sceneProfile);
       expect(await state(page)).toMatchObject({
         activityId: before.activityId,
         progress: before.progress,
@@ -1479,28 +1480,25 @@ test.describe("Production lesson flow", () => {
     }
   });
 
-  test("marks reduced motion and keeps the layered fallback static", async ({ page }) => {
+  test("marks reduced motion and skips the unit-entry reveal", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/?unit=modal-model");
     await expect(page.locator("#world")).toHaveAttribute("data-reduced-motion", "true");
-    const animations = await page.evaluate(() => ({
-      ambient: getComputedStyle(document.querySelector(".world-ambient-effect")).animationName,
-      landmark: getComputedStyle(document.querySelector(".world-landmark"), "::before").animationName,
-    }));
-    expect(animations).toEqual({ ambient: "none", landmark: "none" });
+    expect(await page.locator(".world-ambient-effect").first().evaluate(node => getComputedStyle(node).animationName)).toBe("none");
+    await expect(page.locator("#world")).not.toHaveClass(/scene-reveal-active/);
   });
 
   test("uses the legacy tile renderer when presentation data is invalid", async ({ page }) => {
     await page.route("**/content/presentation.json", route => route.fulfill({
       contentType: "application/json",
-      body: JSON.stringify({ schemaVersion: 1, worlds: {}, units: {}, story: {} }),
+      body: JSON.stringify({ schemaVersion: 2, worlds: {}, units: {}, story: {} }),
     }));
     await page.goto("/?unit=modal-model");
     await expect(page.locator("#world")).toHaveAttribute("data-renderer", "legacy");
     await expect(page.locator("#world")).toHaveAttribute("data-unit-id", "modal-model");
     await expect(page.locator("#world")).toHaveAttribute("data-world-id", "legacy");
     expect(await page.locator(".ground-cell").count()).toBeGreaterThanOrEqual(108);
-    await expect(page.locator(".world-prop, .world-landmark, .world-ambient-effect")).toHaveCount(0);
+    await expect(page.locator(".world-scene-patch, .world-ambient-effect")).toHaveCount(0);
   });
 
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {

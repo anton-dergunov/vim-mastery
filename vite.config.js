@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
@@ -8,7 +8,10 @@ const rootDirectory = dirname(fileURLToPath(import.meta.url));
 const contentDirectory = join(rootDirectory, "content");
 const characterDirectory = join(rootDirectory, "assets", "characters");
 const iconDirectory = join(rootDirectory, "assets", "icons");
+const worldDirectory = join(rootDirectory, "assets", "worlds");
 const packageVersion = JSON.parse(readFileSync(join(rootDirectory, "package.json"), "utf8")).version;
+const WORLD_MEDIA_WARNING_BYTES = 30 * 1024 * 1024;
+const WORLD_MEDIA_LIMIT_BYTES = 50 * 1024 * 1024;
 
 function shortGitHash() {
   try {
@@ -28,6 +31,7 @@ function walk(directory) {
 function offlineAssets() {
   const units = walk(join(contentDirectory, "units")).filter(path => path.endsWith(".json"));
   const idleImages = walk(characterDirectory).filter(path => path.endsWith("idle.png"));
+  const moonrootMedia = walk(join(worldDirectory, "moonroot-ruins", "scenes")).filter(path => path.endsWith(".webp"));
   const catalogMetadata = JSON.parse(readFileSync(join(contentDirectory, "unit-index.json"), "utf8"));
   const catalog = units.map(path => {
     const unit = JSON.parse(readFileSync(path, "utf8"));
@@ -39,7 +43,14 @@ function offlineAssets() {
       path: `content/units/${relative(join(contentDirectory, "units"), path).replaceAll("\\", "/")}`,
     };
   }).sort((left, right) => left.unitNumber - right.unitNumber);
-  return { units, idleImages, catalog, arcs: catalogMetadata.arcs || [] };
+  const worldMediaBytes = moonrootMedia.reduce((total, path) => total + statSync(path).size, 0);
+  if (worldMediaBytes > WORLD_MEDIA_LIMIT_BYTES) {
+    throw new Error(`World/story media is ${(worldMediaBytes / 1024 / 1024).toFixed(2)}MB; production limit is 50MB`);
+  }
+  if (worldMediaBytes > WORLD_MEDIA_WARNING_BYTES) {
+    console.warn(`World/story media is ${(worldMediaBytes / 1024 / 1024).toFixed(2)}MB; review above the 30MB warning threshold`);
+  }
+  return { units, idleImages, moonrootMedia, catalog, arcs: catalogMetadata.arcs || [] };
 }
 
 function pwaBuildPlugin(base, version) {
@@ -58,7 +69,7 @@ function pwaBuildPlugin(base, version) {
       });
     },
     generateBundle() {
-      const { units, idleImages, catalog, arcs } = offlineAssets();
+      const { units, idleImages, moonrootMedia, catalog, arcs } = offlineAssets();
       const emit = (fileName, source) => this.emitFile({ type: "asset", fileName, source });
       units.forEach(path => emit(`content/units/${relative(join(contentDirectory, "units"), path)}`, readFileSync(path)));
       emit("content/unit-index.json", JSON.stringify({ schemaVersion: 2, arcs, units: catalog }, null, 2));
@@ -67,6 +78,7 @@ function pwaBuildPlugin(base, version) {
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       idleImages.forEach(path => emit(`assets/characters/${relative(characterDirectory, path)}`, readFileSync(path)));
+      moonrootMedia.forEach(path => emit(`assets/worlds/${relative(worldDirectory, path)}`, readFileSync(path)));
       emit("icons/icon-192.png", readFileSync(join(iconDirectory, "icon-192.png")));
       emit("icons/icon-512.png", readFileSync(join(iconDirectory, "icon-512.png")));
     },

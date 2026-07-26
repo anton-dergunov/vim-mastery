@@ -1,37 +1,10 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "worlds": {
     "moonroot-ruins": {
       "id": "moonroot-ruins",
       "displayName": "Moonroot Ruins",
       "autoThemeId": "moonroot",
-      "backdrops": {
-        "portrait": "assets/worlds/moonroot-ruins/backdrop-portrait.webp",
-        "square": "assets/worlds/moonroot-ruins/backdrop-square.webp",
-        "wide": "assets/worlds/moonroot-ruins/backdrop-wide.webp"
-      },
-      "props": [
-        {
-          "id": "root-arch",
-          "asset": "assets/worlds/moonroot-ruins/props/root-arch.webp",
-          "placements": {
-            "portrait": { "x": 10, "y": 17, "scale": 0.78 },
-            "square": { "x": 8, "y": 22, "scale": 0.9 },
-            "wide": { "x": 6, "y": 28, "scale": 1 },
-            "shallow": { "x": 4, "y": 32, "scale": 0.84, "hidden": true }
-          }
-        },
-        {
-          "id": "hanging-lantern",
-          "asset": "assets/worlds/moonroot-ruins/props/hanging-lantern.webp",
-          "placements": {
-            "portrait": { "x": 86, "y": 12, "scale": 0.62 },
-            "square": { "x": 89, "y": 17, "scale": 0.7 },
-            "wide": { "x": 92, "y": 20, "scale": 0.78 },
-            "shallow": { "x": 94, "y": 24, "scale": 0.62 }
-          }
-        }
-      ],
       "ambientEffects": ["violet-spores", "water-shimmer", "lantern-glow"],
       "fallbackGradient": "linear-gradient(165deg, #071d18 0%, #123b35 54%, #1c533d 100%)"
     },
@@ -143,6 +116,61 @@
       "id": "modal-model",
       "worldId": "moonroot-ruins",
       "guideCharacterId": "nix",
+      "sceneId": "mode-lantern-grounds",
+      "scenes": {
+        "mode-lantern-grounds": {
+          "id": "mode-lantern-grounds",
+          "patchRegions": {
+            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
+            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
+            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/landmark-restored.webp"
+              }
+            },
+            "compact": {
+              "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/landmark-restored.webp"
+              }
+            },
+            "wide": {
+              "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/landmark-restored.webp"
+              }
+            }
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": ["phase-a"],
+            "isolate": ["phase-b"],
+            "mix": ["phase-a", "phase-b"],
+            "challenge": ["phase-a", "phase-b", "phase-c"],
+            "summary": ["phase-a", "phase-c"]
+          },
+          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+        }
+      },
       "landmark": {
         "id": "mode-lantern",
         "assets": {
@@ -167,6 +195,61 @@
       "id": "cursor-movement",
       "worldId": "moonroot-ruins",
       "guideCharacterId": "vela",
+      "sceneId": "wayfinder-crossroads",
+      "scenes": {
+        "wayfinder-crossroads": {
+          "id": "wayfinder-crossroads",
+          "patchRegions": {
+            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
+            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
+            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/landmark-restored.webp"
+              }
+            },
+            "compact": {
+              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/landmark-restored.webp"
+              }
+            },
+            "wide": {
+              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/landmark-restored.webp"
+              }
+            }
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": ["phase-a"],
+            "isolate": ["phase-b"],
+            "mix": ["phase-a", "phase-b"],
+            "challenge": ["phase-a", "phase-b", "phase-c"],
+            "summary": ["phase-a", "phase-c"]
+          },
+          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+        }
+      },
       "landmark": {
         "id": "wayfinder",
         "assets": {
@@ -191,6 +274,61 @@
       "id": "entering-changing-text",
       "worldId": "moonroot-ruins",
       "guideCharacterId": "tatter",
+      "sceneId": "scribes-spring",
+      "scenes": {
+        "scribes-spring": {
+          "id": "scribes-spring",
+          "patchRegions": {
+            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
+            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
+            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/landmark-restored.webp"
+              }
+            },
+            "compact": {
+              "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/landmark-restored.webp"
+              }
+            },
+            "wide": {
+              "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-restored.webp"
+              }
+            }
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": ["phase-a"],
+            "isolate": ["phase-b"],
+            "mix": ["phase-a", "phase-b"],
+            "challenge": ["phase-a", "phase-b", "phase-c"],
+            "summary": ["phase-a", "phase-c"]
+          },
+          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+        }
+      },
       "landmark": {
         "id": "scribes-spring",
         "assets": {
@@ -215,6 +353,61 @@
       "id": "operator-grammar",
       "worldId": "moonroot-ruins",
       "guideCharacterId": "cinder",
+      "sceneId": "grammar-gate-court",
+      "scenes": {
+        "grammar-gate-court": {
+          "id": "grammar-gate-court",
+          "patchRegions": {
+            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
+            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
+            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/landmark-restored.webp"
+              }
+            },
+            "compact": {
+              "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/landmark-restored.webp"
+              }
+            },
+            "wide": {
+              "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {
+                "phase-a": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/phase-a.webp",
+                "phase-b": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/phase-b.webp",
+                "phase-c": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/phase-c.webp",
+                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/landmark-dormant.webp",
+                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/landmark-restored.webp"
+              }
+            }
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": ["phase-a"],
+            "isolate": ["phase-b"],
+            "mix": ["phase-a", "phase-b"],
+            "challenge": ["phase-a", "phase-b", "phase-c"],
+            "summary": ["phase-a", "phase-c"]
+          },
+          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+        }
+      },
       "landmark": {
         "id": "grammar-gate",
         "assets": {

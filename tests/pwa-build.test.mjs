@@ -40,6 +40,21 @@ test("production PWA precaches all local lessons and excludes animation WebPs", 
   });
   assert.equal(readFileSync(join(dist, "content", "presentation.json"), "utf8"), presentation);
   assert.match(worker, /content\/presentation\.json/);
-  assert.equal(output.some(path => path.endsWith(".webp")), false);
-  assert.doesNotMatch(worker, /raw\.githubusercontent\.com|\.webp/);
+  const moonrootRoot = join(rootPath, "assets", "worlds", "moonroot-ruins");
+  const moonrootMedia = files(join(moonrootRoot, "scenes"))
+    .filter(file => file.endsWith(".webp"))
+    .map(file => `assets/worlds/moonroot-ruins/${file.slice(moonrootRoot.length + 1)}`);
+  assert.equal(moonrootMedia.length, 72);
+  moonrootMedia.forEach(file => {
+    assert.equal(existsSync(join(dist, file)), true);
+    assert.equal(worker.includes(file), true);
+  });
+  for (const retiredAsset of [
+    "assets/worlds/moonroot-ruins/backdrop-square.webp",
+    "assets/worlds/moonroot-ruins/props/root-arch.webp",
+  ]) {
+    assert.equal(existsSync(join(dist, retiredAsset)), false);
+    assert.equal(worker.includes(retiredAsset), false);
+  }
+  assert.doesNotMatch(worker, /raw\.githubusercontent\.com/);
 });

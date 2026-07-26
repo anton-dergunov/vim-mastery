@@ -1,8 +1,9 @@
-export const PRESENTATION_SCHEMA_VERSION = 1;
+export const PRESENTATION_SCHEMA_VERSION = 2;
 
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const assetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
-const shapes = ["portrait", "square", "wide", "shallow"];
+const sceneProfiles = ["tall", "compact", "wide"];
+const learningPhases = ["explain", "demonstrate", "isolate", "mix", "challenge", "summary"];
 
 function object(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -16,25 +17,78 @@ function validateAsset(value, path, errors) {
   if (!assetPattern.test(value || "")) errors.push(`${path} must be a local presentation asset path`);
 }
 
-function validatePlacements(placements, path, errors) {
-  if (!object(placements)) {
-    errors.push(`${path} must define responsive placements`);
+function validatePatchBounds(value, path, errors) {
+  if (!object(value)) {
+    errors.push(`${path} must define normalized patch bounds`);
     return;
   }
-  for (const shape of shapes) {
-    const placement = placements[shape];
-    if (!object(placement)) {
-      errors.push(`${path}.${shape} is required`);
+  for (const field of ["x", "y", "width", "height"]) {
+    if (typeof value[field] !== "number" || value[field] < 0 || value[field] > 1) {
+      errors.push(`${path}.${field} must be between 0 and 1`);
+    }
+  }
+  if ((value.x || 0) + (value.width || 0) > 1 || (value.y || 0) + (value.height || 0) > 1) {
+    errors.push(`${path} must remain inside the source canvas`);
+  }
+}
+
+function validateScene(scene, path, errors) {
+  if (!object(scene)) {
+    errors.push(`${path} must be a registered scene`);
+    return;
+  }
+  validateId(scene.id, `${path}.id`, errors);
+  const regionIds = new Set(Object.keys(object(scene.patchRegions) ? scene.patchRegions : {}));
+  if (regionIds.size !== 3) errors.push(`${path}.patchRegions must define exactly three registered regions`);
+  for (const [patchId, bounds] of Object.entries(scene.patchRegions || {})) {
+    validateId(patchId, `${path}.patchRegions.${patchId}`, errors);
+    validatePatchBounds(bounds, `${path}.patchRegions.${patchId}`, errors);
+  }
+
+  const profilePatchSets = [];
+  for (const profile of sceneProfiles) {
+    const profileData = scene.profiles?.[profile];
+    const profilePath = `${path}.profiles.${profile}`;
+    if (!object(profileData)) {
+      errors.push(`${profilePath} is required`);
       continue;
     }
-    if (typeof placement.x !== "number" || placement.x < 0 || placement.x > 100) {
-      errors.push(`${path}.${shape}.x must be between 0 and 100`);
+    validateAsset(profileData.base, `${profilePath}.base`, errors);
+    if (profileData.focalPosition !== undefined && (typeof profileData.focalPosition !== "string" || !profileData.focalPosition.trim())) {
+      errors.push(`${profilePath}.focalPosition must be a non-empty CSS position`);
     }
-    if (typeof placement.y !== "number" || placement.y < 0 || placement.y > 100) {
-      errors.push(`${path}.${shape}.y must be between 0 and 100`);
+    if (!object(profileData.patches)) {
+      errors.push(`${profilePath}.patches must be an object`);
+      continue;
     }
-    if (typeof placement.scale !== "number" || placement.scale <= 0 || placement.scale > 3) {
-      errors.push(`${path}.${shape}.scale must be greater than 0 and no more than 3`);
+    const ids = new Set(Object.keys(profileData.patches));
+    profilePatchSets.push(ids);
+    for (const [patchId, asset] of Object.entries(profileData.patches)) {
+      validateId(patchId, `${profilePath}.patches.${patchId}`, errors);
+      validateAsset(asset, `${profilePath}.patches.${patchId}`, errors);
+    }
+  }
+
+  for (const phase of learningPhases) {
+    const patchIds = scene.phasePatches?.[phase];
+    if (!Array.isArray(patchIds)) {
+      errors.push(`${path}.phasePatches.${phase} must be an array`);
+      continue;
+    }
+    for (const patchId of patchIds) {
+      if (!regionIds.has(patchId)) errors.push(`${path}.phasePatches.${phase} references undeclared patch "${patchId}"`);
+      if (profilePatchSets.some(ids => !ids.has(patchId))) {
+        errors.push(`${path}.phasePatches.${phase} patch "${patchId}" must exist in every profile`);
+      }
+    }
+  }
+
+  if (scene.landmarkPatches !== undefined) {
+    for (const state of ["dormant", "restored"]) {
+      const patchId = scene.landmarkPatches?.[state];
+      if (patchId !== null && patchId !== undefined && profilePatchSets.some(ids => !ids.has(patchId))) {
+        errors.push(`${path}.landmarkPatches.${state} patch "${patchId}" must exist in every profile`);
+      }
     }
   }
 }
@@ -64,19 +118,6 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
     if (!["moonroot", "ember", "glass", "deepwater"].includes(world.autoThemeId)) {
       errors.push(`worlds.${worldId}.autoThemeId is not a supported theme`);
     }
-    for (const shape of ["portrait", "square", "wide"]) {
-      validateAsset(world.backdrops?.[shape], `worlds.${worldId}.backdrops.${shape}`, errors);
-    }
-    if (!Array.isArray(world.props)) {
-      errors.push(`worlds.${worldId}.props must be an array`);
-    } else {
-      world.props.forEach((prop, index) => {
-        const path = `worlds.${worldId}.props[${index}]`;
-        validateId(prop?.id, `${path}.id`, errors);
-        validateAsset(prop?.asset, `${path}.asset`, errors);
-        validatePlacements(prop?.placements, `${path}.placements`, errors);
-      });
-    }
     if (!Array.isArray(world.ambientEffects)) errors.push(`worlds.${worldId}.ambientEffects must be an array`);
     if (typeof world.fallbackGradient !== "string" || !world.fallbackGradient.trim()) {
       errors.push(`worlds.${worldId}.fallbackGradient is required`);
@@ -99,9 +140,6 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
       errors.push(`units.${unitId}.guideCharacterId references missing character "${unit.guideCharacterId}"`);
     }
     validateId(unit.landmark?.id, `units.${unitId}.landmark.id`, errors);
-    validateAsset(unit.landmark?.assets?.dormant, `units.${unitId}.landmark.assets.dormant`, errors);
-    validateAsset(unit.landmark?.assets?.restored, `units.${unitId}.landmark.assets.restored`, errors);
-    validatePlacements(unit.landmark?.placements, `units.${unitId}.landmark.placements`, errors);
     validateId(unit.completion?.actionId, `units.${unitId}.completion.actionId`, errors);
     for (const field of ["action", "copy"]) {
       if (typeof unit.completion?.[field] !== "string" || !unit.completion[field].trim()) {
@@ -110,6 +148,18 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
     }
     if (typeof unit.completion?.nextHook?.copy !== "string" || !unit.completion.nextHook.copy.trim()) {
       errors.push(`units.${unitId}.completion.nextHook.copy is required`);
+    }
+
+    const scenes = object(unit.scenes) ? unit.scenes : {};
+    if (unit.worldId === "moonroot-ruins" && !unit.sceneId) {
+      errors.push(`units.${unitId}.sceneId is required for the Moonroot proof`);
+    }
+    if (unit.sceneId && !scenes[unit.sceneId]) {
+      errors.push(`units.${unitId}.sceneId references missing scene "${unit.sceneId}"`);
+    }
+    for (const [sceneId, scene] of Object.entries(scenes)) {
+      if (scene.id !== sceneId) errors.push(`units.${unitId}.scenes.${sceneId}.id must match its scene key`);
+      validateScene(scene, `units.${unitId}.scenes.${sceneId}`, errors);
     }
   }
 
@@ -145,7 +195,8 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
 export function resolveUnitPresentation(manifest, unitId) {
   const unit = manifest?.units?.[unitId];
   const world = unit && manifest?.worlds?.[unit.worldId];
-  return unit && world ? { unit, world } : null;
+  const scene = unit?.sceneId ? unit.scenes?.[unit.sceneId] : null;
+  return unit && world ? { unit, world, scene } : null;
 }
 
 export async function loadUnitCatalogWithPresentation({ catalogUrl, presentationUrl, fetchImpl = globalThis.fetch }) {

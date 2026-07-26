@@ -7,7 +7,7 @@ import {
   validatePresentationManifest,
 } from "../presentation-data.js";
 import { findNextSequentialUnit } from "../unit-navigation.js";
-import { backdropShapeForBoard, boardShapeForBounds } from "../world-presentation.js";
+import { boardProfileForBounds, sceneProfileForBoard } from "../world-presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -46,7 +46,7 @@ test("content files expose the expected schema versions", () => {
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
   assert.equal(presentationSchema.$schema, "https://json-schema.org/draft/2020-12/schema");
   assert.equal(presentationSchema.$id, "https://vimwilds.local/schemas/presentation.schema.json");
-  assert.equal(presentation.schemaVersion, 1);
+  assert.equal(presentation.schemaVersion, 2);
   assert.equal(unit.schemaVersion, 1);
   assert.equal(unit.unitNumber, 10);
   assert.equal(cursorUnit.schemaVersion, 1);
@@ -97,26 +97,38 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     );
   }
 
-  for (const [worldId, world] of Object.entries(presentation.worlds)) {
-    for (const shape of ["portrait", "square", "wide"]) {
-      assert.equal(world.backdrops[shape], `assets/worlds/${worldId}/backdrop-${shape}.webp`);
-    }
-    for (const prop of world.props) {
-      assert(idPattern.test(prop.id), `${worldId} prop ID ${prop.id}`);
-      assert.match(prop.asset, new RegExp(`^assets/worlds/${worldId}/props/`));
+  for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar"]) {
+    const resolved = resolveUnitPresentation(presentation, unitId);
+    assert(resolved.scene, `${unitId} must select one registered scene`);
+    assert.equal(resolved.scene.id, resolved.unit.sceneId);
+    assert.deepEqual(Object.keys(resolved.scene.profiles), ["tall", "compact", "wide"]);
+    assert.deepEqual(Object.keys(resolved.scene.patchRegions), ["phase-a", "phase-b", "phase-c"]);
+    for (const profile of ["tall", "compact", "wide"]) {
+      assert.match(
+        resolved.scene.profiles[profile].base,
+        new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${profile}/base\\.webp$`),
+      );
+      for (const patchId of ["phase-a", "phase-b", "phase-c", "landmark-dormant", "landmark-restored"]) {
+        assert.match(
+          resolved.scene.profiles[profile].patches[patchId],
+          new RegExp(`/${profile}/${patchId}\\.webp$`),
+        );
+      }
     }
   }
+  assert.equal(presentation.worlds["moonroot-ruins"].props, undefined);
+  assert.equal(presentation.worlds["moonroot-ruins"].backdrops, undefined);
 });
 
-test("world presentation shape thresholds follow rendered board aspect ratio", () => {
-  assert.equal(boardShapeForBounds({ width: 84, height: 100 }), "portrait");
-  assert.equal(boardShapeForBounds({ width: 85, height: 100 }), "square");
-  assert.equal(boardShapeForBounds({ width: 135, height: 100 }), "square");
-  assert.equal(boardShapeForBounds({ width: 136, height: 100 }), "wide");
-  assert.equal(boardShapeForBounds({ width: 240, height: 100 }), "wide");
-  assert.equal(boardShapeForBounds({ width: 241, height: 100 }), "shallow");
-  assert.equal(backdropShapeForBoard("shallow"), "wide");
-  assert.equal(backdropShapeForBoard("portrait"), "portrait");
+test("registered scene profiles follow the rendered board aspect ratio", () => {
+  assert.equal(boardProfileForBounds({ width: 89, height: 100 }), "tall");
+  assert.equal(boardProfileForBounds({ width: 90, height: 100 }), "compact");
+  assert.equal(boardProfileForBounds({ width: 158, height: 100 }), "compact");
+  assert.equal(boardProfileForBounds({ width: 159, height: 100 }), "wide");
+  assert.equal(boardProfileForBounds({ width: 240, height: 100 }), "wide");
+  assert.equal(boardProfileForBounds({ width: 241, height: 100 }), "shallow");
+  assert.equal(sceneProfileForBoard("shallow"), "wide");
+  assert.equal(sceneProfileForBoard("tall"), "tall");
 });
 
 test("presentation manifest preserves the approved unit story table", () => {

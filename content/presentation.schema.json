@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schemaVersion", "worlds", "units", "story"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "worlds": {
       "type": "object",
       "minProperties": 1,
@@ -30,67 +30,92 @@
       "type": "string",
       "pattern": "^assets/[a-z0-9][a-z0-9./-]*\\.(?:png|webp|svg)$"
     },
-    "placement": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["x", "y", "scale"],
-      "properties": {
-        "x": { "type": "number", "minimum": 0, "maximum": 100 },
-        "y": { "type": "number", "minimum": 0, "maximum": 100 },
-        "scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 3 },
-        "hidden": { "type": "boolean" }
-      }
-    },
-    "placements": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["portrait", "square", "wide", "shallow"],
-      "properties": {
-        "portrait": { "$ref": "#/$defs/placement" },
-        "square": { "$ref": "#/$defs/placement" },
-        "wide": { "$ref": "#/$defs/placement" },
-        "shallow": { "$ref": "#/$defs/placement" }
-      }
-    },
     "world": {
       "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "displayName", "autoThemeId", "backdrops", "props", "ambientEffects", "fallbackGradient"],
+      "required": ["id", "displayName", "autoThemeId", "ambientEffects", "fallbackGradient"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "displayName": { "type": "string", "minLength": 1 },
         "autoThemeId": { "enum": ["moonroot", "ember", "glass", "deepwater"] },
-        "backdrops": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["portrait", "square", "wide"],
-          "properties": {
-            "portrait": { "$ref": "#/$defs/asset" },
-            "square": { "$ref": "#/$defs/asset" },
-            "wide": { "$ref": "#/$defs/asset" }
-          }
-        },
-        "props": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["id", "asset", "placements"],
-            "properties": {
-              "id": { "$ref": "#/$defs/id" },
-              "asset": { "$ref": "#/$defs/asset" },
-              "placements": { "$ref": "#/$defs/placements" }
-            }
-          }
-        },
         "ambientEffects": {
           "type": "array",
           "items": { "$ref": "#/$defs/id" },
           "uniqueItems": true
         },
-        "fallbackGradient": {
-          "type": "string",
-          "minLength": 1
+        "fallbackGradient": { "type": "string", "minLength": 1 }
+      },
+      "description": "World identity and ambient language only. Historical backdrop/prop fields may remain on unconverted worlds during the Moonroot proof but are not part of the registered-scene renderer contract."
+    },
+    "patchBounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+      }
+    },
+    "sceneProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base", "patches"],
+      "properties": {
+        "base": { "$ref": "#/$defs/asset" },
+        "focalPosition": { "type": "string", "minLength": 1 },
+        "patches": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/id" },
+          "additionalProperties": { "$ref": "#/$defs/asset" }
+        }
+      }
+    },
+    "phasePatches": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["explain", "demonstrate", "isolate", "mix", "challenge", "summary"],
+      "properties": {
+        "explain": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+        "demonstrate": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+        "isolate": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+        "mix": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+        "challenge": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
+        "summary": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "patchRegions", "profiles", "phasePatches", "landmarkPatches"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "patchRegions": {
+          "type": "object",
+          "minProperties": 3,
+          "maxProperties": 3,
+          "propertyNames": { "$ref": "#/$defs/id" },
+          "additionalProperties": { "$ref": "#/$defs/patchBounds" }
+        },
+        "profiles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tall", "compact", "wide"],
+          "properties": {
+            "tall": { "$ref": "#/$defs/sceneProfile" },
+            "compact": { "$ref": "#/$defs/sceneProfile" },
+            "wide": { "$ref": "#/$defs/sceneProfile" }
+          }
+        },
+        "phasePatches": { "$ref": "#/$defs/phasePatches" },
+        "landmarkPatches": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dormant", "restored"],
+          "properties": {
+            "dormant": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
+            "restored": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] }
+          }
         }
       }
     },
@@ -102,23 +127,19 @@
         "id": { "$ref": "#/$defs/id" },
         "worldId": { "$ref": "#/$defs/id" },
         "guideCharacterId": { "$ref": "#/$defs/id" },
+        "sceneId": { "$ref": "#/$defs/id" },
+        "scenes": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/id" },
+          "additionalProperties": { "$ref": "#/$defs/scene" }
+        },
         "landmark": {
           "type": "object",
-          "additionalProperties": false,
-          "required": ["id", "assets", "placements"],
+          "required": ["id"],
           "properties": {
-            "id": { "$ref": "#/$defs/id" },
-            "assets": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["dormant", "restored"],
-              "properties": {
-                "dormant": { "$ref": "#/$defs/asset" },
-                "restored": { "$ref": "#/$defs/asset" }
-              }
-            },
-            "placements": { "$ref": "#/$defs/placements" }
-          }
+            "id": { "$ref": "#/$defs/id" }
+          },
+          "description": "Story identity. Historical asset and placement fields may remain until that unit receives registered landmark patches."
         },
         "completion": {
           "type": "object",

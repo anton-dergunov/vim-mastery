@@ -59,8 +59,7 @@ const elements = {
   worldBackdrop: $("#worldBackdrop"),
   groundGrid: $("#groundGrid"),
   worldAmbient: $("#worldAmbient"),
-  worldPropLayer: $("#worldPropLayer"),
-  worldLandmarkLayer: $("#worldLandmarkLayer"),
+  worldPatchLayer: $("#worldPatchLayer"),
   worldGrid: $("#worldGrid"),
   characterLayer: $("#characterLayer"),
   completionHost: $("#completionHost"),
@@ -442,8 +441,7 @@ const worldRenderer = new WorldPresentationRenderer({
   world: elements.world,
   backdropLayer: elements.worldBackdrop,
   ambientLayer: elements.worldAmbient,
-  landmarkLayer: elements.worldLandmarkLayer,
-  propLayer: elements.worldPropLayer,
+  patchLayer: elements.worldPatchLayer,
   assetUrl: localAssetUrl,
   onLegacyResize: scheduleGroundRedraw,
 });
@@ -593,8 +591,18 @@ function renderWorld() {
     resetVimEngineState();
   }
   setTheme(functionalThemeFor(activity));
-  const layeredWorld = worldRenderer.setPresentation(unitPresentation, { unitId: unit.id });
+  // WP-03 intentionally activates the generated world only for Moonroot's
+  // first four units. Later worlds stay on the legacy board until their own
+  // approved media slices are integrated.
+  const moonrootPresentation = unitPresentation?.world.id === "moonroot-ruins" ? unitPresentation : null;
+  const layeredWorld = worldRenderer.setPresentation(moonrootPresentation, {
+    unitId: unit.id,
+    phase: activity.phase || (activity.type === "summary" ? "summary" : "explain"),
+    landmarkState: "dormant",
+  });
   if (layeredWorld) {
+    window.cancelAnimationFrame(groundRedrawFrame);
+    groundRedrawFrame = null;
     elements.groundGrid.replaceChildren();
     elements.groundGrid.removeAttribute("style");
   } else {
@@ -624,9 +632,11 @@ function renderWorld() {
     : "";
   const spriteMarkup = activity.inspection || layeredWorld ? "" : renderSprites(presentation);
   elements.worldGrid.innerHTML = `${spriteMarkup}${content}`;
+  elements.characterLayer.dataset.side = characterMarkup ? presentation.codeSide : "none";
   elements.characterLayer.innerHTML = characterMarkup;
   renderCompletionHost();
   if (hasEditor(activity)) mountEditor();
+  if (layeredWorld) worldRenderer.considerUnitReveal();
 }
 
 function mountEditor() {
@@ -1524,9 +1534,9 @@ const requestedIndex = activities.findIndex(activity => activity.id === requeste
 if (requestedIndex >= 0) state.activityIndex = requestedIndex;
 
 assignCharacters();
+worldRenderer.start();
 renderAll();
 renderThemeOptions();
-worldRenderer.start();
 void loadCharacterAssets();
 persistSession();
 registerServiceWorker();

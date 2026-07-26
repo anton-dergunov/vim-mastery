@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "worldId": "moonroot-ruins",
+  "model": "gemini-3.1-flash-image",
+  "reviewMethod": "Five 2K 4:3 candidates per unit reviewed as DOM-measured compact-board composites",
+  "approvals": [
+    {
+      "unitId": "modal-model",
+      "sceneId": "mode-lantern-grounds",
+      "candidateId": "candidate-01",
+      "approvedAt": "2026-07-26T17:15:24.027589+00:00",
+      "notes": "Best compact-board composition: supported lantern terrace, useful water foreground, coherent outer architecture.",
+      "sourceSha256": "41e94101ea1c4baa513a3f3b23c3012e8bb3f020738ecbc85895b09650b090c3",
+      "tallSha256": "167feaa1dd15222a01590786c8036fe9158a8415c3166ba79345c7f19e12d1f2",
+      "wideSha256": "59f9dcb880169cb26174ac2f19afa2d2469a5dbc8871a2d9bc54192bd695dc31"
+    },
+    {
+      "unitId": "cursor-movement",
+      "sceneId": "wayfinder-crossroads",
+      "candidateId": "candidate-04",
+      "approvedAt": "2026-07-26T17:15:24.104899+00:00",
+      "notes": "Wayfinder is physically embedded in a crossroads platform and remains legible beneath the editor.",
+      "sourceSha256": "c770aa48b90317cbcb253435c3680ec6728ec879b3c414dddc461d1f2a4095fa",
+      "tallSha256": "a45afe29323965d59f122a5626f28b333eb0c51f74aed824339c62f30974d2df",
+      "wideSha256": "310d4b33b18eae5878422cea0a00a4695e8874ab904ceca8021268e52d9d844d"
+    },
+    {
+      "unitId": "entering-changing-text",
+      "sceneId": "scribes-spring",
+      "candidateId": "candidate-02",
+      "approvedAt": "2026-07-26T17:15:24.152054+00:00",
+      "notes": "Paired luminous channels and central path clearly establish the Scribe spring location around the editor.",
+      "sourceSha256": "16fc1a4e87b60f997df4c06330ca827b8973271b11aa979b298e9fb3c8aa7845",
+      "tallSha256": "61d5a2dab0ac0b9ee5a99ea343afc32eb6928c3fb2244e4133b9de42b4b78efa",
+      "wideSha256": "4173b02e48b247a1e3fb0446ae1e49dc20b0dcf772b12ef5a0319a04dcb5c38d"
+    },
+    {
+      "unitId": "operator-grammar",
+      "sceneId": "grammar-gate-court",
+      "sourceSceneId": "grammar-gate",
+      "candidateId": "candidate-04",
+      "approvedAt": "2026-07-26T17:15:24.197222+00:00",
+      "notes": "Coherent gate court with supported architecture and a readable water foreground; no free structural inserts.",
+      "sourceSha256": "26a59174163354c51f7dd9ec50624ffb2584dce2825436714a932e3707aaf2e5",
+      "tallSha256": "88738e73c674b93e349827f42b93cd1795c4f79ecb9b78f26f8556f284d73e1e",
+      "wideSha256": "e5b824bf3ec92c3f90c5a6363d3e4b026d533e9297884f2f7672d1a9b3b78a8b"
+    }
+  ]
+}

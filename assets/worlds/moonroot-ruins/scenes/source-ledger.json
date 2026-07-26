@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "unitId": "modal-model",
+      "sceneId": "mode-lantern-grounds",
+      "profile": "tall",
+      "asset": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/modal-model/tall-source.png",
+      "sourceSha256": "167feaa1dd15222a01590786c8036fe9158a8415c3166ba79345c7f19e12d1f2",
+      "sha256": "27c3f0aa67ea7225d89ac4159c13edf5c73179078a9ec71b121d3ac8fbe00c53",
+      "dimensions": [
+        960,
+        1200
+      ]
+    },
+    {
+      "unitId": "modal-model",
+      "sceneId": "mode-lantern-grounds",
+      "profile": "compact",
+      "asset": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/modal-model/candidate-01.png",
+      "sourceSha256": "41e94101ea1c4baa513a3f3b23c3012e8bb3f020738ecbc85895b09650b090c3",
+      "sha256": "4e37a5256171610b7226d00bfc2f120cc39ab2732485024451a4f9f0cb687d0c",
+      "dimensions": [
+        1200,
+        900
+      ]
+    },
+    {
+      "unitId": "modal-model",
+      "sceneId": "mode-lantern-grounds",
+      "profile": "wide",
+      "asset": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/modal-model/wide-source.png",
+      "sourceSha256": "59f9dcb880169cb26174ac2f19afa2d2469a5dbc8871a2d9bc54192bd695dc31",
+      "sha256": "80d04cf06939c811e8f212679d26fd5ffc119f61f61ccb580d22b1814af7ccfe",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "unitId": "cursor-movement",
+      "sceneId": "wayfinder-crossroads",
+      "profile": "tall",
+      "asset": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/cursor-movement/tall-source.png",
+      "sourceSha256": "a45afe29323965d59f122a5626f28b333eb0c51f74aed824339c62f30974d2df",
+      "sha256": "51b82e3caa5812837c831f5cd482ad061bafc8cd1d227807e6dd637e15941ed4",
+      "dimensions": [
+        960,
+        1200
+      ]
+    },
+    {
+      "unitId": "cursor-movement",
+      "sceneId": "wayfinder-crossroads",
+      "profile": "compact",
+      "asset": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/cursor-movement/candidate-04.png",
+      "sourceSha256": "c770aa48b90317cbcb253435c3680ec6728ec879b3c414dddc461d1f2a4095fa",
+      "sha256": "23ba4a79a75fba637d39eec905a1ceb41c228fd0da3237b738c6d6bcdca3cb6f",
+      "dimensions": [
+        1200,
+        900
+      ]
+    },
+    {
+      "unitId": "cursor-movement",
+      "sceneId": "wayfinder-crossroads",
+      "profile": "wide",
+      "asset": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/cursor-movement/wide-source.png",
+      "sourceSha256": "310d4b33b18eae5878422cea0a00a4695e8874ab904ceca8021268e52d9d844d",
+      "sha256": "a22ff59b32c2101785fad33147ffa3aaf5efec41a6a33987874c92f6dfcc00a7",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "unitId": "entering-changing-text",
+      "sceneId": "scribes-spring",
+      "profile": "tall",
+      "asset": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/entering-changing-text/tall-source.png",
+      "sourceSha256": "61d5a2dab0ac0b9ee5a99ea343afc32eb6928c3fb2244e4133b9de42b4b78efa",
+      "sha256": "e88689044debfd3f781edf67fb2485697641df8536a1f8a3a3c6e4cad39acd1d",
+      "dimensions": [
+        960,
+        1200
+      ]
+    },
+    {
+      "unitId": "entering-changing-text",
+      "sceneId": "scribes-spring",
+      "profile": "compact",
+      "asset": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/entering-changing-text/candidate-02.png",
+      "sourceSha256": "16fc1a4e87b60f997df4c06330ca827b8973271b11aa979b298e9fb3c8aa7845",
+      "sha256": "74c00874c4d47327594823c86067e90bc49682f8c697309b848760743dbd1b22",
+      "dimensions": [
+        1200,
+        900
+      ]
+    },
+    {
+      "unitId": "entering-changing-text",
+      "sceneId": "scribes-spring",
+      "profile": "wide",
+      "asset": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/entering-changing-text/wide-source.png",
+      "sourceSha256": "4173b02e48b247a1e3fb0446ae1e49dc20b0dcf772b12ef5a0319a04dcb5c38d",
+      "sha256": "a685df73f3bcef53784647f16504b432a605f9cd66b45ac59f9edff438c9e6ff",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "unitId": "operator-grammar",
+      "sceneId": "grammar-gate-court",
+      "profile": "tall",
+      "asset": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/operator-grammar/tall-source.png",
+      "sourceSha256": "88738e73c674b93e349827f42b93cd1795c4f79ecb9b78f26f8556f284d73e1e",
+      "sha256": "728b4b06a2b6a80c5ea0ad5dc58ad7aa6956796f02c6de5066afbea612ea93b2",
+      "dimensions": [
+        960,
+        1200
+      ]
+    },
+    {
+      "unitId": "operator-grammar",
+      "sceneId": "grammar-gate-court",
+      "profile": "compact",
+      "asset": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/operator-grammar/candidate-04.png",
+      "sourceSha256": "26a59174163354c51f7dd9ec50624ffb2584dce2825436714a932e3707aaf2e5",
+      "sha256": "1ea22338e054fe0c4fcc2b7a6b97103e47e367e32384aa3c5ee6077041d6dfea",
+      "dimensions": [
+        1200,
+        900
+      ]
+    },
+    {
+      "unitId": "operator-grammar",
+      "sceneId": "grammar-gate-court",
+      "profile": "wide",
+      "asset": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/operator-grammar/wide-source.png",
+      "sourceSha256": "e5b824bf3ec92c3f90c5a6363d3e4b026d533e9297884f2f7672d1a9b3b78a8b",
+      "sha256": "f0f0dab1006063f28fb9f3f4c348da5631eb5120da3f533b13d3f9e3a115a4c3",
+      "dimensions": [
+        1280,
+        720
+      ]
+    }
+  ]
+}

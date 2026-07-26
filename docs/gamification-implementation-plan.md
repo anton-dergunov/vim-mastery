@@ -4,6 +4,47 @@
 
 This document turns the selected gamification direction into independently assignable implementation work. It is an execution plan, not a general visual-design exploration.
 
+### July 2026 composition correction
+
+WP-01 through WP-03 proved that the generated art language is strong but the
+original composition contract is not. A shared world backdrop plus isolated
+structural props produces unsupported branches, lanterns, masonry, and stairs
+when those assets are placed without scene understanding. It also wastes
+portrait art because the real board is selected by its own bounds and is often
+compact or wide even on a portrait phone.
+
+The following decisions supersede every older reference in this document to
+shared backdrops, free structural props, arbitrary `x`/`y`/`scale` placement,
+central editor cavities, or one scene per region:
+
+- Keep four regional identities, but author one distinct registered scene for
+  each of the 14 units.
+- Generate five meaningfully different 2K `4:3` candidates per unit and review
+  them only inside real UI composites. At least two candidates must be led by
+  the environment rather than a landmark.
+- Treat the DOM-derived editor mask as occlusion measurement, not an instruction
+  to draw an empty or black editor-shaped opening.
+- Record an explicit candidate approval before generating derivatives. Scripts
+  must fail when approval is pending or the approved source hash has changed.
+- Derive `4:5` tall, `4:3` compact, and `16:9` wide profiles from the approved
+  scene. Select them from actual board bounds at `<0.9`, `0.9–1.58`,
+  `1.58–2.4`, and `>2.4` for shallow suppression.
+- Add environmental variation only as exact-canvas registered patches authored
+  against real surfaces in the approved scene. Runtime environmental art has no
+  free placement coordinates.
+- Keep characters as deliberate guide overlays during exercises, with a small
+  rune plate/contact shadow. Reserve physically staged character actions for
+  unit transitions.
+- On first entry to a unit, permit a loaded backdrop-first reveal for 450–600ms.
+  Any input cancels it; reduced motion, slow/missing media, resize, direct
+  activity changes, and shallow layouts skip it.
+- Pause WP-04A through WP-04C. Revise and personally approve the four-unit
+  Moonroot proof before generating Starwater, Archive, or Meridian.
+
+Current checkpoint: WP-01R through WP-03R are implemented for the four Moonroot
+units and await personal product review. The next authorized action is
+iteration on that proof, not WP-04 generation.
+
 The decisions recorded here are:
 
 - Keep the editor, keyboard, task description, command tray, completion panel, and top row structurally intact.
@@ -22,12 +63,19 @@ The implementation should be delivered in small work packages. A coding session 
 
 ## Recommended starting point
 
-Start with the board visualization, but build one vertical slice rather than generating every world first:
+Continue from the implemented WP-01 through WP-03 proof by rebuilding only
+Moonroot:
 
-1. Generate and approve the Moonroot Ruins square master, portrait and wide expansions, and prop sheet.
-2. Implement the presentation data contract and layered world renderer.
-3. Integrate Moonroot Ruins for Units 1–4 and validate it at all target sizes.
-4. Decide whether the art direction is strong enough before producing the other three worlds.
+1. Disable the six freely positioned Moonroot structural props immediately.
+2. Capture real tall, compact, and wide editor-occlusion masks from the DOM.
+3. Generate five different `4:3` candidates for each of Units 1–4.
+4. Review all 20 candidates as real game composites and explicitly approve one
+   location per unit.
+5. Derive tall and wide profiles only from those approved sources.
+6. Add three registered phase details and dormant/restored registered landmark
+   edits per scene.
+7. Integrate and validate the revised Moonroot slice, then stop for personal
+   review before any WP-04 expansion.
 
 This is the best starting point because it is highly visible, has little risk to Vim correctness, and establishes the art bible needed by landmarks, story scenes, and character poses.
 
@@ -46,9 +94,9 @@ The intended rhythm has three distinct timescales.
 - Effects never delay input and normally finish within 120–280ms.
 - Incorrect input uses the existing functional feedback first; character reaction appears only after repeated difficulty.
 
-The same experience must survive live changes between portrait, square, wide,
-and shallow boards. Decorative assets may reposition, crop, simplify, or
-disappear; editor and input behavior may not.
+The same experience must survive live changes between tall, compact, wide, and
+shallow boards. Registered scene assets may crop, simplify, or disappear;
+editor and input behavior may not.
 
 ### After an exercise
 
@@ -71,7 +119,8 @@ disappear; editor and input behavior may not.
 
 - No navigable overworld.
 - No character movement controlled by Vim keys.
-- No unique board image for each exercise.
+- No unique board image for each exercise; there is one canonical scene per
+  unit, with deterministic learning-phase patches.
 - No generated text, code, keyboard legends, or UI controls inside raster art.
 - No full-screen takeover after ordinary exercises.
 - No currencies, energy, loot, punitive streaks, or global leaderboard.
@@ -112,7 +161,7 @@ It should contain:
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "worlds": {},
   "units": {},
   "story": {
@@ -127,9 +176,6 @@ Each world entry defines:
 - Stable world ID.
 - Display name.
 - Existing functional theme ID used when theme preference is `auto`.
-- Portrait, square, and wide board backdrops.
-- Optional prop list.
-- Prop and landmark placement for portrait, square, wide, and shallow boards.
 - Ambient-effect vocabulary.
 - Fallback gradient.
 
@@ -139,8 +185,15 @@ Each unit entry defines:
 - World ID.
 - Guide character ID.
 - Landmark ID.
-- Dormant and restored landmark assets.
-- Landmark placement for portrait, square, wide, and shallow board layouts.
+- Selected `sceneId` and a `scenes` map so more scene families can be added
+  without changing the renderer. Ship exactly one selected scene per unit in
+  this tranche.
+- Tall, compact, and wide profiles. Each profile owns one base asset and the
+  same named set of full-registration patch assets.
+- Three non-overlapping patch regions and deterministic phase-to-patch mappings:
+  `explain` base; `demonstrate` A; `isolate` B; `mix` A+B;
+  `challenge` A+B+C; `summary` settled A+C.
+- Dormant and restored landmark patch IDs registered to the same source canvas.
 - Unit-completion action ID.
 - Exact story copy.
 - Next-location hook.
@@ -153,8 +206,10 @@ Prefer extracting these modules instead of further expanding `app.js`:
 
 - `world-presentation.js`
   - Loads and resolves the active world and unit presentation.
-  - Measures the board container and selects portrait, square, wide, or shallow presentation.
-  - Produces backdrop, prop, and landmark markup.
+  - Measures the board container and selects tall, compact, wide, or shallow
+    presentation.
+  - Renders one base plus active exact-registration patches with one identical
+    cover transform and focal position.
   - Provides a legacy/fallback presentation when media is absent.
 
 - `vim-effects.js`
@@ -188,9 +243,8 @@ Story state must never be evidence of curriculum completion. Replaying or cleari
 Classify media into two tiers:
 
 1. **Core local media**
-   - Portrait, square, and wide backdrop variants for four worlds.
-   - Landmark dormant/restored states.
-   - Reusable isolated edge props.
+   - Tall, compact, and wide base scenes for each approved unit.
+   - Exact-registration phase and dormant/restored landmark patches.
    - Approved reaction stills.
    - Story light/mask assets if raster assets are required.
    - These are emitted by the Vite PWA plugin and available offline.
@@ -200,15 +254,17 @@ Classify media into two tiers:
    - Any future cinematic media.
    - Story and landmark restoration must still work without these files.
 
-Add a build test that reports and enforces the total core-media budget. Initial target:
+Add a build test that reports and enforces the total core-media budget:
 
-- World and story media: no more than 10MB total.
-- Reaction pose stills: no more than 3MB total for the first supported cast.
-- Any single board backdrop: no more than 450KB.
-- Any isolated landmark state: no more than 160KB.
-- No required individual file above 600KB.
+- Warn when shipped world and story media exceeds 30MB.
+- Fail the production budget above 50MB.
+- Apply no per-file limit until the complete visual direction has passed review
+  and compression experiments.
+- Keep generation artifacts, 2K sources, and rejected candidates outside the
+  production asset tree with no artificial size limit.
 
-These are targets, not excuses to reduce visible quality. Review assets at rendered size before accepting compression artifacts.
+These thresholds protect offline use without forcing premature visual
+compromises. Review assets at rendered size before trimming.
 
 ## Story bible
 
@@ -285,61 +341,42 @@ The story copy is approved content. Implementation sessions should not rewrite i
 ### Responsive composition contract
 
 Responsiveness follows the **rendered board container**, not a device label. A
-narrow laptop window may produce the same portrait board as a tablet; a phone in
-landscape may produce a much shallower board than a desktop.
+narrow laptop window may produce the same tall board as a tablet; a phone in
+portrait with its keyboard visible may still produce a compact or wide board.
 
-The renderer should observe the board’s actual width and height and assign one
-of four layout shapes. Initial thresholds, to be tuned against screenshots:
+The renderer observes the board’s actual width and height and assigns one of
+four profiles:
 
-| Shape | Initial board width ÷ height | Expected situations | Backdrop |
-|---|---:|---|---|
-| `portrait` | below 0.85 | Narrow browser, portrait phone/tablet when the world receives more height | 4:5 portrait |
-| `square` | 0.85–1.35 | Default desktop canvas, some tablets | 1:1 master |
-| `wide` | 1.35–2.4 | Wide browser and ordinary landscape tablet | 16:9 wide |
-| `shallow` | above 2.4 | Landscape phone or very short window | 16:9 wide, deliberately cropped and simplified |
+| Profile | Board width ÷ height | Scene asset |
+|---|---:|---|
+| `tall` | below 0.9 | Approved `4:5` derivative |
+| `compact` | 0.9–1.58 | Approved canonical `4:3` scene |
+| `wide` | 1.58–2.4 | Approved `16:9` derivative |
+| `shallow` | above 2.4 | Wide profile with optional scenery suppression |
 
 Use a `ResizeObserver` on `.world` or an equivalent container-owned mechanism.
 Do not choose art from user-agent strings. Update the shape without a page
 reload when the browser is resized or device orientation changes.
 
-Every world needs:
+Every unit scene needs:
 
-- A 2K 1:1 square master.
-- A 2K 4:5 portrait expansion made from the approved square master.
-- A 2K 16:9 wide expansion made from the same square master.
-- Isolated props that can be repositioned or hidden per shape.
-- A fallback CSS gradient using the current theme palette.
+- One explicitly approved 2K `4:3` canonical composition.
+- One 2K `4:5` tall derivative and one 2K `16:9` wide derivative from that
+  approved source.
+- Three named, non-overlapping patch regions attached to real surfaces or
+  environmental features.
+- One full-registration asset per named patch and profile.
+- Dormant/restored landmark patches at a fixed authored scene location.
+- A fallback CSS gradient using the regional palette.
 
-Do not create one fixed full-canvas foreground overlay. It would bind prop
-placement to one aspect ratio. Compose the foreground from isolated props and
-landmarks with declarative anchors instead.
-
-Square master:
-
-- Central 68% of width and central 58% of height: calm and low contrast.
-- Outer sides and upper 20%: primary environmental detail.
-- Lower 18%: crop-safe foreground.
-
-Portrait expansion:
-
-- Preserve the square master’s central identity.
-- Extend vertically, placing the strongest additional detail above and below
-  the editor-safe region.
-- Keep side details narrow because the editor uses almost the full width.
-- Provide safe top and bottom positions for a landmark or character, but never
-  require both to remain visible on the shortest phone.
-
-Wide expansion:
-
-- Preserve the square master’s centre and extend horizontally.
-- Put meaningful scenery and large props into the outer thirds, where desktop
-  and landscape tablet layouts have room.
-- Keep the editor region calm.
+The DOM-derived occlusion mask tells the generator which detail may be covered.
+It must never become a central-hole composition brief. The unoccluded base scene
+must be coherent and attractive without editor, patches, character, or landmark.
 
 Shallow layout:
 
-- Reuse and crop the wide backdrop initially.
-- Hide nonessential props and the character when height is insufficient,
+- Reuse and crop the wide scene initially.
+- Hide nonessential patches, ambient effects, and the character when needed,
   matching the existing landscape-phone behavior.
 - Never shrink the editor, command tray, or keyboard merely to preserve art.
 - A dedicated 4:1 shallow asset may be added only if viewport validation proves
@@ -347,10 +384,25 @@ Shallow layout:
 
 Across all variants:
 
-- Landmarks and characters are separate from the backdrop.
+- Registered patches and base use exactly the same cover transform and focal
+  position.
+- Environmental art has no arbitrary runtime `x`, `y`, or `scale`.
+- Characters remain a separate intentional guide overlay.
 - Art may crop; functional UI may not.
 - The same semantic scene must be recognizable in each variant.
 - Switching variants must not visibly stretch an image or move the editor.
+
+Unit location seeds:
+
+| Units | Region | Suggested locations |
+|---|---|---|
+| 1–4 | Moonroot Ruins | Mode Lantern grounds; Wayfinder crossroads; Scribe’s Spring; Grammar Gate |
+| 5–7 | Starwater Sanctuary | Starneedle terrace; Nested Garden; Prism Crossing |
+| 8–10 | Archive of Echoes | Memory cabinet chamber; Far Beacon passage; Echo Clock gallery |
+| 11–14 | Brass Meridian | Meridian route chamber; Mirror Loom hall; Echo Foundry; Meridian Engine convergence |
+
+These are thematic seeds, not mandatory compositions. The five-candidate funnel
+must still explore environment-led and asymmetric alternatives.
 
 ### World 1: Moonroot Ruins
 
@@ -365,7 +417,7 @@ Visual identity:
 - Friendly and mysterious, never threatening.
 - Landmarks feel handcrafted by a lost culture and partially reclaimed by plants.
 
-Prop vocabulary:
+Scene-detail vocabulary (integrate in context; never ship as free structural props):
 
 - Root arch.
 - Mossy broken pillar.
@@ -387,7 +439,7 @@ Visual identity:
 - More precise and spacious than Moonroot.
 - Structures suggest lenses, nesting, alignment, and reflection without literal command symbols.
 
-Prop vocabulary:
+Scene-detail vocabulary (integrate in context; never ship as free structural props):
 
 - Floating star lens.
 - Translucent reed cluster.
@@ -409,7 +461,7 @@ Visual identity:
 - Cozy and wondrous rather than dusty or academic.
 - Repetition appears through rhythm and repeated forms, not copied text.
 
-Prop vocabulary:
+Scene-detail vocabulary (integrate in context; never ship as free structural props):
 
 - Crystal drawer stack.
 - Suspended shelf.
@@ -431,7 +483,7 @@ Visual identity:
 - Spatial motifs emphasize endpoints, routes, pattern matching, recording, and coordinated mechanisms.
 - The final Meridian Engine visually incorporates subtle material echoes from all prior worlds.
 
-Prop vocabulary:
+Scene-detail vocabulary (integrate in context; never ship as free structural props):
 
 - Copper conduit arch.
 - Brass endpoint rail.
@@ -447,37 +499,26 @@ Runtime assets should use this structure:
 ```text
 assets/worlds/
   moonroot-ruins/
-    backdrop-portrait.webp
-    backdrop-square.webp
-    backdrop-wide.webp
-    props/
-      root-arch.webp
-      mossy-pillar.webp
-      hanging-lantern.webp
-      moonflowers.webp
-      mineral-seam.webp
-      causeway-edge.webp
+    scenes/
+      mode-lantern-grounds/
+        tall/
+          base.webp
+          phase-a.webp
+          phase-b.webp
+          phase-c.webp
+          landmark-dormant.webp
+          landmark-restored.webp
+        compact/...
+        wide/...
+      wayfinder-crossroads/...
+      scribes-spring/...
+      grammar-gate-court/...
   starwater-sanctuary/
-    backdrop-portrait.webp
-    backdrop-square.webp
-    backdrop-wide.webp
-    props/...
+    scenes/...
   archive-of-echoes/
-    backdrop-portrait.webp
-    backdrop-square.webp
-    backdrop-wide.webp
-    props/...
+    scenes/...
   brass-meridian/
-    backdrop-portrait.webp
-    backdrop-square.webp
-    backdrop-wide.webp
-    props/...
-  landmarks/
-    mode-lantern-dormant.webp
-    mode-lantern-restored.webp
-    ...
-    meridian-engine-dormant.webp
-    meridian-engine-restored.webp
+    scenes/...
   story/
     intro-connected.webp
     intro-interrupted.webp
@@ -497,26 +538,28 @@ Required generated source outputs:
 
 | Asset class | Source count | Runtime count | Notes |
 |---|---:|---:|---|
-| World 1:1 masters | 4 | 4 | One approved master per world |
-| World 4:5 portrait expansions | 4 | 4 | Conversational edits of the masters |
-| World 16:9 wide expansions | 4 | 4 | Conversational edits of the masters |
-| Six-prop source sheets | 4 | 0 | Generation/production sources, not runtime files |
-| Extracted props | 24 | Up to 24 | Include only props actually used |
-| Dormant landmarks | 14 | 14 | One per unit |
-| Restored landmarks | 14 | 14 | Registered edit of dormant state |
+| Unit `4:3` candidate compositions | 70 | 14 | Five materially different candidates per unit; one explicitly approved |
+| Approved `4:5` tall profiles | 14 | 14 | Conversational responsive edits |
+| Approved `16:9` wide profiles | 14 | 14 | Conversational responsive edits |
+| Registered phase patch sources | 126 | Up to 126 | Three patches × three profiles × 14 units |
+| Dormant/restored landmark patches | 84 | Up to 84 | Two states × three profiles × 14 units |
 | Intro story images | 3 | 3 | Shared first-launch story |
 | Nix reaction poses | 3 | 3 | First reaction vertical slice |
 | Remaining phase-one guide poses | 33 | Up to 33 | Eleven guides × three poses; generate only after Nix approval |
 
 The initial Moonroot vertical slice therefore needs only:
 
-- `moonroot-ruins/backdrop-square.webp`
-- `moonroot-ruins/backdrop-portrait.webp`
-- `moonroot-ruins/backdrop-wide.webp`
-- The Moonroot prop sheet and whichever extracted props are used
-- Optionally the four dormant Moonroot landmarks; CSS placeholders are acceptable until story work
+- Four approved canonical scenes, one for each of Units 1–4.
+- Tall, compact, and wide bases for those four scenes.
+- Three registered environmental detail patches per profile.
+- Registered dormant/restored landmark patches per profile.
+- Regional CSS ambient effects and fallback gradient.
 
-Do not put prompt experiments, rejected candidates, uncompressed 2K/4K masters, or prop sheets into the production asset tree. Keep generation metadata and prompts under `scripts/world-art/`; keep large source masters in the chosen external art archive unless a separate repository policy explicitly adds them.
+Do not put prompt experiments, rejected candidates, or uncompressed 2K/4K
+masters into the production asset tree. Keep scripts and approval metadata under
+`scripts/world-art/`, generated review artifacts under
+`artifacts/world-generation/`, and only approved derivatives under
+`assets/worlds/`.
 
 ## Nano Banana production workflow
 
@@ -525,7 +568,7 @@ Do not put prompt experiments, rejected candidates, uncompressed 2K/4K masters, 
 As of July 2026:
 
 - Use **Nano Banana Pro / `gemini-3-pro-image`** for the first master composition of each world, the final intro key art, and difficult landmark designs. Google positions it for professional asset production, complex instructions, and precision control.
-- Use **Nano Banana 2 / `gemini-3.1-flash-image`** for alternative compositions, controlled edits, outpainting, prop sheets, dormant/restored variants, and character poses. Google positions it as the general workhorse with strong multiple-reference and consistency support.
+- Use **Nano Banana 2 / `gemini-3.1-flash-image`** for alternative compositions, controlled edits, responsive derivation, registered patches, dormant/restored variants, and character poses. Google positions it as the general workhorse with strong multiple-reference and consistency support.
 - Do not build a new Imagen workflow. Google recommends Nano Banana for image generation and lists Imagen shutdown for August 17, 2026.
 - Generate master art at 2K. Use 4K only when a selected image genuinely needs local cropping or cleanup; runtime files should be downscaled and compressed.
 
@@ -542,8 +585,10 @@ Before generating world assets, prepare:
 
 1. `assets/enchanted-ruins.png` as the strongest existing mood reference.
 2. `assets/world-kit.png` as the existing material and palette reference.
-3. Two representative idle characters from `assets/characters/` to communicate rendering scale only.
-4. Simple 1:1, 4:5, and 16:9 layout masks showing the editor-safe area and permitted interest areas.
+3. The previously approved regional scene, when consistency with an existing
+   region is useful.
+4. DOM-derived tall, compact, and wide masks from representative live board
+   states.
 
 For a world-generation request, attach the ruins, world kit, and layout mask. Do not attach more references merely because the model permits them.
 
@@ -551,53 +596,47 @@ For character poses, attach only the canonical idle PNG for that character plus 
 
 ### Generation acceptance loop
 
-For every asset:
+For every unit scene:
 
-1. Generate four materially different candidates.
-2. Reject candidates with pseudo-text, inconsistent perspective, noisy central regions, or recognizable borrowed imagery.
-3. Select one candidate rather than blending several incompatible directions.
-4. Continue editing from the selected interaction.
-5. Generate the required state or aspect variants in that same conversation.
-6. Downscale to runtime dimensions with nearest-neighbor or a pixel-art-aware method.
-7. Export WebP or AVIF for opaque scenes and PNG/WebP for transparency.
-8. Inspect the alpha channel. “Transparent background” is a request, not a guarantee.
-9. Test at actual phone size before accepting detail.
-10. Record model ID, prompt, references, date, source dimensions, runtime dimensions, and approval state in the world manifest.
+1. Generate five materially different `4:3` candidates:
+   landmark/destination; environmental vista; path/arrival; intimate
+   architectural or habitat detail; experimental asymmetric composition.
+2. Ensure at least two candidates are environment-led rather than landmark-led.
+3. Reject candidates with pseudo-text, inconsistent perspective, noisy central regions, or recognizable borrowed imagery.
+4. Composite every candidate into the live UI at representative real board
+   bounds before reviewing it.
+5. Record exactly one explicit approval with candidate ID, source hash, date,
+   and review notes.
+6. Generate aspect and patch derivatives only when the approval gate succeeds.
+7. Downscale to runtime dimensions with nearest-neighbor or a pixel-art-aware method.
+8. Export WebP or AVIF for opaque scenes and PNG/WebP for transparency.
+9. Inspect the alpha channel. “Transparent background” is a request, not a guarantee.
+10. Test at actual phone size before accepting detail.
+11. Record model ID, prompt, references, date, source dimensions, runtime dimensions, and approval state in the world manifest.
 
-### Master world prompt
+### Unit-scene candidate prompt
 
-Use this exact structure. Replace only the bracketed world specification with the corresponding world paragraph below.
+Use this structure with Nano Banana 2. Replace the unit location, landmark
+vocabulary, conceptual feeling, and one of the five candidate directions.
 
 ```text
-The attached images are reference material for the original Vim Wilds mobile
-learning game. Preserve their original art language: polished 2D pixel-art
-fantasy, crisp readable silhouettes, painterly pixel clusters, deep dark
-foundations, restrained amber, turquoise and violet magic, and a premium but
-quiet atmosphere. Do not reproduce the composition of a reference image.
-
-Create a production environmental backdrop for the live exercise board of a
-mobile-first Vim learning game. Real HTML code will be placed over the centre,
-so the environment must frame the interface rather than compete with it.
-
-Composition, in order:
-1. Establish a coherent background, middle ground and foreground.
-2. Keep the central 68 percent of the width and central 58 percent of the
-   height calm, dark, low contrast and free of focal objects.
-3. Concentrate readable environmental detail at the outer sides and in the
-   upper 20 percent.
-4. Keep the lower foreground quiet and crop-safe.
-5. Leave all characters and landmarks out; they will be composited separately.
-
-[WORLD SPECIFICATION]
-
-The intended result is an original game environment, not a screenshot and not
-a navigable tile map. It contains an empty, naturally textured central stage
-with no writing or interface elements. It contains no letters, code, keyboard
-keys, signs, captions, logos, pseudo-text, watermarks or recognizable franchise
-imagery. Lighting remains subdued enough for a readable code editor overlay.
-
-Output one 2K 1:1 square image. This is the canonical composition from which
-portrait and wide versions will be expanded.
+Use case: stylized-concept
+Asset type: responsive environmental backdrop for the live Vim Wilds exercise board
+Primary request: Create a new original [REGION] location for [UNIT].
+Scene/backdrop: [UNIT LOCATION].
+Landmark vocabulary: [LANDMARK], integrated into real terrain or architecture.
+Conceptual feeling: [LEARNING CONCEPT EXPRESSED SPATIALLY].
+Style/medium: polished original 2D pixel-art fantasy matching the attached world
+references in rendering language, material vocabulary and regional palette.
+Composition/framing: 4:3 landscape. [CANDIDATE DIRECTION]
+UI occlusion reference: The attached mask records where live HTML may cover the
+art. It is measurement data only. Do not reproduce its rectangle, hatching,
+shape, color or emptiness. The scene must remain coherent without the editor.
+Constraints: coherent background, middle ground and foreground; every object
+supported by terrain or architecture; no characters.
+Avoid: a generic central black hole; editor-shaped cavity; floating objects;
+isolated prop-sheet elements; writing; symbols; code; UI; pseudo-text; watermark.
+Output one 2K 4:3 image.
 ```
 
 World substitutions:
@@ -646,63 +685,51 @@ smoke, weapons, factories, grim industrial decay and excessive gears.
 
 ### Portrait expansion prompt
 
-Run this as a conversational edit of the approved 1:1 master:
+Run this only after approval, as an edit of the approved `4:3` scene:
 
 ```text
-Keep the approved scene, palette, lighting, pixel-art rendering, perspective and
-central identity unchanged. Expand the canvas vertically to a 4:5 portrait
-aspect ratio by continuing the same environment above and below. Place the
-strongest new environmental detail in the upper and lower additions. Keep the
-central editor-safe region calm and low contrast and keep side details narrow,
-because a real HTML code editor will occupy almost the full width. Do not
-stretch or rescale the approved scene. Add no characters, landmarks, writing,
-symbols, interface elements or text. Output at 2K.
+Create the tall responsive profile of this explicitly approved scene. Recompose
+and extend it vertically to 4:5 while preserving the location, landmark
+identity, material logic, perspective and grounded attachments. Use the
+attached DOM mask only as occlusion measurement; never draw its shape or a
+central cavity. Preserve meaningful grounded foreground below the editor and
+useful atmosphere above it. Add no characters, writing, UI or text. Output 2K.
 ```
 
 ### Wide expansion prompt
 
-Run this as a separate conversational edit of the approved 1:1 master:
+Run this as a separate edit of the same approved `4:3` scene:
 
 ```text
-Keep the approved scene, palette, lighting, pixel-art rendering, perspective and
-central identity unchanged. Expand the canvas horizontally to a 16:9 aspect
-ratio by continuing the same environment into both outer sides. Put meaningful
-new scenery and the richest environmental details into the outer thirds. Keep
-the central editor-safe region calm and low contrast. Do not stretch, rescale or
-redraw the approved centre. Add no characters, landmarks, writing, symbols,
-interface elements or text. Output at 2K.
+Create the wide responsive profile of this explicitly approved scene. Recompose
+and extend it horizontally to 16:9 while preserving the location, landmark
+identity, material logic, perspective and grounded attachments. Continue
+coherent traversable scenery into both sides. Use the DOM mask only as
+occlusion measurement and do not draw its shape or emptiness. Add no characters,
+writing, UI or text. Output 2K.
 ```
 
 For a shallow landscape-phone board, first test a deliberate centre crop of the
 16:9 output. Only if that fails, make a further conversational 4:1 expansion
 whose central identity and low-contrast editor region remain unchanged.
 
-### Prop-sheet prompt
+### Registered-patch method
 
-Use Nano Banana 2 with all three approved backdrop variants as references. Replace the bracketed list.
+Do not generate structural prop sheets. For each approved scene and profile:
 
-```text
-Using the attached approved portrait, square and wide Vim Wilds world variants
-as the exact style, material, palette, lighting and perspective references,
-create a production prop sheet containing exactly six separate environmental
-props:
+1. Define three non-overlapping regions anchored to real surfaces or features.
+2. Send the crop plus contextual margin and request one local, plausible change:
+   flowers opening, a perched creature, water movement, spores, a lantern
+   state, crystal growth, vines, mist, or environmental illumination.
+3. Extract changed pixels inside the declared region and restore them to the
+   exact source-canvas registration.
+4. Reject the edit if unrelated pixels change outside the region, contact or
+   perspective breaks, or an object appears unsupported.
+5. Store each patch as a full-canvas transparent asset with dimensions exactly
+   matching the corresponding base.
 
-[PROP LIST]
-
-Arrange them as a clean 3 by 2 grid. Each prop is fully visible, front or
-three-quarter view consistent with the world, at a compatible scale, and has
-clear empty separation from every other prop. Use a single flat saturated
-magenta background (#ff00ff) with no texture and no cast shadows touching the
-background so it can be removed locally. Include no labels, letters, numbers,
-captions, UI, code, symbols, borders or watermark. Preserve crisp 2D pixel-art
-edges. Output one 2K 4:3 image.
-```
-
-Use the exact prop lists from the four world sections above.
-
-Extract the props as separate transparent runtime files. The renderer positions
-or hides them independently for portrait, square, wide, and shallow layouts.
-Do not generate a fixed full-board foreground overlay.
+Perfect physical lighting is unnecessary; consistent attachment, perspective,
+and local material logic are mandatory.
 
 ### Landmark-generation method
 
@@ -948,8 +975,8 @@ full-bleed backgrounds. This lets one approved image work consistently:
 - Shallow phone landscape: image on one side, copy/actions on the other; omit
   nonessential ambience and keep Skip/Continue visible without document scroll.
 
-Unit-completion scenes use the active world’s portrait, square, or wide
-backdrop plus the separate landmark, so they follow the same board-shape
+Unit-completion scenes use the active unit’s tall, compact, or wide base plus
+its registered restored-landmark patch, so they follow the same board-profile
 selection as exercises. Story text is always HTML and must never depend on a
 particular crop.
 
@@ -1022,31 +1049,36 @@ Validate against Units 5, 9, 11, 12, 13, and 14.
 
 ## Work packages
 
-### WP-01 — Presentation data contract
+### WP-01R — Registered-scene presentation contract revision
 
 **Recommended model:** Sol  
 **Dependencies:** None  
-**Visible change:** None  
-**Risk:** Low
+**Visible change:** None by itself
+**Risk:** Medium
 
 **Session brief**
 
-Implement only the declarative presentation contract described in this document.
+Supersede free prop placement with unit-level registered scenes while preserving
+story data and the legacy board for unconverted regions.
 
 **Work**
 
-- Add `content/presentation.schema.json`.
-- Add `content/presentation.json` with all four worlds and all 14 unit mappings.
-- Use the exact story copy and landmark IDs in this document.
-- Load the presentation data with the existing unit catalog.
-- Add a small resolver module or pure functions without changing current rendering.
-- Extend content tests to validate IDs, asset fields, unit coverage, character IDs, story fields, and world references.
-- Extend the PWA build to emit the presentation JSON.
-- Preserve current output when the manifest is missing or invalid.
+- Bump the presentation schema to version 2.
+- Keep regional identity, palette, ambient vocabulary, guide, landmark ID, and
+  exact story copy.
+- Add `sceneId`, a future-compatible `scenes` map, tall/compact/wide profiles,
+  registered patch assets, phase mappings, and landmark patch states.
+- Require an explicitly approved source before derivative generation.
+- Require one selected scene for every unit whose region is converted.
+- Preserve current output when the manifest is missing, invalid, or the unit is
+  still intentionally on the legacy board.
 
 **Acceptance**
 
 - Every unit maps to exactly one world, guide, landmark, and story beat.
+- Every converted unit maps to exactly one selected scene with all three
+  profiles and consistent patch IDs.
+- No runtime environmental asset exposes `x`, `y`, or `scale`.
 - No lesson JSON changes.
 - Existing app looks and behaves exactly the same.
 - Content and PWA tests pass.
@@ -1057,36 +1089,44 @@ Implement only the declarative presentation contract described in this document.
 - Confirm that unit order, guide, landmark, completion copy, and next hook match the story table.
 - Temporarily rename one world ID in a local copy and confirm the content test explains the broken reference clearly.
 
-### WP-02 — Layered world renderer infrastructure
+### WP-02R — Registered scene renderer revision
 
 **Recommended model:** Sol  
-**Dependencies:** WP-01  
+**Dependencies:** WP-01R
 **Visible change:** Fallback layers only  
 **Risk:** Medium
 
 **Session brief**
 
-Replace the tile-specific renderer with a layered, manifest-driven renderer while keeping a legacy fallback and without changing editor geometry.
+Replace the failed free-placement layer with exact-canvas scene registration
+while keeping a legacy fallback and unchanged editor geometry.
 
 **Work**
 
 - Add `world-presentation.js`.
-- Observe the rendered `.world` bounds and assign portrait, square, wide, or shallow layout from container aspect ratio.
+- Observe `.world` bounds and assign tall, compact, wide, or shallow profiles
+  at the corrected thresholds.
 - Update the layout live on browser resize and `orientationchange` without rebuilding lesson state.
-- Render backdrop, ambient overlay, dormant landmark, isolated props, editor, and character as separate layers.
+- Render base, active full-registration patches, optional CSS ambience, editor,
+  and character as separate layers.
+- Apply one identical cover transform and focal position to base and patches.
+- Add the deterministic phase mapping.
+- Add a rune plate/contact shadow under the existing guide overlay.
+- Add a loaded, cancellable 450–600ms reveal on unit entry only.
 - Keep decorative layers non-interactive and clipped.
 - Preserve the existing 12 × 9 placement grid for editor and character.
 - Stop rebuilding hundreds of ground cells when a layered world is available.
 - Keep `renderGround()` and the tile system as a temporary fallback.
 - Separate world identity from functional theme preference.
-- Expose stable data attributes for world ID, unit ID, landmark ID, board shape, mode, and reduced-motion state.
+- Expose stable data attributes for world ID, unit ID, scene ID, landmark ID,
+  board profile, learning phase, mode, and reduced-motion state.
 - Add a CSS-only placeholder for each world so final generated images are not required to test the renderer.
 
 **Acceptance**
 
 - Editor, completion panel, keyboard, hints, and character placement do not shift.
 - Missing images fall back to the CSS world and never show broken-image icons.
-- Landscape and reduced-motion modes work.
+- Reveal cancellation, missing/slow media, shallow mode, and reduced motion work.
 - Dragging a desktop browser through shape thresholds swaps composition without stretching art or resetting the activity.
 - `window.VimWilds` remains compatible.
 - No extra document scrolling or overflow.
@@ -1098,32 +1138,41 @@ Replace the tile-specific renderer with a layered, manifest-driven renderer whil
 - Change theme preference and confirm UI colors change without changing the unit’s world identity.
 - Inspect 360×740, 390×844, 412×915, 430×932, 432×960, tablet, and desktop.
 
-### WP-03 — Moonroot board vertical slice
+### WP-03R — Four-unit Moonroot registered-scene proof
 
 **Recommended model:** Terra  
-**Dependencies:** WP-02 and approved Moonroot master assets  
+**Dependencies:** WP-01R, WP-02R, 20 generated candidates, and four explicit approvals
 **Visible change:** High  
 **Risk:** Medium
 
 **Session brief**
 
-Integrate only Moonroot Ruins for Units 1–4 and tune the responsive composition. Do not add story transitions or Vim effects.
+Rebuild only Moonroot Ruins for Units 1–4 as distinct registered scenes. Stop
+after validation for personal review. Do not begin another region, story
+transition, or Vim effect.
 
 **Work**
 
-- Add approved Moonroot square, portrait, wide, and prop assets.
-- Position visual interest around the editor without changing its width or height.
-- Add dormant placeholder positions for the first four landmarks.
-- Use board-container shape selection rather than stretching one asset or detecting device type.
-- Tune backdrop focal position and prop visibility for portrait, square, wide, and shallow boards.
+- Disable all six old Moonroot structural props.
+- Capture real DOM occlusion masks.
+- Generate five composition directions per Moonroot unit and review all 20 in
+  live composites.
+- Record one explicit approval per unit, then derive tall and wide profiles.
+- Add three registered local phase changes and dormant/restored landmark patches
+  per approved scene.
+- Use board-container profile selection without device detection.
 - Ensure theory, demo, exercise, choice, summary, completion, and keyboard-hidden states remain readable.
 - Remove tile sprites only for Moonroot units; other units retain the legacy board.
 
 **Acceptance**
 
-- Moonroot feels meaningfully richer on tablet and desktop.
+- Units 1–4 are visibly different locations while retaining Moonroot materials,
+  palette, and atmosphere.
 - On small phones, cropping is intentional even when very little world is visible.
-- No landmark is required to remain visible behind the editor.
+- No structure, lantern, plant, landmark, or character reads as accidentally
+  floating or unsupported.
+- Base scenes are coherent without editor, patches, character, or landmark.
+- Patch pixels are dimensionally registered and do not escape declared bounds.
 - Code contrast does not depend on the image.
 - Core Moonroot media fits its assigned budget.
 
@@ -1132,48 +1181,52 @@ Integrate only Moonroot Ruins for Units 1–4 and tune the responsive compositio
 - Compare Unit 1 and Unit 5 side by side: Unit 1 should clearly show the new board while Unit 5 remains the legacy control.
 - On every target phone size, solve an exercise and inspect the completed-code state.
 - On desktop, confirm the outer scene adds meaningful detail rather than repeated wallpaper.
-- Slowly resize the desktop window from wide through square to portrait without reloading.
+- Slowly resize the desktop window from wide through compact to tall without reloading.
 - Rotate a phone and a tablet in both directions and confirm that the editor state is preserved.
 - Toggle each theme preference.
 - Test with slow network and offline mode.
 
-### WP-04A — Starwater world expansion
+### WP-04A — Starwater unit-scene expansion — PAUSED
 
 **Recommended model:** Terra  
-**Dependencies:** Approved WP-03 and Starwater assets  
+**Dependencies:** Personally approved WP-03R and Starwater candidate approvals
 **Visible change:** High  
 **Risk:** Low
 
-Integrate the approved Starwater portrait, square, and wide backdrops, isolated props, and dormant landmarks for Units 5–7. Reuse the renderer unchanged. If renderer changes are necessary, stop and return the requirement to a Sol architecture session.
+Do not start until WP-03R is personally approved. Then generate and integrate
+one distinct registered scene for each of Units 5–7, one unit at a time, using
+the five-candidate and explicit-approval funnel. Reuse the renderer unchanged.
 
 Human validation focuses on search, text-object, and Visual Block exercises at every target viewport.
 
-### WP-04B — Archive world expansion
+### WP-04B — Archive unit-scene expansion — PAUSED
 
 **Recommended model:** Terra  
-**Dependencies:** Approved WP-03 and Archive assets  
+**Dependencies:** Personally approved WP-03R and Archive candidate approvals
 **Visible change:** High  
 **Risk:** Low
 
-Integrate the approved Archive portrait, square, and wide backdrops, isolated props, and dormant landmarks for Units 8–10. Reuse the renderer unchanged.
+Do not start until WP-03R is personally approved. Then generate and integrate
+one distinct registered scene for each of Units 8–10, one unit at a time.
 
 Human validation focuses on register indicators, long buffers, hidden keyboard layout, and dot-repeat exercises.
 
-### WP-04C — Meridian world expansion
+### WP-04C — Meridian unit-scene expansion — PAUSED
 
 **Recommended model:** Terra  
-**Dependencies:** Approved WP-03 and Meridian assets  
+**Dependencies:** Personally approved WP-03R and Meridian candidate approvals
 **Visible change:** High  
 **Risk:** Low
 
-Integrate the approved Meridian portrait, square, and wide backdrops, isolated props, and dormant landmarks for Units 11–14. Reuse the renderer unchanged.
+Do not start until WP-03R is personally approved. Then generate and integrate
+one distinct registered scene for each of Units 11–14, one unit at a time.
 
 Human validation focuses on Command-line UI, confirmation prompts, macros, substitution, and the densest buffers.
 
 ### WP-05 — Core-media offline and budget policy
 
 **Recommended model:** Sol  
-**Dependencies:** WP-03; may run before WP-04 expansions  
+**Dependencies:** WP-03R; may run before WP-04 expansions
 **Visible change:** None  
 **Risk:** Medium
 
@@ -1370,7 +1423,7 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Skip from each intro panel.
 - Finish or jump to the final summary of a unit and continue.
 - Refresh during the transition.
-- Resize the desktop window through portrait, square, and wide while each story panel is open.
+- Resize the desktop window through tall, compact, and wide while each story panel is open.
 - Rotate phone and tablet during the intro and a unit transition.
 - Deep-link to a later unit and to a specific activity.
 - Replay the intro and a completed unit scene.
@@ -1392,7 +1445,7 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Add per-world light colors and masks.
 - Add story copy and next hooks from the manifest.
 - Ensure dormant/restored assets share registration and do not jump.
-- Use the current board-shape backdrop and landmark placement for unit transitions.
+- Use the current board-profile base and registered landmark state for unit transitions.
 - Do not change story copy.
 
 **Human validation**
@@ -1434,9 +1487,9 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 ## Dependency graph
 
 ```text
-WP-01 Presentation data
- ├─ WP-02 World renderer
- │   └─ WP-03 Moonroot slice
+WP-01R Registered-scene data
+ ├─ WP-02R Registered-scene renderer
+ │   └─ WP-03R Moonroot proof + personal approval gate
  │       ├─ WP-04A Starwater
  │       ├─ WP-04B Archive
  │       ├─ WP-04C Meridian
@@ -1457,7 +1510,8 @@ All selected packages
 
 Parallelism guidance:
 
-- WP-01 and Nano Banana Moonroot exploration can run in parallel.
+- WP-01R/WP-02R and Nano Banana Moonroot exploration can run in parallel, but
+  derivatives cannot run before explicit candidate approvals.
 - WP-06 can run independently of all board and story work.
 - Reaction-pose generation can run independently after the Moonroot art direction is approved.
 - WP-04A, WP-04B, and WP-04C are conceptually independent but all touch shared manifests/styles; run sequentially unless separate branches are used.
@@ -1467,8 +1521,8 @@ Parallelism guidance:
 
 Use **Sol** when correctness depends on cross-cutting architecture, editor semantics, state transitions, PWA behavior, or extensive test design:
 
-- WP-01
-- WP-02
+- WP-01R
+- WP-02R
 - WP-05
 - WP-06
 - WP-07
@@ -1478,7 +1532,7 @@ Use **Sol** when correctness depends on cross-cutting architecture, editor seman
 
 Use **Terra** when the architecture is already established and the work is bounded visual integration, declarative expansion, CSS tuning, or a small state machine:
 
-- WP-03
+- WP-03R
 - WP-04A
 - WP-04B
 - WP-04C
@@ -1491,12 +1545,15 @@ If a Terra session discovers that it must change the data contract, Vim event se
 
 ### Milestone 1 — Prove the new board
 
-1. Generate Moonroot master candidates with Nano Banana Pro.
-2. Approve one square master and create its 4:5 portrait expansion, 16:9 wide expansion, and prop sheet with Nano Banana 2.
-3. WP-01 with Sol.
-4. WP-02 with Sol.
-5. WP-03 with Terra.
-6. Validate personally before generating more worlds.
+1. Disable the old Moonroot structural props.
+2. Capture DOM-derived occlusion masks.
+3. Generate five `4:3` candidates for each of Units 1–4 with Nano Banana 2.
+4. Review all 20 as live composites and record one explicit approval per unit.
+5. Complete WP-01R and WP-02R.
+6. Derive `4:5` and `16:9` profiles and registered patches only from approved
+   sources.
+7. Complete WP-03R.
+8. Validate personally and stop before generating another region.
 
 Exit question:
 
@@ -1539,9 +1596,9 @@ Exit question:
 
 ### Milestone 5 — Expand
 
-1. Generate and integrate Starwater.
-2. Generate and integrate Archive.
-3. Generate and integrate Meridian.
+1. Generate and integrate Starwater one unit scene at a time.
+2. Generate and integrate Archive one unit scene at a time.
+3. Generate and integrate Meridian one unit scene at a time.
 4. Generate the three intro images now that all four master worlds are approved.
 5. Generate remaining landmarks and approved guide poses.
 6. Complete WP-11 across all units.
@@ -1566,9 +1623,12 @@ For a Nano Banana asset session, use the exact prompt and references specified i
 
 Yes: start with the board visualization.
 
-The first concrete move is not “implement all four worlds.” It is:
+The immediate move is not “implement all four regions.” It is:
 
-> Generate one excellent Moonroot Ruins square master, expand it to portrait
-> and wide variants, create one prop sheet, then implement WP-01 through WP-03.
+> Finish and personally approve four distinct registered Moonroot unit scenes,
+> with approval-gated responsive profiles and surface-attached patches, then
+> stop before WP-04.
 
-This provides the fastest trustworthy answer to the central visual question while leaving the editor, curriculum, character system, and completion feedback untouched.
+This provides the fastest trustworthy answer to the central visual question
+while leaving the editor, curriculum, keyboard, character assignment logic, and
+completion feedback untouched.

@@ -5,3 +5,4 @@ test-results/
 playwright-report/
 __pycache__/
 artifacts/character-generation/
+artifacts/world-generation/
