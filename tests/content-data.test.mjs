@@ -124,6 +124,7 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     ["cursor-movement", ["compact", "wide"], "wayfinder-crossroads"],
     ["modal-model", ["compact"], "mode-lantern-grounds"],
     ["entering-changing-text", ["compact"], "scribes-spring"],
+    ["operator-grammar", ["compact"], "grammar-gate-court"],
   ]) {
     const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
     assert.deepEqual(variants.profiles, profiles);

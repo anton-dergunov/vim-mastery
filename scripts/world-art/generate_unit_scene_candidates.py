@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate approval-gated Moonroot unit-scene candidates with Nano Banana 2."""
+"""Generate approval-gated unit-scene backdrop candidates with Nano Banana 2."""
 
 from __future__ import annotations
 
@@ -25,30 +25,81 @@ REFERENCE_PATHS = (
 )
 MODEL = "gemini-3.1-flash-image"
 
+REGION_STYLES = {
+    "starwater-sanctuary": (
+        "Starwater Sanctuary",
+        "a nocturnal sanctuary built across dark reflective water: distant glass observatory structures, slim stone islands, star reflections, translucent reeds, pale cyan and violet light, and sparse warm-gold navigation points. The space feels precise, open and contemplative. Suggest lenses, alignment and reflection through architecture without symbols or writing. Avoid outer space, modern science equipment and neon cyberpunk clutter.",
+    ),
+    "archive-of-echoes": (
+        "Archive of Echoes",
+        "a warm subterranean archive carved into dark stone: crystal drawers, suspended shelves, distant beacons and quiet clockwork forms. Use teal glass, muted brass, amber memory lights and violet shadows. The place is cozy, wondrous and ordered, with repeated architectural rhythms. Avoid readable books, labels, dusty realism and steampunk clutter.",
+    ),
+    "brass-meridian": (
+        "Brass Meridian",
+        "a vast precision workshop and command observatory beneath a dark ridge: brass rails, copper conduits, glass lenses, controlled ember light and narrow cyan currents. The space feels powerful, exact and welcoming. Use endpoints, routes, pattern alignment and coordinated mechanisms as abstract spatial motifs. Avoid smoke, weapons, factories, grim industrial decay and excessive gears.",
+    ),
+}
+
 UNITS = {
-    "modal-model": {
-        "sceneId": "mode-lantern-grounds",
-        "location": "the grounds surrounding the ancient Mode Lantern",
-        "landmark": "a waist-high ancient lantern with four visibly separate nested glass rings around a dim amber core",
-        "meaning": "one place can hold several distinct states without becoming confusing",
+    "precision-motions-search": {
+        "sceneId": "starneedle-observatory", "worldId": "starwater-sanctuary",
+        "location": "the Starneedle Observatory terrace spanning still mirror-water",
+        "landmark": "a slim stone observatory needle holding a floating glass lens aligned with a distant star reflection",
+        "meaning": "precision comes from deliberately focusing on distant signs and exact points",
     },
-    "cursor-movement": {
-        "sceneId": "wayfinder-crossroads",
-        "location": "a moonlit forest crossroads of stone paths, roots, bridges and shallow water",
-        "landmark": "a circular stone-and-brass wayfinder with four disconnected path arms and a resting central needle",
-        "meaning": "direction, reachable destinations and deliberate movement through a coherent place",
+    "text-objects": {
+        "sceneId": "nested-garden", "worldId": "starwater-sanctuary",
+        "location": "the Nested Garden of concentric glass arches and water terraces",
+        "landmark": "three materially nested translucent stone-and-glass arches rooted in separate shallow terraces",
+        "meaning": "nearby boundaries reveal the larger shapes that contain them",
     },
-    "entering-changing-text": {
-        "sceneId": "scribes-spring",
-        "location": "a sheltered spring where luminous water passes through old carved channels",
-        "landmark": "a suspended quill-like crystal above a small spring whose channel is visibly interrupted",
-        "meaning": "new material can enter the world and existing material can be reshaped",
+    "visual-selection": {
+        "sceneId": "prism-crossing", "worldId": "starwater-sanctuary",
+        "location": "Prism Crossing, where glass-pane bridges meet over reflective water",
+        "landmark": "three broad pivoting glass panes on supported stone piers, each with a clearly different silhouette",
+        "meaning": "one place can be traversed as a ribbon, a row or a block",
     },
-    "operator-grammar": {
-        "sceneId": "grammar-gate-court",
-        "location": "the final Moonroot threshold leading toward the starlit region beyond",
-        "landmark": "a compact gate made from two complementary mechanisms that nearly meet at the centre",
-        "meaning": "an action and a range become useful when their two parts connect",
+    "registers-putting": {
+        "sceneId": "memory-archive", "worldId": "archive-of-echoes",
+        "location": "the Memory Archive cabinet chamber carved into quiet dark stone",
+        "landmark": "a large built-in crystal drawer cabinet with one open drawer receiving a glowing memory vial",
+        "meaning": "what is captured can be retained, chosen and placed deliberately",
+    },
+    "long-range-navigation": {
+        "sceneId": "far-beacons", "worldId": "archive-of-echoes",
+        "location": "the Far Beacon passage across a deep archive ravine",
+        "landmark": "two distant brass-and-teal beacons connected by a thin supported thread of light over a causeway",
+        "meaning": "great distances can be crossed and returned from without losing place",
+    },
+    "repeatable-editing": {
+        "sceneId": "echo-clock", "worldId": "archive-of-echoes",
+        "location": "the Echo Clock gallery of quiet repeating mechanisms",
+        "landmark": "one large controlled clock wheel whose motion visibly propagates through three smaller related wheels",
+        "meaning": "one well-shaped change can travel farther than a single moment",
+    },
+    "command-line-ranges-line-operations": {
+        "sceneId": "meridian-table", "worldId": "brass-meridian",
+        "location": "the Meridian Table route chamber beneath the dark ridge",
+        "landmark": "a broad brass route table with two grounded endpoint markers joined by one narrow cyan current",
+        "meaning": "exact endpoints define a route that a command current can follow",
+    },
+    "substitution-practical-regex": {
+        "sceneId": "mirror-loom", "worldId": "brass-meridian",
+        "location": "the Mirror Loom hall of glass lenses and copper threads",
+        "landmark": "a supported lens-and-loom mechanism where only a selected set of glowing threads changes colour",
+        "meaning": "patterns can be found and transformed without changing what does not match",
+    },
+    "macros": {
+        "sceneId": "echo-foundry", "worldId": "brass-meridian",
+        "location": "the Echo Foundry of recorder cylinders and replay mechanisms",
+        "landmark": "a brass recorder cylinder linked by real conduits to three coordinated mechanisms replaying one movement",
+        "meaning": "a complete sequence can be recorded and replayed without forgetting a step",
+    },
+    "global-normal-automation": {
+        "sceneId": "meridian-engine", "worldId": "brass-meridian",
+        "location": "the Meridian Engine convergence chamber where all restored routes meet",
+        "landmark": "a monumental but welcoming brass-and-glass current junction that subtly echoes root, archive and prism materials",
+        "meaning": "range, pattern, repetition and judgment can move together through one coordinated system",
     },
 }
 
@@ -108,13 +159,15 @@ def create_compact_mask() -> Path:
 
 
 def candidate_prompt(unit: dict[str, str], direction: str) -> str:
+    region_name, region_style = REGION_STYLES[unit["worldId"]]
     return f"""Use case: stylized-concept
 Asset type: responsive environmental backdrop for the live Vim Wilds exercise board
-Primary request: Create a new original Moonroot Ruins location for one learning unit.
+Primary request: Create a new original {region_name} location for one learning unit.
 Scene/backdrop: {unit["location"]}.
 Landmark vocabulary: {unit["landmark"]}. The landmark may lead or support the composition according to the candidate direction, but any visible object must be physically supported by the environment.
 Conceptual feeling: {unit["meaning"]}.
-Style/medium: polished original 2D pixel-art fantasy, crisp silhouettes and painterly pixel clusters; match the attached Vim Wilds references in rendering language, restrained amber, turquoise and violet accents, and deep blue-green moonlight.
+Regional art bible: {region_style}
+Style/medium: polished original 2D pixel-art fantasy, crisp silhouettes and painterly pixel clusters; match the attached Vim Wilds references in rendering language, material vocabulary and regional palette.
 Composition/framing: 4:3 landscape. {direction}
 UI occlusion reference: The attached red-hatched image records the area a real HTML editor can cover. It is measurement data only. Do not reproduce its colors, rectangle, hatching, shape or emptiness. The world must remain a coherent complete illustration when the editor is absent. Keep irreplaceable focal detail outside that covered area, but ordinary scenery may continue naturally behind it.
 Constraints: coherent background, middle ground and foreground; grounded objects; consistent side-on or gently elevated game perspective; readable outer scenery when the editor is present; no characters.
@@ -127,7 +180,7 @@ def build_manifest(unit_id: str, unit: dict[str, str], mask: Path) -> dict[str, 
         "schemaVersion": 2,
         "unitId": unit_id,
         "sceneId": unit["sceneId"],
-        "worldId": "moonroot-ruins",
+        "worldId": unit["worldId"],
         "model": MODEL,
         "createdAt": datetime.now(UTC).isoformat(),
         "approval": {"candidateId": None, "approvedAt": None, "notes": ""},
@@ -192,7 +245,7 @@ def main() -> int:
             if not (directory / candidate["path"]).exists():
                 jobs.append((manifest_path, manifest, candidate))
 
-    print(f"Moonroot unit-scene plan: {len(jobs)} missing {MODEL} candidate(s)")
+    print(f"Unit-scene backdrop plan: {len(jobs)} missing {MODEL} candidate(s)")
     if not args.execute:
         for _, manifest, candidate in jobs:
             print(f'  {manifest["unitId"]}/{candidate["id"]}: {candidate["directionId"]}')

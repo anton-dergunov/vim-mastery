@@ -466,6 +466,29 @@
               }
             }
           },
+          "remoteVariants": {
+            "profiles": ["compact"],
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants",
+            "siteIds": [
+              "left-wall-crystal",
+              "left-arch-lantern",
+              "left-satchel-landing",
+              "left-water-crystal",
+              "right-tool-crate",
+              "right-wall-lantern",
+              "right-mushroom-sill",
+              "upper-left-arch-ledge",
+              "lower-center-water-crystal",
+              "upper-right-arch-ledge"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          },
           "phasePatches": {
             "explain": [],
             "demonstrate": ["phase-a"],

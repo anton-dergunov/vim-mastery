@@ -49,7 +49,7 @@ test("production PWA precaches core media and streams GitHub Pages animation and
     assert.equal(existsSync(join(dist, file)), true);
     assert.equal(worker.includes(file), true);
   });
-  for (const sceneId of ["wayfinder-crossroads", "mode-lantern-grounds", "scribes-spring"]) {
+  for (const sceneId of ["wayfinder-crossroads", "mode-lantern-grounds", "scribes-spring", "grammar-gate-court"]) {
     const remoteVariantRoot = join(moonrootRoot, "scenes", sceneId, "variants");
     const remoteVariants = files(remoteVariantRoot)
       .filter(file => file.endsWith(".png"))
