@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import time
 from datetime import UTC, datetime
@@ -26,6 +27,7 @@ from google.genai import errors
 ROOT = Path(__file__).resolve().parents[2]
 SCENE_ID = "wayfinder-crossroads"
 UNIT_ID = "cursor-movement"
+SCENE_TITLE = "Wayfinder Crossroads"
 MODEL_ID = "gemini-3.1-flash-image"
 REVIEW_ROOT = (
     ROOT / "artifacts/world-generation/patch-reviews"
@@ -40,6 +42,7 @@ BASES = {
     for profile in ("tall", "compact", "wide")
 }
 LANDMARK_BOUNDS = (0.28, 0.48, 0.44, 0.52)
+AVOID_RECURRING_MOTIFS: tuple[str, ...] = ()
 OUTPUT_COST_USD = 0.067
 INPUT_COST_ALLOWANCE_USD = 0.0012
 
@@ -246,6 +249,29 @@ SITES = (
         ),
     },
 )
+
+
+def configure_scene(config_path: Path) -> None:
+    """Apply a scene-specific inventory while retaining the reviewed workflow."""
+    global SCENE_ID, UNIT_ID, SCENE_TITLE, REVIEW_ROOT, VISIBILITY_METRICS
+    global MANIFEST_PATH, INVENTORY_PATH, LEDGER_PATH, BASES, LANDMARK_BOUNDS, SITES
+    global AVOID_RECURRING_MOTIFS
+    config = json.loads(config_path.read_text())
+    SCENE_ID = config["sceneId"]
+    UNIT_ID = config["unitId"]
+    SCENE_TITLE = config["sceneTitle"]
+    REVIEW_ROOT = ROOT / "artifacts/world-generation/patch-reviews" / SCENE_ID / "round-03"
+    VISIBILITY_METRICS = REVIEW_ROOT / "visibility/metrics.json"
+    MANIFEST_PATH = REVIEW_ROOT / "approval-manifest.json"
+    INVENTORY_PATH = REVIEW_ROOT / "object-inventory.json"
+    LEDGER_PATH = REVIEW_ROOT / "ledger.jsonl"
+    BASES = {
+        profile: ROOT / f"assets/worlds/moonroot-ruins/scenes/{SCENE_ID}/{profile}/base.webp"
+        for profile in ("tall", "compact", "wide")
+    }
+    LANDMARK_BOUNDS = tuple(config["landmarkBounds"])
+    SITES = tuple(config["sites"])
+    AVOID_RECURRING_MOTIFS = tuple(config.get("avoidRecurringMotifs", ()))
 
 
 def sha256(path: Path) -> str:
@@ -468,11 +494,12 @@ def create_locator(
 
 
 def candidate_prompt(site: dict[str, Any], change: str) -> str:
+    recurring_motifs = "; ".join(AVOID_RECURRING_MOTIFS)
     return f"""Use case: precise-object-edit
 Asset type: one complete 4:3 Vim Wilds environmental board candidate
 
 INPUT ROLES
-- Image 1 is the approved complete Wayfinder Crossroads board and the exact edit target.
+- Image 1 is the approved complete {SCENE_TITLE} board and the exact edit target.
 - Image 2 is a locator crop from Image 1. Its magenta rectangle and label are reference markup only. Never reproduce that rectangle, label, crop framing, or any other markup.
 
 TARGET
@@ -487,6 +514,9 @@ PRESERVATION IS THE MAIN REQUIREMENT
 Return the complete board, not a crop. Keep the canvas, framing, camera, perspective, paths, water, stones, roots, bridge, central wayfinder, every other prop, all edge content, palette, lighting, pixel-art rendering, and spatial relationships as close to Image 1 as possible. Change only the named target and the few immediately adjacent pixels needed for contact, shadow, reflection, or local magical glow. The replacement must be physically attached to or supported by the named surface. Preserve surrounding silhouettes at the target boundary so the edited board can later yield a seamless registered patch.
 
 The target itself must change substantially: it needs an unmistakably new silhouette and content that remains legible when the complete board is displayed small. Do not settle for a tint, brightness shift, tiny sparkles, or a nearly identical version of the existing object.
+
+SERIES VARIETY
+This board is part of a curated series. Do not use these recurring concepts in this candidate: {recurring_motifs or "none specified"}. Invent the specifically requested replacement rather than substituting a familiar generic magical prop.
 
 Avoid: changes elsewhere; warped or redrawn board geometry; altered stairs, bridge, central wayfinder, or outer edges; relocated objects; extra unrelated magical effects; characters; text; letters; numbers; code; UI; locator markup; watermark; photorealism; smooth 3D rendering.
 
@@ -518,7 +548,7 @@ def stage() -> None:
     visibility = build_visibility_artifacts()
     with Image.open(BASES["compact"]) as source:
         base = source.convert("RGB")
-    full_board = REVIEW_ROOT / "inputs/wayfinder-crossroads-compact-base.png"
+    full_board = REVIEW_ROOT / f"inputs/{SCENE_ID}-compact-base.png"
     full_board.parent.mkdir(parents=True, exist_ok=True)
     base.save(full_board, optimize=True)
 
@@ -836,9 +866,32 @@ def status() -> None:
     ]
     print(
         f"{SCENE_ID} round 03: {len(generated)}/50 generated; "
-        f"{len(approved)}/10 explicitly approved; "
+        f"{len(approved)}/{manifest['requiredWinnerCount']} explicitly approved; "
         f"estimated spend ${estimated_spend():.2f}"
     )
+
+
+def approve_all() -> None:
+    """Record an explicit owner decision to retain every generated candidate."""
+    manifest = json.loads(MANIFEST_PATH.read_text())
+    missing = [
+        candidate["id"]
+        for candidate in manifest["candidates"]
+        if not candidate.get("output")
+    ]
+    if missing:
+        raise RuntimeError(
+            "Cannot approve all until every candidate has a generated output: "
+            + ", ".join(missing)
+        )
+    for candidate in manifest["candidates"]:
+        candidate["approvalState"] = "approved"
+    manifest["approvalState"] = "owner-approved-all"
+    manifest["requiredWinnerCount"] = len(manifest["candidates"])
+    manifest["winnerPolicy"] = "owner explicitly approved every generated candidate"
+    manifest["approvedAt"] = datetime.now(UTC).isoformat()
+    write_json(MANIFEST_PATH, manifest)
+    print(f"Recorded owner approval for all {len(manifest['candidates'])} candidates")
 
 
 def promote() -> None:
@@ -849,15 +902,35 @@ def promote() -> None:
     ]
     if len(winners) != manifest["requiredWinnerCount"]:
         raise RuntimeError(
-            "WP-03P-B is locked until exactly ten candidates are explicitly approved"
+            "WP-03P-B is locked until the manifest's explicitly approved candidate count is met"
         )
-    raise RuntimeError(
-        "WP-03P-A is review-only; responsive derivation and promotion belong to WP-03P-B"
-    )
+    if not winners:
+        raise RuntimeError("WP-03P-B requires at least one explicitly approved candidate")
+    destination_root = ROOT / f"assets/worlds/moonroot-ruins/scenes/{SCENE_ID}/variants"
+    destination_root.mkdir(parents=True, exist_ok=True)
+    for candidate in winners:
+        source = ROOT / candidate["output"]["path"]
+        if not source.is_file():
+            raise RuntimeError(f"Missing approved candidate output: {source}")
+        destination = destination_root / f"{candidate['id']}.png"
+        shutil.copy2(source, destination)
+    manifest["promotion"] = {
+        "workPackage": "WP-03P-B",
+        "promotedAt": datetime.now(UTC).isoformat(),
+        "destination": str(destination_root.relative_to(ROOT)),
+        "candidateIds": [candidate["id"] for candidate in winners],
+    }
+    write_json(MANIFEST_PATH, manifest)
+    print(f"Promoted {len(winners)} approved variants to {destination_root.relative_to(ROOT)}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--scene-config",
+        type=Path,
+        help="JSON inventory for another Moonroot scene; preserves the Wayfinder default",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("stage")
     generator = subparsers.add_parser("generate")
@@ -873,12 +946,17 @@ def main() -> int:
     generator.add_argument("--quota-backoff-seconds", type=float, default=75.0)
     generator.add_argument("--max-quota-retries", type=int, default=2)
     subparsers.add_parser("status")
+    subparsers.add_parser("approve-all")
     subparsers.add_parser("promote")
     args = parser.parse_args()
+    if args.scene_config:
+        configure_scene(args.scene_config)
     if args.command == "stage":
         stage()
     elif args.command == "generate":
         generate(args)
+    elif args.command == "approve-all":
+        approve_all()
     elif args.command == "status":
         status()
     else:

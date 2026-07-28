@@ -160,6 +160,29 @@
               }
             }
           },
+          "remoteVariants": {
+            "profiles": ["compact"],
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants",
+            "siteIds": [
+              "upper-left-ruin-window",
+              "left-column-mushroom-cluster",
+              "center-stone-arch",
+              "central-broken-column",
+              "upper-right-stair-landing",
+              "right-fern-bank",
+              "left-water-lily-arc",
+              "lower-center-lily-water",
+              "far-right-water-niche",
+              "distant-cyan-mushrooms"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          },
           "phasePatches": {
             "explain": [],
             "demonstrate": ["phase-a"],
@@ -339,6 +362,29 @@
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-restored.webp"
               }
+            }
+          },
+          "remoteVariants": {
+            "profiles": ["compact"],
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants",
+            "siteIds": [
+              "left-root-lantern",
+              "left-water-channel",
+              "central-pool",
+              "central-paving-mushrooms",
+              "right-waterfall-lip",
+              "right-waterfall-pool",
+              "far-right-lantern",
+              "upper-left-arch-mushrooms",
+              "upper-pool-bridge",
+              "lower-right-mushroom-bank"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
             }
           },
           "phasePatches": {

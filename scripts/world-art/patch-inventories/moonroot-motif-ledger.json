@@ -1,0 +1,53 @@
+{
+  "purpose": "Creative-planning input for a new Moonroot WP-03P-A scene. It prevents familiar fantasy motifs from being repeatedly relocated between units; it is not an automatic image-quality filter.",
+  "procedure": [
+    "Before staging a new scene, read every earlier scene entry and select underused semantic families for its five transformations per site.",
+    "Put the relevant prior families and close synonyms in that scene inventory's avoidRecurringMotifs field so every Gemini request receives them.",
+    "Do a text-only duplicate-idea pass across all fifty planned transformations before paid generation.",
+    "After staging, record the new scene's planned families here; after owner review, mark which families were actually retained."
+  ],
+  "scenes": {
+    "wayfinder-crossroads": {
+      "status": "owner-approved variants",
+      "majorFamilies": [
+        "dragon eyes beneath water",
+        "spirit fish and spirit frogs",
+        "whirlpools and star-water vortices",
+        "carved animal-mouth fountains",
+        "open treasure luggage and mimic chests",
+        "leaf boats and crystal-sail boats",
+        "floating root islands",
+        "crystal hatchlings",
+        "open geodes and root-and-brass beacons"
+      ]
+    },
+    "mode-lantern-grounds": {
+      "status": "review batch generated; do not alter existing candidates",
+      "majorFamilies": [
+        "violet star-map portals",
+        "bold root and ruin transformations",
+        "water-lily transformations",
+        "moonroot magical caches"
+      ]
+    },
+    "scribes-spring": {
+      "status": "planned vocabulary for generation",
+      "majorFamilies": [
+        "stained-glass and paper artifacts",
+        "hourglasses, clocks, pendulums, and brass mechanisms",
+        "water-poppies, lily-clocks, river stones, and submerged mosaics",
+        "ink, type, tablet, and abstract scriptwork objects",
+        "weather gauges, rain catchers, and waterless instruments"
+      ]
+    },
+    "grammar-gate-court": {
+      "status": "planned vocabulary for generation",
+      "majorFamilies": [
+        "bound books, quills, keys, abacuses, and abstract grammar relics",
+        "brass balances, clocks, speaking tubes, and small machines",
+        "stained-glass arches, ink-stones, lily lantern chains, and submerged mirrors",
+        "blank direction plaques, ceramic moon jars, and glass herb jars"
+      ]
+    }
+  }
+}

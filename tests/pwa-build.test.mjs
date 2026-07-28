@@ -49,15 +49,17 @@ test("production PWA precaches core media and streams GitHub Pages animation and
     assert.equal(existsSync(join(dist, file)), true);
     assert.equal(worker.includes(file), true);
   });
-  const remoteVariantRoot = join(moonrootRoot, "scenes", "wayfinder-crossroads", "variants");
-  const remoteVariants = files(remoteVariantRoot)
-    .filter(file => file.endsWith(".png"))
-    .map(file => `assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/${file.split("/").at(-1)}`);
-  assert.equal(remoteVariants.length, 50);
-  remoteVariants.forEach(file => {
-    assert.equal(existsSync(join(dist, file)), true);
-    assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
-  });
+  for (const sceneId of ["wayfinder-crossroads", "mode-lantern-grounds", "scribes-spring"]) {
+    const remoteVariantRoot = join(moonrootRoot, "scenes", sceneId, "variants");
+    const remoteVariants = files(remoteVariantRoot)
+      .filter(file => file.endsWith(".png"))
+      .map(file => `assets/worlds/moonroot-ruins/scenes/${sceneId}/variants/${file.split("/").at(-1)}`);
+    assert.equal(remoteVariants.length, 50);
+    remoteVariants.forEach(file => {
+      assert.equal(existsSync(join(dist, file)), true);
+      assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
+    });
+  }
   const characterAnimations = files(join(rootPath, "assets", "characters"))
     .filter(file => file.includes("/animations/") && file.endsWith(".webp"))
     .map(file => `assets/characters/${file.slice(join(rootPath, "assets", "characters").length + 1)}`);

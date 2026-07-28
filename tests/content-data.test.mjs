@@ -120,14 +120,20 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   assert.equal(presentation.worlds["moonroot-ruins"].props, undefined);
   assert.equal(presentation.worlds["moonroot-ruins"].backdrops, undefined);
 
-  const variants = resolveUnitPresentation(presentation, "cursor-movement").scene.remoteVariants;
-  assert.deepEqual(variants.profiles, ["compact", "wide"]);
-  assert.equal(variants.timing.initialDelayMs, 15_000);
-  assert.equal(variants.timing.fadeMs, 2_600);
-  assert.equal(variants.timing.gapMs, 15_000);
-  assert.equal(variants.siteIds.length, 10);
-  assert.equal(remoteVariantPaths(variants).length, 50);
-  assert.match(remoteVariantPaths(variants)[0], /wayfinder-crossroads\/variants\/.*-c01\.png$/);
+  for (const [unitId, profiles, sceneId] of [
+    ["cursor-movement", ["compact", "wide"], "wayfinder-crossroads"],
+    ["modal-model", ["compact"], "mode-lantern-grounds"],
+    ["entering-changing-text", ["compact"], "scribes-spring"],
+  ]) {
+    const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
+    assert.deepEqual(variants.profiles, profiles);
+    assert.equal(variants.timing.initialDelayMs, 15_000);
+    assert.equal(variants.timing.fadeMs, 2_600);
+    assert.equal(variants.timing.gapMs, 15_000);
+    assert.equal(variants.siteIds.length, 10);
+    assert.equal(remoteVariantPaths(variants).length, 50);
+    assert.match(remoteVariantPaths(variants)[0], new RegExp(`${sceneId}/variants/.*-c01\\.png$`));
+  }
 });
 
 test("registered scene profiles follow the rendered board aspect ratio", () => {

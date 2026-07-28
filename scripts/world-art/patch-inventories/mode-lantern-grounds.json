@@ -1,0 +1,148 @@
+{
+  "unitId": "modal-model",
+  "sceneId": "mode-lantern-grounds",
+  "sceneTitle": "Mode Lantern Grounds",
+  "landmarkBounds": [0.21, 0.58, 0.12, 0.25],
+  "sites": [
+    {
+      "id": "upper-left-ruin-window",
+      "surface": "distant upper-left ruined tower silhouette",
+      "bounds": [0.24, 0.06, 0.11, 0.16],
+      "locator": "the broken window opening in the distant upper-left tower beyond the stone terrace",
+      "appearance": "a dark ruined tower silhouette with one empty window against the blue night sky",
+      "changes": [
+        "Fill the window with a large cyan moon-moth observatory lens held in a rusted stone frame.",
+        "Turn the opening into a compact violet star-map portal with a bright crescent-shaped rim.",
+        "Place a clearly supported tiny bell tower in the opening, with two large amber magical bells.",
+        "Grow a bold fan of luminous blue moonflowers from the broken sill.",
+        "Reveal a small root-bound telescope aimed through the window, with one glowing cyan eyepiece."
+      ]
+    },
+    {
+      "id": "left-column-mushroom-cluster",
+      "surface": "mossy stone at the foot of the left foreground column",
+      "bounds": [0.22, 0.45, 0.11, 0.12],
+      "locator": "the tiny purple and cyan mushroom cluster beside the base of the tall left stone column",
+      "appearance": "several small purple and cyan mushrooms rooted in moss at the column base",
+      "changes": [
+        "Replace them with three oversized glowing mushroom lanterns of visibly different heights.",
+        "Turn the cluster into a miniature crystal greenhouse with bright cyan panes and a violet roof gem.",
+        "Create a compact open geode nest with bold concentric cyan and violet mineral rings.",
+        "Add a tiny mossy shrine with an amber doorway, firmly built against the column base.",
+        "Replace the cluster with a luminous sleeping salamander-shaped root growth fused to the stone."
+      ]
+    },
+    {
+      "id": "center-stone-arch",
+      "surface": "freestanding central stone arch on the terrace",
+      "bounds": [0.35, 0.42, 0.18, 0.29],
+      "locator": "the freestanding tan stone arch standing on the central terrace above the water channel",
+      "appearance": "a weathered two-pillar stone arch with a broken rounded lintel",
+      "changes": [
+        "Transform the arch opening into a large cyan rune-free moon portal with a clear circular interior.",
+        "Grow an enormous root-and-crystal chandelier from the lintel, hanging visibly inside the arch.",
+        "Turn it into a tiny open-air apothecary stall with three large glowing bottles under the lintel.",
+        "Add a broad suspended waterfall curtain inside the arch, falling naturally into the channel below.",
+        "Convert the arch into a root-grown astronomical clock with a big violet lens in its opening."
+      ]
+    },
+    {
+      "id": "central-broken-column",
+      "surface": "short broken column on the central paving",
+      "bounds": [0.55, 0.50, 0.09, 0.18],
+      "locator": "the short broken stone column standing alone on the central paving to the right of the arch",
+      "appearance": "a small gray fractured column stump with a flat broken top",
+      "changes": [
+        "Replace the stump with a compact brass astrolabe projecting a strong cyan circular light.",
+        "Turn it into a stone bowl moonwell containing a bright miniature starfield.",
+        "Grow a dense tiered shelf of blue and violet luminous mushrooms from the broken top.",
+        "Add a perched brass courier automaton with two large glass eyes and a tiny flag.",
+        "Replace it with a friendly treasure mimic chest, open but firmly seated on the paving."
+      ]
+    },
+    {
+      "id": "upper-right-stair-landing",
+      "surface": "upper-right broad stone stair landing",
+      "bounds": [0.72, 0.28, 0.20, 0.18],
+      "locator": "the broad empty upper-right stone stair and its mossy landing",
+      "appearance": "a long cool-gray staircase rising toward the right edge under ruined arches",
+      "changes": [
+        "Add a large root-bound crystal brazier on the landing with one floating violet flame.",
+        "Create a compact moonlit library cart with an open oversized spellbook and cyan page glow.",
+        "Place a small stone dragon egg nest with a bright curled crystal hatchling inside.",
+        "Turn the landing into a supported miniature observatory with a broad brass telescope.",
+        "Add three tall luminous moonflower bells rooted along the stair edge."
+      ]
+    },
+    {
+      "id": "right-fern-bank",
+      "surface": "right-side fern-covered stone bank",
+      "bounds": [0.86, 0.50, 0.14, 0.20],
+      "locator": "the dense green fern and small purple mushrooms on the far-right stone bank above the water",
+      "appearance": "a leafy fern cluster growing from a dark mossy ledge beside the right water",
+      "changes": [
+        "Replace the fern cluster with a broad cyan crystal tree carrying a visible violet gemstone canopy.",
+        "Grow a compact three-tier waterfall shrine into the bank, each basin glowing differently.",
+        "Add a large root-bound firefly lighthouse with a cyan lens and one broad beam.",
+        "Turn the bank into a mossy animal-head spring pouring a bright stream into the water.",
+        "Create a tiny supported moon-mushroom garden with three giant colorful caps."
+      ]
+    },
+    {
+      "id": "left-water-lily-arc",
+      "surface": "lower-left shallow water and lily pads",
+      "bounds": [0.00, 0.62, 0.20, 0.20],
+      "locator": "the lower-left blue water channel with scattered lily pads beside the lantern platform",
+      "appearance": "calm dark cyan water with small green lily pads and stone reflections",
+      "changes": [
+        "Form one large luminous cyan spiral whirlpool, with displaced lily pads around it.",
+        "Grow three enormous open violet-and-blue lotus flowers from the channel.",
+        "Reveal a submerged circular ruin with bright non-text geometric moon marks beneath the water.",
+        "Add a tiny leaf boat with a bright crystal sail and a bold curved wake.",
+        "Create five large glowing spirit fish circling in a readable ring beneath the surface."
+      ]
+    },
+    {
+      "id": "lower-center-lily-water",
+      "surface": "lower central water channel below the bridge",
+      "bounds": [0.43, 0.73, 0.22, 0.20],
+      "locator": "the lower central water with lily pads directly beneath the central stone bridge",
+      "appearance": "a dark water channel under the bridge with several flat green lily pads",
+      "changes": [
+        "Reveal a huge luminous sleeping water-dragon eye contained beneath the surface.",
+        "Add a compact floating root island with one oversized violet mushroom and cyan reflection.",
+        "Turn the water into a star-water vortex containing a tiny night sky and crescent moon.",
+        "Add three translucent cyan spirit frogs leaping in sequence with coherent splashes.",
+        "Create a bright forked magical current with two large glowing stepping lilies."
+      ]
+    },
+    {
+      "id": "far-right-water-niche",
+      "surface": "far-right lower water niche below the fern bank",
+      "bounds": [0.88, 0.69, 0.12, 0.23],
+      "locator": "the narrow dark water niche at the far lower-right edge under the fern-covered ledge",
+      "appearance": "a shadowed blue water pocket with stone blocks and small purple lights",
+      "changes": [
+        "Add an open stone flower holding a large amber magical flame at its center.",
+        "Place a compact moonwell bowl with a visible starfield and hovering cyan crescent.",
+        "Reveal a bright crystal koi nest with three large faceted fish in the niche.",
+        "Build a tiny root-and-brass beacon with three unfolded cyan crystal panels.",
+        "Create a small suspended lantern terrarium with three glowing moon mushrooms."
+      ]
+    },
+    {
+      "id": "distant-cyan-mushrooms",
+      "surface": "upper-center distant ruins behind the terrace wall",
+      "bounds": [0.68, 0.18, 0.12, 0.17],
+      "locator": "the tall cyan mushroom group growing in the distant upper-center ruins behind the terrace wall",
+      "appearance": "a small cluster of narrow glowing cyan mushrooms silhouetted against the night ruins",
+      "changes": [
+        "Replace it with a tall moonflower observatory whose petals frame a bright violet lens.",
+        "Turn it into a compact floating-looking but stone-supported crystal radio with tuning rings.",
+        "Add a tiny blue moth shrine beneath a clear stone arch in the distant ruins.",
+        "Replace the cluster with a bold crescent-shaped caged firefly nest.",
+        "Grow a miniature root-built wind chime with two clearly glowing bells."
+      ]
+    }
+  ]
+}

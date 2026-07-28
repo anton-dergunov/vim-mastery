@@ -47,6 +47,13 @@ brightness/tint proof-overlay renderer has been removed; it is not approved
 environmental art and must not return. Wayfinder's reviewed complete-board
 variants are the replacement. WP-04 generation remains paused.
 
+**Current Moonroot variant status:** Wayfinder Crossroads, Mode Lantern Grounds,
+and Scribe's Spring each have all fifty owner-approved compact full-board
+variants in the production remote-media tree. Their variants stream only on the
+compact profile until separately reviewed tall or wide complete-board batches
+exist. Grammar Gate Court's 50-candidate review-only Gemini batch is complete
+and awaiting owner selection; WP-04 remains paused.
+
 ### July 2026 patch-production correction
 
 The registered renderer is retained, but crop-only generation did not preserve
@@ -798,24 +805,31 @@ Do not generate structural prop sheets. For each approved scene and profile:
 2. Inventory ten semantic compact-profile objects or surfaces. Record exact
    visual descriptions, support surfaces, bounds, measured visibility, and five
    substantial transformation ideas. Exclude the authored landmark.
-3. Decode the shipped compact board once to a lossless PNG. For every
+3. Before choosing those transformations, read
+   `scripts/world-art/patch-inventories/moonroot-motif-ledger.json`. Give the
+   new scene underused semantic families, record its planned families in the
+   ledger, and include earlier recurring families and close synonyms in the
+   scene inventory's `avoidRecurringMotifs`. Do a text-only duplicate-idea pass
+   across all fifty ideas; this is a creative-planning guardrail, not an
+   automated aesthetic rejection of generated images.
+4. Decode the shipped compact board once to a lossless PNG. For every
    candidate, send that complete PNG as the first Gemini image and a small
    contextual crop with a high-contrast locator box as the second image.
-4. State explicitly that Image 1 is the exact edit target, Image 2 is
+5. State explicitly that Image 1 is the exact edit target, Image 2 is
    measurement-only locator markup, the output must be a complete board, the
    target needs a new readable silhouette, and all other board geometry and
    content must remain as close to Image 1 as possible.
-5. Generate five 1K complete-board edits for every inventory site. Keep all
+6. Generate five 1K complete-board edits for every inventory site. Keep all
    decodable results and export a separate boxed/labelled review copy for each.
    Do not locally paste a generated crop into the scene.
-6. During WP-03P-A, run mechanical checks only and do not infer an aesthetic
+7. During WP-03P-A, run mechanical checks only and do not infer an aesthetic
    verdict from a computer-vision diff. Do not extract or promote patch pixels.
-7. Stop for personal review. Record every approved candidate and retain every
+8. Stop for personal review. Record every approved candidate and retain every
    candidate's hashes, model, prompts, source hashes, and date.
-8. During WP-03P-B, copy every approved complete-board output into the scene's
+9. During WP-03P-B, copy every approved complete-board output into the scene's
    `variants/` directory and register the compact profile, semantic site IDs,
    and timing metadata in the presentation manifest.
-9. Emit those PNGs into the GitHub Pages build but exclude them explicitly from
+10. Emit those PNGs into the GitHub Pages build but exclude them explicitly from
    the service-worker precache. Fetch them only at display time through the
    remote media URL, decode them to an object URL, and revoke that object URL
    after fade-out.
@@ -1412,6 +1426,12 @@ left-side structure, so Wayfinder deliberately uses the approved compact base
 cropped at wide aspect ratios until a separately reviewed wide board exists.
 The next Moonroot scene must repeat this same approval gate before integration.
 
+**Mode Lantern Grounds and Scribe's Spring status:** Complete. The owner
+approved all fifty round-03 complete-board edits for each scene. WP-03P-B
+streams all fifty through the same remote-media layer on the compact profile;
+tall and wide retain their approved local bases until their own complete-board
+variant batches are reviewed.
+
 ### WP-03P-B — Remote full-board variant integration and activity variety
 
 **Recommended model:** Terra
@@ -1927,10 +1947,14 @@ instruction verbatim:
 Proceed with WP-03P-A from docs/gamification-implementation-plan.md for exactly
 one Moonroot scene: unit [UNIT_ID], scene [SCENE_ID].
 
-Read AGENTS.md, the whole WP-03P-A section, the Registered-patch method, and the
-existing Wayfinder round-03 scripts and manifests before changing files. Reuse
-the established workflow, but author a new scene-specific object inventory and
-do not copy Wayfinder coordinates or descriptions.
+Read AGENTS.md, the whole WP-03P-A section, the Registered-patch method, the
+existing Wayfinder round-03 scripts and manifests, and the Moonroot motif ledger
+before changing files. Reuse the established workflow, but author a new
+scene-specific object inventory and do not copy Wayfinder coordinates or
+descriptions. Before staging, update the motif ledger, choose underused visual
+families for this scene, add all relevant prior families and close synonyms to
+the inventory's avoidRecurringMotifs, and do a text-only duplicate-idea pass
+across the fifty transformations.
 
 Use only Gemini Nano Banana 2 / gemini-3.1-flash-image through Google Vertex AI
 with application-default credentials. Never use an OpenAI image generator.

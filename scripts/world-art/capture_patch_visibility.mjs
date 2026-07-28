@@ -7,13 +7,21 @@ import process from "node:process";
 import { chromium } from "@playwright/test";
 
 const root = resolve(import.meta.dirname, "../..");
+function option(name, fallback) {
+  const index = process.argv.indexOf(name);
+  return index === -1 ? fallback : process.argv[index + 1];
+}
+
+const unitId = option("--unit", "cursor-movement");
+const sceneId = option("--scene", "wayfinder-crossroads");
+const activityId = option("--activity", "home-row-identifier");
+const port = option("--port", "4173");
 const destination = resolve(
   root,
-  "artifacts/world-generation/patch-reviews/wayfinder-crossroads/round-03/visibility",
+  `artifacts/world-generation/patch-reviews/${sceneId}/round-03/visibility`,
 );
-const origin = "http://127.0.0.1:4173";
-const activityId = "home-row-identifier";
-const activityUrl = `${origin}/play/?unit=cursor-movement&activity=${activityId}`;
+const origin = `http://127.0.0.1:${port}`;
+const activityUrl = `${origin}/play/?unit=${unitId}&activity=${activityId}`;
 
 const cases = [
   ...[
@@ -111,11 +119,11 @@ async function captureCase(browser, captureCase) {
     localStorage.setItem(key, JSON.stringify({ ...previous, keyboardVisibility: visibility }));
   }, captureCase.keyboardVisibility);
   await page.goto(activityUrl);
-  await page.waitForFunction(() => (
+  await page.waitForFunction(expectedSceneId => (
     window.VimWilds?.getState
-    && document.querySelector("#world")?.dataset.sceneId === "wayfinder-crossroads"
+    && document.querySelector("#world")?.dataset.sceneId === expectedSceneId
     && document.querySelector(".editor-stack")
-  ));
+  ), sceneId);
   await page.dispatchEvent("body", "pointerdown");
   await page.waitForTimeout(80);
 
@@ -176,7 +184,7 @@ async function main() {
   await mkdir(resolve(destination, "screenshots"), { recursive: true });
   const vite = spawn(
     "npm",
-    ["run", "dev", "--", "--host", "127.0.0.1", "--port", "4173", "--strictPort"],
+    ["run", "dev", "--", "--host", "127.0.0.1", "--port", port, "--strictPort"],
     { cwd: root, stdio: ["ignore", "pipe", "pipe"] },
   );
   let browser;
@@ -194,8 +202,8 @@ async function main() {
     }
     const payload = {
       schemaVersion: 2,
-      unitId: "cursor-movement",
-      sceneId: "wayfinder-crossroads",
+      unitId,
+      sceneId,
       activityId,
       captures,
     };
