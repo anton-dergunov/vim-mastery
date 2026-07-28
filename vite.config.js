@@ -1,18 +1,15 @@
 import { execFileSync } from "node:child_process";
-import { readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
+import { assertMediaAssets, collectMediaPolicy, contentRevision, coreMediaBytes } from "./media-policy.js";
 
 const rootDirectory = dirname(fileURLToPath(import.meta.url));
 const contentDirectory = join(rootDirectory, "content");
 const characterDirectory = join(rootDirectory, "assets", "characters");
 const iconDirectory = join(rootDirectory, "assets", "icons");
-const worldDirectory = join(rootDirectory, "assets", "worlds");
-const remoteVariantDirectory = join(worldDirectory, "moonroot-ruins", "scenes");
 const packageVersion = JSON.parse(readFileSync(join(rootDirectory, "package.json"), "utf8")).version;
-const WORLD_MEDIA_WARNING_BYTES = 30 * 1024 * 1024;
-const WORLD_MEDIA_LIMIT_BYTES = 50 * 1024 * 1024;
 
 function shortGitHash() {
   try {
@@ -31,13 +28,10 @@ function walk(directory) {
 
 function offlineAssets() {
   const units = walk(join(contentDirectory, "units")).filter(path => path.endsWith(".json"));
-  const idleImages = walk(characterDirectory).filter(path => path.endsWith("idle.png"));
-  const remoteCharacterAnimations = walk(characterDirectory)
-    .filter(path => path.includes(`${sep}animations${sep}`) && path.endsWith(".webp"));
-  const moonrootMedia = walk(join(worldDirectory, "moonroot-ruins", "scenes"))
-    .filter(path => path.endsWith(`${sep}base.webp`));
-  const remoteSceneVariants = walk(remoteVariantDirectory)
-    .filter(assetPath => assetPath.includes(`${sep}variants${sep}`) && assetPath.endsWith(".png"));
+  const presentation = JSON.parse(readFileSync(join(contentDirectory, "presentation.json"), "utf8"));
+  const characterManifest = JSON.parse(readFileSync(join(characterDirectory, "manifest.json"), "utf8"));
+  const media = collectMediaPolicy(presentation, characterManifest);
+  assertMediaAssets(rootDirectory, media);
   const catalogMetadata = JSON.parse(readFileSync(join(contentDirectory, "unit-index.json"), "utf8"));
   const catalog = units.map(path => {
     const unit = JSON.parse(readFileSync(path, "utf8"));
@@ -49,21 +43,10 @@ function offlineAssets() {
       path: `content/units/${relative(join(contentDirectory, "units"), path).replaceAll("\\", "/")}`,
     };
   }).sort((left, right) => left.unitNumber - right.unitNumber);
-  const worldMediaBytes = moonrootMedia.reduce((total, path) => total + statSync(path).size, 0);
-  if (worldMediaBytes > WORLD_MEDIA_LIMIT_BYTES) {
-    throw new Error(`World/story media is ${(worldMediaBytes / 1024 / 1024).toFixed(2)}MB; production limit is 50MB`);
-  }
-  if (worldMediaBytes > WORLD_MEDIA_WARNING_BYTES) {
-    console.warn(`World/story media is ${(worldMediaBytes / 1024 / 1024).toFixed(2)}MB; review above the 30MB warning threshold`);
-  }
+  const worldMediaBytes = coreMediaBytes(rootDirectory, media);
+  console.info(`Core media: ${media.core.length} files, ${(worldMediaBytes / 1024 / 1024).toFixed(2)}MB`);
   return {
-    units,
-    idleImages,
-    remoteCharacterAnimations,
-    moonrootMedia,
-    remoteSceneVariants,
-    catalog,
-    arcs: catalogMetadata.arcs || [],
+    units, media, catalog, arcs: catalogMetadata.arcs || [],
   };
 }
 
@@ -83,10 +66,7 @@ function pwaBuildPlugin(base, version) {
       });
     },
     generateBundle() {
-      const {
-        units, idleImages, remoteCharacterAnimations, moonrootMedia,
-        remoteSceneVariants, catalog, arcs,
-      } = offlineAssets();
+      const { units, media, catalog, arcs } = offlineAssets();
       const emit = (fileName, source) => this.emitFile({ type: "asset", fileName, source });
       units.forEach(path => emit(`content/units/${relative(join(contentDirectory, "units"), path)}`, readFileSync(path)));
       emit("content/unit-index.json", JSON.stringify({ schemaVersion: 2, arcs, units: catalog }, null, 2));
@@ -94,10 +74,7 @@ function pwaBuildPlugin(base, version) {
       emit("content/presentation.json", readFileSync(join(contentDirectory, "presentation.json")));
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
-      idleImages.forEach(path => emit(`assets/characters/${relative(characterDirectory, path)}`, readFileSync(path)));
-      remoteCharacterAnimations.forEach(path => emit(`assets/characters/${relative(characterDirectory, path)}`, readFileSync(path)));
-      moonrootMedia.forEach(path => emit(`assets/worlds/${relative(worldDirectory, path)}`, readFileSync(path)));
-      remoteSceneVariants.forEach(path => emit(`assets/worlds/${relative(worldDirectory, path)}`, readFileSync(path)));
+      [...media.core, ...media.optional].forEach(asset => emit(asset.path, readFileSync(join(rootDirectory, asset.path))));
       emit("icons/icon-192.png", readFileSync(join(iconDirectory, "icon-192.png")));
       emit("icons/icon-512.png", readFileSync(join(iconDirectory, "icon-512.png")));
     },
@@ -113,8 +90,11 @@ function pwaBuildPlugin(base, version) {
           const relativePath = relative(output, path).replaceAll("\\", "/");
           return !relativePath.includes("/animations/") && !relativePath.includes("/variants/");
         })
-        .map(path => `${base}${relative(output, path).replaceAll("\\", "/")}`);
-      const worker = `const CACHE_NAME = ${JSON.stringify(`vim-wilds-${version}`)};\nconst BASE_PATH = ${JSON.stringify(base)};\nconst PRECACHE_URLS = ${JSON.stringify(entries)};\n\nself.addEventListener("install", event => {\n  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS)));\n});\n\nself.addEventListener("activate", event => {\n  event.waitUntil(caches.keys().then(names => Promise.all(names\n    .filter(name => name.startsWith("vim-wilds-") && name !== CACHE_NAME)\n    .map(name => caches.delete(name))\n  )).then(() => self.clients.claim()));\n});\n\nself.addEventListener("message", event => {\n  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();\n});\n\nself.addEventListener("fetch", event => {\n  if (event.request.method !== "GET") return;\n  const requestUrl = new URL(event.request.url);\n  if (requestUrl.origin !== self.location.origin) return;\n  event.respondWith((async () => {\n    const cached = await caches.match(event.request);\n    if (cached) return cached;\n    if (event.request.mode === "navigate") {\n      return caches.match(new URL("play/index.html", self.registration.scope));\n    }\n    return fetch(event.request);\n  })());\n});\n`;
+        .map(path => `${base}${relative(output, path).replaceAll("\\", "/")}`)
+        .sort();
+      const precacheFiles = entries.map(entry => entry.slice(base.length));
+      const cacheRevision = contentRevision(output, precacheFiles);
+      const worker = `const CACHE_NAME = ${JSON.stringify(`vim-wilds-${version}-${cacheRevision}`)};\nconst BASE_PATH = ${JSON.stringify(base)};\nconst PRECACHE_URLS = ${JSON.stringify(entries)};\n\nself.addEventListener("install", event => {\n  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS)));\n});\n\nself.addEventListener("activate", event => {\n  event.waitUntil(caches.keys().then(names => Promise.all(names\n    .filter(name => name.startsWith("vim-wilds-") && name !== CACHE_NAME)\n    .map(name => caches.delete(name))\n  )).then(() => self.clients.claim()));\n});\n\nself.addEventListener("message", event => {\n  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();\n});\n\nself.addEventListener("fetch", event => {\n  if (event.request.method !== "GET") return;\n  const requestUrl = new URL(event.request.url);\n  if (requestUrl.origin !== self.location.origin) return;\n  event.respondWith((async () => {\n    const cached = await caches.match(event.request);\n    if (cached) return cached;\n    if (event.request.mode === "navigate") {\n      return caches.match(new URL("play/index.html", self.registration.scope));\n    }\n    return fetch(event.request);\n  })());\n});\n`;
       const navigationAwareWorker = worker.replace(
         `if (event.request.mode === "navigate") {
       return caches.match(new URL("play/index.html", self.registration.scope));

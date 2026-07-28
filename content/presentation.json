@@ -209,6 +209,7 @@
       },
       "completion": {
         "actionId": "lift-mode-lantern",
+        "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
         "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
         "copy": "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
         "nextHook": { "copy": "A path glimmers beyond camp." }
@@ -311,6 +312,7 @@
       },
       "completion": {
         "actionId": "align-wayfinder",
+        "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
         "action": "Vela turns the central compass; four paths align",
         "copy": "Vela aligns the Wayfinder. North, south, east, and west settle back into place.",
         "nextHook": { "copy": "The path ends at a page of broken words." }
@@ -413,6 +415,7 @@
       },
       "completion": {
         "actionId": "repair-scribes-spring",
+        "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
         "action": "Tatter repairs a split channel; luminous ink begins to flow",
         "copy": "Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.",
         "nextHook": { "copy": "A sealed gate waits for both an action and a range." }
@@ -515,6 +518,7 @@
       },
       "completion": {
         "actionId": "join-grammar-gate",
+        "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/base.webp",
         "action": "Cinder joins two halves of a mechanism; the gate opens",
         "copy": "Cinder joins action to range. The Grammar Gate opens, and the first road out of Moonroot is restored.",
         "nextHook": { "copy": "Starlight flickers beyond the gate." }
@@ -539,6 +543,7 @@
       },
       "completion": {
         "actionId": "focus-starneedle",
+        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.png",
         "action": "Orin focuses a floating lens; distant points illuminate",
         "copy": "Orin focuses the Starneedle. Distant signs and exact characters become visible across the dark.",
         "nextHook": { "copy": "The signal points inward, toward structures hidden in plain sight." }
@@ -563,6 +568,7 @@
       },
       "completion": {
         "actionId": "wake-nested-garden",
+        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.png",
         "action": "Bramble touches the outer arch; nested arches bloom from outside inward",
         "copy": "Bramble wakes the Nested Garden. Words, quotes, brackets, and blocks reveal the shapes they contain.",
         "nextHook": { "copy": "Three panes of light rise from the water." }
@@ -587,6 +593,7 @@
       },
       "completion": {
         "actionId": "align-prism-crossing",
+        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.png",
         "action": "Prism aligns three glass panes: ribbon, row, and rectangle",
         "copy": "Prism aligns the three panes. Character, line, and block become distinct paths through the same code.",
         "nextHook": { "copy": "Behind the final pane, a sealed archive begins to glow." }
@@ -611,6 +618,7 @@
       },
       "completion": {
         "actionId": "restore-memory-archive",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.png",
         "action": "Mica places a captured crystal into a drawer; several drawers illuminate",
         "copy": "Mica reopens the Memory Archive. What is captured can be kept, chosen, and placed where it belongs.",
         "nextHook": { "copy": "One memory points to a beacon far beyond the shelves." }
@@ -635,6 +643,7 @@
       },
       "completion": {
         "actionId": "connect-far-beacons",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.png",
         "action": "Luma sends a thread of light between two distant beacons",
         "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
         "nextHook": { "copy": "Across the causeway, a stopped clock begins to tick." }
@@ -659,6 +668,7 @@
       },
       "completion": {
         "actionId": "restart-echo-clock",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.png",
         "action": "Tock starts one wheel; its motion propagates through matching wheels",
         "copy": "Tock restarts the Echo Clock. A well-shaped change can now travel farther than a single moment.",
         "nextHook": { "copy": "The echo reaches a brass city beneath the ridge." }
@@ -683,6 +693,7 @@
       },
       "completion": {
         "actionId": "set-meridian-table",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.png",
         "action": "Cinder places two endpoints; a current follows the exact route between them",
         "copy": "Cinder sets the Meridian Table. Lines and ranges become routes that the command current can follow.",
         "nextHook": { "copy": "A broken loom is repeating the wrong pattern." }
@@ -707,6 +718,7 @@
       },
       "completion": {
         "actionId": "retune-mirror-loom",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.png",
         "action": "Puddle retunes a lens; only matching threads transform",
         "copy": "Puddle retunes the Mirror Loom. Patterns can be found, tested, and transformed without touching what does not match.",
         "nextHook": { "copy": "The repaired thread leads into a silent foundry." }
@@ -731,6 +743,7 @@
       },
       "completion": {
         "actionId": "record-echo-foundry",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.png",
         "action": "Tock records one movement into a cylinder; three mechanisms replay it",
         "copy": "Tock records the first true echo. The Foundry can repeat a complete sequence without forgetting a step.",
         "nextHook": { "copy": "Only the World Engine remains dark." }
@@ -755,6 +768,7 @@
       },
       "completion": {
         "actionId": "open-meridian-engine",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.png",
         "action": "Cairn connects the restored systems; energy crosses all four worlds",
         "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
         "nextHook": {
@@ -768,17 +782,17 @@
     "intro": [
       {
         "id": "connected-wilds",
-        "asset": "assets/worlds/story/intro-connected.webp",
+        "asset": null,
         "copy": "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range."
       },
       {
         "id": "interrupted-command",
-        "asset": "assets/worlds/story/intro-interrupted.webp",
+        "asset": null,
         "copy": "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent."
       },
       {
         "id": "nix-at-the-threshold",
-        "asset": "assets/worlds/story/intro-nix-threshold.webp",
+        "asset": null,
         "speaker": "Nix",
         "copy": "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember."
       }

@@ -42,20 +42,28 @@ refer to the same revision.
 The service worker precaches the complete offline application in one install:
 
 - Both HTML pages, JavaScript, CSS, PWA manifest, and icons.
-- The world sprite kit, all idle character PNGs, and the character manifest.
+- Every selected registered-scene base and exact-registration patch.
+- Approved story and reaction stills, all idle character PNGs, and the
+  character manifest.
 - The language profile data, unit catalog, and every unit JSON file.
 
 Consequently, after the first successful online installation, every available
 lesson can be opened and completed in airplane mode. Lesson JSON is fetched at
 runtime from the precache rather than compiled into the JavaScript bundle.
 
-Success-animation WebP files are deliberately absent from the GitHub Pages
-artifact and from service-worker caches. When an exercise or completable choice
-opens, the app begins an in-memory, no-store request to the matching file at
-`raw.githubusercontent.com/anton-dergunov/vim-mastery/<commit>/...`. If it is
-ready when the learner succeeds, it plays. If the request is slow, fails, or
-the phone is offline, the already-local idle character remains visible without
-delaying completion.
+Success-animation WebP files and complete-board scene variants are emitted to
+the GitHub Pages artifact but deliberately excluded from service-worker caches.
+The app fetches them in memory from that one Pages media origin only when
+needed. Local Vite development tries the project path first and then the same
+Pages URL. If a request is slow, fails, or the phone is offline, the local base
+scene and idle character remain visible without delaying progress.
+
+The runtime manifest is the deployment allowlist for visual media. Builds fail
+on a declared missing asset, never discover source masters or review files, and
+report the deterministic core-media total without enforcing a size gate. A
+content digest in the cache name changes whenever any precached asset changes
+at a stable path. See `docs/media-and-story-infrastructure.md` for normalization
+commands and the WP-11 integration contract.
 
 ## Updates and saved state
 
@@ -66,11 +74,12 @@ background. Once it is ready, the game shows an **Update** action and a
 worker and reloads into the new version; it never interrupts a lesson without
 the learner choosing to restart.
 
-Only one compact local-storage record is persisted: the active unit, active
-activity, theme preference, and save timestamp. Direct `unit` and `activity`
-query parameters always win over the saved location. No editor buffers,
-completed-history ledger, lesson JSON, or animation media is stored as user
-state.
+The compact session record persists the active unit, active activity, theme
+preference, keyboard preference, and save timestamp. Independent story state
+stores only whether the introduction was seen and which unit transitions have
+already played by default. Direct `unit` and `activity` query parameters always
+win over the saved location. No editor buffers, educational completion ledger,
+lesson JSON, or animation media is stored as user state.
 
 ## Installing on iPhone and iPad
 

@@ -240,6 +240,11 @@
           <label><input type="radio" name="theme" value="glass"> <span><strong>Hall of Mirrors</strong><small>Cool glass and reflected light.</small></span></label>
           <label><input type="radio" name="theme" value="deepwater"> <span><strong>Deepwater Archive</strong><small>Dark water and archive blue.</small></span></label>
         </fieldset>
+        <section class="story-settings" aria-labelledby="storySettingsTitle">
+          <strong id="storySettingsTitle">Story</strong>
+          <p>Replay the three-part introduction without changing lesson progress.</p>
+          <button class="note-action secondary-action" id="replayStoryButton" type="button">Replay Story</button>
+        </section>
         <section class="app-version-panel" aria-label="Application version">
           <strong>Application</strong>
           <span id="currentVersion"></span>
@@ -247,6 +252,36 @@
           <button class="note-action" id="restartUpdateButton" type="button" hidden>Restart with update</button>
         </section>
       </div>
+    </dialog>
+
+    <dialog class="story-dialog" id="storyDialog" aria-labelledby="storyTitle" aria-describedby="storyCopy">
+      <article class="story-surface">
+        <div class="story-visual" role="img" aria-label="Story illustration">
+          <div class="story-board-base" aria-hidden="true"></div>
+          <div class="story-landmark story-landmark-dormant" aria-hidden="true"></div>
+          <div class="story-landmark story-landmark-restored" aria-hidden="true"></div>
+          <div class="story-light-path" aria-hidden="true"></div>
+          <div class="story-guide-action" aria-hidden="true"></div>
+          <div class="story-placeholder-landscape" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="story-content">
+          <div class="story-heading">
+            <span class="story-kicker">The Wilds remember</span>
+            <span class="story-progress" aria-live="polite"></span>
+          </div>
+          <p class="story-speaker" hidden></p>
+          <h2 class="story-title" id="storyTitle">The Vim Wilds</h2>
+          <p class="story-copy" id="storyCopy"></p>
+          <p class="story-action-copy" hidden></p>
+          <p class="story-next-hook" hidden></p>
+          <div class="story-actions">
+            <button class="story-skip" type="button" data-story-action="skip">Skip story</button>
+            <button class="story-continue" type="button" data-story-action="continue">Continue</button>
+          </div>
+        </div>
+      </article>
     </dialog>
 
   </main>

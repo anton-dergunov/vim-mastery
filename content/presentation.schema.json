@@ -180,6 +180,7 @@
           "required": ["actionId", "action", "copy", "nextHook"],
           "properties": {
             "actionId": { "$ref": "#/$defs/id" },
+            "storyBackdrop": { "$ref": "#/$defs/asset" },
             "action": { "type": "string", "minLength": 1 },
             "copy": { "type": "string", "minLength": 1 },
             "nextHook": {
@@ -201,7 +202,13 @@
       "required": ["id", "asset", "copy"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
-        "asset": { "$ref": "#/$defs/asset" },
+        "asset": {
+          "description": "Approved local story still. Null keeps the CSS placeholder active until WP-11 integrates reviewed art.",
+          "anyOf": [
+            { "$ref": "#/$defs/asset" },
+            { "type": "null" }
+          ]
+        },
         "speaker": { "type": "string", "minLength": 1 },
         "copy": { "type": "string", "minLength": 1 }
       }

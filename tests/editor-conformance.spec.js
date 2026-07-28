@@ -54,11 +54,32 @@ test.describe("Production lesson flow", () => {
   test.beforeEach(async ({ page }) => {
     // Interaction coverage deliberately opts into the touch keyboard. Product
     // defaults remain responsive (hidden on desktop, shown on touch devices).
-    await page.addInitScript(() => {
+    await page.addInitScript(completedUnitStoryIds => {
       const key = "vim-wilds.session.v1";
       const existing = JSON.parse(window.localStorage.getItem(key) || "{}");
       window.localStorage.setItem(key, JSON.stringify({ ...existing, keyboardVisibility: "visible" }));
-    });
+      // Story behavior has its own focused suite. Keep editor/navigation
+      // conformance on the post-story continuation path.
+      window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify({
+        introSeen: true,
+        completedUnitStoryIds,
+      }));
+    }, [
+      modalUnit.id,
+      cursorUnit.id,
+      changingUnit.id,
+      operatorUnit.id,
+      precisionUnit.id,
+      textObjectUnit.id,
+      visualUnit.id,
+      registerUnit.id,
+      navigationUnit.id,
+      unit.id,
+      rangeUnit.id,
+      substitutionUnit.id,
+      macroUnit.id,
+      automationUnit.id,
+    ]);
     const goto = page.goto.bind(page);
     Object.defineProperty(page, "goto", {
       configurable: true,
@@ -809,8 +830,9 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "global-normal-automation", unitNumber: 14, activityId: "normal-range-meaning" });
 
     await page.goto("/?unit=global-normal-automation&activity=global-normal-automation-summary");
-    await expect(page.getByRole("button", { name: "Open course contents" })).toBeVisible();
-    await expect(page.locator(".unit-coming-soon")).toContainText("Unit 15 is next");
+    await expect(page.getByRole("button", { name: "Complete Unit 14" })).toBeVisible();
+    await page.getByRole("button", { name: "Complete Unit 14" }).click();
+    await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   });
 
   test("locks direct scrolling while Vim updates the Unit 9 position rail", async ({ page }) => {

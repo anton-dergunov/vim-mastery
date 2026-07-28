@@ -1,8 +1,15 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
 import test from "node:test";
+import {
+  assertMediaAssets,
+  collectMediaPolicy,
+  contentRevision,
+  coreMediaBytes,
+} from "../media-policy.js";
 
 const root = new URL("../", import.meta.url);
 const rootPath = root.pathname;
@@ -14,7 +21,7 @@ function files(directory) {
   });
 }
 
-test("production PWA precaches core media and streams GitHub Pages animation and scene variants", () => {
+test("production PWA precaches core media and streams optional animation and scene variants", () => {
   execFileSync("npm", ["run", "build"], { cwd: rootPath, stdio: "inherit" });
   const dist = join(rootPath, "dist");
   const output = files(dist);
@@ -23,6 +30,9 @@ test("production PWA precaches core media and streams GitHub Pages animation and
   const landing = readFileSync(join(dist, "index.html"), "utf8");
   const play = readFileSync(join(dist, "play", "index.html"), "utf8");
   const presentation = readFileSync(join(rootPath, "content", "presentation.json"), "utf8");
+  const presentationData = JSON.parse(presentation);
+  const characterManifest = JSON.parse(readFileSync(join(rootPath, "assets", "characters", "manifest.json"), "utf8"));
+  const media = collectMediaPolicy(presentationData, characterManifest);
   const unitFiles = files(join(rootPath, "content", "units")).map(path => path.split("/").at(-1));
 
   assert.equal(existsSync(join(dist, "play", "index.html")), true);
@@ -40,15 +50,13 @@ test("production PWA precaches core media and streams GitHub Pages animation and
   });
   assert.equal(readFileSync(join(dist, "content", "presentation.json"), "utf8"), presentation);
   assert.match(worker, /content\/presentation\.json/);
-  const moonrootRoot = join(rootPath, "assets", "worlds", "moonroot-ruins");
-  const moonrootMedia = files(join(moonrootRoot, "scenes"))
-    .filter(file => file.endsWith("/base.webp"))
-    .map(file => `assets/worlds/moonroot-ruins/${file.slice(moonrootRoot.length + 1)}`);
-  assert.equal(moonrootMedia.length, 12);
-  moonrootMedia.forEach(file => {
-    assert.equal(existsSync(join(dist, file)), true);
-    assert.equal(worker.includes(file), true);
+  assert.equal(media.core.length, 96);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 14);
+  media.core.forEach(({ path: file }) => {
+    assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
+    assert.equal(worker.includes(file), true, `${file} must be precached`);
   });
+  const moonrootRoot = join(rootPath, "assets", "worlds", "moonroot-ruins");
   for (const sceneId of ["wayfinder-crossroads", "mode-lantern-grounds", "scribes-spring", "grammar-gate-court"]) {
     const remoteVariantRoot = join(moonrootRoot, "scenes", sceneId, "variants");
     const remoteVariants = files(remoteVariantRoot)
@@ -76,4 +84,49 @@ test("production PWA precaches core media and streams GitHub Pages animation and
     assert.equal(worker.includes(retiredAsset), false);
   }
   assert.doesNotMatch(worker, /raw\.githubusercontent\.com/);
+  assert.match(worker, /const CACHE_NAME = "vim-wilds-0\.1\.0-dev\.[a-f0-9]+-[a-f0-9]{12}"/);
+});
+
+test("media policy is deterministic and fails declared missing runtime assets", () => {
+  const presentation = JSON.parse(readFileSync(join(rootPath, "content", "presentation.json"), "utf8"));
+  const characters = JSON.parse(readFileSync(join(rootPath, "assets", "characters", "manifest.json"), "utf8"));
+  const first = collectMediaPolicy(presentation, characters);
+  const second = collectMediaPolicy(presentation, characters);
+  assert.deepEqual(first, second);
+  assertMediaAssets(rootPath, first);
+  assert(coreMediaBytes(rootPath, first) > 0);
+  assert(first.core.some(asset => asset.category === "registered-patch"));
+  assert(first.core.some(asset => asset.category === "character-idle"));
+  assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 14);
+  assert(first.optional.every(asset => ["character-animation", "remote-scene-variant"].includes(asset.category)));
+
+  const broken = structuredClone(presentation);
+  broken.story.intro[0].asset = "assets/worlds/story/declared-but-missing.webp";
+  assert.throws(
+    () => assertMediaAssets(rootPath, collectMediaPolicy(broken, characters)),
+    /Missing story-still manifest asset/,
+  );
+
+  const unapproved = structuredClone(presentation);
+  unapproved.units["modal-model"].completion.storyBackdrop =
+    "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants/mode-lantern-c01.png";
+  assert.throws(
+    () => collectMediaPolicy(unapproved, characters),
+    /Unapproved scene variants cannot be shipped as core runtime media/,
+  );
+});
+
+test("precache content revision changes when a generated asset changes", () => {
+  const temporary = mkdtempSync(join(tmpdir(), "vim-wilds-cache-revision-"));
+  try {
+    writeFileSync(join(temporary, "asset.webp"), "first");
+    const first = contentRevision(temporary, ["asset.webp"]);
+    const stable = contentRevision(temporary, ["asset.webp"]);
+    writeFileSync(join(temporary, "asset.webp"), "second");
+    const changed = contentRevision(temporary, ["asset.webp"]);
+    assert.equal(first, stable);
+    assert.notEqual(first, changed);
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
 });

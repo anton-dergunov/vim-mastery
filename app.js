@@ -3,6 +3,7 @@ import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 import { appUrl, appVersion, remoteMediaUrls } from "./app-version.js";
 import { loadUnitCatalogWithPresentation, resolveUnitPresentation } from "./presentation-data.js";
+import { StoryTransitions } from "./story-transitions.js";
 import { WorldPresentationRenderer } from "./world-presentation.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -81,6 +82,8 @@ const elements = {
   settingsDialog: $("#settingsDialog"),
   keyboardOptions: $("#keyboardOptions"),
   themeOptions: $("#themeOptions"),
+  replayStoryButton: $("#replayStoryButton"),
+  storyDialog: $("#storyDialog"),
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
   restartUpdateButton: $("#restartUpdateButton"),
@@ -460,6 +463,20 @@ const worldRenderer = new WorldPresentationRenderer({
   onLegacyResize: scheduleGroundRedraw,
 });
 
+const storyTransitions = new StoryTransitions({
+  root: elements.storyDialog,
+  presentation: catalogData.presentation,
+  units,
+  currentUnitId: unit.id,
+  shouldShowIntro: !urlParams.has("preview")
+    && !urlParams.has("activity")
+    && (!urlParams.has("unit") || urlParams.get("unit") === units[0].id),
+  onNavigate: navigateToUnit,
+  onOpenContents: openTableOfContents,
+  onStateChange: renderTableOfContents,
+  assetUrl: localAssetUrl,
+});
+
 function renderSprites(presentation) {
   return presentation.blocks.map((type, index) => {
     const [x, y] = spriteCells[type];
@@ -481,9 +498,8 @@ function nextSequentialUnit() {
 function renderUnitContinuation(activity) {
   const nextUnit = nextSequentialUnit();
   const primaryAction = nextUnit
-    ? `<button class="note-action" type="button" data-unit-id="${escapeHtml(nextUnit.id)}">Continue to Unit ${nextUnit.unitNumber} →</button>`
-    : `<div class="unit-coming-soon"><span>Unit ${unit.unitNumber + 1} is next</span><strong>Coming soon</strong></div>
-       <button class="note-action" type="button" data-action="open-toc">Open course contents</button>`;
+    ? `<button class="note-action" type="button" data-action="next">Continue to Unit ${nextUnit.unitNumber} →</button>`
+    : `<button class="note-action" type="button" data-action="next">Complete Unit ${unit.unitNumber} →</button>`;
   return `<div class="unit-continuation">${primaryAction}${renderRoutes(activity.routes)}</div>`;
 }
 
@@ -912,7 +928,19 @@ function renderTableOfContents() {
   const ungroupedMarkup = ungroupedUnits.length
     ? `<section class="toc-arc" aria-labelledby="toc-arc-other"><h3 class="toc-arc-heading" id="toc-arc-other"><span>Course</span><strong>More units</strong></h3><div class="toc-arc-units">${ungroupedUnits.map(renderUnit).join("")}</div></section>`
     : "";
-  elements.tocLessons.innerHTML = arcMarkup + ungroupedMarkup;
+  const completedStoryIds = new Set(storyTransitions.getState().completedUnitStoryIds);
+  const replayButtons = units
+    .filter(candidate => completedStoryIds.has(candidate.id))
+    .map(candidate => `<button type="button" data-story-replay-unit="${escapeHtml(candidate.id)}">Unit ${candidate.unitNumber}: ${renderInline(candidate.title)}</button>`)
+    .join("");
+  const storyArchive = `<section class="toc-story-archive" aria-labelledby="tocStoryTitle">
+    <h3 id="tocStoryTitle">Story archive</h3>
+    <div class="toc-story-actions">
+      <button type="button" data-story-replay-intro>Replay introduction</button>
+      ${replayButtons}
+    </div>
+  </section>`;
+  elements.tocLessons.innerHTML = storyArchive + arcMarkup + ungroupedMarkup;
 }
 
 function renderThemeOptions() {
@@ -969,6 +997,7 @@ function nextActivity() {
   if (currentActivity().type === "choice" && !state.complete) return;
   if (state.activityIndex === activities.length - 1) {
     const nextUnit = nextSequentialUnit();
+    if (storyTransitions.showUnitAtBoundary(unit.id, nextUnit?.id || null)) return;
     if (nextUnit) navigateToUnit(nextUnit.id);
     else openTableOfContents();
     return;
@@ -1290,6 +1319,7 @@ elements.keyboard.addEventListener("pointerdown", event => {
 
 document.addEventListener("keydown", event => {
   if (event.vimWildsPrompt) return;
+  if (elements.storyDialog?.open) return;
   if (isPractice() && state.complete && state.keyboardVisibility === "hidden") {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -1393,6 +1423,10 @@ elements.settingsButton?.addEventListener("click", () => {
   elements.settingsDialog.showModal();
 });
 elements.restartUpdateButton?.addEventListener("click", applyUpdate);
+elements.replayStoryButton?.addEventListener("click", () => {
+  elements.settingsDialog.close();
+  storyTransitions.showIntro({ replay: true });
+});
 elements.keyboardOptions?.addEventListener("change", event => {
   const value = event.target.closest('input[name="keyboard-visibility"]')?.value;
   if (!keyboardVisibilityValues.has(value)) return;
@@ -1413,6 +1447,17 @@ $(".landscape-controls")?.addEventListener("click", event => {
   }
 });
 elements.tocLessons?.addEventListener("click", event => {
+  if (event.target.closest("[data-story-replay-intro]")) {
+    elements.tocDialog.close();
+    storyTransitions.showIntro({ replay: true });
+    return;
+  }
+  const storyUnit = event.target.closest("[data-story-replay-unit]")?.dataset.storyReplayUnit;
+  if (storyUnit) {
+    elements.tocDialog.close();
+    storyTransitions.showUnit(storyUnit, { replay: true });
+    return;
+  }
   const button = event.target.closest("[data-activity-index]");
   if (button) goToActivity(Number(button.dataset.activityIndex));
   const unitButton = event.target.closest("button[data-unit-id]");
@@ -1502,6 +1547,12 @@ window.VimWilds = Object.freeze({
     if (isDemo()) while (stepDemo());
     else if (isPractice()) scriptKeys().slice(state.progress).forEach(processToken);
   },
+  replayIntroStory() {
+    return storyTransitions.showIntro({ replay: true });
+  },
+  showUnitStory(unitId) {
+    return storyTransitions.showUnit(unitId, { replay: true });
+  },
   getState() {
     const snapshot = state.editorSnapshot || vimEngine?.getSnapshot();
     const ranges = snapshot?.ranges || [];
@@ -1539,6 +1590,7 @@ window.VimWilds = Object.freeze({
       modifiers: [...state.modifiers],
       capsLock: state.capsLock,
       guidance: elements.guidance.textContent,
+      story: storyTransitions.getState(),
     };
   },
 });
@@ -1551,6 +1603,7 @@ assignCharacters();
 worldRenderer.start();
 renderAll();
 renderThemeOptions();
+storyTransitions.start();
 void loadCharacterAssets();
 persistSession();
 registerServiceWorker();

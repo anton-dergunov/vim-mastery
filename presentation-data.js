@@ -18,6 +18,10 @@ function validateAsset(value, path, errors) {
   if (!assetPattern.test(value || "")) errors.push(`${path} must be a local presentation asset path`);
 }
 
+function validatePendingAsset(value, path, errors) {
+  if (value !== null) validateAsset(value, path, errors);
+}
+
 function validateRemoteVariants(value, path, errors) {
   if (!object(value)) {
     errors.push(`${path} must define remote variant metadata`);
@@ -167,6 +171,9 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
     }
     validateId(unit.landmark?.id, `units.${unitId}.landmark.id`, errors);
     validateId(unit.completion?.actionId, `units.${unitId}.completion.actionId`, errors);
+    if (unit.completion?.storyBackdrop !== undefined) {
+      validateAsset(unit.completion.storyBackdrop, `units.${unitId}.completion.storyBackdrop`, errors);
+    }
     for (const field of ["action", "copy"]) {
       if (typeof unit.completion?.[field] !== "string" || !unit.completion[field].trim()) {
         errors.push(`units.${unitId}.completion.${field} is required`);
@@ -204,7 +211,7 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
   } else {
     manifest.story.intro.forEach((panel, index) => {
       validateId(panel?.id, `story.intro[${index}].id`, errors);
-      validateAsset(panel?.asset, `story.intro[${index}].asset`, errors);
+      validatePendingAsset(panel?.asset, `story.intro[${index}].asset`, errors);
       if (typeof panel?.copy !== "string" || !panel.copy.trim()) errors.push(`story.intro[${index}].copy is required`);
     });
   }

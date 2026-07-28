@@ -252,17 +252,17 @@ test("presentation manifest preserves the approved introduction and ending", () 
     intro: [
       {
         id: "connected-wilds",
-        asset: "assets/worlds/story/intro-connected.webp",
+        asset: null,
         copy: "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range.",
       },
       {
         id: "interrupted-command",
-        asset: "assets/worlds/story/intro-interrupted.webp",
+        asset: null,
         copy: "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent.",
       },
       {
         id: "nix-at-the-threshold",
-        asset: "assets/worlds/story/intro-nix-threshold.webp",
+        asset: null,
         speaker: "Nix",
         copy: "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember.",
       },

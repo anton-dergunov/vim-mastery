@@ -7,6 +7,15 @@ const moonrootScenes = {
   "operator-grammar": "grammar-gate-court",
 };
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify({
+      introSeen: true,
+      completedUnitStoryIds: [],
+    }));
+  });
+});
+
 test("renders the four registered Moonroot scenes while later units retain the legacy board", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
