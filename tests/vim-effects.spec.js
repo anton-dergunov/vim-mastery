@@ -16,11 +16,15 @@ async function effects(page) {
 test.describe("Semantic Vim effects", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
-      window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
-      window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify({
-        introSeen: true,
-        completedUnitStoryIds: [],
-      }));
+      if (!window.localStorage.getItem("vim-wilds.session.v1")) {
+        window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
+      }
+      if (!window.localStorage.getItem("vim-wilds.story.v1")) {
+        window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify({
+          introSeen: true,
+          completedUnitStoryIds: [],
+        }));
+      }
     });
   });
 
@@ -149,5 +153,30 @@ test.describe("Semantic Vim effects", () => {
     await emit(page, ["v"]);
     await page.evaluate(() => window.VimWilds.goToActivity(0));
     await expect(page.locator(".cm-effect-selection, .cm-effect-transient")).toHaveCount(0);
+  });
+
+  test("enables effects by default and persists the disabled setting", async ({ page }) => {
+    await openActivity(page, "visual-selection", "select-character-range");
+    expect(await page.evaluate(() => window.VimWilds.getState().vimEffects)).toBe("enabled");
+
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await expect(page.getByLabel("Enable effects")).toBeChecked();
+    await page.getByLabel("Disable effects").check();
+    await page.getByRole("button", { name: "Close settings" }).click();
+
+    await emit(page, ["v", "e"]);
+    expect((await effects(page)).at(-1)).toMatchObject({ type: "selection", selectionKind: "character" });
+    await expect(page.locator(".cm-effect-selection, .cm-effect-transient")).toHaveCount(0);
+
+    await page.reload();
+    await page.waitForFunction(() => window.VimWilds?.getEffects && document.querySelector(".cm-editor"));
+    expect(await page.evaluate(() => window.VimWilds.getState().vimEffects)).toBe("disabled");
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await expect(page.getByLabel("Disable effects")).toBeChecked();
+
+    await page.getByLabel("Enable effects").check();
+    await page.getByRole("button", { name: "Close settings" }).click();
+    await emit(page, ["v", "e"]);
+    await expect(page.locator(".cm-effect-selection-character")).not.toHaveCount(0);
   });
 });

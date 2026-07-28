@@ -701,9 +701,10 @@ function shouldKeepCommand({ after, pending }) {
 }
 
 export class VimEffectController {
-  constructor({ view, onEffect, reducedMotion = () => false }) {
+  constructor({ view, onEffect, enabled = () => true, reducedMotion = () => false }) {
     this.view = view;
     this.onEffect = onEffect;
+    this.enabled = enabled;
     this.reducedMotion = reducedMotion;
     this.command = null;
     this.timer = null;
@@ -728,8 +729,9 @@ export class VimEffectController {
 
   endKey({ after, pending = false }) {
     if (!this.command) return;
-    this.view.dom.classList.toggle("cm-effect-operator-pending", after.mode === "operator-pending");
-    this.view.dom.classList.toggle("cm-effect-recording", Boolean(after.macro?.recording));
+    const enabled = this.enabled();
+    this.view.dom.classList.toggle("cm-effect-operator-pending", enabled && after.mode === "operator-pending");
+    this.view.dom.classList.toggle("cm-effect-recording", enabled && Boolean(after.macro?.recording));
 
     const command = this.command;
     const visualKind = visualModes.get(after.mode);
@@ -754,12 +756,16 @@ export class VimEffectController {
     }
     event.id = ++this.sequence;
     event.duration = eventDuration(event);
+    if (command.source !== "setup") this.onEffect?.(structuredClone(event));
+    if (!enabled) {
+      this.clear();
+      return;
+    }
     if (event.type === "selection") this.showSelection(event);
     else {
       this.clearSelection();
       this.showTransient(event);
     }
-    if (command.source !== "setup") this.onEffect?.(structuredClone(event));
   }
 
   showSelection(event) {

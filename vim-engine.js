@@ -353,6 +353,7 @@ export class VimEngine {
     visualizeWhitespace = false,
     onEvent,
     onEffect,
+    effectsEnabled,
   }) {
     if (wrapColumns !== undefined && (!Number.isInteger(wrapColumns) || wrapColumns < 12 || wrapColumns > 80)) {
       throw new RangeError("wrapColumns must be an integer from 12 to 80");
@@ -453,6 +454,7 @@ export class VimEngine {
     this.effects = new VimEffectController({
       view: this.view,
       onEffect,
+      enabled: effectsEnabled,
       reducedMotion: () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     });
   }

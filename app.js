@@ -12,6 +12,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionStateKey = "vim-wilds.session.v1";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
+const vimEffectValues = new Set(["enabled", "disabled"]);
 
 function readSavedSession() {
   try {
@@ -81,6 +82,7 @@ const elements = {
   tocLessons: $("#tocLessons"),
   settingsDialog: $("#settingsDialog"),
   keyboardOptions: $("#keyboardOptions"),
+  vimEffectOptions: $("#vimEffectOptions"),
   themeOptions: $("#themeOptions"),
   replayStoryButton: $("#replayStoryButton"),
   storyDialog: $("#storyDialog"),
@@ -156,6 +158,10 @@ function storedKeyboardVisibility() {
     : defaultKeyboardVisibility();
 }
 
+function storedVimEffects() {
+  return savedSession.vimEffects === "disabled" ? "disabled" : "enabled";
+}
+
 const state = {
   activityIndex: 0,
   progress: 0,
@@ -171,6 +177,7 @@ const state = {
   playbackMode: null,
   themePreference: storedThemePreference(),
   keyboardVisibility: storedKeyboardVisibility(),
+  vimEffects: storedVimEffects(),
   hintLevel: 0,
   consecutiveMistakes: 0,
   recallFeedback: null,
@@ -186,6 +193,7 @@ function persistSession() {
       activityId: currentActivity()?.id,
       themePreference: state.themePreference,
       keyboardVisibility: state.keyboardVisibility,
+      vimEffects: state.vimEffects,
       savedAt: new Date().toISOString(),
     }));
   } catch {}
@@ -687,6 +695,7 @@ function mountEditor() {
     visualizeWhitespace: activity.editor?.visualizeWhitespace,
     onEvent: handleEngineEvent,
     onEffect: handleSemanticEffect,
+    effectsEnabled: () => state.vimEffects === "enabled",
   });
   for (const step of initial.setup?.steps || []) {
     const key = typeof step === "string" ? step : step.key;
@@ -858,6 +867,11 @@ function renderKeyboardOptions() {
   if (selected) selected.checked = true;
 }
 
+function renderVimEffectOptions() {
+  const selected = $(`input[name="vim-effects"][value="${state.vimEffects}"]`, elements.vimEffectOptions);
+  if (selected) selected.checked = true;
+}
+
 function renderModifiers() {
   const shiftActive = state.modifiers.has("Shift") || state.physicalShift;
   $$('[data-mod]', elements.keyboard).forEach(button => {
@@ -881,6 +895,7 @@ function renderAll() {
   renderCommand();
   renderActivityControls();
   renderKeyboardOptions();
+  renderVimEffectOptions();
   preloadSuccessMedia();
 }
 
@@ -1432,6 +1447,7 @@ elements.tocButton?.addEventListener("click", () => {
 });
 elements.settingsButton?.addEventListener("click", () => {
   renderKeyboardOptions();
+  renderVimEffectOptions();
   renderThemeOptions();
   elements.settingsDialog.showModal();
 });
@@ -1449,12 +1465,20 @@ elements.keyboardOptions?.addEventListener("change", event => {
   renderActivityControls();
   scheduleExecutionConsoleMeasurement();
 });
+elements.vimEffectOptions?.addEventListener("change", event => {
+  const value = event.target.closest('input[name="vim-effects"]')?.value;
+  if (!vimEffectValues.has(value)) return;
+  state.vimEffects = value;
+  persistSession();
+  if (value === "disabled") vimEngine?.clearEffects();
+});
 $(".landscape-controls")?.addEventListener("click", event => {
   const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
   if (action === "toc") openTableOfContents();
   if (action === "reset") resetActivity();
   if (action === "settings") {
     renderKeyboardOptions();
+    renderVimEffectOptions();
     renderThemeOptions();
     elements.settingsDialog.showModal();
   }
@@ -1602,6 +1626,7 @@ window.VimWilds = Object.freeze({
       mode: state.complete ? "Complete" : (snapshot?.mode || "normal"),
       modifiers: [...state.modifiers],
       capsLock: state.capsLock,
+      vimEffects: state.vimEffects,
       guidance: elements.guidance.textContent,
       story: storyTransitions.getState(),
     };
