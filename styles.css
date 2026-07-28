@@ -2483,6 +2483,198 @@ html.next-ui .inspection-choice .choice-option { min-height: 38px; padding: 7px 
 html.next-ui .inspection-choice .choice-feedback { margin: 8px 0 0; font-size: 12px; }
 html.next-ui .cm-preview-range { background: rgba(255, 207, 101, .3); outline: 1px solid rgba(255, 222, 139, .75); }
 
+/* Semantic Vim effects stay inside CodeMirror's decoration layer. They use
+   borders and low-alpha color so the affected text remains fully readable. */
+html.next-ui .code-body .cm-editor.cm-effect-operator-pending {
+  box-shadow: inset 0 0 0 1px rgba(190, 155, 255, .72), inset 0 0 16px rgba(156, 104, 255, .12);
+  transition: box-shadow 90ms ease-out;
+}
+
+html.next-ui .code-body .cm-effect-selection {
+  position: relative;
+  background: rgba(158, 112, 232, .12);
+}
+
+html.next-ui .code-body .cm-effect-selection-character {
+  border-bottom: 2px solid rgba(223, 194, 255, .92);
+}
+
+html.next-ui .code-body .cm-effect-selection-line {
+  box-shadow: inset 0 2px 0 rgba(223, 194, 255, .88), inset 0 -2px 0 rgba(223, 194, 255, .88);
+}
+
+html.next-ui .code-body .cm-effect-selection-block {
+  border-right: 1px solid rgba(230, 209, 255, .95);
+  border-left: 1px solid rgba(230, 209, 255, .95);
+  background: rgba(145, 101, 216, .13);
+}
+
+html.next-ui .code-body .cm-effect-selection-block.cm-effect-block-start {
+  border-top: 2px solid rgba(230, 209, 255, .95);
+}
+
+html.next-ui .code-body .cm-effect-selection-block.cm-effect-block-end {
+  border-bottom: 2px solid rgba(230, 209, 255, .95);
+}
+
+html.next-ui .code-body .cm-effect-selection-block.cm-effect-block-start.cm-effect-block-end {
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+}
+
+html.next-ui .code-body .cm-effect-transient {
+  position: relative;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+html.next-ui .code-body .cm-effect-range-change {
+  background: linear-gradient(90deg, rgba(191, 151, 255, .08), rgba(223, 202, 255, .34), rgba(191, 151, 255, .08)) 100% 0 / 220% 100%;
+  box-shadow: inset 0 -2px rgba(210, 177, 255, .9);
+  animation: vimRangeResolve 220ms ease-out both;
+}
+
+html.next-ui .code-body .cm-effect-capture {
+  background: linear-gradient(90deg, rgba(255, 205, 107, .08), rgba(255, 218, 143, .28)) 100% 0 / 100% 100% no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(255, 218, 143, .78);
+  animation: vimCapture 200ms ease-in both;
+}
+
+html.next-ui .code-body .cm-effect-materialize {
+  background: rgba(100, 226, 169, .28);
+  box-shadow: inset 0 -2px rgba(126, 241, 188, .88);
+  animation: vimMaterialize 240ms ease-out both;
+}
+
+html.next-ui .code-body .cm-effect-repeat {
+  background: rgba(120, 211, 224, .2);
+  box-shadow: inset 0 -2px rgba(132, 225, 238, .88);
+  opacity: var(--vim-effect-intensity, .7);
+  animation: vimRepeatEcho 168ms ease-out both;
+}
+
+html.next-ui .code-body .cm-effect-repeat.cm-effect-materialize {
+  background: rgba(100, 226, 169, .28);
+  box-shadow: inset 0 -2px rgba(126, 241, 188, .88);
+}
+
+html.next-ui .code-body .cm-effect-repeat.cm-effect-range-change {
+  background: linear-gradient(90deg, rgba(191, 151, 255, .08), rgba(223, 202, 255, .34), rgba(191, 151, 255, .08)) 100% 0 / 220% 100%;
+  box-shadow: inset 0 -2px rgba(210, 177, 255, .9);
+}
+
+html.next-ui .code-body .cm-effect-matches {
+  background: rgba(255, 201, 96, .27);
+  box-shadow: inset 0 0 0 1px rgba(255, 222, 148, .76);
+  animation: vimMatchesResolve 250ms ease-out both;
+}
+
+html.next-ui .code-body .cm-effect-matches.cm-effect-phase-search {
+  background: rgba(103, 213, 229, .23);
+  box-shadow: inset 0 0 0 1px rgba(132, 229, 241, .76);
+}
+
+html.next-ui .code-body .cm-effect-rewind {
+  background: rgba(118, 195, 225, .2);
+  box-shadow: inset 0 0 0 1px rgba(151, 215, 240, .7);
+  animation: vimRewind 220ms ease-out both;
+}
+
+html.next-ui .code-body .cm-effect-rewind.cm-effect-operation-redo {
+  background: rgba(131, 224, 172, .2);
+  box-shadow: inset 0 0 0 1px rgba(154, 237, 191, .72);
+  animation-direction: reverse;
+}
+
+html.next-ui .code-body .cm-effect-pulse {
+  position: relative;
+  width: 0;
+  height: 1em;
+  display: inline-block;
+  vertical-align: text-bottom;
+  pointer-events: none;
+}
+
+html.next-ui .code-body .cm-effect-pulse::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  left: -.3em;
+  bottom: -.08em;
+  width: .6em;
+  height: .6em;
+  border: 1px solid rgba(172, 225, 235, .9);
+  border-radius: 50%;
+  background: rgba(75, 163, 184, .18);
+  box-shadow: 0 0 0 2px rgba(78, 178, 201, .12);
+  animation: vimPointPulse 220ms ease-out both;
+}
+
+html.next-ui .code-body .cm-effect-pulse.cm-effect-phase-record-start::after,
+html.next-ui .code-body .cm-effect-pulse.cm-effect-phase-record-stop::after {
+  border-color: rgba(255, 141, 123, .95);
+  background: rgba(255, 105, 91, .22);
+  box-shadow: 0 0 0 2px rgba(255, 115, 98, .16);
+}
+
+html.next-ui .code-body .cm-editor.cm-effect-recording {
+  box-shadow: inset 0 0 0 1px rgba(255, 126, 106, .36);
+}
+
+html.next-ui .code-body .cm-effect-deleted-ghost {
+  position: absolute;
+  z-index: 3;
+  max-width: calc(100% - 2px);
+  overflow: hidden;
+  border-bottom: 2px solid rgba(211, 171, 255, .88);
+  color: transparent;
+  background: rgba(168, 119, 230, .12);
+  white-space: pre;
+  pointer-events: none;
+  animation: vimDeletedRange 220ms ease-out both;
+}
+
+@keyframes vimRangeResolve {
+  from { background-position: 100% 0; opacity: .72; }
+  to { background-position: 0 0; opacity: 1; }
+}
+
+@keyframes vimCapture {
+  from { background-size: 100% 100%; box-shadow: inset 0 0 0 1px rgba(255, 226, 166, .9); }
+  to { background-size: 12% 100%; box-shadow: inset 0 0 0 1px rgba(255, 218, 143, .28); }
+}
+
+@keyframes vimMaterialize {
+  from { background-color: rgba(100, 226, 169, .42); }
+  to { background-color: rgba(100, 226, 169, .08); }
+}
+
+@keyframes vimRepeatEcho {
+  from { background-color: rgba(120, 211, 224, .38); filter: brightness(1.14); }
+  to { background-color: rgba(120, 211, 224, .07); filter: none; }
+}
+
+@keyframes vimMatchesResolve {
+  0%, 40% { background-color: rgba(255, 201, 96, .33); }
+  100% { background-color: rgba(255, 201, 96, .06); }
+}
+
+@keyframes vimRewind {
+  from { background-color: rgba(118, 195, 225, .34); opacity: .58; }
+  to { background-color: rgba(118, 195, 225, .06); opacity: 1; }
+}
+
+@keyframes vimPointPulse {
+  from { opacity: .95; transform: scale(.55); }
+  to { opacity: .18; transform: scale(1.55); }
+}
+
+@keyframes vimDeletedRange {
+  from { opacity: .72; clip-path: inset(0 0 0 0); }
+  to { opacity: 0; clip-path: inset(0 0 0 100%); }
+}
+
 html.next-ui .toc-unit-link > button {
   width: 100%;
   padding: 12px;
@@ -3371,5 +3563,21 @@ html.next-ui .toc-unit-launch button {
     scroll-behavior: auto;
     animation: none !important;
     transition-duration: 0s !important;
+  }
+
+  html.next-ui .code-body .cm-effect-transient,
+  html.next-ui .code-body .cm-effect-pulse::after,
+  html.next-ui .code-body .cm-effect-deleted-ghost {
+    animation: none !important;
+  }
+
+  html.next-ui .code-body .cm-effect-transient {
+    background-image: none;
+    opacity: 1;
+  }
+
+  html.next-ui .code-body .cm-effect-deleted-ghost {
+    opacity: .42;
+    clip-path: none;
   }
 }

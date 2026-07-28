@@ -6,6 +6,7 @@ import { html } from "@codemirror/lang-html";
 import { HighlightStyle, indentUnit, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 import { Vim, getCM, vim } from "@replit/codemirror-vim";
+import { VimEffectController, vimEffectExtensions } from "./vim-effects.js";
 
 const specialKeys = {
   Escape: "<Esc>",
@@ -341,7 +342,18 @@ function offsetForLineStart(lines, line) {
  * this module reaches into EditorView, getCM, or Vim directly.
  */
 export class VimEngine {
-  constructor({ parent, text, cursor, language = "plain-text", wrapColumns, textWidth, viewportRows, visualizeWhitespace = false, onEvent }) {
+  constructor({
+    parent,
+    text,
+    cursor,
+    language = "plain-text",
+    wrapColumns,
+    textWidth,
+    viewportRows,
+    visualizeWhitespace = false,
+    onEvent,
+    onEffect,
+  }) {
     if (wrapColumns !== undefined && (!Number.isInteger(wrapColumns) || wrapColumns < 12 || wrapColumns > 80)) {
       throw new RangeError("wrapColumns must be an integer from 12 to 80");
     }
@@ -378,6 +390,7 @@ export class VimEngine {
           lineNumbers(),
           ...(visualizeWhitespace ? [highlightWhitespace()] : []),
           previewRangeField,
+          ...vimEffectExtensions,
           ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
           ...(language === "html" ? [html()] : []),
           ...(wrapColumns ? [
@@ -400,6 +413,7 @@ export class VimEngine {
           })] : []),
           wildsHighlighting,
           EditorView.updateListener.of(update => {
+            this.effects?.recordUpdate(update);
             if (update.docChanged) this.emit("change");
             else if (update.selectionSet) this.emit("selection");
           }),
@@ -436,6 +450,11 @@ export class VimEngine {
     this.cm?.on("vim-mode-change", this.onModeChange);
     this.cm?.on("vim-keypress", this.onVimKey);
     this.cm?.on("vim-command-done", this.onCommandDone);
+    this.effects = new VimEffectController({
+      view: this.view,
+      onEffect,
+      reducedMotion: () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    });
   }
 
   getSnapshot() {
@@ -448,6 +467,7 @@ export class VimEngine {
     const anchor = vimSelection
       ? Math.max(0, Math.min(doc.length, offsetForPosition(doc.toString(), [vimSelection.anchor.line, vimSelection.anchor.ch])))
       : selection.anchor;
+    const macroMode = Vim.getVimGlobalState_?.().macroModeState;
     return {
       text: doc.toString(),
       cursor,
@@ -463,6 +483,11 @@ export class VimEngine {
       })),
       mode: normalizeMode(this.mode, this.subMode, this.cm, this.commandLine !== null || Boolean(this.confirmationInput())),
       registers: snapshotRegisters(),
+      macro: {
+        recording: Boolean(macroMode?.isRecording),
+        playing: Boolean(macroMode?.isPlaying),
+        register: macroMode?.latestRegister || null,
+      },
       viewport: this.getViewport(),
     };
   }
@@ -484,6 +509,20 @@ export class VimEngine {
     if ((this.locked && !bypassLock) || !this.cm) return false;
     const vimKey = toVimKey(key);
     const canonicalKey = canonicalKeyToken(vimKey);
+    this.effects.beginKey({ key: canonicalKey, source, before: this.getSnapshot() });
+    const finish = handled => {
+      const after = this.getSnapshot();
+      const pending = Boolean(
+        this.cm?.state?.vim?.inputState?.operator
+        || this.cm?.state?.vim?.inputState?.keyBuffer?.length
+        || this.awaitingColonRegister
+        || this.commandLine !== null
+        || this.confirmationInput(),
+      );
+      this.emit("key", { key: canonicalKey, source });
+      this.effects.endKey({ after, pending });
+      return handled;
+    };
 
     const confirmationInput = this.confirmationInput();
     if (confirmationInput) {
@@ -501,8 +540,7 @@ export class VimEngine {
         Object.defineProperty(event, "vimWildsPrompt", { value: true });
         confirmationInput.dispatchEvent(event);
         this.disableNativeInputs();
-        this.emit("key", { key: canonicalKey, source });
-        return true;
+        return finish(true);
       }
     }
 
@@ -544,8 +582,7 @@ export class VimEngine {
         if (text !== null) this.commandLine += text;
       }
       this.syncCommandInput();
-      this.emit("key", { key: canonicalKey, source });
-      return true;
+      return finish(true);
     }
 
     // Keep the authored `@` and `:` tokens visible while preserving the
@@ -557,23 +594,20 @@ export class VimEngine {
       if (vimKey === ":" && this.lastExCommand !== null) {
         Vim.handleEx(this.cm, this.lastExCommand);
         this.moveCursorToLineStart();
-        this.emit("key", { key: canonicalKey, source });
-        return true;
+        return finish(true);
       }
       pendingAtPrefix = true;
     }
     if (vimKey === "@" && !pendingAtPrefix) {
       this.awaitingColonRegister = true;
-      this.emit("key", { key: canonicalKey, source });
-      return true;
+      return finish(true);
     }
     if (vimKey === "&" && this.lastSubstitution) {
       // `&` repeats the substitution pattern and replacement but intentionally
       // does not inherit flags such as `g`.
       const { delimiter, pattern, replacement } = this.lastSubstitution;
       this.executeEx(`s${delimiter}${pattern}${delimiter}${replacement}${delimiter}`);
-      this.emit("key", { key: canonicalKey, source });
-      return true;
+      return finish(true);
     }
 
     const wasInsert = Boolean(this.cm.state.vim?.insertMode);
@@ -613,8 +647,7 @@ export class VimEngine {
     }
     if (this.viewportRows) this.cm.refresh?.();
     this.disableNativeInputs();
-    this.emit("key", { key: canonicalKey, source });
-    return Boolean(handled);
+    return finish(Boolean(handled));
   }
 
   disableNativeInput(input) {
@@ -657,6 +690,10 @@ export class VimEngine {
       ? Decoration.set([Decoration.mark({ class: "cm-preview-range" }).range(from, to)])
       : Decoration.none;
     this.view.dispatch({ effects: setPreviewRange.of(decoration) });
+  }
+
+  clearEffects() {
+    this.effects?.clear();
   }
 
   executeEx(command) {
@@ -878,6 +915,7 @@ export class VimEngine {
   }
 
   destroy() {
+    this.effects?.destroy();
     this.view.dom.removeEventListener("focusin", this.onNativeInputFocus, true);
     this.view.scrollDOM.removeEventListener("wheel", this.blockDirectScroll);
     this.view.scrollDOM.removeEventListener("touchmove", this.blockDirectScroll);

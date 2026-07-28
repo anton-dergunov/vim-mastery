@@ -176,6 +176,7 @@ const state = {
   recallFeedback: null,
   errorTimer: null,
   remediationReturnId: null,
+  semanticEffects: [],
 };
 
 function persistSession() {
@@ -685,6 +686,7 @@ function mountEditor() {
     viewportRows: activity.editor?.viewportRows,
     visualizeWhitespace: activity.editor?.visualizeWhitespace,
     onEvent: handleEngineEvent,
+    onEffect: handleSemanticEffect,
   });
   for (const step of initial.setup?.steps || []) {
     const key = typeof step === "string" ? step : step.key;
@@ -964,6 +966,7 @@ function resetActivity({ vibrateReset = true } = {}) {
   state.choiceResult = null;
   state.playbackStep = 0;
   state.editorSnapshot = null;
+  state.semanticEffects = [];
   state.hintLevel = 0;
   clearPracticeError();
   setHelp(false);
@@ -1090,6 +1093,15 @@ function handleEngineEvent(event) {
   if (isPractice() && !state.complete && state.progress === scriptKeys().length && isTargetSnapshot(event.snapshot)) completeActivity();
 }
 
+function handleSemanticEffect(event) {
+  state.semanticEffects.push({
+    ...event,
+    unitId: unit.id,
+    activityId: currentActivity().id,
+  });
+  if (state.semanticEffects.length > 80) state.semanticEffects.splice(0, state.semanticEffects.length - 80);
+}
+
 function clearPracticeError() {
   if (state.errorTimer) window.clearTimeout(state.errorTimer);
   state.errorTimer = null;
@@ -1194,6 +1206,7 @@ function setHelp(open) {
   }
   elements.helpCard.classList.toggle("open", Boolean(open && canHelp));
   elements.helpCard.setAttribute("aria-hidden", String(!(open && canHelp)));
+  if (open) vimEngine?.clearEffects();
   elements.hintButton?.setAttribute("aria-expanded", String(Boolean(open && canHelp)));
   $$(".key", elements.keyboard).forEach(button => button.classList.remove("hinted"));
   if (open && canHelp) {
@@ -1592,6 +1605,9 @@ window.VimWilds = Object.freeze({
       guidance: elements.guidance.textContent,
       story: storyTransitions.getState(),
     };
+  },
+  getEffects() {
+    return structuredClone(state.semanticEffects);
   },
 });
 
