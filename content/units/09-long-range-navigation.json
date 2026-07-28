@@ -27,9 +27,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -266,7 +266,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Take the middle row",
-          "instruction": "Move directly to the visible middle.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 10–16 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -475,7 +475,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Drop to the visible foot",
-          "instruction": "Move to the final visible row.",
+          "instruction": "Place the cursor at line 16, column 3 (“c”) without changing the text. Keep lines 10–16 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -682,7 +682,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Choose the top without gg",
-          "instruction": "Reach the top of this view, not the file.",
+          "instruction": "Place the cursor at line 10, column 1 without changing the text. Keep lines 10–16 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1114,7 +1114,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Center a top-framed row",
-          "instruction": "Center the row that begins at the top.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 10–16 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1322,7 +1322,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Set the row at the foot",
-          "instruction": "Place the current row at the bottom.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 7–13 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1530,7 +1530,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Expose what follows",
-          "instruction": "Put the row at the top to expose later context.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 13–19 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1962,7 +1962,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Read the previous page",
-          "instruction": "Move one overlapped page backward.",
+          "instruction": "Place the cursor at line 8, column 1 (“ ”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2169,7 +2169,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Advance with more context",
-          "instruction": "Move down half a window.",
+          "instruction": "Place the cursor at line 16, column 1 (“ ”) without changing the text. Keep lines 13–19 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2376,7 +2376,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover earlier context",
-          "instruction": "Move upward by half a window.",
+          "instruction": "Place the cursor at line 10, column 1 without changing the text. Keep lines 7–13 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2807,7 +2807,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reveal one earlier row",
-          "instruction": "Scroll upward by one row.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 9–15 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3014,7 +3014,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Open two rows below",
-          "instruction": "Scroll down twice without j.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 12–18 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3234,7 +3234,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Open two rows above",
-          "instruction": "Reveal two earlier rows while keeping position.",
+          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 8–14 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3686,7 +3686,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Return to the exact column",
-          "instruction": "Return to mark a's precise character.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3902,7 +3902,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep a second site",
-          "instruction": "Return exactly to local mark b.",
+          "instruction": "Place the cursor at line 21, column 9 (“c”) without changing the text. Keep lines 15–21 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4115,7 +4115,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Choose precision",
-          "instruction": "The saved character matters; restore its column.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4555,7 +4555,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Walk back to the newer site",
-          "instruction": "Go older, then forward again.",
+          "instruction": "Visit line 3, column 8 (“u”), then finish at line 21, column 3 (“c”). Keep lines 15–21 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4774,7 +4774,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return linewise to context",
-          "instruction": "Use the linewise previous-context jump.",
+          "instruction": "Place the cursor at line 3, column 1 (“t”) without changing the text. Keep lines 3–9 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4985,7 +4985,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover the exact prior column",
-          "instruction": "Return exactly to the position before the jump.",
+          "instruction": "Place the cursor at line 3, column 8 (“u”) without changing the text. Keep lines 3–9 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5426,7 +5426,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Recover the exact change position",
-          "instruction": "Jump to the exact changed character.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5639,7 +5639,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to the last Insert exit",
-          "instruction": "Jump exactly to where Insert mode ended.",
+          "instruction": "Place the cursor at line 5, column 11 (“e”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5852,7 +5852,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Resume the prior insertion",
-          "instruction": "Use gi, then return safely to Normal mode.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6066,7 +6066,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Restore the previous selection",
-          "instruction": "Reselect the last Visual area.",
+          "instruction": "Place the cursor at line 7, column 6 (“a”) without changing the text. Finish in visual mode. Keep lines 7–13 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6515,7 +6515,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Return to the range end row",
-          "instruction": "Jump linewise to the previous yank end.",
+          "instruction": "Place the cursor at line 5, column 1 (“c”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6730,7 +6730,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Recover the exact range start",
-          "instruction": "Jump to the precise first character.",
+          "instruction": "Place the cursor at line 5, column 5 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6945,7 +6945,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover the exact range end",
-          "instruction": "Jump to the precise final character.",
+          "instruction": "Place the cursor at line 5, column 7 (“r”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -7395,7 +7395,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the earlier edit site",
-          "instruction": "Walk through both seeded changes.",
+          "instruction": "Visit line 21, column 3 (“c”), then finish at line 5, column 10 (“t”). Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -7628,7 +7628,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Move forward in change history",
-          "instruction": "Walk older twice, then newer once.",
+          "instruction": "Visit line 5, column 10 (“t”), then finish at line 21, column 3 (“c”). Keep lines 15–21 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -7876,7 +7876,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Count to the earlier change",
-          "instruction": "Reach the earlier change with one counted command.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8320,7 +8320,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the next section start",
-          "instruction": "Jump to the next column-zero opening.",
+          "instruction": "Place the cursor at line 22, column 1 (“{”) without changing the text. Keep lines 16–22 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8528,7 +8528,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reach a previous section end",
-          "instruction": "Jump to the previous column-zero closing.",
+          "instruction": "Place the cursor at line 9, column 1 (“}”) without changing the text. Keep lines 9–15 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8736,7 +8736,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach the current section end",
-          "instruction": "Jump to the next column-zero closing.",
+          "instruction": "Place the cursor at line 18, column 1 (“}”) without changing the text. Keep lines 12–18 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8944,7 +8944,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find the enclosing block start",
-          "instruction": "Jump to an unmatched opening brace.",
+          "instruction": "Place the cursor at line 14, column 21 (“{”) without changing the text. Keep lines 12–18 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9152,7 +9152,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find the enclosing block end",
-          "instruction": "Jump to an unmatched closing brace.",
+          "instruction": "Place the cursor at line 16, column 3 (“}”) without changing the text. Keep lines 12–18 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9360,7 +9360,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find enclosing parentheses",
-          "instruction": "Jump to the condition's opening parenthesis.",
+          "instruction": "Place the cursor at line 14, column 6 (“(”) without changing the text. Keep lines 11–17 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9568,7 +9568,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find the condition close",
-          "instruction": "Jump to the condition's closing parenthesis.",
+          "instruction": "Place the cursor at line 14, column 19 (“)”) without changing the text. Keep lines 11–17 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9776,7 +9776,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach a method start",
-          "instruction": "Jump to the previous method opening.",
+          "instruction": "Place the cursor at line 13, column 14 (“{”) without changing the text. Keep lines 13–19 visible.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9984,7 +9984,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach a method end",
-          "instruction": "Jump to the next method closing.",
+          "instruction": "Place the cursor at line 18, column 3 (“}”) without changing the text. Keep lines 13–19 visible.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -10437,7 +10437,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Inspect and return",
-          "instruction": "Return to the source of a distant jump.",
+          "instruction": "Place the cursor at line 3, column 8 (“u”) without changing the text. Keep lines 3–9 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -10647,7 +10647,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to an edit, then a mark",
-          "instruction": "Visit the newest edit and then mark a.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -10869,7 +10869,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Return and reveal what follows",
-          "instruction": "Return to mark a and place it at the top.",
+          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {

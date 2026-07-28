@@ -1303,8 +1303,11 @@ test.describe("Production lesson flow", () => {
     expect(placement.controlsTop).toBeGreaterThanOrEqual(placement.slabBottom);
     await page.getByRole("button", { name: "Step" }).click();
     expect((await state(page)).playbackStep).toBe(1);
+    await expect(page.getByRole("button", { name: "Back" })).toBeEnabled();
     await page.getByRole("button", { name: "Play" }).click();
     await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Back" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Step" })).toBeDisabled();
     await page.getByRole("button", { name: "Pause" }).click();
     await expect(page.getByRole("button", { name: "Step" })).toBeEnabled();
     await page.evaluate(() => window.VimWilds.solveCurrent());
@@ -1313,6 +1316,131 @@ test.describe("Production lesson flow", () => {
     expect((await state(page)).playbackStep).toBe(0);
     await page.getByRole("button", { name: "Next" }).click();
     expect((await state(page)).activityId).toBe("dot-python-values");
+  });
+
+  test("groups Insert text into one demo step and replays backward deterministically", async ({ page }) => {
+    await page.goto("/?unit=entering-changing-text&activity=entry-points-demo");
+    await expect(page.getByRole("button", { name: "Back" })).toBeDisabled();
+
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page))).toMatchObject({
+      playbackStep: 1,
+      mode: "insert",
+      code: ["  enabled = true"],
+    });
+
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page))).toMatchObject({
+      playbackStep: 7,
+      mode: "insert",
+      code: ["  const enabled = true"],
+    });
+
+    await page.getByRole("button", { name: "Back" }).click();
+    expect((await state(page))).toMatchObject({
+      playbackStep: 1,
+      mode: "insert",
+      code: ["  enabled = true"],
+    });
+
+    await page.getByRole("button", { name: "Step" }).click();
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page))).toMatchObject({
+      playbackStep: 8,
+      mode: "normal",
+      code: ["  const enabled = true"],
+    });
+    await page.getByRole("button", { name: "Back" }).click();
+    expect((await state(page))).toMatchObject({
+      playbackStep: 7,
+      mode: "insert",
+      code: ["  const enabled = true"],
+    });
+  });
+
+  test("reconstructs search, register, seeded, and viewport demo state when stepping back", async ({ page }) => {
+    for (const [unitId, activityId, stepsBefore] of [
+      ["precision-motions-search", "pattern-search-demo", 2],
+      ["registers-putting", "unnamed-line-demo", 2],
+      ["long-range-navigation", "last-change-line-demo", 1],
+    ]) {
+      await page.goto(`/?unit=${unitId}&activity=${activityId}`);
+      for (let index = 0; index < stepsBefore; index += 1) {
+        await page.getByRole("button", { name: "Step" }).click();
+      }
+      const before = await state(page);
+      await page.getByRole("button", { name: "Step" }).click();
+      await page.getByRole("button", { name: "Back" }).click();
+      const restored = await state(page);
+      expect(restored.playbackStep, activityId).toBe(before.playbackStep);
+      expect(restored.code, activityId).toEqual(before.code);
+      expect(restored.cursor, activityId).toEqual(before.cursor);
+      expect(restored.mode, activityId).toBe(before.mode);
+      expect(restored.registers, activityId).toEqual(before.registers);
+      expect(restored.viewport, activityId).toEqual(before.viewport);
+    }
+  });
+
+  test("lets guided and recall activities enter unrestricted Explore without awarding completion", async ({ page }) => {
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
+    const initial = await state(page);
+    await page.getByRole("button", { name: "Explore" }).click();
+    await expect(page.locator("#commandExplanation")).toContainText("use any Vim commands");
+    await expect(page.locator(".status-key")).toBeHidden();
+    expect((await state(page))).toMatchObject({
+      practiceMode: "guided",
+      practicePolicy: "explore",
+      complete: false,
+      exploreTargetReached: false,
+      history: [],
+      code: initial.code,
+    });
+
+    await page.evaluate(() => window.VimWilds.emit("l"));
+    expect((await state(page)).history).toEqual(["l"]);
+    await page.getByRole("button", { name: "Open hints" }).click();
+    await expect(page.locator("#helpCard")).toHaveClass(/open/);
+    await page.getByRole("button", { name: "Close help" }).click();
+    await page.getByRole("button", { name: "Reset activity" }).click();
+    expect((await state(page))).toMatchObject({
+      practicePolicy: "explore",
+      history: [],
+      code: initial.code,
+    });
+
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({
+      practicePolicy: "explore",
+      exploreTargetReached: true,
+      complete: false,
+    });
+    await expect(page.locator("#commandExplanation")).toContainText("Target reached");
+    await page.evaluate(() => window.VimWilds.emit("u"));
+    const afterUndo = await state(page);
+    expect(afterUndo.complete).toBe(false);
+    expect(afterUndo.history.at(-1)).toBe("u");
+    expect(afterUndo.code).not.toEqual(initial.code.map(line => line.replace("draft", "ready")));
+
+    await page.getByRole("button", { name: "Exit" }).click();
+    expect((await state(page))).toMatchObject({
+      practiceMode: "guided",
+      practicePolicy: "guided-sequence",
+      exploreTargetReached: false,
+      history: [],
+      code: initial.code,
+    });
+
+    await page.evaluate(() => window.VimWilds.goToActivity(
+      window.VimWilds.activities.findIndex(activity => activity.id === "dot-python-values-recall"),
+    ));
+    await page.getByRole("button", { name: "Explore" }).click();
+    expect((await state(page))).toMatchObject({ practiceMode: "recall", practicePolicy: "explore" });
+    await page.getByRole("button", { name: "Exit" }).click();
+    expect((await state(page))).toMatchObject({
+      practiceMode: "recall",
+      practicePolicy: "recall-sequence",
+      history: [],
+    });
   });
 
   test("completes every guided and recall practice with the canonical authored sequence", async ({ page }) => {
@@ -1343,10 +1471,9 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".hint-step small code").first()).toHaveText("ci'");
     const inlineColors = await page.evaluate(() => ({
       hint: getComputedStyle(document.querySelector(".hint-step small code")).color,
-      instruction: getComputedStyle(document.querySelector("#activityInstruction code")).color,
     }));
     expect(inlineColors.hint).toBe("rgb(102, 86, 61)");
-    expect(inlineColors.instruction).toBe("rgb(248, 231, 173)");
+    await expect(page.locator("#activityInstruction code")).toHaveCount(0);
     await page.getByRole("button", { name: "Close help" }).click();
     await page.getByRole("button", { name: "Open hints" }).click();
     await expect(page.locator(".hint-step")).toHaveCount(3);
@@ -1368,9 +1495,10 @@ test.describe("Production lesson flow", () => {
     expect((await state(page)).history).toEqual(["c", "i"]);
   });
 
-  test("formats authored inline code and gives guided and recall mistakes distinct feedback", async ({ page }) => {
+  test("keeps practice copy outcome-only and gives guided and recall mistakes distinct feedback", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
-    await expect(page.locator("#activityInstruction code")).toHaveText(["draft", "ready"]);
+    await expect(page.locator("#activityInstruction code")).toHaveCount(0);
+    await expect(page.locator("#activityInstruction")).toContainText("ready");
     await page.evaluate(() => window.VimWilds.emit("x"));
     await expect(page.locator(".status-key")).toHaveClass(/error/);
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values-recall");
@@ -1521,6 +1649,73 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".world-ambient-effect")).toHaveCount(0);
   });
 
+  test("persists independent generated-scene and character preferences", async ({ page }) => {
+    const decorativeRequests = [];
+    page.on("request", request => {
+      if (/assets\/(?:characters|worlds)\//.test(request.url())) decorativeRequests.push(request.url());
+    });
+    await page.addInitScript(() => {
+      const key = "vim-wilds.session.v1";
+      const existing = JSON.parse(window.localStorage.getItem(key) || "{}");
+      window.localStorage.setItem(key, JSON.stringify({
+        ...existing,
+        generatedBackdrops: existing.generatedBackdrops || "disabled",
+        characters: existing.characters || "disabled",
+      }));
+    });
+    await page.goto("/?unit=modal-model&activity=escape-seeded-insert");
+    expect((await state(page))).toMatchObject({
+      generatedBackdrops: "disabled",
+      characters: "disabled",
+    });
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "fallback");
+    await expect(page.locator(".ground-cell")).toHaveCount(0);
+    await expect(page.locator(".nix")).toHaveCount(0);
+    await expect(page.locator("html")).toHaveAttribute("data-characters-ready", "disabled");
+    expect(decorativeRequests).toEqual([]);
+
+    const editorBefore = await state(page);
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await page.getByLabel("Show generated scenes").check();
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");
+    expect((await state(page))).toMatchObject({
+      code: editorBefore.code,
+      cursor: editorBefore.cursor,
+      characters: "disabled",
+    });
+    await expect(page.locator(".nix")).toHaveCount(0);
+
+    await page.getByLabel("Show characters").check();
+    await page.waitForFunction(() => document.documentElement.dataset.charactersReady === "true");
+    await expect(page.locator(".nix")).toHaveCount(1);
+    expect((await state(page))).toMatchObject({
+      generatedBackdrops: "enabled",
+      characters: "enabled",
+    });
+    await page.getByLabel("Use simple backgrounds").check();
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "fallback");
+    await expect(page.locator(".nix")).toHaveCount(1);
+    await page.getByLabel("Show generated scenes").check();
+
+    await page.reload();
+    expect((await state(page))).toMatchObject({
+      generatedBackdrops: "enabled",
+      characters: "enabled",
+    });
+    await expect(page.locator(".nix")).toHaveCount(1);
+
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await page.getByLabel("Use simple backgrounds").check();
+    await page.getByLabel("Hide characters").check();
+    await page.getByRole("button", { name: "Close settings" }).click();
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "fallback");
+    await expect(page.locator(".ground-cell")).toHaveCount(0);
+    await expect(page.locator(".nix")).toHaveCount(0);
+    const fallbackBackground = await page.locator("#worldBackdrop").evaluate(node => getComputedStyle(node).backgroundImage);
+    expect(fallbackBackground).toContain("gradient");
+  });
+
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open settings" }).click();
@@ -1581,8 +1776,12 @@ test.describe("Production lesson flow", () => {
     const correct = choice.options.find(option => option.id === choice.correctOptionId);
     await page.locator(`[data-choice="${wrong.id}"]`).click();
     expect((await state(page)).complete).toBe(false);
+    await expect(page.locator(".choice-feedback.incorrect")).toContainText("Not quite.");
+    await expect(page.locator(`[data-choice="${wrong.id}"]`)).toHaveClass(/incorrect/);
     await page.locator(`[data-choice="${correct.id}"]`).click();
     expect((await state(page)).complete).toBe(true);
+    await expect(page.locator(".choice-feedback.correct")).toContainText("Correct.");
+    await expect(page.locator(`[data-choice="${correct.id}"]`)).toHaveClass(/correct/);
     await page.getByRole("button", { name: "Next" }).click();
     expect((await state(page)).activityType).toBe("summary");
   });
@@ -1662,8 +1861,59 @@ test.describe("Production lesson flow", () => {
     expect(afterShift.baseColor).not.toBe(beforeShift.baseColor);
   });
 
+  test("renders grammar breaks, recall labels, and semantic assemblies without narrow-screen overflow", async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/?unit=cursor-movement&activity=home-row-directions");
+    const grammar = await page.locator(".grammar").textContent();
+    expect(grammar).toContain("\n");
+    expect(grammar).not.toContain(" · ");
+
+    await page.goto("/?unit=precision-motions-search&activity=cursor-word-search-meaning");
+    await expect(page.locator(".grammar")).toContainText("* / #");
+    expect(await page.locator(".grammar").textContent()).toContain("\n");
+
+    await page.goto("/?unit=cursor-movement&activity=top-line-next-word-recall");
+    await expect(page.locator(".status-primary")).toHaveText("Recall");
+    await expect(page.locator(".status-secondary")).toHaveText("From\nmemory");
+    const recallGeometry = await page.evaluate(() => {
+      const tray = document.querySelector("#nextCommandTray");
+      const rail = document.querySelector(".execution-status");
+      const secondary = document.querySelector(".status-secondary");
+      return {
+        trayFits: tray.scrollWidth <= tray.clientWidth,
+        railFits: rail.scrollWidth <= rail.clientWidth,
+        secondaryFits: secondary.scrollWidth <= secondary.clientWidth,
+        bodyFits: document.documentElement.scrollWidth <= innerWidth,
+      };
+    });
+    expect(recallGeometry).toEqual({
+      trayFits: true,
+      railFits: true,
+      secondaryFits: true,
+      bodyFits: true,
+    });
+
+    await page.goto("/?unit=cursor-movement&activity=home-row-grid-demo");
+    await expect(page.locator(".execution-assembly small")).toHaveText(["3×", "right", "2×", "down", "left", "up"]);
+    const assemblyGeometry = await page.evaluate(() => {
+      const tray = document.querySelector("#nextCommandTray").getBoundingClientRect();
+      const assembly = document.querySelector(".execution-assembly").getBoundingClientRect();
+      const parts = [...document.querySelectorAll(".assembly-part")].map(node => node.getBoundingClientRect());
+      return {
+        withinTray: assembly.left >= tray.left - 1 && assembly.right <= tray.right + 1,
+        partsBounded: parts.every(part => part.left >= assembly.left - 1 && part.right <= assembly.right + 1),
+        bodyFits: document.documentElement.scrollWidth <= innerWidth,
+      };
+    });
+    expect(assemblyGeometry).toEqual({
+      withinTray: true,
+      partsBounded: true,
+      bodyFits: true,
+    });
+  });
+
   test("fills the visible phone viewport and keeps the Normal cursor readable", async ({ page }) => {
-    for (const [width, height] of [[360, 740], [375, 812], [390, 844], [412, 915], [430, 932]]) {
+    for (const [width, height] of [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]]) {
       await page.setViewportSize({ width, height });
       await page.goto("/play/?unit=repeatable-editing&activity=dot-python-values");
       await page.waitForFunction(() => document.documentElement.dataset.charactersReady);

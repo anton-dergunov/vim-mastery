@@ -27,9 +27,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -203,7 +203,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete one visible word",
-          "instruction": "Select `alpha` by character and delete it.",
+          "instruction": "Change “alpha” to “ beta” so line 1 reads “ beta”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -318,7 +318,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Delete two complete records",
-          "instruction": "Select the first two lines and delete them.",
+          "instruction": "Make lines 1–1 read “gamma”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -435,7 +435,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Replace a marker column",
-          "instruction": "Select the marker column and replace all three spaces with `x`.",
+          "instruction": "Make lines 1–3 read “a [x]”, “b [x]”, “c [x]”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -706,7 +706,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete the selected token",
-          "instruction": "Select `alpha` and delete it with `d`.",
+          "instruction": "Change “alpha” to “ beta” so line 1 reads “ beta”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -811,7 +811,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Yank, move, and put",
-          "instruction": "Select `ready`, yank it, move to the end, and put the captured text.",
+          "instruction": "Add “ready” so line 1 reads “ready nowready”.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -926,7 +926,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Fill a selected word",
-          "instruction": "Select `ready` and replace every selected character with `x`.",
+          "instruction": "Change “ready” to “xxxxx” so line 1 reads “xxxxx now”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -1186,7 +1186,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Remove one indentation level",
-          "instruction": "Select the first two lines and shift them left.",
+          "instruction": "Make lines 1–2 read “alpha”, “beta”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1300,7 +1300,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Duplicate two complete rows",
-          "instruction": "Select the first two rows, yank them, and put them below.",
+          "instruction": "Add these lines at line 2: “alpha”, “beta”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -1416,7 +1416,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Delete two selected lines",
-          "instruction": "Select the first two lines and delete them.",
+          "instruction": "Make lines 1–1 read “keep”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -1687,7 +1687,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Move to the opposite block end",
-          "instruction": "Select a three-by-three block, press `o`, and fill it with `x`.",
+          "instruction": "Make lines 1–3 read “axxxe”, “fxxxj”, “kxxxo”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -1819,7 +1819,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Move to the other block corner",
-          "instruction": "Select a three-by-three block, press `O`, and fill it with `x`.",
+          "instruction": "Make lines 1–3 read “axxxe”, “fxxxj”, “kxxxo”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -1943,7 +1943,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Correct the active end before deleting",
-          "instruction": "Extend to the next line, use `o` to return to the start, then delete the visible range.",
+          "instruction": "Make lines 1–1 read “ama delta”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2224,7 +2224,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reselect and correct case",
-          "instruction": "Toggle `ready`, reselect it with `gv`, then make it uppercase.",
+          "instruction": "Change “ready” to “READY” so line 1 reads “READY now”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2340,7 +2340,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reselect a yanked word",
-          "instruction": "Yank `draft`, leave Visual mode, move away, then restore and delete the last selection.",
+          "instruction": "Change “draft” to “ value” so line 1 reads “ value”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -2466,7 +2466,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Correct a selected line range",
-          "instruction": "Indent two lines, reselect them, and restore the original indentation.",
+          "instruction": "Visit line 2, column 1 (“t”), then finish at line 1, column 1 (“o”).",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -2728,7 +2728,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Lowercase one selected word",
-          "instruction": "Select `READY` and make it lowercase.",
+          "instruction": "Change “READY” to “ready” so line 1 reads “ready now”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2833,7 +2833,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Toggle the selected case",
-          "instruction": "Select `Ready` and toggle each letter's case.",
+          "instruction": "Change “Ready” to “rEADY” so line 1 reads “rEADY now”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2938,7 +2938,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reindent a visible code block",
-          "instruction": "Select the first three lines and apply `=`.",
+          "instruction": "Make lines 2–3 read “  run();”, “  log();”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3056,7 +3056,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Format selected prose lines",
-          "instruction": "Select both lines and reflow them with `gq`.",
+          "instruction": "Make lines 1–3 read “This compact paragraph”, “contains several words”, “for wrapping.”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -3323,7 +3323,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Change one column through Insert mode",
-          "instruction": "Select the middle character on three rows and change it to `X`.",
+          "instruction": "Make lines 1–3 read “oXe”, “tXo”, “sXx”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -3445,7 +3445,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Delete one aligned column",
-          "instruction": "Select the middle character on three rows and delete it with `d`.",
+          "instruction": "Make lines 1–3 read “oe”, “to”, “sx”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -3556,8 +3556,8 @@
           "id": "x-block-column",
           "type": "exercise",
           "phase": "mix",
-          "title": "Use x on a rectangular range",
-          "instruction": "Select the middle character on three rows and remove it with `x`.",
+          "title": "Remove a rectangular range",
+          "instruction": "Make lines 1–3 read “oe”, “to”, “sx”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -3835,7 +3835,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Append a marker to every row",
-          "instruction": "Select the final character column and append `!` to all three rows.",
+          "instruction": "Make lines 1–3 read “one!”, “two!”, “six!”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -3957,7 +3957,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Prepend comment markers",
-          "instruction": "Select the first column and insert `# ` on all three rows.",
+          "instruction": "Make lines 1–3 read “# alpha”, “# beta”, “# gamma”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -4083,7 +4083,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Append a status marker",
-          "instruction": "Select the last character column and append `!` to every row.",
+          "instruction": "Make lines 1–3 read “one!”, “two!”, “six!”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -4354,7 +4354,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Repair an aligned marker column",
-          "instruction": "Use a block selection to replace all three marker spaces with `x`.",
+          "instruction": "Make lines 1–3 read “a [x]”, “b [x]”, “c [x]”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -4467,7 +4467,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reselect and correct the last range",
-          "instruction": "Indent two rows, restore the same selection with `gv`, and correct it.",
+          "instruction": "Visit line 2, column 1 (“d”), then finish at line 1, column 1 (“d”).",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -4592,7 +4592,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Inspect one word before deleting",
-          "instruction": "Select `alpha` visibly, then delete it.",
+          "instruction": "Change “alpha” to “ beta” so line 1 reads “ beta”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {

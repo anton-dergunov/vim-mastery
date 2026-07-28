@@ -10,7 +10,7 @@ async function waitForApp(page) {
 }
 
 async function expectStoryToFitViewport(page) {
-  expect(await page.evaluate(() => (
+  await expect.poll(() => page.evaluate(() => (
     document.documentElement.scrollWidth <= window.innerWidth
     && document.documentElement.scrollHeight <= window.innerHeight
   ))).toBe(true);

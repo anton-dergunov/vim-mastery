@@ -25,9 +25,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -217,7 +217,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Land on the call boundary",
-          "instruction": "Jump directly to the closing parenthesis.",
+          "instruction": "Place the cursor at line 1, column 20 (“)”) without changing the text.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -311,7 +311,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep the safe mode",
-          "instruction": "Find the hyphen, then delete up to—but not including—the quote.",
+          "instruction": "Remove “-debug” so line 1 reads “const mode = \"safe\";”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -425,7 +425,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Replace only the status value",
-          "instruction": "Work backward from the line end, preserve the colon, and change the value to `ready`.",
+          "instruction": "Change “pending” to “ready” so line 1 reads “status: ready”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -726,7 +726,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the second separator",
-          "instruction": "Find the first comma, then repeat the find once.",
+          "instruction": "Place the cursor at line 1, column 18 (“,”) without changing the text.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -829,7 +829,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Repair both separators",
-          "instruction": "Replace the first semicolon with a comma, find the next semicolon by repetition, and replay the replacement.",
+          "instruction": "Change “; y=2;” to “, y=2,” so line 1 reads “x=1, y=2, z=3”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -976,7 +976,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Backtrack through arguments",
-          "instruction": "Start at the line end, find a comma backward, continue backward once, then reverse to the later comma.",
+          "instruction": "Visit line 1, column 25 (“)”), then line 1, column 12 (“,”), then finish at line 1, column 18 (“,”).",
           "languageId": "rust",
           "sourceKind": "fragment",
           "scenario": {
@@ -1297,7 +1297,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Find the first timeout",
-          "instruction": "Search forward for `timeout`.",
+          "instruction": "Place the cursor at line 2, column 1 (“t”) without changing the text.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
@@ -1407,7 +1407,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to the latest error",
-          "instruction": "Search backward for `ERROR` from the tail.",
+          "instruction": "Place the cursor at line 4, column 1 (“E”) without changing the text.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -1520,7 +1520,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Advance, then reconsider",
-          "instruction": "Search for `cache`, continue once with `n`, then reverse once with `N`.",
+          "instruction": "Visit line 4, column 1 (“c”), then finish at line 3, column 1 (“c”).",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1836,7 +1836,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Find the next token declaration",
-          "instruction": "Search forward for the whole word under the cursor.",
+          "instruction": "Place the cursor at line 3, column 1 (“t”) without changing the text.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1935,7 +1935,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to the earlier ready state",
-          "instruction": "Search backward for the whole word under the cursor.",
+          "instruction": "Place the cursor at line 1, column 1 (“r”) without changing the text.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -2036,7 +2036,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find cat inside the larger word",
-          "instruction": "From the final `cat`, search backward while allowing substring matches.",
+          "instruction": "Place the cursor at line 1, column 6 (“c”) without changing the text.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2372,7 +2372,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Select matches in both directions",
-          "instruction": "Search backward for `draft`, select the previous match with `gN`, cancel, then select the next match with `gn` and cancel again.",
+          "instruction": "Visit line 1, column 23 (“d”), then line 1, column 18 (“k”), then finish at line 1, column 27 (“t”).",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2566,7 +2566,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Promote the next draft",
-          "instruction": "Search for `draft`, change the current match with `cgn`, and enter `live`.",
+          "instruction": "Change “draft” to “live” so line 1 reads “draft keep live keep draft”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -2691,7 +2691,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Change the match behind you",
-          "instruction": "Search forward for `draft`, move between matches, then change the previous match to `live` with `cgN`.",
+          "instruction": "Change “draft” to “live” so line 1 reads “draft keep live keep draft”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -2831,7 +2831,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Keep gn pointing forward",
-          "instruction": "Start with `?draft`, move between matches, then use `cgn` to change the next match to `live`.",
+          "instruction": "Change “draft” to “live” so line 1 reads “draft keep draft keep live.”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -3131,7 +3131,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the block close",
-          "instruction": "Jump from the opening brace to its matching close.",
+          "instruction": "Place the cursor at line 3, column 1 (“}”) without changing the text.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3232,7 +3232,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove the temporary argument list",
-          "instruction": "Delete from the opening parenthesis through its matching close.",
+          "instruction": "Remove “(temp)” so line 1 reads “wrap”.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -3328,7 +3328,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Jump through the inline block",
-          "instruction": "From the line start, use percent to find the next delimiter and jump to its partner.",
+          "instruction": "Place the cursor at line 1, column 19 (“}”) without changing the text.",
           "languageId": "c",
           "sourceKind": "fragment",
           "scenario": {
@@ -3601,7 +3601,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the next sentence",
-          "instruction": "Move to the beginning of the second sentence.",
+          "instruction": "Place the cursor at line 1, column 13 (“B”) without changing the text.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -3694,7 +3694,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to the earlier sentence",
-          "instruction": "Move from `Gamma` to the beginning of the previous sentence.",
+          "instruction": "Place the cursor at line 1, column 8 (“B”) without changing the text.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -3787,7 +3787,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Cross two paragraph boundaries",
-          "instruction": "Use a count with the forward paragraph motion.",
+          "instruction": "Place the cursor at line 6, column 1 without changing the text.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -4059,7 +4059,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Cut the draft suffix cleanly",
-          "instruction": "Find the hyphen, then delete until the closing quote.",
+          "instruction": "Remove “-post” so line 1 reads “const slug = \"draft\";”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4174,7 +4174,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Inspect the build arguments",
-          "instruction": "Search for `build`, find its opening parenthesis, and jump to the matching close.",
+          "instruction": "Visit line 2, column 1 (“b”), then line 2, column 6 (“(”), then finish at line 2, column 18 (“)”).",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -4315,7 +4315,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Replace the searched value",
-          "instruction": "Search for `legacy`, then change up to the closing quote to `ready`.",
+          "instruction": "Change “legac” to “read” so line 1 reads “mode = \"ready\";”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {

@@ -39,7 +39,7 @@
       "required": ["modes", "manualStep", "reset", "backwardStep"],
       "properties": {
         "modes": {"type": "array", "contains": {"const": "normal"}, "items": {"enum": ["normal", "slow", "manual"]}, "uniqueItems": true},
-        "manualStep": {"const": "one-input-key"}, "reset": {"const": "initial-state"}, "backwardStep": {"const": "deferred"}
+        "manualStep": {"const": "one-input-or-text-run"}, "reset": {"const": "initial-state"}, "backwardStep": {"const": "previous-manual-step"}
       }
     },
     "generationPolicy": {

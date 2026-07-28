@@ -24,9 +24,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -175,7 +175,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Insert before the value",
-          "instruction": "Insert `4` before the final digit to make `42`.",
+          "instruction": "Add “4” so line 1 reads “value = 42”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -272,7 +272,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Append after an item",
-          "instruction": "Append a comma after `1` without moving onto the following space.",
+          "instruction": "Add “,” so line 1 reads “items = [1, 2]”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -369,7 +369,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Finish the statement",
-          "instruction": "Append a semicolon at the end of the line from the current distant cursor.",
+          "instruction": "Add “;” so line 1 reads “return value;”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -596,7 +596,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Insert the missing label",
-          "instruction": "Open a row above `gamma` and type `beta`.",
+          "instruction": "Add this line at line 2: “beta”.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {
@@ -701,7 +701,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Navigate, then open above",
-          "instruction": "Jump to the final row, open above it, and type `middle`.",
+          "instruction": "Add this line at line 2: “middle”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -824,7 +824,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Frame a small block",
-          "instruction": "Open `header` above the block, then `footer` below its final row.",
+          "instruction": "Make lines 1–4 read “header”, “start”, “end”, “footer”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -1185,7 +1185,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Remove a fixed run",
-          "instruction": "Delete the three trailing `x` characters with a count.",
+          "instruction": "Remove “xxx” so line 1 reads “token”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -1281,7 +1281,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Delete backward",
-          "instruction": "Remove the extra slash immediately before the cursor.",
+          "instruction": "Remove “/” so line 1 reads “path/api”.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -1375,7 +1375,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Repair one letter",
-          "instruction": "Replace `q` with `u` without entering Insert mode.",
+          "instruction": "Change “q” to “u” so line 1 reads “ready = true”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1588,7 +1588,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Substitute a character",
-          "instruction": "Replace the `x` in `hxgh` with `i` using s.",
+          "instruction": "Change “x” to “i” so line 1 reads “level = high”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1685,7 +1685,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Replace a placeholder row",
-          "instruction": "Replace the entire `TODO` line with `return true;`.",
+          "instruction": "Change “TODO” to “return true;” so line 1 reads “return true;”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1803,7 +1803,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Overwrite and extend",
-          "instruction": "Use Replace mode to turn `dev` into `production`, continuing beyond the old line end.",
+          "instruction": "Change “dev” to “production” so line 1 reads “tag = production”.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {
@@ -2061,7 +2061,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Undo a deletion",
-          "instruction": "Delete the final extra `e`, then undo that deletion.",
+          "instruction": "First remove the extra final “e”, then restore it so the line reads “cachee” again.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2174,7 +2174,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Restore a substitution",
-          "instruction": "Change `l` to `r`, undo the Insert session, then redo it.",
+          "instruction": "First correct “flog” to “frog”, restore the typo, then finish with “frog” again.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2309,7 +2309,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Verify before keeping a change",
-          "instruction": "Append a semicolon, undo it to inspect the prior state, then redo it.",
+          "instruction": "First add the final semicolon, inspect the version without it, then finish with the semicolon restored.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2596,7 +2596,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reconnect the broken statement",
-          "instruction": "Join the two source lines with one uppercase command.",
+          "instruction": "Make lines 1–1 read “const label = user.name;”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2691,7 +2691,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep the exact gap",
-          "instruction": "Remove the newline while preserving the existing spaces around it.",
+          "instruction": "Make lines 1–1 read “key =   value”.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "editor": {
@@ -2791,7 +2791,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Join adjacent arguments",
-          "instruction": "Join the `one` and `two` argument rows while keeping the closing delimiter separate.",
+          "instruction": "Make lines 2–2 read “  one, two”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3037,7 +3037,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Normalize an uppercase word",
-          "instruction": "Lowercase `ERROR` through the next word boundary.",
+          "instruction": "Change “ERROR” to “error” so line 1 reads “error code”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -3134,7 +3134,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Invert mixed case",
-          "instruction": "Toggle every letter in `mIxEd` using a word motion.",
+          "instruction": "Change “mIxEd” to “MiXeD” so line 1 reads “MiXeD value”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -3230,8 +3230,8 @@
           "id": "normalize-two-case-styles",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Apply opposite case transforms",
-          "instruction": "Uppercase `public`, move forward, then lowercase `DRAFT`.",
+          "title": "Give both words their requested case",
+          "instruction": "Change “public DRAFT” to “PUBLIC draft” so line 1 reads “PUBLIC draft”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -3520,7 +3520,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Advance the version",
-          "instruction": "Increment version 19 to 20.",
+          "instruction": "Change “19” to “20” so line 1 reads “version = 20”.",
           "languageId": "toml",
           "sourceKind": "neutral",
           "scenario": {
@@ -3615,7 +3615,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reduce retries by two",
-          "instruction": "Subtract two from the retry count.",
+          "instruction": "Change “5” to “3” so line 1 reads “retries = 3”.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {
@@ -3713,7 +3713,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach and advance a build",
-          "instruction": "From the line start, reach the final number and add two.",
+          "instruction": "Change “0” to “2” so line 1 reads “build = 42”.",
           "languageId": "shell",
           "sourceKind": "neutral",
           "scenario": {
@@ -3996,7 +3996,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Finish and increment a setting",
-          "instruction": "Append a semicolon, reach the number, then increment it from 2 to 3.",
+          "instruction": "Change “2” to “3;” so line 1 reads “attempts = 3;”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4137,7 +4137,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Join and normalize a value",
-          "instruction": "Join the broken assignment, then uppercase `draft`.",
+          "instruction": "Make lines 1–1 read “message = DRAFT”.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {

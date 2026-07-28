@@ -13,6 +13,12 @@ const sessionStateKey = "vim-wilds.session.v1";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 const vimEffectValues = new Set(["enabled", "disabled"]);
+const decorativeMediaValues = new Set(["enabled", "disabled"]);
+const practicePolicyValues = Object.freeze({
+  guided: "guided-sequence",
+  recall: "recall-sequence",
+  explore: "explore",
+});
 
 function readSavedSession() {
   try {
@@ -57,6 +63,7 @@ const elements = {
   activityTitle: $("#activityTitle"),
   activityInstruction: $("#activityInstruction"),
   hintButton: $("#hintButton"),
+  exploreButton: $("#exploreButton"),
   world: $("#world"),
   worldBackdrop: $("#worldBackdrop"),
   groundGrid: $("#groundGrid"),
@@ -83,6 +90,8 @@ const elements = {
   settingsDialog: $("#settingsDialog"),
   keyboardOptions: $("#keyboardOptions"),
   vimEffectOptions: $("#vimEffectOptions"),
+  backdropOptions: $("#backdropOptions"),
+  characterOptions: $("#characterOptions"),
   themeOptions: $("#themeOptions"),
   replayStoryButton: $("#replayStoryButton"),
   storyDialog: $("#storyDialog"),
@@ -162,6 +171,10 @@ function storedVimEffects() {
   return savedSession.vimEffects === "disabled" ? "disabled" : "enabled";
 }
 
+function storedDecorativeMedia(name) {
+  return savedSession[name] === "disabled" ? "disabled" : "enabled";
+}
+
 const state = {
   activityIndex: 0,
   progress: 0,
@@ -175,9 +188,14 @@ const state = {
   playbackStep: 0,
   playbackTimer: null,
   playbackMode: null,
+  playbackStops: [],
   themePreference: storedThemePreference(),
   keyboardVisibility: storedKeyboardVisibility(),
   vimEffects: storedVimEffects(),
+  generatedBackdrops: storedDecorativeMedia("generatedBackdrops"),
+  characters: storedDecorativeMedia("characters"),
+  practicePolicyOverride: null,
+  exploreTargetReached: false,
   hintLevel: 0,
   consecutiveMistakes: 0,
   recallFeedback: null,
@@ -194,6 +212,8 @@ function persistSession() {
       themePreference: state.themePreference,
       keyboardVisibility: state.keyboardVisibility,
       vimEffects: state.vimEffects,
+      generatedBackdrops: state.generatedBackdrops,
+      characters: state.characters,
       savedAt: new Date().toISOString(),
     }));
   } catch {}
@@ -236,6 +256,10 @@ function characterAssignment(activity = currentActivity()) {
 }
 
 async function loadCharacterAssets() {
+  if (state.characters !== "enabled") {
+    document.documentElement.dataset.charactersReady = "disabled";
+    return;
+  }
   try {
     const response = await fetch(appUrl("assets/characters/manifest.json"));
     if (!response.ok) throw new Error(`manifest request failed (${response.status})`);
@@ -285,6 +309,10 @@ async function fetchOptionalMedia(sources, options) {
 }
 
 function preloadSuccessMedia(activity = currentActivity()) {
+  if (state.characters !== "enabled") {
+    releaseSuccessMedia();
+    return;
+  }
   if (!activity || !(isPractice(activity) || activity.type === "choice") || activity.inspection) return;
   const assignment = characterAssignment(activity);
   const asset = characterAssets[assignment.characterId] || characterAssets.nix;
@@ -336,6 +364,22 @@ function isPractice(activity = currentActivity()) {
 
 function isDemo(activity = currentActivity()) {
   return activity?.type === "demo";
+}
+
+function basePracticePolicy(activity = currentActivity()) {
+  return activity?.practiceMode === "recall" ? practicePolicyValues.recall : practicePolicyValues.guided;
+}
+
+function practicePolicy(activity = currentActivity()) {
+  if (!isPractice(activity)) return null;
+  if (activity === currentActivity() && state.practicePolicyOverride === practicePolicyValues.explore) {
+    return practicePolicyValues.explore;
+  }
+  return basePracticePolicy(activity);
+}
+
+function isExplore(activity = currentActivity()) {
+  return practicePolicy(activity) === practicePolicyValues.explore;
 }
 
 function scriptKeys(activity = currentActivity()) {
@@ -564,14 +608,21 @@ function renderFieldNote(activity) {
       <h2>${renderInline(activity.title)}</h2>
       <p>${renderInline(activity.body)}</p>
       ${renderTheoryPresentation(activity.presentation)}
-      ${activity.grammar ? `<pre class="grammar">${escapeHtml(activity.grammar)}</pre>` : ""}
+      ${activity.grammar ? `<pre class="grammar">${escapeHtml(activity.grammar.replaceAll(" · ", "\n"))}</pre>` : ""}
       ${activity.contrast ? `<p class="contrast">${renderInline(activity.contrast)}</p>` : ""}
       ${action}
     </article>`;
   }
   if (activity.type === "choice") {
-    const choices = activity.options.map(option => `<button class="choice-option${state.choiceResult === option.id ? " selected" : ""}" data-choice="${option.id}" type="button">${renderInline(option.label)}</button>`).join("");
-    const result = state.choiceResult ? `<p class="choice-feedback ${state.complete ? "correct" : ""}">${renderInline(activity.explanation)}</p>` : "";
+    const answeredCorrectly = state.choiceResult === activity.correctOptionId;
+    const choices = activity.options.map(option => {
+      const selected = state.choiceResult === option.id;
+      const resultClass = selected ? (option.id === activity.correctOptionId ? " correct" : " incorrect") : "";
+      return `<button class="choice-option${selected ? " selected" : ""}${resultClass}" data-choice="${option.id}" type="button" aria-pressed="${selected}">${renderInline(option.label)}</button>`;
+    }).join("");
+    const result = state.choiceResult
+      ? `<div class="choice-feedback ${answeredCorrectly ? "correct" : "incorrect"}" role="status" aria-live="polite"><strong>${answeredCorrectly ? "Correct." : "Not quite."}</strong><p>${renderInline(activity.explanation)}</p></div>`
+      : "";
     const remediation = state.choiceResult && !state.complete && activity.remediationRef
       ? `<button class="note-action secondary-action remediation-action" type="button" data-remediation="${escapeHtml(activity.remediationRef)}">Review this idea</button>` : "";
     const next = state.complete ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
@@ -594,11 +645,66 @@ function renderActivityIntro() {
   const show = isRunnable(activity);
   elements.activityIntro.hidden = !show;
   if (!show) return;
-  const practiceLabel = activity.practiceMode === "guided" ? "Guided practice" : activity.practiceMode === "recall" ? "Recall practice" : "Demo";
+  const practiceLabel = isExplore(activity)
+    ? "Explore"
+    : activity.practiceMode === "guided" ? "Guided practice" : activity.practiceMode === "recall" ? "Recall practice" : "Demo";
   elements.activityKicker.innerHTML = `<span class="activity-kind">${escapeHtml(practiceLabel)}</span><span class="activity-language">${escapeHtml(languageLabel(activity))}</span>`;
   elements.activityTitle.innerHTML = renderInline(activity.title);
   elements.activityInstruction.innerHTML = renderInline(activity.instruction);
   elements.hintButton.hidden = !isPractice(activity);
+  elements.exploreButton.hidden = !isPractice(activity);
+  elements.exploreButton.textContent = isExplore(activity) ? "Exit" : "Explore";
+  elements.exploreButton.classList.toggle("active", isExplore(activity));
+  elements.exploreButton.setAttribute("aria-pressed", String(isExplore(activity)));
+}
+
+function applyWorldPresentation(activity, presentation) {
+  // Generated scene images are currently approved for the four Moonroot
+  // units. Simple mode deliberately accepts every unit presentation so its
+  // world-specific CSS fallback replaces both scene art and legacy tiles.
+  const moonrootPresentation = unitPresentation?.world.id === "moonroot-ruins" ? unitPresentation : null;
+  const simpleBackground = state.generatedBackdrops === "disabled";
+  const layeredWorld = worldRenderer.setPresentation(simpleBackground ? unitPresentation : moonrootPresentation, {
+    unitId: unit.id,
+    phase: activity.phase || (activity.type === "summary" ? "summary" : "explain"),
+    landmarkState: "dormant",
+    fallbackOnly: simpleBackground,
+  });
+  if (layeredWorld) {
+    window.cancelAnimationFrame(groundRedrawFrame);
+    groundRedrawFrame = null;
+    elements.groundGrid.replaceChildren();
+    elements.groundGrid.removeAttribute("style");
+  } else {
+    renderGround(presentation);
+  }
+  return layeredWorld;
+}
+
+function renderCharacterLayer(activity, presentation) {
+  const assignment = characterAssignment(activity);
+  const character = characterAssets[assignment.characterId] || characterAssets.nix;
+  const shouldShowCharacter = state.characters === "enabled"
+    && (isPractice(activity) || activity.type === "choice")
+    && !activity.inspection;
+  const characterMarkup = shouldShowCharacter
+    ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
+    : "";
+  elements.characterLayer.dataset.side = characterMarkup ? presentation.codeSide : "none";
+  elements.characterLayer.innerHTML = characterMarkup;
+}
+
+function refreshWorldPresentation() {
+  const activity = currentActivity();
+  const presentation = presentationFor(activity);
+  const layeredWorld = applyWorldPresentation(activity, presentation);
+  elements.worldGrid.querySelectorAll(":scope > .sprite").forEach(sprite => sprite.remove());
+  if (!activity.inspection && !layeredWorld) {
+    const template = document.createElement("template");
+    template.innerHTML = renderSprites(presentation);
+    elements.worldGrid.prepend(...template.content.children);
+  }
+  if (layeredWorld) worldRenderer.considerUnitReveal();
 }
 
 function completionRendersInWorld() {
@@ -630,23 +736,7 @@ function renderWorld() {
     resetVimEngineState();
   }
   setTheme(functionalThemeFor(activity));
-  // WP-03 intentionally activates the generated world only for Moonroot's
-  // first four units. Later worlds stay on the legacy board until their own
-  // approved media slices are integrated.
-  const moonrootPresentation = unitPresentation?.world.id === "moonroot-ruins" ? unitPresentation : null;
-  const layeredWorld = worldRenderer.setPresentation(moonrootPresentation, {
-    unitId: unit.id,
-    phase: activity.phase || (activity.type === "summary" ? "summary" : "explain"),
-    landmarkState: "dormant",
-  });
-  if (layeredWorld) {
-    window.cancelAnimationFrame(groundRedrawFrame);
-    groundRedrawFrame = null;
-    elements.groundGrid.replaceChildren();
-    elements.groundGrid.removeAttribute("style");
-  } else {
-    renderGround(presentation);
-  }
+  const layeredWorld = applyWorldPresentation(activity, presentation);
   const initialState = initialStateFor(activity);
   const viewportRows = activity.editor?.viewportRows;
   const editorStyle = viewportRows
@@ -663,16 +753,9 @@ function renderWorld() {
           <div class="inspection-choice">${renderFieldNote(activity)}</div>
         </div>`
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
-  const assignment = characterAssignment(activity);
-  const character = characterAssets[assignment.characterId] || characterAssets.nix;
-  const shouldShowCharacter = (isPractice(activity) || activity.type === "choice") && !activity.inspection;
-  const characterMarkup = shouldShowCharacter
-    ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
-    : "";
   const spriteMarkup = activity.inspection || layeredWorld ? "" : renderSprites(presentation);
   elements.worldGrid.innerHTML = `${spriteMarkup}${content}`;
-  elements.characterLayer.dataset.side = characterMarkup ? presentation.codeSide : "none";
-  elements.characterLayer.innerHTML = characterMarkup;
+  renderCharacterLayer(activity, presentation);
   renderCompletionHost();
   if (hasEditor(activity)) mountEditor();
   if (layeredWorld) worldRenderer.considerUnitReveal();
@@ -744,14 +827,31 @@ function executionContent(activity, step, history, complete = false) {
   const structured = activity.script.steps.filter(item => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind));
   const group = activeCommandGroup(activity, step);
   const done = complete || step >= keys.length;
-  const recall = activity.practiceMode === "recall" && !done;
+  const policy = practicePolicy(activity);
+  const explore = policy === practicePolicyValues.explore;
+  const recall = policy === practicePolicyValues.recall && !done;
   const reveal = recall && state.recallFeedback === "reveal";
   const retry = recall && state.recallFeedback === "retry";
+  if (explore) {
+    return {
+      explanation: state.exploreTargetReached
+        ? "Target reached. Keep experimenting, undo, or reset whenever you like."
+        : "Explore mode: use any Vim commands. The target will be detected if you reach it.",
+      history,
+      primary: "Explore",
+      secondary: state.exploreTargetReached ? "Target reached" : "Target open",
+      stepStatus: false,
+      key: null,
+      assembly: [],
+    };
+  }
   return {
-    explanation: group?.explanation || "Follow the authored command sequence.",
+    explanation: recall && !reveal
+      ? activity.instruction
+      : group?.explanation || "Follow the authored command sequence.",
     history,
     primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? "Step" : retry ? "Try" : reveal ? "Next" : recall ? "Recall" : "Next",
-    secondary: done ? "Complete" : activity.type === "demo" ? `${step + 1} / ${keys.length}` : retry ? "Again" : reveal ? "A clue" : recall ? "From memory" : "",
+    secondary: done ? "Complete" : activity.type === "demo" ? `${step + 1} / ${keys.length}` : retry ? "Again" : reveal ? "A clue" : recall ? "From\nmemory" : "",
     stepStatus: !done && activity.type === "demo",
     key: done || (recall && !reveal) ? null : keys[step],
     assembly: structured.length ? activity.script.steps.map((item, index) => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind)
@@ -761,7 +861,9 @@ function executionContent(activity, step, history, complete = false) {
 }
 
 function applyExecutionContent(root, content) {
-  const assembly = content.assembly.length ? `<div class="execution-assembly">${content.assembly.map(part => `<span class="assembly-part role-${part.kind}${part.active ? " active" : ""}"><kbd>${escapeHtml(part.key)}</kbd><small>${escapeHtml(part.cue || part.kind)}</small></span>`).join('<i aria-hidden="true">+</i>')}</div>` : "";
+  const assembly = content.assembly.length
+    ? `<div class="execution-assembly" style="--assembly-count:${content.assembly.length}">${content.assembly.map(part => `<span class="assembly-part role-${part.kind}${part.active ? " active" : ""}"><kbd>${escapeHtml(part.key)}</kbd><small>${escapeHtml(part.cue || part.kind)}</small></span>`).join("")}</div>`
+    : "";
   $(".command-explanation", root).innerHTML = `${renderInline(content.explanation)}${assembly}`;
   $(".command-text", root).innerHTML = renderHistory(content.history);
   $(".status-primary", root).textContent = content.primary;
@@ -845,6 +947,7 @@ function renderActivityControls() {
     const action = done ? "reset" : "play-toggle";
     const demoControls = $("#demoControls", elements.worldGrid);
     if (demoControls) demoControls.innerHTML = `
+      <button data-action="back" type="button" ${state.playbackStep === 0 || playing ? "disabled" : ""}>← Back</button>
       <button data-action="${action}" type="button">${playLabel}</button>
       <button data-action="step" type="button" ${done || playing ? "disabled" : ""}>Step</button>
       <button class="primary-action" data-action="next" type="button">Next →</button>`;
@@ -872,6 +975,13 @@ function renderVimEffectOptions() {
   if (selected) selected.checked = true;
 }
 
+function renderDecorativeMediaOptions() {
+  const backdrop = $(`input[name="generated-backdrops"][value="${state.generatedBackdrops}"]`, elements.backdropOptions);
+  const characters = $(`input[name="characters"][value="${state.characters}"]`, elements.characterOptions);
+  if (backdrop) backdrop.checked = true;
+  if (characters) characters.checked = true;
+}
+
 function renderModifiers() {
   const shiftActive = state.modifiers.has("Shift") || state.physicalShift;
   $$('[data-mod]', elements.keyboard).forEach(button => {
@@ -896,6 +1006,7 @@ function renderAll() {
   renderActivityControls();
   renderKeyboardOptions();
   renderVimEffectOptions();
+  renderDecorativeMediaOptions();
   preloadSuccessMedia();
 }
 
@@ -982,6 +1093,8 @@ function resetActivity({ vibrateReset = true } = {}) {
   state.playbackStep = 0;
   state.editorSnapshot = null;
   state.semanticEffects = [];
+  state.playbackStops = [];
+  state.exploreTargetReached = false;
   state.hintLevel = 0;
   clearPracticeError();
   setHelp(false);
@@ -993,6 +1106,7 @@ function goToActivity(index, { preserveRemediation = false } = {}) {
   if (!Number.isInteger(index) || index < 0 || index >= activities.length) throw new RangeError("Invalid activity index");
   elements.tocDialog?.close();
   if (!preserveRemediation) state.remediationReturnId = null;
+  state.practicePolicyOverride = null;
   state.activityIndex = index;
   resetActivity({ vibrateReset: false });
   persistSession();
@@ -1089,6 +1203,15 @@ function completeActivity() {
   vibrate([18, 35, 18]);
 }
 
+function reachExploreTarget() {
+  if (!isExplore() || state.exploreTargetReached) return;
+  state.exploreTargetReached = true;
+  renderCommand();
+  renderActivityControls();
+  playSuccessCharacter({ allowExplore: true });
+  vibrate([18, 35, 18]);
+}
+
 function handleEngineEvent(event) {
   // The app injects every accepted physical key through processToken. Adapter
   // keypress notifications are therefore duplicates, and search prompts can
@@ -1105,7 +1228,11 @@ function handleEngineEvent(event) {
   }
   renderMode();
   renderCommand();
-  if (isPractice() && !state.complete && state.progress === scriptKeys().length && isTargetSnapshot(event.snapshot)) completeActivity();
+  if (isExplore() && isTargetSnapshot(event.snapshot)) {
+    reachExploreTarget();
+  } else if (isPractice() && !state.complete && state.progress === scriptKeys().length && isTargetSnapshot(event.snapshot)) {
+    completeActivity();
+  }
 }
 
 function handleSemanticEffect(event) {
@@ -1165,6 +1292,11 @@ function flashError(token, button) {
 
 function processToken(token, button) {
   if (!isPractice() || state.complete || !vimEngine) return false;
+  if (isExplore()) {
+    clearPracticeError();
+    setHelp(false);
+    return vimEngine.sendKey(token, { source: "lesson" });
+  }
   const expected = scriptKeys()[state.progress];
   if (token !== expected) {
     flashError(token, button);
@@ -1175,7 +1307,7 @@ function processToken(token, button) {
   return vimEngine.sendKey(token, { source: "lesson" });
 }
 
-function stepDemo() {
+function rawDemoStep() {
   if (!isDemo() || state.playbackStep >= scriptKeys().length || !vimEngine) return false;
   const activityId = currentActivity().id;
   const token = scriptKeys()[state.playbackStep];
@@ -1193,6 +1325,51 @@ function stepDemo() {
     renderActivityControls();
   });
   return state.playbackStep < scriptKeys().length;
+}
+
+function isGroupedTextToken(token) {
+  return token === " " || token.length === 1;
+}
+
+function stepDemo() {
+  if (!isDemo() || state.playbackStep >= scriptKeys().length || !vimEngine) return false;
+  const start = state.playbackStep;
+  const startingMode = state.editorSnapshot?.mode;
+  state.playbackStops.push(start);
+  rawDemoStep();
+  if (startingMode !== "insert" && startingMode !== "replace") {
+    return state.playbackStep < scriptKeys().length;
+  }
+  const activity = currentActivity();
+  const group = activeCommandGroup(activity, start);
+  if (activity.script.checkpoints?.some(item => item.afterStep === state.playbackStep)
+    || (group && state.playbackStep >= group.to)
+    || state.editorSnapshot?.mode !== startingMode) {
+    return state.playbackStep < scriptKeys(activity).length;
+  }
+  while (state.playbackStep < scriptKeys(activity).length) {
+    const nextToken = scriptKeys(activity)[state.playbackStep];
+    if (!isGroupedTextToken(nextToken)) break;
+    if (state.editorSnapshot?.mode !== startingMode) break;
+    if (group && state.playbackStep >= group.to) break;
+    rawDemoStep();
+    if (activity.script.checkpoints?.some(item => item.afterStep === state.playbackStep)) break;
+  }
+  return state.playbackStep < scriptKeys(activity).length;
+}
+
+function backDemo() {
+  if (!isDemo() || state.playbackTimer || state.playbackStep === 0) return;
+  const remainingStops = state.playbackStops.slice(0, -1);
+  const target = state.playbackStops.at(-1) ?? Math.max(0, state.playbackStep - 1);
+  resetActivity({ vibrateReset: false });
+  state.playbackStops = remainingStops;
+  while (state.playbackStep < target) rawDemoStep();
+  const checkpoint = currentActivity().script.checkpoints?.find(item => item.afterStep === target);
+  vimEngine.showPreviewRange(checkpoint?.affectedRange || null);
+  renderCommand();
+  renderActivityControls();
+  vibrate(5);
 }
 
 function playDemo(interval) {
@@ -1233,8 +1410,9 @@ function setHelp(open) {
   if (canHelp) vimEngine?.focus();
 }
 
-function playSuccessCharacter() {
+function playSuccessCharacter({ allowExplore = false } = {}) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (state.characters !== "enabled") return;
   const character = $(".nix", elements.characterLayer);
   const asset = characterAssets[character?.dataset.character || ""];
   const animation = asset?.animations?.[character?.dataset.animation || ""];
@@ -1245,7 +1423,7 @@ function playSuccessCharacter() {
   celebrating.style.setProperty("--success-canvas-scale", String(animation.css_scale || 1));
   let started = false;
   const startTransition = () => {
-    if (started || !state.complete || !character.isConnected) return;
+    if (started || (!state.complete && !(allowExplore && state.exploreTargetReached)) || !character.isConnected) return;
     started = true;
     celebrating.classList.add("celebrating", "transitioning-in");
     character.classList.add("transitioning-out");
@@ -1312,14 +1490,15 @@ function processChoice(id) {
   const activity = currentActivity();
   if (activity.type !== "choice" || state.complete) return;
   state.choiceResult = id;
-  renderAll();
   if (id === activity.correctOptionId) completeActivity();
+  else renderAll();
 }
 
 function handleActivityAction(action) {
   if (!action) return;
   if (action === "reset") resetActivity();
   if (action === "step") stepDemo();
+  if (action === "back") backDemo();
   if (action === "play") playDemo(420);
   if (action === "slow") playDemo(850);
   if (action === "pause") { clearPlayback(); renderActivityControls(); }
@@ -1335,6 +1514,16 @@ function handleActivityAction(action) {
   if (action === "previous") previousActivity();
   if (action === "return-remediation") returnFromRemediation();
   if (action === "open-toc") openTableOfContents();
+  if (action === "explore") {
+    state.practicePolicyOverride = practicePolicyValues.explore;
+    resetActivity({ vibrateReset: false });
+    persistSession();
+  }
+  if (action === "exit-explore") {
+    state.practicePolicyOverride = null;
+    resetActivity({ vibrateReset: false });
+    persistSession();
+  }
 }
 
 elements.keyboard.addEventListener("pointerdown", event => {
@@ -1448,6 +1637,7 @@ elements.tocButton?.addEventListener("click", () => {
 elements.settingsButton?.addEventListener("click", () => {
   renderKeyboardOptions();
   renderVimEffectOptions();
+  renderDecorativeMediaOptions();
   renderThemeOptions();
   elements.settingsDialog.showModal();
 });
@@ -1472,6 +1662,25 @@ elements.vimEffectOptions?.addEventListener("change", event => {
   persistSession();
   if (value === "disabled") vimEngine?.clearEffects();
 });
+elements.backdropOptions?.addEventListener("change", event => {
+  const value = event.target.closest('input[name="generated-backdrops"]')?.value;
+  if (!decorativeMediaValues.has(value)) return;
+  state.generatedBackdrops = value;
+  persistSession();
+  refreshWorldPresentation();
+});
+elements.characterOptions?.addEventListener("change", event => {
+  const value = event.target.closest('input[name="characters"]')?.value;
+  if (!decorativeMediaValues.has(value)) return;
+  state.characters = value;
+  persistSession();
+  if (value === "disabled") {
+    releaseSuccessMedia();
+    document.documentElement.dataset.charactersReady = "disabled";
+  }
+  renderCharacterLayer(currentActivity(), presentationFor(currentActivity()));
+  if (value === "enabled") void loadCharacterAssets();
+});
 $(".landscape-controls")?.addEventListener("click", event => {
   const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
   if (action === "toc") openTableOfContents();
@@ -1479,6 +1688,7 @@ $(".landscape-controls")?.addEventListener("click", event => {
   if (action === "settings") {
     renderKeyboardOptions();
     renderVimEffectOptions();
+    renderDecorativeMediaOptions();
     renderThemeOptions();
     elements.settingsDialog.showModal();
   }
@@ -1520,6 +1730,9 @@ elements.activityControls.addEventListener("click", event => {
   if (remediation) goToRemediation(remediation);
   const route = event.target.closest("[data-route]")?.dataset.route;
   if (route) goToActivityId(route);
+});
+elements.exploreButton?.addEventListener("click", () => {
+  handleActivityAction(isExplore() ? "exit-explore" : "explore");
 });
 
 window.addEventListener("resize", () => {
@@ -1614,10 +1827,12 @@ window.VimWilds = Object.freeze({
       exerciseId: isPractice() ? currentActivity().sourceActivityId : null,
       sourceActivityId: currentActivity().sourceActivityId || currentActivity().id,
       practiceMode: currentActivity().practiceMode || null,
+      practicePolicy: practicePolicy(),
       progress: state.progress,
       playbackStep: state.playbackStep,
       history: [...state.history],
       complete: state.complete,
+      exploreTargetReached: state.exploreTargetReached,
       code: snapshot?.text.split("\n") || [],
       cursor: snapshot?.cursorPosition || [0, 0],
       registers: snapshot?.registers || {},
@@ -1627,6 +1842,8 @@ window.VimWilds = Object.freeze({
       modifiers: [...state.modifiers],
       capsLock: state.capsLock,
       vimEffects: state.vimEffects,
+      generatedBackdrops: state.generatedBackdrops,
+      characters: state.characters,
       guidance: elements.guidance.textContent,
       story: storyTransitions.getState(),
     };

@@ -27,9 +27,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -217,7 +217,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Echo one prose word",
-          "instruction": "Yank `amber`, move to `blue`, and put the unnamed text after it.",
+          "instruction": "Add “amber ” so line 1 reads “amber bamber lue green”. Registers: 0 = “amber ” (text); unnamed = “amber ” (text).",
           "languageId": "python",
           "sourceKind": "neutral",
           "scenario": {
@@ -365,7 +365,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Move a stale row",
-          "instruction": "Delete the first row, move to the bottom, and put the unnamed line below it.",
+          "instruction": "Make lines 1–3 read “ready: true”, “queued: true”, “stale: true”. Registers: 1 = “stale: true↵” (line); unnamed = “stale: true↵” (line).",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -520,7 +520,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Name the default explicitly",
-          "instruction": "Yank the first log row and put it below the final row through the explicit unnamed register.",
+          "instruction": "Add this line at line 4: “INFO cache warm”. Registers: 0 = “INFO cache warm↵” (line); unnamed = “INFO cache warm↵” (line).",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -846,7 +846,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Put before and continue",
-          "instruction": "Yank two characters, move to the end, and use `gP` to put before while landing after the inserted text.",
+          "instruction": "Add “a” so line 1 reads “abcad”. Registers: 0 = “a” (text); unnamed = “a” (text).",
           "languageId": "typescript",
           "sourceKind": "neutral",
           "scenario": {
@@ -995,7 +995,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Continue on the line after a put",
-          "instruction": "Yank the first row, move down, and use linewise `gp` to finish on the following row.",
+          "instruction": "Add this line at line 3: “alpha = 1”. Registers: 0 = “alpha = 1↵” (line); unnamed = “alpha = 1↵” (line).",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1158,7 +1158,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Insert before and resume below",
-          "instruction": "Yank the second row, move down, and use linewise `gP` so work resumes on the row after the insertion.",
+          "instruction": "Add this line at line 3: “two”. Registers: 0 = “two↵” (line); unnamed = “two↵” (line).",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {
@@ -1543,7 +1543,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Recover a word after another delete",
-          "instruction": "Yank the first word, delete the second, then put the original yank from register zero before the last word.",
+          "instruction": "Make the line read “red red green”. Keep “red ” in register 0; unnamed and small-delete should hold “blue ”.",
           "languageId": "json",
           "sourceKind": "neutral",
           "scenario": {
@@ -1739,7 +1739,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep a copied setting through a change",
-          "instruction": "Yank the first value, change the second to `live`, then restore the yank from register zero before the third value.",
+          "instruction": "Make the line read “draft live draft final”. Keep “draft ” in register 0; unnamed and small-delete should hold “staging”.",
           "languageId": "shell",
           "sourceKind": "neutral",
           "scenario": {
@@ -1941,7 +1941,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Carry a fixture through cleanup",
-          "instruction": "Yank the fixture row, delete a temporary row, then put register zero before the final assertion.",
+          "instruction": "Place “fixture()” above the final assertion. Keep its line in register 0; register 1 and unnamed should hold “temporary()”.",
           "languageId": "css",
           "sourceKind": "fragment",
           "scenario": {
@@ -2374,7 +2374,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the third delete entry",
-          "instruction": "Delete three rows separately and restore the oldest one from register three.",
+          "instruction": "Remove lines 2–3: “beta”, “gamma”. Registers: 1 = “gamma↵” (line); 2 = “beta↵” (line); 3 = “alpha↵” (line); unnamed = “gamma↵” (line).",
           "languageId": "toml",
           "sourceKind": "neutral",
           "scenario": {
@@ -2637,7 +2637,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Recover a nonadjacent deleted row",
-          "instruction": "Delete the first row, skip one, delete another, then retrieve the older row from register two.",
+          "instruction": "Make lines 1–2 read “keep-a”, “old-a”. Registers: 1 = “old-b↵” (line); 2 = “old-a↵” (line); unnamed = “old-b↵” (line).",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -2843,7 +2843,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover a counted deletion",
-          "instruction": "Delete two rows as one change, delete the next row, then retrieve the earlier two-line block from register two.",
+          "instruction": "Remove line 3: “trace”. Registers: 1 = “trace↵” (line); 2 = “debug-a↵debug-b↵” (line); unnamed = “trace↵” (line).",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3248,7 +3248,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete without replacing a yank",
-          "instruction": "Yank the first line, discard the second through the black-hole register, then put the preserved unnamed yank.",
+          "instruction": "Change “discard” to “keep” so line 2 reads “keep this”. Registers: 0 = “keep this↵” (line); unnamed = “keep this↵” (line).",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -3437,7 +3437,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Recover one removed marker",
-          "instruction": "Delete two marker characters, then restore the latest one from the small-delete register.",
+          "instruction": "Remove “?” so line 1 reads “ab!c”. Registers: unnamed = “!” (text); small-delete = “!” (text).",
           "languageId": "typescript",
           "sourceKind": "neutral",
           "scenario": {
@@ -3615,7 +3615,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Protect a copied row during cleanup",
-          "instruction": "Yank the header, black-hole-delete two temporary rows, then put the preserved header before the footer.",
+          "instruction": "Make lines 2–2 read “# release”. Registers: 0 = “# release↵” (line); unnamed = “# release↵” (line).",
           "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
@@ -3986,7 +3986,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Keep a named word",
-          "instruction": "Yank the first word into register `a`, move to the second word, and put `a` afterward.",
+          "instruction": "Add “north ” so line 1 reads “north enorth ast south”. Registers: a = “north ” (text); unnamed = “north ” (text).",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -4138,7 +4138,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep two lines independently",
-          "instruction": "Yank the first line into `a`, the second into `b`, then put both around the final line.",
+          "instruction": "Add these lines at line 3: “alpha”, “beta”. Registers: a = “alpha↵” (line); unnamed = “beta↵” (line); b = “beta↵” (line).",
           "languageId": "json",
           "sourceKind": "neutral",
           "scenario": {
@@ -4391,7 +4391,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Delete into a chosen name",
-          "instruction": "Delete the middle row into register `a`, move to the bottom, and put it back before the final row.",
+          "instruction": "Make lines 2–3 read “later”, “stash”. Registers: a = “stash↵” (line); unnamed = “stash↵” (line).",
           "languageId": "shell",
           "sourceKind": "neutral",
           "scenario": {
@@ -4770,7 +4770,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Build one characterwise phrase",
-          "instruction": "Yank the first word into `a`, append the second through `A`, then put the combined text after the final word.",
+          "instruction": "Add “red blue ” so line 1 reads “red blue greenred blue ”. Registers: a = “red blue ” (text); unnamed = “red blue ” (text).",
           "languageId": "sql",
           "sourceKind": "neutral",
           "scenario": {
@@ -4955,7 +4955,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Collect separated rows",
-          "instruction": "Store the first row in `a`, append the third row through `A`, then put the collection after the final row.",
+          "instruction": "Add these lines at line 5: “keep-one”, “keep-two”. Registers: a = “keep-one↵keep-two↵” (line); unnamed = “keep-one↵keep-two↵” (line).",
           "languageId": "toml",
           "sourceKind": "neutral",
           "scenario": {
@@ -5160,7 +5160,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Assemble a three-line snippet",
-          "instruction": "Build register `a` from three consecutive lines, then put the complete snippet below the final line.",
+          "instruction": "Add these lines at line 5: “one”, “two”, “three”. Registers: a = “one↵two↵three↵” (line); unnamed = “one↵two↵three↵” (line).",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -5581,7 +5581,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Put a clipboard word",
-          "instruction": "Yank the first word into `+`, move to `green`, and use `\"+gP` to put the word before it and continue at `green`.",
+          "instruction": "Add “amber ” so line 1 reads “amber blue amber green”. Registers: unnamed = “amber ” (text); + = “amber ” (text).",
           "languageId": "python",
           "sourceKind": "neutral",
           "scenario": {
@@ -5735,7 +5735,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Move text through the clipboard register",
-          "instruction": "Delete the first row into `+`, move to the bottom, and put it before the final row with `\"+P`.",
+          "instruction": "Make lines 1–2 read “keep”, “move-me”. Registers: unnamed = “move-me↵” (line); + = “move-me↵” (line).",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -5894,7 +5894,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Inspect the stored clipboard",
-          "instruction": "Yank the line into `+`, then run `:registers +` to inspect the exercise-local value.",
+          "instruction": "Leave the text unchanged with “release = stable” held linewise in both the clipboard and unnamed registers.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6268,7 +6268,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reuse a named line and continue",
-          "instruction": "Store the first line in `a`, move to the third, and use `\"agP` to put before it and resume afterward.",
+          "instruction": "Add this line at line 3: “setup”. Registers: a = “setup↵” (line); unnamed = “setup↵” (line).",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -6436,7 +6436,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Transfer through plus and keep moving",
-          "instruction": "Yank a word into `+`, delete an unrelated word, then use `\"+gp` to put the saved text and continue after it.",
+          "instruction": "Make the line read “alpha gamma dalpha elta”. Keep “alpha ” in the clipboard register; unnamed and small-delete should hold “beta ”.",
           "languageId": "json",
           "sourceKind": "neutral",
           "scenario": {
@@ -6636,7 +6636,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover the right deleted block",
-          "instruction": "Delete a two-line block, delete one later line, then restore the older block from register two before the final row.",
+          "instruction": "Restore “old-one” and “old-two” below “keep”. Register 2 should hold that pair; register 1 and unnamed should hold “old-three”.",
           "languageId": "shell",
           "sourceKind": "neutral",
           "scenario": {

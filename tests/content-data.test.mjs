@@ -57,10 +57,35 @@ test("content files expose the expected schema versions", () => {
   assert.equal(unit.releaseStatus, "authoring");
   assert.deepEqual(unit.playback, {
     modes: ["normal", "slow", "manual"],
-    manualStep: "one-input-key",
+    manualStep: "one-input-or-text-run",
     reset: "initial-state",
-    backwardStep: "deferred",
+    backwardStep: "previous-manual-step",
   });
+});
+
+test("every practice prompt describes outcomes without revealing its canonical recipe", () => {
+  const exercises = units.flatMap(({ data }) => data.lessons)
+    .flatMap(lesson => lesson.activities)
+    .filter(activity => activity.type === "exercise");
+
+  assert.equal(exercises.length, 362);
+  for (const activity of exercises) {
+    assert(activity.title.trim(), `${activity.id} needs an outcome title`);
+    assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
+
+    const backticked = [...activity.instruction.matchAll(/`([^`]+)`/g)].map(match => match[1]);
+    const authoredRecipes = activity.script.commandGroups.map(group => group.display.trim()).filter(Boolean);
+    for (const recipe of authoredRecipes) {
+      assert(
+        !backticked.includes(recipe),
+        `${activity.id} exposes canonical command ${recipe} in its instruction`,
+      );
+    }
+    assert(
+      !/^(?:use|press|type|execute|run)\b/i.test(activity.instruction),
+      `${activity.id} starts with a procedural recipe`,
+    );
+  }
 });
 
 test("presentation manifest covers the catalog with valid worlds, characters, and assets", () => {

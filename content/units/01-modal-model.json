@@ -16,9 +16,9 @@
   "prerequisiteSkillIds": [],
   "playback": {
     "modes": ["normal", "slow", "manual"],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -111,7 +111,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Return from Insert mode",
-          "instruction": "The editor is already in Insert mode. Return safely to Normal without changing the text.",
+          "instruction": "Place the cursor at line 1, column 6 (“ ”) without changing the text. Finish in normal mode.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -132,8 +132,8 @@
           "id": "ctrl-bracket-seeded-replace",
           "type": "exercise",
           "phase": "mix",
-          "title": "Use the alternate escape chord",
-          "instruction": "The editor is in Replace mode. Return to Normal with the portable Vim chord `Ctrl-[`.",
+          "title": "Return from Replace mode",
+          "instruction": "Place the cursor at line 2, column 10 (“ ”) without changing the text. Finish in normal mode.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -225,7 +225,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Cancel a character selection",
-          "instruction": "A character selection is active. Cancel it and return to Normal.",
+          "instruction": "Place the cursor at line 2, column 2 (“ ”) without changing the text. Finish in normal mode.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -247,7 +247,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Cancel a block selection",
-          "instruction": "A rectangular selection has started. Return to Normal without editing the table.",
+          "instruction": "Place the cursor at line 2, column 4 (“r”) without changing the text. Finish in normal mode.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -352,7 +352,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Release a pending operator",
-          "instruction": "Delete is waiting for a range. Cancel it before any text is removed.",
+          "instruction": "Place the cursor at line 1, column 1 (“t”) without changing the text. Finish in normal mode.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -374,7 +374,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Close an empty Command-line",
-          "instruction": "The colon prompt is open. Close it without executing a command.",
+          "instruction": "Place the cursor at line 1, column 1 (“M”) without changing the text. Finish in normal mode.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -492,7 +492,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Assemble the same sentence",
-          "instruction": "Use the count, delete operator, and word motion to remove `draft cache `.",
+          "instruction": "Change “draft cache ” to “entry” so line 1 reads “entry”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -566,7 +566,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Quick check: leave Insert",
-          "instruction": "Return this seeded Insert state to Normal.",
+          "instruction": "Place the cursor at line 1, column 8 (“ ”) without changing the text. Finish in normal mode.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {"initial": {"lines": ["ready = True"], "cursor": [0, 8], "mode": "insert", "setup": {"cursor": [0, 8], "steps": ["i"]}}, "target": {"lines": ["ready = True"], "cursor": [0, 7], "mode": "normal"}},
@@ -586,7 +586,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Quick check: cancel delete",
-          "instruction": "Delete is waiting for a range. Release it without changing the line.",
+          "instruction": "Place the cursor at line 1, column 1 (“c”) without changing the text. Finish in normal mode.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {"initial": {"lines": ["const stable = true;"], "cursor": [0, 0], "mode": "operator-pending", "setup": {"cursor": [0, 0], "steps": ["d"]}}, "target": {"lines": ["const stable = true;"], "cursor": [0, 0], "mode": "normal"}},

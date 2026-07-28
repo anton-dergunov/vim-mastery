@@ -54,6 +54,7 @@ export class WorldPresentationRenderer {
     this.onLegacyResize = onLegacyResize;
     this.presentation = null;
     this.presentationKey = null;
+    this.fallbackOnly = false;
     this.phase = "explain";
     this.landmarkState = "dormant";
     this.profile = null;
@@ -101,16 +102,20 @@ export class WorldPresentationRenderer {
     unitId,
     phase = "explain",
     landmarkState = "dormant",
+    fallbackOnly = false,
   } = {}) {
     const scene = presentation?.scene;
-    const valid = Boolean(presentation?.world && presentation?.unit && scene?.profiles);
+    const validFallback = Boolean(fallbackOnly && presentation?.world && presentation?.unit);
+    const validScene = Boolean(!fallbackOnly && presentation?.world && presentation?.unit && scene?.profiles);
+    const valid = validFallback || validScene;
     this.presentation = valid ? presentation : null;
+    this.fallbackOnly = validFallback;
     this.phase = phase;
     this.landmarkState = landmarkState;
     this.world.dataset.unitId = unitId || presentation?.unit?.id || "unknown";
-    this.world.dataset.renderer = valid ? "registered-scenes" : "legacy";
+    this.world.dataset.renderer = validFallback ? "fallback" : validScene ? "registered-scenes" : "legacy";
     this.world.dataset.worldId = valid ? presentation.world.id : "legacy";
-    this.world.dataset.sceneId = valid ? scene.id : "none";
+    this.world.dataset.sceneId = validScene ? scene.id : "none";
     this.world.dataset.landmarkId = valid ? presentation.unit.landmark.id : "none";
     this.world.dataset.learningPhase = phase;
 
@@ -127,14 +132,22 @@ export class WorldPresentationRenderer {
       return false;
     }
 
-    this.world.style.setProperty("--world-fallback", presentation.world.fallbackGradient);
-    const key = `${presentation.world.id}:${presentation.unit.id}:${scene.id}`;
+    if (validFallback) this.world.style.removeProperty("--world-fallback");
+    else this.world.style.setProperty("--world-fallback", presentation.world.fallbackGradient);
+    const key = validFallback
+      ? `${presentation.world.id}:${presentation.unit.id}:fallback`
+      : `${presentation.world.id}:${presentation.unit.id}:${scene.id}`;
     if (key !== this.presentationKey) {
       this.cancelReveal();
       this.cancelRemoteVariants({ clearLayer: true, resetBag: true });
       this.presentationKey = key;
-      this.remoteVariantPausedOffline = !navigator.onLine;
-      this.buildAmbientLayer();
+      if (validFallback) {
+        this.remoteVariantPausedOffline = true;
+        this.ambientLayer.replaceChildren();
+      } else {
+        this.remoteVariantPausedOffline = !navigator.onLine;
+        this.buildAmbientLayer();
+      }
     }
     this.updateLayout(true);
     return true;
@@ -152,6 +165,7 @@ export class WorldPresentationRenderer {
   }
 
   remoteVariantsAreEligible() {
+    if (this.fallbackOnly) return false;
     const config = this.presentation?.scene?.remoteVariants;
     return Boolean(
       config
@@ -300,6 +314,14 @@ export class WorldPresentationRenderer {
       this.onLegacyResize();
       return;
     }
+    if (this.fallbackOnly) {
+      this.backdropLayer.style.removeProperty("--world-asset");
+      this.backdropLayer.dataset.sceneProfile = "fallback";
+      this.backdropLayer.dataset.backdropShape = "fallback";
+      this.world.style.removeProperty("--scene-focal-position");
+      this.cancelRemoteVariants({ clearLayer: true });
+      return;
+    }
 
     const sceneProfile = sceneProfileForBoard(nextProfile);
     const profileData = this.presentation.scene.profiles[sceneProfile];
@@ -312,7 +334,7 @@ export class WorldPresentationRenderer {
   }
 
   considerUnitReveal() {
-    if (!this.presentation || this.revealKey === this.presentationKey) return;
+    if (!this.presentation || this.fallbackOnly || this.revealKey === this.presentationKey) return;
     this.revealKey = this.presentationKey;
     if (this.reducedMotionQuery?.matches || this.profile === "shallow") return;
     const profile = sceneProfileForBoard(this.profile);

@@ -99,6 +99,7 @@
     <section class="activity-intro" id="activityIntro" aria-labelledby="activityTitle">
       <div class="activity-intro-row">
         <div class="activity-kicker" id="activityKicker">Exercise · Python</div>
+        <button class="explore-button" id="exploreButton" type="button">Explore</button>
         <button class="hint-button" id="hintButton" type="button" aria-label="Open hints" title="Hints">?</button>
       </div>
       <h1 id="activityTitle">Promote every cache mode</h1>
@@ -236,6 +237,16 @@
           <legend>Vim action effects</legend>
           <label><input type="radio" name="vim-effects" value="enabled"> <span><strong>Enable effects</strong><small>Animate exact ranges, selections, captures, repeats, and jumps.</small></span></label>
           <label><input type="radio" name="vim-effects" value="disabled"> <span><strong>Disable effects</strong><small>Keep the editor still while preserving all Vim behavior and feedback.</small></span></label>
+        </fieldset>
+        <fieldset class="keyboard-options" id="backdropOptions">
+          <legend>Generated backdrops</legend>
+          <label><input type="radio" name="generated-backdrops" value="enabled"> <span><strong>Show generated scenes</strong><small>Use the illustrated lesson worlds and their subtle scene variations.</small></span></label>
+          <label><input type="radio" name="generated-backdrops" value="disabled"> <span><strong>Use simple backgrounds</strong><small>Use quiet world-colored gradients and abstract shapes instead.</small></span></label>
+        </fieldset>
+        <fieldset class="keyboard-options" id="characterOptions">
+          <legend>Characters</legend>
+          <label><input type="radio" name="characters" value="enabled"> <span><strong>Show characters</strong><small>Display lesson companions and their success celebrations.</small></span></label>
+          <label><input type="radio" name="characters" value="disabled"> <span><strong>Hide characters</strong><small>Remove companions, animations, and character crossfades.</small></span></label>
         </fieldset>
         <fieldset class="theme-options" id="themeOptions">
           <legend>World theme</legend>

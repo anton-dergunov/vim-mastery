@@ -119,7 +119,9 @@ and Command-line characters remain individual steps. This supports:
 
 - normal and slow autoplay;
 - pause and restart;
-- manual forward movement one input key at a time;
+- manual forward movement one Vim input at a time, grouping a consecutive
+  Insert- or Replace-mode text run into one visible step;
+- deterministic backward movement to the previous visible step;
 - a visible grouping of keys into complete Vim commands.
 
 `commandGroups` partitions the complete step list with zero-based, end-exclusive
@@ -128,8 +130,13 @@ timings are semantic (`literal`, `key`, and command-boundary pauses); the future
 UI owns the actual timers.
 
 Reset restores the initial buffer, cursor, mode, search state, registers, and
-repeat state, then starts again at step zero. Backward stepping and arbitrary
-seeking are not part of the first design.
+repeat state, then starts again at step zero. Back reconstructs that authored
+initial/setup state and deterministically replays raw steps to the preceding
+manual-step boundary, preserving registers, search state, cursor, mode,
+viewport, and checkpoints. Insert- and Replace-mode text runs stop at Escape,
+Enter, Tab, Backspace, a checkpoint, a command-group boundary, or a mode
+change. Search and Ex command-line text remains key-by-key. The raw
+`playbackStep` continues to identify the authored key index.
 
 Runnable delivery can be `guided`, `guided-then-recall`, or `recall`. This lets
 an orientation avoid duplicating trivial transitions while preserving paired

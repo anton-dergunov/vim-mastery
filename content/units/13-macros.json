@@ -25,9 +25,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -214,7 +214,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Comment queued jobs",
-          "instruction": "Record adding \"# \" at the line start, then replay it on the next two rows.",
+          "instruction": "Make lines 1–3 read “# run_alpha()”, “# run_beta()”, “# run_gamma()”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -370,7 +370,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Mute three SQL statements",
-          "instruction": "Record adding \"-- \" at the line start, then replay it on the next two rows.",
+          "instruction": "Make lines 1–3 read “-- SELECT alpha;”, “-- SELECT beta;”, “-- SELECT gamma;”.",
           "languageId": "sql",
           "sourceKind": "fragment",
           "scenario": {
@@ -527,7 +527,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Disable YAML flags",
-          "instruction": "Record adding \"# \" at the line start, then replay it on the next two rows.",
+          "instruction": "Make lines 1–3 read “# alpha: true”, “# beta: true”, “# gamma: true”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -840,7 +840,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Continue the latest list macro",
-          "instruction": "Record a self-advancing \"- \" prefix and replay it with @a@@.",
+          "instruction": "Make lines 1–3 read “- alpha”, “- beta”, “- gamma”.",
           "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
@@ -980,7 +980,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Count three guard prefixes",
-          "instruction": "Record a self-advancing \"# \" prefix and replay it with 3@a.",
+          "instruction": "Make lines 1–4 read “# alpha”, “# beta”, “# gamma”, “# delta”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1122,8 +1122,8 @@
           "id": "count-ten-csv-rows",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Replay across ten CSV records",
-          "instruction": "Record a self-advancing \">\" prefix and replay it with 10@a.",
+          "title": "Update the first eleven CSV records",
+          "instruction": "Prefix rows 1–11 with “>”, leaving row 12 unchanged.",
           "languageId": "csv",
           "sourceKind": "fragment",
           "scenario": {
@@ -1314,7 +1314,7 @@
           "type": "demo",
           "phase": "demonstrate",
           "title": "Normalize irregular mappings",
-          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "instruction": "Make lines 1–4 read “A= one”, “LongField= two”, “Mid= three”, “Z= four”. Finish with register a holding “0f:r=j” as characterwise text.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
@@ -1476,7 +1476,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Normalize log separators",
-          "instruction": "Use | as a stable anchor, replace it with ,, and advance through the irregular rows.",
+          "instruction": "Make lines 1–4 read “A,ready”, “LONG,ready”, “MID,ready”, “Z,ready”. Registers: a = “0f|r,j” (text).",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -1638,7 +1638,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Clear irregular call arguments",
-          "instruction": "Anchor on each opening parenthesis, clear its contents, and advance.",
+          "instruction": "Make lines 1–4 read “a();”, “longCall();”, “mid();”, “z();”.",
           "languageId": "java",
           "sourceKind": "fragment",
           "scenario": {
@@ -1783,7 +1783,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Let search choose each TODO",
-          "instruction": "Record a search-anchored punctuation change and replay it across later TODO rows.",
+          "instruction": "Make lines 2–5 read “TODO! alpha”, “skip”, “TODO! beta”, “TODO! gamma”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1954,7 +1954,7 @@
           "type": "demo",
           "phase": "demonstrate",
           "title": "Advance after each Rust field",
-          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "instruction": "Make lines 1–4 read “$a= one”, “$longName= two”, “$mid= three”, “$z= four”. Finish with register a holding “0f:r=j” as characterwise text.",
           "languageId": "rust",
           "sourceKind": "fragment",
           "scenario": {
@@ -2116,7 +2116,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Land on the next Go field",
-          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "instruction": "Make lines 1–4 read “A= one”, “A longer label= two”, “Medium= three”, “Z= four”. Registers: a = “0f:r=j” (text).",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -2278,7 +2278,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Carry the cursor through records",
-          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "instruction": "Change the first four colons to equals signs, leaving the sentinel unchanged. Registers: a = “0f:r=j” (text).",
           "languageId": "php",
           "sourceKind": "fragment",
           "scenario": {
@@ -2440,7 +2440,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Advance through uneven labels",
-          "instruction": "Use : as a stable anchor, replace it with =, and advance through the irregular rows.",
+          "instruction": "Change the first four colons to equals signs, leaving the sentinel unchanged. Registers: a = “0f:r=j” (text).",
           "languageId": "prose",
           "sourceKind": "fragment",
           "scenario": {
@@ -2758,7 +2758,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Stop before a broken log row",
-          "instruction": "Record deleting |, then confirm replay stops at the first row where that anchor is absent.",
+          "instruction": "Remove “|” so line 1 reads “Aok”.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -2897,7 +2897,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Stop when search runs out",
-          "instruction": "Record a search-driven deletion, then replay after the final match and preserve the trailing row.",
+          "instruction": "Change “T” to “ARGET one” so line 2 reads “ARGET one”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -3036,7 +3036,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Cancel remaining counted replays",
-          "instruction": "Record deleting ,, then confirm replay stops at the first row where that anchor is absent.",
+          "instruction": "Remove “,” so line 1 reads “ab”.",
           "languageId": "csv",
           "sourceKind": "fragment",
           "scenario": {
@@ -3196,7 +3196,7 @@
           "type": "demo",
           "phase": "demonstrate",
           "title": "Add the missing final movement",
-          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "instruction": "Make lines 1–4 read “A:one”, “LONG:two”, “MID:three”, “Z:four”. Finish with register a holding “0f|r:j” as characterwise text.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3388,7 +3388,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Extend a shell-record macro",
-          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "instruction": "Make lines 1–4 read “A= one”, “LongName= two”, “Mid= three”, “Z= four”. Registers: a = “0f|r:j” (text).",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -3580,7 +3580,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Extend a C# field macro",
-          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "instruction": "Make lines 1–4 read “a= one”, “long-attr= two”, “mid= three”, “z= four”. Registers: a = “0f:r=j” (text).",
           "languageId": "csharp",
           "sourceKind": "fragment",
           "scenario": {
@@ -3772,7 +3772,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Extend an attribute cleanup macro",
-          "instruction": "Record the transformation, append its final movement with qA, then replay the extended macro.",
+          "instruction": "Change the first four colons to equals signs, leaving the sentinel unchanged. Registers: a = “0f:r=j” (text).",
           "languageId": "xml",
           "sourceKind": "fragment",
           "scenario": {
@@ -4116,7 +4116,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Inspect a log macro",
-          "instruction": "Put the stored pipe-replacement macro on the scratch row for inspection.",
+          "instruction": "Add “0f|r,” so line 3 reads “macro=0f|r,”. Registers: a = “0f|r,” (text).",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -4251,7 +4251,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Repair a bad delimiter",
-          "instruction": "Repair the visible macro text, yank it back into register a, and replay the corrected command.",
+          "instruction": "Make lines 1–3 read “0f:r=j”, “alpha= one”, “longer= two”. Registers: a = “0f:r=j” (text).",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -4452,7 +4452,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Repair and replay a pipe macro",
-          "instruction": "Repair the visible macro text, yank it back into register a, and replay the corrected command.",
+          "instruction": "Make lines 1–3 read “0f|r,j”, “A,one”, “LONG,two”. Registers: a = “0f|r,j” (text).",
           "languageId": "csv",
           "sourceKind": "fragment",
           "scenario": {
@@ -4843,7 +4843,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Select FIXME rows",
-          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to FIXME rows.",
+          "instruction": "Make lines 1–5 read “# FIXME alpha()”, “keep()”, “# FIXME beta()”, “skip()”, “# FIXME gamma()”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -5016,7 +5016,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Mark only error records",
-          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to ERROR rows.",
+          "instruction": "Make lines 1–5 read “! ERROR alpha”, “INFO keep”, “! ERROR beta”, “DEBUG skip”, “! ERROR gamma”.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -5189,7 +5189,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Mute selected SQL updates",
-          "instruction": "Record the prefix once, then use a start-anchored search to apply it only to UPDATE rows.",
+          "instruction": "Make lines 1–5 read “-- UPDATE alpha;”, “SELECT keep;”, “-- UPDATE beta;”, “SELECT skip;”, “-- UPDATE gamma;”.",
           "languageId": "sql",
           "sourceKind": "fragment",
           "scenario": {

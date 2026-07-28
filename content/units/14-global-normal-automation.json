@@ -24,9 +24,9 @@
       "slow",
       "manual"
     ],
-    "manualStep": "one-input-key",
+    "manualStep": "one-input-or-text-run",
     "reset": "initial-state",
-    "backwardStep": "deferred"
+    "backwardStep": "previous-manual-step"
   },
   "generation": {
     "stage": "authoring",
@@ -176,7 +176,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Comment a known block",
-          "instruction": "Prefix lines 2 through 4 with `# ` using `:normal`.",
+          "instruction": "Make lines 2–4 read “# draft = False”, “# stale = True”, “# legacy = False”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -300,7 +300,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Terminate every declaration",
-          "instruction": "Append a semicolon to every CSS declaration with `%normal`.",
+          "instruction": "Make lines 1–3 read “color: red;”, “display: grid;”, “gap: 8px;”.",
           "languageId": "css",
           "sourceKind": "fragment",
           "scenario": {
@@ -415,7 +415,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Repair a fixed CSV range",
-          "instruction": "Replace the final semicolon on lines 2 and 3 with a comma.",
+          "instruction": "Make lines 2–3 read “alpha,”, “beta,”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -671,7 +671,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Transform a visual range",
-          "instruction": "Select the middle two YAML lines and append commas through `:normal`.",
+          "instruction": "Make lines 2–3 read “alpha: one,”, “beta: two,”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -791,7 +791,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Replace aligned delimiters",
-          "instruction": "Use built-in Normal keys to replace `=` with `:` on lines 2 through 4.",
+          "instruction": "Make lines 2–4 read “alpha : 1”, “beta : 2”, “gamma : 3”.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
@@ -918,7 +918,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove list markers",
-          "instruction": "Use `%normal!` and first-nonblank movement to remove every dash.",
+          "instruction": "Make lines 1–3 read “   alpha”, “   beta”, “   gamma”.",
           "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
@@ -1172,7 +1172,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete comment-only lines",
-          "instruction": "Delete every Python line beginning with `#`.",
+          "instruction": "Make lines 2–2 read “next_value = 2”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1285,7 +1285,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Limit the predicate scan",
-          "instruction": "Within lines 2 through 6, delete only lines containing `TEMP`.",
+          "instruction": "Make lines 3–3 read “keep two”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -1409,7 +1409,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove two debt markers",
-          "instruction": "Use one Vim alternation to delete `TODO` and `FIXME` lines.",
+          "instruction": "Make lines 2–2 read “keep()”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1665,7 +1665,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Keep exported declarations",
-          "instruction": "Delete every JavaScript line that does not begin with `export`.",
+          "instruction": "Make lines 2–2 read “export const ui = 3”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1785,7 +1785,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Invert inside a range",
-          "instruction": "Within lines 2 through 5, delete rows that do not contain `enabled`.",
+          "instruction": "Make lines 3–3 read “gamma enabled”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -1909,7 +1909,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Retain only errors",
-          "instruction": "Use `:vglobal` to remove every non-error log row.",
+          "instruction": "Make lines 1–2 read “ERROR disk”, “ERROR network”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -2170,7 +2170,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Rename only constants",
-          "instruction": "On lines beginning with `const`, substitute `old` with `new`.",
+          "instruction": "Make lines 1–3 read “const new = 1”, “let old = 2”, “const new = 3”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2294,7 +2294,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Combine range and predicate",
-          "instruction": "Inside lines 2 through 4, close `open` only on `ERROR` rows.",
+          "instruction": "Change “open” to “closed” so line 3 reads “ERROR closed”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -2430,7 +2430,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Update non-archive rows",
-          "instruction": "On lines not containing `archive`, substitute `draft` with `live`.",
+          "instruction": "Make lines 1–3 read “live active”, “draft archive”, “live current”.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -2701,7 +2701,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Comment matching tasks",
-          "instruction": "Prefix only `TODO` rows with `// ` using a Global-Normal composition.",
+          "instruction": "Make lines 1–3 read “// TODO alpha”, “ready beta”, “// TODO gamma”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2824,7 +2824,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Annotate uncommented calls",
-          "instruction": "Append ` # reviewed` only to lines not beginning with `#`.",
+          "instruction": "Make lines 1–3 read “alpha() # reviewed”, “# beta()”, “gamma() # reviewed”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -2953,7 +2953,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Change structural delimiters",
-          "instruction": "On `enabled` rows, use a find-and-replace Normal command to change `=` to `:`.",
+          "instruction": "Make lines 1–3 read “alpha : enabled”, “beta = disabled”, “gamma : enabled”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -3237,8 +3237,8 @@
           "id": "global-macro-semicolons",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Replay an append macro",
-          "instruction": "Use the prepared macro to append semicolons only to constants.",
+          "title": "Terminate every matching row",
+          "instruction": "Make lines 1–3 read “const a = 1;”, “let b = 2”, “const c = 3;”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3375,8 +3375,8 @@
           "id": "global-macro-colons",
           "type": "exercise",
           "phase": "mix",
-          "title": "Replay an anchored delimiter macro",
-          "instruction": "Use the prepared find-and-replace macro only on `enabled` rows.",
+          "title": "Normalize every matching delimiter",
+          "instruction": "Make lines 1–3 read “alpha : enabled”, “beta = disabled”, “gamma : enabled”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -3516,8 +3516,8 @@
           "id": "global-macro-status",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Replay a text-object macro",
-          "instruction": "Use the prepared macro to change the first word only on `TODO` rows.",
+          "title": "Update every matching status",
+          "instruction": "Make lines 1–3 read “DONE alpha”, “ready beta”, “DONE gamma”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -3798,7 +3798,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Choose predicate deletion",
-          "instruction": "Delete only rows marked `obsolete`.",
+          "instruction": "Make lines 2–2 read “active three”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -3914,7 +3914,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Choose predicate substitution",
-          "instruction": "On exported rows, substitute `internal` with `public`.",
+          "instruction": "Make lines 1–3 read “export public alpha”, “const internal beta”, “export public gamma”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4047,7 +4047,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Combine predicates carefully",
-          "instruction": "Append semicolons to `const` and `let` declarations, leaving other rows unchanged.",
+          "instruction": "Make lines 1–3 read “const a = 1;”, “var b = 2”, “let c = 3;”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
