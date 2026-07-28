@@ -83,13 +83,26 @@ def bounds(index: int) -> list[float]:
     return [x, y, 0.12, 0.14]
 
 
-def changes(concept: str, title: str) -> list[str]:
+UNIQUE_OBJECTS = [
+    "suspended glass astrolabe", "three-tier moon-bell", "small copper rain organ", "violet seed reliquary", "folded prism fan",
+    "brass tide clock", "living crystal fern stand", "amber listening horn", "nested mirror bowl", "tiny stone observatory",
+    "luminous bead abacus", "rootless floating-light mobile on a visible bracket", "moss-bound sundial", "blueglass water gauge", "five-cup chime rack",
+    "circular mosaic compass", "hinged lens flower", "miniature bridge beacon", "shelved bottle conservatory", "spiral shell lantern",
+    "copper balance arm", "stacked cloud-glass terrarium", "three-stone memory cairn", "mechanical firefly carousel", "crystal weather vane",
+    "low brass projector", "arched aquarium window", "pendulum lantern tower", "carved stone hand holding a gem", "hanging seed-pod chorus",
+    "small wheel-and-ribbon kinetic sculpture", "porcelain moon jar", "four-pane prism screen", "bracketed star map globe without markings", "glass reed harp",
+    "bronze pulse drum", "miniature waterless fountain", "teal filament loom", "clockwork lily platform", "caged aurora capsule",
+    "three-arm signal spinner", "crystal-cored tea set", "faceted echo horn", "two-level glass aviary without birds", "weathered mechanism cabinet",
+    "magnetic stone ring", "luminous paper-fold sculpture", "brass spiral staircase model", "small constellation lantern without symbols", "glowing mineral windcatcher",
+]
+
+
+def changes(concept: str, title: str, site_index: int) -> list[str]:
+    objects = UNIQUE_OBJECTS[site_index * 5:(site_index + 1) * 5]
+    verbs = ["Replace", "Build", "Reveal", "Create", "Install"]
     return [
-        f"Replace the target with a bold {concept}, materially attached to its support, with one clear cyan or violet magical core.",
-        f"Transform the target into a visibly different brass-and-glass {concept} with a warm amber practical light and a grounded shadow.",
-        f"Create a small magical tableau centered on a {concept}, with a new readable silhouette but no writing or symbols.",
-        f"Reveal a weathered, locally supported {concept} whose subtle light reflects only onto immediately adjacent material.",
-        f"Build a compact animated-looking {concept} with two or three distinct physical parts, securely attached to the named support.",
+        f"{verb} the target with a {object}, a wholly new readable silhouette for {title}. Let it subtly echo {concept}, but do not reuse any object, creature, vessel, lamp, bird, canister, or mechanism from another candidate in this batch. Keep it physically attached to the named support."
+        for verb, object in zip(verbs, objects)
     ]
 
 
@@ -105,7 +118,7 @@ def main() -> int:
                 "bounds": bounds(index),
                 "locator": locator,
                 "appearance": f"a small existing supported detail in {title} at the marked location",
-                "changes": changes(concept, title),
+                "changes": changes(concept, title, index),
             })
         payload = {
             "workPackage": "WP-04P-A",

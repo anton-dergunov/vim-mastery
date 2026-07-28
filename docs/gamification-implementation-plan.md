@@ -816,8 +816,11 @@ Do not generate structural prop sheets. For each approved scene and profile:
    new scene underused semantic families, record its planned families in the
    ledger, and include earlier recurring families and close synonyms in the
    scene inventory's `avoidRecurringMotifs`. Do a text-only duplicate-idea pass
-   across all fifty ideas; this is a creative-planning guardrail, not an
-   automated aesthetic rejection of generated images.
+   across all fifty ideas. Every candidate must name a distinct primary object
+   concept: the five alternatives at one locator must never be variations of
+   the same bird, lamp, canister, vessel, mechanism, or other object family.
+   This is a creative-planning guardrail, not an automated aesthetic rejection
+   of generated images.
 4. Decode the shipped compact board once to a lossless PNG. For every
    candidate, send that complete PNG as the first Gemini image and a small
    contextual crop with a high-contrast locator box as the second image.
