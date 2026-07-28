@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "text-objects",
+  "sceneId": "nested-garden",
+  "worldId": "starwater-sanctuary",
+  "source": "base.png",
+  "sha256": "07270d3b3714e1bd2078e6b56d47242efee969e47300f03ea620a8080115e315",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-04",
+    "approvedAt": "2026-07-28T13:33:23.866064+00:00",
+    "notes": "Owner-approved: elaborate nested threshold and calm water."
+  }
+}

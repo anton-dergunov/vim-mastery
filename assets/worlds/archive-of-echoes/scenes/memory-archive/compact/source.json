@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "registers-putting",
+  "sceneId": "memory-archive",
+  "worldId": "archive-of-echoes",
+  "source": "base.png",
+  "sha256": "27f4f79fe0c2aa15007b239d800bbb9b00026ce5b546c231038ca257c33ba9da",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-03",
+    "approvedAt": "2026-07-28T13:33:24.126178+00:00",
+    "notes": "Owner-approved: graphically strong archive cabinet."
+  }
+}

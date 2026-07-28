@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "precision-motions-search",
+  "sceneId": "starneedle-observatory",
+  "worldId": "starwater-sanctuary",
+  "source": "base.png",
+  "sha256": "920d29c67d5e05fc9859ad5a4d27587c80f94713c8f6123d7ae0798e81355df0",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-01",
+    "approvedAt": "2026-07-28T13:33:23.736546+00:00",
+    "notes": "Owner-approved: strongest editor-edge readability."
+  }
+}

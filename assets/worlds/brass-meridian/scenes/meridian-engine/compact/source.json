@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "global-normal-automation",
+  "sceneId": "meridian-engine",
+  "worldId": "brass-meridian",
+  "source": "base.png",
+  "sha256": "28e46f64cf8697cb9c67e478f13e1d46c5fb5fa2086648b945e7cca738085a8e",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-01",
+    "approvedAt": "2026-07-28T13:33:24.861893+00:00",
+    "notes": "Owner-approved: clearest Meridian Engine landmark."
+  }
+}

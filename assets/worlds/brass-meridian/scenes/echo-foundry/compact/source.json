@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "macros",
+  "sceneId": "echo-foundry",
+  "worldId": "brass-meridian",
+  "source": "base.png",
+  "sha256": "83f0397954dde6b906fb91af79125713191d9181adb665fa0205be3370284230",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-02",
+    "approvedAt": "2026-07-28T13:33:24.734882+00:00",
+    "notes": "Owner-approved: calm nature-and-mechanism composition."
+  }
+}

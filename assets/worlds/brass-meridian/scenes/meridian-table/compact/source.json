@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "command-line-ranges-line-operations",
+  "sceneId": "meridian-table",
+  "worldId": "brass-meridian",
+  "source": "base.png",
+  "sha256": "888c4110c677195fa37205f9a7f9240007164f6c579985a1b92dfdda9f1d5512",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-01",
+    "approvedAt": "2026-07-28T13:33:24.497340+00:00",
+    "notes": "Owner-approved: orange-only saturation-reduced rendition; original retained as candidate-01-original.png."
+  }
+}

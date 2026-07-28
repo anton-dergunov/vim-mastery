@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "substitution-practical-regex",
+  "sceneId": "mirror-loom",
+  "worldId": "brass-meridian",
+  "source": "base.png",
+  "sha256": "1c6ba0a95954a4671493996e846a97a85b3f4e99d0546811bb42ef8c895ef0e4",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-02",
+    "approvedAt": "2026-07-28T13:33:24.613846+00:00",
+    "notes": "Owner-approved: calmer glass-lens hall."
+  }
+}

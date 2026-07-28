@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from datetime import UTC, datetime
 from pathlib import Path
@@ -11,6 +12,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ARTIFACT_ROOT = ROOT / "artifacts" / "world-generation" / "unit-scenes"
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def main() -> int:
@@ -31,6 +40,7 @@ def main() -> int:
         raise SystemExit(f"Candidate image is missing: {candidate_path}")
     for candidate in candidates.values():
         candidate["approvalState"] = "approved" if candidate["id"] == args.candidate_id else "rejected"
+    candidates[args.candidate_id]["sha256"] = sha256(candidate_path)
     manifest["approval"] = {
         "candidateId": args.candidate_id,
         "approvedAt": datetime.now(UTC).isoformat(),

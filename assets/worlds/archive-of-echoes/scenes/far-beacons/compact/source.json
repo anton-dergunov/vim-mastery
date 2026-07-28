@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "long-range-navigation",
+  "sceneId": "far-beacons",
+  "worldId": "archive-of-echoes",
+  "source": "base.png",
+  "sha256": "e881a79a62e5e89a5da5e39d4a08e5d782fd8b8147e740efa5720107976899b6",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-03",
+    "approvedAt": "2026-07-28T13:33:24.253808+00:00",
+    "notes": "Owner-approved: consistent beacon passage."
+  }
+}

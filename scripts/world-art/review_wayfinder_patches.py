@@ -43,6 +43,8 @@ BASES = {
 }
 LANDMARK_BOUNDS = (0.28, 0.48, 0.44, 0.52)
 AVOID_RECURRING_MOTIFS: tuple[str, ...] = ()
+PRESERVATION_ANCHORS = "paths, water, stones, roots, bridge, central wayfinder, and outer edges"
+WORK_PACKAGE = "WP-03P-A"
 OUTPUT_COST_USD = 0.067
 INPUT_COST_ALLOWANCE_USD = 0.0012
 
@@ -255,7 +257,7 @@ def configure_scene(config_path: Path) -> None:
     """Apply a scene-specific inventory while retaining the reviewed workflow."""
     global SCENE_ID, UNIT_ID, SCENE_TITLE, REVIEW_ROOT, VISIBILITY_METRICS
     global MANIFEST_PATH, INVENTORY_PATH, LEDGER_PATH, BASES, LANDMARK_BOUNDS, SITES
-    global AVOID_RECURRING_MOTIFS
+    global AVOID_RECURRING_MOTIFS, PRESERVATION_ANCHORS, WORK_PACKAGE
     config = json.loads(config_path.read_text())
     SCENE_ID = config["sceneId"]
     UNIT_ID = config["unitId"]
@@ -265,13 +267,23 @@ def configure_scene(config_path: Path) -> None:
     MANIFEST_PATH = REVIEW_ROOT / "approval-manifest.json"
     INVENTORY_PATH = REVIEW_ROOT / "object-inventory.json"
     LEDGER_PATH = REVIEW_ROOT / "ledger.jsonl"
-    BASES = {
-        profile: ROOT / f"assets/worlds/moonroot-ruins/scenes/{SCENE_ID}/{profile}/base.webp"
-        for profile in ("tall", "compact", "wide")
-    }
+    configured_base = config.get("compactBase")
+    BASES = (
+        {"compact": ROOT / configured_base}
+        if configured_base
+        else {
+            profile: ROOT / f"assets/worlds/moonroot-ruins/scenes/{SCENE_ID}/{profile}/base.webp"
+            for profile in ("tall", "compact", "wide")
+        }
+    )
     LANDMARK_BOUNDS = tuple(config["landmarkBounds"])
     SITES = tuple(config["sites"])
     AVOID_RECURRING_MOTIFS = tuple(config.get("avoidRecurringMotifs", ()))
+    PRESERVATION_ANCHORS = config.get(
+        "preservationAnchors",
+        "paths, water, stones, roots, bridge, central wayfinder, and outer edges",
+    )
+    WORK_PACKAGE = config.get("workPackage", "WP-03P-A")
 
 
 def sha256(path: Path) -> str:
@@ -363,6 +375,22 @@ def site_fraction(mask: Image.Image, bounds: tuple[float, float, float, float]) 
 
 def build_visibility_artifacts() -> dict[str, Any]:
     if not VISIBILITY_METRICS.is_file():
+        if set(BASES) == {"compact"}:
+            return {
+                "schemaVersion": 2,
+                "status": "deferred-until-live-scene-integration",
+                "profiles": {
+                    "compact": {
+                        "base": str(BASES["compact"].relative_to(ROOT)),
+                        "captureIds": [],
+                        "captureCount": 0,
+                    }
+                },
+                "compactSiteVisibility": {
+                    site["id"]: {"approved-4-3-source": 1.0}
+                    for site in SITES
+                },
+            }
         raise RuntimeError(
             "Run node scripts/world-art/capture_patch_visibility.mjs first"
         )
@@ -511,7 +539,7 @@ PRIMARY EDIT
 {change}
 
 PRESERVATION IS THE MAIN REQUIREMENT
-Return the complete board, not a crop. Keep the canvas, framing, camera, perspective, paths, water, stones, roots, bridge, central wayfinder, every other prop, all edge content, palette, lighting, pixel-art rendering, and spatial relationships as close to Image 1 as possible. Change only the named target and the few immediately adjacent pixels needed for contact, shadow, reflection, or local magical glow. The replacement must be physically attached to or supported by the named surface. Preserve surrounding silhouettes at the target boundary so the edited board can later yield a seamless registered patch.
+Return the complete board, not a crop. Keep the canvas, framing, camera, perspective, {PRESERVATION_ANCHORS}, every other prop, all edge content, palette, lighting, pixel-art rendering, and spatial relationships as close to Image 1 as possible. Change only the named target and the few immediately adjacent pixels needed for contact, shadow, reflection, or local magical glow. The replacement must be physically attached to or supported by the named surface. Preserve surrounding silhouettes at the target boundary so the edited board can later yield a seamless registered patch.
 
 The target itself must change substantially: it needs an unmistakably new silhouette and content that remains legible when the complete board is displayed small. Do not settle for a tint, brightness shift, tiny sparkles, or a nearly identical version of the existing object.
 
@@ -565,7 +593,7 @@ def stage() -> None:
         },
         "visibility": visibility,
         "protectedRegions": {
-            "wayfinderLandmark": dict(
+            "authoredLandmark": dict(
                 zip(("x", "y", "width", "height"), LANDMARK_BOUNDS)
             ),
         },
@@ -573,7 +601,7 @@ def stage() -> None:
     }
     manifest = {
         "schemaVersion": 3,
-        "workPackage": "WP-03P-A",
+        "workPackage": WORK_PACKAGE,
         "unitId": UNIT_ID,
         "sceneId": SCENE_ID,
         "round": 3,
@@ -929,7 +957,7 @@ def main() -> int:
     parser.add_argument(
         "--scene-config",
         type=Path,
-        help="JSON inventory for another Moonroot scene; preserves the Wayfinder default",
+        help="JSON inventory for another approved scene; preserves the Wayfinder default",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("stage")

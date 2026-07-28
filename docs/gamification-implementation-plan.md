@@ -38,25 +38,27 @@ central editor cavities, or one scene per region:
 - On first entry to a unit, permit a loaded backdrop-first reveal for 450–600ms.
   Any input cancels it; reduced motion, slow/missing media, resize, direct
   activity changes, and shallow layouts skip it.
-- The four-unit Moonroot proof is approved. WP-04A through WP-04C may now
-  generate review-only 4:3 backdrop candidates through the same explicit human
-  gate; responsive derivation, runtime integration, and all non-Moonroot
-  variation work remain paused until those backdrop choices are approved.
+- The four-unit Moonroot proof is approved. The ten WP-04 4:3 backdrops are
+  personally selected and their compact lossless source boards are promoted.
+  Their complete-board variation prompts are staged for explicit owner-run
+  Vertex generation; responsive derivation and runtime integration remain
+  paused until those variation batches are reviewed.
 
 Current checkpoint: WP-01R through WP-03R are implemented and the four Moonroot
 base scenes and responsive profiles are personally approved. The old local
 brightness/tint proof-overlay renderer has been removed; it is not approved
 environmental art and must not return. Wayfinder's reviewed complete-board
-variants are the replacement. WP-04 is currently in its review-only base-
-backdrop selection gate; no responsive derivation or runtime integration may
-begin until the owner selects a backdrop for each unit.
+variants are the replacement. WP-04 is preparing its first complete-board
+variation batches; no responsive derivation or runtime integration may begin
+until those batches are personally reviewed.
 
 **Current Moonroot variant status:** Wayfinder Crossroads, Mode Lantern Grounds,
 Scribe's Spring, and Grammar Gate Court each have all fifty owner-approved
 compact full-board variants in the production remote-media tree. Their variants
 stream only on the compact profile until separately reviewed tall or wide
-complete-board batches exist. The ten remaining units now have five 2K 4:3
-Gemini base-backdrop candidates each, awaiting owner selection.
+complete-board batches exist. The ten remaining units have selected 2K 4:3
+sources promoted under their scene asset roots and fifty prepared Gemini
+complete-board-edit prompts each.
 
 ### July 2026 patch-production correction
 
@@ -1495,7 +1497,7 @@ Repeat WP-03P-A, its human gate, and WP-03P-B scene by scene for the remaining
 Moonroot units. Do not batch all four scenes before the first integrated scene
 has been personally reviewed.
 
-### WP-04A — Starwater unit-scene expansion — backdrop review active
+### WP-04A — Starwater unit-scene expansion — variants prepared
 
 **Recommended model:** Terra  
 **Dependencies:** Personally approved WP-03P for all four Moonroot scenes and
@@ -1504,13 +1506,14 @@ Starwater candidate approvals
 **Risk:** Low
 
 Generate five 2K 4:3 complete-scene candidates for each of Units 5–7 using the
-same human-reviewed backdrop funnel. Stop after review and owner approval;
-derive responsive profiles, integrate runtime scenes, and generate variants only
-in a later authorized pass. Reuse the renderer unchanged.
+same human-reviewed backdrop funnel. The owner selected one source per unit;
+the 150 complete-board variation prompts are staged but not yet generated.
+Review all outputs before responsive-profile derivation or runtime integration.
+Reuse the renderer unchanged.
 
 Human validation focuses on search, text-object, and Visual Block exercises at every target viewport.
 
-### WP-04B — Archive unit-scene expansion — backdrop review active
+### WP-04B — Archive unit-scene expansion — variants prepared
 
 **Recommended model:** Terra  
 **Dependencies:** Personally approved WP-03P for all four Moonroot scenes and
@@ -1519,13 +1522,13 @@ Archive candidate approvals
 **Risk:** Low
 
 Generate five 2K 4:3 complete-scene candidates for each of Units 8–10 using
-the same human-reviewed backdrop funnel. Stop after review and owner approval;
-derive responsive profiles, integrate runtime scenes, and generate variants only
-in a later authorized pass.
+the same human-reviewed backdrop funnel. The owner selected one source per unit;
+the 150 complete-board variation prompts are staged but not yet generated.
+Review all outputs before responsive-profile derivation or runtime integration.
 
 Human validation focuses on register indicators, long buffers, hidden keyboard layout, and dot-repeat exercises.
 
-### WP-04C — Meridian unit-scene expansion — backdrop review active
+### WP-04C — Meridian unit-scene expansion — variants prepared
 
 **Recommended model:** Terra  
 **Dependencies:** Personally approved WP-03P for all four Moonroot scenes and
@@ -1534,9 +1537,9 @@ Meridian candidate approvals
 **Risk:** Low
 
 Generate five 2K 4:3 complete-scene candidates for each of Units 11–14 using
-the same human-reviewed backdrop funnel. Stop after review and owner approval;
-derive responsive profiles, integrate runtime scenes, and generate variants only
-in a later authorized pass.
+the same human-reviewed backdrop funnel. The owner selected one source per unit;
+the 200 complete-board variation prompts are staged but not yet generated.
+Review all outputs before responsive-profile derivation or runtime integration.
 
 Human validation focuses on Command-line UI, confirmation prompts, macros, substitution, and the densest buffers.
 

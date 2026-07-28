@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "unitId": "repeatable-editing",
+  "sceneId": "echo-clock",
+  "worldId": "archive-of-echoes",
+  "source": "base.png",
+  "sha256": "947285087bcd6b3a4ef733ddeeb7ff06f8865499059127632cf3db017c966828",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-05",
+    "approvedAt": "2026-07-28T13:33:24.377259+00:00",
+    "notes": "Owner-approved: asymmetric clockwork archive path."
+  }
+}
