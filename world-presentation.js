@@ -29,9 +29,10 @@ function setAsset(element, asset, assetUrl) {
 
 export function remoteVariantPaths(config) {
   if (!config?.assetRoot || !Array.isArray(config.siteIds) || !Number.isInteger(config.variantsPerSite)) return [];
+  const format = config.format || "png";
   return config.siteIds.flatMap(siteId => Array.from(
     { length: config.variantsPerSite },
-    (_, index) => `${config.assetRoot}/${siteId}-c${String(index + 1).padStart(2, "0")}.png`,
+    (_, index) => `${config.assetRoot}/${siteId}-c${String(index + 1).padStart(2, "0")}.${format}`,
   ));
 }
 
@@ -43,7 +44,6 @@ export class WorldPresentationRenderer {
     remoteVariantLayer,
     assetUrl = value => value,
     remoteAssetUrls = value => [value],
-    onLegacyResize = () => {},
   }) {
     this.world = world;
     this.backdropLayer = backdropLayer;
@@ -51,10 +51,8 @@ export class WorldPresentationRenderer {
     this.remoteVariantLayer = remoteVariantLayer;
     this.assetUrl = assetUrl;
     this.remoteAssetUrls = remoteAssetUrls;
-    this.onLegacyResize = onLegacyResize;
     this.presentation = null;
     this.presentationKey = null;
-    this.fallbackOnly = false;
     this.phase = "explain";
     this.landmarkState = "dormant";
     this.profile = null;
@@ -102,20 +100,16 @@ export class WorldPresentationRenderer {
     unitId,
     phase = "explain",
     landmarkState = "dormant",
-    fallbackOnly = false,
   } = {}) {
     const scene = presentation?.scene;
-    const validFallback = Boolean(fallbackOnly && presentation?.world && presentation?.unit);
-    const validScene = Boolean(!fallbackOnly && presentation?.world && presentation?.unit && scene?.profiles);
-    const valid = validFallback || validScene;
+    const valid = Boolean(presentation?.world && presentation?.unit && scene?.profiles);
     this.presentation = valid ? presentation : null;
-    this.fallbackOnly = validFallback;
     this.phase = phase;
     this.landmarkState = landmarkState;
     this.world.dataset.unitId = unitId || presentation?.unit?.id || "unknown";
-    this.world.dataset.renderer = validFallback ? "fallback" : validScene ? "registered-scenes" : "legacy";
-    this.world.dataset.worldId = valid ? presentation.world.id : "legacy";
-    this.world.dataset.sceneId = validScene ? scene.id : "none";
+    this.world.dataset.renderer = valid ? "registered-scenes" : "unavailable";
+    this.world.dataset.worldId = valid ? presentation.world.id : "none";
+    this.world.dataset.sceneId = valid ? scene.id : "none";
     this.world.dataset.landmarkId = valid ? presentation.unit.landmark.id : "none";
     this.world.dataset.learningPhase = phase;
 
@@ -132,22 +126,14 @@ export class WorldPresentationRenderer {
       return false;
     }
 
-    if (validFallback) this.world.style.removeProperty("--world-fallback");
-    else this.world.style.setProperty("--world-fallback", presentation.world.fallbackGradient);
-    const key = validFallback
-      ? `${presentation.world.id}:${presentation.unit.id}:fallback`
-      : `${presentation.world.id}:${presentation.unit.id}:${scene.id}`;
+    this.world.style.setProperty("--world-fallback", presentation.world.fallbackGradient);
+    const key = `${presentation.world.id}:${presentation.unit.id}:${scene.id}`;
     if (key !== this.presentationKey) {
       this.cancelReveal();
       this.cancelRemoteVariants({ clearLayer: true, resetBag: true });
       this.presentationKey = key;
-      if (validFallback) {
-        this.remoteVariantPausedOffline = true;
-        this.ambientLayer.replaceChildren();
-      } else {
-        this.remoteVariantPausedOffline = !navigator.onLine;
-        this.buildAmbientLayer();
-      }
+      this.remoteVariantPausedOffline = !navigator.onLine;
+      this.buildAmbientLayer();
     }
     this.updateLayout(true);
     return true;
@@ -165,13 +151,13 @@ export class WorldPresentationRenderer {
   }
 
   remoteVariantsAreEligible() {
-    if (this.fallbackOnly) return false;
     const config = this.presentation?.scene?.remoteVariants;
     return Boolean(
       config
       && this.remoteVariantLayer
       && config.profiles?.includes(sceneProfileForBoard(this.profile))
       && this.profile !== "shallow"
+      && this.world.dataset.simpleBackground !== "true"
       && !this.reducedMotionQuery?.matches
       && navigator.onLine
       && !this.remoteVariantPausedOffline,
@@ -301,27 +287,13 @@ export class WorldPresentationRenderer {
 
   updateLayout(force = false) {
     const nextProfile = boardProfileForBounds(this.world.getBoundingClientRect());
-    if (!force && nextProfile === this.profile) {
-      if (!this.presentation) this.onLegacyResize();
-      return;
-    }
+    if (!force && nextProfile === this.profile) return;
     this.profile = nextProfile;
     this.world.dataset.boardProfile = nextProfile;
     // Keep the old attribute for one compatibility release; its values now
     // deliberately identify registered profiles, not prop-placement shapes.
     this.world.dataset.boardShape = nextProfile;
-    if (!this.presentation) {
-      this.onLegacyResize();
-      return;
-    }
-    if (this.fallbackOnly) {
-      this.backdropLayer.style.removeProperty("--world-asset");
-      this.backdropLayer.dataset.sceneProfile = "fallback";
-      this.backdropLayer.dataset.backdropShape = "fallback";
-      this.world.style.removeProperty("--scene-focal-position");
-      this.cancelRemoteVariants({ clearLayer: true });
-      return;
-    }
+    if (!this.presentation) return;
 
     const sceneProfile = sceneProfileForBoard(nextProfile);
     const profileData = this.presentation.scene.profiles[sceneProfile];
@@ -334,7 +306,7 @@ export class WorldPresentationRenderer {
   }
 
   considerUnitReveal() {
-    if (!this.presentation || this.fallbackOnly || this.revealKey === this.presentationKey) return;
+    if (!this.presentation || this.revealKey === this.presentationKey) return;
     this.revealKey = this.presentationKey;
     if (this.reducedMotionQuery?.matches || this.profile === "shallow") return;
     const profile = sceneProfileForBoard(this.profile);

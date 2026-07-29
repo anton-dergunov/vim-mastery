@@ -52,8 +52,11 @@ def main() -> int:
         unit_data["scenes"] = {
             scene: {
                 "id": scene,
+                "patchRegions": {"phase-a": {"x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24}, "phase-b": {"x": 0.70, "y": 0.64, "width": 0.26, "height": 0.25}, "phase-c": {"x": 0.39, "y": 0.04, "width": 0.22, "height": 0.20}},
                 "profiles": {profile: {"base": f"assets/worlds/{world}/scenes/{scene}/{profile}/base.webp", "focalPosition": "50% 50%", "patches": {}} for profile in ("tall", "compact", "wide")},
-                "remoteVariants": {"profiles": ["compact"], "assetRoot": f"assets/worlds/{world}/scenes/{scene}/variants", "siteIds": [site["id"] for site in config["sites"]], "variantsPerSite": 5, "timing": {"initialDelayMs": 15000, "fadeMs": 2600, "holdMs": 7000, "gapMs": 15000}},
+                "remoteVariants": {"profiles": ["compact"], "assetRoot": f"assets/worlds/{world}/scenes/{scene}/variants", "format": "webp", "siteIds": [site["id"] for site in config["sites"]], "variantsPerSite": 5, "timing": {"initialDelayMs": 15000, "fadeMs": 2600, "holdMs": 7000, "gapMs": 15000}},
+                "phasePatches": {phase: [] for phase in ("explain", "demonstrate", "isolate", "mix", "challenge", "summary")},
+                "landmarkPatches": {"dormant": None, "restored": None},
             }
         }
     PRESENTATION.write_text(json.dumps(presentation, indent=2) + "\n")

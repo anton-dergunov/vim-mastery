@@ -60,7 +60,7 @@ test("production PWA precaches core media and streams optional animation and sce
   for (const sceneId of ["wayfinder-crossroads", "mode-lantern-grounds", "scribes-spring", "grammar-gate-court"]) {
     const remoteVariantRoot = join(moonrootRoot, "scenes", sceneId, "variants");
     const remoteVariants = files(remoteVariantRoot)
-      .filter(file => file.endsWith(".png"))
+      .filter(file => file.endsWith(".webp"))
       .map(file => `assets/worlds/moonroot-ruins/scenes/${sceneId}/variants/${file.split("/").at(-1)}`);
     assert.equal(remoteVariants.length, 50);
     remoteVariants.forEach(file => {
@@ -109,7 +109,7 @@ test("media policy is deterministic and fails declared missing runtime assets", 
 
   const unapproved = structuredClone(presentation);
   unapproved.units["modal-model"].completion.storyBackdrop =
-    "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants/mode-lantern-c01.png";
+    "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants/mode-lantern-c01.webp";
   assert.throws(
     () => collectMediaPolicy(unapproved, characters),
     /Unapproved scene variants cannot be shipped as core runtime media/,

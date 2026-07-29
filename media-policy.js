@@ -42,11 +42,12 @@ export function collectMediaPolicy(presentation, characterManifest) {
 
     const variants = scene?.remoteVariants;
     if (variants) {
+      const format = variants.format || "png";
       for (const siteId of variants.siteIds || []) {
         for (let index = 1; index <= variants.variantsPerSite; index += 1) {
           addAsset(
             optional,
-            `${variants.assetRoot}/${siteId}-c${String(index).padStart(2, "0")}.png`,
+            `${variants.assetRoot}/${siteId}-c${String(index).padStart(2, "0")}.${format}`,
             "remote-scene-variant",
           );
         }

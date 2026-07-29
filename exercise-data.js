@@ -1,30 +1,3 @@
-export const spriteCells = Object.freeze({
-  stone: [0, 0],
-  moss: [1, 0],
-  water: [2, 0],
-  bridge: [3, 0],
-  wall: [0, 1],
-  pillar: [1, 1],
-  gate: [2, 1],
-  rune: [3, 1],
-  crystal: [0, 2],
-  thorn: [1, 2],
-  mirror: [2, 2],
-  beacon: [3, 2],
-  terminal: [0, 3],
-  stair: [1, 3],
-  vine: [2, 3],
-  chest: [3, 3],
-});
-
-const block = (type, col, row, size = 1, activatesAt = Infinity) => ({
-  type,
-  col,
-  row,
-  size,
-  activatesAt,
-});
-
 export const exercises = [
   {
     id: "rune-column",
@@ -58,16 +31,8 @@ export const exercises = [
     ],
     scene: {
       theme: "moonroot",
-      template: "causeway",
       codeSide: "left",
       successEffect: "gate-open",
-      blocks: [
-        block("gate", 10, 1, 2, 5),
-        block("rune", 10, 4, 1, 2),
-        block("rune", 10, 5, 1, 3),
-        block("rune", 10, 6, 1, 4),
-        block("rune", 10, 7, 1, 5),
-      ],
     },
   },
   {
@@ -92,10 +57,8 @@ export const exercises = [
     ],
     scene: {
       theme: "glass",
-      template: "islands",
       codeSide: "right",
       successEffect: "crystal-charge",
-      blocks: [block("crystal", 2, 3, 2, 14), block("pillar", 2, 6, 1)],
     },
   },
   {
@@ -118,14 +81,8 @@ export const exercises = [
     ],
     scene: {
       theme: "deepwater",
-      template: "altar",
       codeSide: "left",
       successEffect: "altar-clear",
-      blocks: [
-        block("rune", 10, 4, 1, 3),
-        block("crystal", 9, 6, 1, 3),
-        block("crystal", 11, 6, 1, 3),
-      ],
     },
   },
   {
@@ -153,14 +110,8 @@ export const exercises = [
     ],
     scene: {
       theme: "ember",
-      template: "lanes",
       codeSide: "right",
       successEffect: "thorns-clear",
-      blocks: [
-        block("thorn", 2, 3, 1, 3),
-        block("thorn", 2, 5, 1, 3),
-        block("thorn", 2, 7, 1, 3),
-      ],
     },
   },
   {
@@ -198,14 +149,8 @@ export const exercises = [
     ],
     scene: {
       theme: "glass",
-      template: "mirrors",
       codeSide: "left",
       successEffect: "mirrors-turn",
-      blocks: [
-        block("mirror", 10, 3, 1, 7),
-        block("mirror", 10, 5, 1, 9),
-        block("mirror", 10, 7, 1, 11),
-      ],
     },
   },
   {
@@ -234,14 +179,8 @@ export const exercises = [
     ],
     scene: {
       theme: "ember",
-      template: "beacons",
       codeSide: "right",
       successEffect: "beacons-light",
-      blocks: [
-        block("beacon", 2, 3, 1, 7),
-        block("beacon", 2, 5, 1, 11),
-        block("beacon", 2, 7, 1, 14),
-      ],
     },
   },
   {
@@ -274,10 +213,8 @@ export const exercises = [
     ],
     scene: {
       theme: "deepwater",
-      template: "terminal",
       codeSide: "right",
       successEffect: "terminal-run",
-      blocks: [block("terminal", 1, 3, 2, 16), block("pillar", 2, 7, 1)],
     },
   },
   {
@@ -302,10 +239,8 @@ export const exercises = [
     ],
     scene: {
       theme: "moonroot",
-      template: "bridge",
       codeSide: "left",
       successEffect: "bridge-align",
-      blocks: [block("stair", 10, 4, 1, 2), block("stair", 10, 6, 1, 3)],
     },
   },
   {
@@ -322,10 +257,8 @@ export const exercises = [
     checkpoints: [{ at: 1, mode: "Complete", code: "target" }],
     scene: {
       theme: "deepwater",
-      template: "aqueduct",
       codeSide: "right",
       successEffect: "bridge-align",
-      blocks: [block("bridge", 2, 4, 1, 1), block("bridge", 2, 6, 1, 1)],
     },
   },
   {
@@ -349,10 +282,8 @@ export const exercises = [
     ],
     scene: {
       theme: "glass",
-      template: "vines",
       codeSide: "left",
       successEffect: "vine-cut",
-      blocks: [block("vine", 10, 3, 2, 5), block("crystal", 10, 7, 1, 5)],
     },
   },
   {
@@ -378,10 +309,8 @@ export const exercises = [
     ],
     scene: {
       theme: "ember",
-      template: "echo",
       codeSide: "right",
       successEffect: "chest-echo",
-      blocks: [block("chest", 2, 4, 1), block("chest", 2, 6, 1, 3)],
     },
   },
 ];

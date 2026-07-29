@@ -21,7 +21,6 @@ ARTIFACT_ROOT = ROOT / "artifacts" / "world-generation" / "unit-scenes"
 MASK_METRICS = ROOT / "artifacts" / "world-generation" / "layout-masks" / "metrics.json"
 REFERENCE_PATHS = (
     ROOT / "assets" / "enchanted-ruins.png",
-    ROOT / "assets" / "world-kit.png",
 )
 MODEL = "gemini-3.1-flash-image"
 

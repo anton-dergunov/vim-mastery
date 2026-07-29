@@ -1558,9 +1558,7 @@ test.describe("Production lesson flow", () => {
       const rendered = await page.locator("#world").evaluate(node => ({
         data: { ...node.dataset },
         classes: [...node.classList],
-        groundCells: node.querySelectorAll(".ground-cell").length,
         ambientEffects: node.querySelectorAll(".world-ambient-effect").length,
-        props: node.querySelectorAll(".world-prop").length,
         decorativeImages: node.querySelectorAll(".world-backdrop img, .world-ambient img").length,
         backdrop: getComputedStyle(node.querySelector(".world-backdrop")).backgroundImage,
         pointerEvents: [".world-backdrop", ".world-ambient"]
@@ -1577,9 +1575,7 @@ test.describe("Production lesson flow", () => {
       });
       expect(["tall", "compact", "wide", "shallow"]).toContain(rendered.data.boardProfile);
       expect(rendered.classes).toContain("theme-moonroot");
-      expect(rendered.groundCells).toBe(0);
       expect(rendered.ambientEffects).toBeGreaterThan(0);
-      expect(rendered.props).toBe(0);
       expect(rendered.decorativeImages).toBe(0);
       expect(rendered.backdrop).toContain("gradient");
       expect(rendered.pointerEvents).toEqual(["none", "none"]);
@@ -1636,16 +1632,15 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator("#world")).not.toHaveClass(/scene-reveal-active/);
   });
 
-  test("uses the legacy tile renderer when presentation data is invalid", async ({ page }) => {
+  test("leaves board art unavailable when presentation data is invalid", async ({ page }) => {
     await page.route("**/content/presentation.json", route => route.fulfill({
       contentType: "application/json",
       body: JSON.stringify({ schemaVersion: 2, worlds: {}, units: {}, story: {} }),
     }));
     await page.goto("/?unit=modal-model");
-    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "legacy");
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "unavailable");
     await expect(page.locator("#world")).toHaveAttribute("data-unit-id", "modal-model");
-    await expect(page.locator("#world")).toHaveAttribute("data-world-id", "legacy");
-    expect(await page.locator(".ground-cell").count()).toBeGreaterThanOrEqual(108);
+    await expect(page.locator("#world")).toHaveAttribute("data-world-id", "none");
     await expect(page.locator(".world-ambient-effect")).toHaveCount(0);
   });
 
@@ -1668,11 +1663,11 @@ test.describe("Production lesson flow", () => {
       generatedBackdrops: "disabled",
       characters: "disabled",
     });
-    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "fallback");
-    await expect(page.locator(".ground-cell")).toHaveCount(0);
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");
+    await expect(page.locator("#world")).toHaveAttribute("data-simple-background", "true");
     await expect(page.locator(".nix")).toHaveCount(0);
     await expect(page.locator("html")).toHaveAttribute("data-characters-ready", "disabled");
-    expect(decorativeRequests).toEqual([]);
+    expect(decorativeRequests.some(url => url.includes("scenes/mode-lantern-grounds/"))).toBe(true);
 
     const editorBefore = await state(page);
     await page.getByRole("button", { name: "Open settings" }).click();
@@ -1693,7 +1688,7 @@ test.describe("Production lesson flow", () => {
       characters: "enabled",
     });
     await page.getByLabel("Use simple backgrounds").check();
-    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "fallback");
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");
     await expect(page.locator(".nix")).toHaveCount(1);
     await page.getByLabel("Show generated scenes").check();
 
@@ -1709,11 +1704,11 @@ test.describe("Production lesson flow", () => {
     await page.getByLabel("Hide characters").check();
     await page.getByRole("button", { name: "Close settings" }).click();
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
-    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "fallback");
-    await expect(page.locator(".ground-cell")).toHaveCount(0);
+    await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");
+    await expect(page.locator("#world")).toHaveAttribute("data-simple-background", "true");
     await expect(page.locator(".nix")).toHaveCount(0);
-    const fallbackBackground = await page.locator("#worldBackdrop").evaluate(node => getComputedStyle(node).backgroundImage);
-    expect(fallbackBackground).toContain("gradient");
+    const baseBackground = await page.locator("#worldBackdrop").evaluate(node => getComputedStyle(node, "::before").backgroundImage);
+    expect(baseBackground).toContain("scenes/echo-clock/");
   });
 
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {

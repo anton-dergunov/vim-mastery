@@ -158,7 +158,8 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert.equal(variants.timing.gapMs, 15_000);
     assert.equal(variants.siteIds.length, 10);
     assert.equal(remoteVariantPaths(variants).length, 50);
-    assert.match(remoteVariantPaths(variants)[0], new RegExp(`${sceneId}/variants/.*-c01\\.png$`));
+    assert.equal(variants.format, "webp");
+    assert.match(remoteVariantPaths(variants)[0], new RegExp(`${sceneId}/variants/.*-c01\\.webp$`));
   }
 });
 

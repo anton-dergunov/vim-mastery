@@ -31,6 +31,9 @@ function validateRemoteVariants(value, path, errors) {
     errors.push(`${path}.profiles must contain supported scene profiles`);
   }
   if (!assetDirectoryPattern.test(value.assetRoot || "")) errors.push(`${path}.assetRoot must be an assets directory path`);
+  if (value.format !== undefined && !["png", "webp"].includes(value.format)) {
+    errors.push(`${path}.format must be png or webp when provided`);
+  }
   if (!Array.isArray(value.siteIds) || !value.siteIds.length) {
     errors.push(`${path}.siteIds must contain at least one semantic site ID`);
   } else {

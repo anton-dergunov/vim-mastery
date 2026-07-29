@@ -200,9 +200,9 @@ editor and input behavior may not.
 Implementation sessions must account for the following existing architecture:
 
 - `app.js` fetches the unit catalog and active unit, derives activities, renders the board, and owns unit navigation.
-- The current scene system is `presentationFor()`, `renderGround()`, `renderSprites()`, and `renderWorld()` in `app.js`.
-- The current ground is a dynamically repeated 12 × 9 tile grid. It expands to more square tiles on wider screens.
-- The editor and character already live in a stable 12 × 9 overlay grid.
+- The current scene system is the registered-scene manifest, `WorldPresentationRenderer`, and `renderWorld()` in `app.js`.
+- Every unit uses a three-profile generated scene base; optional complete-board variants stream separately.
+- The editor and character are independent overlay layers above the scene base.
 - The four current theme IDs are `moonroot`, `ember`, `glass`, and `deepwater`.
 - User theme preference should continue to control functional UI colors. World identity is selected by unit and must not be replaced by the theme preference.
 - `VimEngine` already emits change, selection, mode, key, and command-complete events with editor snapshots.
@@ -670,13 +670,12 @@ Google’s current guidance supports multi-turn editing, detailed context-rich p
 Before generating world assets, prepare:
 
 1. `assets/enchanted-ruins.png` as the strongest existing mood reference.
-2. `assets/world-kit.png` as the existing material and palette reference.
-3. The previously approved regional scene, when consistency with an existing
+2. The previously approved regional scene, when consistency with an existing
    region is useful.
-4. DOM-derived tall, compact, and wide masks from representative live board
+3. DOM-derived tall, compact, and wide masks from representative live board
    states.
 
-For a world-generation request, attach the ruins, world kit, and layout mask. Do not attach more references merely because the model permits them.
+For a world-generation request, attach the ruins and layout mask, plus an approved regional scene when needed. Do not attach more references merely because the model permits them.
 
 For character poses, attach only the canonical idle PNG for that character plus one approved pose from the same production batch when available.
 
@@ -1235,7 +1234,7 @@ Validate against Units 5, 9, 11, 12, 13, and 14.
 **Session brief**
 
 Supersede free prop placement with unit-level registered scenes while preserving
-story data and the legacy board for unconverted regions.
+story data and regional identity.
 
 **Work**
 
@@ -1247,8 +1246,8 @@ story data and the legacy board for unconverted regions.
   states.
 - Require an explicitly approved source before derivative generation.
 - Require one selected scene for every unit whose region is converted.
-- Preserve current output when the manifest is missing, invalid, or the unit is
-  still intentionally on the legacy board.
+- Leave board art unavailable when the manifest is missing or invalid; do not
+  revive a legacy tile board.
 
 **Acceptance**
 
@@ -1293,9 +1292,8 @@ while keeping a legacy fallback and unchanged editor geometry.
 - Add a rune plate/contact shadow under the existing guide overlay.
 - Add a loaded, cancellable 450–600ms reveal on unit entry only.
 - Keep decorative layers non-interactive and clipped.
-- Preserve the existing 12 × 9 placement grid for editor and character.
-- Stop rebuilding hundreds of ground cells when a layered world is available.
-- Keep `renderGround()` and the tile system as a temporary fallback.
+- Render every unit with its registered-scene base; the simpler-background preference keeps that base while disabling streamed variants.
+- The retired 12 × 9 ground-tile renderer, sprite grid, and static world backdrop/prop assets have been removed; there is no legacy board fallback.
 - Separate world identity from functional theme preference.
 - Expose stable data attributes for world ID, unit ID, scene ID, landmark ID,
   board profile, learning phase, mode, and reduced-motion state.
@@ -1343,7 +1341,7 @@ transition, or Vim effect.
   with authored scene changes.
 - Use board-container profile selection without device detection.
 - Ensure theory, demo, exercise, choice, summary, completion, and keyboard-hidden states remain readable.
-- Remove tile sprites only for Moonroot units; other units retain the legacy board.
+- Remove tile sprites and legacy board assets after all units use registered scenes.
 
 **Acceptance**
 

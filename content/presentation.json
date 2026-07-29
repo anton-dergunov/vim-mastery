@@ -16,66 +16,6 @@
       "id": "starwater-sanctuary",
       "displayName": "Starwater Sanctuary",
       "autoThemeId": "deepwater",
-      "backdrops": {
-        "portrait": "assets/worlds/starwater-sanctuary/backdrop-portrait.webp",
-        "square": "assets/worlds/starwater-sanctuary/backdrop-square.webp",
-        "wide": "assets/worlds/starwater-sanctuary/backdrop-wide.webp"
-      },
-      "props": [
-        {
-          "id": "floating-star-lens",
-          "asset": "assets/worlds/starwater-sanctuary/props/floating-star-lens.webp",
-          "placements": {
-            "portrait": {
-              "x": 12,
-              "y": 18,
-              "scale": 0.66
-            },
-            "square": {
-              "x": 9,
-              "y": 22,
-              "scale": 0.78
-            },
-            "wide": {
-              "x": 7,
-              "y": 27,
-              "scale": 0.88
-            },
-            "shallow": {
-              "x": 5,
-              "y": 32,
-              "scale": 0.72,
-              "hidden": true
-            }
-          }
-        },
-        {
-          "id": "prism-shard-group",
-          "asset": "assets/worlds/starwater-sanctuary/props/prism-shards.webp",
-          "placements": {
-            "portrait": {
-              "x": 88,
-              "y": 80,
-              "scale": 0.58
-            },
-            "square": {
-              "x": 91,
-              "y": 75,
-              "scale": 0.7
-            },
-            "wide": {
-              "x": 94,
-              "y": 70,
-              "scale": 0.8
-            },
-            "shallow": {
-              "x": 95,
-              "y": 66,
-              "scale": 0.62
-            }
-          }
-        }
-      ],
       "ambientEffects": [
         "star-reflections",
         "reed-shimmer",
@@ -87,66 +27,6 @@
       "id": "archive-of-echoes",
       "displayName": "Archive of Echoes",
       "autoThemeId": "glass",
-      "backdrops": {
-        "portrait": "assets/worlds/archive-of-echoes/backdrop-portrait.webp",
-        "square": "assets/worlds/archive-of-echoes/backdrop-square.webp",
-        "wide": "assets/worlds/archive-of-echoes/backdrop-wide.webp"
-      },
-      "props": [
-        {
-          "id": "crystal-drawer-stack",
-          "asset": "assets/worlds/archive-of-echoes/props/crystal-drawers.webp",
-          "placements": {
-            "portrait": {
-              "x": 9,
-              "y": 20,
-              "scale": 0.7
-            },
-            "square": {
-              "x": 7,
-              "y": 25,
-              "scale": 0.82
-            },
-            "wide": {
-              "x": 5,
-              "y": 30,
-              "scale": 0.94
-            },
-            "shallow": {
-              "x": 4,
-              "y": 34,
-              "scale": 0.76
-            }
-          }
-        },
-        {
-          "id": "brass-beacon",
-          "asset": "assets/worlds/archive-of-echoes/props/brass-beacon.webp",
-          "placements": {
-            "portrait": {
-              "x": 88,
-              "y": 17,
-              "scale": 0.6
-            },
-            "square": {
-              "x": 91,
-              "y": 22,
-              "scale": 0.7
-            },
-            "wide": {
-              "x": 94,
-              "y": 28,
-              "scale": 0.8
-            },
-            "shallow": {
-              "x": 96,
-              "y": 32,
-              "scale": 0.62,
-              "hidden": true
-            }
-          }
-        }
-      ],
       "ambientEffects": [
         "memory-glow",
         "crystal-drift",
@@ -158,66 +38,6 @@
       "id": "brass-meridian",
       "displayName": "Brass Meridian",
       "autoThemeId": "ember",
-      "backdrops": {
-        "portrait": "assets/worlds/brass-meridian/backdrop-portrait.webp",
-        "square": "assets/worlds/brass-meridian/backdrop-square.webp",
-        "wide": "assets/worlds/brass-meridian/backdrop-wide.webp"
-      },
-      "props": [
-        {
-          "id": "copper-conduit-arch",
-          "asset": "assets/worlds/brass-meridian/props/conduit-arch.webp",
-          "placements": {
-            "portrait": {
-              "x": 10,
-              "y": 18,
-              "scale": 0.72
-            },
-            "square": {
-              "x": 8,
-              "y": 23,
-              "scale": 0.84
-            },
-            "wide": {
-              "x": 5,
-              "y": 29,
-              "scale": 0.96
-            },
-            "shallow": {
-              "x": 3,
-              "y": 34,
-              "scale": 0.78
-            }
-          }
-        },
-        {
-          "id": "pattern-lens",
-          "asset": "assets/worlds/brass-meridian/props/pattern-lens.webp",
-          "placements": {
-            "portrait": {
-              "x": 88,
-              "y": 15,
-              "scale": 0.6
-            },
-            "square": {
-              "x": 91,
-              "y": 20,
-              "scale": 0.72
-            },
-            "wide": {
-              "x": 94,
-              "y": 25,
-              "scale": 0.82
-            },
-            "shallow": {
-              "x": 96,
-              "y": 30,
-              "scale": 0.64,
-              "hidden": true
-            }
-          }
-        }
-      ],
       "ambientEffects": [
         "ember-pulse",
         "cyan-current",
@@ -313,7 +133,8 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
           },
           "phasePatches": {
             "explain": [],
@@ -469,7 +290,8 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
           },
           "phasePatches": {
             "explain": [],
@@ -624,7 +446,8 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
           },
           "phasePatches": {
             "explain": [],
@@ -779,7 +602,8 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
           },
           "phasePatches": {
             "explain": [],
@@ -894,6 +718,26 @@
       "scenes": {
         "starneedle-observatory": {
           "id": "starneedle-observatory",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/tall/base.webp",
@@ -934,7 +778,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -986,6 +843,26 @@
       "scenes": {
         "nested-garden": {
           "id": "nested-garden",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/tall/base.webp",
@@ -1026,7 +903,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1078,6 +968,26 @@
       "scenes": {
         "prism-crossing": {
           "id": "prism-crossing",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/tall/base.webp",
@@ -1118,7 +1028,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1170,6 +1093,26 @@
       "scenes": {
         "memory-archive": {
           "id": "memory-archive",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/tall/base.webp",
@@ -1210,7 +1153,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1262,6 +1218,26 @@
       "scenes": {
         "far-beacons": {
           "id": "far-beacons",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/tall/base.webp",
@@ -1302,7 +1278,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1354,6 +1343,26 @@
       "scenes": {
         "echo-clock": {
           "id": "echo-clock",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/tall/base.webp",
@@ -1394,7 +1403,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1446,6 +1468,26 @@
       "scenes": {
         "meridian-table": {
           "id": "meridian-table",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-table/tall/base.webp",
@@ -1486,7 +1528,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1538,6 +1593,26 @@
       "scenes": {
         "mirror-loom": {
           "id": "mirror-loom",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/mirror-loom/tall/base.webp",
@@ -1578,7 +1653,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1630,6 +1718,26 @@
       "scenes": {
         "echo-foundry": {
           "id": "echo-foundry",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/echo-foundry/tall/base.webp",
@@ -1670,7 +1778,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },
@@ -1723,6 +1844,26 @@
       "scenes": {
         "meridian-engine": {
           "id": "meridian-engine",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-engine/tall/base.webp",
@@ -1763,7 +1904,20 @@
               "fadeMs": 2600,
               "holdMs": 7000,
               "gapMs": 15000
-            }
+            },
+            "format": "webp"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
           }
         }
       },

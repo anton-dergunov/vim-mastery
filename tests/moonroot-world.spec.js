@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("renders the four registered Moonroot scenes while later units retain the legacy board", async ({ page }) => {
+test("renders every unit with its registered scene", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
   });
@@ -27,8 +27,6 @@ test("renders the four registered Moonroot scenes while later units retain the l
   const moonroot = page.locator("#world");
   await expect(moonroot).toHaveAttribute("data-world-id", "moonroot-ruins");
   await expect(moonroot).toHaveAttribute("data-scene-id", "mode-lantern-grounds");
-  await expect(page.locator(".ground-grid .ground-cell")).toHaveCount(0);
-  await expect(page.locator(".world-prop, .world-landmark")).toHaveCount(0);
   await expect(page.locator(".world-scene-patch")).toHaveCount(0);
   expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
     .toContain("scenes/mode-lantern-grounds/");
@@ -73,9 +71,11 @@ test("renders the four registered Moonroot scenes while later units retain the l
   await page.screenshot({ path: "test-results/moonroot-unit-1-wide.png", fullPage: true });
 
   await page.goto("/play/?unit=precision-motions-search&activity=find-family-demo");
-  await page.waitForFunction(() => document.querySelector("#world")?.dataset.renderer === "legacy");
-  await expect(page.locator("#world")).toHaveAttribute("data-world-id", "legacy");
-  await expect(page.locator(".ground-grid .ground-cell")).not.toHaveCount(0);
+  await page.waitForFunction(() => document.querySelector("#world")?.dataset.renderer === "registered-scenes");
+  await expect(page.locator("#world")).toHaveAttribute("data-world-id", "starwater-sanctuary");
+  await expect(page.locator("#world")).toHaveAttribute("data-scene-id", "starneedle-observatory");
+  expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+    .toContain("scenes/starneedle-observatory/");
   await expect(page.locator(".world-scene-patch")).toHaveCount(0);
 });
 
@@ -114,10 +114,10 @@ test("streams compact Wayfinder variants after the delay and silently falls back
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
   });
   const requests = [];
-  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => {
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.webp", route => {
     requests.push(route.request().url());
     return route.fulfill({
-      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
       contentType: "image/png",
       headers: { "access-control-allow-origin": "*" },
     });
@@ -156,12 +156,12 @@ test("falls back to GitHub Pages when a local development variant is missing", a
 
   const localOrigin = new URL(page.url()).origin;
   const requests = [];
-  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => {
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.webp", route => {
     const source = route.request().url();
     requests.push(source);
     if (new URL(source).origin === localOrigin) return route.fulfill({ status: 404 });
     return route.fulfill({
-      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
       contentType: "image/png",
       headers: { "access-control-allow-origin": "*" },
     });
@@ -176,8 +176,8 @@ test("uses the approved compact Wayfinder source and variants on a wide board", 
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
   });
-  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.png", route => route.fulfill({
-    path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.png",
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.webp", route => route.fulfill({
+    path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
     contentType: "image/png",
     headers: { "access-control-allow-origin": "*" },
   }));

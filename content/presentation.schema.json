@@ -44,7 +44,7 @@
         },
         "fallbackGradient": { "type": "string", "minLength": 1 }
       },
-      "description": "World identity and ambient language only. Historical backdrop/prop fields may remain on unconverted worlds during the Moonroot proof but are not part of the registered-scene renderer contract."
+      "description": "World identity and ambient language only. All board imagery is registered on each unit scene."
     },
     "patchBounds": {
       "type": "object",
@@ -96,6 +96,7 @@
           "uniqueItems": true
         },
         "assetRoot": { "type": "string", "pattern": "^assets/[a-z0-9][a-z0-9./-]*$" },
+        "format": { "enum": ["png", "webp"] },
         "siteIds": {
           "type": "array",
           "minItems": 1,

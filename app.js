@@ -1,4 +1,3 @@
-import { spriteCells } from "./exercise-data.js";
 import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 import { appUrl, appVersion, remoteMediaUrls } from "./app-version.js";
@@ -66,7 +65,6 @@ const elements = {
   exploreButton: $("#exploreButton"),
   world: $("#world"),
   worldBackdrop: $("#worldBackdrop"),
-  groundGrid: $("#groundGrid"),
   worldAmbient: $("#worldAmbient"),
   worldRemoteVariantLayer: $("#worldRemoteVariantLayer"),
   worldGrid: $("#worldGrid"),
@@ -101,10 +99,10 @@ const elements = {
 };
 
 const presentations = [
-  { theme: "glass", template: "mirrors", codeSide: "left", blocks: ["mirror", "mirror", "mirror"] },
-  { theme: "deepwater", template: "terminal", codeSide: "right", blocks: ["terminal", "crystal"] },
-  { theme: "moonroot", template: "causeway", codeSide: "left", blocks: ["rune", "gate"] },
-  { theme: "ember", template: "beacons", codeSide: "right", blocks: ["beacon", "beacon"] },
+  { theme: "glass", codeSide: "left" },
+  { theme: "deepwater", codeSide: "right" },
+  { theme: "moonroot", codeSide: "left" },
+  { theme: "ember", codeSide: "right" },
 ];
 
 const themeColors = {
@@ -452,60 +450,6 @@ function setTheme(theme) {
   elements.phone.style.setProperty("--theme-warm", warm);
 }
 
-function groundType(template, row, col) {
-  const edge = row === 1 || row === 9 || col === 1 || col === 12;
-  switch (template) {
-    case "mirrors": return edge ? "water" : (row + col) % 3 === 0 ? "stone" : "moss";
-    case "terminal": return edge ? "water" : row >= 2 && row <= 8 ? "stone" : "moss";
-    case "causeway": return col <= 2 || col === 12 ? "water" : col >= 8 ? "stone" : "moss";
-    case "beacons": return col <= 3 || col >= 10 ? "stone" : edge ? "water" : "moss";
-    default: return edge ? "water" : "moss";
-  }
-}
-
-function renderGround(presentation) {
-  const largeCanvas = window.matchMedia("(min-width: 600px)").matches;
-  const bounds = elements.world.getBoundingClientRect();
-  // On larger canvases, keep the terrain made of actual square tiles rather
-  // than stretching the original 12 × 9 phone grid. The interaction layer
-  // remains a stable 12 × 9 coordinate system, so sprite and editor placement
-  // do not change with the available scenic space.
-  const tileSize = largeCanvas
-    ? Math.max(28, Math.min(54, Math.min(bounds.width / 12, bounds.height / 9)))
-    : 0;
-  const columns = largeCanvas && tileSize ? Math.max(12, Math.floor(bounds.width / tileSize)) : 12;
-  const rows = largeCanvas && tileSize ? Math.max(9, Math.floor(bounds.height / tileSize)) : 9;
-  if (largeCanvas && tileSize) {
-    elements.groundGrid.style.setProperty("--ground-columns", String(columns));
-    elements.groundGrid.style.setProperty("--ground-rows", String(rows));
-    elements.groundGrid.style.setProperty("--ground-tile-size", `${tileSize}px`);
-    elements.groundGrid.style.width = `${columns * tileSize}px`;
-    elements.groundGrid.style.height = `${rows * tileSize}px`;
-  } else {
-    elements.groundGrid.removeAttribute("style");
-  }
-  const cells = [];
-  for (let row = 1; row <= rows; row += 1) {
-    for (let col = 1; col <= columns; col += 1) {
-      const templateRow = Math.min(9, Math.max(1, Math.ceil(row * 9 / rows)));
-      const templateColumn = Math.min(12, Math.max(1, Math.ceil(col * 12 / columns)));
-      const glow = ((row * 13 + col * 7 + currentActivity().lessonIndex) % 29 === 0) ? " glow" : "";
-      cells.push(`<div class="ground-cell ${groundType(presentation.template, templateRow, templateColumn)}${glow}"></div>`);
-    }
-  }
-  elements.groundGrid.innerHTML = cells.join("");
-}
-
-let groundRedrawFrame = null;
-function scheduleGroundRedraw() {
-  // Phone terrain is the fixed 12 × 9 source grid. Only wider canvases use
-  // resize-driven tile density, so avoid redundant full-grid DOM rebuilds
-  // while exhaustive phone viewport checks cycle through activities.
-  if (!window.matchMedia("(min-width: 600px)").matches) return;
-  window.cancelAnimationFrame(groundRedrawFrame);
-  groundRedrawFrame = window.requestAnimationFrame(() => renderGround(presentationFor(currentActivity())));
-}
-
 const worldRenderer = new WorldPresentationRenderer({
   world: elements.world,
   backdropLayer: elements.worldBackdrop,
@@ -513,7 +457,6 @@ const worldRenderer = new WorldPresentationRenderer({
   remoteVariantLayer: elements.worldRemoteVariantLayer,
   assetUrl: localAssetUrl,
   remoteAssetUrls: remoteMediaUrls,
-  onLegacyResize: scheduleGroundRedraw,
 });
 
 const storyTransitions = new StoryTransitions({
@@ -529,15 +472,6 @@ const storyTransitions = new StoryTransitions({
   onStateChange: renderTableOfContents,
   assetUrl: localAssetUrl,
 });
-
-function renderSprites(presentation) {
-  return presentation.blocks.map((type, index) => {
-    const [x, y] = spriteCells[type];
-    const positions = [[10, 3], [10, 6], [2, 5]];
-    const [col, row] = positions[index] || positions[0];
-    return `<div class="sprite type-${type}${state.complete ? " active" : ""}" style="grid-column:${col};grid-row:${row};--sprite-x:${(x * 100 / 3).toFixed(3)}%;--sprite-y:${(y * 100 / 3).toFixed(3)}%" aria-hidden="true"></div>`;
-  }).join("");
-}
 
 function renderRoutes(routes = []) {
   if (!routes.length) return "";
@@ -659,25 +593,15 @@ function renderActivityIntro() {
 }
 
 function applyWorldPresentation(activity, presentation) {
-  // Generated scene images are currently approved for the four Moonroot
-  // units. Simple mode deliberately accepts every unit presentation so its
-  // world-specific CSS fallback replaces both scene art and legacy tiles.
-  const moonrootPresentation = unitPresentation?.world.id === "moonroot-ruins" ? unitPresentation : null;
+  // Every unit now has a registered scene. Simple backgrounds retain that
+  // unit-specific base board; they do not revive the retired world-tile art.
   const simpleBackground = state.generatedBackdrops === "disabled";
-  const layeredWorld = worldRenderer.setPresentation(simpleBackground ? unitPresentation : moonrootPresentation, {
+  elements.world.dataset.simpleBackground = String(simpleBackground);
+  const layeredWorld = worldRenderer.setPresentation(unitPresentation, {
     unitId: unit.id,
     phase: activity.phase || (activity.type === "summary" ? "summary" : "explain"),
     landmarkState: "dormant",
-    fallbackOnly: simpleBackground,
   });
-  if (layeredWorld) {
-    window.cancelAnimationFrame(groundRedrawFrame);
-    groundRedrawFrame = null;
-    elements.groundGrid.replaceChildren();
-    elements.groundGrid.removeAttribute("style");
-  } else {
-    renderGround(presentation);
-  }
   return layeredWorld;
 }
 
@@ -698,12 +622,6 @@ function refreshWorldPresentation() {
   const activity = currentActivity();
   const presentation = presentationFor(activity);
   const layeredWorld = applyWorldPresentation(activity, presentation);
-  elements.worldGrid.querySelectorAll(":scope > .sprite").forEach(sprite => sprite.remove());
-  if (!activity.inspection && !layeredWorld) {
-    const template = document.createElement("template");
-    template.innerHTML = renderSprites(presentation);
-    elements.worldGrid.prepend(...template.content.children);
-  }
   if (layeredWorld) worldRenderer.considerUnitReveal();
 }
 
@@ -753,8 +671,7 @@ function renderWorld() {
           <div class="inspection-choice">${renderFieldNote(activity)}</div>
         </div>`
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
-  const spriteMarkup = activity.inspection || layeredWorld ? "" : renderSprites(presentation);
-  elements.worldGrid.innerHTML = `${spriteMarkup}${content}`;
+  elements.worldGrid.innerHTML = content;
   renderCharacterLayer(activity, presentation);
   renderCompletionHost();
   if (hasEditor(activity)) mountEditor();
@@ -1193,7 +1110,6 @@ function completeActivity() {
   clearPlayback();
   vimEngine?.setLocked(true);
   setTheme(functionalThemeFor());
-  $$(".sprite", elements.worldGrid).forEach(sprite => sprite.classList.add("active"));
   if (currentActivity().type === "choice") renderWorld();
   else renderCompletionHost();
   if (isPractice() || currentActivity().type === "choice") playSuccessCharacter();
