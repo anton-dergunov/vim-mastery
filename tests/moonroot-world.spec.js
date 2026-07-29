@@ -160,7 +160,7 @@ test("keeps the guide at the bottom left without covering the editor", async ({ 
   }
 });
 
-test("streams compact Wayfinder variants after the delay and silently falls back offline", async ({ page }) => {
+test("streams complete-board Wayfinder variants after the delay and silently falls back offline", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
   });
@@ -181,16 +181,15 @@ test("streams compact Wayfinder variants after the delay and silently falls back
   await expect(variant).toHaveCount(0);
   await expect(variant).toHaveCount(1, { timeout: 5_000 });
   await expect(variant).toHaveClass(/is-visible/);
-  await expect(variant).toHaveAttribute("data-media-mode", "transparent-patch");
   expect(new URL(requests[0]).origin).toBe(new URL(page.url()).origin);
   expect(await variant.evaluate(element => getComputedStyle(element, "::before").filter)).toContain("brightness(0.82)");
   expect(await variant.evaluate(element => element.style.getPropertyValue("--remote-variant-fade"))).toBe("1200ms");
-  expect(await variant.evaluate(element => getComputedStyle(element, "::after").content)).toBe("none");
+  expect(await variant.evaluate(element => getComputedStyle(element, "::after").content)).not.toBe("none");
   expect(await page.locator("#worldGrid").evaluate(element => Number(getComputedStyle(element).zIndex))).toBeGreaterThan(
     await variant.evaluate(element => Number(getComputedStyle(element.parentElement).zIndex)),
   );
   await page.waitForTimeout(1_300);
-  await page.screenshot({ path: "test-results/transparent-patch-visible.png", fullPage: true });
+  await page.screenshot({ path: "test-results/complete-board-visible.png", fullPage: true });
 
   await page.context().setOffline(true);
   await page.evaluate(() => window.dispatchEvent(new Event("offline")));

@@ -137,10 +137,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants",
-              "complete-board": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants-full"
-            }
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -299,10 +296,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants",
-              "complete-board": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants-full"
-            }
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -461,10 +455,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants",
-              "complete-board": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants-full"
-            }
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -623,10 +614,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants",
-              "complete-board": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants-full"
-            }
+            "assetRoot": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -805,10 +793,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants",
-              "complete-board": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants-full"
-            }
+            "assetRoot": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -936,10 +921,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants",
-              "complete-board": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants-full"
-            }
+            "assetRoot": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1067,10 +1049,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants",
-              "complete-board": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants-full"
-            }
+            "assetRoot": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1198,10 +1177,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants",
-              "complete-board": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants-full"
-            }
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1329,10 +1305,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants",
-              "complete-board": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants-full"
-            }
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1460,10 +1433,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants",
-              "complete-board": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants-full"
-            }
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1591,10 +1561,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/brass-meridian/scenes/meridian-table/variants",
-              "complete-board": "assets/worlds/brass-meridian/scenes/meridian-table/variants-full"
-            }
+            "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-table/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1722,10 +1689,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/brass-meridian/scenes/mirror-loom/variants",
-              "complete-board": "assets/worlds/brass-meridian/scenes/mirror-loom/variants-full"
-            }
+            "assetRoot": "assets/worlds/brass-meridian/scenes/mirror-loom/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1853,10 +1817,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/brass-meridian/scenes/echo-foundry/variants",
-              "complete-board": "assets/worlds/brass-meridian/scenes/echo-foundry/variants-full"
-            }
+            "assetRoot": "assets/worlds/brass-meridian/scenes/echo-foundry/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1985,10 +1946,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoots": {
-              "transparent-patch": "assets/worlds/brass-meridian/scenes/meridian-engine/variants",
-              "complete-board": "assets/worlds/brass-meridian/scenes/meridian-engine/variants-full"
-            }
+            "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-engine/variants"
           },
           "phasePatches": {
             "explain": [],

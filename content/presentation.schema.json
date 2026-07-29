@@ -87,7 +87,7 @@
     "remoteVariants": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["profiles", "assetRoot", "siteIds", "variantsPerSite", "timing"],
+      "required": ["profiles", "registrationProfile", "assetRoot", "siteIds", "variantsPerSite", "timing"],
       "properties": {
         "profiles": {
           "type": "array",
@@ -95,9 +95,9 @@
           "items": { "enum": ["tall", "compact", "wide"] },
           "uniqueItems": true
         },
+        "registrationProfile": { "enum": ["tall", "compact", "wide"] },
         "assetRoot": { "type": "string", "pattern": "^assets/[a-z0-9][a-z0-9./-]*$" },
         "format": { "enum": ["png", "webp"] },
-        "mode": { "enum": ["complete-board", "transparent-patch"] },
         "siteIds": {
           "type": "array",
           "minItems": 1,

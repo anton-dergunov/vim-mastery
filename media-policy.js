@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { remoteVariantPaths } from "./scene-variant-config.js";
+import { remoteVariantPaths } from "./presentation-data.js";
 
 const runtimeAssetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
 const sourcePathSegments = new Set(["candidates", "masters", "review", "reviews", "sources"]);

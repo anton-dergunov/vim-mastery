@@ -30,10 +30,8 @@ function validateRemoteVariants(value, path, errors) {
   if (!Array.isArray(value.profiles) || !value.profiles.length || value.profiles.some(profile => !sceneProfiles.includes(profile))) {
     errors.push(`${path}.profiles must contain supported scene profiles`);
   }
-  for (const mode of ["transparent-patch", "complete-board"]) {
-    if (!assetDirectoryPattern.test(value.assetRoots?.[mode] || "")) {
-      errors.push(`${path}.assetRoots.${mode} must be an assets directory path`);
-    }
+  if (!assetDirectoryPattern.test(value.assetRoot || "")) {
+    errors.push(`${path}.assetRoot must be an assets directory path`);
   }
   if (!sceneProfiles.includes(value.registrationProfile)) {
     errors.push(`${path}.registrationProfile must name a supported scene profile`);
@@ -54,6 +52,24 @@ function validateRemoteVariants(value, path, errors) {
       errors.push(`${path}.timing.${field} must be a non-negative number`);
     }
   }
+}
+
+export function remoteVariantPaths(config) {
+  if (
+    !config
+    || !Array.isArray(config.siteIds)
+    || !Number.isInteger(config.variantsPerSite)
+    || !config.assetRoot
+  ) {
+    return [];
+  }
+  const format = config.format || "webp";
+  return config.siteIds.flatMap(siteId => Array.from(
+    { length: config.variantsPerSite },
+    (_, index) => (
+      `${config.assetRoot}/${siteId}-c${String(index + 1).padStart(2, "0")}.${format}`
+    ),
+  ));
 }
 
 function validatePatchBounds(value, path, errors) {

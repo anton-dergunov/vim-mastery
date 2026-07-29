@@ -68,24 +68,6 @@ test("production PWA precaches core media and streams optional animation and sce
       assert.equal(existsSync(join(dist, file)), true);
       assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
     });
-    const completeVariantRoot = join(
-      moonrootRoot,
-      "scenes",
-      sceneId,
-      "variants-full",
-    );
-    const completeVariants = files(completeVariantRoot)
-      .filter(file => file.endsWith(".webp"))
-      .map(file => (
-        `assets/worlds/moonroot-ruins/scenes/${sceneId}/variants-full/`
-        + file.split("/").at(-1)
-      ));
-    assert.equal(completeVariants.length, 50);
-    completeVariants.forEach(file => {
-      assert.equal(existsSync(join(rootPath, file)), true);
-      assert.equal(existsSync(join(dist, file)), false);
-      assert.equal(worker.includes(file), false);
-    });
   }
   const characterAnimations = files(join(rootPath, "assets", "characters"))
     .filter(file => file.includes("/animations/") && file.endsWith(".webp"))

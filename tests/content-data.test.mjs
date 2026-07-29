@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import {
   loadUnitCatalogWithPresentation,
@@ -12,7 +11,6 @@ import {
   boardProfileForBounds,
   registeredSceneProfileForBoard,
   remoteVariantPaths,
-  SCENE_VARIANT_ASSET_MODE,
   sceneProfileForBoard,
 } from "../world-presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
@@ -167,19 +165,13 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert.equal(variants.timing.gapMs, 4_000);
     assert.equal(variants.siteIds.length, 10);
     assert.equal(remoteVariantPaths(variants).length, 50);
-    assert.equal(remoteVariantPaths(variants, "complete-board").length, 50);
     assert.equal(variants.format, "webp");
     assert.match(remoteVariantPaths(variants)[0], new RegExp(`${sceneId}/variants/.*-c01\\.webp$`));
-    assert.match(
-      remoteVariantPaths(variants, "complete-board")[0],
-      new RegExp(`${sceneId}/variants-full/.*-c01\\.webp$`),
-    );
   }
   for (const unitId of Object.keys(presentation.units)) {
     const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
-    assert.equal(SCENE_VARIANT_ASSET_MODE, "transparent-patch");
-    assert.equal(remoteVariantPaths(variants).length, 50, `${unitId} must expose every approved patch`);
-    assert.equal(remoteVariantPaths(variants, "complete-board").length, 50, `${unitId} must retain every complete-board fallback`);
+    assert.equal(remoteVariantPaths(variants).length, 50, `${unitId} must expose every approved complete-board variant`);
+    assert.match(variants.assetRoot, /\/variants$/);
     assert.equal(
       registeredSceneProfileForBoard("wide", resolveUnitPresentation(presentation, unitId).scene),
       "compact",
@@ -200,43 +192,6 @@ test("registered scene profiles follow the rendered board aspect ratio", () => {
   assert.equal(boardProfileForBounds({ width: 241, height: 100 }), "shallow");
   assert.equal(sceneProfileForBoard("shallow"), "wide");
   assert.equal(sceneProfileForBoard("tall"), "tall");
-});
-
-test("checked-in scene patches match the seam-free production audit", () => {
-  const summary = readJson(
-    "../scripts/world-art/production-scene-patch-summary.json",
-  );
-  const seamReport = readJson(
-    "../scripts/world-art/production-scene-patch-seam-report.json",
-  );
-  assert.equal(summary.count, 700);
-  assert.equal(seamReport.count, 700);
-  assert.equal(seamReport.visiblySeamedCount, 0);
-  const reportByAsset = new Map(
-    seamReport.assets.map(record => [record.asset, record]),
-  );
-  for (const record of summary.assets) {
-    const report = reportByAsset.get(record.asset);
-    assert(report, `${record.asset} is missing from the seam report`);
-    assert.equal(report.patchSha256, record.patchSha256);
-    const assetBytes = readFileSync(new URL(`../${record.asset}`, import.meta.url));
-    const actualHash = createHash("sha256").update(assetBytes).digest("hex");
-    assert.equal(actualHash, record.patchSha256, `${record.asset} changed after seam review`);
-    const completeUrl = new URL(
-      `../${record.completeBoardAsset}`,
-      import.meta.url,
-    );
-    assert(existsSync(completeUrl), `${record.completeBoardAsset} is missing`);
-    const completeBytes = readFileSync(completeUrl);
-    const completeHash = createHash("sha256")
-      .update(completeBytes)
-      .digest("hex");
-    assert.equal(
-      completeHash,
-      record.completeBoardSha256,
-      `${record.completeBoardAsset} changed after export`,
-    );
-  }
 });
 
 test("presentation manifest preserves the approved unit story table", () => {

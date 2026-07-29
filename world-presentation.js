@@ -1,15 +1,9 @@
-import {
-  remoteVariantPaths,
-  SCENE_VARIANT_ASSET_MODE,
-} from "./scene-variant-config.js";
+import { remoteVariantPaths } from "./presentation-data.js";
 
 const BOARD_PROFILES = ["tall", "compact", "wide", "shallow"];
 const SCENE_PROFILES = ["tall", "compact", "wide"];
 
-export {
-  remoteVariantPaths,
-  SCENE_VARIANT_ASSET_MODE,
-} from "./scene-variant-config.js";
+export { remoteVariantPaths } from "./presentation-data.js";
 
 export function boardProfileForBounds({ width = 0, height = 0 } = {}) {
   const ratio = height > 0 ? width / height : 1;
@@ -260,7 +254,6 @@ export class WorldPresentationRenderer {
       const variant = document.createElement("div");
       variant.className = "world-remote-variant";
       variant.dataset.asset = asset;
-      variant.dataset.mediaMode = SCENE_VARIANT_ASSET_MODE;
       variant.style.setProperty("--world-asset", `url("${objectUrl}")`);
       variant.style.setProperty("--remote-variant-fade", `${config.timing.fadeMs}ms`);
       this.remoteVariantLayer.replaceChildren(variant);

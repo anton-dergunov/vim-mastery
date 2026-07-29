@@ -59,10 +59,11 @@ cwebp -quiet -mt -m 6 -q 82 -metadata none input.png -o output.webp
 pngquant --force --strip --speed 1 --quality 75-90 --output output.png input.png
 ```
 
-For registered transparent patches, use lossless WebP:
+Complete-board scene variants retain their coherent generated lighting. Encode
+them with high-quality lossy WebP:
 
 ```bash
-cwebp -quiet -mt -m 6 -lossless -z 9 -metadata none input.png -o output.webp
+cwebp -quiet -mt -m 6 -q 95 -metadata none input.png -o output.webp
 ```
 
 Record the installed `cwebp -version` or `pngquant --version` with the art batch.

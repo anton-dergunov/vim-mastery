@@ -541,7 +541,7 @@ PRIMARY EDIT
 {change}
 
 PRESERVATION IS THE MAIN REQUIREMENT
-Return the complete board, not a crop. Keep the canvas, framing, camera, perspective, {PRESERVATION_ANCHORS}, every other prop, all edge content, palette, lighting, pixel-art rendering, and spatial relationships as close to Image 1 as possible. Change only the named target and the few immediately adjacent pixels needed for contact, shadow, reflection, or local magical glow. The replacement must be physically attached to or supported by the named surface. Preserve surrounding silhouettes at the target boundary so the edited board can later yield a seamless registered patch.
+Return the complete board, not a crop. Keep the canvas, framing, camera, perspective, {PRESERVATION_ANCHORS}, every other prop, all edge content, palette, lighting, pixel-art rendering, and spatial relationships as close to Image 1 as possible. Change only the named target and the few immediately adjacent pixels needed for contact, shadow, reflection, or local magical glow. The replacement must be physically attached to or supported by the named surface. Preserve the whole generated board so its lighting changes remain coherent during the runtime crossfade.
 
 The target itself must change substantially: it needs an unmistakably new silhouette and content that remains legible when the complete board is displayed small. Do not settle for a tint, brightness shift, tiny sparkles, or a nearly identical version of the existing object.
 
