@@ -5,7 +5,11 @@
       "id": "moonroot-ruins",
       "displayName": "Moonroot Ruins",
       "autoThemeId": "moonroot",
-      "ambientEffects": ["violet-spores", "water-shimmer", "lantern-glow"],
+      "ambientEffects": [
+        "violet-spores",
+        "water-shimmer",
+        "lantern-glow"
+      ],
       "fallbackGradient": "linear-gradient(165deg, #071d18 0%, #123b35 54%, #1c533d 100%)"
     },
     "starwater-sanctuary": {
@@ -22,24 +26,61 @@
           "id": "floating-star-lens",
           "asset": "assets/worlds/starwater-sanctuary/props/floating-star-lens.webp",
           "placements": {
-            "portrait": { "x": 12, "y": 18, "scale": 0.66 },
-            "square": { "x": 9, "y": 22, "scale": 0.78 },
-            "wide": { "x": 7, "y": 27, "scale": 0.88 },
-            "shallow": { "x": 5, "y": 32, "scale": 0.72, "hidden": true }
+            "portrait": {
+              "x": 12,
+              "y": 18,
+              "scale": 0.66
+            },
+            "square": {
+              "x": 9,
+              "y": 22,
+              "scale": 0.78
+            },
+            "wide": {
+              "x": 7,
+              "y": 27,
+              "scale": 0.88
+            },
+            "shallow": {
+              "x": 5,
+              "y": 32,
+              "scale": 0.72,
+              "hidden": true
+            }
           }
         },
         {
           "id": "prism-shard-group",
           "asset": "assets/worlds/starwater-sanctuary/props/prism-shards.webp",
           "placements": {
-            "portrait": { "x": 88, "y": 80, "scale": 0.58 },
-            "square": { "x": 91, "y": 75, "scale": 0.7 },
-            "wide": { "x": 94, "y": 70, "scale": 0.8 },
-            "shallow": { "x": 95, "y": 66, "scale": 0.62 }
+            "portrait": {
+              "x": 88,
+              "y": 80,
+              "scale": 0.58
+            },
+            "square": {
+              "x": 91,
+              "y": 75,
+              "scale": 0.7
+            },
+            "wide": {
+              "x": 94,
+              "y": 70,
+              "scale": 0.8
+            },
+            "shallow": {
+              "x": 95,
+              "y": 66,
+              "scale": 0.62
+            }
           }
         }
       ],
-      "ambientEffects": ["star-reflections", "reed-shimmer", "lens-glint"],
+      "ambientEffects": [
+        "star-reflections",
+        "reed-shimmer",
+        "lens-glint"
+      ],
       "fallbackGradient": "linear-gradient(165deg, #07151d 0%, #123f4e 58%, #1d5262 100%)"
     },
     "archive-of-echoes": {
@@ -56,24 +97,61 @@
           "id": "crystal-drawer-stack",
           "asset": "assets/worlds/archive-of-echoes/props/crystal-drawers.webp",
           "placements": {
-            "portrait": { "x": 9, "y": 20, "scale": 0.7 },
-            "square": { "x": 7, "y": 25, "scale": 0.82 },
-            "wide": { "x": 5, "y": 30, "scale": 0.94 },
-            "shallow": { "x": 4, "y": 34, "scale": 0.76 }
+            "portrait": {
+              "x": 9,
+              "y": 20,
+              "scale": 0.7
+            },
+            "square": {
+              "x": 7,
+              "y": 25,
+              "scale": 0.82
+            },
+            "wide": {
+              "x": 5,
+              "y": 30,
+              "scale": 0.94
+            },
+            "shallow": {
+              "x": 4,
+              "y": 34,
+              "scale": 0.76
+            }
           }
         },
         {
           "id": "brass-beacon",
           "asset": "assets/worlds/archive-of-echoes/props/brass-beacon.webp",
           "placements": {
-            "portrait": { "x": 88, "y": 17, "scale": 0.6 },
-            "square": { "x": 91, "y": 22, "scale": 0.7 },
-            "wide": { "x": 94, "y": 28, "scale": 0.8 },
-            "shallow": { "x": 96, "y": 32, "scale": 0.62, "hidden": true }
+            "portrait": {
+              "x": 88,
+              "y": 17,
+              "scale": 0.6
+            },
+            "square": {
+              "x": 91,
+              "y": 22,
+              "scale": 0.7
+            },
+            "wide": {
+              "x": 94,
+              "y": 28,
+              "scale": 0.8
+            },
+            "shallow": {
+              "x": 96,
+              "y": 32,
+              "scale": 0.62,
+              "hidden": true
+            }
           }
         }
       ],
-      "ambientEffects": ["memory-glow", "crystal-drift", "clock-pulse"],
+      "ambientEffects": [
+        "memory-glow",
+        "crystal-drift",
+        "clock-pulse"
+      ],
       "fallbackGradient": "linear-gradient(165deg, #0b1722 0%, #17394c 56%, #234f68 100%)"
     },
     "brass-meridian": {
@@ -90,24 +168,61 @@
           "id": "copper-conduit-arch",
           "asset": "assets/worlds/brass-meridian/props/conduit-arch.webp",
           "placements": {
-            "portrait": { "x": 10, "y": 18, "scale": 0.72 },
-            "square": { "x": 8, "y": 23, "scale": 0.84 },
-            "wide": { "x": 5, "y": 29, "scale": 0.96 },
-            "shallow": { "x": 3, "y": 34, "scale": 0.78 }
+            "portrait": {
+              "x": 10,
+              "y": 18,
+              "scale": 0.72
+            },
+            "square": {
+              "x": 8,
+              "y": 23,
+              "scale": 0.84
+            },
+            "wide": {
+              "x": 5,
+              "y": 29,
+              "scale": 0.96
+            },
+            "shallow": {
+              "x": 3,
+              "y": 34,
+              "scale": 0.78
+            }
           }
         },
         {
           "id": "pattern-lens",
           "asset": "assets/worlds/brass-meridian/props/pattern-lens.webp",
           "placements": {
-            "portrait": { "x": 88, "y": 15, "scale": 0.6 },
-            "square": { "x": 91, "y": 20, "scale": 0.72 },
-            "wide": { "x": 94, "y": 25, "scale": 0.82 },
-            "shallow": { "x": 96, "y": 30, "scale": 0.64, "hidden": true }
+            "portrait": {
+              "x": 88,
+              "y": 15,
+              "scale": 0.6
+            },
+            "square": {
+              "x": 91,
+              "y": 20,
+              "scale": 0.72
+            },
+            "wide": {
+              "x": 94,
+              "y": 25,
+              "scale": 0.82
+            },
+            "shallow": {
+              "x": 96,
+              "y": 30,
+              "scale": 0.64,
+              "hidden": true
+            }
           }
         }
       ],
-      "ambientEffects": ["ember-pulse", "cyan-current", "lens-glint"],
+      "ambientEffects": [
+        "ember-pulse",
+        "cyan-current",
+        "lens-glint"
+      ],
       "fallbackGradient": "linear-gradient(165deg, #20120e 0%, #4b281c 56%, #683420 100%)"
     }
   },
@@ -121,9 +236,24 @@
         "mode-lantern-grounds": {
           "id": "mode-lantern-grounds",
           "patchRegions": {
-            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
-            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
-            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
           },
           "profiles": {
             "tall": {
@@ -161,7 +291,9 @@
             }
           },
           "remoteVariants": {
-            "profiles": ["compact"],
+            "profiles": [
+              "compact"
+            ],
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants",
             "siteIds": [
               "upper-left-ruin-window",
@@ -185,13 +317,30 @@
           },
           "phasePatches": {
             "explain": [],
-            "demonstrate": ["phase-a"],
-            "isolate": ["phase-b"],
-            "mix": ["phase-a", "phase-b"],
-            "challenge": ["phase-a", "phase-b", "phase-c"],
-            "summary": ["phase-a", "phase-c"]
+            "demonstrate": [
+              "phase-a"
+            ],
+            "isolate": [
+              "phase-b"
+            ],
+            "mix": [
+              "phase-a",
+              "phase-b"
+            ],
+            "challenge": [
+              "phase-a",
+              "phase-b",
+              "phase-c"
+            ],
+            "summary": [
+              "phase-a",
+              "phase-c"
+            ]
           },
-          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+          "landmarkPatches": {
+            "dormant": "landmark-dormant",
+            "restored": "landmark-restored"
+          }
         }
       },
       "landmark": {
@@ -201,18 +350,36 @@
           "restored": "assets/worlds/landmarks/mode-lantern-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
-          "square": { "x": 84, "y": 70, "scale": 0.74 },
-          "wide": { "x": 88, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "lift-mode-lantern",
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
         "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
-        "copy": "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
-        "nextHook": { "copy": "A path glimmers beyond camp." }
+        "copy": "The Mode Lantern wakes. One key can hold more than one meaning\u2014and now the Wilds remember how to listen.",
+        "nextHook": {
+          "copy": "A path glimmers beyond camp."
+        }
       }
     },
     "cursor-movement": {
@@ -224,9 +391,24 @@
         "wayfinder-crossroads": {
           "id": "wayfinder-crossroads",
           "patchRegions": {
-            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
-            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
-            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
           },
           "profiles": {
             "tall": {
@@ -264,7 +446,10 @@
             }
           },
           "remoteVariants": {
-            "profiles": ["compact", "wide"],
+            "profiles": [
+              "compact",
+              "wide"
+            ],
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants",
             "siteIds": [
               "northwest-hanging-lantern",
@@ -288,13 +473,30 @@
           },
           "phasePatches": {
             "explain": [],
-            "demonstrate": ["phase-a"],
-            "isolate": ["phase-b"],
-            "mix": ["phase-a", "phase-b"],
-            "challenge": ["phase-a", "phase-b", "phase-c"],
-            "summary": ["phase-a", "phase-c"]
+            "demonstrate": [
+              "phase-a"
+            ],
+            "isolate": [
+              "phase-b"
+            ],
+            "mix": [
+              "phase-a",
+              "phase-b"
+            ],
+            "challenge": [
+              "phase-a",
+              "phase-b",
+              "phase-c"
+            ],
+            "summary": [
+              "phase-a",
+              "phase-c"
+            ]
           },
-          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+          "landmarkPatches": {
+            "dormant": "landmark-dormant",
+            "restored": "landmark-restored"
+          }
         }
       },
       "landmark": {
@@ -304,10 +506,26 @@
           "restored": "assets/worlds/landmarks/wayfinder-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
-          "square": { "x": 16, "y": 70, "scale": 0.74 },
-          "wide": { "x": 12, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
@@ -315,7 +533,9 @@
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
         "action": "Vela turns the central compass; four paths align",
         "copy": "Vela aligns the Wayfinder. North, south, east, and west settle back into place.",
-        "nextHook": { "copy": "The path ends at a page of broken words." }
+        "nextHook": {
+          "copy": "The path ends at a page of broken words."
+        }
       }
     },
     "entering-changing-text": {
@@ -327,9 +547,24 @@
         "scribes-spring": {
           "id": "scribes-spring",
           "patchRegions": {
-            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
-            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
-            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
           },
           "profiles": {
             "tall": {
@@ -367,7 +602,9 @@
             }
           },
           "remoteVariants": {
-            "profiles": ["compact"],
+            "profiles": [
+              "compact"
+            ],
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants",
             "siteIds": [
               "left-root-lantern",
@@ -391,13 +628,30 @@
           },
           "phasePatches": {
             "explain": [],
-            "demonstrate": ["phase-a"],
-            "isolate": ["phase-b"],
-            "mix": ["phase-a", "phase-b"],
-            "challenge": ["phase-a", "phase-b", "phase-c"],
-            "summary": ["phase-a", "phase-c"]
+            "demonstrate": [
+              "phase-a"
+            ],
+            "isolate": [
+              "phase-b"
+            ],
+            "mix": [
+              "phase-a",
+              "phase-b"
+            ],
+            "challenge": [
+              "phase-a",
+              "phase-b",
+              "phase-c"
+            ],
+            "summary": [
+              "phase-a",
+              "phase-c"
+            ]
           },
-          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+          "landmarkPatches": {
+            "dormant": "landmark-dormant",
+            "restored": "landmark-restored"
+          }
         }
       },
       "landmark": {
@@ -407,18 +661,36 @@
           "restored": "assets/worlds/landmarks/scribes-spring-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 76, "scale": 0.62 },
-          "square": { "x": 84, "y": 69, "scale": 0.74 },
-          "wide": { "x": 88, "y": 63, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 57, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 76,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 69,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 63,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 57,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "repair-scribes-spring",
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
         "action": "Tatter repairs a split channel; luminous ink begins to flow",
-        "copy": "Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.",
-        "nextHook": { "copy": "A sealed gate waits for both an action and a range." }
+        "copy": "Tatter opens the Scribe\u2019s Spring. The Wilds can accept new words and reshape old ones again.",
+        "nextHook": {
+          "copy": "A sealed gate waits for both an action and a range."
+        }
       }
     },
     "operator-grammar": {
@@ -430,9 +702,24 @@
         "grammar-gate-court": {
           "id": "grammar-gate-court",
           "patchRegions": {
-            "phase-a": { "x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24 },
-            "phase-b": { "x": 0.7, "y": 0.64, "width": 0.26, "height": 0.25 },
-            "phase-c": { "x": 0.39, "y": 0.04, "width": 0.22, "height": 0.2 }
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
           },
           "profiles": {
             "tall": {
@@ -470,7 +757,9 @@
             }
           },
           "remoteVariants": {
-            "profiles": ["compact"],
+            "profiles": [
+              "compact"
+            ],
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants",
             "siteIds": [
               "left-wall-crystal",
@@ -494,13 +783,30 @@
           },
           "phasePatches": {
             "explain": [],
-            "demonstrate": ["phase-a"],
-            "isolate": ["phase-b"],
-            "mix": ["phase-a", "phase-b"],
-            "challenge": ["phase-a", "phase-b", "phase-c"],
-            "summary": ["phase-a", "phase-c"]
+            "demonstrate": [
+              "phase-a"
+            ],
+            "isolate": [
+              "phase-b"
+            ],
+            "mix": [
+              "phase-a",
+              "phase-b"
+            ],
+            "challenge": [
+              "phase-a",
+              "phase-b",
+              "phase-c"
+            ],
+            "summary": [
+              "phase-a",
+              "phase-c"
+            ]
           },
-          "landmarkPatches": { "dormant": "landmark-dormant", "restored": "landmark-restored" }
+          "landmarkPatches": {
+            "dormant": "landmark-dormant",
+            "restored": "landmark-restored"
+          }
         }
       },
       "landmark": {
@@ -510,10 +816,26 @@
           "restored": "assets/worlds/landmarks/grammar-gate-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 76, "scale": 0.62 },
-          "square": { "x": 16, "y": 69, "scale": 0.74 },
-          "wide": { "x": 12, "y": 63, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 57, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 76,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 69,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 63,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 57,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
@@ -521,7 +843,9 @@
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/base.webp",
         "action": "Cinder joins two halves of a mechanism; the gate opens",
         "copy": "Cinder joins action to range. The Grammar Gate opens, and the first road out of Moonroot is restored.",
-        "nextHook": { "copy": "Starlight flickers beyond the gate." }
+        "nextHook": {
+          "copy": "Starlight flickers beyond the gate."
+        }
       }
     },
     "precision-motions-search": {
@@ -535,19 +859,86 @@
           "restored": "assets/worlds/landmarks/starneedle-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
-          "square": { "x": 84, "y": 70, "scale": 0.74 },
-          "wide": { "x": 88, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "focus-starneedle",
-        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.png",
+        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.webp",
         "action": "Orin focuses a floating lens; distant points illuminate",
         "copy": "Orin focuses the Starneedle. Distant signs and exact characters become visible across the dark.",
-        "nextHook": { "copy": "The signal points inward, toward structures hidden in plain sight." }
-      }
+        "nextHook": {
+          "copy": "The signal points inward, toward structures hidden in plain sight."
+        }
+      },
+      "sceneId": "starneedle-observatory",
+      "scenes": {
+        "starneedle-observatory": {
+          "id": "starneedle-observatory",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants",
+            "siteIds": [
+              "upper-left-terrace",
+              "upper-right-parapet",
+              "left-water-bank",
+              "right-water-bank",
+              "left-bridge-rail",
+              "right-bridge-rail",
+              "lower-left-shore",
+              "lower-right-shore",
+              "distant-left-island",
+              "distant-right-island"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.webp"
     },
     "text-objects": {
       "id": "text-objects",
@@ -560,19 +951,86 @@
           "restored": "assets/worlds/landmarks/nested-garden-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
-          "square": { "x": 16, "y": 70, "scale": 0.74 },
-          "wide": { "x": 12, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "wake-nested-garden",
-        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.png",
+        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.webp",
         "action": "Bramble touches the outer arch; nested arches bloom from outside inward",
         "copy": "Bramble wakes the Nested Garden. Words, quotes, brackets, and blocks reveal the shapes they contain.",
-        "nextHook": { "copy": "Three panes of light rise from the water." }
-      }
+        "nextHook": {
+          "copy": "Three panes of light rise from the water."
+        }
+      },
+      "sceneId": "nested-garden",
+      "scenes": {
+        "nested-garden": {
+          "id": "nested-garden",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants",
+            "siteIds": [
+              "upper-left-terrace",
+              "upper-right-parapet",
+              "left-water-bank",
+              "right-water-bank",
+              "left-bridge-rail",
+              "right-bridge-rail",
+              "lower-left-shore",
+              "lower-right-shore",
+              "distant-left-island",
+              "distant-right-island"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.webp"
     },
     "visual-selection": {
       "id": "visual-selection",
@@ -585,19 +1043,86 @@
           "restored": "assets/worlds/landmarks/prism-crossing-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 76, "scale": 0.62 },
-          "square": { "x": 84, "y": 69, "scale": 0.74 },
-          "wide": { "x": 88, "y": 63, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 57, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 76,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 69,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 63,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 57,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "align-prism-crossing",
-        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.png",
+        "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.webp",
         "action": "Prism aligns three glass panes: ribbon, row, and rectangle",
         "copy": "Prism aligns the three panes. Character, line, and block become distinct paths through the same code.",
-        "nextHook": { "copy": "Behind the final pane, a sealed archive begins to glow." }
-      }
+        "nextHook": {
+          "copy": "Behind the final pane, a sealed archive begins to glow."
+        }
+      },
+      "sceneId": "prism-crossing",
+      "scenes": {
+        "prism-crossing": {
+          "id": "prism-crossing",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants",
+            "siteIds": [
+              "upper-left-terrace",
+              "upper-right-parapet",
+              "left-water-bank",
+              "right-water-bank",
+              "left-bridge-rail",
+              "right-bridge-rail",
+              "lower-left-shore",
+              "lower-right-shore",
+              "distant-left-island",
+              "distant-right-island"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.webp"
     },
     "registers-putting": {
       "id": "registers-putting",
@@ -610,19 +1135,86 @@
           "restored": "assets/worlds/landmarks/memory-archive-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
-          "square": { "x": 16, "y": 70, "scale": 0.74 },
-          "wide": { "x": 12, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "restore-memory-archive",
-        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.png",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.webp",
         "action": "Mica places a captured crystal into a drawer; several drawers illuminate",
         "copy": "Mica reopens the Memory Archive. What is captured can be kept, chosen, and placed where it belongs.",
-        "nextHook": { "copy": "One memory points to a beacon far beyond the shelves." }
-      }
+        "nextHook": {
+          "copy": "One memory points to a beacon far beyond the shelves."
+        }
+      },
+      "sceneId": "memory-archive",
+      "scenes": {
+        "memory-archive": {
+          "id": "memory-archive",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants",
+            "siteIds": [
+              "upper-left-niche",
+              "upper-right-niche",
+              "left-drawer-bank",
+              "right-drawer-bank",
+              "left-landing",
+              "right-landing",
+              "lower-left-ledge",
+              "lower-right-ledge",
+              "distant-left-shelf",
+              "distant-right-shelf"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.webp"
     },
     "long-range-navigation": {
       "id": "long-range-navigation",
@@ -635,19 +1227,86 @@
           "restored": "assets/worlds/landmarks/far-beacons-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
-          "square": { "x": 84, "y": 70, "scale": 0.74 },
-          "wide": { "x": 88, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "connect-far-beacons",
-        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.png",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
         "action": "Luma sends a thread of light between two distant beacons",
-        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
-        "nextHook": { "copy": "Across the causeway, a stopped clock begins to tick." }
-      }
+        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances\u2014and return without losing their place.",
+        "nextHook": {
+          "copy": "Across the causeway, a stopped clock begins to tick."
+        }
+      },
+      "sceneId": "far-beacons",
+      "scenes": {
+        "far-beacons": {
+          "id": "far-beacons",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants",
+            "siteIds": [
+              "upper-left-niche",
+              "upper-right-niche",
+              "left-drawer-bank",
+              "right-drawer-bank",
+              "left-landing",
+              "right-landing",
+              "lower-left-ledge",
+              "lower-right-ledge",
+              "distant-left-shelf",
+              "distant-right-shelf"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp"
     },
     "repeatable-editing": {
       "id": "repeatable-editing",
@@ -660,19 +1319,86 @@
           "restored": "assets/worlds/landmarks/echo-clock-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 76, "scale": 0.62 },
-          "square": { "x": 16, "y": 69, "scale": 0.74 },
-          "wide": { "x": 12, "y": 63, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 57, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 76,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 69,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 63,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 57,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "restart-echo-clock",
-        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.png",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.webp",
         "action": "Tock starts one wheel; its motion propagates through matching wheels",
         "copy": "Tock restarts the Echo Clock. A well-shaped change can now travel farther than a single moment.",
-        "nextHook": { "copy": "The echo reaches a brass city beneath the ridge." }
-      }
+        "nextHook": {
+          "copy": "The echo reaches a brass city beneath the ridge."
+        }
+      },
+      "sceneId": "echo-clock",
+      "scenes": {
+        "echo-clock": {
+          "id": "echo-clock",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants",
+            "siteIds": [
+              "upper-left-niche",
+              "upper-right-niche",
+              "left-drawer-bank",
+              "right-drawer-bank",
+              "left-landing",
+              "right-landing",
+              "lower-left-ledge",
+              "lower-right-ledge",
+              "distant-left-shelf",
+              "distant-right-shelf"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.webp"
     },
     "command-line-ranges-line-operations": {
       "id": "command-line-ranges-line-operations",
@@ -685,19 +1411,86 @@
           "restored": "assets/worlds/landmarks/meridian-table-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 78, "scale": 0.62 },
-          "square": { "x": 84, "y": 70, "scale": 0.74 },
-          "wide": { "x": 88, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "set-meridian-table",
-        "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.png",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.webp",
         "action": "Cinder places two endpoints; a current follows the exact route between them",
         "copy": "Cinder sets the Meridian Table. Lines and ranges become routes that the command current can follow.",
-        "nextHook": { "copy": "A broken loom is repeating the wrong pattern." }
-      }
+        "nextHook": {
+          "copy": "A broken loom is repeating the wrong pattern."
+        }
+      },
+      "sceneId": "meridian-table",
+      "scenes": {
+        "meridian-table": {
+          "id": "meridian-table",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/brass-meridian/scenes/meridian-table/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/brass-meridian/scenes/meridian-table/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-table/variants",
+            "siteIds": [
+              "upper-left-conduit",
+              "upper-right-lens",
+              "left-rail-junction",
+              "right-rail-junction",
+              "left-platform",
+              "right-platform",
+              "lower-left-walkway",
+              "lower-right-walkway",
+              "distant-left-structure",
+              "distant-right-structure"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.webp"
     },
     "substitution-practical-regex": {
       "id": "substitution-practical-regex",
@@ -710,19 +1503,86 @@
           "restored": "assets/worlds/landmarks/mirror-loom-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 78, "scale": 0.62 },
-          "square": { "x": 16, "y": 70, "scale": 0.74 },
-          "wide": { "x": 12, "y": 64, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 58, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 58,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "retune-mirror-loom",
-        "storyBackdrop": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.png",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.webp",
         "action": "Puddle retunes a lens; only matching threads transform",
         "copy": "Puddle retunes the Mirror Loom. Patterns can be found, tested, and transformed without touching what does not match.",
-        "nextHook": { "copy": "The repaired thread leads into a silent foundry." }
-      }
+        "nextHook": {
+          "copy": "The repaired thread leads into a silent foundry."
+        }
+      },
+      "sceneId": "mirror-loom",
+      "scenes": {
+        "mirror-loom": {
+          "id": "mirror-loom",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/brass-meridian/scenes/mirror-loom/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/brass-meridian/scenes/mirror-loom/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/brass-meridian/scenes/mirror-loom/variants",
+            "siteIds": [
+              "upper-left-conduit",
+              "upper-right-lens",
+              "left-rail-junction",
+              "right-rail-junction",
+              "left-platform",
+              "right-platform",
+              "lower-left-walkway",
+              "lower-right-walkway",
+              "distant-left-structure",
+              "distant-right-structure"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.webp"
     },
     "macros": {
       "id": "macros",
@@ -735,19 +1595,86 @@
           "restored": "assets/worlds/landmarks/echo-foundry-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 82, "y": 76, "scale": 0.62 },
-          "square": { "x": 84, "y": 69, "scale": 0.74 },
-          "wide": { "x": 88, "y": 63, "scale": 0.86 },
-          "shallow": { "x": 91, "y": 57, "scale": 0.66 }
+          "portrait": {
+            "x": 82,
+            "y": 76,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 69,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 63,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 57,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "record-echo-foundry",
-        "storyBackdrop": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.png",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.webp",
         "action": "Tock records one movement into a cylinder; three mechanisms replay it",
         "copy": "Tock records the first true echo. The Foundry can repeat a complete sequence without forgetting a step.",
-        "nextHook": { "copy": "Only the World Engine remains dark." }
-      }
+        "nextHook": {
+          "copy": "Only the World Engine remains dark."
+        }
+      },
+      "sceneId": "echo-foundry",
+      "scenes": {
+        "echo-foundry": {
+          "id": "echo-foundry",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/brass-meridian/scenes/echo-foundry/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/brass-meridian/scenes/echo-foundry/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/brass-meridian/scenes/echo-foundry/variants",
+            "siteIds": [
+              "upper-left-conduit",
+              "upper-right-lens",
+              "left-rail-junction",
+              "right-rail-junction",
+              "left-platform",
+              "right-platform",
+              "lower-left-walkway",
+              "lower-right-walkway",
+              "distant-left-structure",
+              "distant-right-structure"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.webp"
     },
     "global-normal-automation": {
       "id": "global-normal-automation",
@@ -760,22 +1687,87 @@
           "restored": "assets/worlds/landmarks/meridian-engine-restored.webp"
         },
         "placements": {
-          "portrait": { "x": 18, "y": 76, "scale": 0.62 },
-          "square": { "x": 16, "y": 69, "scale": 0.74 },
-          "wide": { "x": 12, "y": 63, "scale": 0.86 },
-          "shallow": { "x": 9, "y": 57, "scale": 0.66 }
+          "portrait": {
+            "x": 18,
+            "y": 76,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 16,
+            "y": 69,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 12,
+            "y": 63,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 9,
+            "y": 57,
+            "scale": 0.66
+          }
         }
       },
       "completion": {
         "actionId": "open-meridian-engine",
-        "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.png",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp",
         "action": "Cairn connects the restored systems; energy crosses all four worlds",
-        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
+        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together\u2014and the Wilds answer again.",
         "nextHook": {
           "speaker": "Nix",
           "copy": "The language is alive. What you restore next is up to you."
         }
-      }
+      },
+      "sceneId": "meridian-engine",
+      "scenes": {
+        "meridian-engine": {
+          "id": "meridian-engine",
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/brass-meridian/scenes/meridian-engine/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/brass-meridian/scenes/meridian-engine/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "compact"
+            ],
+            "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-engine/variants",
+            "siteIds": [
+              "upper-left-conduit",
+              "upper-right-lens",
+              "left-rail-junction",
+              "right-rail-junction",
+              "left-platform",
+              "right-platform",
+              "lower-left-walkway",
+              "lower-right-walkway",
+              "distant-left-structure",
+              "distant-right-structure"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 15000,
+              "fadeMs": 2600,
+              "holdMs": 7000,
+              "gapMs": 15000
+            }
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp"
     }
   },
   "story": {
@@ -794,7 +1786,7 @@
         "id": "nix-at-the-threshold",
         "asset": null,
         "speaker": "Nix",
-        "copy": "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember."
+        "copy": "The language was not lost\u2014only forgotten. Learn it with us, and the Wilds will remember."
       }
     ],
     "ending": {

@@ -50,7 +50,7 @@ test("production PWA precaches core media and streams optional animation and sce
   });
   assert.equal(readFileSync(join(dist, "content", "presentation.json"), "utf8"), presentation);
   assert.match(worker, /content\/presentation\.json/);
-  assert.equal(media.core.length, 96);
+  assert.equal(media.core.length, 116);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 14);
   media.core.forEach(({ path: file }) => {
     assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
