@@ -835,6 +835,11 @@ Do not generate structural prop sheets. For each approved scene and profile:
    verdict from a computer-vision diff. Do not extract or promote patch pixels.
 8. Stop for personal review. Record every approved candidate and retain every
    candidate's hashes, model, prompts, source hashes, and date.
+   If the owner deletes an unsatisfactory generated PNG, approve every extant
+   output with `approve-present`, then stage only the deleted candidate IDs in
+   a new numbered replacement round (for example `round-04`). Generate and
+   review that round separately; never overwrite or mingle it with the
+   original review batch.
 9. During WP-03P-B, copy every approved complete-board output into the scene's
    `variants/` directory and register the compact profile, semantic site IDs,
    and timing metadata in the presentation manifest.

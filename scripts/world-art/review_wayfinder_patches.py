@@ -45,6 +45,7 @@ LANDMARK_BOUNDS = (0.28, 0.48, 0.44, 0.52)
 AVOID_RECURRING_MOTIFS: tuple[str, ...] = ()
 PRESERVATION_ANCHORS = "paths, water, stones, roots, bridge, central wayfinder, and outer edges"
 WORK_PACKAGE = "WP-03P-A"
+ROUND = 3
 OUTPUT_COST_USD = 0.067
 INPUT_COST_ALLOWANCE_USD = 0.0012
 
@@ -253,16 +254,17 @@ SITES = (
 )
 
 
-def configure_scene(config_path: Path) -> None:
+def configure_scene(config_path: Path, round_number: int = 3) -> None:
     """Apply a scene-specific inventory while retaining the reviewed workflow."""
     global SCENE_ID, UNIT_ID, SCENE_TITLE, REVIEW_ROOT, VISIBILITY_METRICS
     global MANIFEST_PATH, INVENTORY_PATH, LEDGER_PATH, BASES, LANDMARK_BOUNDS, SITES
-    global AVOID_RECURRING_MOTIFS, PRESERVATION_ANCHORS, WORK_PACKAGE
+    global AVOID_RECURRING_MOTIFS, PRESERVATION_ANCHORS, WORK_PACKAGE, ROUND
     config = json.loads(config_path.read_text())
     SCENE_ID = config["sceneId"]
     UNIT_ID = config["unitId"]
     SCENE_TITLE = config["sceneTitle"]
-    REVIEW_ROOT = ROOT / "artifacts/world-generation/patch-reviews" / SCENE_ID / "round-03"
+    ROUND = round_number
+    REVIEW_ROOT = ROOT / "artifacts/world-generation/patch-reviews" / SCENE_ID / f"round-{ROUND:02d}"
     VISIBILITY_METRICS = REVIEW_ROOT / "visibility/metrics.json"
     MANIFEST_PATH = REVIEW_ROOT / "approval-manifest.json"
     INVENTORY_PATH = REVIEW_ROOT / "object-inventory.json"
@@ -893,7 +895,7 @@ def status() -> None:
         if item.get("approvalState") == "approved"
     ]
     print(
-        f"{SCENE_ID} round 03: {len(generated)}/50 generated; "
+        f"{SCENE_ID} round {ROUND:02d}: {len(generated)}/{len(manifest['candidates'])} generated; "
         f"{len(approved)}/{manifest['requiredWinnerCount']} explicitly approved; "
         f"estimated spend ${estimated_spend():.2f}"
     )
@@ -906,6 +908,7 @@ def approve_all() -> None:
         candidate["id"]
         for candidate in manifest["candidates"]
         if not candidate.get("output")
+        or not (ROOT / candidate["output"]["path"]).is_file()
     ]
     if missing:
         raise RuntimeError(
@@ -920,6 +923,70 @@ def approve_all() -> None:
     manifest["approvedAt"] = datetime.now(UTC).isoformat()
     write_json(MANIFEST_PATH, manifest)
     print(f"Recorded owner approval for all {len(manifest['candidates'])} candidates")
+
+
+def approve_present() -> None:
+    """Approve every extant output while retaining deleted outputs for replacement."""
+    manifest = json.loads(MANIFEST_PATH.read_text())
+    present = []
+    missing = []
+    for candidate in manifest["candidates"]:
+        output = candidate.get("output")
+        if output and (ROOT / output["path"]).is_file():
+            candidate["approvalState"] = "approved"
+            present.append(candidate["id"])
+        else:
+            candidate["approvalState"] = "replacement-required"
+            missing.append(candidate["id"])
+    manifest["approvalState"] = "owner-approved-present-outputs"
+    manifest["requiredWinnerCount"] = len(present)
+    manifest["winnerPolicy"] = "owner approved every extant output; deleted outputs require a replacement round"
+    manifest["approvedAt"] = datetime.now(UTC).isoformat()
+    write_json(MANIFEST_PATH, manifest)
+    print(f"Recorded owner approval for {len(present)} extant candidates; {len(missing)} replacement(s) required")
+
+
+def stage_replacements(from_round: int) -> None:
+    """Stage only deleted candidates in a clean later review round."""
+    source_root = ROOT / "artifacts/world-generation/patch-reviews" / SCENE_ID / f"round-{from_round:02d}"
+    source_manifest_path = source_root / "approval-manifest.json"
+    source_inventory_path = source_root / "object-inventory.json"
+    if not source_manifest_path.is_file() or not source_inventory_path.is_file():
+        raise RuntimeError(f"Missing source round {from_round:02d} for {SCENE_ID}")
+    if MANIFEST_PATH.is_file():
+        existing = json.loads(MANIFEST_PATH.read_text())
+        if any(candidate.get("output") for candidate in existing.get("candidates", [])):
+            print(f"Replacement round {ROUND:02d} already has generated output; preserving it")
+            return
+    source_manifest = json.loads(source_manifest_path.read_text())
+    replacements = [
+        candidate for candidate in source_manifest["candidates"]
+        if candidate.get("output") and not (ROOT / candidate["output"]["path"]).is_file()
+    ]
+    if not replacements:
+        print(f"No deleted outputs found in {SCENE_ID} round {from_round:02d}")
+        return
+    manifest = {
+        **source_manifest,
+        "round": ROUND,
+        "createdAt": datetime.now(UTC).isoformat(),
+        "approvalState": "pending-human-selection",
+        "requiredWinnerCount": len(replacements),
+        "winnerPolicy": "all owner-approved replacement candidates",
+        "replacementOfRound": from_round,
+        "candidates": [],
+    }
+    for source in replacements:
+        candidate = {**source}
+        candidate["output"] = None
+        candidate["boxedReview"] = None
+        candidate["approvalState"] = "pending"
+        candidate["mechanicalValidation"] = "not-generated"
+        candidate.pop("generatedAt", None)
+        manifest["candidates"].append(candidate)
+    write_json(INVENTORY_PATH, json.loads(source_inventory_path.read_text()))
+    write_json(MANIFEST_PATH, manifest)
+    print(f"Staged {len(replacements)} deleted candidate replacement(s) in round {ROUND:02d}")
 
 
 def promote() -> None:
@@ -959,8 +1026,11 @@ def main() -> int:
         type=Path,
         help="JSON inventory for another approved scene; preserves the Wayfinder default",
     )
+    parser.add_argument("--round", type=int, default=3, help="review round number (default: 3)")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("stage")
+    replacements = subparsers.add_parser("stage-replacements")
+    replacements.add_argument("--from-round", type=int, default=3)
     generator = subparsers.add_parser("generate")
     generator.add_argument("--execute", action="store_true")
     generator.add_argument("--project", default=default_project())
@@ -975,16 +1045,21 @@ def main() -> int:
     generator.add_argument("--max-quota-retries", type=int, default=2)
     subparsers.add_parser("status")
     subparsers.add_parser("approve-all")
+    subparsers.add_parser("approve-present")
     subparsers.add_parser("promote")
     args = parser.parse_args()
     if args.scene_config:
-        configure_scene(args.scene_config)
+        configure_scene(args.scene_config, args.round)
     if args.command == "stage":
         stage()
     elif args.command == "generate":
         generate(args)
     elif args.command == "approve-all":
         approve_all()
+    elif args.command == "approve-present":
+        approve_present()
+    elif args.command == "stage-replacements":
+        stage_replacements(args.from_round)
     elif args.command == "status":
         status()
     else:
