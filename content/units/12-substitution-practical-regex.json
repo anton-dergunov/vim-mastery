@@ -173,7 +173,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Rename this status",
-          "instruction": "Change “draft” to “live” so line 1 reads “status: live”.",
+          "instruction": "Replace “draft” with “live” on the current row only.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -285,7 +285,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Finish every TODO",
-          "instruction": "Make lines 1–3 read “DONE docs”, “DONE tests”, “DONE release”.",
+          "instruction": "Replace every “TODO” marker with “DONE”.",
           "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
@@ -427,7 +427,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Rename exact tokens",
-          "instruction": "Make lines 1–3 read “const mode = new;”, “const OLD = frozen;”, “return new;”.",
+          "instruction": "Replace each lowercase “old” token with “new” without touching uppercase “OLD”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -689,7 +689,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Change only line three",
-          "instruction": "Change “fals” to “tru” so line 3 reads “south = true”.",
+          "instruction": "Change only the south value from “false” to “true”.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
@@ -810,7 +810,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Rename the selected pair",
-          "instruction": "Make lines 2–3 read “current = parse()”, “current = render()”.",
+          "instruction": "Change “old” to “current” only on the selected parse and render rows.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -934,7 +934,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Limit a repeated replacement",
-          "instruction": "Make lines 2–3 read “on on change”, “on on change”.",
+          "instruction": "Change every “off” to “on” on the two middle rows only.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -1179,7 +1179,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Change only the first match",
-          "instruction": "Change “old” to “new” so line 1 reads “new old”.",
+          "instruction": "Change only the first “old” to “new”.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -1285,7 +1285,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Normalize mixed case",
-          "instruction": "Change “red RED Red” to “blue blue blue” so line 1 reads “blue blue blue”.",
+          "instruction": "Replace every case variation of “red” with “blue”.",
           "languageId": "css",
           "sourceKind": "fragment",
           "scenario": {
@@ -1396,7 +1396,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Protect the uppercase name",
-          "instruction": "Change “foo FOO foo” to “bar FOO bar” so line 1 reads “bar FOO bar”.",
+          "instruction": "Replace both lowercase “foo” values with “bar” while preserving uppercase “FOO”.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -1633,7 +1633,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Count before editing",
-          "instruction": "Place the cursor at line 1, column 1 (“W”) without changing the text.",
+          "instruction": "Count the “WARN” matches without changing the buffer.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -1750,7 +1750,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Skip a reviewed match",
-          "instruction": "Place the cursor at line 1, column 1 (“o”) without changing the text.",
+          "instruction": "Review the “old” match and decline its replacement.",
           "languageId": "csv",
           "sourceKind": "fragment",
           "scenario": {
@@ -1860,7 +1860,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Accept all remaining matches",
-          "instruction": "Change “draft draft draft” to “live live live” so line 1 reads “live live live”.",
+          "instruction": "Review the first “draft”, then accept that replacement and all remaining matches.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -2110,7 +2110,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Remove the debug marker",
-          "instruction": "Make lines 1–2 read “ready”, “done”.",
+          "instruction": "Remove the “DEBUG ” prefix from both rows.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -2220,7 +2220,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Upgrade URLs readably",
-          "instruction": "Make lines 1–2 read “https://one.test”, “https://two.test”.",
+          "instruction": "Upgrade both URLs from HTTP to HTTPS.",
           "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
@@ -2341,7 +2341,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reuse the complete recipe",
-          "instruction": "Make lines 1–2 read “state = :live”, “state = :live”.",
+          "instruction": "Change “draft” to “live” on both rows by reusing the complete previous substitution.",
           "languageId": "ruby",
           "sourceKind": "fragment",
           "scenario": {
@@ -2590,7 +2590,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Normalize numeric identifiers",
-          "instruction": "Make lines 1–3 read “id-N”, “id-N”, “id-N”.",
+          "instruction": "Replace each run of digits after “id-” with “N”.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -2710,7 +2710,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Match an optional letter",
-          "instruction": "Change “color colour” to “tone tone” so line 1 reads “tone tone”.",
+          "instruction": "Replace both “color” and “colour” with “tone”.",
           "languageId": "prose",
           "sourceKind": "fragment",
           "scenario": {
@@ -2825,7 +2825,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Normalize bounded codes",
-          "instruction": "Make lines 1–2 read “a = CODE”, “b = CODE”.",
+          "instruction": "Replace the two-to-four-letter uppercase codes with “CODE”, leaving the single-letter code alone.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
@@ -3090,7 +3090,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Normalize two alert levels",
-          "instruction": "Make lines 1–2 read “alert: disk”, “alert: net”.",
+          "instruction": "Replace both “warn” and “error” with “alert”, leaving “info” alone.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -3219,7 +3219,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Wrap only the whole word",
-          "instruction": "Change “cat catalog cat” to “[cat] catalog [cat]” so line 1 reads “[cat] catalog [cat]”.",
+          "instruction": "Wrap each complete “cat” word in brackets without changing “catalog”.",
           "languageId": "prose",
           "sourceKind": "fragment",
           "scenario": {
@@ -3334,7 +3334,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Split a captured assignment",
-          "instruction": "Make lines 1–2 read “MODE”, “production”.",
+          "instruction": "Split “MODE=production” at the equals sign, placing the value on a new line.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -3600,7 +3600,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Replace only after a prefix",
-          "instruction": "Change “development” to “production” so line 1 reads “env:production”.",
+          "instruction": "Replace only the text after “env:” with “production”.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3722,7 +3722,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Preserve the suffix",
-          "instruction": "Change “draft” to “live” so line 1 reads “mode=live;locked”.",
+          "instruction": "Replace “draft” with “live” while preserving the “;locked” suffix.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
@@ -3841,7 +3841,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Normalize only exact IDs",
-          "instruction": "Make lines 1–3 read “item-12 ready”, “grid-12 keep”, “item-7 ready”.",
+          "instruction": "Rename the exact “id-” prefixes to “item-” without changing “grid-12”.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {

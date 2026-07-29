@@ -189,7 +189,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Promote one identifier",
-          "instruction": "Change “draft_mode” to “DRAFT_MODE” so line 1 reads “DRAFT_MODE = True”.",
+          "instruction": "Uppercase the complete “draft_mode” identifier.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -301,7 +301,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Replace one state",
-          "instruction": "Change “draft” to “ready” so line 1 reads “state = ready;”.",
+          "instruction": "Replace the “draft” state with “ready”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -441,7 +441,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove a stale qualifier",
-          "instruction": "Remove “stale ” so line 1 reads “const value”.",
+          "instruction": "Remove the “stale” qualifier and its trailing space.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -698,7 +698,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Uppercase a dotted token",
-          "instruction": "Change “cache.old” to “CACHE.OLD” so line 1 reads “CACHE.OLD ready”.",
+          "instruction": "Uppercase the complete dotted token “cache.old”.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -810,7 +810,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Replace a dotted state",
-          "instruction": "Change “cache.old” to “fresh” so line 1 reads “fresh ready”.",
+          "instruction": "Replace the dotted token “cache.old” with “fresh”.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -950,7 +950,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove one noisy field",
-          "instruction": "Change “cache.old ” to “ready” so line 1 reads “ready”.",
+          "instruction": "Remove the complete “cache.old” field and its trailing space.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
@@ -1209,7 +1209,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Change a quoted value",
-          "instruction": "Change “draft” to “ready” so line 1 reads “name = \"ready\";”.",
+          "instruction": "Replace the text inside the double quotes with “ready”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1346,7 +1346,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove a quoted argument cleanly",
-          "instruction": "Remove “\"draft\"” so line 1 reads “send(, next)”.",
+          "instruction": "Remove the quoted “draft” argument, including its quotes.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1455,7 +1455,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Change single-quoted contents",
-          "instruction": "Change “draft” to “live” so line 1 reads “mode = 'live'”.",
+          "instruction": "Replace the text inside the single quotes with “live”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1587,7 +1587,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Capture a whole single-quoted value",
-          "instruction": "Place the cursor at line 1, column 1 (“'”) without changing the text.",
+          "instruction": "Capture “'draft'” together with its quotes.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1695,7 +1695,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Change template contents",
-          "instruction": "Change “draft” to “live” so line 1 reads “state = `live`;”.",
+          "instruction": "Replace the text inside the backticks with “live”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1827,7 +1827,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove a template argument",
-          "instruction": "Remove “`draft`” so line 1 reads “send(, next)”.",
+          "instruction": "Remove the backticked “draft” argument, including its backticks.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2083,7 +2083,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Empty a call",
-          "instruction": "Remove “one, two” so line 1 reads “call()”.",
+          "instruction": "Remove the arguments from “call(one, two)” but keep the parentheses.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2190,7 +2190,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Empty the parenthesized block",
-          "instruction": "Remove “cache, auth” so line 1 reads “load()”.",
+          "instruction": "Remove the arguments from “load(cache, auth)” but keep the parentheses.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2297,7 +2297,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove a complete parameter list",
-          "instruction": "Remove “(cache, auth)” so line 1 reads “load”.",
+          "instruction": "Remove the complete argument list from “load(cache, auth)”, including its parentheses.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2405,7 +2405,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove a call boundary",
-          "instruction": "Remove “(one, two)” so line 1 reads “call”.",
+          "instruction": "Remove the complete argument list from “call(one, two)”, including its parentheses.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2513,7 +2513,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Replace a full argument list",
-          "instruction": "Change “one, two” to “done” so line 1 reads “call(done)”.",
+          "instruction": "Replace the complete argument list with “(done)”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2803,7 +2803,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Yank around square brackets.",
-          "instruction": "Place the cursor at line 1, column 6 (“[”) without changing the text.",
+          "instruction": "Capture “[one, two]” together with its brackets.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2910,7 +2910,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete inside square brackets.",
-          "instruction": "Remove “one, two” so line 1 reads “items[]”.",
+          "instruction": "Empty the square brackets without removing them.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3017,7 +3017,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Delete around square brackets.",
-          "instruction": "Remove “[one, two]” so line 1 reads “items”.",
+          "instruction": "Remove “[one, two]” together with its brackets.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3124,7 +3124,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Yank inside curly braces.",
-          "instruction": "Place the cursor at line 1, column 11 (“o”) without changing the text.",
+          "instruction": "Capture the contents of the curly braces without changing the code.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -3231,7 +3231,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Yank around curly braces.",
-          "instruction": "Place the cursor at line 1, column 10 (“{”) without changing the text.",
+          "instruction": "Capture “{one: 1}” together with its braces.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -3338,7 +3338,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete inside curly braces.",
-          "instruction": "Remove “one: 1” so line 1 reads “config = {}”.",
+          "instruction": "Empty the curly braces without removing them.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -3445,7 +3445,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Delete around curly braces.",
-          "instruction": "Remove “{one: 1}” so line 1 reads “config = ”.",
+          "instruction": "Remove “{one: 1}” together with its braces.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -3552,7 +3552,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Capture the brace contents",
-          "instruction": "Place the cursor at line 1, column 11 (“o”) without changing the text.",
+          "instruction": "Capture the contents of the curly braces without changing the code.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -3659,7 +3659,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Capture the complete braced block",
-          "instruction": "Place the cursor at line 1, column 10 (“{”) without changing the text.",
+          "instruction": "Capture “{one: 1}” together with its braces.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
@@ -3914,7 +3914,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Capture a complete generic list",
-          "instruction": "Place the cursor at line 1, column 7 (“<”) without changing the text.",
+          "instruction": "Capture “<Ok, Error>” together with its angle brackets.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4021,7 +4021,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Clear generic parameters",
-          "instruction": "Remove “Ok, Error” so line 1 reads “Result<>”.",
+          "instruction": "Remove the generic parameters but keep the angle brackets.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4128,7 +4128,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove a generic list",
-          "instruction": "Remove “<Ok, Error>” so line 1 reads “Result”.",
+          "instruction": "Remove the complete generic list, including its angle brackets.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4393,7 +4393,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Remove one sentence cleanly",
-          "instruction": "Change “First sentence. ” to “Second sentence!” so line 1 reads “Second sentence!”.",
+          "instruction": "Remove the first sentence and the space after it.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -4509,7 +4509,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Indent one paragraph",
-          "instruction": "Make lines 1–2 read “  alpha line”, “  beta line”.",
+          "instruction": "Indent the first paragraph by one level without moving the separator.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -4627,7 +4627,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove a paragraph and separator",
-          "instruction": "Make lines 1–1 read “next block”.",
+          "instruction": "Remove the first paragraph and its separating blank line.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -4885,7 +4885,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Replace tag contents",
-          "instruction": "Change “Hello <em>world</em>” to “Ready” so line 1 reads “<p>Ready</p>”.",
+          "instruction": "Replace everything inside the outer paragraph element with “Ready”.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
@@ -5024,7 +5024,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Capture a complete element",
-          "instruction": "Place the cursor at line 1, column 1 (“<”) without changing the text.",
+          "instruction": "Capture the complete paragraph element, including its tags.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
@@ -5131,7 +5131,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove a complete element",
-          "instruction": "Remove “<p>Hello <em>world</em></p>” so line 1 reads “”.",
+          "instruction": "Remove the complete paragraph element, including its tags.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
@@ -5381,7 +5381,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Empty a call structurally",
-          "instruction": "Remove “user, event” so line 1 reads “notify()”.",
+          "instruction": "Empty the “notify” call while keeping its parentheses.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -5490,7 +5490,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Capture an object literal",
-          "instruction": "Place the cursor at line 1, column 16 (“{”) without changing the text.",
+          "instruction": "Capture the complete “{ ready: true }” object literal.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5599,7 +5599,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Choose the structural target",
-          "instruction": "Change “Draft” to “Ready” so line 1 reads “<status>Ready</status>”.",
+          "instruction": "Replace the contents of the status element with “Ready”.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {

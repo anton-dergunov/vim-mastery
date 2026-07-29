@@ -219,7 +219,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Promote every cache mode",
-          "instruction": "Make lines 1–3 read “east = 'ready'”, “west = 'ready'”, “north = 'ready'”.",
+          "instruction": "Replace every “draft” cache mode with “ready”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -351,7 +351,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Terminate the builder calls",
-          "instruction": "Make lines 1–3 read “builder.name(name);”, “builder.timeout(timeout);”, “builder.retry(retry);”.",
+          "instruction": "Add a semicolon to every builder call.",
           "languageId": "java",
           "sourceKind": "fragment",
           "scenario": {
@@ -478,7 +478,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Enable every service",
-          "instruction": "Make lines 1–3 read “cache := true”, “queue := true”, “audit := true”.",
+          "instruction": "Change every service value from “false” to “true”.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
@@ -753,7 +753,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Promote every environment",
-          "instruction": "Make lines 1–3 read “api: 'prod'”, “worker: 'prod'”, “cron: 'prod'”.",
+          "instruction": "Replace every quoted “dev” environment with “prod”.",
           "languageId": "yaml",
           "sourceKind": "complete",
           "scenario": {
@@ -885,7 +885,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Repair custom-property separators",
-          "instruction": "Make lines 1–3 read “  --gap : 8px;”, “  --radius : 4px;”, “  --speed : 120ms;”.",
+          "instruction": "Replace each custom-property equals sign with a colon.",
           "languageId": "css",
           "sourceKind": "fragment",
           "scenario": {
@@ -1035,7 +1035,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Await every request",
-          "instruction": "Make lines 1–3 read “fetch_user().await”, “fetch_permissions(user).await”, “fetch_dashboard(user).await”.",
+          "instruction": "Append “.await” to every request.",
           "languageId": "rust",
           "sourceKind": "fragment",
           "scenario": {
@@ -1337,7 +1337,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Finish the CSV statuses",
-          "instruction": "Change “todo,todo,todo” to “done,done,done” so line 2 reads “1,done,done,done”.",
+          "instruction": "Change all three “todo” statuses in the data row to “done”.",
           "languageId": "csv",
           "sourceKind": "complete",
           "scenario": {
@@ -1475,7 +1475,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Repair expression arrows",
-          "instruction": "Make lines 1–3 read “Name = user > user.Name;”, “Age = user > user.Age;”, “Role = user > user.Role;”.",
+          "instruction": "Replace the question mark in every expression with “>”.",
           "languageId": "csharp",
           "sourceKind": "fragment",
           "scenario": {
@@ -1621,7 +1621,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Enable every shell flag",
-          "instruction": "Change “ff;cache=off;audit=off” to “n;cache=on;audit=on” so line 1 reads “flags=on;cache=on;audit=on”.",
+          "instruction": "Change every “off” flag to “on”.",
           "languageId": "shell",
           "sourceKind": "complete",
           "scenario": {
@@ -1940,7 +1940,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Clean logs upward",
-          "instruction": "Make lines 1–3 read “logger.info('cache')”, “logger.info('queue')”, “logger.info('worker')”.",
+          "instruction": "Work upward through the buffer, changing every logger level from “debug” to “info”.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -2091,7 +2091,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Update rows on both sides",
-          "instruction": "Make lines 1–3 read “status = 'active'”, “status = 'active'”, “status = 'active'”.",
+          "instruction": "Change all three “pending” statuses to “active”, working on both sides of the starting row.",
           "languageId": "sql",
           "sourceKind": "fragment",
           "scenario": {
@@ -2254,7 +2254,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Normalize matching log codes",
-          "instruction": "Make lines 1–4 read “12:01 TIMEOUT api”, “12:02 E_AUTH login”, “12:03 TIMEOUT worker”, “12:04 TIMEOUT cron”.",
+          "instruction": "Remove the “E_” prefix from every “E_TIMEOUT” code without changing “E_AUTH”.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
@@ -2545,7 +2545,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Remove repeated fields with checkpoints",
-          "instruction": "Make lines 1–1 read “keep release note”.",
+          "instruction": "Remove the three stale rows one at a time, pausing on each before the next deletion.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -2679,7 +2679,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reuse the deletion count",
-          "instruction": "Make lines 1–1 read “keep = true”.",
+          "instruction": "Remove all four temporary rows in two equal deletions.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
@@ -2802,7 +2802,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Replace the remembered count",
-          "instruction": "Change “#####” to “ Release notes” so line 1 reads “ Release notes”.",
+          "instruction": "Remove all five leading hash marks, replacing the remembered count.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -3095,7 +3095,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Replace placeholder limits",
-          "instruction": "Make lines 1–3 read “soft_limit = 0”, “hard_limit = 0”, “burst_limit = 0”.",
+          "instruction": "Replace “None” with “0” on all three limit rows.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -3230,7 +3230,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Activate selected rows",
-          "instruction": "Make lines 1–3 read “('api', 'active'),”, “('worker', 'active'),”, “('cron', 'active')”.",
+          "instruction": "Replace “draft” with “active” on all three records.",
           "languageId": "sql",
           "sourceKind": "fragment",
           "scenario": {
@@ -3372,7 +3372,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Lower every trace level",
-          "instruction": "Make lines 1–3 read “API_LEVEL=INFO”, “QUEUE_LEVEL=INFO”, “WORKER_LEVEL=INFO”.",
+          "instruction": "Replace “TRACE” with “INFO” on all three settings.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
@@ -3673,7 +3673,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Observe the dropped global flag",
-          "instruction": "Make lines 1–2 read “DONE docs; DONE tests”, “DONE release; TODO notes”.",
+          "instruction": "Change both TODOs on the first row to DONE, then change only the first TODO on the second row.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
@@ -3959,7 +3959,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Make the staging value live",
-          "instruction": "Make lines 1–2 read “api: live”, “worker: live”.",
+          "instruction": "Change “draft” and “staging” to “live” by reusing the previous replacement.",
           "languageId": "yaml",
           "sourceKind": "complete",
           "scenario": {
@@ -4113,7 +4113,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Choose the exact substitution repeat",
-          "instruction": "Make lines 1–2 read “<nav class=\"modern\">”, “<main class=\"modern\">”.",
+          "instruction": "Change “legacy” to “modern” on both elements by reusing the complete previous substitution.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
@@ -4412,7 +4412,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Repair nearby separators",
-          "instruction": "Change “? 2? 3?” to “, 2, 3,” so line 1 reads “Point p{1, 2, 3, 4};”.",
+          "instruction": "Replace all three question-mark separators with commas.",
           "languageId": "cpp",
           "sourceKind": "fragment",
           "scenario": {
@@ -4542,7 +4542,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove a fixed debug block",
-          "instruction": "Make lines 1–1 read “return app”.",
+          "instruction": "Remove the three debug rows as one block.",
           "languageId": "swift",
           "sourceKind": "fragment",
           "scenario": {
@@ -4644,7 +4644,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Normalize repeated XML attributes",
-          "instruction": "Make lines 1–3 read “<state>final</state>”, “<state>final</state>”, “<state>final</state>”.",
+          "instruction": "Replace “draft” with “final” in all three XML elements by reusing the previous substitution.",
           "languageId": "xml",
           "sourceKind": "fragment",
           "scenario": {

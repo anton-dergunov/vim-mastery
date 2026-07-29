@@ -266,7 +266,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Take the middle row",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 10–16 visible.",
+          "instruction": "Move to the middle row of the current window without scrolling.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -475,7 +475,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Drop to the visible foot",
-          "instruction": "Place the cursor at line 16, column 3 (“c”) without changing the text. Keep lines 10–16 visible.",
+          "instruction": "Move to the last visible row without scrolling.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -682,7 +682,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Choose the top without gg",
-          "instruction": "Place the cursor at line 10, column 1 without changing the text. Keep lines 10–16 visible.",
+          "instruction": "Move to the first visible row without jumping to the top of the file.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1114,7 +1114,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Center a top-framed row",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 10–16 visible.",
+          "instruction": "Center the current row in the window.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1322,7 +1322,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Set the row at the foot",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 7–13 visible.",
+          "instruction": "Place the current row at the bottom of the window.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1530,7 +1530,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Expose what follows",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 13–19 visible.",
+          "instruction": "Place the current row at the top of the window to reveal what follows.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -1962,7 +1962,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Read the previous page",
-          "instruction": "Place the cursor at line 8, column 1 (“ ”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Move back one full page to the final route entry.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2169,7 +2169,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Advance with more context",
-          "instruction": "Place the cursor at line 16, column 1 (“ ”) without changing the text. Keep lines 13–19 visible.",
+          "instruction": "Move half a page down to the normalized-path declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2376,7 +2376,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover earlier context",
-          "instruction": "Place the cursor at line 10, column 1 without changing the text. Keep lines 7–13 visible.",
+          "instruction": "Move half a page up to the blank line after the routes list.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -2807,7 +2807,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reveal one earlier row",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 9–15 visible.",
+          "instruction": "Reveal one earlier row without moving the cursor.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3014,7 +3014,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Open two rows below",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 12–18 visible.",
+          "instruction": "Reveal two later rows without moving the cursor.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3234,7 +3234,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Open two rows above",
-          "instruction": "Place the cursor at line 13, column 1 (“}”) without changing the text. Keep lines 8–14 visible.",
+          "instruction": "Reveal two earlier rows without moving the cursor.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3686,7 +3686,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Return to the exact column",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to the saved position inside the routes declaration, including its exact column.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -3902,7 +3902,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep a second site",
-          "instruction": "Place the cursor at line 21, column 9 (“c”) without changing the text. Keep lines 15–21 visible.",
+          "instruction": "Return to the saved position inside the config declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4115,7 +4115,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Choose precision",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return precisely to the saved position inside the routes declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4555,7 +4555,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Walk back to the newer site",
-          "instruction": "Visit line 3, column 8 (“u”), then finish at line 21, column 3 (“c”). Keep lines 15–21 visible.",
+          "instruction": "Visit the earlier location in the Route type, then return to the newer location in the config declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4774,7 +4774,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return linewise to context",
-          "instruction": "Place the cursor at line 3, column 1 (“t”) without changing the text. Keep lines 3–9 visible.",
+          "instruction": "Return to the previous context on the Route type line, landing on its first character.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4985,7 +4985,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover the exact prior column",
-          "instruction": "Place the cursor at line 3, column 8 (“u”) without changing the text. Keep lines 3–9 visible.",
+          "instruction": "Return to the previous context at the exact position inside the Route type.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5426,7 +5426,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Recover the exact change position",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to the exact position of the last change inside the routes declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5639,7 +5639,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to the last Insert exit",
-          "instruction": "Place the cursor at line 5, column 11 (“e”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to where the most recent Insert session ended in the routes declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -5852,7 +5852,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Resume the prior insertion",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Briefly resume the previous insertion point, then finish in Normal mode.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6066,7 +6066,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Restore the previous selection",
-          "instruction": "Place the cursor at line 7, column 6 (“a”) without changing the text. Finish in visual mode. Keep lines 7–13 visible.",
+          "instruction": "Restore the previous selection on the account route and finish in Visual mode.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6515,7 +6515,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Return to the range end row",
-          "instruction": "Place the cursor at line 5, column 1 (“c”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to the line where the most recent changed range ended.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6730,7 +6730,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Recover the exact range start",
-          "instruction": "Place the cursor at line 5, column 5 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to the exact start of the most recent changed range.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -6945,7 +6945,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Recover the exact range end",
-          "instruction": "Place the cursor at line 5, column 7 (“r”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to the exact end of the most recent changed range.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -7395,7 +7395,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the earlier edit site",
-          "instruction": "Visit line 21, column 3 (“c”), then finish at line 5, column 10 (“t”). Keep lines 5–11 visible.",
+          "instruction": "Visit the newer config edit, then move back to the earlier routes edit.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -7628,7 +7628,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Move forward in change history",
-          "instruction": "Visit line 5, column 10 (“t”), then finish at line 21, column 3 (“c”). Keep lines 15–21 visible.",
+          "instruction": "Visit the earlier routes edit, return to the config edit, then finish at the newer site.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -7876,7 +7876,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Count to the earlier change",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Move directly to the earlier routes edit in the change history.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8320,7 +8320,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Reach the next section start",
-          "instruction": "Place the cursor at line 22, column 1 (“{”) without changing the text. Keep lines 16–22 visible.",
+          "instruction": "Move to the opening brace of the next section.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8528,7 +8528,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Reach a previous section end",
-          "instruction": "Place the cursor at line 9, column 1 (“}”) without changing the text. Keep lines 9–15 visible.",
+          "instruction": "Move back to the closing brace of the parsing section.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8736,7 +8736,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach the current section end",
-          "instruction": "Place the cursor at line 18, column 1 (“}”) without changing the text. Keep lines 12–18 visible.",
+          "instruction": "Move forward to the closing brace of the validation section.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -8944,7 +8944,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find the enclosing block start",
-          "instruction": "Place the cursor at line 14, column 21 (“{”) without changing the text. Keep lines 12–18 visible.",
+          "instruction": "Move to the opening brace of the enclosing conditional block.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9152,7 +9152,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find the enclosing block end",
-          "instruction": "Place the cursor at line 16, column 3 (“}”) without changing the text. Keep lines 12–18 visible.",
+          "instruction": "Move to the closing brace of the enclosing conditional block.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9360,7 +9360,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find enclosing parentheses",
-          "instruction": "Place the cursor at line 14, column 6 (“(”) without changing the text. Keep lines 11–17 visible.",
+          "instruction": "Move to the opening parenthesis of the enclosing condition.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9568,7 +9568,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Find the condition close",
-          "instruction": "Place the cursor at line 14, column 19 (“)”) without changing the text. Keep lines 11–17 visible.",
+          "instruction": "Move to the closing parenthesis of the enclosing condition.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9776,7 +9776,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach a method start",
-          "instruction": "Place the cursor at line 13, column 14 (“{”) without changing the text. Keep lines 13–19 visible.",
+          "instruction": "Move to the opening brace of the enclosing “find” method.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -9984,7 +9984,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach a method end",
-          "instruction": "Place the cursor at line 18, column 3 (“}”) without changing the text. Keep lines 13–19 visible.",
+          "instruction": "Move to the closing brace of the enclosing “find” method.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
@@ -10437,7 +10437,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Inspect and return",
-          "instruction": "Place the cursor at line 3, column 8 (“u”) without changing the text. Keep lines 3–9 visible.",
+          "instruction": "Return from the inspection site to the exact position inside the Route type.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -10647,7 +10647,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Return to an edit, then a mark",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return through change history, then finish at the saved position inside the routes declaration.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -10869,7 +10869,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Return and reveal what follows",
-          "instruction": "Place the cursor at line 5, column 10 (“t”) without changing the text. Keep lines 5–11 visible.",
+          "instruction": "Return to the saved routes position and place that row at the top of the window.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
