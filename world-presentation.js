@@ -246,6 +246,7 @@ export class WorldPresentationRenderer {
       const variant = document.createElement("div");
       variant.className = "world-remote-variant";
       variant.dataset.asset = asset;
+      variant.dataset.mediaMode = config.mode || "complete-board";
       variant.style.setProperty("--world-asset", `url("${objectUrl}")`);
       variant.style.setProperty("--remote-variant-fade", `${config.timing.fadeMs}ms`);
       this.remoteVariantLayer.replaceChildren(variant);

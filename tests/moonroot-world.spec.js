@@ -109,6 +109,56 @@ test("cancels the unit-entry reveal on input", async ({ page }) => {
   await expect(world).not.toHaveClass(/scene-reveal-active/);
 });
 
+test("keeps the guide at the bottom left without covering the editor", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
+  });
+  for (const viewport of [
+    { width: 980, height: 932 },
+    { width: 1600, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+    await page.waitForFunction(() => document.querySelector("#characterLayer > .nix"));
+    await expect(page.locator("#characterLayer")).toHaveAttribute("data-side", "left");
+    await expect(page.locator(".nix")).toHaveClass(/left/);
+
+    const bounds = await page.evaluate(() => {
+      const world = document.querySelector("#world").getBoundingClientRect();
+      const character = document.querySelector("#characterLayer > .nix").getBoundingClientRect();
+      const editor = document.querySelector(".next-code-slab").getBoundingClientRect();
+      return {
+        world: { left: world.left, right: world.right, bottom: world.bottom },
+        character: {
+          left: character.left,
+          right: character.right,
+          top: character.top,
+          bottom: character.bottom,
+        },
+        editor: {
+          left: editor.left,
+          right: editor.right,
+          top: editor.top,
+          bottom: editor.bottom,
+        },
+      };
+    });
+    const overlapsEditor = (
+      bounds.character.left < bounds.editor.right
+      && bounds.character.right > bounds.editor.left
+      && bounds.character.top < bounds.editor.bottom
+      && bounds.character.bottom > bounds.editor.top
+    );
+    expect(overlapsEditor).toBe(false);
+    expect(bounds.character.left).toBeLessThan(bounds.world.left + (bounds.world.right - bounds.world.left) / 3);
+    expect(bounds.world.bottom - bounds.character.bottom).toBeLessThan(8);
+    await page.screenshot({
+      path: `test-results/guide-bottom-left-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    });
+  }
+});
+
 test("streams compact Wayfinder variants after the delay and silently falls back offline", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
@@ -118,7 +168,7 @@ test("streams compact Wayfinder variants after the delay and silently falls back
     requests.push(route.request().url());
     return route.fulfill({
       path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
-      contentType: "image/png",
+      contentType: "image/webp",
       headers: { "access-control-allow-origin": "*" },
     });
   });
@@ -128,14 +178,18 @@ test("streams compact Wayfinder variants after the delay and silently falls back
 
   const variant = page.locator(".world-remote-variant");
   await expect(variant).toHaveCount(0);
-  await expect(variant).toHaveCount(1, { timeout: 17_000 });
+  await expect(variant).toHaveCount(1, { timeout: 5_000 });
   await expect(variant).toHaveClass(/is-visible/);
+  await expect(variant).toHaveAttribute("data-media-mode", "transparent-patch");
   expect(new URL(requests[0]).origin).toBe(new URL(page.url()).origin);
   expect(await variant.evaluate(element => getComputedStyle(element, "::before").filter)).toContain("brightness(0.82)");
-  expect(await variant.evaluate(element => element.style.getPropertyValue("--remote-variant-fade"))).toBe("2600ms");
+  expect(await variant.evaluate(element => element.style.getPropertyValue("--remote-variant-fade"))).toBe("1200ms");
+  expect(await variant.evaluate(element => getComputedStyle(element, "::after").content)).toBe("none");
   expect(await page.locator("#worldGrid").evaluate(element => Number(getComputedStyle(element).zIndex))).toBeGreaterThan(
     await variant.evaluate(element => Number(getComputedStyle(element.parentElement).zIndex)),
   );
+  await page.waitForTimeout(1_300);
+  await page.screenshot({ path: "test-results/transparent-patch-visible.png", fullPage: true });
 
   await page.context().setOffline(true);
   await page.evaluate(() => window.dispatchEvent(new Event("offline")));
@@ -162,12 +216,12 @@ test("falls back to GitHub Pages when a local development variant is missing", a
     if (new URL(source).origin === localOrigin) return route.fulfill({ status: 404 });
     return route.fulfill({
       path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
-      contentType: "image/png",
+      contentType: "image/webp",
       headers: { "access-control-allow-origin": "*" },
     });
   });
 
-  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 17_000 });
+  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
   expect(new URL(requests[0]).origin).toBe(localOrigin);
   expect(new URL(requests[1]).origin).toBe("https://anton-dergunov.github.io");
 });
@@ -178,7 +232,7 @@ test("uses the approved compact Wayfinder source and variants on a wide board", 
   });
   await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.webp", route => route.fulfill({
     path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
-    contentType: "image/png",
+    contentType: "image/webp",
     headers: { "access-control-allow-origin": "*" },
   }));
   await page.setViewportSize({ width: 1600, height: 900 });
@@ -191,5 +245,5 @@ test("uses the approved compact Wayfinder source and variants on a wide board", 
 
   expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
     .toContain("wayfinder-crossroads/compact/base.webp");
-  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 17_000 });
+  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
 });

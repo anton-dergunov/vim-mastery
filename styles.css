@@ -359,6 +359,9 @@ button { font: inherit; }
   inset: 0;
 }
 .character-layer {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
   pointer-events: none;
 }
 .world-grid { z-index: 4; pointer-events: none; }
@@ -449,8 +452,7 @@ button { font: inherit; }
   pointer-events: none;
   transition: opacity var(--remote-variant-fade, 2600ms) ease-in-out;
 }
-.world-remote-variant::before,
-.world-remote-variant::after {
+.world-remote-variant::before {
   content: "";
   position: absolute;
   pointer-events: none;
@@ -463,8 +465,11 @@ button { font: inherit; }
   background-size: cover;
   filter: saturate(.88) brightness(.82);
 }
-.world-remote-variant::after {
+.world-remote-variant[data-media-mode="complete-board"]::after {
+  content: "";
+  position: absolute;
   inset: 4px;
+  pointer-events: none;
   background:
     linear-gradient(90deg, rgba(2, 8, 8, .32), transparent 24%, transparent 76%, rgba(2, 8, 8, .32)),
     linear-gradient(0deg, rgba(2, 8, 8, .34), transparent 30%);

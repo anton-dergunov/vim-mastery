@@ -129,12 +129,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -286,12 +287,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -442,12 +444,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -598,12 +601,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -774,12 +778,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -899,12 +904,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1024,12 +1030,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1149,12 +1156,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1274,12 +1282,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1399,12 +1408,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1524,12 +1534,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1649,12 +1660,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1774,12 +1786,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],
@@ -1900,12 +1913,13 @@
             ],
             "variantsPerSite": 5,
             "timing": {
-              "initialDelayMs": 15000,
-              "fadeMs": 2600,
-              "holdMs": 7000,
-              "gapMs": 15000
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
             },
-            "format": "webp"
+            "format": "webp",
+            "mode": "transparent-patch"
           },
           "phasePatches": {
             "explain": [],

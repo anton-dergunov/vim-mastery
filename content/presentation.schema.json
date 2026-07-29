@@ -97,6 +97,7 @@
         },
         "assetRoot": { "type": "string", "pattern": "^assets/[a-z0-9][a-z0-9./-]*$" },
         "format": { "enum": ["png", "webp"] },
+        "mode": { "enum": ["complete-board", "transparent-patch"] },
         "siteIds": {
           "type": "array",
           "minItems": 1,

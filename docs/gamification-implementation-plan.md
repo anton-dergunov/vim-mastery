@@ -4,6 +4,33 @@
 
 This document turns the selected gamification direction into independently assignable implementation work. It is an execution plan, not a general visual-design exploration.
 
+### July 2026 transparent-patch storage correction
+
+This correction supersedes every older instruction in this document to ship the
+approved Nano Banana outputs as opaque complete-board runtime variants. The
+approved generated boards remain the review sources, but production stores each
+variation as a lossless, transparent WebP patch on the original 1200×896 canvas.
+
+- Compare the complete approved base and generated board. Authored target bounds
+  are never used for extraction because the generator may place a valid change
+  outside the requested target.
+- Divide the whole canvas into 16×16 cells, normalize each cell's perceptual
+  delta against whole-image noise, and use a finite linear distance kernel to
+  reinforce nearby evidence.
+- Treat connected changed cells as islands. Retain islands relative to the
+  strongest island's perceptual energy, grow connected lower-contrast boundary
+  cells with a distance penalty, and add one safety-cell dilation.
+- Copy generated pixels inside the retained mask exactly and make all other
+  pixels transparent. Lossless WebP decoding and base-plus-patch recomposition
+  must match that filtered reference pixel for pixel.
+- Keep the full transparent canvas instead of cropping to a bounding box. In
+  the reviewed proof, cropping saved only another 2.1% after transparency, while
+  a full canvas preserves cover scaling and focal registration without runtime
+  offsets.
+- Stream patches only on profiles registered against the same source canvas.
+  Fade a first patch after 2.5 seconds, use 1.2-second fades, hold for 6.5
+  seconds, and leave a 4-second gap. The base board remains visible underneath.
+
 ### July 2026 composition correction
 
 WP-01 through WP-03 proved that the generated art language is strong but the

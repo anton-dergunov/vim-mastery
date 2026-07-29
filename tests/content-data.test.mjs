@@ -153,13 +153,20 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   ]) {
     const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
     assert.deepEqual(variants.profiles, profiles);
-    assert.equal(variants.timing.initialDelayMs, 15_000);
-    assert.equal(variants.timing.fadeMs, 2_600);
-    assert.equal(variants.timing.gapMs, 15_000);
+    assert.equal(variants.timing.initialDelayMs, 2_500);
+    assert.equal(variants.timing.fadeMs, 1_200);
+    assert.equal(variants.timing.holdMs, 6_500);
+    assert.equal(variants.timing.gapMs, 4_000);
     assert.equal(variants.siteIds.length, 10);
     assert.equal(remoteVariantPaths(variants).length, 50);
     assert.equal(variants.format, "webp");
+    assert.equal(variants.mode, "transparent-patch");
     assert.match(remoteVariantPaths(variants)[0], new RegExp(`${sceneId}/variants/.*-c01\\.webp$`));
+  }
+  for (const unitId of Object.keys(presentation.units)) {
+    const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
+    assert.equal(variants.mode, "transparent-patch", `${unitId} must stream transparent patches`);
+    assert.equal(remoteVariantPaths(variants).length, 50, `${unitId} must expose every approved patch`);
   }
 });
 

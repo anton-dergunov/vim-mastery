@@ -608,13 +608,14 @@ function applyWorldPresentation(activity, presentation) {
 function renderCharacterLayer(activity, presentation) {
   const assignment = characterAssignment(activity);
   const character = characterAssets[assignment.characterId] || characterAssets.nix;
+  const characterSide = "left";
   const shouldShowCharacter = state.characters === "enabled"
     && (isPractice(activity) || activity.type === "choice")
     && !activity.inspection;
   const characterMarkup = shouldShowCharacter
-    ? `<img class="nix ${presentation.codeSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
+    ? `<img class="nix ${characterSide}" data-character="${assignment.characterId}" data-animation="${assignment.animationId}" src="${localAssetUrl(character.idle)}" alt="${escapeHtml(`${character.name}, ${character.role}`)}">`
     : "";
-  elements.characterLayer.dataset.side = characterMarkup ? presentation.codeSide : "none";
+  elements.characterLayer.dataset.side = characterMarkup ? characterSide : "none";
   elements.characterLayer.innerHTML = characterMarkup;
 }
 

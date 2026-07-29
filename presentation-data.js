@@ -34,6 +34,9 @@ function validateRemoteVariants(value, path, errors) {
   if (value.format !== undefined && !["png", "webp"].includes(value.format)) {
     errors.push(`${path}.format must be png or webp when provided`);
   }
+  if (value.mode !== undefined && !["complete-board", "transparent-patch"].includes(value.mode)) {
+    errors.push(`${path}.mode must be complete-board or transparent-patch when provided`);
+  }
   if (!Array.isArray(value.siteIds) || !value.siteIds.length) {
     errors.push(`${path}.siteIds must contain at least one semantic site ID`);
   } else {
