@@ -30,12 +30,16 @@ function validateRemoteVariants(value, path, errors) {
   if (!Array.isArray(value.profiles) || !value.profiles.length || value.profiles.some(profile => !sceneProfiles.includes(profile))) {
     errors.push(`${path}.profiles must contain supported scene profiles`);
   }
-  if (!assetDirectoryPattern.test(value.assetRoot || "")) errors.push(`${path}.assetRoot must be an assets directory path`);
+  for (const mode of ["transparent-patch", "complete-board"]) {
+    if (!assetDirectoryPattern.test(value.assetRoots?.[mode] || "")) {
+      errors.push(`${path}.assetRoots.${mode} must be an assets directory path`);
+    }
+  }
+  if (!sceneProfiles.includes(value.registrationProfile)) {
+    errors.push(`${path}.registrationProfile must name a supported scene profile`);
+  }
   if (value.format !== undefined && !["png", "webp"].includes(value.format)) {
     errors.push(`${path}.format must be png or webp when provided`);
-  }
-  if (value.mode !== undefined && !["complete-board", "transparent-patch"].includes(value.mode)) {
-    errors.push(`${path}.mode must be complete-board or transparent-patch when provided`);
   }
   if (!Array.isArray(value.siteIds) || !value.siteIds.length) {
     errors.push(`${path}.siteIds must contain at least one semantic site ID`);

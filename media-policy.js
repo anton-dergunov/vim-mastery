@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
+import { remoteVariantPaths } from "./scene-variant-config.js";
 
 const runtimeAssetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
 const sourcePathSegments = new Set(["candidates", "masters", "review", "reviews", "sources"]);
@@ -14,7 +15,10 @@ function addAsset(target, asset, category) {
   if (segments.some(segment => sourcePathSegments.has(segment))) {
     throw new Error(`Source/review media cannot be shipped as runtime media: ${asset}`);
   }
-  if (category !== "remote-scene-variant" && segments.includes("variants")) {
+  if (
+    category !== "remote-scene-variant"
+    && segments.some(segment => segment.startsWith("variants"))
+  ) {
     throw new Error(`Unapproved scene variants cannot be shipped as core runtime media: ${asset}`);
   }
   if (!target.has(asset)) target.set(asset, category);
@@ -42,15 +46,8 @@ export function collectMediaPolicy(presentation, characterManifest) {
 
     const variants = scene?.remoteVariants;
     if (variants) {
-      const format = variants.format || "png";
-      for (const siteId of variants.siteIds || []) {
-        for (let index = 1; index <= variants.variantsPerSite; index += 1) {
-          addAsset(
-            optional,
-            `${variants.assetRoot}/${siteId}-c${String(index).padStart(2, "0")}.${format}`,
-            "remote-scene-variant",
-          );
-        }
+      for (const asset of remoteVariantPaths(variants)) {
+        addAsset(optional, asset, "remote-scene-variant");
       }
     }
   }

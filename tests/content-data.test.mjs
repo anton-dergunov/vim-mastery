@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import {
   loadUnitCatalogWithPresentation,
@@ -7,7 +8,13 @@ import {
   validatePresentationManifest,
 } from "../presentation-data.js";
 import { findNextSequentialUnit } from "../unit-navigation.js";
-import { boardProfileForBounds, remoteVariantPaths, sceneProfileForBoard } from "../world-presentation.js";
+import {
+  boardProfileForBounds,
+  registeredSceneProfileForBoard,
+  remoteVariantPaths,
+  SCENE_VARIANT_ASSET_MODE,
+  sceneProfileForBoard,
+} from "../world-presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -145,28 +152,42 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   assert.equal(presentation.worlds["moonroot-ruins"].props, undefined);
   assert.equal(presentation.worlds["moonroot-ruins"].backdrops, undefined);
 
-  for (const [unitId, profiles, sceneId] of [
-    ["cursor-movement", ["compact", "wide"], "wayfinder-crossroads"],
-    ["modal-model", ["compact"], "mode-lantern-grounds"],
-    ["entering-changing-text", ["compact"], "scribes-spring"],
-    ["operator-grammar", ["compact"], "grammar-gate-court"],
+  for (const [unitId, sceneId] of [
+    ["cursor-movement", "wayfinder-crossroads"],
+    ["modal-model", "mode-lantern-grounds"],
+    ["entering-changing-text", "scribes-spring"],
+    ["operator-grammar", "grammar-gate-court"],
   ]) {
     const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
-    assert.deepEqual(variants.profiles, profiles);
+    assert.deepEqual(variants.profiles, ["tall", "compact", "wide"]);
+    assert.equal(variants.registrationProfile, "compact");
     assert.equal(variants.timing.initialDelayMs, 2_500);
     assert.equal(variants.timing.fadeMs, 1_200);
     assert.equal(variants.timing.holdMs, 6_500);
     assert.equal(variants.timing.gapMs, 4_000);
     assert.equal(variants.siteIds.length, 10);
     assert.equal(remoteVariantPaths(variants).length, 50);
+    assert.equal(remoteVariantPaths(variants, "complete-board").length, 50);
     assert.equal(variants.format, "webp");
-    assert.equal(variants.mode, "transparent-patch");
     assert.match(remoteVariantPaths(variants)[0], new RegExp(`${sceneId}/variants/.*-c01\\.webp$`));
+    assert.match(
+      remoteVariantPaths(variants, "complete-board")[0],
+      new RegExp(`${sceneId}/variants-full/.*-c01\\.webp$`),
+    );
   }
   for (const unitId of Object.keys(presentation.units)) {
     const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
-    assert.equal(variants.mode, "transparent-patch", `${unitId} must stream transparent patches`);
+    assert.equal(SCENE_VARIANT_ASSET_MODE, "transparent-patch");
     assert.equal(remoteVariantPaths(variants).length, 50, `${unitId} must expose every approved patch`);
+    assert.equal(remoteVariantPaths(variants, "complete-board").length, 50, `${unitId} must retain every complete-board fallback`);
+    assert.equal(
+      registeredSceneProfileForBoard("wide", resolveUnitPresentation(presentation, unitId).scene),
+      "compact",
+    );
+    assert.equal(
+      registeredSceneProfileForBoard("tall", resolveUnitPresentation(presentation, unitId).scene),
+      "compact",
+    );
   }
 });
 
@@ -179,6 +200,43 @@ test("registered scene profiles follow the rendered board aspect ratio", () => {
   assert.equal(boardProfileForBounds({ width: 241, height: 100 }), "shallow");
   assert.equal(sceneProfileForBoard("shallow"), "wide");
   assert.equal(sceneProfileForBoard("tall"), "tall");
+});
+
+test("checked-in scene patches match the seam-free production audit", () => {
+  const summary = readJson(
+    "../scripts/world-art/production-scene-patch-summary.json",
+  );
+  const seamReport = readJson(
+    "../scripts/world-art/production-scene-patch-seam-report.json",
+  );
+  assert.equal(summary.count, 700);
+  assert.equal(seamReport.count, 700);
+  assert.equal(seamReport.visiblySeamedCount, 0);
+  const reportByAsset = new Map(
+    seamReport.assets.map(record => [record.asset, record]),
+  );
+  for (const record of summary.assets) {
+    const report = reportByAsset.get(record.asset);
+    assert(report, `${record.asset} is missing from the seam report`);
+    assert.equal(report.patchSha256, record.patchSha256);
+    const assetBytes = readFileSync(new URL(`../${record.asset}`, import.meta.url));
+    const actualHash = createHash("sha256").update(assetBytes).digest("hex");
+    assert.equal(actualHash, record.patchSha256, `${record.asset} changed after seam review`);
+    const completeUrl = new URL(
+      `../${record.completeBoardAsset}`,
+      import.meta.url,
+    );
+    assert(existsSync(completeUrl), `${record.completeBoardAsset} is missing`);
+    const completeBytes = readFileSync(completeUrl);
+    const completeHash = createHash("sha256")
+      .update(completeBytes)
+      .digest("hex");
+    assert.equal(
+      completeHash,
+      record.completeBoardSha256,
+      `${record.completeBoardAsset} changed after export`,
+    );
+  }
 });
 
 test("presentation manifest preserves the approved unit story table", () => {

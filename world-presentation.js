@@ -1,5 +1,15 @@
+import {
+  remoteVariantPaths,
+  SCENE_VARIANT_ASSET_MODE,
+} from "./scene-variant-config.js";
+
 const BOARD_PROFILES = ["tall", "compact", "wide", "shallow"];
 const SCENE_PROFILES = ["tall", "compact", "wide"];
+
+export {
+  remoteVariantPaths,
+  SCENE_VARIANT_ASSET_MODE,
+} from "./scene-variant-config.js";
 
 export function boardProfileForBounds({ width = 0, height = 0 } = {}) {
   const ratio = height > 0 ? width / height : 1;
@@ -27,13 +37,17 @@ function setAsset(element, asset, assetUrl) {
   element.style.setProperty("--world-asset", `url("${assetUrl(asset)}")`);
 }
 
-export function remoteVariantPaths(config) {
-  if (!config?.assetRoot || !Array.isArray(config.siteIds) || !Number.isInteger(config.variantsPerSite)) return [];
-  const format = config.format || "png";
-  return config.siteIds.flatMap(siteId => Array.from(
-    { length: config.variantsPerSite },
-    (_, index) => `${config.assetRoot}/${siteId}-c${String(index + 1).padStart(2, "0")}.${format}`,
-  ));
+export function registeredSceneProfileForBoard(profile, scene) {
+  const defaultProfile = sceneProfileForBoard(profile);
+  const variants = scene?.remoteVariants;
+  if (
+    profile !== "shallow"
+    && variants?.profiles?.includes(defaultProfile)
+    && SCENE_PROFILES.includes(variants.registrationProfile)
+  ) {
+    return variants.registrationProfile;
+  }
+  return defaultProfile;
 }
 
 export class WorldPresentationRenderer {
@@ -246,7 +260,7 @@ export class WorldPresentationRenderer {
       const variant = document.createElement("div");
       variant.className = "world-remote-variant";
       variant.dataset.asset = asset;
-      variant.dataset.mediaMode = config.mode || "complete-board";
+      variant.dataset.mediaMode = SCENE_VARIANT_ASSET_MODE;
       variant.style.setProperty("--world-asset", `url("${objectUrl}")`);
       variant.style.setProperty("--remote-variant-fade", `${config.timing.fadeMs}ms`);
       this.remoteVariantLayer.replaceChildren(variant);
@@ -296,7 +310,10 @@ export class WorldPresentationRenderer {
     this.world.dataset.boardShape = nextProfile;
     if (!this.presentation) return;
 
-    const sceneProfile = sceneProfileForBoard(nextProfile);
+    const sceneProfile = registeredSceneProfileForBoard(
+      nextProfile,
+      this.presentation.scene,
+    );
     const profileData = this.presentation.scene.profiles[sceneProfile];
     setAsset(this.backdropLayer, profileData?.base, this.assetUrl);
     this.backdropLayer.dataset.sceneProfile = sceneProfile;

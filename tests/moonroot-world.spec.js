@@ -114,6 +114,7 @@ test("keeps the guide at the bottom left without covering the editor", async ({ 
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
   });
   for (const viewport of [
+    { width: 760, height: 960 },
     { width: 980, height: 932 },
     { width: 1600, height: 900 },
   ]) {
@@ -226,17 +227,17 @@ test("falls back to GitHub Pages when a local development variant is missing", a
   expect(new URL(requests[1]).origin).toBe("https://anton-dergunov.github.io");
 });
 
-test("uses the approved compact Wayfinder source and variants on a wide board", async ({ page }) => {
+test("uses the registered compact source and variants on every wide board", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
   });
-  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.webp", route => route.fulfill({
-    path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants/*.webp", route => route.fulfill({
+    path: "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants/upper-left-ruin-window-c01.webp",
     contentType: "image/webp",
     headers: { "access-control-allow-origin": "*" },
   }));
   await page.setViewportSize({ width: 1600, height: 900 });
-  await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
+  await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
   await page.locator("#world").evaluate(node => {
     Object.assign(node.style, { position: "fixed", inset: "0 auto auto 0", width: "1024px", height: "600px" });
     window.dispatchEvent(new Event("orientationchange"));
@@ -244,6 +245,7 @@ test("uses the approved compact Wayfinder source and variants on a wide board", 
   await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "wide");
 
   expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
-    .toContain("wayfinder-crossroads/compact/base.webp");
+    .toContain("mode-lantern-grounds/compact/base.webp");
+  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "compact");
   await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
 });
