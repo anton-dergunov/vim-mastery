@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    336,
+    336
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1908212,
+  "master_bytes": 1911934,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      9,
+      261,
+      252
+    ],
+    [
+      78,
+      9,
+      261,
+      252
+    ],
+    [
+      78,
+      9,
+      261,
+      252
+    ],
+    [
+      78,
+      9,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      9,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      269
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      78,
+      11,
+      261,
+      252
+    ],
+    [
+      84,
+      11,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      84,
+      11,
+      261,
+      252
+    ],
+    [
+      84,
+      11,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      84,
+      12,
+      261,
+      252
+    ],
+    [
+      84,
+      11,
+      261,
+      252
+    ],
+    [
+      84,
+      11,
+      261,
+      252
+    ],
+    [
+      86,
+      11,
+      261,
+      252
+    ],
+    [
+      87,
+      11,
+      261,
+      252
+    ],
+    [
+      86,
+      11,
+      261,
+      252
+    ],
+    [
+      86,
+      11,
+      261,
+      252
+    ],
+    [
+      86,
+      11,
+      261,
+      252
+    ],
+    [
+      83,
+      11,
+      261,
+      329
+    ],
+    [
+      83,
+      11,
+      261,
+      329
+    ],
+    [
+      83,
+      11,
+      261,
+      330
+    ],
+    [
+      78,
+      11,
+      261,
+      329
+    ],
+    [
+      83,
+      11,
+      261,
+      329
+    ],
+    [
+      83,
+      85,
+      249,
+      329
+    ],
+    [
+      83,
+      12,
+      261,
+      329
+    ],
+    [
+      83,
+      85,
+      250,
+      329
+    ],
+    [
+      83,
+      11,
+      261,
+      329
+    ],
+    [
+      83,
+      11,
+      261,
+      329
+    ],
+    [
+      83,
+      12,
+      261,
+      329
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.797,
+  "foreground_area_ratio": 1.034,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "tock",
+  "animation": "puzzled",
+  "attempt": 2,
+  "description": "Tock seems rhythmically bewildered while keeping both feet planted. Both wing-arms lift in a compact shrug, the head tilts sharply, the beak opens slightly in surprise, and one wing tip scratches the side of the head. The metronome tail ticks twice evenly, hesitates off-beat, then makes one cautious corrective tick while three tiny timing lights briefly lose alignment; no punctuation, hopping or added parts. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Tock, A brass-and-teal clockwork woodpecker with two wings, two feet, pointed beak, one wind-up key and metronome tail.\nAction over exactly four seconds: Tock detects a rhythm contradiction using only the existing body\u2014create no new effect or object. The existing metronome tail gives one early tick, waits too long, then gives a late tick. Tock counts the beats with two small low wing-tip motions, but the wing tips stop at visibly different heights; the beak opens and the eye aperture widens in unmistakable surprise. The tail cautiously tests one final beat and stops halfway as Tock looks between the uneven wing tips. No wing straightens, points or forms a T-pose. No projected gears, floating panels, gauges, dials, arcs, tick marks, numbers, letters, glyphs, symbols or new lights appear anywhere, especially not on or above the torso.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: brass plates with teal enamel; exactly two wings and two feet; one pointed woodpecker beak; one wind-up key on the back; one metronome tail.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. VARIANT FOUR ADDITIVE CANDIDATE: This is a new review candidate, not a replacement for earlier takes. Perform only the newly authored character-specific choreography above. Give the clip one dominant readable acting idea, a clean silhouette and clear negative space. Do not fall back to generic head scratching, broad arm waving or any gesture from an earlier take. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. Preserve the supplied costume and body coverage exactly: all armour, cloth, plating, feathers, fur and other coverings remain closed, opaque and in their original positions. Never expose, invent or emphasize breasts, nipples, genitals, buttocks, underwear, cleavage or bare human-like anatomy, and never arrange paired round props, lights or effects over the chest in a way that resembles breasts. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. The character must never hit, tap, knock, bump, poke or slap their own head or face, and must never perform a facepalm, forehead slap, temple tap, mocking pantomime, taunt or gesture that could imply the learner is stupid. Keep the acting kind, respectful and non-offensive in every frame. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, opened costume, removed clothing, missing armour, opened armour, transparent clothing, nudity, exposed breasts, nipples, cleavage, genitals, buttocks, underwear, sexualized anatomy, paired round chest effects, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, self-hit, head hit, head tap, head bump, forehead knock, forehead slap, facepalm, temple tap, mocking gesture, insulting gesture, taunt, derision, contempt, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tock",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 32611,
+  "variant_index": 4,
+  "source": "artifacts/character-generation/reactions-round-04/videos/tock/puzzled-attempt-02.mp4",
+  "source_sha256": "31e75d6e7b877a9f33d17c9eb70471f05e3529729bb3d44fee2b6f13d4fbd898",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 2,
+  "reaction_slot": 3,
+  "selected_source": "reactions-round-04/runtime-candidates/tock/puzzled-attempt-02.webp",
+  "selected_round": 4
+}

@@ -770,6 +770,20 @@ button { font: inherit; }
 }
 .world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .42s ease-in-out forwards; }
 .world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .42s ease-in-out forwards; }
+.nix.reaction-crossfade { transition: opacity 150ms ease, filter 150ms ease, transform 150ms ease; }
+.nix.reaction-attentive:not(.reaction-has-media) { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
+.nix.reaction-puzzled:not(.reaction-has-media) { animation: characterPuzzled .72s ease-in-out 2; }
+.nix.reaction-encouraging:not(.reaction-has-media) { animation: characterEncouraging .9s ease-in-out infinite alternate; }
+.nix.reaction-celebrating:not(.celebrating) { animation: nixCelebrate .72s ease-in-out 2; }
+
+@keyframes characterPuzzled {
+  0%, 100% { transform: scaleX(var(--character-facing, 1)); }
+  45% { transform: translateX(3px) rotate(2deg) scaleX(var(--character-facing, 1)); }
+}
+@keyframes characterEncouraging {
+  from { transform: translateY(0) scaleX(var(--character-facing, 1)); filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)); }
+  to { transform: translateY(-5px) scaleX(var(--character-facing, 1)); filter: drop-shadow(0 10px 9px rgba(0,0,0,.65)) brightness(1.12); }
+}
 
 .oracle {
   z-index: 10;
@@ -1091,6 +1105,9 @@ button { font: inherit; }
     transition-duration: .01ms !important;
   }
   .world.complete .nix { animation: none !important; }
+  .nix.reaction-attentive { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
+  .nix.reaction-puzzled { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) saturate(.82); transform: rotate(1deg) scaleX(var(--character-facing, 1)); }
+  .nix.reaction-encouraging { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.12); }
 }
 
 html.next-ui .phone {
@@ -1838,18 +1855,100 @@ html.next-ui .story-visual.has-story-art {
   background-repeat: no-repeat;
 }
 
+/* The wide story worlds are viewed as camera journeys, not decorative
+   backgrounds. The enlarged source lets a narrow screen visit the whole route
+   instead of permanently cropping the centre. */
+html.next-ui .story-visual.has-story-art.story-panorama {
+  background-size: auto 100%;
+  background-position: 0% center;
+  animation: story-panorama-camera-track 24s linear 1 forwards;
+  animation-delay: var(--story-panorama-delay, 0ms);
+  animation-fill-mode: both;
+}
+
+@keyframes story-panorama-camera-track {
+  0%, 7% { background-position: 0% center; }
+  82% { background-position: 100% center; }
+  100% { background-position: 100% center; }
+}
+
+html.next-ui .story-visual.has-story-art.story-panorama.story-panorama-reverse {
+  background-position: 100% center;
+  animation-name: story-panorama-camera-track-reverse;
+}
+
+@keyframes story-panorama-camera-track-reverse {
+  0%, 7% { background-position: 100% center; }
+  82% { background-position: 0% center; }
+  100% { background-position: 0% center; }
+}
+
+html.next-ui .story-panorama-crossfade {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  opacity: 1;
+  background-image:
+    linear-gradient(to bottom, transparent 60%, rgba(4, 10, 12, .28)),
+    var(--story-crossfade-asset);
+  background-position: center;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  transition: opacity 820ms ease-in-out;
+}
+
+html.next-ui .story-panorama-crossfade.is-leaving { opacity: 0; }
+
 html.next-ui .story-visual.has-story-art .story-placeholder-landscape {
   display: none;
 }
 
 html.next-ui .story-board-base,
 html.next-ui .story-landmark,
-html.next-ui .story-light-path,
-html.next-ui .story-guide-action {
+html.next-ui .story-light-path {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
+
+html.next-ui .story-board-base,
+html.next-ui .story-landmark {
+  background-image: var(--story-layer-asset, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+html.next-ui .story-board-base { z-index: 1; }
+html.next-ui .story-landmark { z-index: 2; }
+html.next-ui .story-landmark-restored {
+  opacity: 0;
+  transition: opacity 780ms ease-in-out;
+}
+html.next-ui .story-landmark-dormant {
+  opacity: 1;
+  transition: opacity 640ms ease-in-out;
+}
+html.next-ui .story-surface[data-restoration="restored"] .story-landmark-restored { opacity: 1; }
+html.next-ui .story-surface[data-restoration="restored"] .story-landmark-dormant { opacity: 0; }
+html.next-ui .story-surface[data-registered-scene="true"] .story-placeholder-landscape { display: none; }
+
+html.next-ui .story-light-path {
+  z-index: 3;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 560ms ease 180ms;
+  background:
+    radial-gradient(ellipse at 48% 62%, var(--story-light, rgba(109, 231, 204, .33)), transparent 23%),
+    linear-gradient(155deg, transparent 39%, var(--story-light, rgba(109, 231, 204, .24)) 49%, transparent 59%);
+  mask-image: linear-gradient(90deg, transparent 2%, #000 18% 82%, transparent 98%);
+}
+html.next-ui .story-surface[data-restoration="restored"] .story-light-path.has-light-path { opacity: 1; }
+html.next-ui .story-surface[data-world-id="moonroot-ruins"] { --story-light: rgba(117, 230, 179, .36); }
+html.next-ui .story-surface[data-world-id="starwater-sanctuary"] { --story-light: rgba(117, 220, 239, .36); }
+html.next-ui .story-surface[data-world-id="archive-of-echoes"] { --story-light: rgba(146, 199, 249, .34); }
+html.next-ui .story-surface[data-world-id="brass-meridian"] { --story-light: rgba(255, 185, 99, .34); }
 
 html.next-ui .story-placeholder-landscape {
   position: absolute;
@@ -1911,6 +2010,114 @@ html.next-ui .story-content {
   flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+/* Final story art always occupies the whole portrait game frame. Narrative
+   copy begins around the first quarter and is written directly over the art. */
+html.next-ui .story-dialog:has(.story-visual.has-story-art)[open] {
+  width: min(calc(100% - 20px), 560px);
+  height: calc(100dvh - max(20px, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+}
+
+html.next-ui .story-surface:has(.story-visual.has-story-art) {
+  position: relative;
+  display: block;
+}
+
+html.next-ui .story-surface .story-visual.has-story-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+}
+
+html.next-ui .story-surface .story-visual.has-story-art:not(.story-panorama) {
+  background-position: center;
+  background-size: cover;
+}
+
+html.next-ui .story-surface:has(.story-visual.has-story-art) .story-content {
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  height: 100%;
+  padding: clamp(18px, 5vw, 30px);
+  padding-top: clamp(150px, 24dvh, 235px);
+  overflow: hidden;
+  background:
+    linear-gradient(to bottom, rgba(3, 10, 12, .35) 0%, rgba(3, 10, 12, .82) 17%, rgba(3, 10, 12, .7) 43%, transparent 64%),
+    linear-gradient(to top, rgba(3, 9, 10, .86) 0%, transparent 25%);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, .92);
+}
+
+html.next-ui .story-surface:has(.story-visual.has-story-art) .story-heading {
+  display: none;
+}
+
+html.next-ui .story-surface:has(.story-visual.has-story-art) .story-title {
+  max-width: 28ch;
+  margin-top: 0;
+  font-size: clamp(19px, 5vw, 25px);
+  line-height: 1.18;
+  color: #f6daa0;
+}
+
+html.next-ui .story-surface:has(.story-visual.has-story-art) .story-speaker {
+  margin: 0 0 7px;
+}
+
+html.next-ui .story-surface:has(.story-visual.has-story-art) .story-copy {
+  max-width: 30ch;
+  margin-top: 13px;
+  color: #fff8e7;
+  font-size: clamp(23px, 6.2vw, 31px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+html.next-ui .story-surface[data-kind="unit"]:has(.story-unit-ending) .story-action-copy,
+html.next-ui .story-surface[data-kind="unit"]:has(.story-unit-ending) .story-next-hook {
+  display: none;
+}
+
+html.next-ui .story-copy.is-typing::after,
+html.next-ui .story-copy.is-writing-finished::after {
+  content: "";
+  display: inline-block;
+  width: clamp(38px, 10vw, 54px);
+  aspect-ratio: 546 / 534;
+  margin: 0 0 -.48em .06em;
+  vertical-align: baseline;
+  background-image: var(--story-pen-asset);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .72));
+  transform-origin: 12% 86%;
+}
+
+html.next-ui .story-copy.is-typing::after {
+  animation: story-pen-writing 760ms ease-in-out infinite;
+}
+
+html.next-ui .story-copy.is-writing-finished::after {
+  animation: story-pen-finish 900ms ease-out forwards;
+}
+
+@keyframes story-pen-writing {
+  0%, 100% { transform: translate3d(-.09em, .01em, 0) rotate(-7deg); }
+  30% { transform: translate3d(.15em, -.12em, 0) rotate(7deg); }
+  58% { transform: translate3d(-.05em, .04em, 0) rotate(-4deg); }
+  82% { transform: translate3d(.12em, -.06em, 0) rotate(5deg); }
+}
+
+@keyframes story-pen-finish {
+  0% { opacity: 1; transform: translate3d(0, 0, 0) rotate(-2deg); }
+  42% { opacity: 1; transform: translate3d(.42em, -.35em, 0) rotate(8deg); }
+  100% { opacity: 0; transform: translate3d(.85em, -.85em, 0) rotate(13deg); }
 }
 
 html.next-ui .story-heading {
@@ -2025,6 +2232,45 @@ html.next-ui .toc-story-actions button {
   color: #dce9e2;
   background: rgba(255,255,255,.04);
   font: 750 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.next-ui .story-review-index p {
+  margin: 8px 0 0;
+  color: #a9beb3;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+html.next-ui .story-review-unit {
+  margin-bottom: 10px;
+}
+
+html.next-ui .story-review-links {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+html.next-ui .story-review-links a {
+  min-height: 38px;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(193, 220, 206, .25);
+  border-radius: 8px;
+  color: #e4eee8;
+  background: rgba(255,255,255,.045);
+  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-decoration: none;
+}
+
+html.next-ui .story-review-links a:hover,
+html.next-ui .story-review-links a:focus-visible {
+  border-color: rgba(255, 225, 145, .62);
+  color: #fff1bd;
+  background: rgba(255, 213, 112, .1);
 }
 
 html.next-ui .dialog-head {
@@ -3499,6 +3745,11 @@ html.next-ui .toc-unit-launch button {
     padding: 14px 16px;
   }
 
+  html.next-ui .story-surface:has(.story-visual.has-story-art) .story-content {
+    padding: 14px 18px;
+    padding-top: clamp(74px, 21dvh, 105px);
+  }
+
   html.next-ui .story-title {
     margin-top: 6px;
     font-size: clamp(19px, 3.8vw, 25px);
@@ -3508,6 +3759,16 @@ html.next-ui .toc-unit-launch button {
     margin-top: 9px;
     font-size: clamp(14px, 2.25vw, 17px);
     line-height: 1.38;
+  }
+
+  html.next-ui .story-surface:has(.story-visual.has-story-art) .story-copy {
+    max-width: 34ch;
+    font-size: clamp(18px, 3.2vw, 23px);
+    line-height: 1.3;
+  }
+
+  html.next-ui .story-surface:has(.story-visual.has-story-art) .story-title {
+    font-size: clamp(16px, 2.7vw, 20px);
   }
 
   html.next-ui .story-action-copy {
@@ -3527,6 +3788,7 @@ html.next-ui .toc-unit-launch button {
 @media (prefers-reduced-motion: reduce) {
   html.next-ui .story-dialog,
   html.next-ui .story-dialog::backdrop,
+  html.next-ui .story-visual,
   html.next-ui .story-visual *,
   html.next-ui .story-content * {
     scroll-behavior: auto;
@@ -3549,4 +3811,8 @@ html.next-ui .toc-unit-launch button {
     opacity: .42;
     clip-path: none;
   }
+
+  html.next-ui .story-landmark-dormant,
+  html.next-ui .story-landmark-restored,
+  html.next-ui .story-light-path { transition-duration: 0s; }
 }

@@ -15,6 +15,7 @@ import concurrent.futures
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -40,8 +41,11 @@ DEFAULT_ARTIFACT_ROOT = ROOT / "artifacts" / "character-generation"
 LEDGER_NAME = "ledger.jsonl"
 OPERATIONS_NAME = "operations.json"
 BACKGROUND = (26, 32, 30, 255)
-DEFAULT_BUDGET = 25.0
+DEFAULT_BUDGET = 100.0
 RUNTIME_QUALITY = 88
+REACTION_IDS = ("attentive", "puzzled", "encouraging")
+SELECTED_REACTIONS_ROOT = DEFAULT_ARTIFACT_ROOT / "__selected"
+SELECTED_REACTION_REPAIRS = SCRIPT_DIR / "selected_reaction_repairs.json"
 
 
 class PipelineError(RuntimeError):
@@ -83,10 +87,44 @@ def validate_catalogue(catalogue: dict[str, Any]) -> None:
     actions = catalogue.get("actions", [])
     if len(characters) != 15:
         raise PipelineError(f"Catalogue must contain 15 characters, found {len(characters)}")
-    if len(actions) != 10:
-        raise PipelineError(f"Catalogue must contain 10 actions, found {len(actions)}")
+    if len(actions) != 13:
+        raise PipelineError(f"Catalogue must contain 13 actions, found {len(actions)}")
     character_ids = [item.get("id") for item in characters]
     action_ids = [item.get("id") for item in actions]
+    reaction_variant_three = catalogue.get("reaction_variant_three", {})
+    for reaction in ("attentive", "puzzled", "encouraging"):
+        directions = reaction_variant_three.get(reaction, [])
+        if len(directions) != 5 or not all(
+            isinstance(item, str) and item.strip() for item in directions
+        ):
+            raise PipelineError(
+                f"reaction_variant_three.{reaction} must contain five non-empty directions"
+            )
+    overrides = catalogue.get("reaction_variant_three_overrides", {})
+    if not isinstance(overrides, dict):
+        raise PipelineError("reaction_variant_three_overrides must be an object")
+    for character_id, reaction_overrides in overrides.items():
+        if not isinstance(reaction_overrides, dict):
+            raise PipelineError(
+                f"reaction_variant_three_overrides.{character_id} must be an object"
+            )
+        for reaction, direction in reaction_overrides.items():
+            if reaction not in {"attentive", "puzzled", "encouraging"}:
+                raise PipelineError(f"Unknown reaction variant override: {character_id}/{reaction}")
+            if not isinstance(direction, str) or not direction.strip():
+                raise PipelineError(f"Empty reaction variant override: {character_id}/{reaction}")
+    variant_four = catalogue.get("reaction_variant_four", {})
+    if set(variant_four) != set(character_ids):
+        raise PipelineError("reaction_variant_four must contain every character exactly once")
+    for character_id, reactions in variant_four.items():
+        if not isinstance(reactions, dict) or set(reactions) != {
+            "attentive", "puzzled", "encouraging"
+        }:
+            raise PipelineError(
+                f"reaction_variant_four.{character_id} must contain attentive, puzzled and encouraging"
+            )
+        if not all(isinstance(value, str) and value.strip() for value in reactions.values()):
+            raise PipelineError(f"reaction_variant_four.{character_id} contains an empty description")
     if len(set(character_ids)) != len(character_ids) or not all(character_ids):
         raise PipelineError("Character IDs must be present and unique")
     if len(set(action_ids)) != len(action_ids) or not all(action_ids):
@@ -94,6 +132,7 @@ def validate_catalogue(catalogue: dict[str, Any]) -> None:
     required = {
         "name", "species", "role", "description", "invariants", "motion",
         "prop_motion", "magic", "project", "prop_trick", "illusion", "signature",
+        "attentive", "puzzled", "encouraging",
     }
     for character in characters:
         missing = sorted(required - character.keys())
@@ -130,8 +169,20 @@ def still_seed(catalogue: dict[str, Any], character: dict[str, Any], candidate: 
     return 1000 + catalogue["characters"].index(character) * 100 + candidate
 
 
-def video_seed(catalogue: dict[str, Any], character: dict[str, Any], action: dict[str, Any]) -> int:
-    return 2000 + catalogue["characters"].index(character) * 100 + catalogue["actions"].index(action)
+def video_seed(
+    catalogue: dict[str, Any],
+    character: dict[str, Any],
+    action: dict[str, Any],
+    variant_index: int = 1,
+) -> int:
+    if variant_index < 1:
+        raise PipelineError("Video variant_index must be at least 1")
+    return (
+        2000
+        + catalogue["characters"].index(character) * 100
+        + catalogue["actions"].index(action)
+        + (variant_index - 1) * 10_000
+    )
 
 
 def still_prompt(catalogue: dict[str, Any], character: dict[str, Any]) -> str:
@@ -155,9 +206,65 @@ Avoid: do not turn this character into Nix; no teal hood or lantern staff unless
 Background: genuinely transparent if supported; otherwise a completely uniform removable background with no checkerboard pattern."""
 
 
-def video_prompt(catalogue: dict[str, Any], character: dict[str, Any], action: dict[str, Any]) -> str:
+def reaction_variant_direction(
+    catalogue: dict[str, Any],
+    character: dict[str, Any],
+    action: dict[str, Any],
+    variant_index: int,
+) -> str:
+    """Return deterministic alternate choreography for the third reaction take."""
+    if variant_index != 3 or action["id"] not in {"attentive", "puzzled", "encouraging"}:
+        return ""
+    directions = catalogue.get("reaction_variant_three", {}).get(action["id"], [])
+    if len(directions) != 5 or not all(isinstance(item, str) and item.strip() for item in directions):
+        raise PipelineError(
+            f"reaction_variant_three.{action['id']} must contain five non-empty directions"
+        )
+    character_index = catalogue["characters"].index(character)
+    action_offset = {"attentive": 0, "puzzled": 2, "encouraging": 4}[action["id"]]
+    direction = (
+        catalogue.get("reaction_variant_three_overrides", {})
+        .get(character["id"], {})
+        .get(action["id"])
+        or directions[(character_index + action_offset) % len(directions)]
+    )
+    return (
+        " VARIANT THREE CHOREOGRAPHY: Keep the authored emotion and character-specific identity, but make this "
+        f"take visibly different in timing, silhouette and intensity. {direction} "
+        "This alternate staging changes only the gesture choreography; all permanent design, prop-continuity, "
+        "framing, no-text, no-salute and exact-final-pose constraints remain mandatory."
+    )
+
+
+def reaction_variant_four_description(
+    catalogue: dict[str, Any],
+    character: dict[str, Any],
+    action: dict[str, Any],
+    variant_index: int,
+) -> str | None:
+    if variant_index not in {4, 5} or action["id"] not in {"attentive", "puzzled", "encouraging"}:
+        return None
+    try:
+        return catalogue["reaction_variant_four"][character["id"]][action["id"]]
+    except KeyError as error:
+        raise PipelineError(
+            f"Missing reaction variant four description: {character['id']}/{action['id']}"
+        ) from error
+
+
+def video_prompt(
+    catalogue: dict[str, Any],
+    character: dict[str, Any],
+    action: dict[str, Any],
+    variant_index: int = 1,
+) -> str:
     invariants = "; ".join(character["invariants"])
     description = action_description(character, action)
+    variant_four_description = reaction_variant_four_description(
+        catalogue, character, action, variant_index
+    )
+    if variant_four_description:
+        description = variant_four_description
     replacement_descriptions = {
         ("cairn", "signature-finale"): (
             "Cairn warmly floats three small, separate stone tiles at chest height, each with one clear uppercase V, I or M "
@@ -208,6 +315,48 @@ def video_prompt(catalogue: dict[str, Any], character: dict[str, Any], action: d
         ),
     }
     action_specific_constraint += special_constraints.get((character["id"], action["id"]), "")
+    if action["id"] in {"attentive", "puzzled", "encouraging"}:
+        action_specific_constraint += reaction_variant_direction(
+            catalogue, character, action, variant_index
+        )
+        if variant_index in {4, 5}:
+            variant_word = {4: "FOUR", 5: "FIVE"}[variant_index]
+            action_specific_constraint += (
+                f" VARIANT {variant_word} ADDITIVE CANDIDATE: This is a new review candidate, not a replacement for earlier "
+                "takes. Perform only the newly authored character-specific choreography above. Give the clip one "
+                "dominant readable acting idea, a clean silhouette and clear negative space. Do not fall back to "
+                "generic head scratching, broad arm waving or any gesture from an earlier take."
+            )
+        action_specific_constraint += (
+            " REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. "
+            "0.35-2.45 seconds, perform exactly the described emotional gesture in place. "
+            "2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. "
+            "3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. "
+            "The character's feet remain anchored to the same pixels for the entire clip. "
+            "Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, "
+            "unobscured and visible in every frame. The final held pose must reproduce the supplied image—including "
+            "every prop and its placement—not a newly invented generic idle. "
+            "Preserve the supplied costume and body coverage exactly: all armour, cloth, plating, feathers, fur and "
+            "other coverings remain closed, opaque and in their original positions. Never expose, invent or emphasize "
+            "breasts, nipples, genitals, buttocks, underwear, cleavage or bare human-like anatomy, and never arrange "
+            "paired round props, lights or effects over the chest in a way that resembles breasts. "
+            "At the end of the video the character must not drop, hide, remove, exchange or transform any prop, "
+            "and must not fade away or disappear; the character simply stays normally visible and still in that "
+            "approved neutral pose through the final frame. "
+            "Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, "
+            "labels, signs, interface text, written encouragement, watermark, title or end-card message. Express "
+            "the reaction only through the character's face, pose, props and motion. "
+            "Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above "
+            "shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform "
+            "the specific listening, thinking or offering action described. "
+            "The character must never hit, tap, knock, bump, poke or slap their own head or face, and must never "
+            "perform a facepalm, forehead slap, temple tap, mocking pantomime, taunt or gesture that could imply "
+            "the learner is stupid. Keep the acting kind, respectful and non-offensive in every frame. "
+            "Never add a puddle, spilled liquid, wet patch, stain, bodily fluid, urine-like mark or floor mark "
+            "beneath or beside the character. "
+            "No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, "
+            "fade-out, dissolve, disappearance, shrinking, scene transition or end card."
+        )
     return f"""Locked camera and a completely static dark neutral background.
 Animate only the supplied approved 2D pixel-art character {character['name']}, {character['description']}
 Action over exactly four seconds: {description}
@@ -215,19 +364,42 @@ Preserve the exact approved design, silhouette, pixel-art rendering, proportions
 Keep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose.{action_specific_constraint} Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described."""
 
 
-def negative_video_prompt(character: dict[str, Any]) -> str:
+def negative_video_prompt(character: dict[str, Any], action: dict[str, Any] | None = None) -> str:
     text_negative = "text, captions, watermark, writing, letters, glyph,"
-    if character["id"] in {"cairn", "prism"}:
+    if action and action["id"] == "signature-finale" and character["id"] in {"cairn", "prism"}:
         text_negative = (
             "unrelated text, captions, watermark, writing, letters or glyphs other than the three explicit V, I and M labels,"
+        )
+    elif (
+        action
+        and action["id"] == "puzzled"
+        and "question-mark-shaped" in character["puzzled"]
+    ):
+        text_negative = (
+            "text, captions, watermark, writing, letters, numbers, glyphs or symbols other than the one "
+            "explicit question-mark-shaped thought wisp,"
+        )
+    reaction_negative = ""
+    if action and action["id"] in {"attentive", "puzzled", "encouraging"}:
+        reaction_negative = (
+            "walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, "
+            "victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, "
+            "invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, "
+            "single rigid raised arm, single straight raised wing, "
+            "self-hit, head hit, head tap, head bump, forehead knock, forehead slap, facepalm, temple tap, "
+            "mocking gesture, insulting gesture, taunt, derision, contempt, "
         )
     return (
         "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, "
         "new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, "
         "new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, "
         "back-facing turn, back view, "
-        "changed costume, changed face, changed species, "
+        "changed costume, opened costume, removed clothing, missing armour, opened armour, transparent clothing, "
+        "nudity, exposed breasts, nipples, cleavage, genitals, buttocks, underwear, sexualized anatomy, "
+        "paired round chest effects, changed face, changed species, "
+        "puddle, spilled liquid, wet patch, stain, bodily fluid, urine, floor mark, "
         f"{text_negative} emblem, logo, swastika, cross, "
+        f"{reaction_negative}"
         "religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, "
         f"anything inconsistent with {character['name']}"
     )
@@ -237,7 +409,8 @@ def render_catalogue_markdown(catalogue: dict[str, Any]) -> str:
     models = catalogue["models"]
     still_cost = 14 * 3 * float(models["image_cost_usd"])
     video_unit_cost = float(models["video_cost_per_second_usd"]) * int(models["duration_seconds"])
-    video_cost = 149 * video_unit_cost
+    video_count = len(catalogue["characters"]) * len(catalogue["actions"]) - 1
+    video_cost = video_count * video_unit_cost
     minimum_cost = still_cost + video_cost
     remaining_budget = DEFAULT_BUDGET - minimum_cost
     lines = [
@@ -254,7 +427,7 @@ def render_catalogue_markdown(catalogue: dict[str, Any]) -> str:
         f"- Palette: {catalogue['world']['palette']}",
         f"- Image model: `{models['image']}`",
         f"- Video model: `{models['video']}`; {models['duration_seconds']} seconds; silent; {models['video_fps']} fps source / {models['runtime_fps']} fps runtime",
-        f"- Minimum generation plan: 42 stills × ${models['image_cost_usd']:.3f} + 149 videos × ${video_unit_cost:.2f} = ${minimum_cost:.2f}",
+        f"- Minimum generation plan: 42 stills × ${models['image_cost_usd']:.3f} + {video_count} videos × ${video_unit_cost:.2f} = ${minimum_cost:.2f}",
         f"- Hard cap: ${DEFAULT_BUDGET:.2f}; minimum plan leaves ${remaining_budget:.2f}, enough for {int(remaining_budget // video_unit_cost)} additional Veo Lite attempts",
         "",
         "Shared rules:",
@@ -284,8 +457,10 @@ def render_catalogue_markdown(catalogue: dict[str, Any]) -> str:
         lines.extend([
             f"### {index}. {character['name']} (`{character['id']}`)",
             "",
-            f"**Role:** {character['role']}  ",
-            f"**Species:** {character['species']}  ",
+            f"**Role:** {character['role']}",
+            "",
+            f"**Species:** {character['species']}",
+            "",
             f"**Canonical description:** {character['description']}",
             "",
             "Permanent invariants:",
@@ -314,11 +489,44 @@ def render_catalogue_markdown(catalogue: dict[str, Any]) -> str:
                 video_prompt(catalogue, character, action),
                 "",
                 "Negative prompt:",
-                negative_video_prompt(character),
+                negative_video_prompt(character, action),
                 "```",
                 "</details>",
                 "",
             ])
+            if action["id"] in {"attentive", "puzzled", "encouraging"}:
+                lines.extend([
+                    "<details><summary>Variant 3 alternate-choreography Veo prompt</summary>",
+                    "",
+                    "```text",
+                    video_prompt(catalogue, character, action, variant_index=3),
+                    "",
+                    "Negative prompt:",
+                    negative_video_prompt(character, action),
+                    "```",
+                    "</details>",
+                    "",
+                    "<details><summary>Variant 4 additive character-specific Veo prompt</summary>",
+                    "",
+                    "```text",
+                    video_prompt(catalogue, character, action, variant_index=4),
+                    "",
+                    "Negative prompt:",
+                    negative_video_prompt(character, action),
+                    "```",
+                    "</details>",
+                    "",
+                    "<details><summary>Variant 5 additive current-description Veo prompt</summary>",
+                    "",
+                    "```text",
+                    video_prompt(catalogue, character, action, variant_index=5),
+                    "",
+                    "Negative prompt:",
+                    negative_video_prompt(character, action),
+                    "```",
+                    "</details>",
+                    "",
+                ])
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -332,7 +540,7 @@ def command_catalogue(args: argparse.Namespace) -> int:
         return 0
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(rendered)
-    print(f"Wrote {args.output}: 15 characters, 150 animation descriptions and prompts")
+    print(f"Wrote {args.output}: 15 characters, 195 animation descriptions and prompts")
     return 0
 
 
@@ -662,15 +870,35 @@ def promote_animation_candidate(
     attempt: int,
     *,
     replace_approved: bool = False,
+    reaction_slot: int | None = None,
 ) -> Path:
     """Promote one reviewed candidate, replacing an approved asset only on request."""
     source = artifact_root / "runtime-candidates" / character["id"] / f"{action['id']}-attempt-{attempt:02d}.webp"
     source_metadata = source.with_suffix(".json")
     if not source.is_file() or not source_metadata.is_file():
         raise PipelineError(f"Animation candidate or metadata does not exist: {source}")
-    destination = ASSET_ROOT / character["id"] / "animations" / f"{action['id']}.webp"
+    is_reaction = action["id"] in {"attentive", "puzzled", "encouraging"}
+    if reaction_slot is not None:
+        if not is_reaction:
+            raise PipelineError("--reaction-slot is only valid for reaction animations")
+        if reaction_slot < 1:
+            raise PipelineError("--reaction-slot must be at least 1")
+    destination_name = (
+        f"{action['id']}-variant-{reaction_slot:02d}.webp"
+        if reaction_slot is not None
+        else f"{action['id']}.webp"
+    )
+    destination = ASSET_ROOT / character["id"] / "animations" / destination_name
     destination_metadata = destination.with_suffix(".json")
-    existing = approvals.get("animations", {}).get(character["id"], {}).get(action["id"])
+    if reaction_slot is not None:
+        existing = (
+            approvals.get("reaction_variants", {})
+            .get(character["id"], {})
+            .get(action["id"], {})
+            .get(str(reaction_slot))
+        )
+    else:
+        existing = approvals.get("animations", {}).get(character["id"], {}).get(action["id"])
     if existing and existing.get("approved") and not replace_approved:
         raise PipelineError(f"Approved animation already exists: {destination}")
     if (destination.exists() or destination_metadata.exists()) and not replace_approved:
@@ -678,15 +906,214 @@ def promote_animation_candidate(
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, destination)
     metadata = read_json(source_metadata)
-    metadata.update({"approved": True, "approval_state": "approved", "approved_attempt": attempt})
+    metadata.update({
+        "approved": True,
+        "approval_state": "approved",
+        "approved_attempt": attempt,
+        "reaction_slot": reaction_slot,
+    })
     write_json(destination_metadata, metadata)
-    approvals.setdefault("animations", {}).setdefault(character["id"], {})[action["id"]] = {
+    approval_record = {
         "attempt": attempt,
         "path": str(destination.relative_to(ROOT)),
         "sha256": sha256_path(destination),
         "approved": True,
     }
+    if reaction_slot is not None:
+        (
+            approvals.setdefault("reaction_variants", {})
+            .setdefault(character["id"], {})
+            .setdefault(action["id"], {})
+        )[str(reaction_slot)] = approval_record
+    else:
+        approvals.setdefault("animations", {}).setdefault(character["id"], {})[action["id"]] = (
+            approval_record
+        )
     return destination
+
+
+def selected_reaction_jobs(
+    catalogue: dict[str, Any], selected_root: Path,
+) -> list[dict[str, Any]]:
+    """Resolve the human-curated reaction folder into deterministic slots.
+
+    Slot numbering is deliberately derived from round then attempt.  No exact
+    variant count is required: a character/reaction pair may contain any
+    positive number of approved files.
+    """
+    known_characters = {character["id"] for character in catalogue["characters"]}
+    pattern = re.compile(
+        r"^reactions-round-(\d+)/runtime-candidates/([^/]+)/"
+        r"(attentive|puzzled|encouraging)-attempt-(\d+)\.webp$"
+    )
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    paths = sorted(selected_root.glob("reactions-round-*/runtime-candidates/*/*-attempt-*.webp"))
+    if not paths:
+        raise PipelineError(f"No curated reaction WebPs found under {selected_root}")
+    for source in paths:
+        relative = source.relative_to(selected_root).as_posix()
+        match = pattern.fullmatch(relative)
+        if not match:
+            raise PipelineError(f"Unexpected selected reaction path: {relative}")
+        round_number, character_id, reaction_id, attempt = match.groups()
+        if character_id not in known_characters:
+            raise PipelineError(f"Unknown selected reaction character: {character_id}")
+        metadata_path = source.with_suffix(".json")
+        if not metadata_path.is_file():
+            raise PipelineError(f"Selected reaction metadata is missing: {metadata_path}")
+        metadata = read_json(metadata_path)
+        if metadata.get("character") != character_id or metadata.get("animation") != reaction_id:
+            raise PipelineError(f"Selected reaction metadata disagrees with its path: {relative}")
+        try:
+            with Image.open(source) as image:
+                if not getattr(image, "is_animated", False) or image.n_frames < 2:
+                    raise PipelineError(f"Selected reaction is not animated: {relative}")
+        except OSError as error:
+            raise PipelineError(f"Selected reaction cannot be decoded: {relative}: {error}") from error
+        grouped.setdefault((character_id, reaction_id), []).append({
+            "source": source,
+            "metadata": metadata_path,
+            "selected_path": relative,
+            "round": int(round_number),
+            "attempt": int(attempt),
+        })
+
+    jobs: list[dict[str, Any]] = []
+    for (character_id, reaction_id), candidates in sorted(grouped.items()):
+        candidates.sort(key=lambda item: (item["round"], item["attempt"], item["selected_path"]))
+        for slot, candidate in enumerate(candidates, 1):
+            jobs.append({
+                **candidate,
+                "character": character_id,
+                "reaction": reaction_id,
+                "slot": slot,
+            })
+    return jobs
+
+
+def command_repair_selected_reactions(args: argparse.Namespace) -> int:
+    catalogue = load_catalogue(args.catalogue)
+    approvals = require_catalogue_approval(args.catalogue)
+    repairs = read_json(args.repair_file).get("repairs", [])
+    if not repairs:
+        raise PipelineError(f"No repairs configured in {args.repair_file}")
+    print(f"Selected reaction repair plan: {len(repairs)} reviewed repair(s)")
+    for repair in repairs:
+        print(f"  {repair['relative_path']}: {repair['reason']}")
+    if not args.execute:
+        print("Dry run only; add --execute to rebuild the reviewed selected files.")
+        return 0
+
+    for repair in repairs:
+        runtime = args.selected_root / repair["relative_path"]
+        metadata_path = runtime.with_suffix(".json")
+        if not runtime.is_file() or not metadata_path.is_file():
+            raise PipelineError(f"Selected repair target is missing: {runtime}")
+        metadata = read_json(metadata_path)
+        character = character_by_id(catalogue, metadata.get("character"))
+        raw_video = ROOT / metadata.get("source", "")
+        if not raw_video.is_file():
+            raise PipelineError(f"Selected repair source video is missing: {raw_video}")
+        idle = approved_idle_path(character, approvals)
+        debug = (
+            args.selected_root / "_repair-debug" / character["id"]
+            / f"{metadata['animation']}-round-{metadata.get('variant_index', 'unknown')}"
+        )
+        with tempfile.TemporaryDirectory(prefix="vim-wilds-selected-repair-") as directory:
+            temporary = Path(directory)
+            master = temporary / "master.webp"
+            rebuilt = temporary / "runtime.webp"
+            conversion = convert_video_asset(
+                raw_video,
+                idle,
+                master,
+                rebuilt,
+                debug,
+                duration_seconds=int(metadata.get("duration_seconds", 4)),
+                cover_rectangles=repair.get("cover_rectangles", []),
+                canvas_mode=metadata.get("canvas_mode", "anchor"),
+            )
+            shutil.copy2(rebuilt, runtime)
+        metadata.update(conversion)
+        metadata["selected_repair"] = {
+            "reason": repair["reason"],
+            "cover_rectangles": repair.get("cover_rectangles", []),
+            "source_sha256": sha256_path(raw_video),
+            "result_sha256": sha256_path(runtime),
+        }
+        write_json(metadata_path, metadata)
+        print(f"Repaired {runtime.relative_to(ROOT)}")
+    return 0
+
+
+def command_import_selected_reactions(args: argparse.Namespace) -> int:
+    catalogue = load_catalogue(args.catalogue)
+    approvals = require_catalogue_approval(args.catalogue)
+    jobs = selected_reaction_jobs(catalogue, args.selected_root)
+    counts: dict[tuple[str, str], int] = {}
+    for job in jobs:
+        key = (job["character"], job["reaction"])
+        counts[key] = counts.get(key, 0) + 1
+    print(
+        f"Selected reaction import plan: {len(jobs)} clip(s), "
+        f"{len(counts)} character/reaction pair(s), "
+        f"{min(counts.values())}-{max(counts.values())} variants per pair"
+    )
+    for (character_id, reaction_id), count in sorted(counts.items()):
+        print(f"  {character_id}/{reaction_id}: {count}")
+    if not args.execute:
+        print("Dry run only; add --execute to promote every remaining curated clip.")
+        return 0
+
+    destinations = []
+    for job in jobs:
+        destination = (
+            ASSET_ROOT / job["character"] / "animations"
+            / f"{job['reaction']}-variant-{job['slot']:02d}.webp"
+        )
+        destinations.append((job, destination, destination.with_suffix(".json")))
+    occupied = [
+        destination for _, destination, metadata in destinations
+        if destination.exists() or metadata.exists()
+    ]
+    existing_approvals = approvals.get("reaction_variants", {})
+    if (occupied or existing_approvals) and not args.replace_approved:
+        raise PipelineError(
+            "Approved reaction variants already exist; use --replace-approved to resynchronise "
+            "them from the curated folder"
+        )
+
+    new_approvals: dict[str, Any] = {}
+    for job, destination, destination_metadata in destinations:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(job["source"], destination)
+        metadata = read_json(job["metadata"])
+        metadata.update({
+            "approved": True,
+            "approval_state": "approved",
+            "approved_attempt": job["attempt"],
+            "reaction_slot": job["slot"],
+            "selected_source": job["selected_path"],
+            "selected_round": job["round"],
+        })
+        write_json(destination_metadata, metadata)
+        record = {
+            "attempt": job["attempt"],
+            "round": job["round"],
+            "selected_source": job["selected_path"],
+            "path": str(destination.relative_to(ROOT)),
+            "sha256": sha256_path(destination),
+            "approved": True,
+        }
+        (
+            new_approvals.setdefault(job["character"], {})
+            .setdefault(job["reaction"], {})
+        )[str(job["slot"])] = record
+    approvals["reaction_variants"] = new_approvals
+    write_json(APPROVALS_PATH, approvals)
+    write_manifest(catalogue, approvals)
+    print(f"Imported {len(jobs)} approved reaction variants from {args.selected_root}")
+    return 0
 
 
 def command_approve(args: argparse.Namespace) -> int:
@@ -706,7 +1133,15 @@ def command_approve(args: argparse.Namespace) -> int:
         if args.attempt is None:
             raise PipelineError("animation approval requires --animation and --attempt")
         action = action_by_id(catalogue, args.animation)
-        destination = promote_animation_candidate(catalogue, approvals, args.artifact_root, character, action, args.attempt)
+        destination = promote_animation_candidate(
+            catalogue,
+            approvals,
+            args.artifact_root,
+            character,
+            action,
+            args.attempt,
+            reaction_slot=getattr(args, "reaction_slot", None),
+        )
         write_json(APPROVALS_PATH, approvals)
         write_manifest(catalogue, approvals)
         print(f"Approved {character['name']} {action['id']} attempt {args.attempt}: {destination}")
@@ -803,7 +1238,10 @@ def command_videos(args: argparse.Namespace) -> int:
     approvals = require_catalogue_approval(args.catalogue) if args.execute else load_approvals()
     jobs = video_jobs(catalogue, approvals, args.character, args.animation, require_approved=args.execute)
     unit_cost = float(catalogue["models"]["video_cost_per_second_usd"]) * int(catalogue["models"]["duration_seconds"])
-    print(f"Video plan: {len(jobs)} new four-second clips; estimated output cost ${len(jobs) * unit_cost:.2f}")
+    print(
+        f"Video plan: {len(jobs)} new four-second clips for variant {args.variant_index}; "
+        f"estimated output cost ${len(jobs) * unit_cost:.2f}"
+    )
     if not args.execute:
         print("Dry run only; no Vertex requests submitted. Execution requires all 15 approved idle sprites.")
         return 0
@@ -844,22 +1282,31 @@ def command_videos(args: argparse.Namespace) -> int:
             idle = approved_idle_path(character, approvals)
             prepared = prepare_veo_input(idle, args.artifact_root / "prepared" / f"{character['id']}.png")
             enforce_budget(args.artifact_root, args.budget_usd, unit_cost)
+            prompt = video_prompt(catalogue, character, action, args.variant_index)
+            negative_prompt = negative_video_prompt(character, action)
+            seed = video_seed(catalogue, character, action, args.variant_index)
             try:
+                video_config: dict[str, Any] = {
+                    "number_of_videos": 1,
+                    "duration_seconds": 4,
+                    "fps": 24,
+                    "seed": seed,
+                    "aspect_ratio": "9:16",
+                    "resolution": "720p",
+                    "negative_prompt": negative_prompt,
+                    "generate_audio": False,
+                    "resize_mode": types.ImageResizeMode.PAD,
+                }
+                if action["id"] in {"attentive", "puzzled", "encouraging"}:
+                    video_config["last_frame"] = types.Image(
+                        image_bytes=prepared.read_bytes(),
+                        mime_type="image/png",
+                    )
                 operation = client.models.generate_videos(
                     model=catalogue["models"]["video"],
-                    prompt=video_prompt(catalogue, character, action),
+                    prompt=prompt,
                     image=types.Image(image_bytes=prepared.read_bytes(), mime_type="image/png"),
-                    config=types.GenerateVideosConfig(
-                        number_of_videos=1,
-                        duration_seconds=4,
-                        fps=24,
-                        seed=video_seed(catalogue, character, action),
-                        aspect_ratio="9:16",
-                        resolution="720p",
-                        negative_prompt=negative_video_prompt(character),
-                        generate_audio=False,
-                        resize_mode=types.ImageResizeMode.PAD,
-                    ),
+                    config=types.GenerateVideosConfig(**video_config),
                 )
             except Exception as error:
                 append_ledger(args.artifact_root, {
@@ -885,12 +1332,16 @@ def command_videos(args: argparse.Namespace) -> int:
                 })
             append_ledger(args.artifact_root, {
                 "event": "submitted", "kind": "video", "character": character["id"],
-                "animation": action["id"], "model": catalogue["models"]["video"],
+                "animation": action["id"], "variant_index": args.variant_index,
+                "model": catalogue["models"]["video"],
                 "operation_name": operation.name, "estimated_cost_usd": unit_cost,
+                "prompt": prompt, "negative_prompt": negative_prompt, "seed": seed,
             })
             operations["jobs"][key] = {
                 "status": "submitted", "operation_name": operation.name, "attempt": attempt,
+                "variant_index": args.variant_index,
                 "path": str(raw_video.relative_to(ROOT)),
+                "prompt": prompt, "negative_prompt": negative_prompt, "seed": seed,
             }
             save_operations(args.artifact_root, operations)
             pending[key] = (operation, character, action, raw_video)
@@ -1102,6 +1553,24 @@ def convert_video_asset(
     }
 
 
+def compact_reaction_manifest_record(
+    runtime: Path, details: dict[str, Any], slot: int,
+) -> dict[str, Any]:
+    """Keep large prompts and per-frame audit arrays out of the runtime JSON."""
+    return {
+        "src": str(runtime.relative_to(ROOT)),
+        "reaction_slot": slot,
+        "frames": details.get("frames"),
+        "fps": details.get("fps"),
+        "duration_seconds": details.get("duration_seconds"),
+        "loop": details.get("loop"),
+        "canvas_size": details.get("canvas_size"),
+        "css_scale": details.get("css_scale"),
+        "presentation": details.get("presentation"),
+        "sha256": sha256_path(runtime),
+    }
+
+
 def write_manifest(catalogue: dict[str, Any], approvals: dict[str, Any]) -> None:
     manifest: dict[str, Any] = {"schema_version": 1, "characters": {}}
     for character in catalogue["characters"]:
@@ -1114,9 +1583,34 @@ def write_manifest(catalogue: dict[str, Any], approvals: dict[str, Any]) -> None
             metadata = directory / f"{action['id']}.json"
             if runtime.exists() and metadata.exists():
                 animations[action["id"]] = {"src": str(runtime.relative_to(ROOT)), **read_json(metadata)}
+        reactions: dict[str, Any] = {
+            reaction: animations[reaction]
+            for reaction in ("attentive", "puzzled", "encouraging")
+            if reaction in animations
+        }
+        approved_reactions = approvals.get("reaction_variants", {}).get(character["id"], {})
+        for reaction in ("attentive", "puzzled", "encouraging"):
+            variants = []
+            for slot, record in sorted(
+                approved_reactions.get(reaction, {}).items(),
+                key=lambda item: int(item[0]),
+            ):
+                if not record.get("approved") or not record.get("path"):
+                    continue
+                runtime = ROOT / record["path"]
+                metadata = runtime.with_suffix(".json")
+                if not runtime.exists() or not metadata.exists():
+                    raise PipelineError(
+                        f"Approved reaction variant is missing: {character['id']}/{reaction}/{slot}"
+                    )
+                details = read_json(metadata)
+                variants.append(compact_reaction_manifest_record(runtime, details, int(slot)))
+            if variants:
+                reactions[reaction] = variants
         manifest["characters"][character["id"]] = {
             "name": character["name"], "role": character["role"],
-            "idle": str(idle.relative_to(ROOT)), "idle_sha256": sha256_path(idle), "animations": animations,
+            "idle": str(idle.relative_to(ROOT)), "idle_sha256": sha256_path(idle),
+            "animations": animations, "reactions": reactions,
         }
     write_json(ASSET_ROOT / "manifest.json", manifest)
 
@@ -1187,10 +1681,24 @@ def command_convert(args: argparse.Namespace) -> int:
         metadata = convert_video_asset(raw, approved_idle_path(character, approvals), master, runtime, debug)
         metadata.update({
             "character": character["id"], "animation": action["id"], "attempt": attempt,
-            "description": action_description(character, action), "prompt": video_prompt(catalogue, character, action),
-            "negative_prompt": negative_video_prompt(character), "model": catalogue["models"]["video"],
+            "description": action_description(character, action),
+            "prompt": record.get(
+                "prompt",
+                video_prompt(
+                    catalogue,
+                    character,
+                    action,
+                    int(record.get("variant_index", 1)),
+                ),
+            ),
+            "negative_prompt": record.get("negative_prompt", negative_video_prompt(character, action)),
+            "model": catalogue["models"]["video"],
             "model_revision": catalogue["models"]["video"],
-            "seed": video_seed(catalogue, character, action),
+            "seed": int(record.get(
+                "seed",
+                video_seed(catalogue, character, action, int(record.get("variant_index", 1))),
+            )),
+            "variant_index": int(record.get("variant_index", 1)),
             "source": str(raw.relative_to(ROOT)), "source_sha256": sha256_path(raw),
             "estimated_generation_cost_usd": (
                 float(catalogue["models"]["video_cost_per_second_usd"])
@@ -1280,9 +1788,24 @@ def command_review_approve(args: argparse.Namespace) -> int:
         )
         metadata.update({
             "character": character["id"], "animation": action["id"], "attempt": attempt,
-            "description": action_description(character, action), "prompt": video_prompt(catalogue, character, action),
-            "negative_prompt": negative_video_prompt(character), "model": catalogue["models"]["video"],
-            "model_revision": catalogue["models"]["video"], "seed": video_seed(catalogue, character, action),
+            "description": action_description(character, action),
+            "prompt": record.get(
+                "prompt",
+                video_prompt(
+                    catalogue,
+                    character,
+                    action,
+                    int(record.get("variant_index", 1)),
+                ),
+            ),
+            "negative_prompt": record.get(
+                "negative_prompt",
+                negative_video_prompt(character, action),
+            ),
+            "model": catalogue["models"]["video"],
+            "model_revision": catalogue["models"]["video"],
+            "seed": video_seed(catalogue, character, action, int(record.get("variant_index", 1))),
+            "variant_index": int(record.get("variant_index", 1)),
             "source": str(raw.relative_to(ROOT)), "source_sha256": sha256_path(raw),
             "estimated_generation_cost_usd": float(catalogue["models"]["video_cost_per_second_usd"]) * 4,
             "approved": False, "approval_state": "awaiting-human-review",
@@ -1349,6 +1872,11 @@ def build_parser() -> argparse.ArgumentParser:
     approve.add_argument("--candidate", type=int)
     approve.add_argument("--animation")
     approve.add_argument("--attempt", type=int)
+    approve.add_argument(
+        "--reaction-slot",
+        type=int,
+        help="Add a reviewed attentive, puzzled or encouraging clip to this playback slot.",
+    )
     approve.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     approve.set_defaults(handler=command_approve)
 
@@ -1361,6 +1889,10 @@ def build_parser() -> argparse.ArgumentParser:
     videos.add_argument("--rejection-reason", help="Human review reason recorded before a numbered retry")
     videos.add_argument("--budget-usd", type=float, default=DEFAULT_BUDGET)
     videos.add_argument("--max-concurrency", type=int, default=2)
+    videos.add_argument(
+        "--variant-index", type=int, choices=(1, 2, 3, 4, 5), default=1,
+        help="Deterministic review variant index. Use a separate artifact root for each index.",
+    )
     videos.add_argument(
         "--quota-backoff-seconds", type=float, default=60.0,
         help="Wait this long after a temporary Vertex 429 before retrying (default: 60).",
@@ -1389,6 +1921,28 @@ def build_parser() -> argparse.ArgumentParser:
     )
     review.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     review.set_defaults(handler=command_review_approve)
+
+    repair_selected = subparsers.add_parser(
+        "repair-selected-reactions",
+        help="Rebuild explicitly reviewed artifacts in the curated reaction folder",
+    )
+    repair_selected.add_argument("--selected-root", type=Path, default=SELECTED_REACTIONS_ROOT)
+    repair_selected.add_argument("--repair-file", type=Path, default=SELECTED_REACTION_REPAIRS)
+    repair_selected.add_argument("--execute", action="store_true")
+    repair_selected.set_defaults(handler=command_repair_selected_reactions)
+
+    import_selected = subparsers.add_parser(
+        "import-selected-reactions",
+        help="Promote every remaining human-curated reaction clip into numbered runtime slots",
+    )
+    import_selected.add_argument("--selected-root", type=Path, default=SELECTED_REACTIONS_ROOT)
+    import_selected.add_argument("--execute", action="store_true")
+    import_selected.add_argument(
+        "--replace-approved",
+        action="store_true",
+        help="Resynchronise existing numbered reaction slots from the curated folder.",
+    )
+    import_selected.set_defaults(handler=command_import_selected_reactions)
     return parser
 
 

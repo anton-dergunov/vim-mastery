@@ -2873,6 +2873,261 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/nix/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9c187985fdbbb64d745e3d91c7527990d15bf629a81225485cfbe9bad5e148b5"
+          },
+          {
+            "src": "assets/characters/nix/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              360,
+              360
+            ],
+            "css_scale": 1.40625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "8b6d4e0c64aaf6d18ef840da8963e2a34c71c677b4e09255023358388f1b50d5"
+          },
+          {
+            "src": "assets/characters/nix/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ef213d828dc17ca86d2f22c2519f13797746b7ed301b2a044b502616b5fb46bd"
+          },
+          {
+            "src": "assets/characters/nix/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "88d3dca59cee7450b15016537a4e80eb17b0aba77706e97c6251141757e1d85f"
+          },
+          {
+            "src": "assets/characters/nix/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              360,
+              360
+            ],
+            "css_scale": 1.40625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9bb2ae3b6886491cbe0b64a4cf5605807930c8031e11b931405ab4ce002d47da"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/nix/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              360,
+              360
+            ],
+            "css_scale": 1.40625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "510c286dda10aecc32a7b6c5a03585cbd2915ebd8115882563b62cc888338ae7"
+          },
+          {
+            "src": "assets/characters/nix/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e6a3646fd1170ce1c0824bc0c88ac4b8c58041b156b6b295e591e67c62346f62"
+          },
+          {
+            "src": "assets/characters/nix/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a61e617ada2ee122a9de456f9de79e31e18a53b74b73ede739d65cc005f0f19c"
+          },
+          {
+            "src": "assets/characters/nix/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              368,
+              368
+            ],
+            "css_scale": 1.4375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5e735a5529c3defc6fa2c7e78a7e19a2b17f95398f84d17b68c6291e3e11cd97"
+          },
+          {
+            "src": "assets/characters/nix/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              360,
+              360
+            ],
+            "css_scale": 1.40625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "eab499b8d13e9b214d175e6ae1338e01312ee14d93c7f069abbbe2e3bf11c5aa"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/nix/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "40ae8786f30638b9ee73f26beb010dc75e093473cc766ab9c8804846687aac68"
+          },
+          {
+            "src": "assets/characters/nix/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              358,
+              358
+            ],
+            "css_scale": 1.3984375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "798eefa43ac65cbfef1e308f425dff185950d793edfe1e7750c7b967b9fafd28"
+          },
+          {
+            "src": "assets/characters/nix/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              368,
+              368
+            ],
+            "css_scale": 1.4375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9a2bdf38a92ef4722aa6a6dede65bd3ae3c7cd0326a7c76d9d0ba496cc358367"
+          }
+        ]
       }
     },
     "vela": {
@@ -6384,6 +6639,280 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/vela/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "12f61835202421e40cfd8b632d5b300bbc53e3254813e56ae46534369a689edc"
+          },
+          {
+            "src": "assets/characters/vela/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "05730199f6ab1ae39ad0feb7078e361736f3315680e4d2d970b09e7bd068d928"
+          },
+          {
+            "src": "assets/characters/vela/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "2bd07656f7ebbaed3f3d73361dbe3c865907ee2abff5c413d7a73dcebf95dc89"
+          },
+          {
+            "src": "assets/characters/vela/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "cd88ed1a6979cbc0699befe9bd88208f5431183cd032ef76c2d6621a95e58777"
+          },
+          {
+            "src": "assets/characters/vela/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "33e498d6ba913edaef2e10409fa109ef2ad056adc6b6c1b57b2553917d9f33a7"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/vela/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "0c8fcaca5da330bf375487866d61f684c84d6b3e7a78c45e3da2c19d97e35476"
+          },
+          {
+            "src": "assets/characters/vela/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "425822a92ae831bcb3521b7ec513ca34b78b32a99dc4008bfde7999fe2b55a09"
+          },
+          {
+            "src": "assets/characters/vela/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3f37ada8d260836298f59710e2cec9613aae9c171748824f55ea2874798dc4d8"
+          },
+          {
+            "src": "assets/characters/vela/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "88ccff200628dd44967b59c4f052c5962a70ba05fc897b03be3b3d29497b6dce"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/vela/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6283138f75324eb43f61f2dc3c37d07d7b94431a5eb654c21fc8681f3bfd0a27"
+          },
+          {
+            "src": "assets/characters/vela/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a0d5b6874e2a9e92c1bd4f24f609a07a9d66244e2c58b911ed0cc9d893934f78"
+          },
+          {
+            "src": "assets/characters/vela/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "faf8bcd5590c05246b7d441a4ddd911f0012d585283009baee5f0f71ada68b5a"
+          },
+          {
+            "src": "assets/characters/vela/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3a2fc1393da7ddc94b27f8b7529f32389754a69afd034f1417248773f42c8558"
+          },
+          {
+            "src": "assets/characters/vela/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a335257607fa292e6c2ce2fbf65d8c6c91ea5696bd1c1f988d2c1c12babf5444"
+          }
+        ]
       }
     },
     "tatter": {
@@ -9895,6 +10424,261 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/tatter/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "611213826ffc0033659e5a298ede3b98563448ff814e58785197e5b2c2595084"
+          },
+          {
+            "src": "assets/characters/tatter/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d6f7707d79b0e569fce58f527ae484bf4da269b076ac144d145f6ac7216e4e7a"
+          },
+          {
+            "src": "assets/characters/tatter/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9797b7953d10cca1cfa13bcd775e3aa67f3237ca8274ef92ccb2a857590a52e3"
+          },
+          {
+            "src": "assets/characters/tatter/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "07fec6f06b21f3f198dd6ff52002e00a8642fd22eac875d7b367dbfae9c20172"
+          },
+          {
+            "src": "assets/characters/tatter/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "49b427cd6244f9abff6a8ff128ffce5bb223099c7edd7c962a9b13eb7bca4c93"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/tatter/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9b7488879d2f05308adc461d276291b50ca5366b6f2d1ee3dd545de653c817c5"
+          },
+          {
+            "src": "assets/characters/tatter/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f7ba351c58e0008e0ffd8fb44635e9ecb87ececd86db46a8eddcf165433767f8"
+          },
+          {
+            "src": "assets/characters/tatter/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "dcf0f5926561b25cfda85353322365315b43fbba2c1e42fdc86cd1a542b6be82"
+          },
+          {
+            "src": "assets/characters/tatter/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              350,
+              350
+            ],
+            "css_scale": 1.3671875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "461e8b2c800d87b0fac28cc4f79926660827ae5f19c708af4cef869c2321c482"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/tatter/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1d06d97f10785bafef189de58faac33f7e00c894afcd28fab012f6e9455c84f0"
+          },
+          {
+            "src": "assets/characters/tatter/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ba9a506ce38a07a1fb4d2912d4861ab84db7a17080abeffd56e85f9b9a2f1978"
+          },
+          {
+            "src": "assets/characters/tatter/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "39f32fcc92ba79f964d92a447d72fa6b35ca73d4affab70cdcd4ed70bed92cd2"
+          },
+          {
+            "src": "assets/characters/tatter/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "b1b4009a00cb9a119b0ac6c78b58008f47e488312e6059a74095220a266cea72"
+          }
+        ]
       }
     },
     "orin": {
@@ -13403,6 +14187,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/orin/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              324,
+              324
+            ],
+            "css_scale": 1.265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "09d86054c6156c94366f0b33912e4ce3d6ba4784a6d357d04323fa3154638e84"
+          },
+          {
+            "src": "assets/characters/orin/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "892ea4c483a7ed00d32fbc4ffe2bba77c18363944b7a69d43f6a2d36111e92eb"
+          },
+          {
+            "src": "assets/characters/orin/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f7408b2f1009a6714f69207062d24f08d1055ed57aa8eb0ed28aa536971e0a88"
+          },
+          {
+            "src": "assets/characters/orin/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "735226cc63d48c82bcaa18edf34e61127a3f653391a835ac77c9273471b01492"
+          },
+          {
+            "src": "assets/characters/orin/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "748d808a7a96fe216d15d70a299278e0daf3b76040043e82f8b8648e3191998b"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/orin/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "bc6904fc5604e67d54e0710430aba8c37e0db304580720d58a74fcb45ef60b58"
+          },
+          {
+            "src": "assets/characters/orin/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "89d06c2154763dba02591600f12deb9da24f752a45db3aa405c0a38f2b045797"
+          },
+          {
+            "src": "assets/characters/orin/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              324,
+              324
+            ],
+            "css_scale": 1.265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5dbf3c00c71d065d3dc113ceab7a4d41d87ecd6eaf0964c5e51a0e1ecb3e781f"
+          },
+          {
+            "src": "assets/characters/orin/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              326,
+              326
+            ],
+            "css_scale": 1.2734375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4105d1c3e7d308c21f4155ac09a8f6b4ef60f2d991ab33ac3d09533ce3b1707e"
+          },
+          {
+            "src": "assets/characters/orin/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "812a75e4c03ea0c5df91a3e43732fa79c279df2cc5e8beb23a2486fee16b8fe6"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/orin/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              334,
+              334
+            ],
+            "css_scale": 1.3046875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5e60c7c6d00bbfdfec033152d90f0c64a1783fc0705f494c484d67d9a79f34f9"
+          },
+          {
+            "src": "assets/characters/orin/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              324,
+              324
+            ],
+            "css_scale": 1.265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f77a31f803d3ac268dcf1b6cc8117aa22a68c3ec75ca0201e920d24fa00b6d82"
+          },
+          {
+            "src": "assets/characters/orin/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              326,
+              326
+            ],
+            "css_scale": 1.2734375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4af714499fd814c02b6bb17f4b6417bb08a38c21e7a735170ee9dc8e17475d09"
+          },
+          {
+            "src": "assets/characters/orin/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              312,
+              312
+            ],
+            "css_scale": 1.21875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5ccba515fbb168c8e9d4509432d4840e41a46212e3b8cc03f70418459ec6cf60"
+          },
+          {
+            "src": "assets/characters/orin/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              332,
+              332
+            ],
+            "css_scale": 1.296875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "678948f4714842761882153b054e92ee5c7d78d9bc91aa76d479398196b31614"
+          }
+        ]
       }
     },
     "cinder": {
@@ -16919,6 +17996,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/cinder/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "48bb0f58716643f83f1c19018f8c7c7fd03661b6cf36fae9b4d40fa77b52f16f"
+          },
+          {
+            "src": "assets/characters/cinder/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              348,
+              348
+            ],
+            "css_scale": 1.359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9e28be04c6028e7d37d662b770d82cc26bc4e76eb5911bd09b6b9e9457ea43b9"
+          },
+          {
+            "src": "assets/characters/cinder/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "bb5124f7fc659fa62d0310e0d785469bbc607f6c1e8753dad113871f9a9132aa"
+          },
+          {
+            "src": "assets/characters/cinder/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "af64f4e31bcef8b8277d83ad3d96027104488ecc628e1ab10702ed511371704c"
+          },
+          {
+            "src": "assets/characters/cinder/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "fd149ec64fa4b5ed26cebacb0d68a98b6e953177c7e60a9eef15a81a232ebbd7"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/cinder/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "705129df9c5ef4a17f85c4b443a4867ae60ffbbdc653075f1ba940fa23bf9ec8"
+          },
+          {
+            "src": "assets/characters/cinder/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ab7b3cc1d10587c0ff006bddc76bc550251dbf9fe106b2667bb93166548e445a"
+          },
+          {
+            "src": "assets/characters/cinder/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4f571b495a417b09ca2e9a4d5cae9785b0c2d8c5abae311256a8c0235e8f0429"
+          },
+          {
+            "src": "assets/characters/cinder/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9a68ec512de98a7f329609f5de033492f72c0a36a530ddccb558eafb52088d01"
+          },
+          {
+            "src": "assets/characters/cinder/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "67253fbe02eda785f024a1f24b1bba35a1e6b135c51973a3d9fe28e4d21ace07"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/cinder/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6cfd83fa2abf9656ba885b8516bafd4961c29ab4135f495969c39db4c554c9aa"
+          },
+          {
+            "src": "assets/characters/cinder/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              350,
+              350
+            ],
+            "css_scale": 1.3671875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5dc4addf0b51aacd71b18708392b0d07a2223baa27ba6b556fdb4487533764f6"
+          },
+          {
+            "src": "assets/characters/cinder/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c68a048622a6b612ad27fbfb431c675e962768db08c03b2e902c83214752ed1f"
+          },
+          {
+            "src": "assets/characters/cinder/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5b40ec043f2f205f6be8012adadc68d7ddaaeee7c0e7c4dae6532a30c42ee5ab"
+          },
+          {
+            "src": "assets/characters/cinder/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6b36272371dc379dadacabb79289fa1ff0206810905c28fbd2a00fda21afffd9"
+          }
+        ]
       }
     },
     "prism": {
@@ -20437,6 +21807,299 @@
           "approval_state": "approved",
           "approved_attempt": 3
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/prism/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              350,
+              350
+            ],
+            "css_scale": 1.3671875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1524908176b91bee9ddeefbf93093502b8bc1a2b7b58c42ef05eabae128b7da6"
+          },
+          {
+            "src": "assets/characters/prism/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              348,
+              348
+            ],
+            "css_scale": 1.359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a60eff02315a27891ed12ce60fd26cfa0a586a5138c0d15d1fdedab8d119c04a"
+          },
+          {
+            "src": "assets/characters/prism/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              350,
+              350
+            ],
+            "css_scale": 1.3671875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "95d88c09d6bc9bb8926cbba437f797bc2562988bafdf28b5f8251477b65f498d"
+          },
+          {
+            "src": "assets/characters/prism/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e0a9a11fdf53113f077ccf6518dd238d65e5ee77a6bc4cb2ad34d31c3b0e3f84"
+          },
+          {
+            "src": "assets/characters/prism/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "547acb2615801f61b46f928be75ae8d5f97112d4d643a6febb1f005cbbda76ec"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/prism/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              352,
+              352
+            ],
+            "css_scale": 1.375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d4207aeb5952ae64eb35cfa204077863f6a2da09671c1222f3ac71532acb9e1c"
+          },
+          {
+            "src": "assets/characters/prism/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f92cf8f5905ca71d16162df63e4c4970fff99973bab50ade56dae42c155229d6"
+          },
+          {
+            "src": "assets/characters/prism/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3566ac13c6f36d2998afdd44971928348a09b543280283971d7df8851c0f7e1f"
+          },
+          {
+            "src": "assets/characters/prism/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "28720788ea6667460b0523b42fc644f9d8a08e66f27ce26f1d5f16da121b1fef"
+          },
+          {
+            "src": "assets/characters/prism/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              340,
+              340
+            ],
+            "css_scale": 1.328125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "284e1eab2682b469450a5111c01f3c0bb195e95b5ecff83b8a97d25fe381df94"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/prism/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c48092f4dbdb307ce0404713e49dd7017a17e1a01bd62c8d8b288460d8eb967f"
+          },
+          {
+            "src": "assets/characters/prism/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              332,
+              332
+            ],
+            "css_scale": 1.296875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "aad4486ef2ebd3ae2e4de088b7f7d208e93e68c56b9d7a8fe16e2963248cfd12"
+          },
+          {
+            "src": "assets/characters/prism/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "785e7c65c894625ee62768937187135f96eb4f40b425fb46c2fdae26d9b21186"
+          },
+          {
+            "src": "assets/characters/prism/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ad32bb1593d23e885f89acf079af80c6068f2159010cec6620c6ac41c759668c"
+          },
+          {
+            "src": "assets/characters/prism/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              342,
+              342
+            ],
+            "css_scale": 1.3359375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "baa6fe928750c272acf6709f91d66f56d307b6909c487baa1449eba2dcf8eb9f"
+          }
+        ]
       }
     },
     "tock": {
@@ -23947,6 +25610,280 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/tock/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a1d6a53fd5b04109b38a4a1a9989368cc8ed4804eecc85ab038ec2f29ce31dfc"
+          },
+          {
+            "src": "assets/characters/tock/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "23d77bcdd77a5fa03ce26402ec6d0d2b47c6132df16438f6215a27e02b64ef5d"
+          },
+          {
+            "src": "assets/characters/tock/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1d4ded4ace177e8790b3ec88e110812bdfcd218b892f4c7880422980113cf716"
+          },
+          {
+            "src": "assets/characters/tock/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              338,
+              338
+            ],
+            "css_scale": 1.3203125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "03643abcc7f28520cebb5a5fbd44db7dcca02c293eccf64ab9e3cf1373962739"
+          },
+          {
+            "src": "assets/characters/tock/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "688766bc21c0284c68d92bcca1c101ed804fdab46995522309f2f15ded012e9a"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/tock/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              338,
+              338
+            ],
+            "css_scale": 1.3203125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "2e5d11791cf5c694ffca6be84012ea46a53cf18a25e15872a07afd8a44671e88"
+          },
+          {
+            "src": "assets/characters/tock/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3d47e5949dcfe807182691e528b631f76cba390bd7f8ee7a1b9946a1f6eee973"
+          },
+          {
+            "src": "assets/characters/tock/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "10ff885d233e74cfacebba7f01a993676d5eeeee24cd73e21c485b8452b98ecd"
+          },
+          {
+            "src": "assets/characters/tock/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "fba577dd94ea9425184d52357ec6108102de495ab6fdcd1aa1b1e0fadf80b35d"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/tock/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1f787dbda149ecf80abdb84674e5de3f35c27381976597849e5b1920927aee37"
+          },
+          {
+            "src": "assets/characters/tock/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1e607f5cfdfaa1a903a82895a70cf6ef38f942fb427663cfa136ab2d91a41f04"
+          },
+          {
+            "src": "assets/characters/tock/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "66909fb4a112ed90e88084bce0678139ffde99a0c5687714b00f24a787943d2d"
+          },
+          {
+            "src": "assets/characters/tock/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              338,
+              338
+            ],
+            "css_scale": 1.3203125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "b90f9d34ee3a4c85194e8b6cc6c649d18e0b698f6fac1cbb713d25e91b2abee4"
+          },
+          {
+            "src": "assets/characters/tock/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f31eb3f9b24720798323d64e27643ada6eb6a2db7540bfbd22a61d08eae40646"
+          }
+        ]
       }
     },
     "brikk": {
@@ -27385,6 +29322,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/brikk/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "96c8adf18a7bf0fd04d27278cc9bda048adffca5f011077c2a800741eda914b7"
+          },
+          {
+            "src": "assets/characters/brikk/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              334,
+              334
+            ],
+            "css_scale": 1.3046875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a2d1dca6a0eef5f2e15ede85202edca1ae78508a22aeb8199ea329c6fb135487"
+          },
+          {
+            "src": "assets/characters/brikk/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "8133f55fefe14ce179bb0e862171990246f07bff499a17f8d0d7181569370e20"
+          },
+          {
+            "src": "assets/characters/brikk/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              328,
+              328
+            ],
+            "css_scale": 1.28125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c508e99fe5ef466c92f85b3c05b32fa7ce3035b3a70278ce0a810139f2573b4c"
+          },
+          {
+            "src": "assets/characters/brikk/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "69a332a8d3a0c8b4cc5b12a9f03a20d9bd5adcce097517861bb218c9dc39c643"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/brikk/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "be2560cc9daaf7885a7b8e60321075ae8284fd519afd1c4acd7531f06595d7e5"
+          },
+          {
+            "src": "assets/characters/brikk/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "61d4970b7b9559a1506861f0dad9750a203c58e4a0f3a858c87a790eb006e80f"
+          },
+          {
+            "src": "assets/characters/brikk/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d87c1b8b5eedfb71fe00261cc6a51278fee4d935bee4ab12fe733cdc9ae5a88f"
+          },
+          {
+            "src": "assets/characters/brikk/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5303c415cf8a37f50edade97514094058b9c7d207081182a3ce71d6dc13d3a43"
+          },
+          {
+            "src": "assets/characters/brikk/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "088952dd7f3f7a02f52203fe55e4b443286039be96c393fe06c5ae08c6082fd0"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/brikk/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "41dfaff0c634bb173d6ec6661a6ab3d38487d7980203588c6205bfa9ce4d4c72"
+          },
+          {
+            "src": "assets/characters/brikk/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "22eb4fdf77d83754069eeb338c167a478df9b12ec07c3d1ab547064405c0ffc6"
+          },
+          {
+            "src": "assets/characters/brikk/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "fa9545b33d34f6ee0eb1051a7bc21a941af59fc046d11a448525a560d5fc102f"
+          },
+          {
+            "src": "assets/characters/brikk/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9a557344bb9b9cb174d9746e9bda7c0539851e065672cbdcad64b007e103e40a"
+          },
+          {
+            "src": "assets/characters/brikk/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              336,
+              336
+            ],
+            "css_scale": 1.3125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c290eff6f0fdfcd319f06fb95a401877c0a19ec60d0dc3bf101e906f4b74a715"
+          }
+        ]
       }
     },
     "cairn": {
@@ -30894,6 +33124,299 @@
           "approval_state": "approved",
           "approved_attempt": 4
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/cairn/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c43c0e3249acf064af5cf3f9cd3a953f5184b15d79ac47e5eb49312d17a5830e"
+          },
+          {
+            "src": "assets/characters/cairn/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d63230e626652253735729d907fcd2ece574434235535103ea4b52f331c82c89"
+          },
+          {
+            "src": "assets/characters/cairn/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c8178d03abbd5e11e7203643db4d859784704ffcbf1eaf49d1565afb85598e4b"
+          },
+          {
+            "src": "assets/characters/cairn/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e526fdc9683cc0155afe28db77954f06c128992f604cdf67ab5cc1e6200ee24b"
+          },
+          {
+            "src": "assets/characters/cairn/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              308,
+              308
+            ],
+            "css_scale": 1.203125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "89c5536c8bf3d6840b3c97a7f406c9158c84f45381777760bf7cbedb0caa6010"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/cairn/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "37626ed28cbb0d55e298f8d7b01c7aa844d9b279b71441030758cad3b74d38f5"
+          },
+          {
+            "src": "assets/characters/cairn/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "dfbc4b839c75520a5c760035f71aa9241a359e4ffc73bdfcca2b2335efc820cc"
+          },
+          {
+            "src": "assets/characters/cairn/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d50a3477a374726fd67f252075b85a3d24583902dac55e6b30cca1f47fa3e34b"
+          },
+          {
+            "src": "assets/characters/cairn/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "2145af19bca67bf331abac5a606ece43d04635b901f5bd298d98c6835a0ed9db"
+          },
+          {
+            "src": "assets/characters/cairn/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "09ef73460ae43614e8d6f2f8b1588fc59e5f367cacde0526a1e42e2debe41f46"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/cairn/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "08ed9e7fbf5af1e1dcac9bb1b6c5269e6ad00b82d4542e62f6bedfc8702fb121"
+          },
+          {
+            "src": "assets/characters/cairn/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              308,
+              308
+            ],
+            "css_scale": 1.203125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5e41380f4af01ad30949ce8d6925b0204f7e274b6f26e84defab8047e3bfdefa"
+          },
+          {
+            "src": "assets/characters/cairn/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              308,
+              308
+            ],
+            "css_scale": 1.203125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "06f3264bc500bbdab1aee92a2a302a061162c50e057e63ff61f825560d2f8203"
+          },
+          {
+            "src": "assets/characters/cairn/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6b086005f9b10b1f128af7070c68ec29de9ac18a66cf4735f1668859bc1fc306"
+          },
+          {
+            "src": "assets/characters/cairn/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              310,
+              310
+            ],
+            "css_scale": 1.2109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a4d3cc53fdb202d0572bb09aade785697b1d9f2fb671826f2b7b0ac72ecf4998"
+          }
+        ]
       }
     },
     "mello": {
@@ -34331,6 +36854,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/mello/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e4562efd274e0737a031a338664e7859c4d9af563e1fd1c99f33971e9f79e07e"
+          },
+          {
+            "src": "assets/characters/mello/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6182b8e136a4ffad945927da6a017ef24d69e334c325eeaab19f7a10c7e5060f"
+          },
+          {
+            "src": "assets/characters/mello/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "062a905a30c3af45c6b2c5402407ca6b3a4361651b26fa2dd9903417398eb9f2"
+          },
+          {
+            "src": "assets/characters/mello/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              264,
+              264
+            ],
+            "css_scale": 1.03125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "661f1144c7bca46e9c32794272c462ad0e177414178ae16d262e26c12e479f36"
+          },
+          {
+            "src": "assets/characters/mello/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              264,
+              264
+            ],
+            "css_scale": 1.03125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d98378edcd7789c229f91464b13c8c32f37e8ab81acee4a4936db67198361fa8"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/mello/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9ef06539c5dacafa6ef51a05dcbff6ff6aafa5267fd2517bb96c6cb120503cb8"
+          },
+          {
+            "src": "assets/characters/mello/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "035bf78c572f01da69f68d81054ac5bf34008ed18bc09e741024b7ac13b92a64"
+          },
+          {
+            "src": "assets/characters/mello/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ab9387d7f780481027891f3bd1a7d0779f60d28cc9ec4072fc21b6e43aa149e2"
+          },
+          {
+            "src": "assets/characters/mello/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6148054fde0b4c0dfb30bddf36d27ae10b7b15d120215d9a43b23aeffeb02494"
+          },
+          {
+            "src": "assets/characters/mello/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "015c2c8d26ef3cc5d45c0300779b4af0ed8ef525136610bbc608518ed686f6e2"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/mello/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "0556df4218d9147f06e178e401df8da0886c6fa908f81bb975b1c66512be19c8"
+          },
+          {
+            "src": "assets/characters/mello/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "57fce7621a4962c29b9c5bf9b735163a22b3cecb07f55ac9dbb2516efac1296c"
+          },
+          {
+            "src": "assets/characters/mello/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5ac8e21786986af40ee707d00355aedb38aa747e970529ec81844d30a08a9f43"
+          },
+          {
+            "src": "assets/characters/mello/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              274,
+              274
+            ],
+            "css_scale": 1.0703125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "db1b285614e975b06e76e72cb7d90a8cfa44df05767ff8715ac41ef51542a193"
+          },
+          {
+            "src": "assets/characters/mello/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              262,
+              262
+            ],
+            "css_scale": 1.0234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "df5523372fba56035d922d140b4d986749ea175b98f68d1cb372f891d79ff2a1"
+          }
+        ]
       }
     },
     "puddle": {
@@ -37840,6 +40656,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/puddle/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              306,
+              306
+            ],
+            "css_scale": 1.1953125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "aa82196137fa8cddffde7edff92b448aa63f5ab7306038ea29522da6f796ee1a"
+          },
+          {
+            "src": "assets/characters/puddle/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "343e53f47429c132e17f556989db3e929de79fdaa31d9283d29d11c9146bfe18"
+          },
+          {
+            "src": "assets/characters/puddle/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4b1e03b3907e9f8edce58852c4d7f80a3d7b75538d822811d4b4d55de5569ea4"
+          },
+          {
+            "src": "assets/characters/puddle/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "8cc4ac8b2a03a0aafe739f46597a2fd290dcfa9e3767acf4c9fb5daea8f481bb"
+          },
+          {
+            "src": "assets/characters/puddle/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ab30f5d6cad88459aa8e0eca11b4c24fcb129d12dd9b694882732684f107110b"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/puddle/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              306,
+              306
+            ],
+            "css_scale": 1.1953125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ca68a0f53387bccf7e9fce3940c25c81ee7ed7bacff5a57640edc60ca036f2e4"
+          },
+          {
+            "src": "assets/characters/puddle/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "46d02b778e1b7fb0d793d41cbe5d753b7a0ea984680a2c1b104a2ff3227c6d63"
+          },
+          {
+            "src": "assets/characters/puddle/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a88ff5662e586c6fc5156d1a144234277448c78879237b78be819ec41bba3aba"
+          },
+          {
+            "src": "assets/characters/puddle/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f26fb6321843b2f1c4db8c34b8d6c03cb8d792a1fe1c0664eb8151e66dc72d5a"
+          },
+          {
+            "src": "assets/characters/puddle/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "b1c5a8f71865b47e28a625178c0875d15e5150ea03e10b2435c2bb686794710e"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/puddle/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5818ecf2d9f3a875ef29c21d4d27a0217119ba8e1a9b2b486c9c361785d28fac"
+          },
+          {
+            "src": "assets/characters/puddle/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "83ca006b833782c5f82c9d636854e3aeb776a4b3d3f1522a70da87a7861de9a6"
+          },
+          {
+            "src": "assets/characters/puddle/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              298,
+              298
+            ],
+            "css_scale": 1.1640625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a675cad5325160cc105e284749a36ce37bb3e9762028afbbf7f0d5389e24bfdf"
+          },
+          {
+            "src": "assets/characters/puddle/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              296,
+              296
+            ],
+            "css_scale": 1.15625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "71c7d6c0499c11695fcdd726f2eed859e1da3b1a4b0852c9aaf87659107b2434"
+          },
+          {
+            "src": "assets/characters/puddle/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              296,
+              296
+            ],
+            "css_scale": 1.15625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "eed6152510a8da91a727037e45dd9bb9c1850d376ad74ebdd73520cfed3fdeff"
+          }
+        ]
       }
     },
     "bramble": {
@@ -41351,6 +44460,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/bramble/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              300,
+              300
+            ],
+            "css_scale": 1.171875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e8ea7f9e5ba901c4fbb43d56e0fd235fddd6c2bbc613684dd6f09178aded1e6d"
+          },
+          {
+            "src": "assets/characters/bramble/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5b60f58c8b56d00c1031cd80f6ce180f7f9adc5fe68f7f5a2840af4cd4ad5505"
+          },
+          {
+            "src": "assets/characters/bramble/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "ea7b9808838ffe11adf4ba9e085c9e17ec823f54225a732bcf56857baff88a52"
+          },
+          {
+            "src": "assets/characters/bramble/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              294,
+              294
+            ],
+            "css_scale": 1.1484375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1f24a41255f801eec1cd01ddedc0463d409fb2828c3e587d2f964054b3ba31fd"
+          },
+          {
+            "src": "assets/characters/bramble/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3934d7a6861e4898b1bbd0a781a2384296e150a52d6abf1a5f7cb06349bc81f6"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/bramble/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "cf9f240fd835c4e5ed5482741f25da6572ea5884ba1e05a49afe6a7568a6b8ba"
+          },
+          {
+            "src": "assets/characters/bramble/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1e0dcba16104c32dcd64ae1210a73323f14af340703192790899bb5a93a946f1"
+          },
+          {
+            "src": "assets/characters/bramble/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "44a4b9a353e7102e669d445262d7aef1bd294ccdb102e6c2e205849c6d33586b"
+          },
+          {
+            "src": "assets/characters/bramble/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3c34c809c41cdf4022be3cc10d346b71dd7e860db2a8ad3563dfdc435308c7c8"
+          },
+          {
+            "src": "assets/characters/bramble/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e65cb06b21d0f4baeba4e6050b170a9ad6a65f3363ae8e716058319b901dd64b"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/bramble/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "31364db08cabf6f62c0b0a6bdfd1a00a8608da6c9eee11451a3176196f51b60a"
+          },
+          {
+            "src": "assets/characters/bramble/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "de57534300999b9bd3176c3b7e5e36bf5af02eab7fe11af7e1326c590566b663"
+          },
+          {
+            "src": "assets/characters/bramble/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e34989b4114ba2d963bbc0e04fb6cba6d9e4fb58971fd8810fae942155e464ac"
+          },
+          {
+            "src": "assets/characters/bramble/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              292,
+              292
+            ],
+            "css_scale": 1.140625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1cbf148fcbda461853b77e585a8a3eecacd05a823a678cb7b1c4ca0533e96fc5"
+          },
+          {
+            "src": "assets/characters/bramble/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              284,
+              284
+            ],
+            "css_scale": 1.109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "72ef287a3f9063850eae62b570de8d1171c439e3e5a27a9409ab69c057fac82b"
+          }
+        ]
       }
     },
     "mica": {
@@ -44860,6 +48262,261 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/mica/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4f7b2149c6c8e1b8fe7745dd320e7f1ed444b97d1212b24bbf0fc88926137836"
+          },
+          {
+            "src": "assets/characters/mica/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              274,
+              274
+            ],
+            "css_scale": 1.0703125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "dde54afb3b892aea74731c108e88e01cd3ed49f36b686670a431b29ab45a27fe"
+          },
+          {
+            "src": "assets/characters/mica/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              274,
+              274
+            ],
+            "css_scale": 1.0703125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4425e0337ef28499f5ada685aba918f19a4cc4c3cde7733339c3ccb04c3cd802"
+          },
+          {
+            "src": "assets/characters/mica/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "89e6da2d1a7ea4f3682da4d5e1745e98dfa96798e57ecc12a4970bc34b85089b"
+          },
+          {
+            "src": "assets/characters/mica/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c75566b455682e1f355aabe0918cf7a62e151700312def1e10e5e0e15267f0a2"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/mica/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "74d2596e91ad25b8ba3c5e64281567cc1ead3a24feeac6d88d70d4463fb8045b"
+          },
+          {
+            "src": "assets/characters/mica/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              284,
+              284
+            ],
+            "css_scale": 1.109375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "39f87c84bb4766e7e702d4b0d88b9ae88977cec699a79d60d303c38c2251c2d3"
+          },
+          {
+            "src": "assets/characters/mica/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "146e4543155d65e51eecdb7c6aa5d95c97106007cfae820252041fe272b1e7d1"
+          },
+          {
+            "src": "assets/characters/mica/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d3727924b5f4fbca5f01f3393d47038424e001029e20516e6b063a3effca75f6"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/mica/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "f747813c0f722385e01fa7977d9262004316b44530524543ee5def1023da31bb"
+          },
+          {
+            "src": "assets/characters/mica/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "cc169d43556322748124cb6d3474b8f843b1898dcb1e4044020653eafca11401"
+          },
+          {
+            "src": "assets/characters/mica/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "1456feb3d0311d4f59f354000e7a88755066dee6fb19e62129e6d3f7346eca86"
+          },
+          {
+            "src": "assets/characters/mica/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              276,
+              276
+            ],
+            "css_scale": 1.078125,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "056b1c44df3493a541b073b37579ef579cc0edc96e1d2ef4927163f645cf115c"
+          }
+        ]
       }
     },
     "luma": {
@@ -48370,6 +52027,299 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/luma/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "99bb56a4c090d2c44ca8c020cce6d82726d0d5b1461ac1be1066ac11808504c7"
+          },
+          {
+            "src": "assets/characters/luma/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6da9dd4419c8c6820aca3c73c5175790045f7e916f6c03931e40561b456bfa3a"
+          },
+          {
+            "src": "assets/characters/luma/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "5143e5503e558563a949479638c8f9d8332c08f8edf5bb5509caf160210642b6"
+          },
+          {
+            "src": "assets/characters/luma/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "2e9d47958956f41791b18dfa8c34d77198e70ab633fd8d971ad026fa427a8f5c"
+          },
+          {
+            "src": "assets/characters/luma/animations/attentive-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3d10f3c82365a1f4e9d7c525fec18e6f16c6f09cd1546f9c645747e9f11faa75"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/luma/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "dd72755e6e4efc19771453dd8932a06ae847636749e9695213302ca734e1956e"
+          },
+          {
+            "src": "assets/characters/luma/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6813bacb2deeaa910777c426cf67f837138f677c0726bd2b06462a6ed3fd5d85"
+          },
+          {
+            "src": "assets/characters/luma/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "30af78a8767cafd11964e2af98b3964e972d7a8960e3edad5c29e4aa82a2e7f5"
+          },
+          {
+            "src": "assets/characters/luma/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "a52c43e3383cbd4ff1df1b7f938a4f313902e1a5cd038c2d5966290c6b2e6440"
+          },
+          {
+            "src": "assets/characters/luma/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e9bd1a4042cbad02c12f73537f5489807f07e900b444766d700e6517bbc3eaa1"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/luma/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "500dfd188e08f3573f12f257a83b87e21bf1f5cb11b7cf6db97570bb198d3581"
+          },
+          {
+            "src": "assets/characters/luma/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "b473356977297f5f0a3de3d030495205a5c42bdd7ac4babe4cc2e24f57d9272b"
+          },
+          {
+            "src": "assets/characters/luma/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "6ba387ebb7034d13dc683c05315f52673d67e3d76fecdf082f25c5e559233838"
+          },
+          {
+            "src": "assets/characters/luma/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "bc1c97b22ab1748d811ee3f47d9e813c3511575f83969eb02ec141d21e47f272"
+          },
+          {
+            "src": "assets/characters/luma/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              256,
+              256
+            ],
+            "css_scale": 1.0,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "614cae74c72ef2685e701c245689eae4cac9d751793bbfb0fbbbfa4b2ce388b7"
+          }
+        ]
       }
     },
     "fen": {
@@ -51878,6 +55828,280 @@
           "approval_state": "approved",
           "approved_attempt": 1
         }
+      },
+      "reactions": {
+        "attentive": [
+          {
+            "src": "assets/characters/fen/animations/attentive-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "34990dbe6230d8f8549215e139a9fc1bbfc7dd54f9b74b8ddbc322f0570d5fc6"
+          },
+          {
+            "src": "assets/characters/fen/animations/attentive-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "4477ed7d8659cdf70fcab15cefd63b73dc5336b66991699a9f7f4f635aed30b5"
+          },
+          {
+            "src": "assets/characters/fen/animations/attentive-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              314,
+              314
+            ],
+            "css_scale": 1.2265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "d5c2f9ba022048b664cc25b7542a66f4d067a85fdca32cfcff8308eb96f3390a"
+          },
+          {
+            "src": "assets/characters/fen/animations/attentive-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              324,
+              324
+            ],
+            "css_scale": 1.265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "79941015c517e6b1437a380f37b7849dfda19b28fecfba7ba9468d96c59b0106"
+          }
+        ],
+        "puzzled": [
+          {
+            "src": "assets/characters/fen/animations/puzzled-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "446e66bd17b17f5754a3c3fb192363a0ce5bc3bf56a415e55438d260cb43e6c9"
+          },
+          {
+            "src": "assets/characters/fen/animations/puzzled-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              314,
+              314
+            ],
+            "css_scale": 1.2265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "72166dfd1dc0efceeb26c7dc82efc4ad508d325d8347bb76ddb499cb577e7890"
+          },
+          {
+            "src": "assets/characters/fen/animations/puzzled-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "b4013b01dcdb33d6a09b589b24449f501349f9cefe1615ac88a5f9ccc56b45e1"
+          },
+          {
+            "src": "assets/characters/fen/animations/puzzled-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              318,
+              318
+            ],
+            "css_scale": 1.2421875,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "dbaf8d9fc8961546bb83e29128f309c1bb749fcfdfa65c9bb839962ff63b36be"
+          },
+          {
+            "src": "assets/characters/fen/animations/puzzled-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "c98685b57df936ed46cf44e5760937b92d9678b0197fce8dcb25cdc0c9cfb05a"
+          }
+        ],
+        "encouraging": [
+          {
+            "src": "assets/characters/fen/animations/encouraging-variant-01.webp",
+            "reaction_slot": 1,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "288859fbe94fb09bf627a196d316d6ea610620b585c5a1d078a5d72e3b6d036d"
+          },
+          {
+            "src": "assets/characters/fen/animations/encouraging-variant-02.webp",
+            "reaction_slot": 2,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              314,
+              314
+            ],
+            "css_scale": 1.2265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "9390811a5a4ed9ad17067228fb324d1346c8f47f0d5a5d6fa704cb42554e2dc0"
+          },
+          {
+            "src": "assets/characters/fen/animations/encouraging-variant-03.webp",
+            "reaction_slot": 3,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              314,
+              314
+            ],
+            "css_scale": 1.2265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "e28c065ed8b0ae4df091eca03576c0cf0790f65b3ad034682e4367a804906d4b"
+          },
+          {
+            "src": "assets/characters/fen/animations/encouraging-variant-04.webp",
+            "reaction_slot": 4,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              314,
+              314
+            ],
+            "css_scale": 1.2265625,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "7cc0950dd0c9bcacad30df59b30d9d270283184b487a6dfc4df51ab5bc75cac0"
+          },
+          {
+            "src": "assets/characters/fen/animations/encouraging-variant-05.webp",
+            "reaction_slot": 5,
+            "frames": 48,
+            "fps": 12,
+            "duration_seconds": 4,
+            "loop": 1,
+            "canvas_size": [
+              316,
+              316
+            ],
+            "css_scale": 1.234375,
+            "presentation": {
+              "object_fit": "contain",
+              "object_position": "center center",
+              "preserve_full_native_canvas": false
+            },
+            "sha256": "3fbac6e2aacd5701b1410edb00369ca386b9e181cfc70343beddccbbbff6c59f"
+          }
+        ]
       }
     }
   }

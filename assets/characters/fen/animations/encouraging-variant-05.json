@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    316,
+    316
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.234375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1413912,
+  "master_bytes": 1416744,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      80,
+      73,
+      235,
+      241
+    ],
+    [
+      74,
+      10,
+      235,
+      241
+    ],
+    [
+      80,
+      73,
+      235,
+      241
+    ],
+    [
+      80,
+      73,
+      235,
+      241
+    ],
+    [
+      79,
+      73,
+      235,
+      309
+    ],
+    [
+      79,
+      73,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      79,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      78,
+      73,
+      235,
+      311
+    ],
+    [
+      78,
+      73,
+      235,
+      309
+    ],
+    [
+      79,
+      73,
+      235,
+      309
+    ],
+    [
+      79,
+      73,
+      235,
+      309
+    ],
+    [
+      79,
+      73,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      74,
+      235,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      78,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      75,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ],
+    [
+      74,
+      10,
+      245,
+      309
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 0.402,
+  "foreground_area_ratio": 1.037,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "fen",
+  "animation": "encouraging",
+  "attempt": 1,
+  "description": "Fen gives a warm, confident 'your turn\u2014start here' invitation without words while keeping both feet planted. Fen looks directly toward the implied learner with lifted brows, a broad reassuring smile and one firm encouraging nod. The existing map turns outward without changing its artwork; one already-drawn turquoise route brightens gently. The reed stylus taps the first existing waypoint, then the free paw leaves the map edge and makes one clear low forward beckoning sweep before opening palm-up beside that first step. The otter tail lifts into a lively supportive curve and Fen holds the map-plus-open-paw invitation. Show no character name, text, captions, labels or written message outside the unchanged map artwork. No new map marks, side step, map spectacle, applause, walking, cheering or celebration. The performance must instantly communicate supportive invitation, confident coaching, reassuring approval, a clear count-in or a gentle handoff\u2014whichever behavior is authored for this character\u2014without displaying words or becoming a victory celebration.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Fen, A warm-brown otter cartographer with cream muzzle, teal vest, one rolled map and one reed stylus.\nAction over exactly four seconds: Fen makes the first step feel achievable through the unchanged map. One existing waypoint brightens, then a turquoise pulse travels along one already-drawn route toward its next waypoint. Fen rotates the intact map slightly toward the learner, follows the pulse with a broad reassuring smile and opens the free paw low beneath the illuminated start. The reed stylus remains safely held at the side; no writing, name, label, number or new mark appears.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: warm-brown fur with cream muzzle and chest; exactly two arms, two legs and one otter tail; teal vest; one rolled parchment map; one reed stylus.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. VARIANT FIVE ADDITIVE CANDIDATE: This is a new review candidate, not a replacement for earlier takes. Perform only the newly authored character-specific choreography above. Give the clip one dominant readable acting idea, a clean silhouette and clear negative space. Do not fall back to generic head scratching, broad arm waving or any gesture from an earlier take. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. Preserve the supplied costume and body coverage exactly: all armour, cloth, plating, feathers, fur and other coverings remain closed, opaque and in their original positions. Never expose, invent or emphasize breasts, nipples, genitals, buttocks, underwear, cleavage or bare human-like anatomy, and never arrange paired round props, lights or effects over the chest in a way that resembles breasts. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. The character must never hit, tap, knock, bump, poke or slap their own head or face, and must never perform a facepalm, forehead slap, temple tap, mocking pantomime, taunt or gesture that could imply the learner is stupid. Keep the acting kind, respectful and non-offensive in every frame. Never add a puddle, spilled liquid, wet patch, stain, bodily fluid, urine-like mark or floor mark beneath or beside the character. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, opened costume, removed clothing, missing armour, opened armour, transparent clothing, nudity, exposed breasts, nipples, cleavage, genitals, buttocks, underwear, sexualized anatomy, paired round chest effects, changed face, changed species, puddle, spilled liquid, wet patch, stain, bodily fluid, urine, floor mark, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, self-hit, head hit, head tap, head bump, forehead knock, forehead slap, facepalm, temple tap, mocking gesture, insulting gesture, taunt, derision, contempt, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Fen",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 43412,
+  "variant_index": 5,
+  "source": "artifacts/character-generation/reactions-round-05/videos/fen/encouraging-attempt-01.mp4",
+  "source_sha256": "f5ed5f561cd3609d1ecc3a661b3d4636faa822ccc4497efb5b530f64c9a06243",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 5,
+  "selected_source": "reactions-round-05/runtime-candidates/fen/encouraging-attempt-01.webp",
+  "selected_round": 5
+}

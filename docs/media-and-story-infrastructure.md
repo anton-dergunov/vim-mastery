@@ -117,11 +117,11 @@ Unit transition integration has stable hooks on `.story-surface`:
 - `data-guide-id`
 - `data-action-id`
 
-The inert layer slots are `.story-board-base`, `.story-landmark-dormant`,
-`.story-landmark-restored`, `.story-light-path`, and `.story-guide-action`.
-WP-11 should fill these from the selected scene profile and its registered
-landmark patches, keeping base and both landmark states on the identical cover
-transform. Do not add free landmark coordinates.
+The fallback layer slots are `.story-board-base`, `.story-landmark-dormant`,
+`.story-landmark-restored`, and `.story-light-path`. WP-11 fills these from the
+selected scene profile and its registered landmark patches when final art is
+unavailable. Approved unit endings use their complete portrait plates and do
+not add a character overlay.
 
 `window.VimWilds.showUnitStory(unitId)` opens any of the 14 transitions as a
 non-mutating replay for choreography checks. `getState().story` reports the

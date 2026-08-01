@@ -30,12 +30,17 @@ function stillSource(value) {
   return value.still || value.src || null;
 }
 
+function reactionCandidates(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
 export function collectMediaPolicy(presentation, characterManifest) {
   const core = new Map();
   const optional = new Map();
 
   for (const unit of Object.values(presentation?.units || {})) {
     addAsset(core, unit.completion?.storyBackdrop, "unit-story-base");
+    addAsset(core, unit.completion?.storyImage, "unit-story-image");
     const scene = unit.sceneId ? unit.scenes?.[unit.sceneId] : null;
     for (const profile of Object.values(scene?.profiles || {})) {
       addAsset(core, profile.base, "world-base");
@@ -55,11 +60,15 @@ export function collectMediaPolicy(presentation, characterManifest) {
   for (const panel of presentation?.story?.intro || []) {
     addAsset(core, panel.asset, "story-still");
   }
+  addAsset(core, presentation?.story?.writingPenAsset, "story-ui");
+  addAsset(core, presentation?.story?.ending?.asset, "story-finale");
 
   for (const character of Object.values(characterManifest?.characters || {})) {
     addAsset(core, character.idle, "character-idle");
     for (const reaction of Object.values(character.reactions || character.stills || {})) {
-      addAsset(core, stillSource(reaction), "reaction-still");
+      for (const candidate of reactionCandidates(reaction)) {
+        addAsset(optional, stillSource(candidate), "character-reaction");
+      }
     }
     for (const animation of Object.values(character.animations || {})) {
       addAsset(optional, animation?.src, "character-animation");

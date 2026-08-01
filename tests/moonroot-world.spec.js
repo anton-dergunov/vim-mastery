@@ -160,6 +160,25 @@ test("keeps the guide at the bottom left without covering the editor", async ({ 
   }
 });
 
+test("uses supportive character reactions only after repeated mistakes", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+  await page.waitForFunction(() => window.VimWilds?.getState && document.querySelector("#characterLayer > .nix"));
+
+  const pressKey = key => page.locator(`.key[data-key="${key}"]`).evaluate(element => {
+    element.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  });
+  await pressKey("q");
+  expect(await page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("idle");
+  await pressKey("q");
+  await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "puzzled");
+  await pressKey("q");
+  await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "encouraging");
+
+  await pressKey("Escape");
+  await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("celebrating");
+});
+
 test("streams complete-board Wayfinder variants after the delay and silently falls back offline", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));

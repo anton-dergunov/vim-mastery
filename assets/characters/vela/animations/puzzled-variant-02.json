@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    256,
+    256
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1220898,
+  "master_bytes": 1222726,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      66,
+      44,
+      187,
+      244
+    ],
+    [
+      66,
+      44,
+      187,
+      244
+    ],
+    [
+      66,
+      44,
+      188,
+      244
+    ],
+    [
+      66,
+      44,
+      188,
+      244
+    ],
+    [
+      66,
+      46,
+      189,
+      244
+    ],
+    [
+      66,
+      46,
+      189,
+      244
+    ],
+    [
+      66,
+      45,
+      190,
+      244
+    ],
+    [
+      66,
+      44,
+      190,
+      244
+    ],
+    [
+      66,
+      40,
+      191,
+      244
+    ],
+    [
+      66,
+      34,
+      192,
+      244
+    ],
+    [
+      66,
+      28,
+      193,
+      244
+    ],
+    [
+      66,
+      24,
+      193,
+      244
+    ],
+    [
+      72,
+      22,
+      193,
+      212
+    ],
+    [
+      72,
+      23,
+      193,
+      212
+    ],
+    [
+      72,
+      24,
+      192,
+      243
+    ],
+    [
+      66,
+      24,
+      191,
+      244
+    ],
+    [
+      66,
+      24,
+      190,
+      244
+    ],
+    [
+      72,
+      24,
+      188,
+      212
+    ],
+    [
+      66,
+      24,
+      188,
+      244
+    ],
+    [
+      72,
+      24,
+      188,
+      212
+    ],
+    [
+      66,
+      24,
+      188,
+      244
+    ],
+    [
+      72,
+      24,
+      188,
+      212
+    ],
+    [
+      72,
+      24,
+      189,
+      212
+    ],
+    [
+      72,
+      24,
+      189,
+      212
+    ],
+    [
+      72,
+      24,
+      189,
+      212
+    ],
+    [
+      72,
+      24,
+      190,
+      212
+    ],
+    [
+      72,
+      24,
+      190,
+      212
+    ],
+    [
+      72,
+      24,
+      191,
+      212
+    ],
+    [
+      72,
+      24,
+      191,
+      212
+    ],
+    [
+      67,
+      24,
+      192,
+      244
+    ],
+    [
+      67,
+      24,
+      193,
+      244
+    ],
+    [
+      72,
+      24,
+      194,
+      212
+    ],
+    [
+      71,
+      45,
+      195,
+      212
+    ],
+    [
+      70,
+      45,
+      195,
+      212
+    ],
+    [
+      69,
+      44,
+      195,
+      212
+    ],
+    [
+      69,
+      44,
+      194,
+      212
+    ],
+    [
+      69,
+      44,
+      193,
+      212
+    ],
+    [
+      69,
+      44,
+      192,
+      212
+    ],
+    [
+      69,
+      44,
+      191,
+      212
+    ],
+    [
+      69,
+      44,
+      190,
+      212
+    ],
+    [
+      69,
+      44,
+      189,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ],
+    [
+      69,
+      44,
+      188,
+      243
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 12,
+  "first_last_mean_absolute_error": 1.044,
+  "foreground_area_ratio": 1.122,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "vela",
+  "animation": "puzzled",
+  "attempt": 1,
+  "description": "Vela remains completely stationary with both feet planted and the satchel attached. The shoulders rise in a clear shrug, one paw scratches the back of the head just behind one ear, both ears angle in different directions, the amber eyes widen, and the mouth opens slightly in genuine surprise. The tail pauses in a questioning curve and one soft turquoise question-mark-shaped thought wisp appears above the head; no walking or pacing. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Vela, A quick rust-red fox courier with cream muzzle and tail tip, teal scarf, small compass satchel and alert amber eyes.\nAction over exactly four seconds: Vela remains completely stationary with both feet planted and the satchel attached. The shoulders rise in a clear shrug, one paw scratches the back of the head just behind one ear, both ears angle in different directions, the amber eyes widen, and the mouth opens slightly in genuine surprise. The tail pauses in a questioning curve and one soft turquoise question-mark-shaped thought wisp appears above the head; no walking or pacing. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: rust-red fur with cream muzzle, chest and single tail tip; exactly two fox ears, two arms, two legs and one tail; teal scarf; one brown compass satchel; amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, numbers, glyphs or symbols other than the one explicit question-mark-shaped thought wisp, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 12111,
+  "variant_index": 2,
+  "source": "artifacts/character-generation/reactions-round-02/videos/vela/puzzled-attempt-01.mp4",
+  "source_sha256": "b25c3de2209fb7215f4c4771435712a6f4c4468a20718503b709d8100d7343e1",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 2,
+  "selected_source": "reactions-round-02/runtime-candidates/vela/puzzled-attempt-01.webp",
+  "selected_round": 2
+}

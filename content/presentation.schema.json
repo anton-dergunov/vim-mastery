@@ -183,6 +183,7 @@
           "properties": {
             "actionId": { "$ref": "#/$defs/id" },
             "storyBackdrop": { "$ref": "#/$defs/asset" },
+            "storyImage": { "$ref": "#/$defs/asset" },
             "action": { "type": "string", "minLength": 1 },
             "copy": { "type": "string", "minLength": 1 },
             "nextHook": {
@@ -218,8 +219,9 @@
     "story": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["intro", "ending"],
+      "required": ["writingPenAsset", "intro", "ending"],
       "properties": {
+        "writingPenAsset": { "$ref": "#/$defs/asset" },
         "intro": {
           "type": "array",
           "minItems": 3,
@@ -229,8 +231,9 @@
         "ending": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["speaker", "copy"],
+          "required": ["asset", "speaker", "copy"],
           "properties": {
+            "asset": { "$ref": "#/$defs/asset" },
             "speaker": { "type": "string", "minLength": 1 },
             "copy": { "type": "string", "minLength": 1 }
           }

@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    306,
+    306
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.1953125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 1800070,
+  "master_bytes": 1799954,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      72,
+      12,
+      235,
+      295
+    ],
+    [
+      72,
+      12,
+      235,
+      236
+    ],
+    [
+      72,
+      12,
+      235,
+      237
+    ],
+    [
+      72,
+      12,
+      235,
+      243
+    ],
+    [
+      72,
+      12,
+      235,
+      258
+    ],
+    [
+      72,
+      12,
+      235,
+      261
+    ],
+    [
+      72,
+      12,
+      235,
+      275
+    ],
+    [
+      72,
+      12,
+      235,
+      299
+    ],
+    [
+      72,
+      14,
+      235,
+      292
+    ],
+    [
+      74,
+      12,
+      235,
+      297
+    ],
+    [
+      72,
+      12,
+      235,
+      299
+    ],
+    [
+      72,
+      12,
+      235,
+      283
+    ],
+    [
+      72,
+      12,
+      235,
+      299
+    ],
+    [
+      71,
+      12,
+      235,
+      280
+    ],
+    [
+      71,
+      12,
+      235,
+      288
+    ],
+    [
+      71,
+      12,
+      235,
+      299
+    ],
+    [
+      71,
+      12,
+      235,
+      299
+    ],
+    [
+      74,
+      12,
+      235,
+      299
+    ],
+    [
+      73,
+      12,
+      235,
+      298
+    ],
+    [
+      71,
+      12,
+      235,
+      299
+    ],
+    [
+      72,
+      8,
+      235,
+      299
+    ],
+    [
+      73,
+      7,
+      235,
+      299
+    ],
+    [
+      73,
+      14,
+      235,
+      295
+    ],
+    [
+      71,
+      14,
+      235,
+      298
+    ],
+    [
+      71,
+      14,
+      235,
+      299
+    ],
+    [
+      71,
+      14,
+      235,
+      295
+    ],
+    [
+      76,
+      14,
+      235,
+      299
+    ],
+    [
+      74,
+      12,
+      235,
+      299
+    ],
+    [
+      74,
+      12,
+      235,
+      292
+    ],
+    [
+      73,
+      12,
+      235,
+      292
+    ],
+    [
+      71,
+      12,
+      235,
+      299
+    ],
+    [
+      73,
+      12,
+      235,
+      299
+    ],
+    [
+      71,
+      14,
+      235,
+      294
+    ],
+    [
+      77,
+      14,
+      235,
+      297
+    ],
+    [
+      71,
+      14,
+      235,
+      297
+    ],
+    [
+      71,
+      14,
+      235,
+      293
+    ],
+    [
+      71,
+      14,
+      235,
+      299
+    ],
+    [
+      74,
+      14,
+      235,
+      261
+    ],
+    [
+      72,
+      14,
+      235,
+      297
+    ],
+    [
+      74,
+      14,
+      235,
+      283
+    ],
+    [
+      74,
+      14,
+      235,
+      298
+    ],
+    [
+      74,
+      14,
+      235,
+      298
+    ],
+    [
+      74,
+      14,
+      235,
+      297
+    ],
+    [
+      74,
+      14,
+      235,
+      298
+    ],
+    [
+      72,
+      12,
+      235,
+      236
+    ],
+    [
+      72,
+      12,
+      235,
+      295
+    ],
+    [
+      72,
+      12,
+      235,
+      296
+    ],
+    [
+      71,
+      12,
+      235,
+      296
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 7,
+  "first_last_mean_absolute_error": 0.871,
+  "foreground_area_ratio": 1.187,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "puddle",
+  "animation": "puzzled",
+  "attempt": 1,
+  "description": "Puddle looks experimentally confused while remaining in one planted frog stance with the satchel closed and rod safely lowered. The shoulders rise in a clear shrug, the free hand scratches the head beside the goggles, the eyes widen behind the lenses, and the mouth opens in genuine surprise. One small turquoise bubble swells, becomes comically lopsided, wobbles left and right, and pops cleanly without forming punctuation or a symbol; no hopping or distress. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Puddle, A jade frog alchemist with pale throat, amber goggles, teal potion satchel and one short stirring rod.\nAction over exactly four seconds: Puddle looks experimentally confused while remaining in one planted frog stance with the satchel closed and rod safely lowered. The shoulders rise in a clear shrug, the free hand scratches the head beside the goggles, the eyes widen behind the lenses, and the mouth opens in genuine surprise. One small turquoise bubble swells, becomes comically lopsided, wobbles left and right, and pops cleanly without forming punctuation or a symbol; no hopping or distress. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: jade skin with pale throat; exactly two arms and two powerful legs; two amber goggles over two eyes; one teal potion satchel; one short stirring rod.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Puddle",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3011,
+  "variant_index": 1,
+  "source": "artifacts/character-generation/reactions-round-01/videos/puddle/puzzled-attempt-01.mp4",
+  "source_sha256": "030c66fadf4c47d32ad640163eb31d85eabe870966d483543d1486799f37d718",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 1,
+  "selected_source": "reactions-round-01/runtime-candidates/puddle/puzzled-attempt-01.webp",
+  "selected_round": 1
+}

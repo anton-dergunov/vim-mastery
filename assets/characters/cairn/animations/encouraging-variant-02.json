@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    308,
+    308
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.203125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1712546,
+  "master_bytes": 1714902,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      70,
+      7,
+      240,
+      302
+    ],
+    [
+      70,
+      7,
+      240,
+      237
+    ],
+    [
+      70,
+      7,
+      240,
+      237
+    ],
+    [
+      70,
+      7,
+      240,
+      302
+    ],
+    [
+      70,
+      7,
+      230,
+      302
+    ],
+    [
+      70,
+      7,
+      240,
+      302
+    ],
+    [
+      70,
+      7,
+      240,
+      237
+    ],
+    [
+      70,
+      7,
+      228,
+      302
+    ],
+    [
+      72,
+      9,
+      240,
+      302
+    ],
+    [
+      72,
+      9,
+      240,
+      237
+    ],
+    [
+      72,
+      9,
+      240,
+      237
+    ],
+    [
+      72,
+      9,
+      240,
+      237
+    ],
+    [
+      72,
+      9,
+      240,
+      237
+    ],
+    [
+      69,
+      9,
+      240,
+      237
+    ],
+    [
+      69,
+      9,
+      240,
+      237
+    ],
+    [
+      69,
+      9,
+      240,
+      237
+    ],
+    [
+      69,
+      9,
+      240,
+      302
+    ],
+    [
+      69,
+      9,
+      240,
+      237
+    ],
+    [
+      69,
+      9,
+      240,
+      242
+    ],
+    [
+      69,
+      9,
+      240,
+      252
+    ],
+    [
+      69,
+      9,
+      240,
+      293
+    ],
+    [
+      69,
+      9,
+      240,
+      297
+    ],
+    [
+      69,
+      9,
+      240,
+      303
+    ],
+    [
+      69,
+      9,
+      240,
+      249
+    ],
+    [
+      69,
+      9,
+      240,
+      302
+    ],
+    [
+      69,
+      9,
+      240,
+      302
+    ],
+    [
+      69,
+      9,
+      240,
+      302
+    ],
+    [
+      69,
+      9,
+      240,
+      302
+    ],
+    [
+      69,
+      9,
+      240,
+      258
+    ],
+    [
+      69,
+      9,
+      240,
+      261
+    ],
+    [
+      69,
+      9,
+      240,
+      261
+    ],
+    [
+      69,
+      9,
+      240,
+      280
+    ],
+    [
+      69,
+      9,
+      240,
+      280
+    ],
+    [
+      72,
+      9,
+      240,
+      283
+    ],
+    [
+      72,
+      9,
+      240,
+      287
+    ],
+    [
+      72,
+      9,
+      230,
+      286
+    ],
+    [
+      72,
+      9,
+      230,
+      265
+    ],
+    [
+      72,
+      9,
+      230,
+      255
+    ],
+    [
+      72,
+      9,
+      230,
+      257
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ],
+    [
+      72,
+      9,
+      230,
+      300
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ],
+    [
+      72,
+      9,
+      230,
+      250
+    ],
+    [
+      72,
+      9,
+      230,
+      237
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 0.785,
+  "foreground_area_ratio": 1.186,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "cairn",
+  "animation": "encouraging",
+  "attempt": 1,
+  "description": "Cairn gives a serious but unmistakably supportive 'the path is yours' invitation without words, rooted on both blocky feet. The cyan rune face softens from stern concentration into a small confident approving smile and the inset command-key slab wakes into a broad warm glow. One blocky fist presses once to the chest; then both enormous arms open low and diagonally forward, elbows clearly bent and palms visibly turned toward the learner, creating a large clear passage between the hands. Hold both complete hands well inside the image with generous dark margin on every side; neither hand may touch or cross a frame edge. The arms never form a straight horizontal T-pose. Cairn leans forward slightly and holds this broad open-path silhouette with calm protective confidence. The hands must travel far enough from the torso to create an obvious change from idle while the full body and hands stay visible. Show no text or written message. No gate object, salute, pointing skyward, stomping, applause, walking, cheering or triumph pose. The performance must instantly communicate supportive invitation, confident coaching, reassuring approval, a clear count-in or a gentle handoff\u2014whichever behavior is authored for this character\u2014without displaying words or becoming a victory celebration.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Cairn, A squat ancient stone guardian with blocky arms and legs, cyan rune face, moss shoulders and one inset command-key slab.\nAction over exactly four seconds: Cairn gives a serious but unmistakably supportive 'the path is yours' invitation without words, rooted on both blocky feet. The cyan rune face softens from stern concentration into a small confident approving smile and the inset command-key slab wakes into a broad warm glow. One blocky fist presses once to the chest; then both enormous arms sweep apart low and wide, elbows bent and palms visibly open toward the learner, creating a large clear passage between them. Cairn leans forward slightly and holds this broad open-path silhouette with calm protective confidence. The hands must travel far enough from the torso to create an obvious change from idle. Show no text or written message. No gate object, salute, pointing skyward, stomping, applause, walking, cheering or triumph pose. The performance must instantly communicate supportive invitation, confident coaching, reassuring approval, a clear count-in or a gentle handoff\u2014whichever behavior is authored for this character\u2014without displaying words or becoming a victory celebration.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: squat weathered stone body; exactly two blocky arms and two blocky legs; one cyan rune face; moss on both shoulders; one inset amber command-key slab.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Cairn",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 12812,
+  "variant_index": 2,
+  "source": "artifacts/character-generation/reactions-round-02/videos/cairn/encouraging-attempt-01.mp4",
+  "source_sha256": "f5e6ed507fe559fb72a45aedc9b5b6f727767981269b06c10c2836eb269a8ad7",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 2,
+  "selected_source": "reactions-round-02/runtime-candidates/cairn/encouraging-attempt-01.webp",
+  "selected_round": 2
+}

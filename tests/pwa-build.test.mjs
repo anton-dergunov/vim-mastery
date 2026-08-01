@@ -50,8 +50,12 @@ test("production PWA precaches core media and streams optional animation and sce
   });
   assert.equal(readFileSync(join(dist, "content", "presentation.json"), "utf8"), presentation);
   assert.match(worker, /content\/presentation\.json/);
-  assert.equal(media.core.length, 116);
+  assert.equal(media.core.length, 135);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 14);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 14);
+  assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);
+  assert.equal(media.core.filter(asset => asset.category === "story-finale").length, 1);
+  assert.equal(media.core.filter(asset => asset.category === "story-ui").length, 1);
   assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 700);
   media.core.forEach(({ path: file }) => {
     assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
@@ -72,7 +76,12 @@ test("production PWA precaches core media and streams optional animation and sce
   const characterAnimations = files(join(rootPath, "assets", "characters"))
     .filter(file => file.includes("/animations/") && file.endsWith(".webp"))
     .map(file => `assets/characters/${file.slice(join(rootPath, "assets", "characters").length + 1)}`);
-  assert.equal(characterAnimations.length, 150);
+  const reactionVariantCount = Object.values(characterManifest.characters)
+    .flatMap(character => Object.values(character.reactions || {}))
+    .filter(Array.isArray)
+    .reduce((total, variants) => total + variants.length, 0);
+  assert.equal(reactionVariantCount, 216);
+  assert.equal(characterAnimations.length, 150 + reactionVariantCount);
   characterAnimations.forEach(file => {
     assert.equal(existsSync(join(dist, file)), true);
     assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
@@ -99,7 +108,33 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   assert(first.core.some(asset => asset.category === "registered-patch"));
   assert(first.core.some(asset => asset.category === "character-idle"));
   assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 14);
-  assert(first.optional.every(asset => ["character-animation", "remote-scene-variant"].includes(asset.category)));
+  assert.equal(first.core.filter(asset => asset.category === "unit-story-image").length, 14);
+  assert.equal(first.core.filter(asset => asset.category === "story-ui").length, 1);
+  assert(first.optional.every(asset => [
+    "character-animation",
+    "character-reaction",
+    "remote-scene-variant",
+  ].includes(asset.category)));
+
+  const variedCharacters = structuredClone(characters);
+  for (const character of Object.values(variedCharacters.characters)) {
+    character.reactions = {};
+  }
+  variedCharacters.characters.nix.reactions.attentive = [
+    { src: "assets/characters/nix/animations/joyful-hop.webp" },
+    { src: "assets/characters/nix/animations/high-jump.webp" },
+  ];
+  const variedMedia = collectMediaPolicy(presentation, variedCharacters);
+  assert.deepEqual(
+    variedMedia.optional
+      .filter(asset => asset.category === "character-reaction")
+      .map(asset => asset.path)
+      .sort(),
+    [
+      "assets/characters/nix/animations/high-jump.webp",
+      "assets/characters/nix/animations/joyful-hop.webp",
+    ],
+  );
 
   const broken = structuredClone(presentation);
   broken.story.intro[0].asset = "assets/worlds/story/declared-but-missing.webp";

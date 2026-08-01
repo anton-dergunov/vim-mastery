@@ -1669,6 +1669,11 @@ Add a tested semantic-effect event contract without rendering effects and withou
 
 ### WP-09 — Character reaction state machine
 
+**Implementation status (2026-08-01):** Runtime and reviewed multi-character
+reaction assets are implemented. Attentive, puzzled, and encouraging each use a
+shuffle bag of the approved Veo clips available for that character/state pair;
+the idle/CSS cue remains the harmless fallback when media is blocked or absent.
+
 **Recommended model:** Terra  
 **Dependencies:** Approved Nix reaction poses; independent of Vim effects  
 **Visible change:** Medium  
@@ -1757,6 +1762,16 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 
 ### WP-11 — Landmark restoration and final story art
 
+**Implementation status (2026-08-01):** Story integration code is implemented.
+The three intro panels, registered unit choreography, portrait unit-ending
+plates, reverse-travel finale, persistence, replay, and direct review routes are
+available. All three intro scenes, all fourteen unit endings, the writing quill,
+and the finale have explicit owner approvals and are promoted to runtime assets.
+Illustrated scenes use a full-frame narrative overlay with slow quill writing;
+unit endings intentionally contain no separate character overlay. Intro Panels
+1–2 share a registered camera clock and crossfade, while Panel 3 restarts its
+own camera journey. The finale uses the same presentation in reverse.
+
 **Recommended model:** Terra  
 **Dependencies:** WP-10 and the approved world/landmark assets for the units being integrated. Final intro art requires all four approved world masters.  
 **Visible change:** Very high  
@@ -1767,7 +1782,7 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Add the three approved intro images.
 - Add all approved dormant/restored landmarks.
 - Implement the exact unit choreography.
-- Map existing character animations to actions with still/CSS fallbacks.
+- Keep characters out of the final unit-ending plates and runtime overlay.
 - Add per-world light colors and masks.
 - Add story copy and next hooks from the manifest.
 - Ensure dormant/restored assets share registration and do not jump.
@@ -1780,7 +1795,7 @@ Implement first-launch story and unit-completion transitions with placeholder ar
 - Watch all 14 unit transitions using a test navigation helper.
 - Check every landmark for crossfade registration.
 - Test with animations available, blocked, slow, and offline.
-- Confirm the character action supports the landmark rather than drawing attention away from the copy.
+- Confirm no character overlay obscures any approved unit-ending plate.
 - Confirm every scene can be understood from still states.
 
 ### WP-12 — Final accessibility, performance, and regression audit

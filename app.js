@@ -4,6 +4,7 @@ import { appUrl, appVersion, remoteMediaUrls } from "./app-version.js";
 import { loadUnitCatalogWithPresentation, resolveUnitPresentation } from "./presentation-data.js";
 import { StoryTransitions } from "./story-transitions.js";
 import { WorldPresentationRenderer } from "./world-presentation.js";
+import { CharacterReactions } from "./character-reactions.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -273,6 +274,7 @@ async function loadCharacterAssets() {
       image.dataset.animation = assignment.animationId;
       image.src = localAssetUrl(character.idle);
       image.alt = `${character.name}, ${character.role}`;
+      image.__characterAsset = character;
     }
     preloadSuccessMedia();
   } catch (error) {
@@ -473,6 +475,12 @@ const storyTransitions = new StoryTransitions({
   assetUrl: localAssetUrl,
 });
 
+const characterReactions = new CharacterReactions({
+  layer: elements.characterLayer,
+  assetUrl: localAssetUrl,
+  reducedMotion: () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+});
+
 function renderRoutes(routes = []) {
   if (!routes.length) return "";
   return `<div class="note-routes">${routes.map(route => `<button class="note-action${route.emphasis === "secondary" ? " secondary-action" : ""}" type="button" data-route="${escapeHtml(route.activityRef)}">${renderInline(route.label)}</button>`).join("")}</div>`;
@@ -617,6 +625,10 @@ function renderCharacterLayer(activity, presentation) {
     : "";
   elements.characterLayer.dataset.side = characterMarkup ? characterSide : "none";
   elements.characterLayer.innerHTML = characterMarkup;
+  const image = $(".nix", elements.characterLayer);
+  if (image) image.__characterAsset = character;
+  characterReactions.setActivity(activity);
+  characterReactions.apply("idle");
 }
 
 function refreshWorldPresentation() {
@@ -975,6 +987,9 @@ function renderTableOfContents() {
     ? `<section class="toc-arc" aria-labelledby="toc-arc-other"><h3 class="toc-arc-heading" id="toc-arc-other"><span>Course</span><strong>More units</strong></h3><div class="toc-arc-units">${ungroupedUnits.map(renderUnit).join("")}</div></section>`
     : "";
   const completedStoryIds = new Set(storyTransitions.getState().completedUnitStoryIds);
+  const endingReplayButton = storyTransitions.getState().endingSeen
+    ? '<button type="button" data-story-replay-ending>Replay finale</button>'
+    : "";
   const replayButtons = units
     .filter(candidate => completedStoryIds.has(candidate.id))
     .map(candidate => `<button type="button" data-story-replay-unit="${escapeHtml(candidate.id)}">Unit ${candidate.unitNumber}: ${renderInline(candidate.title)}</button>`)
@@ -984,9 +999,46 @@ function renderTableOfContents() {
     <div class="toc-story-actions">
       <button type="button" data-story-replay-intro>Replay introduction</button>
       ${replayButtons}
+      ${endingReplayButton}
     </div>
   </section>`;
   elements.tocLessons.innerHTML = storyArchive + arcMarkup + ungroupedMarkup;
+}
+
+function storyPreviewHref(parameters) {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.searchParams.set("preview", "story");
+  for (const [key, value] of Object.entries(parameters)) url.searchParams.set(key, value);
+  return `${url.pathname}${url.search}`;
+}
+
+function renderStoryReviewIndex() {
+  const introLinks = catalogData.presentation.story.intro
+    .map((panel, index) => `<a href="${escapeHtml(storyPreviewHref({ story: "intro", panel: panel.id }))}">Panel ${index + 1}: ${escapeHtml(panel.id)}</a>`)
+    .join("");
+  const unitLinks = units.map(candidate => {
+    const links = Array.from({ length: 5 }, (_, index) => {
+      const candidateNumber = String(index + 1);
+      const href = storyPreviewHref({
+        story: "unit-ending",
+        unit: candidate.id,
+        candidate: candidateNumber,
+      });
+      return `<a href="${escapeHtml(href)}">Candidate ${candidateNumber}</a>`;
+    }).join("");
+    return `<details class="toc-unit story-review-unit" open>
+      <summary><span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong></summary>
+      <div class="story-review-links">${links}</div>
+    </details>`;
+  }).join("");
+  const finaleHref = storyPreviewHref({ story: "finale" });
+  elements.tocLessons.innerHTML = `<section class="toc-story-archive story-review-index" aria-labelledby="storyReviewTitle">
+    <h3 id="storyReviewTitle">Story scene review</h3>
+    <p>Each link opens that scene immediately. No lesson completion or saved progress is required.</p>
+    <div class="story-review-links">${introLinks}<a href="${escapeHtml(finaleHref)}">Final restored Wilds</a></div>
+  </section>${unitLinks}`;
+  elements.tocDialog.showModal();
 }
 
 function renderThemeOptions() {
@@ -1114,6 +1166,7 @@ function completeActivity() {
   if (currentActivity().type === "choice") renderWorld();
   else renderCompletionHost();
   if (isPractice() || currentActivity().type === "choice") playSuccessCharacter();
+  if (isPractice() || currentActivity().type === "choice") characterReactions.celebrate();
   renderMode();
   renderCommand();
   renderActivityControls();
@@ -1144,6 +1197,7 @@ function handleEngineEvent(event) {
     if (isPractice()) state.progress = state.history.length;
   }
   renderMode();
+  if (event.kind === "mode" || event.kind === "key") characterReactions.modeChanged(event.snapshot?.mode);
   renderCommand();
   if (isExplore() && isTargetSnapshot(event.snapshot)) {
     reachExploreTarget();
@@ -1166,6 +1220,7 @@ function clearPracticeError() {
   state.errorTimer = null;
   state.recallFeedback = null;
   state.consecutiveMistakes = 0;
+  characterReactions.correctProgress();
   elements.statusKey?.classList.remove("error");
 }
 
@@ -1183,6 +1238,8 @@ function flashError(token, button) {
   elements.commandTray.classList.add("error");
   window.setTimeout(() => elements.commandTray.classList.remove("error"), 300);
   if (!isPractice()) return;
+  state.consecutiveMistakes += 1;
+  characterReactions.incorrectInput(state.consecutiveMistakes);
   if (currentActivity().practiceMode === "guided") {
     elements.statusKey?.classList.remove("error");
     void elements.statusKey?.offsetWidth;
@@ -1193,7 +1250,6 @@ function flashError(token, button) {
   // Only a touched on-screen key gets a red flash. Physical keys retain the
   // compact rail feedback without inventing a keyboard interaction.
   flashWrongKey(button);
-  state.consecutiveMistakes += 1;
   state.recallFeedback = state.consecutiveMistakes >= 3 ? "reveal" : "retry";
   if (state.errorTimer) window.clearTimeout(state.errorTimer);
   renderCommand();
@@ -1616,6 +1672,11 @@ elements.tocLessons?.addEventListener("click", event => {
     storyTransitions.showIntro({ replay: true });
     return;
   }
+  if (event.target.closest("[data-story-replay-ending]")) {
+    elements.tocDialog.close();
+    storyTransitions.showEnding({ replay: true });
+    return;
+  }
   const storyUnit = event.target.closest("[data-story-replay-unit]")?.dataset.storyReplayUnit;
   if (storyUnit) {
     elements.tocDialog.close();
@@ -1717,6 +1778,17 @@ window.VimWilds = Object.freeze({
   replayIntroStory() {
     return storyTransitions.showIntro({ replay: true });
   },
+  replayEndingStory() {
+    return storyTransitions.showEnding({ replay: true });
+  },
+  previewIntroArt(candidate) {
+    const id = String(candidate).replace(/^candidate-?/, "").padStart(2, "0");
+    if (!["05", "07", "10", "14"].includes(id)) throw new RangeError("Available intro-art reviews: 05, 07, 10, 14");
+    return storyTransitions.showIntro({
+      replay: true,
+      reviewAsset: `artifacts/world-generation/wp11/intro-connected/candidate-${id}.png`,
+    });
+  },
   showUnitStory(unitId) {
     return storyTransitions.showUnit(unitId, { replay: true });
   },
@@ -1761,6 +1833,7 @@ window.VimWilds = Object.freeze({
       vimEffects: state.vimEffects,
       generatedBackdrops: state.generatedBackdrops,
       characters: state.characters,
+      characterReaction: characterReactions.state,
       guidance: elements.guidance.textContent,
       story: storyTransitions.getState(),
     };
@@ -1779,6 +1852,30 @@ worldRenderer.start();
 renderAll();
 renderThemeOptions();
 storyTransitions.start();
+
+if (urlParams.get("preview") === "story-index") {
+  renderStoryReviewIndex();
+} else if (urlParams.get("preview") === "story") {
+  const requestedStory = urlParams.get("story");
+  if (requestedStory === "intro") {
+    const panels = catalogData.presentation?.story?.intro || [];
+    const requestedPanel = urlParams.get("panel") || "1";
+    const numericPanel = Number.parseInt(requestedPanel, 10);
+    const panelIndex = Number.isInteger(numericPanel) && String(numericPanel) === requestedPanel
+      ? numericPanel - 1
+      : panels.findIndex(panel => panel.id === requestedPanel);
+    storyTransitions.showIntro({ panelIndex: Math.max(0, panelIndex), replay: true });
+  } else if (requestedStory === "unit-ending" || requestedStory === "unit") {
+    const candidateNumber = Math.max(1, Math.min(5, Number.parseInt(urlParams.get("candidate") || "1", 10) || 1));
+    const candidate = String(candidateNumber).padStart(2, "0");
+    storyTransitions.showUnit(unit.id, {
+      replay: true,
+      reviewAsset: `artifacts/world-generation/wp11/story-review-v2/unit-endings/${unit.id}-restoration-3x4/candidate-${candidate}.png`,
+    });
+  } else if (requestedStory === "finale" || requestedStory === "ending") {
+    storyTransitions.showEnding({ replay: true });
+  }
+}
 void loadCharacterAssets();
 persistSession();
 registerServiceWorker();

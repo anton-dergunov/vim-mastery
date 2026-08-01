@@ -199,6 +199,7 @@
       "completion": {
         "actionId": "lift-mode-lantern",
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
+        "storyImage": "assets/worlds/story/units/modal-model.png",
         "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
         "copy": "The Mode Lantern wakes. One key can hold more than one meaning\u2014and now the Wilds remember how to listen.",
         "nextHook": {
@@ -362,7 +363,8 @@
         "copy": "Vela aligns the Wayfinder. North, south, east, and west settle back into place.",
         "nextHook": {
           "copy": "The path ends at a page of broken words."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/cursor-movement.png"
       }
     },
     "entering-changing-text": {
@@ -521,7 +523,8 @@
         "copy": "Tatter opens the Scribe\u2019s Spring. The Wilds can accept new words and reshape old ones again.",
         "nextHook": {
           "copy": "A sealed gate waits for both an action and a range."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/entering-changing-text.png"
       }
     },
     "operator-grammar": {
@@ -680,7 +683,8 @@
         "copy": "Cinder joins action to range. The Grammar Gate opens, and the first road out of Moonroot is restored.",
         "nextHook": {
           "copy": "Starlight flickers beyond the gate."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/operator-grammar.png"
       }
     },
     "precision-motions-search": {
@@ -723,7 +727,8 @@
         "copy": "Orin focuses the Starneedle. Distant signs and exact characters become visible across the dark.",
         "nextHook": {
           "copy": "The signal points inward, toward structures hidden in plain sight."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/precision-motions-search.png"
       },
       "sceneId": "starneedle-observatory",
       "scenes": {
@@ -851,7 +856,8 @@
         "copy": "Bramble wakes the Nested Garden. Words, quotes, brackets, and blocks reveal the shapes they contain.",
         "nextHook": {
           "copy": "Three panes of light rise from the water."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/text-objects.png"
       },
       "sceneId": "nested-garden",
       "scenes": {
@@ -979,7 +985,8 @@
         "copy": "Prism aligns the three panes. Character, line, and block become distinct paths through the same code.",
         "nextHook": {
           "copy": "Behind the final pane, a sealed archive begins to glow."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/visual-selection.png"
       },
       "sceneId": "prism-crossing",
       "scenes": {
@@ -1107,7 +1114,8 @@
         "copy": "Mica reopens the Memory Archive. What is captured can be kept, chosen, and placed where it belongs.",
         "nextHook": {
           "copy": "One memory points to a beacon far beyond the shelves."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/registers-putting.png"
       },
       "sceneId": "memory-archive",
       "scenes": {
@@ -1235,7 +1243,8 @@
         "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances\u2014and return without losing their place.",
         "nextHook": {
           "copy": "Across the causeway, a stopped clock begins to tick."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/long-range-navigation.png"
       },
       "sceneId": "far-beacons",
       "scenes": {
@@ -1363,7 +1372,8 @@
         "copy": "Tock restarts the Echo Clock. A well-shaped change can now travel farther than a single moment.",
         "nextHook": {
           "copy": "The echo reaches a brass city beneath the ridge."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/repeatable-editing.png"
       },
       "sceneId": "echo-clock",
       "scenes": {
@@ -1491,7 +1501,8 @@
         "copy": "Cinder sets the Meridian Table. Lines and ranges become routes that the command current can follow.",
         "nextHook": {
           "copy": "A broken loom is repeating the wrong pattern."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/command-line-ranges-line-operations.png"
       },
       "sceneId": "meridian-table",
       "scenes": {
@@ -1619,7 +1630,8 @@
         "copy": "Puddle retunes the Mirror Loom. Patterns can be found, tested, and transformed without touching what does not match.",
         "nextHook": {
           "copy": "The repaired thread leads into a silent foundry."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/substitution-practical-regex.png"
       },
       "sceneId": "mirror-loom",
       "scenes": {
@@ -1747,7 +1759,8 @@
         "copy": "Tock records the first true echo. The Foundry can repeat a complete sequence without forgetting a step.",
         "nextHook": {
           "copy": "Only the World Engine remains dark."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/macros.png"
       },
       "sceneId": "echo-foundry",
       "scenes": {
@@ -1876,7 +1889,8 @@
         "nextHook": {
           "speaker": "Nix",
           "copy": "The language is alive. What you restore next is up to you."
-        }
+        },
+        "storyImage": "assets/worlds/story/units/global-normal-automation.png"
       },
       "sceneId": "meridian-engine",
       "scenes": {
@@ -1966,25 +1980,27 @@
     }
   },
   "story": {
+    "writingPenAsset": "assets/worlds/story/ui/flying-pen.png",
     "intro": [
       {
         "id": "connected-wilds",
-        "asset": null,
+        "asset": "assets/worlds/story/intro/connected-wilds.png",
         "copy": "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range."
       },
       {
         "id": "interrupted-command",
-        "asset": null,
+        "asset": "assets/worlds/story/intro/interrupted-wilds.png",
         "copy": "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent."
       },
       {
         "id": "nix-at-the-threshold",
-        "asset": null,
+        "asset": "assets/worlds/story/intro/nix-at-the-threshold.png",
         "speaker": "Nix",
         "copy": "The language was not lost\u2014only forgotten. Learn it with us, and the Wilds will remember."
       }
     ],
     "ending": {
+      "asset": "assets/worlds/story/ending/restored-wilds.png",
       "speaker": "Nix",
       "copy": "The language is alive. What you restore next is up to you."
     }

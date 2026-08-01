@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    340,
+    340
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.328125,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 2.0,
+  "runtime_bytes": 1888782,
+  "master_bytes": 1891992,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      87,
+      13,
+      256,
+      254
+    ],
+    [
+      86,
+      13,
+      256,
+      254
+    ],
+    [
+      87,
+      13,
+      256,
+      254
+    ],
+    [
+      83,
+      13,
+      256,
+      322
+    ],
+    [
+      83,
+      13,
+      256,
+      322
+    ],
+    [
+      83,
+      80,
+      256,
+      322
+    ],
+    [
+      83,
+      78,
+      256,
+      322
+    ],
+    [
+      83,
+      13,
+      256,
+      322
+    ],
+    [
+      83,
+      13,
+      256,
+      322
+    ],
+    [
+      91,
+      13,
+      256,
+      254
+    ],
+    [
+      83,
+      13,
+      256,
+      322
+    ],
+    [
+      90,
+      13,
+      256,
+      275
+    ],
+    [
+      78,
+      13,
+      256,
+      324
+    ],
+    [
+      76,
+      26,
+      256,
+      323
+    ],
+    [
+      76,
+      14,
+      256,
+      324
+    ],
+    [
+      76,
+      13,
+      256,
+      324
+    ],
+    [
+      85,
+      6,
+      256,
+      326
+    ],
+    [
+      87,
+      6,
+      256,
+      322
+    ],
+    [
+      85,
+      6,
+      256,
+      323
+    ],
+    [
+      87,
+      6,
+      256,
+      324
+    ],
+    [
+      76,
+      6,
+      256,
+      325
+    ],
+    [
+      76,
+      14,
+      256,
+      327
+    ],
+    [
+      76,
+      14,
+      256,
+      321
+    ],
+    [
+      76,
+      14,
+      256,
+      324
+    ],
+    [
+      76,
+      13,
+      256,
+      326
+    ],
+    [
+      77,
+      13,
+      256,
+      320
+    ],
+    [
+      77,
+      13,
+      256,
+      325
+    ],
+    [
+      89,
+      12,
+      256,
+      312
+    ],
+    [
+      89,
+      13,
+      256,
+      320
+    ],
+    [
+      89,
+      13,
+      256,
+      254
+    ],
+    [
+      89,
+      13,
+      256,
+      254
+    ],
+    [
+      88,
+      13,
+      256,
+      254
+    ],
+    [
+      88,
+      80,
+      250,
+      254
+    ],
+    [
+      83,
+      79,
+      245,
+      324
+    ],
+    [
+      85,
+      79,
+      245,
+      324
+    ],
+    [
+      87,
+      13,
+      256,
+      254
+    ],
+    [
+      83,
+      13,
+      256,
+      323
+    ],
+    [
+      87,
+      13,
+      256,
+      254
+    ],
+    [
+      87,
+      13,
+      256,
+      254
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ],
+    [
+      83,
+      13,
+      256,
+      323
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ],
+    [
+      83,
+      14,
+      256,
+      325
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ],
+    [
+      83,
+      14,
+      256,
+      323
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 1.284,
+  "foreground_area_ratio": 1.1,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "orin",
+  "animation": "puzzled",
+  "attempt": 1,
+  "description": "Orin looks searchingly uncertain while staying planted on both taloned feet with the scroll secure. The round head tilts strongly, one wing-arm makes a modest shrug, the beak opens slightly in surprise, and the monocular lens briefly loses focus. Three tiny pale-cyan searching lights drift apart within the lens glow, pause, and converge again without becoming punctuation or writing. No hopping, flapping away, sadness or mockery. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Orin, A round navy-and-cream owl archivist with two wing-arms, two taloned feet, one glowing monocular lens and one rolled scroll.\nAction over exactly four seconds: Orin looks searchingly uncertain while staying planted on both taloned feet with the scroll secure. The round head tilts strongly, one wing-arm makes a modest shrug, the beak opens slightly in surprise, and the monocular lens briefly loses focus. Three tiny pale-cyan searching lights drift apart within the lens glow, pause, and converge again without becoming punctuation or writing. No hopping, flapping away, sadness or mockery. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: navy plumage with cream brow and chest; exactly two wing-arms and two taloned feet; two amber eyes; one turquoise monocular lens; one rolled scroll.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Orin",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 12311,
+  "variant_index": 2,
+  "source": "artifacts/character-generation/reactions-round-02/videos/orin/puzzled-attempt-01.mp4",
+  "source_sha256": "35d58d6a8d632c5c8987cae390fdf038c3c2576c3abf1583da05a6471ec6836c",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 2,
+  "selected_source": "reactions-round-02/runtime-candidates/orin/puzzled-attempt-01.webp",
+  "selected_round": 2
+}

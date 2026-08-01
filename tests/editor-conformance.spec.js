@@ -832,6 +832,12 @@ test.describe("Production lesson flow", () => {
     await page.goto("/?unit=global-normal-automation&activity=global-normal-automation-summary");
     await expect(page.getByRole("button", { name: "Complete Unit 14" })).toBeVisible();
     await page.getByRole("button", { name: "Complete Unit 14" }).click();
+    const storySurface = page.locator(".story-surface");
+    if (await storySurface.getAttribute("data-kind") === "unit") {
+      await page.getByRole("button", { name: "Continue to finale" }).click();
+    }
+    await expect(storySurface).toHaveAttribute("data-kind", "ending");
+    await page.getByRole("button", { name: "View the restored Wilds" }).click();
     await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   });
 

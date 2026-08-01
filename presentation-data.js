@@ -200,6 +200,9 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
     if (unit.completion?.storyBackdrop !== undefined) {
       validateAsset(unit.completion.storyBackdrop, `units.${unitId}.completion.storyBackdrop`, errors);
     }
+    if (unit.completion?.storyImage !== undefined) {
+      validateAsset(unit.completion.storyImage, `units.${unitId}.completion.storyImage`, errors);
+    }
     for (const field of ["action", "copy"]) {
       if (typeof unit.completion?.[field] !== "string" || !unit.completion[field].trim()) {
         errors.push(`units.${unitId}.completion.${field} is required`);
@@ -241,6 +244,8 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
       if (typeof panel?.copy !== "string" || !panel.copy.trim()) errors.push(`story.intro[${index}].copy is required`);
     });
   }
+  validateAsset(manifest.story?.writingPenAsset, "story.writingPenAsset", errors);
+  validateAsset(manifest.story?.ending?.asset, "story.ending.asset", errors);
   if (typeof manifest.story?.ending?.speaker !== "string" || !manifest.story.ending.speaker.trim()) {
     errors.push("story.ending.speaker is required");
   }

@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    342,
+    342
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.3359375,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 1.7320507764816284,
+  "runtime_bytes": 2258366,
+  "master_bytes": 2266290,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      84,
+      91,
+      254,
+      336
+    ],
+    [
+      84,
+      91,
+      253,
+      336
+    ],
+    [
+      84,
+      92,
+      254,
+      336
+    ],
+    [
+      82,
+      93,
+      254,
+      335
+    ],
+    [
+      84,
+      93,
+      254,
+      336
+    ],
+    [
+      88,
+      93,
+      254,
+      252
+    ],
+    [
+      82,
+      92,
+      255,
+      336
+    ],
+    [
+      84,
+      81,
+      255,
+      335
+    ],
+    [
+      84,
+      68,
+      255,
+      335
+    ],
+    [
+      84,
+      61,
+      255,
+      335
+    ],
+    [
+      84,
+      53,
+      255,
+      335
+    ],
+    [
+      84,
+      47,
+      255,
+      335
+    ],
+    [
+      84,
+      47,
+      255,
+      335
+    ],
+    [
+      84,
+      47,
+      255,
+      335
+    ],
+    [
+      84,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      335
+    ],
+    [
+      82,
+      47,
+      255,
+      335
+    ],
+    [
+      84,
+      47,
+      255,
+      336
+    ],
+    [
+      84,
+      47,
+      255,
+      335
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      253,
+      336
+    ],
+    [
+      82,
+      47,
+      253,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      84,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      84,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      255,
+      336
+    ],
+    [
+      82,
+      47,
+      254,
+      336
+    ],
+    [
+      82,
+      47,
+      254,
+      336
+    ],
+    [
+      82,
+      47,
+      254,
+      336
+    ],
+    [
+      82,
+      92,
+      254,
+      336
+    ],
+    [
+      87,
+      91,
+      254,
+      252
+    ],
+    [
+      84,
+      91,
+      254,
+      336
+    ],
+    [
+      84,
+      91,
+      254,
+      336
+    ],
+    [
+      84,
+      91,
+      254,
+      336
+    ],
+    [
+      82,
+      91,
+      254,
+      338
+    ],
+    [
+      82,
+      91,
+      254,
+      338
+    ],
+    [
+      82,
+      91,
+      254,
+      336
+    ],
+    [
+      82,
+      91,
+      254,
+      336
+    ],
+    [
+      84,
+      91,
+      254,
+      336
+    ],
+    [
+      84,
+      91,
+      254,
+      336
+    ],
+    [
+      84,
+      91,
+      254,
+      336
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 4,
+  "first_last_mean_absolute_error": 0.678,
+  "foreground_area_ratio": 1.354,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "tatter",
+  "animation": "puzzled",
+  "attempt": 1,
+  "description": "Tatter looks thoughtfully baffled while keeping both walking legs planted and all four arms visible. The lower hands retain the needle and spool, one upper hand scratches the side of the hooded head, and the other upper hand opens in a clear shrug. A short loose thread tries to follow two directions, gathers into one harmless untidy knot between the lower hands, and relaxes again without forming punctuation or text; no sadness, tangled body, walking or added arms. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Tatter, An indigo fantasy spider tailor with exactly four arms and two walking legs, warm cream face, golden needle and teal thread spool.\nAction over exactly four seconds: Tatter encounters an editing choice without any hand approaching the head. The lower hands retain the needle and spool while the upper hands lift two loose ends of the same teal thread. The thread briefly divides into three harmless curved routes of unequal length; Tatter's eyes compare each route with a surprised open mouth while the two empty upper palms turn upward. The routes gently collapse back into one untangled line; no knot, text or punctuation remains.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: exactly four arms and two walking legs; indigo body with warm cream face; two amber eyes; one golden needle; one teal thread spool.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. VARIANT FOUR ADDITIVE CANDIDATE: This is a new review candidate, not a replacement for earlier takes. Perform only the newly authored character-specific choreography above. Give the clip one dominant readable acting idea, a clean silhouette and clear negative space. Do not fall back to generic head scratching, broad arm waving or any gesture from an earlier take. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. The character must never hit, tap, knock, bump, poke or slap their own head or face, and must never perform a facepalm, forehead slap, temple tap, mocking pantomime, taunt or gesture that could imply the learner is stupid. Keep the acting kind, respectful and non-offensive in every frame. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, self-hit, head hit, head tap, head bump, forehead knock, forehead slap, facepalm, temple tap, mocking gesture, insulting gesture, taunt, derision, contempt, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Tatter",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 32211,
+  "variant_index": 4,
+  "source": "artifacts/character-generation/reactions-round-04/videos/tatter/puzzled-attempt-01.mp4",
+  "source_sha256": "f432dcc9f4dd7b414478b6f497ea0f354bbc551703f834c9c6c2b819bc2b9f08",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 3,
+  "selected_source": "reactions-round-04/runtime-candidates/tatter/puzzled-attempt-01.webp",
+  "selected_round": 4
+}

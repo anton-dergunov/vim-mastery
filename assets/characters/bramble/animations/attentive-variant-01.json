@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    300,
+    300
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.171875,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1791766,
+  "master_bytes": 1790242,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      73,
+      13,
+      232,
+      290
+    ],
+    [
+      73,
+      13,
+      232,
+      290
+    ],
+    [
+      73,
+      13,
+      232,
+      290
+    ],
+    [
+      71,
+      13,
+      232,
+      290
+    ],
+    [
+      71,
+      13,
+      232,
+      290
+    ],
+    [
+      71,
+      15,
+      232,
+      290
+    ],
+    [
+      73,
+      14,
+      232,
+      290
+    ],
+    [
+      71,
+      14,
+      232,
+      290
+    ],
+    [
+      71,
+      14,
+      232,
+      290
+    ],
+    [
+      71,
+      14,
+      226,
+      234
+    ],
+    [
+      71,
+      14,
+      232,
+      290
+    ],
+    [
+      71,
+      14,
+      231,
+      290
+    ],
+    [
+      71,
+      14,
+      232,
+      290
+    ],
+    [
+      71,
+      14,
+      232,
+      290
+    ],
+    [
+      73,
+      13,
+      232,
+      290
+    ],
+    [
+      71,
+      13,
+      232,
+      290
+    ],
+    [
+      71,
+      13,
+      232,
+      290
+    ],
+    [
+      92,
+      13,
+      232,
+      286
+    ],
+    [
+      71,
+      13,
+      232,
+      288
+    ],
+    [
+      71,
+      13,
+      232,
+      290
+    ],
+    [
+      71,
+      13,
+      232,
+      288
+    ],
+    [
+      71,
+      13,
+      232,
+      288
+    ],
+    [
+      71,
+      13,
+      232,
+      288
+    ],
+    [
+      71,
+      13,
+      232,
+      289
+    ],
+    [
+      71,
+      13,
+      232,
+      293
+    ],
+    [
+      70,
+      13,
+      232,
+      293
+    ],
+    [
+      70,
+      13,
+      232,
+      294
+    ],
+    [
+      70,
+      13,
+      232,
+      294
+    ],
+    [
+      70,
+      13,
+      232,
+      294
+    ],
+    [
+      70,
+      13,
+      232,
+      294
+    ],
+    [
+      70,
+      13,
+      232,
+      294
+    ],
+    [
+      70,
+      14,
+      232,
+      294
+    ],
+    [
+      70,
+      13,
+      232,
+      294
+    ],
+    [
+      71,
+      13,
+      232,
+      294
+    ],
+    [
+      71,
+      12,
+      232,
+      294
+    ],
+    [
+      71,
+      12,
+      232,
+      294
+    ],
+    [
+      73,
+      14,
+      228,
+      234
+    ],
+    [
+      73,
+      14,
+      223,
+      234
+    ],
+    [
+      73,
+      14,
+      223,
+      234
+    ],
+    [
+      73,
+      14,
+      222,
+      234
+    ],
+    [
+      73,
+      14,
+      223,
+      234
+    ],
+    [
+      73,
+      13,
+      232,
+      234
+    ],
+    [
+      73,
+      13,
+      232,
+      234
+    ],
+    [
+      73,
+      13,
+      232,
+      234
+    ],
+    [
+      73,
+      13,
+      232,
+      234
+    ],
+    [
+      73,
+      14,
+      232,
+      234
+    ],
+    [
+      73,
+      13,
+      232,
+      234
+    ],
+    [
+      73,
+      14,
+      232,
+      234
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.642,
+  "foreground_area_ratio": 1.274,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "bramble",
+  "animation": "attentive",
+  "attempt": 1,
+  "description": "Bramble shifts into protective listening while keeping both feet planted with the rune shield low and secure. The broad body turns squarely toward the implied learner, both ears angle forward, and the free paw cups fully behind one ear as the torso leans closer. The amber eyes hold a calm unblinking focus; after the listening pause, the shield rim produces one narrow steady acknowledgement pulse. No nodding, grounded hop, walking or ward projection. The performance must instantly communicate absorbed attention, alert observation, active listening, careful note-readiness or clear comprehension\u2014whichever behavior is authored for this character\u2014without locomotion or celebration.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Bramble, A charcoal-and-cream badger wardkeeper with broad paws, moss cape, amber clasp and one round rune shield.\nAction over exactly four seconds: Bramble shifts into protective listening while keeping both feet planted with the rune shield low and secure. The broad body turns squarely toward the implied learner, both ears angle forward, and the free paw cups fully behind one ear as the torso leans closer. The amber eyes hold a calm unblinking focus; after the listening pause, the shield rim produces one narrow steady acknowledgement pulse. No nodding, grounded hop, walking or ward projection. The performance must instantly communicate absorbed attention, alert observation, active listening, careful note-readiness or clear comprehension\u2014whichever behavior is authored for this character\u2014without locomotion or celebration.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: charcoal fur with cream facial stripes and chest; exactly two arms and two legs; moss-green cape with amber clasp; one round rune shield; two amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, changed face, changed species, text, captions, watermark, writing, letters, glyph, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Bramble",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 3110,
+  "variant_index": 1,
+  "source": "artifacts/character-generation/reactions-round-01/videos/bramble/attentive-attempt-01.mp4",
+  "source_sha256": "8b7c5d8cd16d777377d290f3ef4bf6c221fdc24c7f432d5fd232796547cec9ed",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 1,
+  "selected_source": "reactions-round-01/runtime-candidates/bramble/attentive-attempt-01.webp",
+  "selected_round": 1
+}

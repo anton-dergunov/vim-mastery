@@ -1,0 +1,353 @@
+{
+  "frames": 48,
+  "fps": 12,
+  "duration_seconds": 4,
+  "loop": 1,
+  "canvas_size": [
+    256,
+    256
+  ],
+  "canvas_mode": "anchor",
+  "base_size": 256,
+  "css_scale": 1.0,
+  "presentation": {
+    "object_fit": "contain",
+    "object_position": "center center",
+    "preserve_full_native_canvas": false
+  },
+  "border_variation": 3.316624879837036,
+  "runtime_bytes": 1225148,
+  "master_bytes": 1226628,
+  "runtime_size_target_bytes": [
+    307200,
+    716800
+  ],
+  "runtime_size_in_target": false,
+  "all_frames_audited": true,
+  "frame_alpha_bounds": [
+    [
+      69,
+      14,
+      195,
+      212
+    ],
+    [
+      69,
+      14,
+      195,
+      212
+    ],
+    [
+      69,
+      14,
+      195,
+      212
+    ],
+    [
+      69,
+      14,
+      195,
+      234
+    ],
+    [
+      69,
+      14,
+      195,
+      246
+    ],
+    [
+      69,
+      14,
+      195,
+      246
+    ],
+    [
+      67,
+      14,
+      195,
+      246
+    ],
+    [
+      67,
+      14,
+      195,
+      246
+    ],
+    [
+      65,
+      14,
+      195,
+      247
+    ],
+    [
+      65,
+      14,
+      195,
+      247
+    ],
+    [
+      65,
+      14,
+      195,
+      247
+    ],
+    [
+      65,
+      15,
+      195,
+      246
+    ],
+    [
+      69,
+      44,
+      195,
+      245
+    ],
+    [
+      65,
+      48,
+      195,
+      244
+    ],
+    [
+      66,
+      49,
+      192,
+      244
+    ],
+    [
+      63,
+      14,
+      195,
+      246
+    ],
+    [
+      61,
+      14,
+      195,
+      247
+    ],
+    [
+      61,
+      14,
+      195,
+      247
+    ],
+    [
+      61,
+      14,
+      195,
+      246
+    ],
+    [
+      61,
+      14,
+      195,
+      247
+    ],
+    [
+      69,
+      44,
+      191,
+      238
+    ],
+    [
+      66,
+      15,
+      195,
+      235
+    ],
+    [
+      69,
+      44,
+      187,
+      238
+    ],
+    [
+      69,
+      15,
+      195,
+      241
+    ],
+    [
+      69,
+      44,
+      194,
+      243
+    ],
+    [
+      70,
+      15,
+      195,
+      246
+    ],
+    [
+      65,
+      44,
+      195,
+      246
+    ],
+    [
+      65,
+      15,
+      195,
+      246
+    ],
+    [
+      63,
+      44,
+      195,
+      247
+    ],
+    [
+      63,
+      44,
+      195,
+      247
+    ],
+    [
+      64,
+      44,
+      195,
+      247
+    ],
+    [
+      63,
+      14,
+      195,
+      247
+    ],
+    [
+      61,
+      44,
+      195,
+      247
+    ],
+    [
+      61,
+      44,
+      195,
+      247
+    ],
+    [
+      61,
+      45,
+      195,
+      247
+    ],
+    [
+      61,
+      48,
+      195,
+      247
+    ],
+    [
+      61,
+      48,
+      195,
+      247
+    ],
+    [
+      61,
+      15,
+      195,
+      247
+    ],
+    [
+      61,
+      15,
+      195,
+      245
+    ],
+    [
+      61,
+      15,
+      195,
+      247
+    ],
+    [
+      61,
+      15,
+      195,
+      240
+    ],
+    [
+      62,
+      15,
+      195,
+      228
+    ],
+    [
+      69,
+      15,
+      195,
+      231
+    ],
+    [
+      69,
+      44,
+      189,
+      234
+    ],
+    [
+      69,
+      15,
+      195,
+      212
+    ],
+    [
+      69,
+      15,
+      195,
+      212
+    ],
+    [
+      69,
+      15,
+      195,
+      212
+    ],
+    [
+      69,
+      44,
+      187,
+      212
+    ]
+  ],
+  "minimum_content_edge_clearance_px": 9,
+  "first_last_mean_absolute_error": 0.989,
+  "foreground_area_ratio": 1.122,
+  "automatic_review_flags": [
+    "runtime-size-outside-target"
+  ],
+  "human_review_checklist": [
+    "identity and proportions match approved idle",
+    "canonical props and anatomy are present exactly once",
+    "no background leakage or dark edge halo",
+    "first and last poses read as the approved neutral pose"
+  ],
+  "review_conversion": {
+    "source_duration_seconds": 4,
+    "duration_seconds": 4,
+    "cover_rectangles": []
+  },
+  "character": "vela",
+  "animation": "puzzled",
+  "attempt": 1,
+  "description": "Vela remains completely stationary with both feet planted and the satchel attached. The shoulders rise in a clear shrug, one paw scratches the back of the head just behind one ear, both ears angle in different directions, the amber eyes widen, and the mouth opens slightly in genuine surprise. The tail pauses in a questioning curve and one soft turquoise question-mark-shaped thought wisp appears above the head; no walking or pacing. The emotion must read immediately as genuinely surprised and thoughtfully confused, never sad, ashamed, angry or mocking.",
+  "prompt": "Locked camera and a completely static dark neutral background.\nAnimate only the supplied approved 2D pixel-art character Vela, A quick rust-red fox courier with cream muzzle and tail tip, teal scarf, small compass satchel and alert amber eyes.\nAction over exactly four seconds: Vela discovers contradictory directions without touching the head. The compass permanently built into the satchel wobbles between two bearings while two short turquoise route dashes appear low on opposite sides of the satchel and fade. Vela braces the satchel with both low paws, looks left, then right, then back to the learner with raised brows, uneven ears and a slightly open mouth. The tail makes one hesitant low curve; no question mark appears in this take.\nPreserve the exact approved design, silhouette, pixel-art rendering, proportions, colours, camera angle and these permanent invariants: rust-red fur with cream muzzle, chest and single tail tip; exactly two fox ears, two arms, two legs and one tail; teal scarf; one brown compass satchel; amber eyes.\nKeep the full body visible at unchanged scale. Start from the supplied neutral pose and finish settled in that exact pose. VARIANT FIVE ADDITIVE CANDIDATE: This is a new review candidate, not a replacement for earlier takes. Perform only the newly authored character-specific choreography above. Give the clip one dominant readable acting idea, a clean silhouette and clear negative space. Do not fall back to generic head scratching, broad arm waving or any gesture from an earlier take. REACTION TIMING: 0.00-0.35 seconds, hold the supplied neutral pose fully visible. 0.35-2.45 seconds, perform exactly the described emotional gesture in place. 2.45-3.25 seconds, smoothly settle back into the exact supplied neutral pose. 3.25-4.00 seconds, hold that exact neutral pose completely still, fully opaque and fully visible. The character's feet remain anchored to the same pixels for the entire clip. Every permanent prop, costume piece, limb and facial feature from the supplied image remains attached, unobscured and visible in every frame. The final held pose must reproduce the supplied image\u2014including every prop and its placement\u2014not a newly invented generic idle. Preserve the supplied costume and body coverage exactly: all armour, cloth, plating, feathers, fur and other coverings remain closed, opaque and in their original positions. Never expose, invent or emphasize breasts, nipples, genitals, buttocks, underwear, cleavage or bare human-like anatomy, and never arrange paired round props, lights or effects over the chest in a way that resembles breasts. At the end of the video the character must not drop, hide, remove, exchange or transform any prop, and must not fade away or disappear; the character simply stays normally visible and still in that approved neutral pose through the final frame. Do not display text anywhere in any frame: no character name, words, dialogue, captions, subtitles, labels, signs, interface text, written encouragement, watermark, title or end-card message. Express the reaction only through the character's face, pose, props and motion. Never form a salute-like pose: no single rigid straight arm or wing may extend diagonally above shoulder height. Any raised arm or wing must remain visibly bent or curved and must clearly perform the specific listening, thinking or offering action described. The character must never hit, tap, knock, bump, poke or slap their own head or face, and must never perform a facepalm, forehead slap, temple tap, mocking pantomime, taunt or gesture that could imply the learner is stupid. Keep the acting kind, respectful and non-offensive in every frame. Never add a puddle, spilled liquid, wet patch, stain, bodily fluid, urine-like mark or floor mark beneath or beside the character. No walking, stepping, running, hopping, pacing, dancing, sliding, turning away, camera motion, fade-out, dissolve, disappearance, shrinking, scene transition or end card. Deliberately stylised 2D sprite animation, not photorealistic. Restrained amber, turquoise or violet magic is allowed only where described.",
+  "negative_prompt": "camera movement, pan, tilt, zoom, crop, cut, scene transition, changing background, new character, duplicate character, extra limbs, missing limbs, extra wings, missing wings, new props, missing props, mutated anatomy, detached head, missing head, headless body, hidden face, back-facing turn, back view, changed costume, opened costume, removed clothing, missing armour, opened armour, transparent clothing, nudity, exposed breasts, nipples, cleavage, genitals, buttocks, underwear, sexualized anatomy, paired round chest effects, changed face, changed species, puddle, spilled liquid, wet patch, stain, bodily fluid, urine, floor mark, text, captions, watermark, writing, letters, numbers, glyphs or symbols other than the one explicit question-mark-shaped thought wisp, emblem, logo, swastika, cross, walking, stepping, running, hopping, jumping, pacing, dancing, locomotion, foot movement, victory celebration, cheering, confetti, fade-out, fading character, dissolve, disappearance, invisibility, shrinking, end card, salute, military salute, fascist salute, Nazi salute, single rigid raised arm, single straight raised wing, self-hit, head hit, head tap, head bump, forehead knock, forehead slap, facepalm, temple tap, mocking gesture, insulting gesture, taunt, derision, contempt, religious symbol, political symbol, scenery, floor, realistic texture, photorealism, 3D render, anything inconsistent with Vela",
+  "model": "veo-3.1-lite-generate-001",
+  "model_revision": "veo-3.1-lite-generate-001",
+  "seed": 42111,
+  "variant_index": 5,
+  "source": "artifacts/character-generation/reactions-round-05/videos/vela/puzzled-attempt-01.mp4",
+  "source_sha256": "0e537feb7f98d60551f06e66c3bfa543511981b25f61aaeaaa7163d651b4bed3",
+  "estimated_generation_cost_usd": 0.12,
+  "approved": true,
+  "approval_state": "approved",
+  "approved_attempt": 1,
+  "reaction_slot": 4,
+  "selected_source": "reactions-round-05/runtime-candidates/vela/puzzled-attempt-01.webp",
+  "selected_round": 5
+}

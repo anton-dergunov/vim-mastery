@@ -114,6 +114,10 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert(resolved, `${catalogUnit.id} must resolve a presentation`);
     assert.equal(resolved.unit.id, catalogUnit.id);
     assert.equal(resolved.world.id, resolved.unit.worldId);
+    assert.equal(
+      resolved.unit.completion.storyImage,
+      `assets/worlds/story/units/${catalogUnit.id}.png`,
+    );
     assert(characterManifest.characters[resolved.unit.guideCharacterId], `${catalogUnit.id} guide must exist`);
     assert(!landmarkIds.has(resolved.unit.landmark.id), `${resolved.unit.landmark.id} must belong to one unit`);
     landmarkIds.add(resolved.unit.landmark.id);
@@ -295,25 +299,27 @@ test("presentation manifest preserves the approved unit story table", () => {
 
 test("presentation manifest preserves the approved introduction and ending", () => {
   assert.deepEqual(presentation.story, {
+    writingPenAsset: "assets/worlds/story/ui/flying-pen.png",
     intro: [
       {
         id: "connected-wilds",
-        asset: null,
+        asset: "assets/worlds/story/intro/connected-wilds.png",
         copy: "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range.",
       },
       {
         id: "interrupted-command",
-        asset: null,
+        asset: "assets/worlds/story/intro/interrupted-wilds.png",
         copy: "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent.",
       },
       {
         id: "nix-at-the-threshold",
-        asset: null,
+        asset: "assets/worlds/story/intro/nix-at-the-threshold.png",
         speaker: "Nix",
         copy: "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember.",
       },
     ],
     ending: {
+      asset: "assets/worlds/story/ending/restored-wilds.png",
       speaker: "Nix",
       copy: "The language is alive. What you restore next is up to you.",
     },
