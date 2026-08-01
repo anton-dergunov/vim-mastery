@@ -1769,8 +1769,9 @@ available. All three intro scenes, all fourteen unit endings, the writing quill,
 and the finale have explicit owner approvals and are promoted to runtime assets.
 Illustrated scenes use a full-frame narrative overlay with slow quill writing;
 unit endings intentionally contain no separate character overlay. Intro Panels
-1–2 share a registered camera clock and crossfade, while Panel 3 restarts its
-own camera journey. The finale uses the same presentation in reverse.
+1–2 share a registered 60-second camera clock and keep moving through their
+crossfade, while Panel 3 restarts its own 60-second camera journey. The finale
+uses the same presentation in reverse at its approved 24-second pace.
 
 **Recommended model:** Terra  
 **Dependencies:** WP-10 and the approved world/landmark assets for the units being integrated. Final intro art requires all four approved world masters.  

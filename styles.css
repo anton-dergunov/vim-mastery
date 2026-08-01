@@ -1859,28 +1859,26 @@ html.next-ui .story-visual.has-story-art {
    backgrounds. The enlarged source lets a narrow screen visit the whole route
    instead of permanently cropping the centre. */
 html.next-ui .story-visual.has-story-art.story-panorama {
-  background-size: auto 100%;
-  background-position: 0% center;
-  animation: story-panorama-camera-track 24s linear 1 forwards;
+  background-size: 100% 100%, auto 94%, 100% 100%;
+  background-position: center, 0% center, center;
+  animation: story-panorama-camera-track var(--story-panorama-duration, 60s) linear 1 forwards;
   animation-delay: var(--story-panorama-delay, 0ms);
   animation-fill-mode: both;
 }
 
 @keyframes story-panorama-camera-track {
-  0%, 7% { background-position: 0% center; }
-  82% { background-position: 100% center; }
-  100% { background-position: 100% center; }
+  0% { background-position: center, 0% center, center; }
+  100% { background-position: center, 100% center, center; }
 }
 
 html.next-ui .story-visual.has-story-art.story-panorama.story-panorama-reverse {
-  background-position: 100% center;
+  background-position: center, 100% center, center;
   animation-name: story-panorama-camera-track-reverse;
 }
 
 @keyframes story-panorama-camera-track-reverse {
-  0%, 7% { background-position: 100% center; }
-  82% { background-position: 0% center; }
-  100% { background-position: 0% center; }
+  0% { background-position: center, 100% center, center; }
+  100% { background-position: center, 0% center, center; }
 }
 
 html.next-ui .story-panorama-crossfade {
@@ -1889,16 +1887,21 @@ html.next-ui .story-panorama-crossfade {
   inset: 0;
   pointer-events: none;
   opacity: 1;
-  background-image:
-    linear-gradient(to bottom, transparent 60%, rgba(4, 10, 12, .28)),
-    var(--story-crossfade-asset);
-  background-position: center;
-  background-size: auto 100%;
+  background-image: var(--story-crossfade-asset);
+  background-position: 0% center;
+  background-size: auto 94%;
   background-repeat: no-repeat;
-  transition: opacity 820ms ease-in-out;
+  animation: story-panorama-crossfade-track var(--story-panorama-duration, 60s) linear 1 both;
+  animation-delay: var(--story-panorama-delay, 0ms);
+  transition: opacity 1400ms ease-in-out;
 }
 
 html.next-ui .story-panorama-crossfade.is-leaving { opacity: 0; }
+
+@keyframes story-panorama-crossfade-track {
+  0% { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
 
 html.next-ui .story-visual.has-story-art .story-placeholder-landscape {
   display: none;
@@ -2035,7 +2038,7 @@ html.next-ui .story-surface .story-visual.has-story-art {
 
 html.next-ui .story-surface .story-visual.has-story-art:not(.story-panorama) {
   background-position: center;
-  background-size: cover;
+  background-size: 100% 100%, auto 94%, 100% 100%;
 }
 
 html.next-ui .story-surface:has(.story-visual.has-story-art) .story-content {
@@ -2044,7 +2047,7 @@ html.next-ui .story-surface:has(.story-visual.has-story-art) .story-content {
   box-sizing: border-box;
   height: 100%;
   padding: clamp(18px, 5vw, 30px);
-  padding-top: clamp(150px, 24dvh, 235px);
+  padding-top: clamp(96px, 14dvh, 145px);
   overflow: hidden;
   background:
     linear-gradient(to bottom, rgba(3, 10, 12, .35) 0%, rgba(3, 10, 12, .82) 17%, rgba(3, 10, 12, .7) 43%, transparent 64%),
@@ -2059,9 +2062,14 @@ html.next-ui .story-surface:has(.story-visual.has-story-art) .story-heading {
 html.next-ui .story-surface:has(.story-visual.has-story-art) .story-title {
   max-width: 28ch;
   margin-top: 0;
-  font-size: clamp(19px, 5vw, 25px);
-  line-height: 1.18;
+  font-size: clamp(25px, 6.8vw, 32px);
+  line-height: 1.14;
   color: #f6daa0;
+}
+
+html.next-ui .story-surface[data-kind="intro"]:has(.story-visual.has-story-art) .story-title,
+html.next-ui .story-surface[data-kind="ending"]:has(.story-visual.has-story-art) .story-title {
+  font-size: clamp(30px, 8.4vw, 38px);
 }
 
 html.next-ui .story-surface:has(.story-visual.has-story-art) .story-speaker {
@@ -2082,14 +2090,22 @@ html.next-ui .story-surface[data-kind="unit"]:has(.story-unit-ending) .story-nex
   display: none;
 }
 
-html.next-ui .story-copy.is-typing::after,
-html.next-ui .story-copy.is-writing-finished::after {
+html.next-ui .story-pen-anchor {
+  position: relative;
+  display: inline;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+html.next-ui .story-pen-anchor::after {
   content: "";
-  display: inline-block;
+  position: absolute;
+  left: -.08em;
+  bottom: -.45em;
+  display: block;
   width: clamp(38px, 10vw, 54px);
   aspect-ratio: 546 / 534;
-  margin: 0 0 -.48em .06em;
-  vertical-align: baseline;
   background-image: var(--story-pen-asset);
   background-position: center;
   background-repeat: no-repeat;
@@ -2099,11 +2115,11 @@ html.next-ui .story-copy.is-writing-finished::after {
   transform-origin: 12% 86%;
 }
 
-html.next-ui .story-copy.is-typing::after {
+html.next-ui .story-pen-anchor.is-writing::after {
   animation: story-pen-writing 760ms ease-in-out infinite;
 }
 
-html.next-ui .story-copy.is-writing-finished::after {
+html.next-ui .story-pen-anchor.is-writing-finished::after {
   animation: story-pen-finish 900ms ease-out forwards;
 }
 

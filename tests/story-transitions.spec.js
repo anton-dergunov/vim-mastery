@@ -98,6 +98,7 @@ test("renders selected WP-11 panorama candidates with a one-way in-game camera t
     await expect(visual).toHaveClass(/story-panorama/);
     await expect(visual).toHaveAttribute("data-review-story-asset", new RegExp(`candidate-${candidate}\\.png$`));
     expect(await visual.evaluate(element => getComputedStyle(element).animationName)).toBe("story-panorama-camera-track");
+    expect(await visual.evaluate(element => getComputedStyle(element).animationDuration)).toBe("60s");
   }
 });
 
@@ -110,7 +111,7 @@ test("keeps Panels 1 and 2 on one camera clock, crossfades them, and restarts Pa
   const firstDelay = Number.parseFloat(await visual.evaluate(element => getComputedStyle(element).animationDelay));
   expect(firstDelay).toBeGreaterThan(-.1);
   expect(await visual.evaluate(element => getComputedStyle(element).backgroundSize)).not.toContain("185%");
-  expect(await visual.evaluate(element => getComputedStyle(element).backgroundSize)).toContain("100%");
+  expect(await visual.evaluate(element => getComputedStyle(element).backgroundSize)).toContain("94%");
 
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.locator(".story-surface")).toHaveAttribute("data-panel-id", "interrupted-command");
@@ -121,7 +122,11 @@ test("keeps Panels 1 and 2 on one camera clock, crossfades them, and restarts Pa
   await expect(crossfade).toHaveCount(1);
   await expect(crossfade).toHaveClass(/is-leaving/);
   expect(Number.parseFloat(await crossfade.evaluate(element => getComputedStyle(element).transitionDuration)))
-    .toBeGreaterThan(0);
+    .toBeGreaterThanOrEqual(1.4);
+  expect(await crossfade.evaluate(element => getComputedStyle(element).animationPlayState)).toBe("running");
+  const fadePosition = await crossfade.evaluate(element => getComputedStyle(element).backgroundPosition);
+  await page.waitForTimeout(250);
+  expect(await crossfade.evaluate(element => getComputedStyle(element).backgroundPosition)).not.toBe(fadePosition);
 
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.locator(".story-surface")).toHaveAttribute("data-panel-id", "nix-at-the-threshold");
@@ -129,6 +134,11 @@ test("keeps Panels 1 and 2 on one camera clock, crossfades them, and restarts Pa
   expect(thirdDelay).toBeGreaterThan(secondDelay);
   expect(thirdDelay).toBeGreaterThan(-.25);
   await expect(crossfade).toHaveCount(0);
+  expect(await visual.evaluate(element => getComputedStyle(element).animationName)).toBe("story-panorama-camera-track");
+  expect(await visual.evaluate(element => getComputedStyle(element).animationDuration)).toBe("60s");
+  const thirdPosition = await visual.evaluate(element => getComputedStyle(element).backgroundPosition);
+  await page.waitForTimeout(250);
+  expect(await visual.evaluate(element => getComputedStyle(element).backgroundPosition)).not.toBe(thirdPosition);
 });
 
 test("opens direct review URLs for intro, unit-ending candidates, and the finale", async ({ page }) => {
@@ -180,8 +190,10 @@ test("uses a full portrait frame with top narrative text for unit-ending art", a
   expect(dialogBounds.height).toBeGreaterThan(800);
   expect(Math.abs(visualBounds.height - dialogBounds.height)).toBeLessThanOrEqual(2);
   const titleBounds = await title.boundingBox();
-  expect(titleBounds.y).toBeGreaterThan(dialogBounds.y + dialogBounds.height * .18);
-  expect(titleBounds.y).toBeLessThan(dialogBounds.y + dialogBounds.height * .32);
+  expect(titleBounds.y).toBeGreaterThan(dialogBounds.y + dialogBounds.height * .1);
+  expect(titleBounds.y).toBeLessThan(dialogBounds.y + dialogBounds.height * .22);
+  expect(copyBounds.y).toBeGreaterThan(dialogBounds.y + dialogBounds.height * .18);
+  expect(copyBounds.y).toBeLessThan(dialogBounds.y + dialogBounds.height * .36);
   expect(Number.parseFloat(await copy.evaluate(element => getComputedStyle(element).fontSize)))
     .toBeGreaterThanOrEqual(23);
   await expect(dialog.locator(".story-heading")).toBeHidden();
@@ -209,17 +221,24 @@ test("writes every illustrated story slowly with the approved flying pen", async
   expect(partialStory.length).toBeGreaterThan(2);
   expect(partialStory.length).toBeLessThan(fullStory.length / 2);
   await expect(copy).toHaveClass(/is-typing/);
-  const pen = await copy.evaluate(element => {
+  const anchor = copy.locator(".story-pen-anchor");
+  await expect(anchor).toHaveCount(1);
+  const pen = await anchor.evaluate(element => {
     const style = getComputedStyle(element, "::after");
+    const anchorStyle = getComputedStyle(element);
     return {
       backgroundImage: style.backgroundImage,
       animationName: style.animationName,
       width: Number.parseFloat(style.width),
+      position: style.position,
+      anchorWidth: Number.parseFloat(anchorStyle.width),
     };
   });
   expect(pen.backgroundImage).toContain("flying-pen.png");
   expect(pen.animationName).toBe("story-pen-writing");
   expect(pen.width).toBeGreaterThanOrEqual(38);
+  expect(pen.position).toBe("absolute");
+  expect(pen.anchorWidth).toBe(0);
 
   await page.goto("/play/?preview=story&story=finale");
   await waitForApp(page);
@@ -370,6 +389,7 @@ test("chains Unit 14 into the restored-world finale and archives its reverse jou
   await expect(visual).toHaveClass(/story-panorama-reverse/);
   expect(await visual.evaluate(element => getComputedStyle(element).animationName))
     .toBe("story-panorama-camera-track-reverse");
+  expect(await visual.evaluate(element => getComputedStyle(element).animationDuration)).toBe("24s");
   await expect(dialog.locator(".story-copy")).toHaveAttribute("aria-label",
     "The language is alive. What you restore next is up to you.",
   );

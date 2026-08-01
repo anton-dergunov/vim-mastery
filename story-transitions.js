@@ -3,7 +3,8 @@ import { boardProfileForBounds, sceneProfileForBoard } from "./world-presentatio
 export const STORY_STORAGE_KEY = "vim-wilds.story.v1";
 export const STORY_TRANSITION_KEY = "vim-wilds.story-transition.v1";
 
-const STORY_PANORAMA_DURATION_MS = 24_000;
+const INTRO_PANORAMA_DURATION_MS = 60_000;
+const FINALE_PANORAMA_DURATION_MS = 24_000;
 
 function readJson(storage, key, fallback) {
   try {
@@ -347,6 +348,7 @@ export class StoryTransitions {
     );
     this.elements.visual.style.removeProperty("--story-asset");
     this.elements.visual.style.removeProperty("--story-panorama-delay");
+    this.elements.visual.style.removeProperty("--story-panorama-duration");
     this.elements.surface.dataset.restoration = "idle";
     this.elements.lightPath?.classList.remove("has-light-path");
     for (const element of [
@@ -371,6 +373,7 @@ export class StoryTransitions {
     this.writingFinishTimer = null;
     this.panoramaCrossfadeTimer = null;
     this.elements.copy.classList.remove("is-typing", "is-writing-finished");
+    this.elements.copy.querySelector(".story-pen-anchor")?.remove();
   }
 
   setStoryCopy(copy, { type = false } = {}) {
@@ -382,17 +385,23 @@ export class StoryTransitions {
       return;
     }
     this.elements.copy.textContent = "";
+    const textNode = document.createTextNode("");
+    const penAnchor = document.createElement("span");
+    penAnchor.className = "story-pen-anchor is-writing";
+    penAnchor.setAttribute("aria-hidden", "true");
+    this.elements.copy.append(textNode, penAnchor);
     this.elements.copy.classList.add("is-typing");
     let index = 0;
     const typeNext = () => {
       index = Math.min(text.length, index + 1);
-      this.elements.copy.textContent = text.slice(0, index);
+      textNode.data = text.slice(0, index);
       if (index >= text.length) {
         this.elements.copy.classList.remove("is-typing");
-        this.elements.copy.classList.add("is-writing-finished");
+        penAnchor.classList.remove("is-writing");
+        penAnchor.classList.add("is-writing-finished");
         this.typingTimer = null;
         this.writingFinishTimer = window.setTimeout(() => {
-          this.elements.copy.classList.remove("is-writing-finished");
+          penAnchor.remove();
           this.writingFinishTimer = null;
         }, 900);
         return;
@@ -453,8 +462,6 @@ export class StoryTransitions {
     const panel = panels[this.active.panelIndex];
     const previousPanelId = this.elements.surface.dataset.panelId;
     const previousAsset = this.elements.visual.dataset.storyAsset;
-    const previousPosition = getComputedStyle(this.elements.visual)
-      .backgroundPosition.split(",")[0];
     const crossfadeFromConnected = previousPanelId === "connected-wilds"
       && panel.id === "interrupted-command"
       && previousAsset;
@@ -475,7 +482,7 @@ export class StoryTransitions {
     this.elements.visual.classList.toggle("story-panorama", Boolean(asset && isPanorama));
     if (asset && isPanorama) this.setPanoramaTiming();
     if (crossfadeFromConnected) {
-      this.addPanoramaCrossfade(previousAsset, previousPosition);
+      this.addPanoramaCrossfade(previousAsset);
     }
     if (isPanorama && this.active.reviewAsset) this.elements.visual.dataset.reviewStoryAsset = this.active.reviewAsset;
     this.elements.visual.setAttribute("aria-label", `Story illustration ${this.active.panelIndex + 1} of ${panels.length}`);
@@ -554,21 +561,32 @@ export class StoryTransitions {
 
   setPanoramaTiming() {
     const startedAt = Number(this.active?.panoramaStartedAt) || Date.now();
-    const elapsed = Math.min(STORY_PANORAMA_DURATION_MS, Math.max(0, Date.now() - startedAt));
+    const duration = this.active?.kind === "ending"
+      ? FINALE_PANORAMA_DURATION_MS
+      : INTRO_PANORAMA_DURATION_MS;
+    const elapsed = Math.min(duration, Math.max(0, Date.now() - startedAt));
     this.elements.visual.style.setProperty("--story-panorama-delay", `${-elapsed}ms`);
+    this.elements.visual.style.setProperty("--story-panorama-duration", `${duration}ms`);
   }
 
-  addPanoramaCrossfade(asset, backgroundPosition) {
+  addPanoramaCrossfade(asset) {
     const layer = document.createElement("div");
     layer.className = "story-panorama-crossfade";
     layer.setAttribute("aria-hidden", "true");
     layer.style.setProperty("--story-crossfade-asset", `url("${this.assetUrl(asset)}")`);
-    layer.style.backgroundPosition = backgroundPosition || "center";
+    layer.style.setProperty(
+      "--story-panorama-delay",
+      this.elements.visual.style.getPropertyValue("--story-panorama-delay"),
+    );
+    layer.style.setProperty(
+      "--story-panorama-duration",
+      this.elements.visual.style.getPropertyValue("--story-panorama-duration"),
+    );
     this.elements.visual.append(layer);
     requestAnimationFrame(() => layer.classList.add("is-leaving"));
     this.panoramaCrossfadeTimer = window.setTimeout(() => {
       layer.remove();
       this.panoramaCrossfadeTimer = null;
-    }, 900);
+    }, 1500);
   }
 }
