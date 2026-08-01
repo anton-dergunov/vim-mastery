@@ -6,6 +6,9 @@ import { remoteVariantPaths } from "./presentation-data.js";
 const runtimeAssetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
 const sourcePathSegments = new Set(["candidates", "masters", "review", "reviews", "sources"]);
 
+export const CORE_MEDIA_WARNING_BYTES = 30 * 1024 * 1024;
+export const CORE_MEDIA_MAX_BYTES = 50 * 1024 * 1024;
+
 function addAsset(target, asset, category) {
   if (asset === null || asset === undefined) return;
   if (typeof asset !== "string" || !runtimeAssetPattern.test(asset)) {
@@ -92,6 +95,20 @@ export function assertMediaAssets(rootDirectory, media) {
 
 export function coreMediaBytes(rootDirectory, media) {
   return media.core.reduce((total, asset) => total + statSync(resolve(rootDirectory, asset.path)).size, 0);
+}
+
+export function assertCoreMediaBudget(rootDirectory, media, {
+  onWarning = message => console.warn(message),
+} = {}) {
+  const bytes = coreMediaBytes(rootDirectory, media);
+  const formatted = (bytes / 1024 / 1024).toFixed(2);
+  if (bytes > CORE_MEDIA_MAX_BYTES) {
+    throw new Error(`Core media budget exceeded: ${formatted} MiB is above the 50 MiB limit`);
+  }
+  if (bytes > CORE_MEDIA_WARNING_BYTES) {
+    onWarning(`Core media budget warning: ${formatted} MiB is above the 30 MiB target`);
+  }
+  return bytes;
 }
 
 export function contentRevision(rootDirectory, paths) {

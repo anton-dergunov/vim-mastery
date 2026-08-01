@@ -4,6 +4,23 @@
 
 This document turns the selected gamification direction into independently assignable implementation work. It is an execution plan, not a general visual-design exploration.
 
+### Closed — 2026-08-01
+
+All selected work packages are implemented and the final WP-12 audit is
+complete. The shipped experience now includes registered responsive scenes for
+all fourteen units, optional streamed complete-board variants, semantic Vim
+effects, supportive multi-character reactions, the full intro/unit/finale
+story sequence, offline core media, and deterministic fallbacks.
+
+The closing audit passed the complete content, native-Vim, semantic-effect,
+PWA, and browser regression suites. It also exercised every production
+activity at 360×740, 390×844, 412×915, 430×932, and 432×960 with no clipping,
+document scrolling, or horizontal overflow. Approved story stills now ship as
+same-dimension WebP derivatives; all eighteen decode in the browser and reduce
+the core precache from 131.37 MiB to 40.18 MiB. The build warns above the 30 MiB
+target and fails above the 50 MiB limit. No diagnostic flags or workspace-owned
+Vite/Playwright processes remain.
+
 ### July 2026 composition correction
 
 WP-01 through WP-03 proved that the generated art language is strong but the
@@ -44,21 +61,11 @@ central editor cavities, or one scene per region:
   Vertex generation; responsive derivation and runtime integration remain
   paused until those variation batches are reviewed.
 
-Current checkpoint: WP-01R through WP-03R are implemented and the four Moonroot
-base scenes and responsive profiles are personally approved. The old local
-brightness/tint proof-overlay renderer has been removed; it is not approved
-environmental art and must not return. Wayfinder's reviewed complete-board
-variants are the replacement. WP-04 is preparing its first complete-board
-variation batches; no responsive derivation or runtime integration may begin
-until those batches are personally reviewed.
-
-**Current Moonroot variant status:** Wayfinder Crossroads, Mode Lantern Grounds,
-Scribe's Spring, and Grammar Gate Court each have all fifty owner-approved
-compact full-board variants in the production remote-media tree. Their variants
-stream only on the compact profile until separately reviewed tall or wide
-complete-board batches exist. The ten remaining units have selected 2K 4:3
-sources promoted under their scene asset roots and fifty prepared Gemini
-complete-board-edit prompts each.
+Final checkpoint: every unit has an approved registered base scene with tall,
+compact, and wide profiles plus fifty approved optional complete-board variants
+in the production remote-media tree. The old local brightness/tint proof-overlay
+renderer remains removed and must not return. Profile eligibility and explicit
+registration exceptions remain declared in the presentation manifest.
 
 ### July 2026 patch-production correction
 
@@ -125,26 +132,11 @@ The decisions recorded here are:
 
 The implementation should be delivered in small work packages. A coding session should normally receive one work package, its prerequisites, and the repository `AGENTS.md`.
 
-## Recommended starting point
+## Plan closure
 
-Continue from the approved WP-03R Moonroot scenes:
-
-1. Run WP-03P-A for one Moonroot scene only.
-2. Measure cross-profile visibility and inventory ten compact-board objects or
-   surfaces.
-3. Generate five complete-board Gemini edits per site at 1K, using the lossless
-   full board plus a boxed locator crop.
-4. Export the 50 unmarked outputs and 50 boxed review copies, then stop for
-   personal selection without automated ranking or patch extraction.
-5. After personal approval, run WP-03P-B to publish and integrate all 50
-   complete-board variants as remote optional media, then validate the scene.
-6. Repeat WP-03P-A and WP-03P-B for the other three Moonroot scenes one scene at
-   a time.
-7. Stop for personal review before any WP-04 expansion.
-
-This is the best starting point because it is highly visible, has little risk to Vim correctness, and establishes the art bible needed by landmarks, story scenes, and character poses.
-
-Do not begin by generating all 14 landmarks or all character reactions. A weak master world would make those batches expensive to redo.
+No implementation package remains open. The work-package briefs and sequencing
+below are retained as an implementation record and as constraints for future
+maintenance, not as an active queue.
 
 ## Product experience
 
@@ -1800,6 +1792,12 @@ uses the same presentation in reverse at its approved 24-second pace.
 - Confirm every scene can be understood from still states.
 
 ### WP-12 — Final accessibility, performance, and regression audit
+
+**Implementation status (2026-08-01):** Complete. Static checks, all automated
+content/native-Vim/effect/PWA coverage, the full browser suite, the exhaustive
+five-phone activity matrix, and focused story-media decode and dialog-focus
+checks pass. The core-media budget is enforced at build time and currently
+measures 40.18 MiB. Final browser-process hygiene is clean.
 
 **Recommended model:** Sol  
 **Dependencies:** All selected packages  

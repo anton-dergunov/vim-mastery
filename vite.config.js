@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
-import { assertMediaAssets, collectMediaPolicy, contentRevision, coreMediaBytes } from "./media-policy.js";
+import { assertCoreMediaBudget, assertMediaAssets, collectMediaPolicy, contentRevision } from "./media-policy.js";
 
 const rootDirectory = dirname(fileURLToPath(import.meta.url));
 const contentDirectory = join(rootDirectory, "content");
@@ -43,8 +43,8 @@ function offlineAssets() {
       path: `content/units/${relative(join(contentDirectory, "units"), path).replaceAll("\\", "/")}`,
     };
   }).sort((left, right) => left.unitNumber - right.unitNumber);
-  const worldMediaBytes = coreMediaBytes(rootDirectory, media);
-  console.info(`Core media: ${media.core.length} files, ${(worldMediaBytes / 1024 / 1024).toFixed(2)}MB`);
+  const worldMediaBytes = assertCoreMediaBudget(rootDirectory, media);
+  console.info(`Core media: ${media.core.length} files, ${(worldMediaBytes / 1024 / 1024).toFixed(2)} MiB`);
   return {
     units, media, catalog, arcs: catalogMetadata.arcs || [],
   };

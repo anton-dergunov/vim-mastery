@@ -1,14 +1,16 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, truncateSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
 import {
+  assertCoreMediaBudget,
   assertMediaAssets,
   collectMediaPolicy,
   contentRevision,
-  coreMediaBytes,
+  CORE_MEDIA_MAX_BYTES,
+  CORE_MEDIA_WARNING_BYTES,
 } from "../media-policy.js";
 
 const root = new URL("../", import.meta.url);
@@ -56,6 +58,9 @@ test("production PWA precaches core media and streams optional animation and sce
   assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);
   assert.equal(media.core.filter(asset => asset.category === "story-finale").length, 1);
   assert.equal(media.core.filter(asset => asset.category === "story-ui").length, 1);
+  assert(media.core
+    .filter(asset => ["unit-story-image", "story-still", "story-finale"].includes(asset.category))
+    .every(asset => asset.path.endsWith(".webp")));
   assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 700);
   media.core.forEach(({ path: file }) => {
     assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
@@ -104,7 +109,13 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   const second = collectMediaPolicy(presentation, characters);
   assert.deepEqual(first, second);
   assertMediaAssets(rootPath, first);
-  assert(coreMediaBytes(rootPath, first) > 0);
+  const warnings = [];
+  const coreBytes = assertCoreMediaBudget(rootPath, first, {
+    onWarning: message => warnings.push(message),
+  });
+  assert(coreBytes > 0);
+  assert(coreBytes <= CORE_MEDIA_MAX_BYTES);
+  assert.equal(warnings.length, coreBytes > CORE_MEDIA_WARNING_BYTES ? 1 : 0);
   assert(first.core.some(asset => asset.category === "registered-patch"));
   assert(first.core.some(asset => asset.category === "character-idle"));
   assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 14);
@@ -150,6 +161,23 @@ test("media policy is deterministic and fails declared missing runtime assets", 
     () => collectMediaPolicy(unapproved, characters),
     /Unapproved scene variants cannot be shipped as core runtime media/,
   );
+});
+
+test("core media budget rejects an oversized precache", () => {
+  const temporary = mkdtempSync(join(tmpdir(), "vim-wilds-media-budget-"));
+  try {
+    const oversized = join(temporary, "oversized.webp");
+    writeFileSync(oversized, "");
+    truncateSync(oversized, CORE_MEDIA_MAX_BYTES + 1);
+    assert.throws(
+      () => assertCoreMediaBudget(temporary, {
+        core: [{ path: "oversized.webp", category: "test" }],
+      }),
+      /Core media budget exceeded/,
+    );
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
 });
 
 test("precache content revision changes when a generated asset changes", () => {

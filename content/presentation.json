@@ -199,7 +199,7 @@
       "completion": {
         "actionId": "lift-mode-lantern",
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
-        "storyImage": "assets/worlds/story/units/modal-model.png",
+        "storyImage": "assets/worlds/story/units/modal-model.webp",
         "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
         "copy": "The Mode Lantern wakes. One key can hold more than one meaning\u2014and now the Wilds remember how to listen.",
         "nextHook": {
@@ -364,7 +364,7 @@
         "nextHook": {
           "copy": "The path ends at a page of broken words."
         },
-        "storyImage": "assets/worlds/story/units/cursor-movement.png"
+        "storyImage": "assets/worlds/story/units/cursor-movement.webp"
       }
     },
     "entering-changing-text": {
@@ -524,7 +524,7 @@
         "nextHook": {
           "copy": "A sealed gate waits for both an action and a range."
         },
-        "storyImage": "assets/worlds/story/units/entering-changing-text.png"
+        "storyImage": "assets/worlds/story/units/entering-changing-text.webp"
       }
     },
     "operator-grammar": {
@@ -684,7 +684,7 @@
         "nextHook": {
           "copy": "Starlight flickers beyond the gate."
         },
-        "storyImage": "assets/worlds/story/units/operator-grammar.png"
+        "storyImage": "assets/worlds/story/units/operator-grammar.webp"
       }
     },
     "precision-motions-search": {
@@ -728,7 +728,7 @@
         "nextHook": {
           "copy": "The signal points inward, toward structures hidden in plain sight."
         },
-        "storyImage": "assets/worlds/story/units/precision-motions-search.png"
+        "storyImage": "assets/worlds/story/units/precision-motions-search.webp"
       },
       "sceneId": "starneedle-observatory",
       "scenes": {
@@ -857,7 +857,7 @@
         "nextHook": {
           "copy": "Three panes of light rise from the water."
         },
-        "storyImage": "assets/worlds/story/units/text-objects.png"
+        "storyImage": "assets/worlds/story/units/text-objects.webp"
       },
       "sceneId": "nested-garden",
       "scenes": {
@@ -986,7 +986,7 @@
         "nextHook": {
           "copy": "Behind the final pane, a sealed archive begins to glow."
         },
-        "storyImage": "assets/worlds/story/units/visual-selection.png"
+        "storyImage": "assets/worlds/story/units/visual-selection.webp"
       },
       "sceneId": "prism-crossing",
       "scenes": {
@@ -1115,7 +1115,7 @@
         "nextHook": {
           "copy": "One memory points to a beacon far beyond the shelves."
         },
-        "storyImage": "assets/worlds/story/units/registers-putting.png"
+        "storyImage": "assets/worlds/story/units/registers-putting.webp"
       },
       "sceneId": "memory-archive",
       "scenes": {
@@ -1244,7 +1244,7 @@
         "nextHook": {
           "copy": "Across the causeway, a stopped clock begins to tick."
         },
-        "storyImage": "assets/worlds/story/units/long-range-navigation.png"
+        "storyImage": "assets/worlds/story/units/long-range-navigation.webp"
       },
       "sceneId": "far-beacons",
       "scenes": {
@@ -1373,7 +1373,7 @@
         "nextHook": {
           "copy": "The echo reaches a brass city beneath the ridge."
         },
-        "storyImage": "assets/worlds/story/units/repeatable-editing.png"
+        "storyImage": "assets/worlds/story/units/repeatable-editing.webp"
       },
       "sceneId": "echo-clock",
       "scenes": {
@@ -1502,7 +1502,7 @@
         "nextHook": {
           "copy": "A broken loom is repeating the wrong pattern."
         },
-        "storyImage": "assets/worlds/story/units/command-line-ranges-line-operations.png"
+        "storyImage": "assets/worlds/story/units/command-line-ranges-line-operations.webp"
       },
       "sceneId": "meridian-table",
       "scenes": {
@@ -1631,7 +1631,7 @@
         "nextHook": {
           "copy": "The repaired thread leads into a silent foundry."
         },
-        "storyImage": "assets/worlds/story/units/substitution-practical-regex.png"
+        "storyImage": "assets/worlds/story/units/substitution-practical-regex.webp"
       },
       "sceneId": "mirror-loom",
       "scenes": {
@@ -1760,7 +1760,7 @@
         "nextHook": {
           "copy": "Only the World Engine remains dark."
         },
-        "storyImage": "assets/worlds/story/units/macros.png"
+        "storyImage": "assets/worlds/story/units/macros.webp"
       },
       "sceneId": "echo-foundry",
       "scenes": {
@@ -1890,7 +1890,7 @@
           "speaker": "Nix",
           "copy": "The language is alive. What you restore next is up to you."
         },
-        "storyImage": "assets/worlds/story/units/global-normal-automation.png"
+        "storyImage": "assets/worlds/story/units/global-normal-automation.webp"
       },
       "sceneId": "meridian-engine",
       "scenes": {
@@ -1984,23 +1984,23 @@
     "intro": [
       {
         "id": "connected-wilds",
-        "asset": "assets/worlds/story/intro/connected-wilds.png",
+        "asset": "assets/worlds/story/intro/connected-wilds.webp",
         "copy": "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range."
       },
       {
         "id": "interrupted-command",
-        "asset": "assets/worlds/story/intro/interrupted-wilds.png",
+        "asset": "assets/worlds/story/intro/interrupted-wilds.webp",
         "copy": "Then an unfinished command crossed the land. Paths shifted, memories scattered, and the great mechanisms fell silent."
       },
       {
         "id": "nix-at-the-threshold",
-        "asset": "assets/worlds/story/intro/nix-at-the-threshold.png",
+        "asset": "assets/worlds/story/intro/nix-at-the-threshold.webp",
         "speaker": "Nix",
         "copy": "The language was not lost\u2014only forgotten. Learn it with us, and the Wilds will remember."
       }
     ],
     "ending": {
-      "asset": "assets/worlds/story/ending/restored-wilds.png",
+      "asset": "assets/worlds/story/ending/restored-wilds.webp",
       "speaker": "Nix",
       "copy": "The language is alive. What you restore next is up to you."
     }

@@ -66,6 +66,16 @@ them with high-quality lossy WebP:
 cwebp -quiet -mt -m 6 -q 95 -metadata none input.png -o output.webp
 ```
 
+Approved full-frame story stills use the same deterministic settings at quality
+90 so the complete offline story remains inside the core-media budget:
+
+```bash
+cwebp -quiet -mt -m 6 -q 90 -metadata none input.png -o output.webp
+```
+
+The 2026-08-01 story batch was normalized with `cwebp 1.6.0` and
+`libsharpyuv 0.4.2`.
+
 Record the installed `cwebp -version` or `pngquant --version` with the art batch.
 Run `npm run test:pwa` after changing a manifest or normalized runtime asset.
 

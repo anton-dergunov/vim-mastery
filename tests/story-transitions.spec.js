@@ -24,7 +24,8 @@ async function expectStoryToFitViewport(page) {
   await expect(page.locator(".story-actions")).toBeInViewport();
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, testInfo) => {
+  if (testInfo.title === "loads every compressed story still in the browser") return;
   await page.route(/\.(?:png|webp)(?:\?.*)?$/, route => route.abort());
 });
 
@@ -35,6 +36,9 @@ test("shows the exact three-panel introduction once with immediate skip and repl
 
   const dialog = page.locator("#storyDialog");
   await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAttribute("aria-labelledby", "storyTitle");
+  await expect(dialog).toHaveAttribute("aria-describedby", "storyCopy");
+  await expect(dialog.getByRole("button", { name: "Continue" })).toBeFocused();
   await expect(dialog.locator(".story-copy")).toHaveAttribute("aria-label",
     "Long ago, the Wilds answered to a precise language. Every motion had a destination; every change knew its range.",
   );
@@ -60,6 +64,35 @@ test("shows the exact three-panel introduction once with immediate skip and repl
   await expect(dialog).toBeVisible();
   await expect(dialog.locator(".story-progress")).toHaveText("1 of 3");
   await dialog.getByRole("button", { name: "Skip story" }).click();
+});
+
+test("loads every compressed story still in the browser", async ({ page }) => {
+  await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+  await waitForApp(page);
+
+  const results = await page.evaluate(async () => {
+    const presentation = await fetch("../content/presentation.json").then(response => response.json());
+    const assets = [
+      ...Object.values(presentation.units).map(unit => unit.completion.storyImage),
+      ...presentation.story.intro.map(panel => panel.asset),
+      presentation.story.ending.asset,
+    ];
+    return Promise.all(assets.map(asset => new Promise(resolve => {
+      const image = new Image();
+      image.onload = () => resolve({
+        asset,
+        complete: image.complete,
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      });
+      image.onerror = () => resolve({ asset, complete: false, width: 0, height: 0 });
+      image.src = `../${asset}`;
+    })));
+  });
+
+  expect(results).toHaveLength(18);
+  expect(results.every(result => result.asset.endsWith(".webp"))).toBe(true);
+  expect(results.every(result => result.complete && result.width > 0 && result.height > 0)).toBe(true);
 });
 
 test("allows skipping from every introduction panel", async ({ page }) => {
@@ -148,7 +181,7 @@ test("opens direct review URLs for intro, unit-ending candidates, and the finale
   await expect(surface).toHaveAttribute("data-panel-id", "nix-at-the-threshold");
   await expect(page.locator(".story-visual")).toHaveAttribute(
     "data-story-asset",
-    "assets/worlds/story/intro/nix-at-the-threshold.png",
+    "assets/worlds/story/intro/nix-at-the-threshold.webp",
   );
 
   await page.goto("/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=3");
@@ -261,7 +294,7 @@ test("fits the complete narrative for every approved unit ending without a chara
     await expect(dialog.locator(".story-guide-action")).toHaveCount(0);
     await expect(dialog.locator(".story-visual")).toHaveAttribute(
       "data-story-asset",
-      `assets/worlds/story/units/${unit.id}.png`,
+      `assets/worlds/story/units/${unit.id}.webp`,
     );
     const copyBounds = await copy.boundingBox();
     const actionBounds = await actions.boundingBox();
@@ -343,7 +376,7 @@ test("intercepts the final unit boundary, restores on refresh, and archives the 
   await expect(dialog.locator(".story-surface")).toHaveAttribute("data-landmark-id", "mode-lantern");
   await expect(dialog.locator(".story-visual")).toHaveAttribute(
     "data-story-asset",
-    "assets/worlds/story/units/modal-model.png",
+    "assets/worlds/story/units/modal-model.webp",
   );
   await expect(dialog.locator(".story-visual")).toHaveClass(/story-unit-ending/);
   await expect(dialog.locator(".story-copy")).toHaveAttribute("aria-label",
@@ -385,7 +418,7 @@ test("chains Unit 14 into the restored-world finale and archives its reverse jou
   const visual = dialog.locator(".story-visual");
   await expect(surface).toHaveAttribute("data-kind", "ending");
   await expect(surface).toHaveAttribute("data-panel-id", "restored-wilds");
-  await expect(visual).toHaveAttribute("data-story-asset", "assets/worlds/story/ending/restored-wilds.png");
+  await expect(visual).toHaveAttribute("data-story-asset", "assets/worlds/story/ending/restored-wilds.webp");
   await expect(visual).toHaveClass(/story-panorama-reverse/);
   expect(await visual.evaluate(element => getComputedStyle(element).animationName))
     .toBe("story-panorama-camera-track-reverse");
