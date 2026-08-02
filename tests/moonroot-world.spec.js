@@ -114,8 +114,14 @@ test("keeps the guide at the bottom left without covering the editor", async ({ 
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
   });
   for (const viewport of [
-    { width: 760, height: 960 },
-    { width: 980, height: 932 },
+    { width: 360, height: 740 },
+    { width: 390, height: 844 },
+    { width: 412, height: 915 },
+    { width: 430, height: 932 },
+    { width: 432, height: 960 },
+    { width: 768, height: 1024 },
+    { width: 1024, height: 768 },
+    { width: 1280, height: 800 },
     { width: 1600, height: 900 },
   ]) {
     await page.setViewportSize(viewport);
@@ -123,18 +129,23 @@ test("keeps the guide at the bottom left without covering the editor", async ({ 
     await page.waitForFunction(() => document.querySelector("#characterLayer > .nix"));
     await expect(page.locator("#characterLayer")).toHaveAttribute("data-side", "left");
     await expect(page.locator(".nix")).toHaveClass(/left/);
+    await page.locator(".nix").evaluate(image => image.decode());
 
     const bounds = await page.evaluate(() => {
       const world = document.querySelector("#world").getBoundingClientRect();
-      const character = document.querySelector("#characterLayer > .nix").getBoundingClientRect();
+      const characterElement = document.querySelector("#characterLayer > .nix");
+      characterElement.style.animation = "none";
+      const character = characterElement.getBoundingClientRect();
       const editor = document.querySelector(".next-code-slab").getBoundingClientRect();
       return {
-        world: { left: world.left, right: world.right, bottom: world.bottom },
+        world: { left: world.left, right: world.right, bottom: world.bottom, width: world.width },
         character: {
           left: character.left,
           right: character.right,
           top: character.top,
           bottom: character.bottom,
+          cssWidth: Number.parseFloat(getComputedStyle(characterElement).width),
+          cssMarginBottom: Number.parseFloat(getComputedStyle(characterElement).marginBottom),
         },
         editor: {
           left: editor.left,
@@ -150,13 +161,58 @@ test("keeps the guide at the bottom left without covering the editor", async ({ 
       && bounds.character.top < bounds.editor.bottom
       && bounds.character.bottom > bounds.editor.top
     );
+    const expectedWidth = viewport.width < 600
+      ? Math.min(94, Math.max(70, viewport.width * .23))
+      : Math.min(234, Math.max(153, viewport.width * .195));
+    const bottomInset = bounds.world.bottom - bounds.character.bottom;
+    const leftInset = bounds.character.left - bounds.world.left;
     expect(overlapsEditor).toBe(false);
-    expect(bounds.character.left).toBeLessThan(bounds.world.left + (bounds.world.right - bounds.world.left) / 3);
-    expect(bounds.world.bottom - bounds.character.bottom).toBeLessThan(8);
+    expect(Math.abs(bounds.character.cssWidth - expectedWidth)).toBeLessThan(.5);
+    expect(bounds.character.cssMarginBottom).toBe(viewport.width < 600 ? 6 : 12);
+    expect(leftInset).toBeGreaterThanOrEqual(-1);
+    expect(leftInset).toBeLessThan(30);
+    expect(bottomInset).toBeGreaterThanOrEqual(bounds.character.cssMarginBottom - 1);
+    expect(bottomInset).toBeLessThanOrEqual(bounds.character.cssMarginBottom + 4);
     await page.screenshot({
       path: `test-results/guide-bottom-left-${viewport.width}x${viewport.height}.png`,
       fullPage: true,
     });
+  }
+});
+
+test("centers every scene content surface on iPad layouts", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
+  });
+  const activities = [
+    { id: "quick-exit-insert", selector: ".editor-stack" },
+    { id: "mode-compass", selector: ".field-note-wrap" },
+    { id: "identify-insert-mode", selector: ".inspection-layout" },
+  ];
+
+  for (const viewport of [
+    { width: 768, height: 1024 },
+    { width: 1024, height: 768 },
+  ]) {
+    await page.setViewportSize(viewport);
+    for (const activity of activities) {
+      await page.goto(`/play/?unit=modal-model&activity=${activity.id}`);
+      await page.waitForFunction(() => window.VimWilds?.getState);
+      const centers = await page.locator(activity.selector).evaluate(element => {
+        const world = document.querySelector("#world").getBoundingClientRect();
+        const surface = element.getBoundingClientRect();
+        return {
+          world: world.left + world.width / 2,
+          surface: surface.left + surface.width / 2,
+        };
+      });
+      expect(Math.abs(centers.surface - centers.world), `${activity.id} at ${viewport.width}x${viewport.height}`)
+        .toBeLessThanOrEqual(1);
+      await page.screenshot({
+        path: `test-results/ipad-centered-${activity.id}-${viewport.width}x${viewport.height}.png`,
+        fullPage: true,
+      });
+    }
   }
 });
 

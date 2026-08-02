@@ -364,7 +364,13 @@ button { font: inherit; }
   grid-template-rows: repeat(9, minmax(0, 1fr));
   pointer-events: none;
 }
-.world-grid { z-index: 4; pointer-events: none; }
+.world-grid {
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  pointer-events: none;
+}
 .world-grid > * { pointer-events: auto; }
 
 .world-backdrop,
@@ -1573,7 +1579,8 @@ html.next-ui .code-body .cm-vim-message {
   overflow-wrap: anywhere;
 }
 
-html.next-ui .nix { z-index: 4; }
+html.next-ui .nix { z-index: 4; margin-bottom: 6px; }
+html.next-ui .nix.left { left: 0; }
 
 html.next-ui .demo-controls {
   width: 100%;
@@ -2073,12 +2080,12 @@ html.next-ui .story-surface[data-kind="ending"]:has(.story-visual.has-story-art)
 }
 
 html.next-ui .story-surface:has(.story-visual.has-story-art) .story-speaker {
-  margin: 0 0 7px;
+  margin: 12px 0 0;
 }
 
 html.next-ui .story-surface:has(.story-visual.has-story-art) .story-copy {
   max-width: 30ch;
-  margin-top: 13px;
+  margin-top: clamp(18px, 2.4dvh, 26px);
   color: #fff8e7;
   font-size: clamp(23px, 6.2vw, 31px);
   font-weight: 600;
@@ -2164,7 +2171,7 @@ html.next-ui .story-title {
 }
 
 html.next-ui .story-speaker {
-  margin: 13px 0 -7px;
+  margin: 13px 0 0;
   color: #79d9c3;
   font: 850 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: .1em;
@@ -2172,7 +2179,7 @@ html.next-ui .story-speaker {
 }
 
 html.next-ui .story-copy {
-  margin: 15px 0 0;
+  margin: clamp(18px, 2.4dvh, 26px) 0 0;
   color: #e0ebe5;
   font: 500 clamp(16px, 4.4vw, 19px)/1.52 Georgia, serif;
 }
@@ -3137,7 +3144,7 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); min-height: 0; }
   html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
   html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
-  html.next-ui .nix { width: clamp(58px, 19vw, 78px); grid-row: 8 / 10; }
+  html.next-ui .nix { width: clamp(70px, 23vw, 94px); grid-row: 8 / 10; }
   html.next-ui .nix.left { grid-column: 1 / span 3; }
   html.next-ui .nix.right { grid-column: 10 / span 3; }
   html.next-ui .field-note-wrap,
@@ -3224,8 +3231,8 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); max-height: 228px; }
   html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
   html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
-  html.next-ui .nix { width: clamp(100px, 13vw, 160px); grid-row: 8 / 10; }
-  html.next-ui .nix.left { grid-column: 2 / span 3; }
+  html.next-ui .nix { width: clamp(153px, 19.5vw, 234px); margin-bottom: 12px; grid-row: 8 / 10; }
+  html.next-ui .nix.left { grid-column: 1 / span 3; }
   html.next-ui .nix.right { grid-column: 9 / span 3; }
   html.next-ui .field-note-wrap { width: min(760px, calc(100% - 60px)); justify-self: center; margin: 24px 0; }
   html.next-ui .field-note { max-height: 100%; }
@@ -3233,6 +3240,10 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .keyboard-panel { padding-right: clamp(12px, 3vw, 28px); padding-left: clamp(12px, 3vw, 28px); }
   html.next-ui .keyboard { width: 100%; }
   html.next-ui .app-dialog[open] { width: min(calc(100% - 48px), 920px); }
+  html.next-ui .story-dialog[open],
+  html.next-ui .story-dialog:has(.story-visual.has-story-art)[open] {
+    width: min(calc(100% - 48px), 920px);
+  }
   html.next-ui #tocDialog[open] { height: min(calc(100% - 48px), 820px); }
   html.next-ui .toc-lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   html.next-ui .toc-arc + .toc-arc { margin-top: 0; }
@@ -3284,7 +3295,7 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
     max-height: 250px;
   }
 
-  html.next-ui .nix { width: clamp(118px, 15vw, 180px); }
+  html.next-ui .nix { width: clamp(153px, 19.5vw, 234px); }
 
   html.next-ui .keyboard-panel {
     padding-top: 10px;
@@ -3469,7 +3480,7 @@ html.next-ui .toc-unit-launch button {
   }
 
   html.next-ui .phone.keyboard-visible .nix {
-    width: clamp(92px, 9vw, 126px);
+    width: clamp(120px, 11.7vw, 164px);
     grid-row: 5 / span 3;
   }
 
@@ -3779,6 +3790,7 @@ html.next-ui .toc-unit-launch button {
 
   html.next-ui .story-surface:has(.story-visual.has-story-art) .story-copy {
     max-width: 34ch;
+    margin-top: 9px;
     font-size: clamp(18px, 3.2vw, 23px);
     line-height: 1.3;
   }

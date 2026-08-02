@@ -208,6 +208,8 @@ test("opens direct review URLs for intro, unit-ending candidates, and the finale
 });
 
 test("uses a full portrait frame with top narrative text for unit-ending art", async ({ page }) => {
+  await page.unroute(/\.(?:png|webp)(?:\?.*)?$/);
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?preview=story&story=unit-ending&unit=modal-model&candidate=1");
   await waitForApp(page);
@@ -225,6 +227,7 @@ test("uses a full portrait frame with top narrative text for unit-ending art", a
   const titleBounds = await title.boundingBox();
   expect(titleBounds.y).toBeGreaterThan(dialogBounds.y + dialogBounds.height * .1);
   expect(titleBounds.y).toBeLessThan(dialogBounds.y + dialogBounds.height * .22);
+  expect(copyBounds.y - (titleBounds.y + titleBounds.height)).toBeGreaterThanOrEqual(18);
   expect(copyBounds.y).toBeGreaterThan(dialogBounds.y + dialogBounds.height * .18);
   expect(copyBounds.y).toBeLessThan(dialogBounds.y + dialogBounds.height * .36);
   expect(Number.parseFloat(await copy.evaluate(element => getComputedStyle(element).fontSize)))
@@ -235,12 +238,21 @@ test("uses a full portrait frame with top narrative text for unit-ending art", a
     "aria-label",
     "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
   );
+  expect(dialogBounds.width).toBeCloseTo(370, 0);
+  await page.screenshot({ path: "test-results/story-unit-ending-390x844.png", fullPage: true });
+
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await expectStoryToFitViewport(page);
+  const tabletBounds = await dialog.boundingBox();
+  expect(tabletBounds.width).toBeCloseTo(720, 0);
+  await page.screenshot({ path: "test-results/story-unit-ending-768x1024.png", fullPage: true });
 
   await page.setViewportSize({ width: 1280, height: 800 });
   await expectStoryToFitViewport(page);
   const desktopBounds = await dialog.boundingBox();
-  expect(desktopBounds.width).toBeLessThanOrEqual(560);
+  expect(desktopBounds.width).toBeCloseTo(920, 0);
   expect(desktopBounds.height).toBeGreaterThan(740);
+  await page.screenshot({ path: "test-results/story-unit-ending-1280x800.png", fullPage: true });
 });
 
 test("writes every illustrated story slowly with the approved flying pen", async ({ page }) => {
