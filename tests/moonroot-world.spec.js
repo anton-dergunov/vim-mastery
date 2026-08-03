@@ -228,6 +228,14 @@ test("uses supportive character reactions only after repeated mistakes", async (
   expect(await page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("idle");
   await pressKey("q");
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "puzzled");
+  const reactionScale = await page.locator("#characterLayer > .nix").evaluate(image => {
+    const variant = Number(image.dataset.reactionVariant) - 1;
+    return {
+      applied: Number(image.style.getPropertyValue("--character-media-scale")),
+      authored: Number(image.__characterAsset.reactions.puzzled[variant].css_scale || 1),
+    };
+  });
+  expect(reactionScale.applied).toBe(reactionScale.authored);
   await pressKey("q");
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "encouraging");
 

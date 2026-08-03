@@ -569,8 +569,8 @@ function renderFieldNote(activity) {
       <h2>${renderInline(activity.title)}</h2>
       <p>${renderInline(activity.body)}</p>
       ${renderTheoryPresentation(activity.presentation)}
-      ${activity.grammar ? `<pre class="grammar">${escapeHtml(activity.grammar.replaceAll(" · ", "\n"))}</pre>` : ""}
-      ${activity.contrast ? `<p class="contrast">${renderInline(activity.contrast)}</p>` : ""}
+      ${activity.grammar ? `<div class="theory-reference"><strong>Command pattern</strong><pre class="grammar">${escapeHtml(activity.grammar.replaceAll(" · ", "\n"))}</pre></div>` : ""}
+      ${activity.contrast ? `<p class="contrast"><strong>Key difference:</strong> ${renderInline(activity.contrast)}</p>` : ""}
       ${action}
     </article>`;
   }
@@ -772,9 +772,34 @@ function activeCommandGroup(activity = currentActivity(), step = state.playbackS
     || activity.script?.commandGroups.at(-1);
 }
 
+function executionAssembly(steps, step, done) {
+  const parts = [];
+  for (let index = 0; index < steps.length; index += 1) {
+    const item = steps[index];
+    if (typeof item !== "object") continue;
+    const next = steps[index + 1];
+    const isTextObjectPrefix = item.kind === "command"
+      && ["inside", "around"].includes(item.cue)
+      && typeof next === "object"
+      && next.kind === "text-object";
+    if (isTextObjectPrefix) {
+      parts.push({
+        key: `${item.key}${next.key}`,
+        kind: "text-object",
+        cue: `${item.cue} ${next.cue || "object"}`,
+        active: done || index + 1 < step,
+      });
+      index += 1;
+      continue;
+    }
+    if (!["count", "operator", "motion", "text-object"].includes(item.kind)) continue;
+    parts.push({ key: item.key, kind: item.kind, cue: item.cue, active: done || index < step });
+  }
+  return parts;
+}
+
 function executionContent(activity, step, history, complete = false, preview = {}) {
   const keys = scriptKeys(activity);
-  const structured = activity.script.steps.filter(item => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind));
   const group = activeCommandGroup(activity, step);
   const done = complete || step >= keys.length;
   const policy = preview.policy === undefined ? practicePolicy(activity) : preview.policy;
@@ -806,9 +831,7 @@ function executionContent(activity, step, history, complete = false, preview = {
     secondary: done ? "Complete" : activity.type === "demo" ? `${step + 1} / ${keys.length}` : retry ? "Again" : reveal ? "A clue" : recall ? "From\nmemory" : "",
     stepStatus: !done && activity.type === "demo",
     key: done || (recall && !reveal) ? null : keys[step],
-    assembly: structured.length ? activity.script.steps.map((item, index) => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind)
-      ? { key: item.key, kind: item.kind, cue: item.cue, active: index < step || done }
-      : null).filter(Boolean) : [],
+    assembly: executionAssembly(activity.script.steps, step, done),
   };
 }
 

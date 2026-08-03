@@ -9,9 +9,9 @@ function fixture(randomValues = [0]) {
     __characterAsset: {
       idle: "idle.png",
       reactions: {
-        attentive: { src: "attentive-a.webp" },
+        attentive: { src: "attentive-a.webp", css_scale: 1.3 },
         puzzled: [
-          { src: "puzzled-a.webp" },
+          { src: "puzzled-a.webp", css_scale: 1.3 },
           { src: "puzzled-b.webp" },
           { src: "puzzled-c.webp" },
         ],
@@ -24,6 +24,11 @@ function fixture(randomValues = [0]) {
       },
     },
     dataset: {},
+    style: {
+      values: new Map(),
+      setProperty(name, value) { this.values.set(name, value); },
+      removeProperty(name) { this.values.delete(name); },
+    },
     src: "",
   };
   let randomIndex = 0;
@@ -48,6 +53,7 @@ test("reaction collections vary playback without immediately repeating", () => {
   reactions.apply("puzzled");
   assert.equal(character.src, "/assets/puzzled-a.webp");
   assert.equal(character.dataset.reactionVariant, "1");
+  assert.equal(character.style.values.get("--character-media-scale"), "1.3");
 
   reactions.apply("puzzled");
   assert.equal(character.src, "/assets/puzzled-b.webp");
@@ -69,6 +75,7 @@ test("single reaction objects and idle fallback remain compatible", () => {
   reactions.apply("encouraging");
   assert.equal(character.src, "/assets/idle.png");
   assert.equal(character.dataset.reactionVariant, undefined);
+  assert.equal(character.style.values.has("--character-media-scale"), false);
   assert(classes.has("reaction-encouraging"));
 });
 

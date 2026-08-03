@@ -301,6 +301,16 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Step" }).click();
     expect((await state(page)).mode).toBe("operator-pending");
     await expect(page.locator(".assembly-part.active")).toHaveCount(2);
+
+    await page.goto("/?unit=text-objects&activity=around-word-demo");
+    await page.getByRole("button", { name: "Step" }).click();
+    await expect(page.locator(".assembly-part")).toHaveCount(2);
+    await expect(page.locator(".assembly-part kbd")).toHaveText(["y", "aw"]);
+    await expect(page.locator(".assembly-part small")).toHaveText(["yank", "around word"]);
+    await page.getByRole("button", { name: "Step" }).click();
+    await page.getByRole("button", { name: "Step" }).click();
+    expect((await state(page)).history).toEqual(["y", "a", "w"]);
+    await expect(page.locator(".assembly-part.active")).toHaveCount(2);
   });
 
   test("holds intermediate Unit 1 demo modes long enough to read", async ({ page }) => {

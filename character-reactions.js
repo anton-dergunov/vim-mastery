@@ -76,6 +76,11 @@ export class CharacterReactions {
     else delete character.dataset.reactionVariant;
     const source = typeof pose === "string" ? pose : pose?.src;
     const usesReactionMedia = Boolean(source && !this.reducedMotion());
+    if (usesReactionMedia) {
+      character.style.setProperty("--character-media-scale", String(Number(pose?.css_scale) || 1));
+    } else {
+      character.style.removeProperty("--character-media-scale");
+    }
     this.activeDurationMs = usesReactionMedia
       ? Math.max(4000, Number(pose?.duration_seconds || 4) * 1000)
       : 0;
