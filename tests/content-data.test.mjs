@@ -46,6 +46,13 @@ const runnable = activities.filter(activity => activity.type === "demo" || activ
 const activityById = new Map(activities.map(activity => [activity.id, activity]));
 const profileById = new Map(registry.profiles.map(profile => [profile.id, profile]));
 const keysOf = activity => activity.script.steps.map(step => typeof step === "string" ? step : step.key);
+const plannedRowsOf = activity => Math.max(
+  1,
+  activity.scenario.initial.lines.length,
+  activity.scenario.target.lines.length,
+  ...(activity.script.checkpoints || []).map(checkpoint => checkpoint.lines?.length || 0),
+  activity.editor?.requiredRows || 0,
+);
 
 test("content files expose the expected schema versions", () => {
   assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
@@ -388,6 +395,49 @@ test("numbered unit catalog is ordered and internally linked", () => {
       }
     }
   }
+});
+
+test("runnable activities reserve every authored editor row before execution", () => {
+  assert.deepEqual(schema.$defs.editorConfig.properties.requiredRows, {
+    type: "integer",
+    minimum: 1,
+    maximum: 12,
+    description: "Reserve at least this many logical rows when authored transient states need more space than initial, target, or checkpoints reveal.",
+  });
+  assert.deepEqual(schema.$defs.editorConfig.allOf, [{ not: { required: ["requiredRows", "viewportRows"] } }]);
+
+  const growing = [];
+  for (const { data } of units) {
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities.filter(item => item.type === "demo" || item.type === "exercise")) {
+        const requiredRows = activity.editor?.requiredRows;
+        if (requiredRows !== undefined) {
+          assert(Number.isInteger(requiredRows) && requiredRows >= 1 && requiredRows <= 12, `${activity.id} requiredRows`);
+          assert.equal(activity.editor.viewportRows, undefined, `${activity.id} cannot combine requiredRows and viewportRows`);
+        }
+        if (activity.editor?.viewportRows) continue;
+        const authoredStates = [
+          ["initial", activity.scenario.initial.lines],
+          ["target", activity.scenario.target.lines],
+          ...(activity.script.checkpoints || []).filter(checkpoint => checkpoint.lines)
+            .map(checkpoint => [`checkpoint ${checkpoint.afterStep}`, checkpoint.lines]),
+        ];
+        const plannedRows = plannedRowsOf(activity);
+        for (const [label, lines] of authoredStates) {
+          assert(lines.length <= plannedRows, `${activity.id} ${label} exceeds its ${plannedRows}-row plan`);
+        }
+        if (plannedRows > activity.scenario.initial.lines.length) growing.push(`${data.id}/${activity.id}`);
+      }
+    }
+  }
+
+  assert.equal(growing.length, 33);
+  for (const id of [
+    "entering-changing-text/open-middle-line-demo",
+    "entering-changing-text/open-beta-above",
+    "entering-changing-text/open-before-final-row",
+    "entering-changing-text/open-header-and-footer",
+  ]) assert(growing.includes(id), `${id} must reserve its final buffer size`);
 });
 
 test("unit continuation follows the next published catalog unit", () => {

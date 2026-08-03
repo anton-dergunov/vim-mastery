@@ -390,6 +390,84 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "operator-grammar", unitNumber: 4, activityId: "operator-sentence-meanings" });
   });
 
+  test("reserves all three rows for the Unit 3 open-line demo before playback", async ({ page }) => {
+    const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960], [888, 1248]];
+    for (const [width, height] of viewports) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/?unit=entering-changing-text&activity=open-middle-line-demo");
+      await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone")).getPropertyValue("--execution-console-height").trim());
+      const samples = await page.evaluate(async () => {
+        const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const capture = () => {
+          const slab = document.querySelector(".next-code-slab");
+          const scroller = document.querySelector(".cm-scroller");
+          const bounds = scroller.getBoundingClientRect();
+          const lines = [...document.querySelectorAll(".cm-line")].map(line => line.getBoundingClientRect());
+          return {
+            height: slab.getBoundingClientRect().height,
+            plannedRows: Number(document.querySelector(".editor-stack").dataset.plannedRows),
+            lineCount: lines.length,
+            linesVisible: lines.every(line => line.top >= bounds.top - 1 && line.bottom <= bounds.bottom + 1),
+            documentOverflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
+          };
+        };
+        await settle();
+        const result = [capture()];
+        while (window.VimWilds.getState().playbackStep < 10) {
+          document.querySelector('.demo-controls [data-action="step"]').click();
+          await settle();
+          result.push(capture());
+        }
+        return { result, state: window.VimWilds.getState() };
+      });
+      expect(new Set(samples.result.map(sample => sample.height)).size, `${width}×${height} stable editor`).toBe(1);
+      expect(samples.result.every(sample => sample.plannedRows === 3), `${width}×${height} planned rows`).toBe(true);
+      expect(samples.result.every(sample => sample.linesVisible), `${width}×${height} visible lines`).toBe(true);
+      expect(samples.result.some(sample => sample.lineCount === 3), `${width}×${height} third line`).toBe(true);
+      expect(samples.result.every(sample => !sample.documentOverflow), `${width}×${height} viewport overflow`).toBe(true);
+      expect(samples.state).toMatchObject({
+        playbackStep: 10,
+        code: ["first()", "second()", "third()"],
+        cursor: [1, 7],
+        mode: "normal",
+      });
+    }
+  });
+
+  test("keeps the largest inferred non-viewport buffer fully visible", async ({ page }) => {
+    const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960], [888, 1248]];
+    for (const [width, height] of viewports) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/?unit=command-line-ranges-line-operations&activity=copy-range-to-end");
+      await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone")).getPropertyValue("--execution-console-height").trim());
+      const result = await page.evaluate(async () => {
+        const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await settle();
+        const beforeHeight = document.querySelector(".next-code-slab").getBoundingClientRect().height;
+        window.VimWilds.solveCurrent();
+        await settle();
+        const scroller = document.querySelector(".cm-scroller");
+        const bounds = scroller.getBoundingClientRect();
+        const lines = [...document.querySelectorAll(".cm-line")].map(line => line.getBoundingClientRect());
+        return {
+          beforeHeight,
+          afterHeight: document.querySelector(".next-code-slab").getBoundingClientRect().height,
+          plannedRows: Number(document.querySelector(".editor-stack").dataset.plannedRows),
+          lineCount: lines.length,
+          linesVisible: lines.every(line => line.top >= bounds.top - 1 && line.bottom <= bounds.bottom + 1),
+          documentOverflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
+          state: window.VimWilds.getState(),
+        };
+      });
+      expect(result.plannedRows, `${width}×${height} planned rows`).toBe(8);
+      expect(result.afterHeight, `${width}×${height} stable editor`).toBe(result.beforeHeight);
+      expect(result.lineCount, `${width}×${height} rendered lines`).toBe(8);
+      expect(result.linesVisible, `${width}×${height} visible lines`).toBe(true);
+      expect(result.documentOverflow, `${width}×${height} viewport overflow`).toBe(false);
+      expect(result.state.complete).toBe(true);
+    }
+  });
+
   test("runs every Unit 4 operator activity and continues to Unit 5", async ({ page }) => {
     await page.goto("/?unit=operator-grammar");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
@@ -1814,22 +1892,33 @@ test.describe("Production lesson flow", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/?unit=repeatable-editing&activity=dot-append-demo");
     await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone")).getPropertyValue("--execution-console-height").trim());
-    const consoleHeights = await page.evaluate(() => {
-      const heights = [];
+    const consoleMeasurements = await page.evaluate(async () => {
+      const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const measurements = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
         if (!activity.script) continue;
         window.VimWilds.goToActivity(index);
+        await settle();
+        const heights = [document.querySelector("#nextCommandTray").getBoundingClientRect().height];
+        window.VimWilds.solveCurrent();
+        await settle();
         heights.push(document.querySelector("#nextCommandTray").getBoundingClientRect().height);
-        activity.script.steps.forEach(step => {
-          const key = typeof step === "string" ? step : step.key;
-          if (activity.type === "demo") document.querySelector('.demo-controls [data-action="step"]').click();
-          else window.VimWilds.emit(key);
-          heights.push(document.querySelector("#nextCommandTray").getBoundingClientRect().height);
+        const history = document.querySelector("#nextCommandText");
+        const explanation = document.querySelector("#commandExplanation");
+        measurements.push({
+          id: activity.id,
+          heights,
+          historyFits: history.scrollHeight <= history.clientHeight + 1,
+          explanationFits: explanation.scrollHeight <= explanation.clientHeight + 1,
         });
       }
-      return heights;
+      return measurements;
     });
-    expect(new Set(consoleHeights.map(height => Math.round(height * 10) / 10)).size).toBe(1);
+    for (const measurement of consoleMeasurements) {
+      expect(new Set(measurement.heights.map(height => Math.round(height * 10) / 10)).size, measurement.id).toBe(1);
+      expect(measurement.historyFits, `${measurement.id} history`).toBe(true);
+      expect(measurement.explanationFits, `${measurement.id} explanation`).toBe(true);
+    }
 
     await page.evaluate(() => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === "dot-python-values")));
     const before = await state(page);
@@ -1860,6 +1949,96 @@ test.describe("Production lesson flow", () => {
     expect(afterShift.baseTop).toBeCloseTo(beforeShift.baseTop, 1);
     expect(afterShift.shiftedColor).not.toBe(beforeShift.shiftedColor);
     expect(afterShift.baseColor).not.toBe(beforeShift.baseColor);
+  });
+
+  test("reserves long canonical history and wrapped guidance on narrow phones", async ({ page }) => {
+    const activity = automationActivities.find(item => item.id === "integrated-global-substitute");
+    for (const [width, height] of [[360, 740], [390, 844]]) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/?unit=global-normal-automation&activity=integrated-global-substitute");
+      await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone")).getPropertyValue("--execution-console-height").trim());
+      const result = await page.evaluate(async keys => {
+        const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const capture = () => {
+          const tray = document.querySelector("#nextCommandTray");
+          const history = document.querySelector("#nextCommandText");
+          const explanation = document.querySelector("#commandExplanation");
+          const lineHeight = Number.parseFloat(getComputedStyle(explanation).lineHeight);
+          return {
+            height: tray.getBoundingClientRect().height,
+            historyFits: history.scrollHeight <= history.clientHeight + 1,
+            explanationFits: explanation.scrollHeight <= explanation.clientHeight + 1,
+            explanationLines: explanation.getBoundingClientRect().height / lineHeight,
+            overflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
+          };
+        };
+        await settle();
+        const samples = [capture()];
+        for (const key of keys) {
+          window.VimWilds.emit(key);
+          await settle();
+          samples.push(capture());
+        }
+        return { samples, state: window.VimWilds.getState() };
+      }, keysFor(activity));
+      expect(new Set(result.samples.map(sample => sample.height)).size, `${width}px stable console`).toBe(1);
+      expect(result.samples.every(sample => sample.historyFits), `${width}px history`).toBe(true);
+      expect(result.samples.every(sample => sample.explanationFits), `${width}px guidance`).toBe(true);
+      expect(result.samples.some(sample => sample.explanationLines > 1.5), `${width}px wrapped guidance`).toBe(true);
+      expect(result.samples.every(sample => !sample.overflow), `${width}px viewport`).toBe(true);
+      expect(result.state).toMatchObject({ complete: true, code: activity.scenario.target.lines });
+    }
+  });
+
+  test("keeps unbounded Explore edits inside the planned editor and history surfaces", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values-recall");
+    await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone")).getPropertyValue("--execution-console-height").trim());
+    await page.getByRole("button", { name: "Explore" }).click();
+    const result = await page.evaluate(async () => {
+      const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await settle();
+      const tray = document.querySelector("#nextCommandTray");
+      const slab = document.querySelector(".next-code-slab");
+      const before = { tray: tray.getBoundingClientRect().height, slab: slab.getBoundingClientRect().height };
+      for (let index = 0; index < 100; index += 1) {
+        for (const key of ["o", "x", "Escape"]) window.VimWilds.emit(key);
+      }
+      await settle();
+      const history = document.querySelector("#nextCommandText");
+      const scroller = document.querySelector(".cm-scroller");
+      const cursor = document.querySelector(".cm-cursor").getBoundingClientRect();
+      const scrollerBounds = scroller.getBoundingClientRect();
+      const afterGrowth = {
+        tray: tray.getBoundingClientRect().height,
+        slab: slab.getBoundingClientRect().height,
+        historyScrolls: history.scrollHeight > history.clientHeight + 1,
+        historyAtEnd: history.scrollTop + history.clientHeight >= history.scrollHeight - 1,
+        editorScrolls: scroller.scrollHeight > scroller.clientHeight + 1,
+        cursorVisible: cursor.top >= scrollerBounds.top - 1 && cursor.bottom <= scrollerBounds.bottom + 1,
+      };
+      history.scrollTop = 0;
+      const olderHistoryReachable = history.scrollTop === 0;
+      window.VimWilds.emit("j");
+      await settle();
+      return {
+        before,
+        afterGrowth,
+        olderHistoryReachable,
+        historyReturnsToEnd: history.scrollTop + history.clientHeight >= history.scrollHeight - 1,
+        plannedRows: Number(document.querySelector(".editor-stack").dataset.plannedRows),
+        state: window.VimWilds.getState(),
+      };
+    });
+    expect(result.afterGrowth.tray).toBe(result.before.tray);
+    expect(result.afterGrowth.slab).toBe(result.before.slab);
+    expect(result.afterGrowth.historyScrolls).toBe(true);
+    expect(result.afterGrowth.historyAtEnd).toBe(true);
+    expect(result.afterGrowth.editorScrolls).toBe(true);
+    expect(result.afterGrowth.cursorVisible).toBe(true);
+    expect(result.olderHistoryReachable).toBe(true);
+    expect(result.historyReturnsToEnd).toBe(true);
+    expect(result.state.code.length).toBeGreaterThan(result.plannedRows);
   });
 
   test("renders grammar breaks, recall labels, and semantic assemblies without narrow-screen overflow", async ({ page }) => {

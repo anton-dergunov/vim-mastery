@@ -220,6 +220,7 @@ function persistSession() {
 
 let vimEngine = null;
 let executionMeasurementFrame = null;
+let executionMeasurementSignature = null;
 
 function currentActivity() {
   return activities[state.activityIndex];
@@ -356,6 +357,24 @@ function hasEditor(activity = currentActivity()) {
 
 function initialStateFor(activity = currentActivity()) {
   return activity?.scenario?.initial || activity?.inspection?.initial || null;
+}
+
+function plannedEditorRows(activity = currentActivity()) {
+  const requiredRows = activity?.editor?.requiredRows;
+  const viewportRows = activity?.editor?.viewportRows;
+  if (requiredRows !== undefined) {
+    if (!Number.isInteger(requiredRows) || requiredRows < 1 || requiredRows > 12) {
+      throw new RangeError("requiredRows must be an integer from 1 to 12");
+    }
+    if (viewportRows !== undefined) throw new RangeError("requiredRows cannot be combined with viewportRows");
+  }
+  const authoredLineCounts = [
+    activity?.scenario?.initial?.lines?.length,
+    activity?.scenario?.target?.lines?.length,
+    ...(activity?.script?.checkpoints || []).map(checkpoint => checkpoint.lines?.length),
+    requiredRows,
+  ].filter(Number.isInteger);
+  return Math.max(1, ...authoredLineCounts);
 }
 
 function isPractice(activity = currentActivity()) {
@@ -668,13 +687,14 @@ function renderWorld() {
   }
   setTheme(functionalThemeFor(activity));
   const layeredWorld = applyWorldPresentation(activity, presentation);
-  const initialState = initialStateFor(activity);
   const viewportRows = activity.editor?.viewportRows;
-  const editorStyle = viewportRows
-    ? `--viewport-rows:${viewportRows};--editor-height:${viewportRows * 24 + 18}px`
-    : `--editor-height:${108 + (initialState?.lines.length || 0) * 24}px`;
+  const plannedRows = plannedEditorRows(activity);
+  const editorRows = viewportRows || plannedRows;
+  const expandedRowsClass = editorRows > 6 ? " has-expanded-rows" : "";
+  const editorPadding = viewportRows ? 18 : 24;
+  const editorStyle = `--editor-rows:${editorRows};--editor-height:${editorRows * 24 + editorPadding}px${viewportRows ? `;--viewport-rows:${viewportRows}` : ""}`;
   const content = isRunnable(activity)
-    ? `<div class="editor-stack${viewportRows ? " has-viewport" : ""}" style="${editorStyle}">
+    ? `<div class="editor-stack${viewportRows ? " has-viewport" : ""}${expandedRowsClass}" data-planned-rows="${editorRows}" style="${editorStyle}">
           <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}</div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
         </div>`
@@ -752,24 +772,26 @@ function activeCommandGroup(activity = currentActivity(), step = state.playbackS
     || activity.script?.commandGroups.at(-1);
 }
 
-function executionContent(activity, step, history, complete = false) {
+function executionContent(activity, step, history, complete = false, preview = {}) {
   const keys = scriptKeys(activity);
   const structured = activity.script.steps.filter(item => typeof item === "object" && ["count", "operator", "motion", "text-object"].includes(item.kind));
   const group = activeCommandGroup(activity, step);
   const done = complete || step >= keys.length;
-  const policy = practicePolicy(activity);
+  const policy = preview.policy === undefined ? practicePolicy(activity) : preview.policy;
+  const recallFeedback = preview.recallFeedback === undefined ? state.recallFeedback : preview.recallFeedback;
+  const exploreTargetReached = preview.exploreTargetReached === undefined ? state.exploreTargetReached : preview.exploreTargetReached;
   const explore = policy === practicePolicyValues.explore;
   const recall = policy === practicePolicyValues.recall && !done;
-  const reveal = recall && state.recallFeedback === "reveal";
-  const retry = recall && state.recallFeedback === "retry";
+  const reveal = recall && recallFeedback === "reveal";
+  const retry = recall && recallFeedback === "retry";
   if (explore) {
     return {
-      explanation: state.exploreTargetReached
+      explanation: exploreTargetReached
         ? "Target reached. Keep experimenting, undo, or reset whenever you like."
         : "Explore mode: use any Vim commands. The target will be detected if you reach it.",
       history,
       primary: "Explore",
-      secondary: state.exploreTargetReached ? "Target reached" : "Target open",
+      secondary: exploreTargetReached ? "Target reached" : "Target open",
       stepStatus: false,
       key: null,
       assembly: [],
@@ -795,7 +817,9 @@ function applyExecutionContent(root, content) {
     ? `<div class="execution-assembly" style="--assembly-count:${content.assembly.length}">${content.assembly.map(part => `<span class="assembly-part role-${part.kind}${part.active ? " active" : ""}"><kbd>${escapeHtml(part.key)}</kbd><small>${escapeHtml(part.cue || part.kind)}</small></span>`).join("")}</div>`
     : "";
   $(".command-explanation", root).innerHTML = `${renderInline(content.explanation)}${assembly}`;
-  $(".command-text", root).innerHTML = renderHistory(content.history);
+  const history = $(".command-text", root);
+  history.innerHTML = renderHistory(content.history);
+  history.scrollTop = history.scrollHeight;
   $(".status-primary", root).textContent = content.primary;
   $(".status-secondary", root).textContent = content.secondary;
   root.classList.toggle("is-step-status", content.stepStatus);
@@ -804,29 +828,69 @@ function applyExecutionContent(root, content) {
   key.hidden = !content.key;
 }
 
+function executionMeasurementContents(activity) {
+  const keys = scriptKeys(activity);
+  const contents = [];
+  const addSequence = (policy, recallFeedback = null) => {
+    for (let step = 0; step <= keys.length; step += 1) {
+      contents.push(executionContent(activity, step, keys.slice(0, step), step >= keys.length, {
+        policy,
+        recallFeedback,
+      }));
+    }
+  };
+  if (isDemo(activity)) {
+    addSequence(null);
+  } else {
+    const policy = basePracticePolicy(activity);
+    addSequence(policy);
+    if (policy === practicePolicyValues.recall) {
+      addSequence(policy, "retry");
+      addSequence(policy, "reveal");
+    }
+    contents.push(executionContent(activity, 0, keys, false, {
+      policy: practicePolicyValues.explore,
+      exploreTargetReached: false,
+    }));
+    contents.push(executionContent(activity, 0, keys, false, {
+      policy: practicePolicyValues.explore,
+      exploreTargetReached: true,
+    }));
+  }
+  return contents;
+}
+
+function executionConsoleMeasurementSignature(activity = currentActivity()) {
+  const trayWidth = Math.round(elements.commandTray.getBoundingClientRect().width * 10) / 10;
+  return `${activity.id}:${innerWidth}x${Math.round(window.visualViewport?.height || innerHeight)}:${trayWidth}`;
+}
+
 function measureExecutionConsole() {
   executionMeasurementFrame = null;
+  const activity = currentActivity();
+  if (!isRunnable(activity)) return;
+  const signature = executionConsoleMeasurementSignature(activity);
   const probe = elements.commandTray.cloneNode(true);
   probe.removeAttribute("id");
   probe.removeAttribute("aria-live");
   probe.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
   probe.classList.remove("hidden");
   probe.classList.add("execution-measure");
-  probe.style.width = `${elements.phone.getBoundingClientRect().width}px`;
+  probe.style.width = `${elements.commandTray.getBoundingClientRect().width}px`;
   elements.phone.append(probe);
   let requiredHeight = 0;
-  activities.filter(isRunnable).forEach(activity => {
-    const keys = scriptKeys(activity);
-    for (let step = 0; step <= keys.length; step += 1) {
-      applyExecutionContent(probe, executionContent(activity, step, keys.slice(0, step), step >= keys.length));
-      requiredHeight = Math.max(requiredHeight, Math.ceil(probe.scrollHeight), Math.ceil(probe.getBoundingClientRect().height));
-    }
+  executionMeasurementContents(activity).forEach(content => {
+    applyExecutionContent(probe, content);
+    requiredHeight = Math.max(requiredHeight, Math.ceil(probe.scrollHeight), Math.ceil(probe.getBoundingClientRect().height));
   });
   probe.remove();
   elements.phone.style.setProperty("--execution-console-height", `${requiredHeight}px`);
+  executionMeasurementSignature = signature;
 }
 
-function scheduleExecutionConsoleMeasurement() {
+function scheduleExecutionConsoleMeasurement({ force = false } = {}) {
+  if (!isRunnable()) return;
+  if (!force && executionMeasurementSignature === executionConsoleMeasurementSignature()) return;
   if (executionMeasurementFrame) return;
   executionMeasurementFrame = window.requestAnimationFrame(measureExecutionConsole);
 }
@@ -1715,9 +1779,13 @@ elements.exploreButton?.addEventListener("click", () => {
 
 window.addEventListener("resize", () => {
   elements.phone.style.removeProperty("--execution-console-height");
-  scheduleExecutionConsoleMeasurement();
+  executionMeasurementSignature = null;
+  scheduleExecutionConsoleMeasurement({ force: true });
 });
-document.fonts?.ready.then(scheduleExecutionConsoleMeasurement);
+document.fonts?.ready.then(() => {
+  executionMeasurementSignature = null;
+  scheduleExecutionConsoleMeasurement({ force: true });
+});
 
 function showUpdateReady(registration) {
   serviceWorkerRegistration = registration;

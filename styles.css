@@ -1295,6 +1295,7 @@ html.next-ui .next-command-tray {
   flex: 0 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--status-rail-width);
+  grid-template-rows: minmax(0, 1fr);
   padding: 0;
   overflow: hidden;
   border-top: 1px solid rgba(153, 198, 177, .13);
@@ -1307,11 +1308,15 @@ html.next-ui .next-command-tray.error { animation: trayShake .3s ease; border-co
 
 html.next-ui .execution-copy {
   min-width: 0;
+  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
   padding: 9px 10px 8px 15px;
   display: grid;
   grid-template-rows: auto auto minmax(25px, 1fr);
   align-content: start;
   gap: 5px;
+  overflow: hidden;
 }
 
 html.next-ui .command-explanation {
@@ -1330,6 +1335,7 @@ html.next-ui .command-history-label {
 
 html.next-ui .execution-status {
   min-width: 0;
+  min-height: 0;
   padding: 10px 5px;
   display: grid;
   grid-template-rows: auto auto minmax(30px, 1fr);
@@ -1409,6 +1415,7 @@ html.next-ui .next-command-tray .command-text {
   grid-column: 1;
   grid-row: 3;
   min-width: 0;
+  min-height: 0;
   display: flex;
   align-content: start;
   align-items: start;
@@ -1417,7 +1424,10 @@ html.next-ui .next-command-tray .command-text {
   color: #f6edda;
   font: 700 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
   white-space: normal;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   text-overflow: clip;
 }
 
@@ -1431,6 +1441,8 @@ html.next-ui .execution-measure {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+html.next-ui .execution-measure .command-text { overflow: visible; }
 
 html.next-ui .game-area {
   min-height: 0;
@@ -1453,7 +1465,7 @@ html.next-ui .editor-stack {
 
 html.next-ui .next-code-slab {
   width: 100%;
-  height: clamp(132px, var(--editor-height), 228px);
+  height: max(132px, var(--editor-height));
   align-self: start;
 }
 
@@ -3128,25 +3140,26 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .hint-button { position: absolute; top: 9px; right: 10px; }
   html.next-ui .activity-intro h1 { max-width: calc(100% - 36px); margin-top: 0; font-size: clamp(20px, 5.7vw, 23px); }
   html.next-ui .activity-intro p { max-width: 100%; margin-top: 4px; padding-bottom: 3px; font-size: 14px; line-height: 18px; }
-  html.next-ui .next-command-tray { --status-rail-width: 76px; height: 94px; }
+  html.next-ui .next-command-tray { --status-rail-width: 76px; height: var(--execution-console-height, 94px); }
   html.next-ui .execution-copy { padding: 8px 10px 7px 13px; gap: 4px; }
   html.next-ui .command-explanation { font-size: 14px; line-height: 1.28; }
   html.next-ui .command-explanation code { padding-inline: .12em; }
   html.next-ui .command-history-label { display: none; }
-  html.next-ui .next-command-tray .command-text { grid-row: 2; align-self: start; font-size: 13px; }
-  html.next-ui .execution-copy { grid-template-rows: minmax(0, 1fr) auto; }
+  html.next-ui .next-command-tray .command-text { grid-row: 2; align-self: stretch; font-size: 13px; }
+  html.next-ui .execution-copy { grid-template-rows: auto minmax(25px, 1fr); }
   html.next-ui .world { min-height: 220px; }
   html.next-ui .editor-stack {
-    grid-row: 1 / 8;
+    grid-row: 1 / 10;
     align-self: stretch;
     margin: 8px 13px 0;
   }
-  html.next-ui .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); min-height: 0; }
-  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
-  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
+  html.next-ui .next-code-slab { height: max(132px, var(--editor-height)); min-height: 0; }
+  html.next-ui .editor-stack:has(.demo-controls) { grid-row: 1 / 10; grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
+  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
   html.next-ui .nix { width: clamp(70px, 23vw, 94px); grid-row: 8 / 10; }
   html.next-ui .nix.left { grid-column: 1 / span 3; }
   html.next-ui .nix.right { grid-column: 10 / span 3; }
+  html.next-ui .world:has(.editor-stack.has-expanded-rows) .nix { display: none; }
   html.next-ui .field-note-wrap,
   html.next-ui .inspection-layout { grid-row: 1 / 10; }
 }
@@ -3184,7 +3197,7 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .hint-button { position: absolute; top: 5px; right: 5px; width: 27px; height: 27px; flex-basis: 27px; font-size: 14px; }
   html.next-ui .activity-intro h1 { margin-top: 5px; font-size: clamp(16px, 3.1vw, 20px); line-height: 1.06; }
   html.next-ui .activity-intro p { margin-top: 4px; font-size: 11px; line-height: 1.25; }
-  html.next-ui .next-command-tray { --status-rail-width: 66px; height: 78px; flex: 0 0 auto; }
+  html.next-ui .next-command-tray { --status-rail-width: 66px; height: var(--execution-console-height, 78px); flex: 0 0 auto; }
   html.next-ui .execution-copy { padding: 7px 8px; gap: 3px; }
   html.next-ui .command-explanation { font-size: 11px; line-height: 1.2; }
   html.next-ui .command-history-label { display: none; }
@@ -3198,8 +3211,8 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .world { min-height: 0; }
   html.next-ui .editor-stack { grid-row: 1 / 10; margin: 7px 9px; }
   html.next-ui .next-code-slab { height: min(var(--editor-height), 100%); min-height: 0; }
-  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
-  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
+  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
+  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
   html.next-ui .code-head { height: 24px; flex-basis: 24px; font-size: 9px; }
   html.next-ui .next-code-slab .code-body { padding: 3px; }
   html.next-ui .code-body .cm-scroller { font-size: 14px; line-height: 1.3; }
@@ -3228,9 +3241,9 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .world { min-height: 280px; }
   /* Keep the authored visual-line semantics stable as the board widens. */
   html.next-ui .editor-stack { width: min(404px, calc(100% - 110px)); grid-row: 1 / 10; justify-self: center; margin: clamp(18px, 4vh, 34px) 0 0; }
-  html.next-ui .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); max-height: 228px; }
-  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: auto auto; align-content: start; }
-  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: min(clamp(132px, var(--editor-height), 228px), 100%); }
+  html.next-ui .next-code-slab { height: max(132px, var(--editor-height)); max-height: none; }
+  html.next-ui .editor-stack:has(.demo-controls) { grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
+  html.next-ui .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
   html.next-ui .nix { width: clamp(153px, 19.5vw, 234px); margin-bottom: 12px; grid-row: 8 / 10; }
   html.next-ui .nix.left { grid-column: 1 / span 3; }
   html.next-ui .nix.right { grid-column: 9 / span 3; }
@@ -3266,7 +3279,7 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .activity-intro { min-height: 0; padding: 42px 10px 7px; }
   html.next-ui .activity-intro h1 { width: auto; max-width: none; margin: 5px 0 0; font-size: clamp(16px, 3.1vw, 20px); line-height: 1.06; }
   html.next-ui .activity-intro p { width: auto; margin: 4px 0 0; font-size: 11px; line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-  html.next-ui .next-command-tray { --status-rail-width: 66px; min-height: 78px; height: 78px; }
+  html.next-ui .next-command-tray { --status-rail-width: 66px; min-height: 78px; height: var(--execution-console-height, 78px); }
   html.next-ui .execution-copy { width: auto; margin: 0; padding: 7px 8px; }
   html.next-ui .command-explanation { font-size: 11px; line-height: 1.2; }
   html.next-ui .next-command-tray .command-text { font-size: 10px; line-height: 1.2; }
@@ -3292,7 +3305,7 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .next-command-tray .command-text { font-size: 15px; }
 
   html.next-ui .editor-stack:not(.has-viewport) .next-code-slab {
-    max-height: 250px;
+    max-height: none;
   }
 
   html.next-ui .nix { width: clamp(153px, 19.5vw, 234px); }
@@ -3638,7 +3651,7 @@ html.next-ui .toc-unit-launch button {
 
   html.next-ui .next-command-tray .command-text {
     grid-row: 3;
-    align-self: start;
+    align-self: stretch;
     font-size: 13px;
     line-height: 1.3;
   }
