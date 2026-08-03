@@ -217,6 +217,12 @@ test("centers every scene content surface on iPad layouts", async ({ page }) => 
 });
 
 test("uses supportive character reactions only after repeated mistakes", async ({ page }) => {
+  let releasePuzzledMedia;
+  const puzzledMediaHeld = new Promise(resolve => { releasePuzzledMedia = resolve; });
+  await page.route("**/assets/characters/*/animations/puzzled-variant-*.webp", async route => {
+    await puzzledMediaHeld;
+    await route.continue();
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
   await page.waitForFunction(() => window.VimWilds?.getState && document.querySelector("#characterLayer > .nix"));
@@ -228,6 +234,16 @@ test("uses supportive character reactions only after repeated mistakes", async (
   expect(await page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("idle");
   await pressKey("q");
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "puzzled");
+  const waitingVisual = await page.locator("#characterLayer > .nix").evaluate(image => ({
+    source: image.getAttribute("src"),
+    scale: image.style.getPropertyValue("--character-media-scale"),
+    transition: getComputedStyle(image).transitionProperty,
+  }));
+  expect(waitingVisual.source).toMatch(/\/idle\.png$/);
+  expect(waitingVisual.scale).toBe("");
+  expect(waitingVisual.transition).not.toContain("transform");
+  releasePuzzledMedia();
+  await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction-media-active", "true");
   const reactionScale = await page.locator("#characterLayer > .nix").evaluate(image => {
     const variant = Number(image.dataset.reactionVariant) - 1;
     return {
