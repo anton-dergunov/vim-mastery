@@ -233,27 +233,56 @@ test("uses supportive character reactions only after repeated mistakes", async (
   await pressKey("q");
   expect(await page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("idle");
   await pressKey("q");
-  await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "puzzled");
+  await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("puzzled");
   const waitingVisual = await page.locator("#characterLayer > .nix").evaluate(image => ({
     source: image.getAttribute("src"),
     scale: image.style.getPropertyValue("--character-media-scale"),
-    transition: getComputedStyle(image).transitionProperty,
+    reaction: image.dataset.reaction,
   }));
   expect(waitingVisual.source).toMatch(/\/idle\.png$/);
   expect(waitingVisual.scale).toBe("");
-  expect(waitingVisual.transition).not.toContain("transform");
-  // Start observing only after the held reaction request is established, so
-  // unrelated character-ready transitions cannot enter this swap's log.
-  await page.locator("#characterLayer > .nix").evaluate(image => {
-    window.__reactionOpacityTransitions = [];
-    image.addEventListener("transitionend", event => {
-      if (event.propertyName === "opacity") {
-        window.__reactionOpacityTransitions.push(Number.parseFloat(getComputedStyle(image).opacity));
-      }
-    });
+  expect(waitingVisual.reaction).toBe("idle");
+  await page.evaluate(() => {
+    window.__reactionFrames = [];
+    window.__sampleReactionFrames = true;
+    const sample = () => {
+      const images = [...document.querySelectorAll("#characterLayer > .nix")];
+      window.__reactionFrames.push(images.map(image => ({
+        opacity: Number.parseFloat(getComputedStyle(image).opacity),
+        transform: getComputedStyle(image).transform,
+        outgoing: image.classList.contains("reaction-outgoing"),
+        incoming: image.classList.contains("reaction-transitioning-in"),
+      })));
+      if (window.__sampleReactionFrames) requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
   });
   releasePuzzledMedia();
+  await expect(page.locator("#characterLayer > .reaction-settling")).toHaveCount(1);
+  await expect(page.locator("#characterLayer > .reaction-transitioning-in")).toHaveCount(1);
+  const neutralTransforms = await page.locator("#characterLayer > .nix").evaluateAll(images => images.map(image => {
+    const matrix = new DOMMatrixReadOnly(getComputedStyle(image).transform);
+    return { translateX: matrix.e, translateY: matrix.f, skewX: matrix.b, skewY: matrix.c };
+  }));
+  for (const transform of neutralTransforms) {
+    expect(Math.abs(transform.translateX)).toBeLessThan(.1);
+    expect(Math.abs(transform.translateY)).toBeLessThan(.1);
+    expect(Math.abs(transform.skewX)).toBeLessThan(.1);
+    expect(Math.abs(transform.skewY)).toBeLessThan(.1);
+  }
+  await expect.poll(() => page.evaluate(() => window.__reactionFrames.some(frame => (
+    frame.length === 2
+      && frame.every(layer => layer.opacity > .08 && layer.opacity < .92)
+      && frame.reduce((total, layer) => total + layer.opacity, 0) >= .95
+  )))).toBe(true);
+  await page.screenshot({ path: "test-results/reaction-crossfade-390x844.png", fullPage: true });
+  await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction-media-active", "true");
+  await page.evaluate(() => { window.__sampleReactionFrames = false; });
+  const neverEmpty = await page.evaluate(() => window.__reactionFrames.every(frame => (
+    frame.reduce((total, layer) => total + layer.opacity, 0) >= .95
+  )));
+  expect(neverEmpty).toBe(true);
   const reactionScale = await page.locator("#characterLayer > .nix").evaluate(image => {
     const variant = Number(image.dataset.reactionVariant) - 1;
     return {
@@ -262,9 +291,8 @@ test("uses supportive character reactions only after repeated mistakes", async (
     };
   });
   expect(reactionScale.applied).toBe(reactionScale.authored);
-  await expect.poll(() => page.evaluate(() => window.__reactionOpacityTransitions.slice(-2))).toEqual([0, 1]);
   await pressKey("q");
-  await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "encouraging");
+  await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("encouraging");
 
   await pressKey("Escape");
   await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("celebrating");

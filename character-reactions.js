@@ -18,9 +18,13 @@ export class CharacterReactions {
     reducedMotion = () => false,
     random = Math.random,
     prepareMedia,
-    fadeDurationMs = 110,
+    settleDurationMs = 180,
+    fadeDurationMs = 420,
     delay = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds)),
     forceStyle = character => void character.offsetWidth,
+    readTransform = character => typeof getComputedStyle === "function"
+      ? getComputedStyle(character).transform
+      : "none",
   } = {}) {
     this.layer = layer;
     this.assetUrl = assetUrl;
@@ -38,16 +42,18 @@ export class CharacterReactions {
         ? image.decode().catch(() => image.complete && image.naturalWidth ? undefined : loaded)
         : loaded;
     });
+    this.settleDurationMs = settleDurationMs;
     this.fadeDurationMs = fadeDurationMs;
     this.delay = delay;
     this.forceStyle = forceStyle;
+    this.readTransform = readTransform;
     this.activityKey = null;
     this.state = "idle";
     this.resetTimer = null;
     this.lastVariantByState = new Map();
     this.activeDurationMs = 0;
     this.mediaRequest = 0;
-    this.fadeOwner = null;
+    this.transitionOwner = null;
   }
 
   setActivity(activity) {
@@ -64,7 +70,9 @@ export class CharacterReactions {
   }
 
   element() {
-    return this.layer?.querySelector(".nix") || null;
+    return this.layer?.querySelector(".nix:not(.reaction-outgoing)")
+      || this.layer?.querySelector(".nix")
+      || null;
   }
 
   reactionCandidates(asset, state) {
@@ -83,9 +91,33 @@ export class CharacterReactions {
     return { candidate: candidates[index], index };
   }
 
-  cancelFade(character = this.element()) {
-    if (character) character.classList.remove("reaction-fading-out");
-    this.fadeOwner = null;
+  clearTransitionClasses(character) {
+    character?.classList.remove(
+      "reaction-settling",
+      "reaction-staged",
+      "reaction-transitioning-in",
+      "reaction-transitioning-out",
+      "reaction-outgoing",
+    );
+    character?.style.removeProperty("--reaction-settle-from");
+  }
+
+  cancelTransition() {
+    const current = this.element();
+    const characters = this.layer?.querySelectorAll?.(".nix") || [];
+    for (const character of characters) {
+      if (character.classList.contains("reaction-outgoing")) {
+        character.remove();
+        continue;
+      }
+      this.clearTransitionClasses(character);
+      character.removeAttribute?.("aria-hidden");
+    }
+    if (current?.isConnected !== false) {
+      this.clearTransitionClasses(current);
+      current?.removeAttribute?.("aria-hidden");
+    }
+    this.transitionOwner = null;
   }
 
   commitVisual(character, { source, scale = 1, reactionMedia = false }) {
@@ -97,33 +129,87 @@ export class CharacterReactions {
     else delete character.dataset.reactionMediaActive;
   }
 
-  async swapVisual(character, visual, request) {
+  applyReactionState(character, { state, variant }) {
+    character.dataset.reaction = state;
+    if (variant !== null) character.dataset.reactionVariant = String(variant + 1);
+    else delete character.dataset.reactionVariant;
+    for (const candidate of REACTION_STATES) {
+      character.classList.toggle(`reaction-${candidate}`, candidate === state);
+    }
+  }
+
+  applyFallback(character, presentation) {
+    const idle = character.__characterAsset?.idle;
+    if (idle) this.commitVisual(character, {
+      source: this.assetUrl(idle),
+      reactionMedia: false,
+    });
+    this.activeDurationMs = 0;
+    this.applyReactionState(character, presentation);
+  }
+
+  async swapVisual(character, visual, presentation, request) {
     try {
       await this.prepareMedia(visual.source);
     } catch {
-      return false;
+      if (request !== this.mediaRequest || character !== this.element()) return false;
+      this.applyFallback(character, presentation);
+      return true;
     }
     if (request !== this.mediaRequest || character !== this.element()) return false;
 
-    const shouldFade = !this.reducedMotion() && this.fadeDurationMs > 0;
-    if (shouldFade) {
-      this.fadeOwner = request;
-      character.style.setProperty("--reaction-fade-duration", `${this.fadeDurationMs}ms`);
-      character.classList.add("reaction-fading-out");
-      await this.delay(this.fadeDurationMs);
+    const shouldCrossfade = !this.reducedMotion() && this.fadeDurationMs > 0;
+    if (!shouldCrossfade || typeof character.cloneNode !== "function" || typeof character.after !== "function") {
+      this.commitVisual(character, visual);
+      this.applyReactionState(character, presentation);
+      return true;
+    }
+
+    this.transitionOwner = request;
+    character.style.setProperty("--reaction-settle-from", this.readTransform(character));
+    character.style.setProperty("--reaction-settle-duration", `${this.settleDurationMs}ms`);
+    character.style.setProperty("--reaction-fade-duration", `${this.fadeDurationMs}ms`);
+    character.classList.add("reaction-settling");
+    if (this.settleDurationMs > 0) {
+      await this.delay(this.settleDurationMs);
       if (request !== this.mediaRequest || character !== this.element()) {
-        if (this.fadeOwner === request) this.cancelFade(character);
+        if (this.transitionOwner === request) this.cancelTransition();
         return false;
       }
     }
 
-    this.commitVisual(character, visual);
-    if (this.fadeOwner === request) {
-      // Force the hidden pose to be painted as the new transition origin.
-      // Without this boundary, browsers can batch the src swap and class
-      // removal into one frame, which reads as a blink instead of a fade-in.
-      this.forceStyle(character);
-      this.cancelFade(character);
+    const incoming = character.cloneNode();
+    incoming.__characterAsset = character.__characterAsset;
+    this.clearTransitionClasses(incoming);
+    this.commitVisual(incoming, visual);
+    this.applyReactionState(incoming, presentation);
+    incoming.style.setProperty("--reaction-settle-duration", `${this.settleDurationMs}ms`);
+    incoming.style.setProperty("--reaction-fade-duration", `${this.fadeDurationMs}ms`);
+    incoming.classList.add("reaction-staged");
+    incoming.removeAttribute?.("aria-hidden");
+    character.after(incoming);
+    this.forceStyle(incoming);
+
+    if (request !== this.mediaRequest || character !== this.element()) {
+      incoming.remove();
+      if (this.transitionOwner === request) this.cancelTransition();
+      return false;
+    }
+
+    character.classList.remove("reaction-settling");
+    character.classList.add("reaction-outgoing", "reaction-transitioning-out");
+    character.setAttribute?.("aria-hidden", "true");
+    incoming.classList.remove("reaction-staged");
+    incoming.classList.add("reaction-transitioning-in");
+
+    await this.delay(this.fadeDurationMs);
+    if (request !== this.mediaRequest || incoming !== this.element()) return false;
+
+    character.remove();
+    this.clearTransitionClasses(incoming);
+    incoming.removeAttribute?.("aria-hidden");
+    if (this.transitionOwner === request) {
+      this.transitionOwner = null;
     }
     return true;
   }
@@ -131,43 +217,38 @@ export class CharacterReactions {
   apply(nextState) {
     const state = REACTION_STATES.has(nextState) ? nextState : "idle";
     this.state = state;
-    const character = this.element();
-    if (!character) return;
     const request = ++this.mediaRequest;
-    this.cancelFade(character);
+    this.cancelTransition();
+    const character = this.element();
+    if (!character) return Promise.resolve(false);
 
     const asset = character.__characterAsset;
     const candidates = this.reactionCandidates(asset, state);
     const { candidate: pose, index } = this.chooseReaction(candidates, state);
-    character.dataset.reaction = state;
-    if (pose) character.dataset.reactionVariant = String(index + 1);
-    else delete character.dataset.reactionVariant;
+    const presentation = { state, variant: pose ? index : null };
     const source = typeof pose === "string" ? pose : pose?.src;
     const usesReactionMedia = Boolean(source && !this.reducedMotion());
     this.activeDurationMs = usesReactionMedia
       ? Math.max(4000, Number(pose?.duration_seconds || 4) * 1000)
       : 0;
-    character.classList.toggle("reaction-crossfade", !this.reducedMotion());
-    for (const candidate of REACTION_STATES) {
-      character.classList.toggle(`reaction-${candidate}`, candidate === state);
-    }
     if (usesReactionMedia) {
       return this.swapVisual(character, {
         source: this.assetUrl(source),
         scale: Number(pose?.css_scale) || 1,
         reactionMedia: true,
-      }, request);
+      }, presentation, request);
     }
     if (asset?.idle && character.dataset.reactionMediaActive === "true") {
       return this.swapVisual(character, {
         source: this.assetUrl(asset.idle),
         reactionMedia: false,
-      }, request);
+      }, presentation, request);
     }
     if (asset?.idle) this.commitVisual(character, {
       source: this.assetUrl(asset.idle),
       reactionMedia: false,
     });
+    this.applyReactionState(character, presentation);
     return Promise.resolve(true);
   }
 
@@ -188,22 +269,34 @@ export class CharacterReactions {
 
   celebrate() {
     this.clearTimer();
-    this.apply("celebrating");
+    this.state = "celebrating";
+    this.activeDurationMs = 0;
+    this.mediaRequest += 1;
+    this.cancelTransition();
+    const character = this.element();
+    if (!character) return Promise.resolve(false);
+    this.applyReactionState(character, { state: "celebrating", variant: null });
+    return Promise.resolve(true);
   }
 
   showTemporarily(state) {
     this.clearTimer();
-    this.apply(state);
-    this.resetTimer = window.setTimeout(() => {
-      this.resetTimer = null;
-      this.apply("idle");
-    }, this.activeDurationMs ? this.activeDurationMs + 120 : 2800);
+    const pending = this.apply(state);
+    const request = this.mediaRequest;
+    Promise.resolve(pending).then(applied => {
+      if (!applied || request !== this.mediaRequest || this.state !== state) return;
+      const duration = this.activeDurationMs ? this.activeDurationMs + 120 : 2800;
+      this.resetTimer = window.setTimeout(() => {
+        this.resetTimer = null;
+        this.apply("idle");
+      }, duration);
+    });
   }
 
   stop() {
     this.clearTimer();
     this.mediaRequest += 1;
-    this.cancelFade();
+    this.cancelTransition();
     this.activityKey = null;
     this.state = "idle";
   }

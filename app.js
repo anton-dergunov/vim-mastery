@@ -1473,7 +1473,7 @@ function setHelp(open) {
 function playSuccessCharacter({ allowExplore = false } = {}) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   if (state.characters !== "enabled") return;
-  const character = $(".nix", elements.characterLayer);
+  const character = $(".nix:not(.reaction-outgoing)", elements.characterLayer);
   const asset = characterAssets[character?.dataset.character || ""];
   const animation = asset?.animations?.[character?.dataset.animation || ""];
   if (!character || !animation?.src || successMedia?.status !== "ready" || !successMedia.objectUrl) return;
