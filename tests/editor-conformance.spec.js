@@ -2152,7 +2152,7 @@ test.describe("Production lesson flow", () => {
     expect(phone).toBe(812);
   });
 
-  test("keeps every production activity inside the target phone viewports without clipping", async ({ page }) => {
+  test("keeps every production activity inside the target phone viewports without clipping @exhaustive", async ({ page }) => {
     // This exhaustively renders every activity at every target viewport. Keep
     // the budget proportional to the growing production curriculum so CI can
     // complete the coverage rather than timing out mid-matrix.

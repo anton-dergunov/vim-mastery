@@ -8,12 +8,18 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "postinstall": "patch-package",
-    "test": "npm run test:content && npm run test:effects && npm run test:native && npm run test:pwa && npm run test:browser",
+    "test": "npm run test:quick",
+    "test:quick": "npm run test:content && npm run test:effects && npm run test:native && npm run test:media && npm run test:browser:smoke",
+    "test:full": "npm run test:content && npm run test:effects && npm run test:native && npm run test:media && npm run test:pwa && npm run test:browser",
     "test:content": "node --test tests/content-data.test.mjs tests/action-guidance.test.mjs tests/character-reactions.test.mjs",
     "test:effects": "node --test tests/vim-effects.test.mjs",
     "test:native": "node --test tests/native-vim.test.mjs",
+    "test:media": "node --test tests/media-policy.test.mjs",
     "test:pwa": "node --test tests/pwa-build.test.mjs",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "test:browser:smoke": "playwright test tests/smoke.spec.js --workers=1",
+    "test:targeted": "playwright test --workers=1 --max-failures=1",
+    "test:exhaustive": "playwright test --grep @exhaustive"
   },
   "dependencies": {
     "@codemirror/commands": "6.10.4",
