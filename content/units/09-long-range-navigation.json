@@ -3123,9 +3123,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-e",
+                "explanation": "Scroll the window down one line."
+              },
+              {
+                "from": 1,
                 "to": 2,
-                "display": "Ctrl-e Ctrl-e",
-                "explanation": "Two scrolls reveal two later rows."
+                "display": "Ctrl-e",
+                "explanation": "Scroll the window down one line."
               }
             ],
             "checkpoints": [
@@ -3343,9 +3349,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-y",
+                "explanation": "Scroll the window up one line."
+              },
+              {
+                "from": 1,
                 "to": 2,
-                "display": "Ctrl-y Ctrl-y",
-                "explanation": "Two upward scrolls preserve the cursor."
+                "display": "Ctrl-y",
+                "explanation": "Scroll the window up one line."
               }
             ],
             "checkpoints": [
@@ -4667,9 +4679,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-o",
+                "explanation": "Move to the older position in the jump list."
+              },
+              {
+                "from": 1,
                 "to": 2,
-                "display": "Ctrl-o Ctrl-i",
-                "explanation": "The two commands walk both directions."
+                "display": "Ctrl-i",
+                "explanation": "Move to the newer position in the jump list."
               }
             ],
             "checkpoints": [
@@ -5967,9 +5985,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "gi",
+                "explanation": "Return to the latest Insert position and enter Insert mode."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "gi Escape",
-                "explanation": "gi reopened Insert at the caret mark."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -7516,9 +7540,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "g;",
+                "explanation": "Move to the older position in the change list."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "g; g;",
-                "explanation": "Two older steps reach the earlier edit."
+                "display": "g;",
+                "explanation": "Move to the older position in the change list."
               }
             ],
             "checkpoints": [
@@ -7751,9 +7781,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "g;",
+                "explanation": "Move to the older position in the change list."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "g;",
+                "explanation": "Move to the older position in the change list."
+              },
+              {
+                "from": 4,
                 "to": 6,
-                "display": "g; g; g,",
-                "explanation": "g, reverses one older step."
+                "display": "g,",
+                "explanation": "Move to the newer position in the change list."
               }
             ],
             "checkpoints": [
@@ -10330,9 +10372,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "`a",
+                "explanation": "Jump to mark a’s exact position."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "backtick-a backtick-b",
-                "explanation": "Two named marks make planned sites addressable."
+                "display": "`b",
+                "explanation": "Jump to mark b’s exact position."
               }
             ],
             "checkpoints": [
@@ -10770,9 +10818,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "g;",
+                "explanation": "Move to the older position in the change list."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "g; backtick-a",
-                "explanation": "Change history finds the edit; the mark finds the planned site."
+                "display": "`a",
+                "explanation": "Jump to mark a’s exact position."
               }
             ],
             "checkpoints": [
@@ -10985,9 +11039,15 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "`a",
+                "explanation": "Jump to mark a’s exact position."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "backtick-a zt",
-                "explanation": "The mark restores location and zt reframes context."
+                "display": "zt",
+                "explanation": "Scroll the current line to the top of the window."
               }
             ],
             "checkpoints": [

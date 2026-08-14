@@ -96,10 +96,15 @@ test("reduced motion keeps the idle still and uses the CSS state fallback", asyn
 test("decodes each pose before fading, then swaps its source and scale while hidden", async () => {
   const preparations = [];
   const fades = [];
+  const paintedSources = [];
   const { character, classes, reactions } = fixture([0], {
     prepareMedia: source => new Promise(resolve => preparations.push({ source, resolve })),
     fadeDurationMs: 90,
     delay: () => new Promise(resolve => fades.push(resolve)),
+    forceStyle: image => {
+      assert.equal(classes.has("reaction-fading-out"), true);
+      paintedSources.push(image.src);
+    },
   });
   character.src = "/assets/idle.png";
 
@@ -118,6 +123,7 @@ test("decodes each pose before fading, then swaps its source and scale while hid
   assert.equal(character.src, "/assets/attentive-a.webp");
   assert.equal(character.style.values.get("--character-media-scale"), "1.3");
   assert.equal(classes.has("reaction-fading-out"), false);
+  assert.deepEqual(paintedSources, ["/assets/attentive-a.webp"]);
 
   const showIdle = reactions.apply("idle");
   assert.equal(character.src, "/assets/attentive-a.webp");
@@ -130,6 +136,7 @@ test("decodes each pose before fading, then swaps its source and scale while hid
   assert.equal(character.src, "/assets/idle.png");
   assert.equal(character.style.values.has("--character-media-scale"), false);
   assert.equal(classes.has("reaction-fading-out"), false);
+  assert.deepEqual(paintedSources, ["/assets/attentive-a.webp", "/assets/idle.png"]);
 });
 
 test("discards a short reaction that ends before its media is ready", async () => {

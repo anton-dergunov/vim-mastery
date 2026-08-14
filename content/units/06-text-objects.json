@@ -377,9 +377,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "ciwready⎋",
-                "explanation": "Change `draft` to `ready` without touching its spacing."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -886,9 +898,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ciW",
+                "explanation": "Change inside the current whitespace-delimited WORD and enter Insert mode."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "fresh",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "ciWfresh⎋",
-                "explanation": "Change the full dotted token to `fresh`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1285,9 +1309,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ci\"",
+                "explanation": "Change only the text inside the double quotes."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "ci\"ready⎋",
-                "explanation": "Replace only the contents of the double quotes with `ready`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1526,9 +1562,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ci'",
+                "explanation": "Change only the text inside the single quotes."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "ci'live⎋",
-                "explanation": "Replace only `draft` with `live`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1766,9 +1814,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ci`",
+                "explanation": "Change only the text inside the backticks."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "ci`live⎋",
-                "explanation": "Replace the backtick contents with `live`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -2594,9 +2654,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ca(",
+                "explanation": "Change the parentheses and everything inside them."
+              },
+              {
+                "from": 3,
+                "to": 9,
+                "display": "(done)",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 9,
                 "to": 10,
-                "display": "ca((done)⎋",
-                "explanation": "Replace the whole parenthesized object with `(done)`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -4961,9 +5033,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "cit",
+                "explanation": "Change only the content inside the surrounding tag."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "Ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "citReady⎋",
-                "explanation": "Replace the paragraph contents with `Ready` while keeping its tags."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -5675,9 +5759,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "cit",
+                "explanation": "Change only the content inside the surrounding tag."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "Ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "citReady⎋",
-                "explanation": "Replace only the contents of the status element with `Ready`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [

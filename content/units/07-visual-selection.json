@@ -107,9 +107,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "1l",
+                "explanation": "Move one column right to extend the selection."
+              },
+              {
+                "from": 11,
                 "to": 13,
-                "display": "veEscVjEscCtrl-v2j1lrx",
-                "explanation": "Enter each Visual mode, cancel the first two, then replace a two-column block."
+                "display": "rx",
+                "explanation": "Replace every character in the block selection."
               }
             ],
             "checkpoints": [
@@ -237,9 +291,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "ved",
-                "explanation": "Select `alpha` by character and delete it."
+                "display": "d",
+                "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [
@@ -354,9 +420,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "Vjd",
-                "explanation": "Select the first two lines and delete them."
+                "display": "d",
+                "explanation": "Delete the selected lines."
               }
             ],
             "checkpoints": [
@@ -475,9 +553,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "Ctrl-v2jrx",
-                "explanation": "Select the marker column and replace all three spaces with `x`."
+                "display": "rx",
+                "explanation": "Replace every character in the block selection."
               }
             ],
             "checkpoints": [
@@ -628,9 +718,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "c",
+                "explanation": "Change the selection."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "vecliveEsc",
-                "explanation": "Select `draft`, change it to `live`, then return to Normal."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -740,9 +854,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "ved",
-                "explanation": "Select `alpha` and delete it with `d`."
+                "display": "d",
+                "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [
@@ -847,9 +973,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "y",
+                "explanation": "Yank the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 4,
                 "to": 5,
-                "display": "vey$p",
-                "explanation": "Select `ready`, yank it, move to the end, and put the captured text."
+                "display": "p",
+                "explanation": "Put the captured text after the cursor."
               }
             ],
             "checkpoints": [
@@ -961,9 +1111,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "verx",
-                "explanation": "Select `ready` and replace every selected character with `x`."
+                "display": "rx",
+                "explanation": "Replace every character in the selection."
               }
             ],
             "checkpoints": [
@@ -1111,9 +1273,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "Vj>",
-                "explanation": "Select the first two lines and shift them right once."
+                "display": ">",
+                "explanation": "Indent the selected lines."
               }
             ],
             "checkpoints": [
@@ -1224,9 +1398,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "Vj<",
-                "explanation": "Select the first two lines and shift them left."
+                "display": "<",
+                "explanation": "Unindent the selected lines."
               }
             ],
             "checkpoints": [
@@ -1341,9 +1527,27 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "y",
+                "explanation": "Yank the selected lines."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "Vjyp",
-                "explanation": "Select the first two rows, yank them, and put them below."
+                "display": "p",
+                "explanation": "Put the captured text after the cursor."
               }
             ],
             "checkpoints": [
@@ -1452,9 +1656,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "Vjd",
-                "explanation": "Select the first two lines and delete them."
+                "display": "d",
+                "explanation": "Delete the selected lines."
               }
             ],
             "checkpoints": [
@@ -1601,9 +1817,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "l",
+                "explanation": "Move one column right to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "o",
+                "explanation": "Move the cursor to the opposite end of the selection."
+              },
+              {
+                "from": 4,
                 "to": 5,
-                "display": "vjlod",
-                "explanation": "Build a cross-line selection, swap to its anchor with `o`, then delete."
+                "display": "d",
+                "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [
@@ -1730,9 +1970,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "2l",
+                "explanation": "Move two columns right to extend the selection."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "o",
+                "explanation": "Move the cursor to the opposite end of the selection."
+              },
+              {
+                "from": 6,
                 "to": 8,
-                "display": "Ctrl-v2j2lorx",
-                "explanation": "Select a three-by-three block, press `o`, and fill it with `x`."
+                "display": "rx",
+                "explanation": "Replace every character in the block selection."
               }
             ],
             "checkpoints": [
@@ -1862,9 +2126,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "2l",
+                "explanation": "Move two columns right to extend the selection."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "O",
+                "explanation": "Move the cursor to the opposite corner on the same row."
+              },
+              {
+                "from": 6,
                 "to": 8,
-                "display": "Ctrl-v2j2lOrx",
-                "explanation": "Select a three-by-three block, press `O`, and fill it with `x`."
+                "display": "rx",
+                "explanation": "Replace every character in the block selection."
               }
             ],
             "checkpoints": [
@@ -1980,9 +2268,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "l",
+                "explanation": "Move one column right to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "o",
+                "explanation": "Move the cursor to the opposite end of the selection."
+              },
+              {
+                "from": 4,
                 "to": 5,
-                "display": "vjlod",
-                "explanation": "Extend to the next line, use `o` to return to the start, then delete the visible range."
+                "display": "d",
+                "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [
@@ -2141,9 +2453,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ">",
+                "explanation": "Indent the selected lines."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "gv",
+                "explanation": "Reselect the latest Visual range."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "Vj>gv<",
-                "explanation": "Indent two lines, restore the same line selection with `gv`, then shift it left."
+                "display": "<",
+                "explanation": "Unindent the selection."
               }
             ],
             "checkpoints": [
@@ -2261,9 +2597,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "~",
+                "explanation": "Toggle the case of the selection."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "gv",
+                "explanation": "Reselect the latest Visual range."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "ve~gvU",
-                "explanation": "Toggle `ready`, reselect it with `gv`, then make it uppercase."
+                "display": "U",
+                "explanation": "Uppercase the selection."
               }
             ],
             "checkpoints": [
@@ -2379,9 +2739,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "y",
+                "explanation": "Yank the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "gv",
+                "explanation": "Reselect the latest Visual range."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "veyEscwgvd",
-                "explanation": "Yank `draft`, leave Visual mode, move away, then restore and delete the last selection."
+                "display": "d",
+                "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [
@@ -2507,9 +2903,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ">",
+                "explanation": "Indent the selected lines."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "gv",
+                "explanation": "Reselect the latest Visual range."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "Vj>gv<",
-                "explanation": "Indent two lines, reselect them, and restore the original indentation."
+                "display": "<",
+                "explanation": "Unindent the selection."
               }
             ],
             "checkpoints": [
@@ -2658,9 +3078,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "veU",
-                "explanation": "Select `ready` and make it uppercase."
+                "display": "U",
+                "explanation": "Uppercase the selection."
               }
             ],
             "checkpoints": [
@@ -2762,9 +3194,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "veu",
-                "explanation": "Select `READY` and make it lowercase."
+                "display": "u",
+                "explanation": "Lowercase the selection."
               }
             ],
             "checkpoints": [
@@ -2867,9 +3311,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "ve~",
-                "explanation": "Select `Ready` and toggle each letter's case."
+                "display": "~",
+                "explanation": "Toggle the case of the selection."
               }
             ],
             "checkpoints": [
@@ -2979,9 +3435,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "V2j=",
-                "explanation": "Select the first three lines and apply `=`."
+                "display": "=",
+                "explanation": "Reindent the selected lines."
               }
             ],
             "checkpoints": [
@@ -3094,9 +3562,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "Vjgq",
-                "explanation": "Select both lines and reflow them with `gq`."
+                "display": "gq",
+                "explanation": "Format the selected lines."
               }
             ],
             "checkpoints": [
@@ -3251,9 +3731,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "Ctrl-v2jrx",
-                "explanation": "Select the three marker cells and replace them with `x`."
+                "display": "rx",
+                "explanation": "Replace every character in the block selection."
               }
             ],
             "checkpoints": [
@@ -3364,9 +3856,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "c",
+                "explanation": "Change the block selection."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "X",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "Ctrl-v2jcXEsc",
-                "explanation": "Select the middle character on three rows and change it to `X`."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -3484,9 +4000,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "Ctrl-v2jd",
-                "explanation": "Select the middle character on three rows and delete it with `d`."
+                "display": "d",
+                "explanation": "Delete the block selection."
               }
             ],
             "checkpoints": [
@@ -3596,9 +4124,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "Ctrl-v2jx",
-                "explanation": "Select the middle character on three rows and remove it with `x`."
+                "display": "x",
+                "explanation": "Delete the selected block column."
               }
             ],
             "checkpoints": [
@@ -3752,9 +4292,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "I",
+                "explanation": "Insert text at the left edge of every selected row."
+              },
+              {
+                "from": 4,
+                "to": 6,
+                "display": "> ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "Ctrl-v2jI> Esc",
-                "explanation": "Select the first column of three rows and insert `> ` before each."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -3876,9 +4440,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "A",
+                "explanation": "Append text at the right edge of every selected row."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "!",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "Ctrl-v2jA!Esc",
-                "explanation": "Select the final character column and append `!` to all three rows."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -3999,9 +4587,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "I",
+                "explanation": "Insert text at the left edge of every selected row."
+              },
+              {
+                "from": 4,
+                "to": 6,
+                "display": "# ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "Ctrl-v2jI# Esc",
-                "explanation": "Select the first column and insert `# ` on all three rows."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -4124,9 +4736,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "A",
+                "explanation": "Append text at the right edge of every selected row."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "!",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "Ctrl-v2jA!Esc",
-                "explanation": "Select the last character column and append `!` to every row."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -4278,9 +4914,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "Vj>",
-                "explanation": "Select two complete statements and indent them after confirming the range."
+                "display": ">",
+                "explanation": "Indent the selected lines."
               }
             ],
             "checkpoints": [
@@ -4394,9 +5042,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "Ctrl-v2jrx",
-                "explanation": "Use a block selection to replace all three marker spaces with `x`."
+                "display": "rx",
+                "explanation": "Replace every character in the block selection."
               }
             ],
             "checkpoints": [
@@ -4508,9 +5168,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ">",
+                "explanation": "Indent the selected lines."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "gv",
+                "explanation": "Reselect the latest Visual range."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "Vj>gv<",
-                "explanation": "Indent two rows, restore the same selection with `gv`, and correct it."
+                "display": "<",
+                "explanation": "Unindent the selection."
               }
             ],
             "checkpoints": [
@@ -4626,9 +5310,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "e",
+                "explanation": "Move to the current word end to extend the selection."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "ved",
-                "explanation": "Select `alpha` visibly, then delete it."
+                "display": "d",
+                "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [

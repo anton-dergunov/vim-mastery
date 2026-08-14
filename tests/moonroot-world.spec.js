@@ -232,6 +232,14 @@ test("uses supportive character reactions only after repeated mistakes", async (
   });
   await pressKey("q");
   expect(await page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("idle");
+  await page.locator("#characterLayer > .nix").evaluate(image => {
+    window.__reactionOpacityTransitions = [];
+    image.addEventListener("transitionend", event => {
+      if (event.propertyName === "opacity") {
+        window.__reactionOpacityTransitions.push(Number.parseFloat(getComputedStyle(image).opacity));
+      }
+    });
+  });
   await pressKey("q");
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "puzzled");
   const waitingVisual = await page.locator("#characterLayer > .nix").evaluate(image => ({
@@ -252,6 +260,7 @@ test("uses supportive character reactions only after repeated mistakes", async (
     };
   });
   expect(reactionScale.applied).toBe(reactionScale.authored);
+  await expect.poll(() => page.evaluate(() => window.__reactionOpacityTransitions)).toEqual([0, 1]);
   await pressKey("q");
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction", "encouraging");
 

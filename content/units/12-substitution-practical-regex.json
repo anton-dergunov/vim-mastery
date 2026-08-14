@@ -106,9 +106,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "/var/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 8,
+                "to": 14,
+                "display": "const/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": ":%s/var/const/g↵",
-                "explanation": "Replace `var` with `const` throughout the buffer."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -221,9 +251,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "live/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":s/draft/live/↵",
-                "explanation": "Replace `draft` with `live` on the current line."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -360,9 +414,15 @@
               },
               {
                 "from": 14,
+                "to": 15,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": "g↵",
-                "explanation": "Apply it to every match, then run the command."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -476,9 +536,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "/old/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 8,
+                "to": 12,
+                "display": "new/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":%s/old/new/g↵",
-                "explanation": "Replace the lowercase token without changing the uppercase constant."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -620,9 +710,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 5,
+                "display": "2,4s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 5,
+                "to": 14,
+                "display": "/pending/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 14,
+                "to": 20,
+                "display": "ready/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 20,
                 "to": 21,
-                "display": ":2,4s/pending/ready/↵",
-                "explanation": "Replace `pending` on lines two through four."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -742,9 +856,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "3s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 10,
+                "display": "/false/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 10,
+                "to": 15,
+                "display": "true/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": ":3s/false/true/↵",
-                "explanation": "Address line three directly and update its value."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -866,9 +1004,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 5,
+                "to": 10,
+                "display": "/old/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 10,
+                "to": 18,
+                "display": "current/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": "jVj:s/old/current/↵",
-                "explanation": "Select the middle two lines and substitute only inside that Visual range."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -986,9 +1166,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 5,
+                "display": "2,3s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 5,
+                "to": 10,
+                "display": "/off/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 10,
+                "to": 13,
+                "display": "on/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":2,3s/off/on/g↵",
-                "explanation": "Replace both `off` values, but only on lines two and three."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1116,9 +1326,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/tag/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 12,
+                "display": "item/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":s/tag/item/g↵",
-                "explanation": "Replace all three tags on the current line."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1222,9 +1462,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/old/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "new/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": ":s/old/new/↵",
-                "explanation": "Run a substitution without `g` so the second value remains."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1331,9 +1595,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/red/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 12,
+                "display": "blue/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 12,
+                "to": 14,
+                "display": "gi",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":s/red/blue/gi↵",
-                "explanation": "Use `i` and `g` to replace every case variant."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1441,9 +1735,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/foo/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "bar/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 11,
+                "to": 13,
+                "display": "gI",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":s/foo/bar/gI↵",
-                "explanation": "Use `I` explicitly so only lowercase `foo` changes."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1568,9 +1892,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/foo/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "bar/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "c",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "↵",
+                "explanation": "Run the command."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":s/foo/bar/c↵y",
-                "explanation": "Inspect the match and confirm its replacement with `y`."
+                "display": "y",
+                "explanation": "Accept this match and continue to the next one."
               }
             ],
             "checkpoints": [
@@ -1684,9 +2044,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 9,
+                "display": "/WARN/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 15,
+                "display": "ERROR/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 15,
+                "to": 17,
+                "display": "gn",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":%s/WARN/ERROR/gn↵",
-                "explanation": "Use `n` with `g` to count every match without changing the buffer."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1795,9 +2185,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/old/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "new/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "c",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "↵",
+                "explanation": "Run the command."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":s/old/new/c↵n",
-                "explanation": "Inspect the match and leave it unchanged with `n`."
+                "display": "n",
+                "explanation": "Move to the next search match."
               }
             ],
             "checkpoints": [
@@ -1909,9 +2335,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "live/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
+                "to": 16,
+                "display": "gc",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "↵",
+                "explanation": "Run the command."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":s/draft/live/gc↵a",
-                "explanation": "Use `a` to accept every match after reviewing the first one."
+                "display": "a",
+                "explanation": "Enter Insert mode after the cursor."
               }
             ],
             "checkpoints": [
@@ -2043,9 +2505,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 4,
+                "display": "cat",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "//",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 10,
+                "to": 15,
+                "display": "wolf/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 15,
+                "to": 16,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": "/cat↵:%s//wolf/g↵",
-                "explanation": "Search for `cat`, then reuse that pattern in a whole-buffer substitution."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2156,9 +2666,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 11,
+                "display": "/DEBUG /",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "/",
+                "explanation": "Leave the replacement empty to remove each match."
+              },
+              {
+                "from": 12,
                 "to": 13,
-                "display": ":%s/DEBUG //↵",
-                "explanation": "Use an empty replacement to delete every marker."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2275,9 +2809,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 12,
+                "display": "#http://#",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 12,
+                "to": 21,
+                "display": "https://#",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 21,
                 "to": 22,
-                "display": ":%s#http://#https://#↵",
-                "explanation": "Use `#` as the delimiter so URL slashes stay readable."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2391,9 +2949,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "live/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "↵",
+                "explanation": "Run the command."
+              },
+              {
+                "from": 15,
+                "to": 16,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": ":s/draft/live/↵j&",
-                "explanation": "Substitute once, move down, and use `&` to repeat the pattern and replacement."
+                "display": "&",
+                "explanation": "Repeat the latest substitution on this line."
               }
             ],
             "checkpoints": [
@@ -2521,9 +3115,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 10,
+                "display": "/^\\s\\+/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "/",
+                "explanation": "Leave the replacement empty to remove each match."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": ":%s/^\\s\\+//↵",
-                "explanation": "Remove one or more leading whitespace characters from every line."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2643,9 +3261,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 12,
+                "display": "/id-\\d\\+/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 12,
+                "to": 17,
+                "display": "id-N/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":%s/id-\\d\\+/id-N/↵",
-                "explanation": "Replace each run of digits after `id-`."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2760,9 +3402,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 12,
+                "display": "/colou\\?r/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 12,
+                "to": 17,
+                "display": "tone/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": ":s/colou\\?r/tone/g↵",
-                "explanation": "Use `\\?` so both spellings become `tone`."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2882,9 +3554,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 16,
+                "display": "/[A-Z]\\{2,4}/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 16,
+                "to": 21,
+                "display": "CODE/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 21,
                 "to": 22,
-                "display": ":%s/[A-Z]\\{2,4}/CODE/↵",
-                "explanation": "Replace uppercase codes containing two to four letters."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3025,9 +3721,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 21,
+                "display": "/\\(\\w\\+\\),\\(\\w\\+\\)/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 21,
+                "to": 27,
+                "display": "\\2,\\1/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 27,
                 "to": 28,
-                "display": ":s/\\(\\w\\+\\),\\(\\w\\+\\)/\\2,\\1/↵",
-                "explanation": "Capture both CSV fields and rebuild them in reverse order."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3152,9 +3872,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 20,
+                "display": "/\\(warn\\|error\\)/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 20,
+                "to": 26,
+                "display": "alert/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 26,
                 "to": 27,
-                "display": ":%s/\\(warn\\|error\\)/alert/↵",
-                "explanation": "Group two alternatives and replace either with `alert`."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3267,9 +4011,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 11,
+                "display": "/\\<cat\\>/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 11,
+                "to": 15,
+                "display": "[&]/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 15,
+                "to": 16,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": ":s/\\<cat\\>/[&]/g↵",
-                "explanation": "Use word boundaries and `&` so `cat` is wrapped but `catalog` is untouched."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3395,9 +4169,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 21,
+                "display": "/^\\(\\w\\+\\)=\\(.*\\)$/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 21,
+                "to": 28,
+                "display": "\\1\\r\\2/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 28,
                 "to": 29,
-                "display": ":s/^\\(\\w\\+\\)=\\(.*\\)$/\\1\\r\\2/↵",
-                "explanation": "Capture the key and value, then rebuild them on separate lines with `\\r`."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3535,9 +4333,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 17,
+                "display": "/\\v(\\w+),(\\w+)/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 17,
+                "to": 23,
+                "display": "\\2,\\1/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 23,
                 "to": 24,
-                "display": ":s/\\v(\\w+),(\\w+)/\\2,\\1/↵",
-                "explanation": "Use `\\v` to swap the two comma-separated fields with lighter punctuation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3657,9 +4479,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 14,
+                "display": "/env:\\zs.*$/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 14,
+                "to": 25,
+                "display": "production/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 25,
                 "to": 26,
-                "display": ":s/env:\\zs.*$/production/↵",
-                "explanation": "Use `\\zs` so the prefix participates in the match but remains unchanged."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3778,9 +4624,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 19,
+                "display": "/draft\\ze;locked/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 19,
+                "to": 24,
+                "display": "live/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 24,
                 "to": 25,
-                "display": ":s/draft\\ze;locked/live/↵",
-                "explanation": "Use `\\ze` so only the value before the suffix is replaced."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3902,9 +4772,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 17,
+                "display": "/\\v<id-(\\d+)>/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 17,
+                "to": 25,
+                "display": "item-\\1/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 25,
                 "to": 26,
-                "display": ":%s/\\v<id-(\\d+)>/item-\\1/↵",
-                "explanation": "Combine `%`, `\\v`, boundaries, and captures for a controlled cleanup."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [

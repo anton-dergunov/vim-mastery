@@ -486,9 +486,21 @@
               },
               {
                 "from": 4,
+                "to": 6,
+                "display": "c$",
+                "explanation": "Change from the cursor through the end of the line."
+              },
+              {
+                "from": 6,
+                "to": 11,
+                "display": "ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "c$ready⎋",
-                "explanation": "Change the remaining value."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1189,9 +1201,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/draft↵",
-                "explanation": "Search forward for draft."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -1207,9 +1231,21 @@
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "?",
+                "explanation": "Open a backward search."
+              },
+              {
+                "from": 10,
+                "to": 15,
+                "display": "ready",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": "?ready↵",
-                "explanation": "Start a backward search for ready."
+                "display": "↵",
+                "explanation": "Run the search."
               }
             ],
             "checkpoints": [
@@ -1343,9 +1379,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 8,
+                "display": "timeout",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "/timeout↵",
-                "explanation": "Search forward across the buffer."
+                "display": "↵",
+                "explanation": "Run the search."
               }
             ],
             "checkpoints": [
@@ -1453,9 +1501,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "?",
+                "explanation": "Open a backward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "ERROR",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "?ERROR↵",
-                "explanation": "Search backward for the nearest error."
+                "display": "↵",
+                "explanation": "Run the search."
               }
             ],
             "checkpoints": [
@@ -1566,9 +1626,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "cache",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/cache↵",
-                "explanation": "Find the next cache row."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -1735,9 +1807,15 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "$b",
-                "explanation": "Return to the final whole word."
+                "display": "b",
+                "explanation": "Move to the previous word start."
               },
               {
                 "from": 6,
@@ -2206,9 +2284,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "?",
+                "explanation": "Open a backward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "?draft↵",
-                "explanation": "Establish the draft pattern with a backward search."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -2224,9 +2314,21 @@
               },
               {
                 "from": 10,
+                "to": 11,
+                "display": "c",
+                "explanation": "Change the selection."
+              },
+              {
+                "from": 11,
+                "to": 15,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": "clive⎋",
-                "explanation": "Change the selected match."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 16,
@@ -2242,9 +2344,21 @@
               },
               {
                 "from": 19,
+                "to": 20,
+                "display": "c",
+                "explanation": "Change the selection."
+              },
+              {
+                "from": 20,
+                "to": 25,
+                "display": "ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 25,
                 "to": 26,
-                "display": "cready⎋",
-                "explanation": "Change the selected match."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -2418,9 +2532,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "?",
+                "explanation": "Open a backward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "?draft↵",
-                "explanation": "Search backward to the final draft."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -2612,15 +2738,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/draft↵",
-                "explanation": "Find the next draft."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
+                "to": 10,
+                "display": "cgn",
+                "explanation": "Change the next search match and enter Insert mode."
+              },
+              {
+                "from": 10,
+                "to": 14,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": "cgnlive⎋",
-                "explanation": "Change that exact search match."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -2738,9 +2888,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/draft↵",
-                "explanation": "Find the middle draft."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -2750,9 +2912,21 @@
               },
               {
                 "from": 8,
+                "to": 11,
+                "display": "cgN",
+                "explanation": "Change the previous search match and enter Insert mode."
+              },
+              {
+                "from": 11,
+                "to": 15,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": "cgNlive⎋",
-                "explanation": "Change the previous match."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -2878,9 +3052,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "?",
+                "explanation": "Open a backward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "?draft↵",
-                "explanation": "Search backward to the final draft."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -2890,9 +3076,21 @@
               },
               {
                 "from": 8,
+                "to": 11,
+                "display": "cgn",
+                "explanation": "Change the next search match and enter Insert mode."
+              },
+              {
+                "from": 11,
+                "to": 15,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": "cgnlive⎋",
-                "explanation": "Change the next match; gn remains forward."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -3963,9 +4161,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "build",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/build↵",
-                "explanation": "Search for the call name."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -4219,9 +4429,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "build",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/build↵",
-                "explanation": "Search across lines for the call."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
@@ -4365,9 +4587,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": "legacy",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "/legacy↵",
-                "explanation": "Search for the value text."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 8,
@@ -4377,9 +4611,15 @@
               },
               {
                 "from": 11,
+                "to": 16,
+                "display": "ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": "ready⎋",
-                "explanation": "Enter the replacement and return to Normal."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [

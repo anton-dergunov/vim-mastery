@@ -1058,6 +1058,17 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ mode: "visual-line", selection: { kind: "linear", from: [0, 0] } });
   });
 
+  test("advances the guidance one learner action at a time", async ({ page }) => {
+    await page.goto("/?unit=visual-selection&activity=select-line-range");
+    await expect(page.locator("#commandExplanation")).toHaveText("Switch to Visual Line mode.");
+
+    await page.evaluate(() => window.VimWilds.emit("V"));
+    await expect(page.locator("#commandExplanation")).toHaveText("Move one line down to extend the selection.");
+
+    await page.evaluate(() => window.VimWilds.emit("j"));
+    await expect(page.locator("#commandExplanation")).toHaveText("Delete the selected lines.");
+  });
+
   test("enters Ctrl-v and shifted block insertion from touch and physical keyboards", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/?unit=visual-selection&activity=prepend-comment-markers-recall");

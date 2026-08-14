@@ -18,8 +18,9 @@ export class CharacterReactions {
     reducedMotion = () => false,
     random = Math.random,
     prepareMedia,
-    fadeDurationMs = 90,
+    fadeDurationMs = 110,
     delay = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds)),
+    forceStyle = character => void character.offsetWidth,
   } = {}) {
     this.layer = layer;
     this.assetUrl = assetUrl;
@@ -39,6 +40,7 @@ export class CharacterReactions {
     });
     this.fadeDurationMs = fadeDurationMs;
     this.delay = delay;
+    this.forceStyle = forceStyle;
     this.activityKey = null;
     this.state = "idle";
     this.resetTimer = null;
@@ -106,6 +108,7 @@ export class CharacterReactions {
     const shouldFade = !this.reducedMotion() && this.fadeDurationMs > 0;
     if (shouldFade) {
       this.fadeOwner = request;
+      character.style.setProperty("--reaction-fade-duration", `${this.fadeDurationMs}ms`);
       character.classList.add("reaction-fading-out");
       await this.delay(this.fadeDurationMs);
       if (request !== this.mediaRequest || character !== this.element()) {
@@ -115,7 +118,13 @@ export class CharacterReactions {
     }
 
     this.commitVisual(character, visual);
-    if (this.fadeOwner === request) this.cancelFade(character);
+    if (this.fadeOwner === request) {
+      // Force the hidden pose to be painted as the new transition origin.
+      // Without this boundary, browsers can batch the src swap and class
+      // removal into one frame, which reads as a blink instead of a fade-in.
+      this.forceStyle(character);
+      this.cancelFade(character);
+    }
     return true;
   }
 

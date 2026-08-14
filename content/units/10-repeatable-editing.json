@@ -111,21 +111,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;⎋",
-                "explanation": "Append once and finish the change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
+                "to": 4,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 4,
                 "to": 5,
-                "display": "j.",
-                "explanation": "Move, then replay."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               },
               {
                 "from": 5,
+                "to": 6,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "j.",
-                "explanation": "Replay at the third line."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -267,15 +291,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ci'",
+                "explanation": "Change only the text inside the single quotes."
+              },
+              {
+                "from": 3,
+                "to": 8,
+                "display": "ready",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "ci'ready⎋",
-                "explanation": "Create one complete quote change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 12,
                 "to": 13,
-                "display": "j.j.",
-                "explanation": "Move and replay twice."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -393,15 +447,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;⎋",
-                "explanation": "Prepare the append."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
+                "to": 4,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "j.j.",
-                "explanation": "Apply it to both remaining calls."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -525,15 +609,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "true",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "ciwtrue⎋",
-                "explanation": "Prepare the value change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "j.j.",
-                "explanation": "Replay it twice."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -668,15 +782,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ",",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A,⎋",
-                "explanation": "Make a line-end-aware append."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
+                "to": 4,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "j.j.",
-                "explanation": "Replay on different lengths."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -800,15 +944,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "ci'",
+                "explanation": "Change only the text inside the single quotes."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "prod",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "ci'prod⎋",
-                "explanation": "Change a structural target."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "j.j.",
-                "explanation": "Replay independently of key length."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -934,21 +1108,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "f=",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "f=r:",
-                "explanation": "Find and replace the first separator."
+                "display": "r:",
+                "explanation": "Replace the character under the cursor."
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "f=",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "j0f=.",
-                "explanation": "Find the next separator and replay."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 11,
+                "to": 13,
+                "display": "f=",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": "j0f=.",
-                "explanation": "Repeat once more."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1082,15 +1298,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": ".await",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "A.await⎋",
-                "explanation": "Prepare a line-end-aware append."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "j.j.",
-                "explanation": "Replay on the longer expressions."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1235,21 +1481,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 3,
+                "display": "2f=",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 4,
+                "to": 7,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 7,
+                "to": 10,
+                "display": "new",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 10,
                 "to": 11,
-                "display": "2f=lciwnew⎋",
-                "explanation": "Find the middle assignment and prepare the change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 11,
+                "to": 13,
+                "display": "2,",
+                "explanation": "Repeat the latest character find in the opposite direction."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": "2,l.",
-                "explanation": "Reverse past the current marker to the first value and replay."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               },
               {
                 "from": 15,
+                "to": 17,
+                "display": "2;",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": "2;l.",
-                "explanation": "Continue forward to the last value and replay."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1384,15 +1678,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "ft",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 5,
+                "to": 9,
+                "display": "done",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 9,
                 "to": 10,
-                "display": "ftciwdone⎋",
-                "explanation": "Find and change the first status."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 10,
+                "to": 11,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ";.;.",
-                "explanation": "Repeat the find and change twice."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1522,21 +1852,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "f?",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "f?r>",
-                "explanation": "Find and repair the first marker."
+                "display": "r>",
+                "explanation": "Replace the character under the cursor."
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "j0;.",
-                "explanation": "Reuse the find on the next line, then dot."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "j0;.",
-                "explanation": "Repeat once more."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1667,21 +2039,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "f=",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "on",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "f=lciwon⎋",
-                "explanation": "Find the first assignment and prepare the value change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": ";l.",
-                "explanation": "Reach and change the second value."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               },
               {
                 "from": 12,
+                "to": 13,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ";l.",
-                "explanation": "Reach and change the final value."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1839,21 +2259,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/draft↵",
-                "explanation": "Establish search history."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
+                "to": 10,
+                "display": "ci\"",
+                "explanation": "Change only the text inside the double quotes."
+              },
+              {
+                "from": 10,
+                "to": 14,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": "ci\"live⎋",
-                "explanation": "Prepare the structural change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": "n.n.",
-                "explanation": "Advance and replay twice."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -1994,21 +2456,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "?",
+                "explanation": "Open a backward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "debug",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "?debug↵",
-                "explanation": "Search backward from the bottom."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
+                "to": 10,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 10,
+                "to": 14,
+                "display": "info",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": "ciwinfo⎋",
-                "explanation": "Prepare the level change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": "n.n.",
-                "explanation": "Continue backward and replay."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -2149,27 +2653,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 8,
+                "display": "pending",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "/pending↵",
-                "explanation": "Find the middle value."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 9,
+                "to": 12,
+                "display": "ci'",
+                "explanation": "Change only the text inside the single quotes."
+              },
+              {
+                "from": 12,
+                "to": 18,
+                "display": "active",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": "ci'active⎋",
-                "explanation": "Prepare the change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 19,
+                "to": 20,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 20,
                 "to": 21,
-                "display": "n.",
-                "explanation": "Continue forward."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               },
               {
                 "from": 21,
+                "to": 22,
+                "display": "N",
+                "explanation": "Move to the previous search match."
+              },
+              {
+                "from": 22,
                 "to": 23,
-                "display": "N.",
-                "explanation": "Reverse to the untouched earlier match."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -2317,21 +2857,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 10,
+                "display": "E_TIMEOUT",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 10,
                 "to": 11,
-                "display": "/E_TIMEOUT↵",
-                "explanation": "Search only for the intended code."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 11,
+                "to": 14,
+                "display": "ciw",
+                "explanation": "Change inside the current word and enter Insert mode."
+              },
+              {
+                "from": 14,
+                "to": 21,
+                "display": "TIMEOUT",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 21,
                 "to": 22,
-                "display": "ciwTIMEOUT⎋",
-                "explanation": "Prepare the exact code change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 22,
+                "to": 23,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 23,
+                "to": 24,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 24,
+                "to": 25,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 25,
                 "to": 26,
-                "display": "n.n.",
-                "explanation": "Replay only on later matches."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -2589,9 +3171,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "..",
-                "explanation": "Replay twice, with a stop available after either dot."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -2992,21 +3580,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/false/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "true/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":s/false/true/↵",
-                "explanation": "Run one current-line substitution."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 16,
                 "to": 18,
-                "display": "j@:",
-                "explanation": "Move and replay the Ex command."
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
               },
               {
                 "from": 18,
+                "to": 19,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 19,
                 "to": 21,
-                "display": "j@:",
-                "explanation": "Replay on the final line."
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
               }
             ],
             "checkpoints": [
@@ -3147,15 +3771,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 8,
+                "display": "/None/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "0/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 10,
                 "to": 11,
-                "display": ":s/None/0/↵",
-                "explanation": "Create the Ex recipe."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 11,
+                "to": 12,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 12,
+                "to": 14,
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 15,
                 "to": 17,
-                "display": "j@:j@:",
-                "explanation": "Replay it on both later lines."
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
               }
             ],
             "checkpoints": [
@@ -3288,15 +3954,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 16,
+                "display": "active/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": ":s/draft/active/↵",
-                "explanation": "Define the current-line edit."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 17,
+                "to": 18,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 18,
+                "to": 20,
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
+              },
+              {
+                "from": 20,
+                "to": 21,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 21,
                 "to": 23,
-                "display": "j@:j@:",
-                "explanation": "Replay it on later tuples."
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
               }
             ],
             "checkpoints": [
@@ -3428,15 +4136,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/TRACE/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "INFO/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":s/TRACE/INFO/↵",
-                "explanation": "Run the first Ex change."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 16,
+                "to": 18,
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
+              },
+              {
+                "from": 18,
+                "to": 19,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 19,
                 "to": 21,
-                "display": "j@:j@:",
-                "explanation": "Replay on the remaining assignments."
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
               }
             ],
             "checkpoints": [
@@ -3590,15 +4340,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/old/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "new/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": ":s/old/new/↵",
-                "explanation": "Establish the substitution recipe."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 12,
+                "to": 13,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "&",
+                "explanation": "Repeat the latest substitution on this line."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": "j&j&",
-                "explanation": "Apply it on the next two lines."
+                "display": "&",
+                "explanation": "Repeat the latest substitution on this line."
               }
             ],
             "checkpoints": [
@@ -3723,15 +4515,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 8,
+                "display": "/TODO/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 8,
+                "to": 13,
+                "display": "DONE/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":s/TODO/DONE/g↵",
-                "explanation": "Use `g` on the first line."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": "j&",
-                "explanation": "Repeat without inherited flags."
+                "display": "&",
+                "explanation": "Repeat the latest substitution on this line."
               }
             ],
             "checkpoints": [
@@ -3866,21 +4694,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "/cat/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 7,
+                "to": 12,
+                "display": "wolf/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 12,
                 "to": 13,
-                "display": ":s/cat/wolf/↵",
-                "explanation": "Remember the replacement `wolf`."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 13,
+                "to": 14,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 14,
+                "to": 17,
+                "display": "fox",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": "/fox↵",
-                "explanation": "Make `fox` the latest search pattern."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 18,
+                "to": 19,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 19,
+                "to": 20,
+                "display": "~",
+                "explanation": "Reuse the latest replacement with the current search pattern."
+              },
+              {
+                "from": 20,
                 "to": 21,
-                "display": ":~↵",
-                "explanation": "Apply the old replacement to the latest search."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -4019,21 +4895,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "live/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":s/draft/live/↵",
-                "explanation": "Establish the replacement."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 16,
+                "to": 23,
+                "display": "staging",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 23,
                 "to": 24,
-                "display": "/staging↵",
-                "explanation": "Change the active search pattern."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 24,
+                "to": 25,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 25,
+                "to": 26,
+                "display": "~",
+                "explanation": "Reuse the latest replacement with the current search pattern."
+              },
+              {
+                "from": 26,
                 "to": 27,
-                "display": ":~↵",
-                "explanation": "Use that pattern with `live`."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -4166,15 +5090,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 10,
+                "display": "/legacy/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 10,
+                "to": 17,
+                "display": "modern/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":s/legacy/modern/↵",
-                "explanation": "Create the exact recipe."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 18,
+                "to": 19,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 19,
                 "to": 20,
-                "display": "j&",
-                "explanation": "Apply it on the next line."
+                "display": "&",
+                "explanation": "Repeat the latest substitution on this line."
               }
             ],
             "checkpoints": [
@@ -4313,21 +5267,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "/draft↵",
-                "explanation": "Choose the repeated targets."
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
                 "from": 7,
+                "to": 10,
+                "display": "ci\"",
+                "explanation": "Change only the text inside the double quotes."
+              },
+              {
+                "from": 10,
+                "to": 14,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": "ci\"live⎋",
-                "explanation": "Prepare one structural edit."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 15,
+                "to": 16,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 18,
                 "to": 19,
-                "display": "n.n.",
-                "explanation": "Select and replay."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -4451,15 +5447,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "f?",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 2,
                 "to": 4,
-                "display": "f?r,",
-                "explanation": "Find and replace once."
+                "display": "r,",
+                "explanation": "Replace the character under the cursor."
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": ".",
+                "explanation": "Repeat the latest change."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": ";",
+                "explanation": "Repeat the latest character find in the same direction."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": ";.;.",
-                "explanation": "Reuse both operations."
+                "display": ".",
+                "explanation": "Repeat the latest change."
               }
             ],
             "checkpoints": [
@@ -4701,15 +5721,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 2,
+                "to": 9,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 9,
+                "to": 15,
+                "display": "final/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": ":s/draft/final/↵",
-                "explanation": "Prepare the row-local Ex command."
+                "display": "↵",
+                "explanation": "Run the command."
               },
               {
                 "from": 16,
+                "to": 17,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 17,
+                "to": 19,
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
+              },
+              {
+                "from": 19,
+                "to": 20,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 20,
                 "to": 22,
-                "display": "j@:j@:",
-                "explanation": "Replay it on the remaining elements."
+                "display": "@:",
+                "explanation": "Replay the latest Ex command."
               }
             ],
             "checkpoints": [

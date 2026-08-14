@@ -90,8 +90,18 @@
           "script": {
             "steps": [{"key": "i", "kind": "command", "cue": "enter Insert"}, {"key": "Escape", "kind": "control", "cue": "return to Normal"}],
             "commandGroups": [
-              {"from": 0, "to": 1, "display": "i", "explanation": "Enter Insert mode at the cursor."},
-              {"from": 1, "to": 2, "display": "Esc", "explanation": "Cancel text entry and return to Normal."}
+              {
+                "from": 0,
+                "to": 1,
+                "display": "i",
+                "explanation": "Enter Insert mode at the cursor."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "Esc",
+                "explanation": "Cancel text entry and return to Normal."
+              }
             ],
             "checkpoints": [
               {"afterStep": 1, "cursor": [0, 0], "mode": "insert", "caption": "The same buffer, now in Insert mode."},
@@ -118,7 +128,7 @@
             "initial": {"lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 6], "mode": "insert", "setup": {"cursor": [0, 6], "steps": ["i"]}},
             "target": {"lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 5], "mode": "normal"}
           },
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Return to the Normal-mode home base."}], "checkpoints": [{"afterStep": 1, "lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 5], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Return to the Normal-mode home base."}], "checkpoints": [{"afterStep": 1, "lines": ["const port = 3000;", "startServer(port);"], "cursor": [0, 5], "mode": "normal"}]},
           "hints": ["Use the dedicated escape key.", "Press `Esc`."],
           "feedback": {"success": "Normal mode restored.", "why": "The seeded Insert state was cancelled without touching the buffer."},
           "skills": {"primary": ["escape-to-normal"], "supporting": ["insert-mode"]},
@@ -140,7 +150,7 @@
             "initial": {"lines": ["service: api", "replicas: 3"], "cursor": [1, 10], "mode": "replace", "setup": {"cursor": [1, 10], "steps": ["R"]}},
             "target": {"lines": ["service: api", "replicas: 3"], "cursor": [1, 9], "mode": "normal"}
           },
-          "script": {"steps": ["Ctrl-["], "commandGroups": [{"from": 0, "to": 1, "display": "Ctrl-[", "explanation": "Ctrl-[ is Vim's keyboard-level alternative to Escape."}], "checkpoints": [{"afterStep": 1, "lines": ["service: api", "replicas: 3"], "cursor": [1, 9], "mode": "normal"}]},
+          "script": {"steps": ["Ctrl-["], "commandGroups": [{"from":0,"to":1,"display":"Ctrl-[","explanation":"Ctrl-[ is Vim's keyboard-level alternative to Escape."}], "checkpoints": [{"afterStep": 1, "lines": ["service: api", "replicas: 3"], "cursor": [1, 9], "mode": "normal"}]},
           "hints": ["Latch Ctrl, then press `[`."],
           "feedback": {"success": "The alternate chord returned to Normal.", "why": "Vim treats `Ctrl-[` like Escape; hosts may reserve it, so Esc remains the primary legend."},
           "skills": {"primary": ["ctrl-bracket-to-normal"], "supporting": ["replace-mode", "modifier-chord"]},
@@ -199,9 +209,42 @@
           "script": {
             "steps": ["v", "Escape", "V", "Escape", "Ctrl-v", "Escape"],
             "commandGroups": [
-              {"from": 0, "to": 2, "display": "v Esc", "explanation": "Enter Visual Character, then cancel."},
-              {"from": 2, "to": 4, "display": "V Esc", "explanation": "Enter Visual Line, then cancel."},
-              {"from": 4, "to": 6, "display": "Ctrl-v Esc", "explanation": "Enter Visual Block, then cancel."}
+              {
+                "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Ctrl-v",
+                "explanation": "Switch to Visual Block mode."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
             ],
             "checkpoints": [
               {"afterStep": 1, "mode": "visual"},
@@ -232,7 +275,7 @@
             "initial": {"lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 2], "mode": "visual", "setup": {"cursor": [1, 1], "steps": ["v"]}},
             "target": {"lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 1], "mode": "normal"}
           },
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Cancel the visible selection."}], "checkpoints": [{"afterStep": 1, "lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 1], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Cancel the visible selection."}], "checkpoints": [{"afterStep": 1, "lines": ["Release checklist", "- tests", "- notes"], "cursor": [1, 1], "mode": "normal"}]},
           "hints": ["Use the same safe return as Insert mode."],
           "feedback": {"success": "Selection cancelled.", "why": "Escape left the text unchanged and restored Normal mode."},
           "skills": {"primary": ["visual-cancellation"], "supporting": ["visual-mode-recognition"]},
@@ -254,7 +297,7 @@
             "initial": {"lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "visual-block", "setup": {"cursor": [1, 3], "steps": ["Ctrl-v"]}},
             "target": {"lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "normal"}
           },
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Release the rectangular selection."}], "checkpoints": [{"afterStep": 1, "lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Release the rectangular selection."}], "checkpoints": [{"afterStep": 1, "lines": ["id,state", "a1,ready", "b2,ready"], "cursor": [1, 3], "mode": "normal"}]},
           "hints": ["The selection shape changes; the cancellation key does not."],
           "feedback": {"success": "Block selection cancelled.", "why": "Escape is a consistent recovery action across Visual modes."},
           "skills": {"primary": ["visual-cancellation"], "supporting": ["visual-block-mode"]},
@@ -329,8 +372,24 @@
           "script": {
             "steps": [{"key": "d", "kind": "operator", "cue": "begin delete"}, {"key": "Escape", "kind": "control", "cue": "cancel operator"}, {"key": ":", "kind": "command", "cue": "open Command-line"}, {"key": "Escape", "kind": "control", "cue": "cancel Command-line"}],
             "commandGroups": [
-              {"from": 0, "to": 2, "display": "d Esc", "explanation": "The delete operator waits; Escape cancels it."},
-              {"from": 2, "to": 4, "display": ": Esc", "explanation": "Command-line opens; Escape closes it."}
+              {
+                "from": 0,
+                "to": 2,
+                "display": "d Esc",
+                "explanation": "The delete operator waits; Escape cancels it."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "Esc",
+                "explanation": "Close the command line without running anything."
+              }
             ],
             "checkpoints": [
               {"afterStep": 1, "cursor": [0, 0], "mode": "operator-pending"},
@@ -359,7 +418,7 @@
             "initial": {"lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "operator-pending", "setup": {"cursor": [0, 0], "steps": ["d"]}},
             "target": {"lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "normal"}
           },
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Discard the incomplete delete composition."}], "checkpoints": [{"afterStep": 1, "lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Discard the incomplete delete composition."}], "checkpoints": [{"afterStep": 1, "lines": ["timeout := 30", "start(timeout)"], "cursor": [0, 0], "mode": "normal"}]},
           "hints": ["Do not supply a motion; cancel the operator."],
           "feedback": {"success": "The operator was cancelled.", "why": "No range was supplied, so Escape returned to Normal without deleting."},
           "skills": {"primary": ["operator-cancellation"], "supporting": ["operator-pending"]},
@@ -381,7 +440,7 @@
             "initial": {"lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "command-line", "setup": {"cursor": [0, 0], "steps": [":"]}},
             "target": {"lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "normal"}
           },
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Close the prompt without executing it."}], "checkpoints": [{"afterStep": 1, "lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Close the prompt without executing it."}], "checkpoints": [{"afterStep": 1, "lines": ["MODE=preview", "run_service"], "cursor": [0, 0], "mode": "normal"}]},
           "hints": ["Use the universal cancellation key."],
           "feedback": {"success": "Command-line closed.", "why": "Escape abandoned the empty Ex command and restored Normal mode."},
           "skills": {"primary": ["command-line-cancellation"], "supporting": ["command-line-mode"]},
@@ -473,7 +532,14 @@
           },
           "script": {
             "steps": [{"key": "2", "kind": "count", "cue": "twice"}, {"key": "d", "kind": "operator", "cue": "delete"}, {"key": "w", "kind": "motion", "cue": "word range"}],
-            "commandGroups": [{"from": 0, "to": 3, "display": "2dw", "explanation": "Count two, apply delete, and use the word motion as the range."}],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "2dw",
+                "explanation": "Count two, apply delete, and use the word motion as the range."
+              }
+            ],
             "checkpoints": [
               {"afterStep": 2, "cursor": [0, 0], "mode": "operator-pending", "caption": "The operator is still waiting for its range."},
               {"afterStep": 3, "lines": ["cache entry", "keep current cache entry"], "cursor": [0, 0], "mode": "normal", "affectedRange": {"from": [0, 0], "to": [0, 13]}}
@@ -499,7 +565,7 @@
             "initial": {"lines": ["draft cache entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal"},
             "target": {"lines": ["entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal"}
           },
-          "script": {"steps": [{"key": "2", "kind": "count", "cue": "twice"}, {"key": "d", "kind": "operator", "cue": "delete"}, {"key": "w", "kind": "motion", "cue": "word range"}], "commandGroups": [{"from": 0, "to": 3, "display": "2dw", "explanation": "Read it as two + delete + word range."}], "checkpoints": [{"afterStep": 2, "cursor": [0, 0], "mode": "operator-pending"}, {"afterStep": 3, "lines": ["entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal", "affectedRange": {"from": [0, 0], "to": [0, 12]}}]},
+          "script": {"steps": [{"key": "2", "kind": "count", "cue": "twice"}, {"key": "d", "kind": "operator", "cue": "delete"}, {"key": "w", "kind": "motion", "cue": "word range"}], "commandGroups": [{"from":0,"to":3,"display":"2dw","explanation":"Read it as two + delete + word range."}], "checkpoints": [{"afterStep": 2, "cursor": [0, 0], "mode": "operator-pending"}, {"afterStep": 3, "lines": ["entry", "stable cache entry"], "cursor": [0, 0], "mode": "normal", "affectedRange": {"from": [0, 0], "to": [0, 12]}}]},
           "hints": ["Start with how many word ranges.", "Use `2`, then `d`, then `w`."],
           "feedback": {"success": "A three-part Vim sentence.", "why": "You composed a count, an operator, and a motion instead of treating the keys as unrelated shortcuts."},
           "skills": {"primary": ["command-grammar"], "supporting": ["count", "delete-operator", "word-motion"]},
@@ -570,7 +636,7 @@
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {"initial": {"lines": ["ready = True"], "cursor": [0, 8], "mode": "insert", "setup": {"cursor": [0, 8], "steps": ["i"]}}, "target": {"lines": ["ready = True"], "cursor": [0, 7], "mode": "normal"}},
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Return to the known Normal state."}], "checkpoints": [{"afterStep": 1, "lines": ["ready = True"], "cursor": [0, 7], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Return to the known Normal state."}], "checkpoints": [{"afterStep": 1, "lines": ["ready = True"], "cursor": [0, 7], "mode": "normal"}]},
           "hints": ["Use the safe return key."],
           "feedback": {"success": "Insert state cleared.", "why": "You recognized the state and returned to Normal without editing."},
           "skills": {"primary": ["escape-to-normal"], "supporting": ["insert-mode"]},
@@ -590,7 +656,7 @@
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {"initial": {"lines": ["const stable = true;"], "cursor": [0, 0], "mode": "operator-pending", "setup": {"cursor": [0, 0], "steps": ["d"]}}, "target": {"lines": ["const stable = true;"], "cursor": [0, 0], "mode": "normal"}},
-          "script": {"steps": ["Escape"], "commandGroups": [{"from": 0, "to": 1, "display": "Esc", "explanation": "Cancel the incomplete operator."}], "checkpoints": [{"afterStep": 1, "lines": ["const stable = true;"], "cursor": [0, 0], "mode": "normal"}]},
+          "script": {"steps": ["Escape"], "commandGroups": [{"from":0,"to":1,"display":"Esc","explanation":"Cancel the incomplete operator."}], "checkpoints": [{"afterStep": 1, "lines": ["const stable = true;"], "cursor": [0, 0], "mode": "normal"}]},
           "hints": ["Do not complete the delete sentence."],
           "feedback": {"success": "Pending operator cleared.", "why": "You cancelled incomplete intent instead of supplying a destructive range."},
           "skills": {"primary": ["operator-cancellation"], "supporting": ["operator-pending"]},

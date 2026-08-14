@@ -107,9 +107,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 13,
+                "display": "2,3normal A;",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":2,3normal A;↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -230,9 +242,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 14,
+                "display": "2,4normal I# ",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":2,4normal I# ↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -347,9 +371,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 11,
+                "display": "%normal A;",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": ":%normal A;↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -467,9 +503,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 14,
+                "display": "2,3normal $r,",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":2,3normal $r,↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -603,9 +651,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 14,
+                "display": "%normal! I// ",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":%normal! I// ↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -722,9 +782,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 4,
+                "to": 13,
+                "display": "normal A,",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": "jVj:normal A,↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -848,9 +938,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 17,
+                "display": "2,4normal! 0f=r:",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":2,4normal! 0f=r:↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -966,9 +1068,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 12,
+                "display": "%normal! ^x",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 12,
                 "to": 13,
-                "display": ":%normal! ^x↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1104,9 +1218,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 15,
+                "display": "g/DEBUG/delete",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": ":g/DEBUG/delete↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1217,9 +1343,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": "g/^#/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": ":g/^#/d↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1339,9 +1477,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 12,
+                "display": "2,6g/TEMP/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 12,
                 "to": 13,
-                "display": ":2,6g/TEMP/d↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1463,9 +1613,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 16,
+                "display": "g/TODO\\|FIXME/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": ":g/TODO\\|FIXME/d↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1598,9 +1760,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 14,
+                "display": "v/keep/delete",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 14,
                 "to": 15,
-                "display": ":v/keep/delete↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1718,9 +1892,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 17,
+                "display": "v/^export/delete",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":v/^export/delete↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1840,9 +2026,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 15,
+                "display": "2,5v/enabled/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 15,
                 "to": 16,
-                "display": ":2,5v/enabled/d↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -1956,9 +2154,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 10,
+                "display": "v/ERROR/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 10,
                 "to": 11,
-                "display": ":v/ERROR/d↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2102,9 +2312,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 10,
+                "display": "g/ready/s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 10,
+                "to": 19,
+                "display": "/enabled/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 19,
+                "to": 26,
+                "display": "active/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 26,
                 "to": 27,
-                "display": ":g/ready/s/enabled/active/↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2226,9 +2460,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 11,
+                "display": "g/^const/s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 11,
+                "to": 16,
+                "display": "/old/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 16,
+                "to": 20,
+                "display": "new/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 20,
                 "to": 21,
-                "display": ":g/^const/s/old/new/↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2360,9 +2618,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 13,
+                "display": "2,4g/ERROR/s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 13,
+                "to": 19,
+                "display": "/open/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 19,
+                "to": 26,
+                "display": "closed/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 26,
                 "to": 27,
-                "display": ":2,4g/ERROR/s/open/closed/↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2492,9 +2774,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 12,
+                "display": "v/archive/s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 12,
+                "to": 19,
+                "display": "/draft/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 19,
+                "to": 24,
+                "display": "live/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 24,
                 "to": 25,
-                "display": ":v/archive/s/draft/live/↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2633,9 +2939,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 19,
+                "display": "g/^const/normal A;",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 19,
                 "to": 20,
-                "display": ":g/^const/normal A;↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2756,9 +3074,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 19,
+                "display": "g/TODO/normal I// ",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 19,
                 "to": 20,
-                "display": ":g/TODO/normal I// ↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -2885,9 +3215,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 25,
+                "display": "v/^#/normal A # reviewed",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 25,
                 "to": 26,
-                "display": ":v/^#/normal A # reviewed↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3012,9 +3354,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 23,
+                "display": "g/enabled/normal 0f=r:",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 23,
                 "to": 24,
-                "display": ":g/enabled/normal 0f=r:↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3170,9 +3524,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 20,
+                "display": "g/^target/normal @a",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 20,
                 "to": 21,
-                "display": ":g/^target/normal @a↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3308,9 +3674,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 19,
+                "display": "g/^const/normal @a",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 19,
                 "to": 20,
-                "display": ":g/^const/normal @a↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3449,9 +3827,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 20,
+                "display": "g/enabled/normal @a",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 20,
                 "to": 21,
-                "display": ":g/enabled/normal @a↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3590,9 +3980,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 17,
+                "display": "g/TODO/normal @a",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 17,
                 "to": 18,
-                "display": ":g/TODO/normal @a↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3728,9 +4130,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 13,
+                "display": "2,4normal A,",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":2,4normal A,↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3847,9 +4261,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 13,
+                "display": "g/obsolete/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": ":g/obsolete/d↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -3979,9 +4405,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 12,
+                "display": "g/^export/s",
+                "explanation": "Choose the line scope and start a substitution."
+              },
+              {
+                "from": 12,
+                "to": 22,
+                "display": "/internal/",
+                "explanation": "Enter the search pattern for the substitution."
+              },
+              {
+                "from": 22,
+                "to": 29,
+                "display": "public/",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 29,
                 "to": 30,
-                "display": ":g/^export/s/internal/public/↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -4110,9 +4560,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 25,
+                "display": "g/^const\\|^let/normal A;",
+                "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
+              },
+              {
+                "from": 25,
                 "to": 26,
-                "display": ":g/^const\\|^let/normal A;↩",
-                "explanation": "Choose the line set first, then run one deterministic transformation."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [

@@ -106,21 +106,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "// ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI// ⎋q",
-                "explanation": "Record one complete line-start insertion in register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
                 "to": 11,
-                "display": "j@a",
-                "explanation": "Move to the next row and replay register a."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 11,
+                "to": 12,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 12,
                 "to": 14,
-                "display": "j@@",
-                "explanation": "Move once more and replay the latest macro."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -262,21 +298,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "# ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "qaI# ⎋q",
-                "explanation": "Record one complete line-start insertion in register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 10,
-                "display": "j@a",
-                "explanation": "Move to the next row and replay register a."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 13,
-                "display": "j@@",
-                "explanation": "Move once more and replay the latest macro."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -419,21 +491,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "-- ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI-- ⎋q",
-                "explanation": "Record one complete line-start insertion in register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
                 "to": 11,
-                "display": "j@a",
-                "explanation": "Move to the next row and replay register a."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 11,
+                "to": 12,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 12,
                 "to": 14,
-                "display": "j@@",
-                "explanation": "Move once more and replay the latest macro."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -575,21 +683,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "# ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "qaI# ⎋q",
-                "explanation": "Record one complete line-start insertion in register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 10,
-                "display": "j@a",
-                "explanation": "Move to the next row and replay register a."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 13,
-                "display": "j@@",
-                "explanation": "Move once more and replay the latest macro."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -749,15 +893,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "! ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI! ⎋jq",
-                "explanation": "Record the edit and the movement to the next row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 10,
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
+              },
+              {
+                "from": 10,
                 "to": 12,
-                "display": "@a@@",
-                "explanation": "Replay once by name and once as the latest macro."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -889,15 +1069,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "- ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI- ⎋jq",
-                "explanation": "Record the edit and the movement to the next row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 10,
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
+              },
+              {
+                "from": 10,
                 "to": 12,
-                "display": "@a@@",
-                "explanation": "Use the named macro, then repeat the latest one."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -1030,9 +1246,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "# ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI# ⎋jq",
-                "explanation": "Record the edit and the movement to the next row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
@@ -1187,9 +1433,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": ">",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "qaI>⎋jq",
-                "explanation": "Record the edit and the movement to the next row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 7,
@@ -1371,9 +1647,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "qa0f:r=jq",
-                "explanation": "Record a delimiter-anchored edit that advances one row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 9,
@@ -1533,9 +1839,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f|",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r,",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "qa0f|r,jq",
-                "explanation": "Record a delimiter-anchored edit that advances one row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 9,
@@ -1690,9 +2026,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f(",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 8,
+                "display": "di(",
+                "explanation": "Delete everything inside the parentheses."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 9,
                 "to": 10,
-                "display": "qa0f(di(jq",
-                "explanation": "Record a parenthesis text-object edit and advance."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 10,
@@ -1842,15 +2208,63 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "TODO",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 11,
+                "to": 13,
+                "display": "r!",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": "qa/TODO↵0f:r!q",
-                "explanation": "Record the search and delimiter edit together."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 14,
+                "to": 16,
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
+              },
+              {
+                "from": 16,
                 "to": 18,
-                "display": "@a@@",
-                "explanation": "Replay the search-driven macro twice."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -2011,9 +2425,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "qa0f:r=jq",
-                "explanation": "Record a delimiter-anchored edit that advances one row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 9,
@@ -2173,9 +2617,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "qa0f:r=jq",
-                "explanation": "Record a delimiter-anchored edit that advances one row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 9,
@@ -2335,9 +2809,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "qa0f:r=jq",
-                "explanation": "Record a delimiter-anchored edit that advances one row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 9,
@@ -2497,9 +3001,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "qa0f:r=jq",
-                "explanation": "Record a delimiter-anchored edit that advances one row."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 9,
@@ -2667,9 +3201,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f;",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "x",
+                "explanation": "Delete the character under the cursor."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f;xjq",
-                "explanation": "Record an anchored deletion and advance."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
@@ -2806,9 +3370,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f|",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "x",
+                "explanation": "Delete the character under the cursor."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f|xjq",
-                "explanation": "Record an anchored deletion and advance."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
@@ -2947,9 +3541,45 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 3,
+                "to": 9,
+                "display": "TARGET",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "x",
+                "explanation": "Delete the character under the cursor."
+              },
+              {
+                "from": 12,
                 "to": 13,
-                "display": "qa/TARGET↵0xq",
-                "explanation": "Record a successful search and deletion."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 13,
@@ -3086,9 +3716,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f,",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "x",
+                "explanation": "Delete the character under the cursor."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f,xjq",
-                "explanation": "Record an anchored deletion and advance."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
@@ -3256,15 +3916,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f:r=q",
-                "explanation": "Record the transformation without movement."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 10,
+                "display": "qA",
+                "explanation": "Start recording into register A."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "qAjq",
-                "explanation": "Append a downward movement to register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 12,
@@ -3448,15 +4144,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f|",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r:",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f|r:q",
-                "explanation": "Record the transformation without movement."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 10,
+                "display": "qA",
+                "explanation": "Start recording into register A."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "qAjq",
-                "explanation": "Append a downward movement to register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 12,
@@ -3640,15 +4372,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f:r=q",
-                "explanation": "Record the transformation without movement."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 10,
+                "display": "qA",
+                "explanation": "Start recording into register A."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "qAjq",
-                "explanation": "Append a downward movement to register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 12,
@@ -3832,15 +4600,51 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "f:",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "r=",
+                "explanation": "Replace the character under the cursor."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qa0f:r=q",
-                "explanation": "Record the transformation without movement."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 10,
+                "display": "qA",
+                "explanation": "Start recording into register A."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "qAjq",
-                "explanation": "Append a downward movement to register a."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 12,
@@ -4040,9 +4844,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 2,
                 "to": 5,
-                "display": "j$\"ap",
-                "explanation": "Move to the scratch row and put the macro text."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -4175,9 +4991,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 2,
                 "to": 5,
-                "display": "j$\"ap",
-                "explanation": "Put the recorded keys for inspection."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -4323,21 +5151,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "k",
+                "explanation": "Move one line up."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "f;",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 4,
                 "to": 6,
-                "display": "k0f;r:",
-                "explanation": "Return to the macro text and repair its bad anchor."
+                "display": "r:",
+                "explanation": "Replace the character under the cursor."
               },
               {
                 "from": 6,
+                "to": 7,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "\"ay$",
+                "explanation": "Apply the edit using the selected register."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "0\"ay$j",
-                "explanation": "Yank the repaired command text into register a and return to the data."
+                "display": "j",
+                "explanation": "Move one line down."
               },
               {
                 "from": 12,
+                "to": 14,
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
+              },
+              {
+                "from": 14,
                 "to": 16,
-                "display": "@a@@",
-                "explanation": "Replay the repaired macro twice."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -4524,21 +5388,57 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "k",
+                "explanation": "Move one line up."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "f;",
+                "explanation": "Find the requested character on this line."
+              },
+              {
+                "from": 4,
                 "to": 6,
-                "display": "k0f;r|",
-                "explanation": "Return to the macro text and repair its bad anchor."
+                "display": "r|",
+                "explanation": "Replace the character under the cursor."
               },
               {
                 "from": 6,
+                "to": 7,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 7,
+                "to": 11,
+                "display": "\"ay$",
+                "explanation": "Apply the edit using the selected register."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "0\"ay$j",
-                "explanation": "Yank the repaired command text into register a and return to the data."
+                "display": "j",
+                "explanation": "Move one line down."
               },
               {
                 "from": 12,
+                "to": 14,
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
+              },
+              {
+                "from": 14,
                 "to": 16,
-                "display": "@a@@",
-                "explanation": "Replay the repaired macro twice."
+                "display": "@@",
+                "explanation": "Replay the latest macro."
               }
             ],
             "checkpoints": [
@@ -4729,21 +5629,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "// ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI// ⎋q",
-                "explanation": "Record the local prefix transformation."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "^TODO",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 15,
                 "to": 17,
-                "display": "/^TODO↵@a",
-                "explanation": "Search for the next qualifying row and replay."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 17,
+                "to": 18,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 18,
                 "to": 20,
-                "display": "n@a",
-                "explanation": "Continue the same search and replay only at the next match."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               }
             ],
             "checkpoints": [
@@ -4902,21 +5850,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "# ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "qaI# ⎋q",
-                "explanation": "Record the local prefix transformation."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 7,
+                "to": 8,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 8,
+                "to": 14,
+                "display": "^FIXME",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 15,
                 "to": 17,
-                "display": "/^FIXME↵@a",
-                "explanation": "Search for the next qualifying row and replay."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 17,
+                "to": 18,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 18,
                 "to": 20,
-                "display": "n@a",
-                "explanation": "Continue the same search and replay only at the next match."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               }
             ],
             "checkpoints": [
@@ -5075,21 +6071,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "! ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "qaI! ⎋q",
-                "explanation": "Record the local prefix transformation."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 7,
+                "to": 8,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 8,
+                "to": 14,
+                "display": "^ERROR",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 15,
                 "to": 17,
-                "display": "/^ERROR↵@a",
-                "explanation": "Search for the next qualifying row and replay."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 17,
+                "to": 18,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 18,
                 "to": 20,
-                "display": "n@a",
-                "explanation": "Continue the same search and replay only at the next match."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               }
             ],
             "checkpoints": [
@@ -5250,21 +6294,69 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "-- ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "qaI-- ⎋q",
-                "explanation": "Record the local prefix transformation."
+                "display": "q",
+                "explanation": "Stop recording the macro."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 9,
+                "to": 16,
+                "display": "^UPDATE",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 17,
                 "to": 19,
-                "display": "/^UPDATE↵@a",
-                "explanation": "Search for the next qualifying row and replay."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               },
               {
                 "from": 19,
+                "to": 20,
+                "display": "n",
+                "explanation": "Move to the next search match."
+              },
+              {
+                "from": 20,
                 "to": 22,
-                "display": "n@a",
-                "explanation": "Continue the same search and replay only at the next match."
+                "display": "@a",
+                "explanation": "Replay the macro stored in register a."
               }
             ],
             "checkpoints": [

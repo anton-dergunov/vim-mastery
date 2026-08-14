@@ -58,10 +58,30 @@
           "script": {
             "steps": [{"key":"3","kind":"count","cue":"3×"},{"key":"l","kind":"motion","cue":"right"},{"key":"2","kind":"count","cue":"2×"},{"key":"j","kind":"motion","cue":"down"},{"key":"h","kind":"motion","cue":"left"},{"key":"k","kind":"motion","cue":"up"}],
             "commandGroups": [
-              {"from":0,"to":2,"display":"3l","explanation":"Move three columns right."},
-              {"from":2,"to":4,"display":"2j","explanation":"Move down two logical lines while preserving the preferred column."},
-              {"from":4,"to":5,"display":"h","explanation":"Move one character left."},
-              {"from":5,"to":6,"display":"k","explanation":"Move one logical line up."}
+              {
+                "from": 0,
+                "to": 2,
+                "display": "3l",
+                "explanation": "Move three columns right."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "2j",
+                "explanation": "Move down two logical lines while preserving the preferred column."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "h",
+                "explanation": "Move one character left."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "k",
+                "explanation": "Move one logical line up."
+              }
             ],
             "checkpoints": [
               {"afterStep":2,"cursor":[0,3],"mode":"normal"},
@@ -161,7 +181,38 @@
           "scenario": {"initial":{"lines":["    deploy(target)   "],"cursor":[0,10],"mode":"normal"},"target":{"lines":["    deploy(target)   "],"cursor":[0,11],"mode":"normal"}},
           "script": {
             "steps":["0","^","$","g","_","1","2","|"],
-            "commandGroups":[{"from":0,"to":1,"display":"0","explanation":"Go to absolute column zero."},{"from":1,"to":2,"display":"^","explanation":"Skip indentation to the first nonblank."},{"from":2,"to":3,"display":"$","explanation":"Reach the final trailing space."},{"from":3,"to":5,"display":"g_","explanation":"Return to the last nonblank character."},{"from":5,"to":8,"display":"12|","explanation":"Go to one-based column twelve."}],
+            "commandGroups":[
+              {
+                "from": 0,
+                "to": 1,
+                "display": "0",
+                "explanation": "Go to absolute column zero."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "^",
+                "explanation": "Skip indentation to the first nonblank."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "$",
+                "explanation": "Reach the final trailing space."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "g_",
+                "explanation": "Return to the last nonblank character."
+              },
+              {
+                "from": 5,
+                "to": 8,
+                "display": "12|",
+                "explanation": "Go to one-based column twelve."
+              }
+            ],
             "checkpoints":[{"afterStep":1,"cursor":[0,0],"mode":"normal"},{"afterStep":2,"cursor":[0,4],"mode":"normal"},{"afterStep":3,"cursor":[0,20],"mode":"normal"},{"afterStep":5,"cursor":[0,17],"mode":"normal"},{"afterStep":8,"lines":["    deploy(target)   "],"cursor":[0,11],"mode":"normal"}]
           },
           "hints": [],

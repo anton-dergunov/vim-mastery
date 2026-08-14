@@ -785,7 +785,7 @@ button { font: inherit; }
 }
 .world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .42s ease-in-out forwards; }
 .world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .42s ease-in-out forwards; }
-.nix.reaction-crossfade { transition: opacity 90ms ease, filter 150ms ease; }
+.nix.reaction-crossfade { transition: opacity var(--reaction-fade-duration, 110ms) ease, filter 150ms ease; }
 .nix.reaction-fading-out { opacity: 0; }
 .nix.reaction-attentive:not(.reaction-has-media) { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
 .nix.reaction-puzzled:not(.reaction-has-media) { animation: characterPuzzled .72s ease-in-out 2; }

@@ -9,7 +9,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "postinstall": "patch-package",
     "test": "npm run test:content && npm run test:effects && npm run test:native && npm run test:pwa && npm run test:browser",
-    "test:content": "node --test tests/content-data.test.mjs tests/character-reactions.test.mjs",
+    "test:content": "node --test tests/content-data.test.mjs tests/action-guidance.test.mjs tests/character-reactions.test.mjs",
     "test:effects": "node --test tests/vim-effects.test.mjs",
     "test:native": "node --test tests/native-vim.test.mjs",
     "test:pwa": "node --test tests/pwa-build.test.mjs",

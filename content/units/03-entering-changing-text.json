@@ -98,15 +98,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "I",
+                "explanation": "Enter Insert mode at the first nonblank character."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": "const ",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "Iconst ␠Esc",
-                "explanation": "Enter Insert mode at the first nonblank and add the declaration keyword."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 8,
+                "to": 9,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 10,
                 "to": 11,
-                "display": "A;Esc",
-                "explanation": "Append punctuation at the physical end and return to Normal mode."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -209,9 +233,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "i",
+                "explanation": "Enter Insert mode before the cursor."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "4",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "i4Esc",
-                "explanation": "Insert immediately before the cursor, then return to Normal mode."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -306,9 +342,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "a",
+                "explanation": "Enter Insert mode after the cursor."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ",",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "a,Esc",
-                "explanation": "Append on the cursor's right boundary."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -403,9 +451,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;Esc",
-                "explanation": "Jump to the end and append in one entry command."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -527,9 +587,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "o",
+                "explanation": "Open a new line below and enter Insert mode."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "second()",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 9,
                 "to": 10,
-                "display": "osecond()Esc",
-                "explanation": "Open below, enter the call, and return to Normal mode."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -636,9 +708,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "O",
+                "explanation": "Open a new line above and enter Insert mode."
+              },
+              {
+                "from": 1,
+                "to": 5,
+                "display": "beta",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "ObetaEsc",
-                "explanation": "Open above the current row and fill it."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -750,9 +834,21 @@
               },
               {
                 "from": 1,
+                "to": 2,
+                "display": "O",
+                "explanation": "Open a new line above and enter Insert mode."
+              },
+              {
+                "from": 2,
+                "to": 8,
+                "display": "middle",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "OmiddleEsc",
-                "explanation": "Open above it and enter the missing row."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -876,9 +972,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "O",
+                "explanation": "Open a new line above and enter Insert mode."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": "header",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 7,
                 "to": 8,
-                "display": "OheaderEsc",
-                "explanation": "Create the header above."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 8,
@@ -888,9 +996,21 @@
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "o",
+                "explanation": "Open a new line below and enter Insert mode."
+              },
+              {
+                "from": 10,
+                "to": 16,
+                "display": "footer",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": "ofooterEsc",
-                "explanation": "Create the footer below."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1044,9 +1164,15 @@
               },
               {
                 "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "j$",
-                "explanation": "Reach the next row's final character."
+                "display": "$",
+                "explanation": "Move to the line end."
               },
               {
                 "from": 3,
@@ -1056,9 +1182,27 @@
               },
               {
                 "from": 5,
+                "to": 6,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "0",
+                "explanation": "Move to the first column."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 8,
                 "to": 9,
-                "display": "j0lX",
-                "explanation": "Stand after the extra hash and delete backward."
+                "display": "X",
+                "explanation": "Delete the character before the cursor."
               }
             ],
             "checkpoints": [
@@ -1526,9 +1670,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "R",
+                "explanation": "Enter Replace mode at the cursor."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Type the replacement text."
+              },
+              {
+                "from": 6,
                 "to": 7,
-                "display": "RdraftEsc",
-                "explanation": "Overwrite the existing five-character value and return to Normal mode."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1622,9 +1778,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "s",
+                "explanation": "Remove the character under the cursor and enter Insert mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "i",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "siEsc",
-                "explanation": "Remove one character, enter its replacement, and leave Insert mode."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1732,9 +1900,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "S",
+                "explanation": "Clear the current line and enter Insert mode for its replacement."
+              },
+              {
+                "from": 1,
+                "to": 13,
+                "display": "return true;",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 13,
                 "to": 14,
-                "display": "Sreturn true;Esc",
-                "explanation": "Substitute the complete current line and type its replacement."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1846,9 +2026,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "R",
+                "explanation": "Enter Replace mode at the cursor."
+              },
+              {
+                "from": 1,
+                "to": 11,
+                "display": "production",
+                "explanation": "Type the replacement text."
+              },
+              {
+                "from": 11,
                 "to": 12,
-                "display": "RproductionEsc",
-                "explanation": "Overwrite the old value, then insert once Replace mode reaches the line end."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
@@ -1966,9 +2158,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;Esc",
-                "explanation": "Create one complete append change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
@@ -2210,9 +2414,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "s",
+                "explanation": "Remove the character under the cursor and enter Insert mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "r",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "srEsc",
-                "explanation": "Create one substitution change."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
@@ -2345,9 +2561,21 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;Esc",
-                "explanation": "Make the append."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
@@ -3424,9 +3652,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "ww",
-                "explanation": "Move through the label to the next number."
+                "display": "w",
+                "explanation": "Move to the next word start."
               },
               {
                 "from": 4,
@@ -3885,15 +4119,39 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;Esc",
-                "explanation": "Append at the first row's line end."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
+                "to": 4,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 5,
                 "to": 6,
-                "display": "j$b",
-                "explanation": "Reach the final word on the next row."
+                "display": "b",
+                "explanation": "Move to the previous word start."
               },
               {
                 "from": 6,
@@ -4033,15 +4291,33 @@
             "commandGroups": [
               {
                 "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Enter Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": ";",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "A;Esc",
-                "explanation": "Append the terminator."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 3,
+                "to": 4,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 4,
                 "to": 5,
-                "display": "$h",
-                "explanation": "Stand on the number before the terminator."
+                "display": "h",
+                "explanation": "Move one column left."
               },
               {
                 "from": 5,
@@ -4181,9 +4457,15 @@
               },
               {
                 "from": 1,
+                "to": 2,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "$b",
-                "explanation": "Reach the joined value."
+                "display": "b",
+                "explanation": "Move to the previous word start."
               },
               {
                 "from": 3,

@@ -115,9 +115,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "jp",
-                "explanation": "Move down and put the unnamed line below."
+                "display": "p",
+                "explanation": "Put the captured text after the cursor."
               }
             ],
             "checkpoints": [
@@ -268,9 +274,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "wp",
-                "explanation": "Move to the next target and put afterward."
+                "display": "p",
+                "explanation": "Put the captured text after the cursor."
               }
             ],
             "checkpoints": [
@@ -420,9 +432,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 3,
                 "to": 4,
-                "display": "Gp",
-                "explanation": "Reach the bottom and put the captured line below."
+                "display": "p",
+                "explanation": "Put the captured text after the cursor."
               }
             ],
             "checkpoints": [
@@ -578,9 +596,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 3,
                 "to": 6,
-                "display": "G\"\"p",
-                "explanation": "Reach the bottom and explicitly select the unnamed register before putting."
+                "display": "\"\"p",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -749,9 +773,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "lgp",
-                "explanation": "Move right, put after, and land after the inserted text."
+                "display": "gp",
+                "explanation": "Put the captured text and leave the cursor after it."
               }
             ],
             "checkpoints": [
@@ -898,9 +928,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "$gP",
-                "explanation": "Put before the last character and finish after the inserted text."
+                "display": "gP",
+                "explanation": "Put the captured text and leave the cursor after it."
               }
             ],
             "checkpoints": [
@@ -1054,9 +1090,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "jgp",
-                "explanation": "Put below the second row and land on the following row."
+                "display": "gp",
+                "explanation": "Put the captured text and leave the cursor after it."
               }
             ],
             "checkpoints": [
@@ -1217,9 +1259,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "jgP",
-                "explanation": "Put before the third line and land on the line after the inserted copy."
+                "display": "gP",
+                "explanation": "Put the captured text and leave the cursor after it."
               }
             ],
             "checkpoints": [
@@ -1401,9 +1449,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "jdd",
-                "explanation": "Delete the second line, replacing only the unnamed value."
+                "display": "dd",
+                "explanation": "Delete the complete current line."
               },
               {
                 "from": 5,
@@ -1602,9 +1656,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "wdw",
-                "explanation": "Delete the second word into the unnamed register."
+                "display": "dw",
+                "explanation": "Delete through the next word boundary."
               },
               {
                 "from": 5,
@@ -1804,15 +1864,39 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "cw",
+                "explanation": "Change through the current word and enter Insert mode."
+              },
+              {
+                "from": 5,
+                "to": 9,
+                "display": "live",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 9,
                 "to": 10,
-                "display": "wcwlive<Esc>",
-                "explanation": "Change the second value, replacing the unnamed register."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 10,
+                "to": 11,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 11,
                 "to": 14,
-                "display": "w\"0P",
-                "explanation": "Reach the final value and put the protected yank before it."
+                "display": "\"0P",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -2007,15 +2091,27 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "jdd",
-                "explanation": "Delete the temporary row."
+                "display": "dd",
+                "explanation": "Delete the complete current line."
               },
               {
                 "from": 5,
+                "to": 6,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 6,
                 "to": 9,
-                "display": "G\"0P",
-                "explanation": "Put the protected fixture before the assertion."
+                "display": "\"0P",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -2701,9 +2797,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 5,
-                "display": "jdd",
-                "explanation": "Skip the kept row and delete the second old row."
+                "display": "dd",
+                "explanation": "Delete the complete current line."
               },
               {
                 "from": 5,
@@ -3307,9 +3409,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 7,
-                "display": "j\"_dd",
-                "explanation": "Delete the second line without touching stored text."
+                "display": "\"_dd",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 7,
@@ -3490,9 +3598,15 @@
               },
               {
                 "from": 1,
+                "to": 2,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 2,
                 "to": 3,
-                "display": "lx",
-                "explanation": "Move and delete the exclamation mark."
+                "display": "x",
+                "explanation": "Delete the character under the cursor."
               },
               {
                 "from": 3,
@@ -3676,9 +3790,15 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 8,
-                "display": "j\"_2dd",
-                "explanation": "Discard both temporary rows without rotating registers."
+                "display": "\"_2dd",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 8,
@@ -3884,9 +4004,15 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
                 "to": 8,
-                "display": "j\"ap",
-                "explanation": "Move down and put register a below."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -4041,9 +4167,15 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 5,
                 "to": 8,
-                "display": "w\"ap",
-                "explanation": "Put register a after the next word."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -4211,15 +4343,27 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
                 "to": 9,
-                "display": "j\"byy",
-                "explanation": "Store beta in register b."
+                "display": "\"byy",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 10,
                 "to": 13,
-                "display": "j\"aP",
-                "explanation": "Put alpha before finish."
+                "display": "\"aP",
+                "explanation": "Put text from the selected register at the cursor."
               },
               {
                 "from": 13,
@@ -4452,9 +4596,15 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 5,
                 "to": 8,
-                "display": "G\"aP",
-                "explanation": "Put register a before the final row."
+                "display": "\"aP",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -4637,15 +4787,27 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
                 "to": 9,
-                "display": "j\"Ayy",
-                "explanation": "Append the second line through uppercase A."
+                "display": "\"Ayy",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 10,
                 "to": 13,
-                "display": "j\"ap",
-                "explanation": "Put the combined lowercase register below finish."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -4830,15 +4992,27 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 5,
                 "to": 9,
-                "display": "w\"Ayw",
-                "explanation": "Append the second word and space."
+                "display": "\"Ayw",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "$",
+                "explanation": "Move to the line end."
+              },
+              {
+                "from": 10,
                 "to": 13,
-                "display": "$\"ap",
-                "explanation": "Put the combined phrase after the final word."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -5024,15 +5198,27 @@
               },
               {
                 "from": 4,
+                "to": 6,
+                "display": "2j",
+                "explanation": "Move two lines down."
+              },
+              {
+                "from": 6,
                 "to": 10,
-                "display": "2j\"Ayy",
-                "explanation": "Reach and append the third row."
+                "display": "\"Ayy",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 10,
+                "to": 11,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 11,
                 "to": 14,
-                "display": "G\"ap",
-                "explanation": "Put the collected rows after finish."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -5234,21 +5420,39 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
                 "to": 9,
-                "display": "j\"Ayy",
-                "explanation": "Append line two."
+                "display": "\"Ayy",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 9,
+                "to": 10,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 10,
                 "to": 14,
-                "display": "j\"Ayy",
-                "explanation": "Append line three."
+                "display": "\"Ayy",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 14,
+                "to": 15,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 15,
                 "to": 18,
-                "display": "j\"ap",
-                "explanation": "Put the complete snippet below finish."
+                "display": "\"ap",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -5479,9 +5683,15 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 5,
                 "to": 8,
-                "display": "j\"+p",
-                "explanation": "Put that internal clipboard below the second line."
+                "display": "\"+p",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -5638,9 +5848,21 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 6,
                 "to": 10,
-                "display": "ww\"+gP",
-                "explanation": "Move to green, put the yanked word before it, and continue at green."
+                "display": "\"+gP",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -5794,9 +6016,15 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 5,
                 "to": 8,
-                "display": "G\"+P",
-                "explanation": "Put the internal clipboard before the final row."
+                "display": "\"+P",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -5958,9 +6186,21 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 5,
+                "to": 16,
+                "display": "registers +",
+                "explanation": "Choose the plus register for inspection."
+              },
+              {
+                "from": 16,
                 "to": 17,
-                "display": ":registers +<Enter>",
-                "explanation": "Open register inspection filtered to plus."
+                "display": "↵",
+                "explanation": "Run the command."
               }
             ],
             "checkpoints": [
@@ -6135,15 +6375,27 @@
               },
               {
                 "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 3,
                 "to": 7,
-                "display": "j\"_dd",
-                "explanation": "Discard the temporary row without replacing it."
+                "display": "\"_dd",
+                "explanation": "Apply the edit using the selected register."
               },
               {
                 "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 8,
                 "to": 10,
-                "display": "jgp",
-                "explanation": "Put below finish and land on the following row."
+                "display": "gp",
+                "explanation": "Put the captured text and leave the cursor after it."
               }
             ],
             "checkpoints": [
@@ -6332,9 +6584,15 @@
               },
               {
                 "from": 4,
+                "to": 6,
+                "display": "2j",
+                "explanation": "Move two lines down."
+              },
+              {
+                "from": 6,
                 "to": 10,
-                "display": "2j\"agP",
-                "explanation": "Put before finish and land on finish."
+                "display": "\"agP",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -6499,15 +6757,27 @@
               },
               {
                 "from": 4,
+                "to": 5,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 5,
                 "to": 7,
-                "display": "wdw",
-                "explanation": "Delete beta without changing plus."
+                "display": "dw",
+                "explanation": "Delete through the next word boundary."
               },
               {
                 "from": 7,
+                "to": 8,
+                "display": "w",
+                "explanation": "Move to the next word start."
+              },
+              {
+                "from": 8,
                 "to": 12,
-                "display": "w\"+gp",
-                "explanation": "Put the plus value after gamma and land after it."
+                "display": "\"+gp",
+                "explanation": "Put text from the selected register at the cursor."
               }
             ],
             "checkpoints": [
@@ -6703,9 +6973,15 @@
               },
               {
                 "from": 3,
+                "to": 4,
+                "display": "j",
+                "explanation": "Move one line down."
+              },
+              {
+                "from": 4,
                 "to": 6,
-                "display": "jdd",
-                "explanation": "Delete the later old row and rotate history."
+                "display": "dd",
+                "explanation": "Delete the complete current line."
               },
               {
                 "from": 6,
