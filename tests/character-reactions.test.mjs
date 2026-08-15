@@ -6,10 +6,7 @@ import { CharacterReactions } from "../character-reactions.js";
 function createLayer() {
   return {
     children: [],
-    querySelector(selector) {
-      if (selector.includes(":not(.reaction-outgoing)")) {
-        return this.children.find(character => !character.classList.contains("reaction-outgoing")) || null;
-      }
+    querySelector() {
       return this.children[0] || null;
     },
     querySelectorAll() {
@@ -93,7 +90,7 @@ function fixture(randomValues = [0], options = {}) {
     reducedMotion: () => false,
     random: () => randomValues[randomIndex++ % randomValues.length],
     settleDurationMs: 0,
-    fadeDurationMs: 0,
+    nextFrame: () => Promise.resolve(),
     ...options,
   });
   return { character, classes, layer, reactions };
@@ -162,15 +159,16 @@ test("reduced motion keeps the idle still and uses the CSS state fallback", asyn
   assert.equal(reactions.activeDurationMs, 0);
 });
 
-test("settles at neutral, overlaps decoded visuals, and crossfades back to idle", async () => {
+test("settles at neutral, swaps one decoded visual, and returns to idle without stacking", async () => {
   const preparations = [];
   const timeline = deferredSteps();
+  const frames = [];
   const paintedSources = [];
   const { character, layer, reactions } = fixture([0], {
     prepareMedia: source => new Promise(resolve => preparations.push({ source, resolve })),
     settleDurationMs: 180,
-    fadeDurationMs: 420,
     delay: milliseconds => timeline.delay(milliseconds),
+    nextFrame: () => new Promise(resolve => frames.push(resolve)),
     readTransform: () => "matrix(-1, 0, 0, 1, 0, -2)",
     forceStyle: image => paintedSources.push(image.src),
   });
@@ -189,22 +187,19 @@ test("settles at neutral, overlaps decoded visuals, and crossfades back to idle"
 
   timeline.release(180);
   await Promise.resolve();
-  assert.equal(layer.children.length, 2);
-  const [outgoing, incoming] = layer.children;
-  assert(outgoing.classList.contains("reaction-transitioning-out"));
-  assert(incoming.classList.contains("reaction-transitioning-in"));
-  assert.equal(outgoing.getAttribute("aria-hidden"), "true");
-  assert.equal(outgoing.src, "/assets/idle.png");
-  assert.equal(incoming.src, "/assets/attentive-a.webp");
-  assert.equal(incoming.dataset.reaction, "attentive");
-  assert.equal(incoming.style.values.get("--character-media-scale"), "1.3");
-  assert.deepEqual(paintedSources, ["/assets/attentive-a.webp"]);
+  assert.equal(layer.children.length, 1);
+  assert(character.classList.contains("reaction-neutral-ready"));
+  assert.equal(character.src, "/assets/idle.png");
+  assert.equal(character.dataset.reaction, undefined);
+  assert.deepEqual(paintedSources, ["/assets/idle.png"]);
 
-  timeline.release(420);
+  frames.shift()();
   assert.equal(await showReaction, true);
   assert.equal(layer.children.length, 1);
-  assert.equal(layer.children[0], incoming);
-  assert.equal(incoming.classList.contains("reaction-transitioning-in"), false);
+  assert.equal(character.src, "/assets/attentive-a.webp");
+  assert.equal(character.dataset.reaction, "attentive");
+  assert.equal(character.style.values.get("--character-media-scale"), "1.3");
+  assert.equal(character.classList.contains("reaction-neutral-ready"), false);
 
   const showIdle = reactions.apply("idle");
   assert.equal(preparations[0].source, "/assets/idle.png");
@@ -212,23 +207,23 @@ test("settles at neutral, overlaps decoded visuals, and crossfades back to idle"
   await Promise.resolve();
   timeline.release(180);
   await Promise.resolve();
-  assert.equal(layer.children.length, 2);
-  assert.equal(layer.children[0].src, "/assets/attentive-a.webp");
-  assert.equal(layer.children[1].src, "/assets/idle.png");
-  timeline.release(420);
+  assert.equal(layer.children.length, 1);
+  assert.equal(character.src, "/assets/attentive-a.webp");
+  frames.shift()();
   assert.equal(await showIdle, true);
   assert.equal(layer.children.length, 1);
-  assert.equal(layer.children[0].src, "/assets/idle.png");
-  assert.equal(layer.children[0].style.values.has("--character-media-scale"), false);
+  assert.equal(character.src, "/assets/idle.png");
+  assert.equal(character.style.values.has("--character-media-scale"), false);
 });
 
-test("completion cancels an active layered transition without leaving duplicate characters", async () => {
+test("completion cancels a neutral-ready swap without changing the visible character", async () => {
   const timeline = deferredSteps();
+  const frames = [];
   const { character, layer, reactions } = fixture([0], {
     prepareMedia: () => Promise.resolve(),
     settleDurationMs: 180,
-    fadeDurationMs: 420,
     delay: milliseconds => timeline.delay(milliseconds),
+    nextFrame: () => new Promise(resolve => frames.push(resolve)),
   });
   character.src = "/assets/idle.png";
 
@@ -236,16 +231,18 @@ test("completion cancels an active layered transition without leaving duplicate 
   await Promise.resolve();
   timeline.release(180);
   await Promise.resolve();
-  assert.equal(layer.children.length, 2);
+  assert.equal(layer.children.length, 1);
+  assert(character.classList.contains("reaction-neutral-ready"));
 
   await reactions.celebrate();
   assert.equal(layer.children.length, 1);
   assert.equal(reactions.state, "celebrating");
   assert.equal(layer.children[0].dataset.reaction, "celebrating");
-  assert.equal(layer.children[0].classList.contains("reaction-outgoing"), false);
-  assert.equal(layer.children[0].classList.contains("reaction-transitioning-in"), false);
+  assert.equal(layer.children[0].classList.contains("reaction-settling"), false);
+  assert.equal(layer.children[0].classList.contains("reaction-neutral-ready"), false);
   assert.notEqual(layer.children[0].getAttribute("aria-hidden"), "true");
-  timeline.release(420);
+  assert.equal(character.src, "/assets/idle.png");
+  frames.shift()();
   assert.equal(await pending, false);
   assert.equal(layer.children.length, 1);
 });

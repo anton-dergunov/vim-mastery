@@ -250,8 +250,9 @@ test("uses supportive character reactions only after repeated mistakes", async (
       window.__reactionFrames.push(images.map(image => ({
         opacity: Number.parseFloat(getComputedStyle(image).opacity),
         transform: getComputedStyle(image).transform,
-        outgoing: image.classList.contains("reaction-outgoing"),
-        incoming: image.classList.contains("reaction-transitioning-in"),
+        source: image.getAttribute("src"),
+        settling: image.classList.contains("reaction-settling"),
+        neutralReady: image.classList.contains("reaction-neutral-ready"),
       })));
       if (window.__sampleReactionFrames) requestAnimationFrame(sample);
     };
@@ -259,30 +260,36 @@ test("uses supportive character reactions only after repeated mistakes", async (
   });
   releasePuzzledMedia();
   await expect(page.locator("#characterLayer > .reaction-settling")).toHaveCount(1);
-  await expect(page.locator("#characterLayer > .reaction-transitioning-in")).toHaveCount(1);
-  const neutralTransforms = await page.locator("#characterLayer > .nix").evaluateAll(images => images.map(image => {
-    const matrix = new DOMMatrixReadOnly(getComputedStyle(image).transform);
-    return { translateX: matrix.e, translateY: matrix.f, skewX: matrix.b, skewY: matrix.c };
-  }));
-  for (const transform of neutralTransforms) {
-    expect(Math.abs(transform.translateX)).toBeLessThan(.1);
-    expect(Math.abs(transform.translateY)).toBeLessThan(.1);
-    expect(Math.abs(transform.skewX)).toBeLessThan(.1);
-    expect(Math.abs(transform.skewY)).toBeLessThan(.1);
-  }
-  await expect.poll(() => page.evaluate(() => window.__reactionFrames.some(frame => (
-    frame.length === 2
-      && frame.every(layer => layer.opacity > .08 && layer.opacity < .92)
-      && frame.reduce((total, layer) => total + layer.opacity, 0) >= .95
-  )))).toBe(true);
-  await page.screenshot({ path: "test-results/reaction-crossfade-390x844.png", fullPage: true });
   await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction-media-active", "true");
   await page.evaluate(() => { window.__sampleReactionFrames = false; });
-  const neverEmpty = await page.evaluate(() => window.__reactionFrames.every(frame => (
-    frame.reduce((total, layer) => total + layer.opacity, 0) >= .95
-  )));
-  expect(neverEmpty).toBe(true);
+  const transitionEvidence = await page.evaluate(() => {
+    const frames = window.__reactionFrames;
+    const neutral = frames.flat().find(frame => frame.neutralReady);
+    const matrix = neutral ? new DOMMatrixReadOnly(neutral.transform) : null;
+    return {
+      alwaysOneCharacter: frames.every(frame => frame.length === 1),
+      alwaysFullyOpaque: frames.flat().every(frame => frame.opacity >= .999),
+      sawSettlingIdle: frames.flat().some(frame => frame.settling && /\/idle\.png$/.test(frame.source)),
+      sawReaction: frames.flat().some(frame => /\/puzzled-variant-\d+\.webp$/.test(frame.source)),
+      neutral: matrix && {
+        translateX: matrix.e,
+        translateY: matrix.f,
+        skewX: matrix.b,
+        skewY: matrix.c,
+      },
+    };
+  });
+  expect(transitionEvidence.alwaysOneCharacter).toBe(true);
+  expect(transitionEvidence.alwaysFullyOpaque).toBe(true);
+  expect(transitionEvidence.sawSettlingIdle).toBe(true);
+  expect(transitionEvidence.sawReaction).toBe(true);
+  expect(transitionEvidence.neutral).not.toBeNull();
+  expect(Math.abs(transitionEvidence.neutral.translateX)).toBeLessThan(.1);
+  expect(Math.abs(transitionEvidence.neutral.translateY)).toBeLessThan(.1);
+  expect(Math.abs(transitionEvidence.neutral.skewX)).toBeLessThan(.1);
+  expect(Math.abs(transitionEvidence.neutral.skewY)).toBeLessThan(.1);
+  await page.screenshot({ path: "test-results/reaction-neutral-swap-390x844.png", fullPage: true });
   const reactionScale = await page.locator("#characterLayer > .nix").evaluate(image => {
     const variant = Number(image.dataset.reactionVariant) - 1;
     return {

@@ -789,19 +789,6 @@ button { font: inherit; }
   animation: nixReactionSettle var(--reaction-settle-duration, 180ms) ease-out forwards;
   will-change: transform;
 }
-.nix.reaction-staged {
-  opacity: 0;
-  animation: none;
-  transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1));
-}
-.nix.reaction-transitioning-in {
-  animation: nixReactionFadeIn var(--reaction-fade-duration, 420ms) ease-in-out forwards;
-  will-change: opacity;
-}
-.nix.reaction-transitioning-out {
-  animation: nixReactionFadeOut var(--reaction-fade-duration, 420ms) ease-in-out forwards;
-  will-change: opacity;
-}
 .nix.reaction-attentive:not(.reaction-has-media) { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
 .nix.reaction-puzzled:not(.reaction-has-media) { animation: characterPuzzled .72s ease-in-out 2; }
 .nix.reaction-encouraging:not(.reaction-has-media) { animation: characterEncouraging .9s ease-in-out infinite alternate; }
@@ -1098,14 +1085,6 @@ button { font: inherit; }
 @keyframes nixReactionSettle {
   from { transform: var(--reaction-settle-from); }
   to { transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
-}
-@keyframes nixReactionFadeOut {
-  from { opacity: 1; transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
-  to { opacity: 0; transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
-}
-@keyframes nixReactionFadeIn {
-  from { opacity: 0; transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
-  to { opacity: 1; transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
 }
 @keyframes oracleFloat { 0%,100% { transform: translateY(1px); } 50% { transform: translateY(-3px); } }
 @keyframes moteFloat { 0%,100% { transform: translate(0, 2px); opacity: .35; } 50% { transform: translate(4px, -5px); opacity: 1; } }

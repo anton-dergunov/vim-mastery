@@ -19,9 +19,11 @@ export class CharacterReactions {
     random = Math.random,
     prepareMedia,
     settleDurationMs = 180,
-    fadeDurationMs = 420,
     delay = milliseconds => new Promise(resolve => window.setTimeout(resolve, milliseconds)),
     forceStyle = character => void character.offsetWidth,
+    nextFrame = () => new Promise(resolve => window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => resolve());
+    })),
     readTransform = character => typeof getComputedStyle === "function"
       ? getComputedStyle(character).transform
       : "none",
@@ -43,9 +45,9 @@ export class CharacterReactions {
         : loaded;
     });
     this.settleDurationMs = settleDurationMs;
-    this.fadeDurationMs = fadeDurationMs;
     this.delay = delay;
     this.forceStyle = forceStyle;
+    this.nextFrame = nextFrame;
     this.readTransform = readTransform;
     this.activityKey = null;
     this.state = "idle";
@@ -70,9 +72,7 @@ export class CharacterReactions {
   }
 
   element() {
-    return this.layer?.querySelector(".nix:not(.reaction-outgoing)")
-      || this.layer?.querySelector(".nix")
-      || null;
+    return this.layer?.querySelector(".nix") || null;
   }
 
   reactionCandidates(asset, state) {
@@ -94,29 +94,14 @@ export class CharacterReactions {
   clearTransitionClasses(character) {
     character?.classList.remove(
       "reaction-settling",
-      "reaction-staged",
-      "reaction-transitioning-in",
-      "reaction-transitioning-out",
-      "reaction-outgoing",
+      "reaction-neutral-ready",
     );
     character?.style.removeProperty("--reaction-settle-from");
   }
 
   cancelTransition() {
     const current = this.element();
-    const characters = this.layer?.querySelectorAll?.(".nix") || [];
-    for (const character of characters) {
-      if (character.classList.contains("reaction-outgoing")) {
-        character.remove();
-        continue;
-      }
-      this.clearTransitionClasses(character);
-      character.removeAttribute?.("aria-hidden");
-    }
-    if (current?.isConnected !== false) {
-      this.clearTransitionClasses(current);
-      current?.removeAttribute?.("aria-hidden");
-    }
+    this.clearTransitionClasses(current);
     this.transitionOwner = null;
   }
 
@@ -158,8 +143,8 @@ export class CharacterReactions {
     }
     if (request !== this.mediaRequest || character !== this.element()) return false;
 
-    const shouldCrossfade = !this.reducedMotion() && this.fadeDurationMs > 0;
-    if (!shouldCrossfade || typeof character.cloneNode !== "function" || typeof character.after !== "function") {
+    const shouldSettle = !this.reducedMotion() && this.settleDurationMs > 0;
+    if (!shouldSettle) {
       this.commitVisual(character, visual);
       this.applyReactionState(character, presentation);
       return true;
@@ -168,46 +153,24 @@ export class CharacterReactions {
     this.transitionOwner = request;
     character.style.setProperty("--reaction-settle-from", this.readTransform(character));
     character.style.setProperty("--reaction-settle-duration", `${this.settleDurationMs}ms`);
-    character.style.setProperty("--reaction-fade-duration", `${this.fadeDurationMs}ms`);
     character.classList.add("reaction-settling");
-    if (this.settleDurationMs > 0) {
-      await this.delay(this.settleDurationMs);
-      if (request !== this.mediaRequest || character !== this.element()) {
-        if (this.transitionOwner === request) this.cancelTransition();
-        return false;
-      }
-    }
-
-    const incoming = character.cloneNode();
-    incoming.__characterAsset = character.__characterAsset;
-    this.clearTransitionClasses(incoming);
-    this.commitVisual(incoming, visual);
-    this.applyReactionState(incoming, presentation);
-    incoming.style.setProperty("--reaction-settle-duration", `${this.settleDurationMs}ms`);
-    incoming.style.setProperty("--reaction-fade-duration", `${this.fadeDurationMs}ms`);
-    incoming.classList.add("reaction-staged");
-    incoming.removeAttribute?.("aria-hidden");
-    character.after(incoming);
-    this.forceStyle(incoming);
-
+    await this.delay(this.settleDurationMs);
     if (request !== this.mediaRequest || character !== this.element()) {
-      incoming.remove();
       if (this.transitionOwner === request) this.cancelTransition();
       return false;
     }
 
-    character.classList.remove("reaction-settling");
-    character.classList.add("reaction-outgoing", "reaction-transitioning-out");
-    character.setAttribute?.("aria-hidden", "true");
-    incoming.classList.remove("reaction-staged");
-    incoming.classList.add("reaction-transitioning-in");
+    character.classList.add("reaction-neutral-ready");
+    this.forceStyle(character);
+    await this.nextFrame();
+    if (request !== this.mediaRequest || character !== this.element()) {
+      if (this.transitionOwner === request) this.cancelTransition();
+      return false;
+    }
 
-    await this.delay(this.fadeDurationMs);
-    if (request !== this.mediaRequest || incoming !== this.element()) return false;
-
-    character.remove();
-    this.clearTransitionClasses(incoming);
-    incoming.removeAttribute?.("aria-hidden");
+    this.commitVisual(character, visual);
+    this.applyReactionState(character, presentation);
+    this.clearTransitionClasses(character);
     if (this.transitionOwner === request) {
       this.transitionOwner = null;
     }
