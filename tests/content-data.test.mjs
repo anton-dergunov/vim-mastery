@@ -194,6 +194,21 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   }
 });
 
+test("every character calibrates reaction media to its idle silhouette", () => {
+  for (const [characterId, character] of Object.entries(characterManifest.characters)) {
+    assert.equal(
+      typeof character.reaction_scale_correction,
+      "number",
+      `${characterId} must define a reaction scale correction`,
+    );
+    assert(
+      character.reaction_scale_correction >= 0.85
+        && character.reaction_scale_correction <= 0.95,
+      `${characterId} reaction scale correction must stay within the calibrated range`,
+    );
+  }
+});
+
 test("registered scene profiles follow the rendered board aspect ratio", () => {
   assert.equal(boardProfileForBounds({ width: 89, height: 100 }), "tall");
   assert.equal(boardProfileForBounds({ width: 90, height: 100 }), "compact");

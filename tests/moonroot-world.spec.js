@@ -262,6 +262,9 @@ test("uses supportive character reactions only after repeated mistakes", async (
   await expect(page.locator("#characterLayer > .reaction-settling")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction-media-active", "true");
+  await expect.poll(() => page.evaluate(() => window.__reactionFrames
+    .flat()
+    .some(frame => /\/puzzled-variant-\d+\.webp$/.test(frame.source)))).toBe(true);
   await page.evaluate(() => { window.__sampleReactionFrames = false; });
   const transitionEvidence = await page.evaluate(() => {
     const frames = window.__reactionFrames;
@@ -295,9 +298,41 @@ test("uses supportive character reactions only after repeated mistakes", async (
     return {
       applied: Number(image.style.getPropertyValue("--character-media-scale")),
       authored: Number(image.__characterAsset.reactions.puzzled[variant].css_scale || 1),
+      correction: Number(image.__characterAsset.reaction_scale_correction || 1),
     };
   });
-  expect(reactionScale.applied).toBe(reactionScale.authored);
+  expect(reactionScale.applied).toBeCloseTo(reactionScale.authored * reactionScale.correction, 8);
+  for (const viewport of [
+    { width: 360, height: 740 },
+    { width: 390, height: 844 },
+    { width: 412, height: 915 },
+    { width: 430, height: 932 },
+    { width: 432, height: 960 },
+  ]) {
+    await page.setViewportSize(viewport);
+    const layout = await page.evaluate(() => {
+      const world = document.querySelector("#world").getBoundingClientRect();
+      const character = document.querySelector("#characterLayer > .nix").getBoundingClientRect();
+      return {
+        characterCount: document.querySelectorAll("#characterLayer > .nix").length,
+        fullyOpaque: Number.parseFloat(getComputedStyle(document.querySelector("#characterLayer > .nix")).opacity) >= .999,
+        reactionActive: document.querySelector("#characterLayer > .nix").dataset.reactionMediaActive === "true",
+        withinWorld: character.left >= world.left - 1
+          && character.right <= world.right + 1
+          && character.top >= world.top - 1
+          && character.bottom <= world.bottom + 1,
+        documentOverflow: document.documentElement.scrollWidth > innerWidth
+          || document.documentElement.scrollHeight > innerHeight,
+      };
+    });
+    expect(layout, `${viewport.width}x${viewport.height}`).toEqual({
+      characterCount: 1,
+      fullyOpaque: true,
+      reactionActive: true,
+      withinWorld: true,
+      documentOverflow: false,
+    });
+  }
   await pressKey("q");
   await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("encouraging");
 

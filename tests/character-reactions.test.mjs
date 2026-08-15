@@ -73,6 +73,7 @@ function fixture(randomValues = [0], options = {}) {
   const classes = character._classes;
   character.__characterAsset = {
     idle: "idle.png",
+    reaction_scale_correction: 0.875,
     reactions: {
       attentive: { src: "attentive-a.webp", css_scale: 1.3 },
       puzzled: [
@@ -123,7 +124,7 @@ test("reaction collections vary playback without immediately repeating", async (
   await reactions.apply("puzzled");
   assert.equal(character.src, "/assets/puzzled-a.webp");
   assert.equal(character.dataset.reactionVariant, "1");
-  assert.equal(character.style.values.get("--character-media-scale"), "1.3");
+  assert.equal(character.style.values.get("--character-media-scale"), "1.1375");
 
   await reactions.apply("puzzled");
   assert.equal(character.src, "/assets/puzzled-b.webp");
@@ -198,7 +199,7 @@ test("settles at neutral, swaps one decoded visual, and returns to idle without 
   assert.equal(layer.children.length, 1);
   assert.equal(character.src, "/assets/attentive-a.webp");
   assert.equal(character.dataset.reaction, "attentive");
-  assert.equal(character.style.values.get("--character-media-scale"), "1.3");
+  assert.equal(character.style.values.get("--character-media-scale"), "1.1375");
   assert.equal(character.classList.contains("reaction-neutral-ready"), false);
 
   const showIdle = reactions.apply("idle");

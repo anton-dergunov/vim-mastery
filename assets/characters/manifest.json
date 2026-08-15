@@ -4,6 +4,7 @@
     "nix": {
       "name": "Nix",
       "role": "guide",
+      "reaction_scale_correction": 0.876,
       "idle": "assets/characters/nix/idle.png",
       "idle_sha256": "7d35ede81121913e1566e415ce0065cfc04582a96e7e30edc7e33019ec053cf6",
       "animations": {
@@ -3133,6 +3134,7 @@
     "vela": {
       "name": "Vela",
       "role": "movement teacher",
+      "reaction_scale_correction": 0.912,
       "idle": "assets/characters/vela/idle.png",
       "idle_sha256": "37704679d03e81a431fc16034e75166702fd7543af2b3ab2ac4806d9fbb7f3a7",
       "animations": {
@@ -6918,6 +6920,7 @@
     "tatter": {
       "name": "Tatter",
       "role": "editing teacher",
+      "reaction_scale_correction": 0.888,
       "idle": "assets/characters/tatter/idle.png",
       "idle_sha256": "612a3235c73461289e85874797263a3b85732768e0da15d17226ade308768e46",
       "animations": {
@@ -10684,6 +10687,7 @@
     "orin": {
       "name": "Orin",
       "role": "search teacher",
+      "reaction_scale_correction": 0.864,
       "idle": "assets/characters/orin/idle.png",
       "idle_sha256": "d85f54af54e687c87c0c7a64cf022a6bffe13336922ff3b318a54fa735ac5bfe",
       "animations": {
@@ -14485,6 +14489,7 @@
     "cinder": {
       "name": "Cinder",
       "role": "command teacher",
+      "reaction_scale_correction": 0.866,
       "idle": "assets/characters/cinder/idle.png",
       "idle_sha256": "9838cb462db0e3a22d25148075db8d7476e1ddb31a71f8993100780748ca96c2",
       "animations": {
@@ -18294,6 +18299,7 @@
     "prism": {
       "name": "Prism",
       "role": "visual-mode teacher",
+      "reaction_scale_correction": 0.868,
       "idle": "assets/characters/prism/idle.png",
       "idle_sha256": "5f2c2000e9d400c9bfff9c142bf2a83c6d2ff2b760644bd396e65e62a870be26",
       "animations": {
@@ -22105,6 +22111,7 @@
     "tock": {
       "name": "Tock",
       "role": "repetition teacher",
+      "reaction_scale_correction": 0.873,
       "idle": "assets/characters/tock/idle.png",
       "idle_sha256": "68fd836069866225b0afbd9eb1f11db49a13635f33498035c80d1ef85c5e033c",
       "animations": {
@@ -25889,6 +25896,7 @@
     "brikk": {
       "name": "Brikk",
       "role": "debugging teacher",
+      "reaction_scale_correction": 0.876,
       "idle": "assets/characters/brikk/idle.png",
       "idle_sha256": "53a6aaef731f2b2de0a97a370f6885c0757f7e00b0a53aaa2e93f6ca5caa9711",
       "animations": {
@@ -29620,6 +29628,7 @@
     "cairn": {
       "name": "Cairn",
       "role": "challenge host",
+      "reaction_scale_correction": 0.869,
       "idle": "assets/characters/cairn/idle.png",
       "idle_sha256": "c2970204bc32fda771435e95e93232983c69c8422779ffdd09290337b396fc2c",
       "animations": {
@@ -33422,6 +33431,7 @@
     "mello": {
       "name": "Mello",
       "role": "encouragement character",
+      "reaction_scale_correction": 0.906,
       "idle": "assets/characters/mello/idle.png",
       "idle_sha256": "3d9abddaae6bd4dbf4c292247ae921d3cb7e87ec11e1be5efb4377ceb45755b8",
       "animations": {
@@ -37152,6 +37162,7 @@
     "puddle": {
       "name": "Puddle",
       "role": "transformation teacher",
+      "reaction_scale_correction": 0.884,
       "idle": "assets/characters/puddle/idle.png",
       "idle_sha256": "ec9b8c558cfe8427cf137853f5ed8b1e7869ee68d5f91d342c15fa3d200fecac",
       "animations": {
@@ -40954,6 +40965,7 @@
     "bramble": {
       "name": "Bramble",
       "role": "structure teacher",
+      "reaction_scale_correction": 0.862,
       "idle": "assets/characters/bramble/idle.png",
       "idle_sha256": "b79fabd36aae153cd629e890ec393e3cbf046ff7a0a22ecc6ac65c6688384601",
       "animations": {
@@ -44758,6 +44770,7 @@
     "mica": {
       "name": "Mica",
       "role": "register teacher",
+      "reaction_scale_correction": 0.884,
       "idle": "assets/characters/mica/idle.png",
       "idle_sha256": "b406b80576861ce03cb6466a22f1be60409b20615cb8dbe601105699d324bbc9",
       "animations": {
@@ -48522,6 +48535,7 @@
     "luma": {
       "name": "Luma",
       "role": "marks and jumps teacher",
+      "reaction_scale_correction": 0.935,
       "idle": "assets/characters/luma/idle.png",
       "idle_sha256": "c75dae62cd47711ef821f86e59cd0301e7807febf2b74f7af9ad959563fa2ade",
       "animations": {
@@ -52325,6 +52339,7 @@
     "fen": {
       "name": "Fen",
       "role": "buffers and windows teacher",
+      "reaction_scale_correction": 0.869,
       "idle": "assets/characters/fen/idle.png",
       "idle_sha256": "d9d454e2908a5d21441199312a09d0fa15ed0becc84015a65bb8d88ec4a89eb9",
       "animations": {

@@ -133,6 +133,12 @@ export class CharacterReactions {
     this.applyReactionState(character, presentation);
   }
 
+  reactionScale(asset, pose) {
+    const authoredScale = Number(pose?.css_scale) || 1;
+    const characterCorrection = Number(asset?.reaction_scale_correction) || 1;
+    return authoredScale * characterCorrection;
+  }
+
   async swapVisual(character, visual, presentation, request) {
     try {
       await this.prepareMedia(visual.source);
@@ -197,7 +203,7 @@ export class CharacterReactions {
     if (usesReactionMedia) {
       return this.swapVisual(character, {
         source: this.assetUrl(source),
-        scale: Number(pose?.css_scale) || 1,
+        scale: this.reactionScale(asset, pose),
         reactionMedia: true,
       }, presentation, request);
     }
