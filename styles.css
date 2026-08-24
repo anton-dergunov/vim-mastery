@@ -789,37 +789,6 @@ button { font: inherit; }
   animation: nixReactionSettle var(--reaction-settle-duration, 180ms) ease-out forwards;
   will-change: transform;
 }
-.reaction-dissolve-mask {
-  position: absolute;
-  z-index: 8;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: repeat(9, minmax(0, 1fr));
-  pointer-events: none;
-  will-change: clip-path;
-}
-.reaction-dissolve-incoming-mask { z-index: 9; }
-.reaction-dissolve-mask > .nix {
-  opacity: 1;
-}
-.nix.reaction-dissolve-frozen {
-  opacity: 1;
-  animation: none;
-  transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1));
-}
-.reaction-dissolve-staged.reaction-dissolve-incoming-mask {
-  clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-start) var(--reaction-dissolve-y-1), var(--reaction-dissolve-start) var(--reaction-dissolve-y-2), var(--reaction-dissolve-start) var(--reaction-dissolve-y-3), var(--reaction-dissolve-start) var(--reaction-dissolve-y-4), var(--reaction-dissolve-start) var(--reaction-dissolve-y-5), var(--reaction-dissolve-start) var(--reaction-dissolve-y-6), var(--reaction-dissolve-start) var(--reaction-dissolve-y-7), var(--reaction-dissolve-start) var(--reaction-dissolve-y-8), var(--reaction-dissolve-start) var(--reaction-dissolve-y-9), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10));
-}
-.reaction-dissolve-staged.reaction-dissolve-outgoing-mask {
-  clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-9), var(--reaction-dissolve-start) var(--reaction-dissolve-y-8), var(--reaction-dissolve-start) var(--reaction-dissolve-y-7), var(--reaction-dissolve-start) var(--reaction-dissolve-y-6), var(--reaction-dissolve-start) var(--reaction-dissolve-y-5), var(--reaction-dissolve-start) var(--reaction-dissolve-y-4), var(--reaction-dissolve-start) var(--reaction-dissolve-y-3), var(--reaction-dissolve-start) var(--reaction-dissolve-y-2), var(--reaction-dissolve-start) var(--reaction-dissolve-y-1));
-}
-.reaction-dissolve-running-in {
-  animation: nixReactionDissolveIn var(--reaction-dissolve-duration, 320ms) cubic-bezier(.45, 0, .2, 1) forwards;
-}
-.reaction-dissolve-running-out {
-  animation: nixReactionDissolveOut var(--reaction-dissolve-duration, 320ms) cubic-bezier(.45, 0, .2, 1) forwards;
-}
 .nix.reaction-attentive:not(.reaction-has-media) { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
 .nix.reaction-puzzled:not(.reaction-has-media) { animation: characterPuzzled .72s ease-in-out 2; }
 .nix.reaction-encouraging:not(.reaction-has-media) { animation: characterEncouraging .9s ease-in-out infinite alternate; }
@@ -1116,34 +1085,6 @@ button { font: inherit; }
 @keyframes nixReactionSettle {
   from { transform: var(--reaction-settle-from); }
   to { transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
-}
-@keyframes nixReactionDissolveIn {
-  0% {
-    clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-start) var(--reaction-dissolve-y-1), var(--reaction-dissolve-start) var(--reaction-dissolve-y-2), var(--reaction-dissolve-start) var(--reaction-dissolve-y-3), var(--reaction-dissolve-start) var(--reaction-dissolve-y-4), var(--reaction-dissolve-start) var(--reaction-dissolve-y-5), var(--reaction-dissolve-start) var(--reaction-dissolve-y-6), var(--reaction-dissolve-start) var(--reaction-dissolve-y-7), var(--reaction-dissolve-start) var(--reaction-dissolve-y-8), var(--reaction-dissolve-start) var(--reaction-dissolve-y-9), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10));
-  }
-  35% {
-    clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-35-0) var(--reaction-dissolve-y-0), var(--reaction-dissolve-35-1) var(--reaction-dissolve-y-1), var(--reaction-dissolve-35-2) var(--reaction-dissolve-y-2), var(--reaction-dissolve-35-3) var(--reaction-dissolve-y-3), var(--reaction-dissolve-35-4) var(--reaction-dissolve-y-4), var(--reaction-dissolve-35-5) var(--reaction-dissolve-y-5), var(--reaction-dissolve-35-6) var(--reaction-dissolve-y-6), var(--reaction-dissolve-35-7) var(--reaction-dissolve-y-7), var(--reaction-dissolve-35-8) var(--reaction-dissolve-y-8), var(--reaction-dissolve-35-9) var(--reaction-dissolve-y-9), var(--reaction-dissolve-35-10) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10));
-  }
-  70% {
-    clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-70-0) var(--reaction-dissolve-y-0), var(--reaction-dissolve-70-1) var(--reaction-dissolve-y-1), var(--reaction-dissolve-70-2) var(--reaction-dissolve-y-2), var(--reaction-dissolve-70-3) var(--reaction-dissolve-y-3), var(--reaction-dissolve-70-4) var(--reaction-dissolve-y-4), var(--reaction-dissolve-70-5) var(--reaction-dissolve-y-5), var(--reaction-dissolve-70-6) var(--reaction-dissolve-y-6), var(--reaction-dissolve-70-7) var(--reaction-dissolve-y-7), var(--reaction-dissolve-70-8) var(--reaction-dissolve-y-8), var(--reaction-dissolve-70-9) var(--reaction-dissolve-y-9), var(--reaction-dissolve-70-10) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10));
-  }
-  100% {
-    clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-1), var(--reaction-dissolve-end) var(--reaction-dissolve-y-2), var(--reaction-dissolve-end) var(--reaction-dissolve-y-3), var(--reaction-dissolve-end) var(--reaction-dissolve-y-4), var(--reaction-dissolve-end) var(--reaction-dissolve-y-5), var(--reaction-dissolve-end) var(--reaction-dissolve-y-6), var(--reaction-dissolve-end) var(--reaction-dissolve-y-7), var(--reaction-dissolve-end) var(--reaction-dissolve-y-8), var(--reaction-dissolve-end) var(--reaction-dissolve-y-9), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10));
-  }
-}
-@keyframes nixReactionDissolveOut {
-  0% {
-    clip-path: polygon(var(--reaction-dissolve-start) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-10), var(--reaction-dissolve-start) var(--reaction-dissolve-y-9), var(--reaction-dissolve-start) var(--reaction-dissolve-y-8), var(--reaction-dissolve-start) var(--reaction-dissolve-y-7), var(--reaction-dissolve-start) var(--reaction-dissolve-y-6), var(--reaction-dissolve-start) var(--reaction-dissolve-y-5), var(--reaction-dissolve-start) var(--reaction-dissolve-y-4), var(--reaction-dissolve-start) var(--reaction-dissolve-y-3), var(--reaction-dissolve-start) var(--reaction-dissolve-y-2), var(--reaction-dissolve-start) var(--reaction-dissolve-y-1));
-  }
-  35% {
-    clip-path: polygon(var(--reaction-dissolve-35-0) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-35-10) var(--reaction-dissolve-y-10), var(--reaction-dissolve-35-9) var(--reaction-dissolve-y-9), var(--reaction-dissolve-35-8) var(--reaction-dissolve-y-8), var(--reaction-dissolve-35-7) var(--reaction-dissolve-y-7), var(--reaction-dissolve-35-6) var(--reaction-dissolve-y-6), var(--reaction-dissolve-35-5) var(--reaction-dissolve-y-5), var(--reaction-dissolve-35-4) var(--reaction-dissolve-y-4), var(--reaction-dissolve-35-3) var(--reaction-dissolve-y-3), var(--reaction-dissolve-35-2) var(--reaction-dissolve-y-2), var(--reaction-dissolve-35-1) var(--reaction-dissolve-y-1));
-  }
-  70% {
-    clip-path: polygon(var(--reaction-dissolve-70-0) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-70-10) var(--reaction-dissolve-y-10), var(--reaction-dissolve-70-9) var(--reaction-dissolve-y-9), var(--reaction-dissolve-70-8) var(--reaction-dissolve-y-8), var(--reaction-dissolve-70-7) var(--reaction-dissolve-y-7), var(--reaction-dissolve-70-6) var(--reaction-dissolve-y-6), var(--reaction-dissolve-70-5) var(--reaction-dissolve-y-5), var(--reaction-dissolve-70-4) var(--reaction-dissolve-y-4), var(--reaction-dissolve-70-3) var(--reaction-dissolve-y-3), var(--reaction-dissolve-70-2) var(--reaction-dissolve-y-2), var(--reaction-dissolve-70-1) var(--reaction-dissolve-y-1));
-  }
-  100% {
-    clip-path: polygon(var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-0), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-end) var(--reaction-dissolve-y-10), var(--reaction-dissolve-end) var(--reaction-dissolve-y-9), var(--reaction-dissolve-end) var(--reaction-dissolve-y-8), var(--reaction-dissolve-end) var(--reaction-dissolve-y-7), var(--reaction-dissolve-end) var(--reaction-dissolve-y-6), var(--reaction-dissolve-end) var(--reaction-dissolve-y-5), var(--reaction-dissolve-end) var(--reaction-dissolve-y-4), var(--reaction-dissolve-end) var(--reaction-dissolve-y-3), var(--reaction-dissolve-end) var(--reaction-dissolve-y-2), var(--reaction-dissolve-end) var(--reaction-dissolve-y-1));
-  }
 }
 @keyframes oracleFloat { 0%,100% { transform: translateY(1px); } 50% { transform: translateY(-3px); } }
 @keyframes moteFloat { 0%,100% { transform: translate(0, 2px); opacity: .35; } 50% { transform: translate(4px, -5px); opacity: 1; } }

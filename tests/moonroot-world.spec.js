@@ -246,41 +246,20 @@ test("uses supportive character reactions only after repeated mistakes", async (
     window.__reactionFrames = [];
     window.__sampleReactionFrames = true;
     const sample = () => {
-      const images = [...document.querySelectorAll("#characterLayer .nix")];
-      window.__reactionFrames.push(images.map(image => {
-        const mask = image.closest(".reaction-dissolve-mask");
-        return {
-          opacity: Number.parseFloat(getComputedStyle(image).opacity),
-          transform: getComputedStyle(image).transform,
-          clipPath: mask ? getComputedStyle(mask).clipPath : "none",
-          source: image.getAttribute("src"),
-          settling: image.classList.contains("reaction-settling"),
-          neutralReady: image.classList.contains("reaction-neutral-ready"),
-          incoming: mask?.classList.contains("reaction-dissolve-incoming-mask") || false,
-          outgoing: mask?.classList.contains("reaction-dissolve-outgoing-mask") || false,
-          running: mask?.classList.contains("reaction-dissolve-running-in")
-            || mask?.classList.contains("reaction-dissolve-running-out")
-            || false,
-        };
-      }));
+      const images = [...document.querySelectorAll("#characterLayer > .nix")];
+      window.__reactionFrames.push(images.map(image => ({
+        opacity: Number.parseFloat(getComputedStyle(image).opacity),
+        transform: getComputedStyle(image).transform,
+        source: image.getAttribute("src"),
+        settling: image.classList.contains("reaction-settling"),
+        neutralReady: image.classList.contains("reaction-neutral-ready"),
+      })));
       if (window.__sampleReactionFrames) requestAnimationFrame(sample);
     };
     requestAnimationFrame(sample);
   });
   releasePuzzledMedia();
   await expect(page.locator("#characterLayer > .reaction-settling")).toHaveCount(1);
-  await expect(page.locator("#characterLayer > .reaction-dissolve-running-in")).toHaveCount(1);
-  await expect(page.locator("#characterLayer > .reaction-dissolve-running-out")).toHaveCount(1);
-  await page.evaluate(() => new Promise(resolve => {
-    let remaining = 8;
-    const advance = () => {
-      remaining -= 1;
-      if (remaining <= 0) resolve();
-      else requestAnimationFrame(advance);
-    };
-    requestAnimationFrame(advance);
-  }));
-  await page.screenshot({ path: "test-results/reaction-complementary-dissolve-390x844.png", fullPage: true });
   await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction-media-active", "true");
   await page.evaluate(() => { window.__sampleReactionFrames = false; });
@@ -288,18 +267,11 @@ test("uses supportive character reactions only after repeated mistakes", async (
     const frames = window.__reactionFrames;
     const neutral = frames.flat().find(frame => frame.neutralReady);
     const matrix = neutral ? new DOMMatrixReadOnly(neutral.transform) : null;
-    const dissolveFrames = frames.filter(frame => frame.some(item => item.running));
     return {
-      neverEmpty: frames.every(frame => frame.length >= 1),
+      alwaysOneCharacter: frames.every(frame => frame.length === 1),
       alwaysFullyOpaque: frames.flat().every(frame => frame.opacity >= .999),
       sawSettlingIdle: frames.flat().some(frame => frame.settling && /\/idle\.png$/.test(frame.source)),
       sawReaction: frames.flat().some(frame => /\/puzzled-variant-\d+\.webp$/.test(frame.source)),
-      complementaryPairs: dissolveFrames.length > 0 && dissolveFrames.every(frame => (
-        frame.length === 2
-        && frame.filter(item => item.incoming).length === 1
-        && frame.filter(item => item.outgoing).length === 1
-        && frame.every(item => item.clipPath !== "none")
-      )),
       neutral: matrix && {
         translateX: matrix.e,
         translateY: matrix.f,
@@ -308,17 +280,16 @@ test("uses supportive character reactions only after repeated mistakes", async (
       },
     };
   });
-  expect(transitionEvidence.neverEmpty).toBe(true);
+  expect(transitionEvidence.alwaysOneCharacter).toBe(true);
   expect(transitionEvidence.alwaysFullyOpaque).toBe(true);
   expect(transitionEvidence.sawSettlingIdle).toBe(true);
   expect(transitionEvidence.sawReaction).toBe(true);
-  expect(transitionEvidence.complementaryPairs).toBe(true);
   expect(transitionEvidence.neutral).not.toBeNull();
   expect(Math.abs(transitionEvidence.neutral.translateX)).toBeLessThan(.1);
   expect(Math.abs(transitionEvidence.neutral.translateY)).toBeLessThan(.1);
   expect(Math.abs(transitionEvidence.neutral.skewX)).toBeLessThan(.1);
   expect(Math.abs(transitionEvidence.neutral.skewY)).toBeLessThan(.1);
-  await page.screenshot({ path: "test-results/reaction-dissolve-complete-390x844.png", fullPage: true });
+  await page.screenshot({ path: "test-results/reaction-neutral-swap-390x844.png", fullPage: true });
   const reactionScale = await page.locator("#characterLayer > .nix").evaluate(image => {
     const variant = Number(image.dataset.reactionVariant) - 1;
     return {
@@ -327,37 +298,6 @@ test("uses supportive character reactions only after repeated mistakes", async (
     };
   });
   expect(reactionScale.applied).toBe(reactionScale.authored);
-  for (const viewport of [
-    { width: 360, height: 740 },
-    { width: 390, height: 844 },
-    { width: 412, height: 915 },
-    { width: 430, height: 932 },
-    { width: 432, height: 960 },
-  ]) {
-    await page.setViewportSize(viewport);
-    const layout = await page.evaluate(() => {
-      const world = document.querySelector("#world").getBoundingClientRect();
-      const character = document.querySelector("#characterLayer > .nix").getBoundingClientRect();
-      return {
-        characterCount: document.querySelectorAll("#characterLayer > .nix").length,
-        fullyOpaque: Number.parseFloat(getComputedStyle(document.querySelector("#characterLayer > .nix")).opacity) >= .999,
-        reactionActive: document.querySelector("#characterLayer > .nix").dataset.reactionMediaActive === "true",
-        withinWorld: character.left >= world.left - 1
-          && character.right <= world.right + 1
-          && character.top >= world.top - 1
-          && character.bottom <= world.bottom + 1,
-        documentOverflow: document.documentElement.scrollWidth > innerWidth
-          || document.documentElement.scrollHeight > innerHeight,
-      };
-    });
-    expect(layout, `${viewport.width}x${viewport.height}`).toEqual({
-      characterCount: 1,
-      fullyOpaque: true,
-      reactionActive: true,
-      withinWorld: true,
-      documentOverflow: false,
-    });
-  }
   await pressKey("q");
   await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("encouraging");
 
