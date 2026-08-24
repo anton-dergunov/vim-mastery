@@ -262,6 +262,9 @@ test("uses supportive character reactions only after repeated mistakes", async (
   await expect(page.locator("#characterLayer > .reaction-settling")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveCount(1);
   await expect(page.locator("#characterLayer > .nix")).toHaveAttribute("data-reaction-media-active", "true");
+  await page.waitForFunction(() => window.__reactionFrames
+    .flat()
+    .some(frame => /\/puzzled-variant-\d+\.webp$/.test(frame.source)));
   await page.evaluate(() => { window.__sampleReactionFrames = false; });
   const transitionEvidence = await page.evaluate(() => {
     const frames = window.__reactionFrames;
