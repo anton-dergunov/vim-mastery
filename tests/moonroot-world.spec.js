@@ -308,6 +308,46 @@ test("uses supportive character reactions only after repeated mistakes", async (
   await expect.poll(() => page.evaluate(() => window.VimWilds.getState().characterReaction)).toBe("celebrating");
 });
 
+test("keeps active reaction media inside every target phone viewport", async ({ page }) => {
+  for (const viewport of [
+    { width: 360, height: 740 },
+    { width: 390, height: 844 },
+    { width: 412, height: 915 },
+    { width: 430, height: 932 },
+    { width: 432, height: 960 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+    await page.waitForFunction(() => window.VimWilds?.getState && document.querySelector("#characterLayer > .nix"));
+    await page.evaluate(() => {
+      window.VimWilds.emit("q");
+      window.VimWilds.emit("q");
+    });
+    await expect(page.locator("#characterLayer > .nix")).toHaveAttribute(
+      "data-reaction-media-active",
+      "true",
+    );
+    await page.locator("#characterLayer > .nix").evaluate(image => image.decode());
+    await page.waitForTimeout(250);
+    const layout = await page.evaluate(() => ({
+      characterCount: document.querySelectorAll("#characterLayer > .nix").length,
+      opacity: Number.parseFloat(getComputedStyle(document.querySelector("#characterLayer > .nix")).opacity),
+      scrollWidth: document.documentElement.scrollWidth,
+      scrollHeight: document.documentElement.scrollHeight,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+    }));
+    expect(layout.characterCount, `${viewport.width}×${viewport.height}`).toBe(1);
+    expect(layout.opacity, `${viewport.width}×${viewport.height}`).toBeGreaterThanOrEqual(.999);
+    expect(layout.scrollWidth, `${viewport.width}×${viewport.height}`).toBeLessThanOrEqual(layout.viewportWidth);
+    expect(layout.scrollHeight, `${viewport.width}×${viewport.height}`).toBeLessThanOrEqual(layout.viewportHeight);
+    await page.screenshot({
+      path: `test-results/reaction-active-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    });
+  }
+});
+
 test("streams complete-board Wayfinder variants after the delay and silently falls back offline", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));

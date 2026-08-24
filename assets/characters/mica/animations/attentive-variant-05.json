@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    276,
-    276
+    272,
+    272
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.078125,
+  "css_scale": 1.0625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 1.7320507764816284,
-  "runtime_bytes": 1374856,
-  "master_bytes": 1377094,
+  "runtime_bytes": 1488234,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
-      68,
-      9,
-      214,
-      270
+      70,
+      54,
+      202,
+      219
+    ],
+    [
+      72,
+      56,
+      201,
+      216
+    ],
+    [
+      72,
+      56,
+      201,
+      216
     ],
     [
       68,
       9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       7,
-      214,
-      270
+      212,
+      266
+    ],
+    [
+      68,
+      9,
+      212,
+      266
     ],
     [
       68,
       7,
-      214,
-      270
+      212,
+      266
+    ],
+    [
+      68,
+      9,
+      212,
+      266
     ],
     [
       68,
       7,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       7,
-      214,
-      270
+      212,
+      266
+    ],
+    [
+      68,
+      7,
+      212,
+      266
+    ],
+    [
+      68,
+      7,
+      212,
+      266
     ],
     [
       69,
       9,
-      214,
-      222
+      212,
+      218
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
+    ],
+    [
+      68,
+      7,
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      265
+    ],
+    [
+      66,
+      7,
+      212,
+      266
+    ],
+    [
+      66,
+      9,
+      212,
+      266
+    ],
+    [
+      66,
+      9,
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      269
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
+      212,
+      266
     ],
     [
       68,
       9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
-    ],
-    [
-      68,
-      9,
-      214,
-      270
+      212,
+      266
     ],
     [
       71,
       9,
-      214,
-      222
+      212,
+      218
     ],
     [
       71,
+      9,
+      212,
+      218
+    ],
+    [
+      71,
+      9,
+      212,
+      218
+    ],
+    [
+      68,
       10,
-      214,
-      222
+      212,
+      266
     ],
     [
       71,
       9,
-      214,
-      222
-    ],
-    [
-      68,
-      10,
-      214,
-      270
+      212,
+      218
     ],
     [
       71,
       9,
-      214,
-      222
+      212,
+      218
     ],
     [
       71,
       9,
-      214,
-      222
-    ],
-    [
-      71,
-      9,
-      214,
-      222
+      212,
+      218
     ],
     [
       68,
       54,
-      205,
-      269
+      203,
+      266
     ],
     [
       69,
       54,
-      205,
-      270
+      203,
+      266
     ],
     [
       69,
       54,
-      205,
-      270
+      203,
+      266
     ],
     [
       71,
       54,
-      205,
-      222
+      203,
+      218
     ],
     [
       68,
       54,
-      205,
-      269
+      203,
+      265
     ],
     [
       68,
       54,
-      205,
-      269
+      203,
+      265
     ],
     [
       69,
       54,
-      205,
-      269
+      203,
+      265
     ],
     [
       68,
       54,
-      205,
-      269
+      203,
+      265
+    ],
+    [
+      72,
+      56,
+      201,
+      216
+    ],
+    [
+      72,
+      56,
+      201,
+      216
+    ],
+    [
+      72,
+      56,
+      201,
+      216
+    ],
+    [
+      70,
+      54,
+      202,
+      219
     ]
   ],
   "minimum_content_edge_clearance_px": 6,
-  "first_last_mean_absolute_error": 0.485,
-  "foreground_area_ratio": 1.029,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.069,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 5,
   "selected_source": "reactions-round-05/runtime-candidates/mica/attentive-attempt-01.webp",
-  "selected_round": 5
+  "selected_round": 5,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

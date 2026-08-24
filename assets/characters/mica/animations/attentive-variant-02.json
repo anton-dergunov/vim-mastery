@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    274,
-    274
+    272,
+    272
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.0703125,
+  "css_scale": 1.0625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1361320,
-  "master_bytes": 1362868,
+  "runtime_bytes": 1482878,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
-      64,
-      8,
-      212,
-      268
+      70,
+      54,
+      202,
+      219
+    ],
+    [
+      72,
+      56,
+      200,
+      217
+    ],
+    [
+      72,
+      56,
+      200,
+      218
     ],
     [
       64,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       64,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       64,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       64,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       64,
-      8,
-      213,
-      268
+      9,
+      210,
+      267
+    ],
+    [
+      64,
+      9,
+      211,
+      267
     ],
     [
       61,
-      8,
-      213,
-      268
+      9,
+      211,
+      267
     ],
     [
       61,
-      8,
-      213,
-      268
+      9,
+      211,
+      267
     ],
     [
       61,
-      6,
-      213,
-      268
+      7,
+      211,
+      267
     ],
     [
       61,
-      8,
-      213,
-      268
+      7,
+      211,
+      267
     ],
     [
       61,
-      8,
-      213,
-      268
+      9,
+      211,
+      267
     ],
     [
       61,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       61,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       61,
-      8,
-      212,
-      268
+      9,
+      210,
+      267
     ],
     [
       61,
-      8,
-      206,
-      268
+      9,
+      204,
+      267
     ],
     [
       61,
-      8,
-      212,
-      221
+      9,
+      210,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      213,
-      221
+      9,
+      211,
+      220
     ],
     [
       61,
-      8,
-      213,
-      221
+      9,
+      211,
+      220
     ],
     [
       61,
-      8,
-      213,
-      221
+      9,
+      211,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
-      206,
-      221
+      9,
+      204,
+      220
     ],
     [
       61,
-      8,
+      9,
+      205,
+      220
+    ],
+    [
+      61,
+      9,
       207,
-      221
-    ],
-    [
-      61,
-      8,
-      209,
-      221
+      220
     ],
     [
       64,
-      8,
-      209,
-      221
+      9,
+      207,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      213,
-      221
+      9,
+      211,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
     ],
     [
       64,
-      8,
-      204,
-      221
+      9,
+      202,
+      220
+    ],
+    [
+      72,
+      56,
+      200,
+      218
+    ],
+    [
+      72,
+      56,
+      200,
+      218
+    ],
+    [
+      72,
+      56,
+      200,
+      217
+    ],
+    [
+      70,
+      54,
+      202,
+      219
     ]
   ],
-  "minimum_content_edge_clearance_px": 6,
-  "first_last_mean_absolute_error": 0.484,
-  "foreground_area_ratio": 1.038,
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.073,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 2,
   "selected_source": "reactions-round-02/runtime-candidates/mica/attentive-attempt-01.webp",
-  "selected_round": 2
+  "selected_round": 2,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

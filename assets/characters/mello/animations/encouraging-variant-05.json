@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    262,
-    262
+    260,
+    260
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.0234375,
+  "css_scale": 1.015625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1565290,
-  "master_bytes": 1568178,
+  "runtime_bytes": 1710598,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -27,296 +26,338 @@
   "frame_alpha_bounds": [
     [
       67,
-      9,
-      203,
-      216
+      48,
+      192,
+      213
     ],
     [
-      65,
-      9,
-      203,
-      257
+      69,
+      50,
+      190,
+      211
     ],
     [
-      65,
-      9,
-      203,
-      257
+      69,
+      50,
+      190,
+      213
     ],
     [
-      65,
-      9,
-      203,
-      257
+      67,
+      10,
+      201,
+      215
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
+    ],
+    [
+      65,
+      11,
+      201,
+      254
+    ],
+    [
+      65,
+      11,
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
+    ],
+    [
+      65,
+      10,
+      201,
+      254
+    ],
+    [
+      65,
+      48,
+      193,
+      254
+    ],
+    [
+      65,
+      48,
+      193,
+      254
+    ],
+    [
+      65,
+      48,
+      194,
+      254
     ],
     [
       65,
       48,
       195,
-      257
+      254
     ],
     [
       65,
       48,
       195,
-      257
+      254
     ],
     [
       65,
-      48,
-      196,
-      257
-    ],
-    [
-      65,
-      48,
-      196,
-      257
-    ],
-    [
-      65,
-      48,
-      197,
-      257
-    ],
-    [
-      65,
-      43,
-      197,
-      257
+      44,
+      195,
+      254
     ],
     [
       65,
       39,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
-      33,
-      197,
-      257
+      34,
+      195,
+      254
     ],
     [
       65,
-      29,
-      197,
-      257
+      30,
+      195,
+      254
     ],
     [
       65,
       26,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
-      22,
-      197,
-      257
+      23,
+      195,
+      254
     ],
     [
       65,
       19,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       17,
-      197,
-      257
-    ],
-    [
-      65,
-      15,
-      197,
-      257
-    ],
-    [
-      65,
-      15,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       16,
-      197,
-      257
+      195,
+      254
+    ],
+    [
+      65,
+      16,
+      195,
+      254
+    ],
+    [
+      65,
+      17,
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
+      195,
+      254
     ],
     [
       65,
       47,
-      197,
-      257
-    ],
-    [
-      65,
-      47,
-      197,
-      257
-    ],
-    [
-      65,
-      47,
-      196,
-      257
-    ],
-    [
-      65,
-      48,
-      196,
-      257
+      195,
+      254
     ],
     [
       65,
       48,
       195,
-      257
+      254
     ],
     [
       65,
       48,
       195,
-      257
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      194,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      194,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
-      9,
-      203,
-      257
+      48,
+      193,
+      254
+    ],
+    [
+      65,
+      48,
+      193,
+      254
+    ],
+    [
+      65,
+      48,
+      193,
+      254
+    ],
+    [
+      65,
+      10,
+      201,
+      254
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      67,
+      48,
+      192,
+      213
     ]
   ],
-  "minimum_content_edge_clearance_px": 5,
-  "first_last_mean_absolute_error": 0.545,
-  "foreground_area_ratio": 1.186,
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.251,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 5,
   "selected_source": "reactions-round-05/runtime-candidates/mello/encouraging-attempt-01.webp",
-  "selected_round": 5
+  "selected_round": 5,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

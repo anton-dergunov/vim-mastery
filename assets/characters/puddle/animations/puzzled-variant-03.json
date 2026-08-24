@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    298,
-    298
+    296,
+    296
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.1640625,
+  "css_scale": 1.15625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1708774,
-  "master_bytes": 1710300,
+  "runtime_bytes": 1891204,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
-      70,
-      11,
-      231,
-      232
+      76,
+      66,
+      220,
+      231
+    ],
+    [
+      78,
+      67,
+      218,
+      228
+    ],
+    [
+      78,
+      67,
+      219,
+      228
     ],
     [
       70,
-      11,
-      231,
-      232
+      10,
+      230,
+      231
     ],
     [
       70,
-      11,
-      231,
-      232
+      10,
+      230,
+      231
+    ],
+    [
+      70,
+      10,
+      230,
+      231
     ],
     [
       75,
-      11,
-      231,
-      232
+      10,
+      230,
+      231
     ],
     [
       68,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       68,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       69,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       68,
-      11,
+      10,
+      221,
+      289
+    ],
+    [
+      68,
+      10,
+      230,
+      290
+    ],
+    [
+      70,
+      10,
       222,
-      291
-    ],
-    [
-      68,
-      11,
-      231,
-      291
+      290
     ],
     [
       70,
-      11,
-      223,
-      292
+      10,
+      222,
+      290
     ],
     [
       70,
-      11,
-      223,
-      292
+      10,
+      230,
+      231
     ],
     [
       70,
-      11,
-      231,
-      232
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      231
     ],
     [
       70,
-      11,
-      231,
-      232
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
-    ],
-    [
-      71,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       74,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       74,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       71,
-      11,
-      231,
-      291
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       71,
-      11,
-      231,
-      291
+      10,
+      230,
+      289
     ],
     [
       70,
-      11,
-      223,
-      292
+      10,
+      222,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       68,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
     ],
     [
       70,
-      11,
-      231,
-      292
+      10,
+      230,
+      290
+    ],
+    [
+      78,
+      67,
+      218,
+      228
+    ],
+    [
+      78,
+      67,
+      218,
+      228
+    ],
+    [
+      78,
+      67,
+      218,
+      228
+    ],
+    [
+      76,
+      66,
+      220,
+      231
     ]
   ],
   "minimum_content_edge_clearance_px": 6,
-  "first_last_mean_absolute_error": 1.012,
-  "foreground_area_ratio": 1.08,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.147,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 3,
   "selected_source": "reactions-round-03/runtime-candidates/puddle/puzzled-attempt-01.webp",
-  "selected_round": 3
+  "selected_round": 3,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

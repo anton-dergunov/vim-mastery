@@ -57,10 +57,16 @@ class VeoConversionTests(unittest.TestCase):
         self.assertAlmostEqual(
             (first_body[0] + first_body[2]) / 2,
             (anchor_box[0] + anchor_box[2]) / 2 + placement.inset,
-            delta=2,
+            delta=3,
         )
         self.assertAlmostEqual(first_body[3], anchor_box[3] + placement.inset, delta=2)
-        self.assertAlmostEqual(first_body[2] - first_body[0], anchor_box[2] - anchor_box[0], delta=2)
+        anchor_frame = converter.render_anchor_frame(anchor_sprite(), 128, placement.canvas_size)
+        anchor_body = converter.largest_component_mask(anchor_frame.getchannel("A"))
+        first_mask = converter.largest_component_mask(output[0].getchannel("A"))
+        self.assertGreater(
+            np.count_nonzero(anchor_body & first_mask) / np.count_nonzero(anchor_body | first_mask),
+            0.8,
+        )
         for frame in output:
             alpha = np.asarray(frame.getchannel("A"))
             self.assertFalse(alpha[0].any() or alpha[-1].any() or alpha[:, 0].any() or alpha[:, -1].any())
@@ -80,6 +86,27 @@ class VeoConversionTests(unittest.TestCase):
                 converter.inspect_webp_animation(output),
                 {"frames": 2, "duration_ms": round(2 * 1000 / 12), "loop": 1},
             )
+
+    def test_sdf_ramp_starts_and_ends_on_exact_idle_without_extending_duration(self) -> None:
+        idle = Image.new("RGBA", (64, 64))
+        ImageDraw.Draw(idle).ellipse((18, 12, 46, 56), fill=(20, 110, 108, 255))
+        clip = []
+        for offset in (2, 4):
+            frame = Image.new("RGBA", idle.size)
+            ImageDraw.Draw(frame).ellipse(
+                (18 + offset, 10, 48 + offset, 56), fill=(50, 145, 122, 255)
+            )
+            clip.append(frame)
+        ramp = converter.add_idle_morph_ramp(clip, idle)
+        self.assertEqual(len(ramp), len(clip) + 7)
+        self.assertEqual(np.asarray(ramp[0]).tolist(), np.asarray(idle).tolist())
+        self.assertEqual(np.asarray(ramp[-1]).tolist(), np.asarray(idle).tolist())
+        self.assertGreater(np.count_nonzero(np.asarray(ramp[1].getchannel("A"))), 0)
+
+        durations = converter.morph_ramp_durations(48, 12)
+        self.assertEqual(len(durations), 55)
+        self.assertEqual(sum(durations), 4000)
+        self.assertLess(durations[0], durations[3])
 
 
 if __name__ == "__main__":

@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    348,
-    348
+    346,
+    346
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.359375,
+  "css_scale": 1.3515625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1572070,
-  "master_bytes": 1573152,
+  "runtime_bytes": 1726810,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
-      84,
-      12,
-      270,
-      338
+      91,
+      91,
+      255,
+      254
+    ],
+    [
+      93,
+      93,
+      254,
+      253
+    ],
+    [
+      93,
+      93,
+      254,
+      253
     ],
     [
       84,
       12,
-      270,
-      338
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      338
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      338
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      338
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      338
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      338
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      257
+      268,
+      335
     ],
     [
       84,
       12,
-      270,
-      257
+      268,
+      255
+    ],
+    [
+      84,
+      12,
+      268,
+      255
     ],
     [
       84,
       14,
-      270,
-      257
+      268,
+      255
     ],
     [
-      99,
+      98,
       13,
-      270,
-      257
+      268,
+      255
     ],
     [
-      99,
+      98,
       14,
-      269,
-      283
-    ],
-    [
-      85,
-      14,
-      270,
-      343
+      267,
+      279
     ],
     [
       85,
       14,
-      270,
-      343
-    ],
-    [
-      85,
-      14,
-      270,
-      343
-    ],
-    [
-      85,
-      14,
-      270,
-      343
-    ],
-    [
-      85,
-      14,
-      270,
+      268,
       340
     ],
     [
       85,
       14,
-      270,
+      268,
+      340
+    ],
+    [
+      85,
+      14,
+      268,
+      340
+    ],
+    [
+      85,
+      14,
+      268,
+      340
+    ],
+    [
+      85,
+      14,
+      268,
+      337
+    ],
+    [
+      85,
+      14,
+      268,
+      336
+    ],
+    [
+      85,
+      14,
+      268,
+      329
+    ],
+    [
+      85,
+      14,
+      268,
+      337
+    ],
+    [
+      85,
+      14,
+      268,
       339
     ],
     [
-      85,
+      87,
       14,
-      270,
-      332
-    ],
-    [
-      85,
-      14,
-      270,
-      340
-    ],
-    [
-      85,
-      14,
-      270,
-      342
+      268,
+      329
     ],
     [
       87,
       14,
-      270,
-      332
-    ],
-    [
-      87,
-      14,
-      270,
-      332
+      268,
+      328
     ],
     [
       84,
       14,
-      270,
-      342
+      268,
+      339
     ],
     [
       84,
       12,
-      270,
-      330
-    ],
-    [
-      84,
-      14,
-      270,
-      330
-    ],
-    [
-      84,
-      14,
-      270,
-      332
-    ],
-    [
-      84,
-      14,
-      270,
-      332
-    ],
-    [
-      84,
-      14,
-      270,
-      342
+      268,
+      329
     ],
     [
       83,
       14,
-      270,
-      343
+      268,
+      329
     ],
     [
       84,
       14,
-      270,
-      343
+      268,
+      329
+    ],
+    [
+      84,
+      14,
+      268,
+      329
+    ],
+    [
+      84,
+      14,
+      268,
+      339
     ],
     [
       83,
       14,
-      270,
-      343
+      268,
+      340
+    ],
+    [
+      84,
+      14,
+      268,
+      340
+    ],
+    [
+      83,
+      14,
+      268,
+      340
     ],
     [
       90,
       14,
-      270,
-      257
-    ],
-    [
-      90,
-      14,
-      270,
-      257
+      268,
+      255
     ],
     [
       89,
       14,
-      270,
-      257
+      268,
+      255
+    ],
+    [
+      88,
+      14,
+      268,
+      255
     ],
     [
       83,
       14,
-      270,
-      257
+      268,
+      255
     ],
     [
       83,
       12,
-      270,
-      257
+      268,
+      255
     ],
     [
-      84,
+      83,
       14,
-      269,
-      257
-    ],
-    [
-      91,
-      14,
-      269,
-      257
-    ],
-    [
-      84,
-      14,
-      269,
-      338
+      267,
+      255
     ],
     [
       91,
       14,
-      269,
-      257
+      267,
+      255
     ],
     [
-      88,
+      83,
       14,
-      269,
-      338
+      267,
+      335
     ],
     [
       91,
       14,
-      269,
-      257
+      267,
+      255
     ],
     [
       88,
       14,
-      269,
-      338
+      267,
+      335
     ],
     [
-      84,
+      91,
       14,
-      270,
-      338
-    ],
-    [
-      84,
-      14,
-      270,
-      338
+      267,
+      255
     ],
     [
       88,
       14,
-      270,
-      338
+      267,
+      335
     ],
     [
       84,
       14,
-      270,
-      338
+      268,
+      335
+    ],
+    [
+      84,
+      14,
+      268,
+      335
+    ],
+    [
+      88,
+      14,
+      268,
+      335
+    ],
+    [
+      84,
+      14,
+      268,
+      335
+    ],
+    [
+      93,
+      93,
+      255,
+      253
+    ],
+    [
+      93,
+      93,
+      255,
+      253
+    ],
+    [
+      93,
+      93,
+      254,
+      253
+    ],
+    [
+      91,
+      91,
+      255,
+      254
     ]
   ],
-  "minimum_content_edge_clearance_px": 5,
-  "first_last_mean_absolute_error": 0.906,
-  "foreground_area_ratio": 1.082,
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.149,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 2,
   "selected_source": "reactions-round-02/runtime-candidates/cinder/attentive-attempt-01.webp",
-  "selected_round": 2
+  "selected_round": 2,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

@@ -78,6 +78,14 @@ test("production PWA precaches core media and streams optional animation and sce
     .filter(Array.isArray)
     .reduce((total, variants) => total + variants.length, 0);
   assert.equal(reactionVariantCount, 216);
+  Object.values(characterManifest.characters)
+    .flatMap(character => Object.values(character.reactions || {}))
+    .filter(Array.isArray)
+    .flat()
+    .forEach(reaction => {
+      assert.equal(reaction.frames, 55);
+      assert.equal(reaction.duration_seconds, 4);
+    });
   assert.equal(characterAnimations.length, 150 + reactionVariantCount);
   characterAnimations.forEach(file => {
     assert.equal(existsSync(join(dist, file)), true);

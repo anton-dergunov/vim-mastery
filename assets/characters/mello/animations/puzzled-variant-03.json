@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    262,
-    262
+    260,
+    260
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.0234375,
+  "css_scale": 1.015625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1538636,
-  "master_bytes": 1542420,
+  "runtime_bytes": 1681516,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
+      67,
+      48,
+      192,
+      213
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
       61,
-      9,
+      10,
+      193,
+      213
+    ],
+    [
+      61,
+      10,
+      193,
+      213
+    ],
+    [
+      61,
+      10,
+      193,
+      254
+    ],
+    [
+      61,
+      10,
+      201,
+      254
+    ],
+    [
+      61,
+      10,
+      193,
+      254
+    ],
+    [
+      61,
+      10,
+      193,
+      254
+    ],
+    [
+      61,
+      10,
+      193,
+      254
+    ],
+    [
+      61,
+      10,
       195,
-      215
+      254
     ],
     [
       61,
-      9,
-      195,
-      215
-    ],
-    [
-      61,
-      9,
-      195,
-      257
-    ],
-    [
-      61,
-      9,
-      203,
-      257
-    ],
-    [
-      61,
-      9,
-      195,
-      257
-    ],
-    [
-      61,
-      9,
-      195,
-      257
-    ],
-    [
-      61,
-      9,
-      195,
-      257
-    ],
-    [
-      61,
-      9,
+      10,
       197,
-      257
+      254
     ],
     [
       61,
-      9,
-      199,
-      257
+      10,
+      197,
+      213
     ],
     [
       61,
-      9,
-      199,
-      215
+      10,
+      197,
+      213
     ],
     [
       61,
-      9,
-      199,
-      215
+      10,
+      197,
+      213
     ],
     [
       61,
-      9,
-      199,
-      215
-    ],
-    [
-      61,
-      9,
-      199,
-      215
+      10,
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
       48,
-      199,
-      215
+      197,
+      213
     ],
     [
       72,
-      47,
-      199,
-      215
+      48,
+      197,
+      213
     ],
     [
       68,
       46,
-      198,
-      215
+      196,
+      213
     ],
     [
       61,
-      9,
-      198,
-      215
+      10,
+      196,
+      213
     ],
     [
       61,
-      9,
-      198,
-      215
+      10,
+      196,
+      213
     ],
     [
       61,
-      9,
-      198,
-      215
+      10,
+      196,
+      213
+    ],
+    [
+      63,
+      41,
+      196,
+      213
     ],
     [
       63,
       40,
-      198,
-      215
+      196,
+      213
     ],
     [
       63,
-      40,
-      198,
-      215
-    ],
-    [
-      63,
-      40,
-      198,
-      215
+      41,
+      196,
+      213
     ],
     [
       63,
       42,
-      198,
-      257
+      196,
+      254
     ],
     [
       63,
       47,
-      198,
-      257
+      196,
+      254
     ],
     [
       63,
       48,
-      198,
-      257
+      196,
+      254
     ],
     [
       61,
-      9,
-      198,
-      257
+      10,
+      196,
+      254
     ],
     [
       63,
       48,
-      198,
-      257
+      196,
+      254
     ],
     [
       63,
       48,
-      198,
-      257
+      196,
+      254
     ],
     [
       63,
       48,
-      198,
-      257
+      196,
+      254
     ],
     [
       63,
       48,
-      198,
-      257
+      196,
+      254
     ],
     [
       64,
       48,
-      198,
-      215
+      196,
+      213
     ],
     [
       69,
       49,
-      197,
-      215
+      195,
+      213
     ],
     [
       68,
-      48,
-      196,
-      215
+      49,
+      194,
+      213
     ],
     [
       67,
       48,
-      195,
-      215
+      193,
+      213
     ],
     [
       67,
       48,
-      195,
-      215
+      193,
+      213
     ],
     [
       67,
       48,
-      195,
-      215
+      193,
+      213
     ],
     [
       67,
       48,
-      195,
-      215
+      193,
+      213
     ],
     [
       67,
       48,
-      195,
-      215
+      193,
+      213
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
+    ],
+    [
+      69,
+      50,
+      191,
+      211
+    ],
+    [
+      69,
+      50,
+      191,
+      211
+    ],
+    [
+      69,
+      50,
+      191,
+      211
+    ],
+    [
+      67,
+      48,
+      192,
+      213
     ]
   ],
-  "minimum_content_edge_clearance_px": 5,
-  "first_last_mean_absolute_error": 0.478,
-  "foreground_area_ratio": 1.076,
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.135,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 3,
   "selected_source": "reactions-round-03/runtime-candidates/mello/puzzled-attempt-01.webp",
-  "selected_round": 3
+  "selected_round": 3,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

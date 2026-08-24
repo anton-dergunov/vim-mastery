@@ -75,6 +75,24 @@ test("content files expose the expected schema versions", () => {
   });
 });
 
+test("reaction manifest preserves the four-second idle-ramp contract", () => {
+  const variants = Object.values(characterManifest.characters)
+    .flatMap(character => Object.values(character.reactions || {}))
+    .filter(Array.isArray)
+    .flat();
+
+  assert.equal(variants.length, 216);
+  for (const reaction of variants) {
+    assert.equal(reaction.frames, 55, `${reaction.src} must include the seven-frame idle ramp`);
+    assert.equal(reaction.fps, 12);
+    assert.equal(reaction.duration_seconds, 4);
+    assert.equal(reaction.loop, 1);
+    assert(Array.isArray(reaction.canvas_size));
+    assert.equal(reaction.canvas_size.length, 2);
+    assert(reaction.css_scale >= 1);
+  }
+});
+
 test("every practice prompt describes outcomes without revealing its canonical recipe", () => {
   const exercises = units.flatMap(({ data }) => data.lessons)
     .flatMap(lesson => lesson.activities)

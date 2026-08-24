@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    262,
-    262
+    260,
+    260
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.0234375,
+  "css_scale": 1.015625,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1559436,
-  "master_bytes": 1563738,
+  "runtime_bytes": 1703234,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
+      67,
+      48,
+      192,
+      213
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       67,
       10,
-      203,
-      215
+      201,
+      213
     ],
     [
       65,
       10,
-      203,
-      257
+      201,
+      254
     ],
     [
       67,
       48,
-      195,
-      215
+      193,
+      213
     ],
     [
       67,
       10,
-      203,
-      215
+      201,
+      213
     ],
     [
       67,
       43,
-      195,
-      215
+      193,
+      213
     ],
     [
       67,
-      37,
-      195,
-      215
+      38,
+      193,
+      213
     ],
     [
       67,
-      31,
-      195,
-      215
+      32,
+      193,
+      213
     ],
     [
       67,
       29,
-      195,
-      215
+      193,
+      213
     ],
     [
       65,
-      9,
-      203,
-      257
+      10,
+      201,
+      254
     ],
     [
       65,
-      9,
-      203,
-      257
+      10,
+      201,
+      254
     ],
     [
       65,
       22,
-      195,
-      256
+      193,
+      254
+    ],
+    [
+      65,
+      22,
+      193,
+      254
     ],
     [
       65,
       21,
-      195,
-      256
+      193,
+      254
+    ],
+    [
+      65,
+      21,
+      193,
+      254
     ],
     [
       65,
       20,
-      195,
-      256
+      193,
+      254
+    ],
+    [
+      65,
+      20,
+      193,
+      254
+    ],
+    [
+      65,
+      20,
+      193,
+      254
     ],
     [
       65,
       22,
-      195,
-      256
+      193,
+      254
     ],
     [
       65,
       20,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       20,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
-      20,
-      195,
-      257
+      21,
+      194,
+      254
     ],
     [
       65,
-      20,
+      24,
       195,
-      257
+      254
     ],
     [
       65,
-      20,
-      195,
-      257
-    ],
-    [
-      65,
-      19,
-      195,
-      257
+      21,
+      196,
+      254
     ],
     [
       65,
       20,
       196,
-      257
+      254
+    ],
+    [
+      70,
+      22,
+      196,
+      213
+    ],
+    [
+      65,
+      20,
+      196,
+      253
+    ],
+    [
+      65,
+      20,
+      196,
+      254
+    ],
+    [
+      65,
+      20,
+      196,
+      254
     ],
     [
       65,
       23,
-      197,
-      257
-    ],
-    [
-      65,
-      20,
-      198,
-      257
-    ],
-    [
-      65,
-      19,
-      198,
-      257
-    ],
-    [
-      70,
-      21,
-      198,
-      215
-    ],
-    [
-      65,
-      19,
-      198,
-      256
-    ],
-    [
-      65,
-      19,
-      198,
-      257
-    ],
-    [
-      65,
-      20,
-      198,
-      257
+      196,
+      254
     ],
     [
       65,
       22,
-      198,
-      257
+      196,
+      254
     ],
     [
       65,
-      21,
-      198,
-      257
-    ],
-    [
-      65,
-      22,
-      203,
-      257
+      23,
+      201,
+      254
     ],
     [
       60,
-      22,
-      203,
-      257
+      23,
+      201,
+      254
     ],
     [
       59,
-      19,
-      203,
-      257
+      20,
+      201,
+      254
     ],
     [
       59,
-      19,
-      203,
-      257
-    ],
-    [
-      59,
-      47,
-      203,
-      257
+      20,
+      201,
+      254
     ],
     [
       59,
       47,
-      203,
-      257
+      201,
+      254
     ],
     [
       59,
       47,
-      203,
-      257
+      201,
+      254
     ],
     [
       59,
       47,
-      203,
-      257
+      201,
+      254
     ],
     [
       59,
       47,
-      203,
-      257
+      201,
+      254
+    ],
+    [
+      59,
+      48,
+      201,
+      254
     ],
     [
       65,
       48,
-      203,
-      257
+      201,
+      254
     ],
     [
       65,
       48,
-      199,
-      257
+      197,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
     ],
     [
       65,
       48,
-      195,
-      257
+      193,
+      254
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      69,
+      50,
+      190,
+      211
+    ],
+    [
+      67,
+      48,
+      192,
+      213
     ]
   ],
-  "minimum_content_edge_clearance_px": 5,
-  "first_last_mean_absolute_error": 0.817,
-  "foreground_area_ratio": 1.105,
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.166,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 2,
   "selected_source": "reactions-round-02/runtime-candidates/mello/encouraging-attempt-01.webp",
-  "selected_round": 2
+  "selected_round": 2,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

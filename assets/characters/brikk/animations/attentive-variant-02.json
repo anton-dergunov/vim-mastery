@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    334,
-    334
+    332,
+    332
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.3046875,
+  "css_scale": 1.296875,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 1746230,
-  "master_bytes": 1748938,
+  "runtime_bytes": 1922910,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
+      85,
+      84,
+      246,
+      248
+    ],
+    [
+      87,
+      86,
+      244,
+      247
+    ],
+    [
+      87,
+      86,
+      244,
+      247
+    ],
+    [
       77,
-      8,
-      260,
-      329
+      10,
+      258,
+      326
+    ],
+    [
+      77,
+      10,
+      258,
+      249
+    ],
+    [
+      77,
+      10,
+      258,
+      326
     ],
     [
       77,
       8,
-      260,
-      252
+      258,
+      326
     ],
     [
       77,
       8,
-      260,
-      329
+      258,
+      325
     ],
     [
       77,
       8,
-      260,
-      329
+      258,
+      325
     ],
     [
       77,
       8,
-      260,
-      328
+      258,
+      325
     ],
     [
       77,
       8,
-      260,
-      328
-    ],
-    [
-      77,
-      8,
-      260,
-      328
-    ],
-    [
-      77,
-      8,
-      260,
-      328
+      258,
+      325
     ],
     [
       76,
       8,
-      260,
-      328
+      258,
+      325
     ],
     [
       74,
-      8,
-      260,
-      252
+      10,
+      258,
+      249
     ],
     [
       74,
-      8,
-      260,
-      328
+      10,
+      258,
+      325
+    ],
+    [
+      77,
+      10,
+      258,
+      325
+    ],
+    [
+      77,
+      10,
+      258,
+      326
     ],
     [
       77,
       8,
-      260,
-      328
+      258,
+      326
+    ],
+    [
+      77,
+      10,
+      258,
+      326
     ],
     [
       77,
       8,
-      260,
-      329
+      258,
+      326
     ],
     [
       77,
-      8,
-      260,
-      329
+      10,
+      258,
+      325
     ],
     [
       77,
-      8,
-      260,
-      329
+      10,
+      258,
+      325
     ],
     [
       77,
-      8,
-      260,
-      329
+      10,
+      258,
+      325
     ],
     [
       77,
-      8,
-      260,
-      328
-    ],
-    [
-      77,
-      8,
-      260,
-      328
-    ],
-    [
-      77,
-      8,
-      260,
-      328
-    ],
-    [
-      77,
-      8,
-      260,
-      328
+      10,
+      258,
+      325
     ],
     [
       79,
       8,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
-      8,
-      260,
-      329
+      10,
+      258,
+      326
     ],
     [
       82,
-      8,
-      260,
-      328
+      9,
+      258,
+      325
     ],
     [
       77,
-      8,
-      260,
-      328
+      9,
+      258,
+      326
     ],
     [
       77,
-      8,
-      260,
-      329
+      9,
+      258,
+      326
     ],
     [
       77,
-      8,
-      260,
-      328
+      9,
+      258,
+      326
     ],
     [
       74,
-      10,
-      260,
-      329
+      9,
+      258,
+      326
     ],
     [
       75,
-      10,
-      260,
-      328
+      9,
+      258,
+      325
     ],
     [
       74,
-      10,
-      259,
-      329
+      9,
+      257,
+      326
     ],
     [
       74,
-      10,
-      260,
-      328
+      9,
+      258,
+      325
     ],
     [
       74,
-      10,
-      260,
-      330
+      9,
+      258,
+      325
+    ],
+    [
+      77,
+      9,
+      258,
+      325
+    ],
+    [
+      77,
+      9,
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      329
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      249
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      325
     ],
     [
       77,
       10,
-      260,
-      252
+      258,
+      249
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      252
+      258,
+      325
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      325
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      328
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      329
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      329
+      258,
+      326
     ],
     [
       77,
       10,
-      260,
-      329
+      258,
+      326
     ],
     [
-      77,
-      10,
-      260,
-      329
+      87,
+      86,
+      244,
+      247
     ],
     [
-      77,
-      10,
-      260,
-      328
+      87,
+      86,
+      244,
+      247
+    ],
+    [
+      87,
+      86,
+      244,
+      247
+    ],
+    [
+      85,
+      84,
+      246,
+      248
     ]
   ],
-  "minimum_content_edge_clearance_px": 4,
-  "first_last_mean_absolute_error": 0.607,
-  "foreground_area_ratio": 1.051,
+  "minimum_content_edge_clearance_px": 6,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.072,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 2,
   "selected_source": "reactions-round-02/runtime-candidates/brikk/attentive-attempt-01.webp",
-  "selected_round": 2
+  "selected_round": 2,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }

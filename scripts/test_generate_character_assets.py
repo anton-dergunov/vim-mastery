@@ -591,6 +591,23 @@ class CharacterAssetPipelineTests(unittest.TestCase):
             self.assertNotIn("prompt", record)
             self.assertNotIn("frame_alpha_bounds", record)
 
+    def test_anchor_audit_records_exact_endpoints_and_flags_drift(self) -> None:
+        idle = Image.new("RGBA", (64, 64))
+        ImageDraw.Draw(idle).ellipse((18, 10, 46, 58), fill=(40, 130, 110, 255))
+        exact = pipeline.anchor_frame_audit([idle, idle], idle, base_size=64)
+        self.assertEqual(exact["anchor_first_frame_iou"], 1.0)
+        self.assertEqual(exact["anchor_last_frame_iou"], 1.0)
+        self.assertEqual(exact["anchor_foot_delta_px"], 0)
+        self.assertEqual(pipeline.anchor_review_flags(exact), [])
+
+        shifted = Image.new("RGBA", idle.size)
+        ImageDraw.Draw(shifted).ellipse((24, 10, 52, 58), fill=(40, 130, 110, 255))
+        drift = pipeline.anchor_frame_audit([shifted, shifted], idle, base_size=64)
+        self.assertIn(
+            "anchor-first-frame-iou-below-threshold",
+            pipeline.anchor_review_flags(drift),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

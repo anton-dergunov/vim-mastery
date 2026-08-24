@@ -1233,6 +1233,21 @@ def save_generated_video(operation: Any, output: Path) -> None:
     video.save(str(output))
 
 
+def audit_generated_reaction(raw_video: Path, idle: Path) -> dict[str, Any]:
+    """Run the Stage A gate on a new reaction before accepting the paid output."""
+    with tempfile.TemporaryDirectory(prefix="vim-wilds-anchor-gate-") as directory:
+        source = converter.extract_frames(raw_video, 12, Path(directory))[:48]
+        if len(source) < 48:
+            raise PipelineError(f"Generated reaction contains only {len(source)} sampled frames")
+        background, _ = converter.estimate_background(source)
+        cleaned = converter.matte_frames(source, background, 7, 16, "background", "auto")
+        idle_image = Image.open(idle).convert("RGBA")
+        placement = converter.fit_placement(cleaned, idle_image, 256, 6, "width")
+        aligned = converter.render_aligned_frames(cleaned, placement, 256)
+    metrics = anchor_frame_audit(aligned, idle_image)
+    return {**metrics, "automatic_review_flags": anchor_review_flags(metrics)}
+
+
 def command_videos(args: argparse.Namespace) -> int:
     catalogue = load_catalogue(args.catalogue)
     approvals = require_catalogue_approval(args.catalogue) if args.execute else load_approvals()
@@ -1260,6 +1275,7 @@ def command_videos(args: argparse.Namespace) -> int:
     queue = list(jobs)
     pending: dict[str, tuple[Any, dict[str, Any], dict[str, Any], Path]] = {}
     retry_after = 0.0
+    anchor_gate_failures: list[str] = []
 
     while queue or pending:
         while queue and len(pending) < args.max_concurrency:
@@ -1284,7 +1300,7 @@ def command_videos(args: argparse.Namespace) -> int:
             enforce_budget(args.artifact_root, args.budget_usd, unit_cost)
             prompt = video_prompt(catalogue, character, action, args.variant_index)
             negative_prompt = negative_video_prompt(character, action)
-            seed = video_seed(catalogue, character, action, args.variant_index)
+            seed = video_seed(catalogue, character, action, args.variant_index) + (attempt - 1) * 1_000_000
             try:
                 video_config: dict[str, Any] = {
                     "number_of_videos": 1,
@@ -1379,11 +1395,62 @@ def command_videos(args: argparse.Namespace) -> int:
                 print(f"Failed {key}: {error}", file=sys.stderr)
                 continue
             prior = operations["jobs"][key]
-            operations["jobs"][key] = {**prior, "status": "completed", "path": str(raw_video.relative_to(ROOT))}
+            anchor_audit = None
+            if action["id"] in REACTION_ACTIONS:
+                anchor_audit = audit_generated_reaction(
+                    raw_video, approved_idle_path(character, approvals)
+                )
+                if anchor_audit["automatic_review_flags"]:
+                    attempt = int(prior.get("attempt", 1))
+                    append_ledger(args.artifact_root, {
+                        "event": "rejected", "kind": "video", "character": character["id"],
+                        "animation": action["id"], "attempt": attempt,
+                        "path": str(raw_video.relative_to(ROOT)),
+                        "reason": "anchor endpoint acceptance gate",
+                        "anchor_audit": anchor_audit,
+                    })
+                    if attempt <= args.anchor_retries:
+                        operations["jobs"][key] = {
+                            **prior,
+                            "status": "anchor-rejected",
+                            "anchor_audit": anchor_audit,
+                        }
+                        queue.append((character, action))
+                        print(
+                            f"Rejected {key} attempt {attempt} at the anchor gate; "
+                            "queued an automatic retry.",
+                            file=sys.stderr,
+                        )
+                    else:
+                        operations["jobs"][key] = {
+                            **prior,
+                            "status": "failed",
+                            "error": "anchor endpoint acceptance gate exhausted retries",
+                            "anchor_audit": anchor_audit,
+                        }
+                        anchor_gate_failures.append(key)
+                        print(
+                            f"Failed {key}: anchor gate still failed after {attempt} attempt(s).",
+                            file=sys.stderr,
+                        )
+                    save_operations(args.artifact_root, operations)
+                    del pending[key]
+                    continue
+            operations["jobs"][key] = {
+                **prior,
+                "status": "completed",
+                "path": str(raw_video.relative_to(ROOT)),
+                "anchor_audit": anchor_audit,
+            }
             save_operations(args.artifact_root, operations)
-            append_ledger(args.artifact_root, {"event": "completed", "kind": "video", "character": character["id"], "animation": action["id"], "path": str(raw_video.relative_to(ROOT)), "sha256": sha256_path(raw_video)})
+            append_ledger(args.artifact_root, {"event": "completed", "kind": "video", "character": character["id"], "animation": action["id"], "path": str(raw_video.relative_to(ROOT)), "sha256": sha256_path(raw_video), "anchor_audit": anchor_audit})
             print(f"Saved {raw_video}")
             del pending[key]
+    if anchor_gate_failures:
+        raise PipelineError(
+            "Anchor endpoint acceptance gate exhausted retries for: "
+            + ", ".join(sorted(anchor_gate_failures))
+        )
     return 0
 
 
@@ -1446,6 +1513,88 @@ def write_all_frame_contact_sheet(frames: Sequence[Image.Image], output: Path, l
     sheet.save(output, optimize=True)
 
 
+ANCHOR_IOU_THRESHOLD = 0.96
+ANCHOR_FOOT_DELTA_THRESHOLD_PX = 2
+ANCHOR_AREA_RATIO_RANGE = (0.97, 1.03)
+REACTION_ACTIONS = {"attentive", "puzzled", "encouraging"}
+REACTION_SEAM_PIPELINE_VERSION = 1
+
+
+def _anchor_endpoint_metrics(
+    anchor: Image.Image, frame: Image.Image, endpoint: str,
+) -> dict[str, float | int]:
+    if frame.size != anchor.size:
+        raise PipelineError("Anchor audit requires matching frame canvases")
+    anchor_rgba = np.asarray(anchor.convert("RGBA"), dtype=np.uint8)
+    frame_rgba = np.asarray(frame.convert("RGBA"), dtype=np.uint8)
+    anchor_mask = anchor_rgba[..., 3] > 0
+    frame_mask = frame_rgba[..., 3] > 0
+    intersection = anchor_mask & frame_mask
+    union = anchor_mask | frame_mask
+    iou = float(np.count_nonzero(intersection) / max(1, np.count_nonzero(union)))
+    area_ratio = float(
+        np.sqrt(np.count_nonzero(frame_mask) / max(1, np.count_nonzero(anchor_mask)))
+    )
+    anchor_body = converter.largest_component_bbox(anchor.getchannel("A"))
+    frame_body = converter.largest_component_bbox(frame.getchannel("A"))
+    rgb_mae = (
+        float(
+            np.abs(
+                frame_rgba[..., :3][intersection].astype(np.int16)
+                - anchor_rgba[..., :3][intersection].astype(np.int16)
+            ).mean()
+        )
+        if intersection.any()
+        else 255.0
+    )
+    return {
+        f"anchor_{endpoint}_frame_iou": round(iou, 5),
+        f"anchor_{endpoint}_frame_area_ratio": round(area_ratio, 5),
+        f"anchor_{endpoint}_body_width_ratio": round(
+            (frame_body[2] - frame_body[0]) / (anchor_body[2] - anchor_body[0]), 5
+        ),
+        f"anchor_{endpoint}_body_height_ratio": round(
+            (frame_body[3] - frame_body[1]) / (anchor_body[3] - anchor_body[1]), 5
+        ),
+        f"anchor_{endpoint}_foot_delta_px": frame_body[3] - anchor_body[3],
+        f"anchor_{endpoint}_rgb_mean_absolute_error": round(rgb_mae, 3),
+    }
+
+
+def anchor_frame_audit(
+    frames: Sequence[Image.Image], idle: Image.Image, base_size: int = 256,
+) -> dict[str, float | int]:
+    """Compare both clip endpoints with idle in the clip coordinate frame."""
+    if not frames:
+        raise PipelineError("Anchor audit requires at least one animation frame")
+    if len({frame.size for frame in frames}) != 1 or frames[0].width != frames[0].height:
+        raise PipelineError("Anchor audit requires one consistent square clip canvas")
+    anchor = converter.render_anchor_frame(idle, base_size, frames[0].width)
+    metrics = {
+        **_anchor_endpoint_metrics(anchor, frames[0], "first"),
+        **_anchor_endpoint_metrics(anchor, frames[-1], "last"),
+    }
+    metrics["anchor_foot_delta_px"] = max(
+        abs(int(metrics["anchor_first_foot_delta_px"])),
+        abs(int(metrics["anchor_last_foot_delta_px"])),
+    )
+    return metrics
+
+
+def anchor_review_flags(metrics: dict[str, Any]) -> list[str]:
+    flags = []
+    minimum_area, maximum_area = ANCHOR_AREA_RATIO_RANGE
+    for endpoint in ("first", "last"):
+        if float(metrics[f"anchor_{endpoint}_frame_iou"]) < ANCHOR_IOU_THRESHOLD:
+            flags.append(f"anchor-{endpoint}-frame-iou-below-threshold")
+        if abs(int(metrics[f"anchor_{endpoint}_foot_delta_px"])) > ANCHOR_FOOT_DELTA_THRESHOLD_PX:
+            flags.append(f"anchor-{endpoint}-frame-foot-drift")
+        area_ratio = float(metrics[f"anchor_{endpoint}_frame_area_ratio"])
+        if not minimum_area <= area_ratio <= maximum_area:
+            flags.append(f"anchor-{endpoint}-frame-area-ratio-outside-threshold")
+    return flags
+
+
 def convert_video_asset(
     raw_video: Path,
     idle: Path,
@@ -1456,19 +1605,20 @@ def convert_video_asset(
     duration_seconds: int = 4,
     cover_rectangles: Sequence[Sequence[float]] = (),
     canvas_mode: str = "anchor",
+    write_master: bool = True,
 ) -> dict[str, Any]:
     if duration_seconds < 1 or duration_seconds > 4:
         raise PipelineError("Review conversion duration must be between one and four seconds")
     if canvas_mode not in {"native", "anchor"}:
         raise PipelineError("Review conversion canvas_mode must be native or anchor")
-    expected_frames = duration_seconds * 12
+    source_frame_count = duration_seconds * 12
     with tempfile.TemporaryDirectory(prefix="vim-wilds-cast-convert-") as directory:
         source = converter.extract_frames(raw_video, 12, Path(directory))
-        if len(source) < expected_frames:
+        if len(source) < source_frame_count:
             raise PipelineError(
-                f"Expected at least {expected_frames} decoded frames for a {duration_seconds}-second clip, found {len(source)}"
+                f"Expected at least {source_frame_count} decoded frames for a {duration_seconds}-second clip, found {len(source)}"
             )
-        source = source[:expected_frames]
+        source = source[:source_frame_count]
         background, variation = converter.estimate_background(source)
         source = cover_source_rectangles(source, background, cover_rectangles)
         # The batch contract locks Veo to one dark backdrop. Border variation
@@ -1483,17 +1633,25 @@ def convert_video_asset(
             # the now-transparent backdrop compresses well in WebP.
             frames = [frame.copy() for frame in cleaned]
             placement = None
+            durations = None
         else:
-            placement = converter.fit_placement(cleaned, Image.open(idle).convert("RGBA"), 256, 6, "width")
-            frames = converter.render_aligned_frames(cleaned, placement, 256)
-        converter.save_webp(frames, master, 12, 1, lossless=True)
-        converter.save_webp(frames, runtime, 12, 1, lossless=False, quality=RUNTIME_QUALITY)
+            idle_image = Image.open(idle).convert("RGBA")
+            placement = converter.fit_placement(cleaned, idle_image, 256, 6, "width")
+            aligned = converter.render_aligned_frames(cleaned, placement, 256)
+            anchor = converter.render_anchor_frame(idle_image, 256, placement.canvas_size)
+            frames = converter.add_idle_morph_ramp(aligned, anchor)
+            durations = converter.morph_ramp_durations(len(aligned), 12)
+        if write_master:
+            converter.save_webp(frames, master, 12, 1, lossless=True, durations_ms=durations)
+        converter.save_webp(
+            frames, runtime, 12, 1, lossless=False, quality=RUNTIME_QUALITY, durations_ms=durations
+        )
         converter.write_debug(debug, source, cleaned, frames, background, variation, placement)
         write_all_frame_contact_sheet(frames, debug / "all-frames-contact-sheet.png", raw_video.stem)
         review_frames = [debug / f"frame-{index:02d}.png" for index in (0, len(frames) // 2, len(frames) - 1)]
         make_contact_sheet(review_frames, debug / "contact-sheet.png", raw_video.stem)
     animation_info = converter.inspect_webp_animation(runtime)
-    expected_info = {"frames": expected_frames, "duration_ms": duration_seconds * 1000, "loop": 1}
+    expected_info = {"frames": len(frames), "duration_ms": duration_seconds * 1000, "loop": 1}
     if animation_info != expected_info:
         raise PipelineError(f"Runtime WebP metadata is invalid: {animation_info}")
     if canvas_mode == "anchor":
@@ -1521,8 +1679,13 @@ def convert_video_asset(
         automatic_flags.append("high-border-variation-reviewed-with-cv-matte")
     if not 300 * 1024 <= runtime_bytes <= 700 * 1024:
         automatic_flags.append("runtime-size-outside-target")
-    return {
+    anchor_audit: dict[str, Any] = {}
+    if canvas_mode == "anchor":
+        anchor_audit = anchor_frame_audit(frames, Image.open(idle).convert("RGBA"))
+        automatic_flags.extend(anchor_review_flags(anchor_audit))
+    result = {
         "frames": len(frames), "fps": 12, "duration_seconds": duration_seconds, "loop": 1,
+        "source_frames": source_frame_count,
         "canvas_size": [frames[0].width, frames[0].height], "canvas_mode": canvas_mode,
         "base_size": 256, "css_scale": 1.0 if canvas_mode == "native" else frames[0].width / 256,
         "presentation": {
@@ -1530,7 +1693,7 @@ def convert_video_asset(
             "preserve_full_native_canvas": canvas_mode == "native",
         },
         "border_variation": variation,
-        "runtime_bytes": runtime_bytes, "master_bytes": master.stat().st_size,
+        "runtime_bytes": runtime_bytes,
         "runtime_size_target_bytes": [300 * 1024, 700 * 1024],
         "runtime_size_in_target": 300 * 1024 <= runtime_bytes <= 700 * 1024,
         "all_frames_audited": True,
@@ -1538,6 +1701,19 @@ def convert_video_asset(
         "minimum_content_edge_clearance_px": edge_clearance,
         "first_last_mean_absolute_error": round(first_last_mae, 3),
         "foreground_area_ratio": round(area_ratio, 3),
+        **anchor_audit,
+        "idle_morph_ramp": (
+            {
+                "method": "signed-distance-field",
+                "pipeline_version": REACTION_SEAM_PIPELINE_VERSION,
+                "head_intermediate_frames": len(converter.MORPH_HEAD_TIMES),
+                "tail_intermediate_frames": len(converter.MORPH_TAIL_TIMES),
+                "added_frames": len(frames) - source_frame_count,
+                "duration_ms": sum(durations) if durations is not None else duration_seconds * 1000,
+            }
+            if canvas_mode == "anchor"
+            else None
+        ),
         "automatic_review_flags": automatic_flags,
         "human_review_checklist": [
             "identity and proportions match approved idle",
@@ -1551,6 +1727,9 @@ def convert_video_asset(
             "cover_rectangles": [list(rectangle) for rectangle in cover_rectangles],
         },
     }
+    if write_master:
+        result["master_bytes"] = master.stat().st_size
+    return result
 
 
 def compact_reaction_manifest_record(
@@ -1613,6 +1792,158 @@ def write_manifest(catalogue: dict[str, Any], approvals: dict[str, Any]) -> None
             "animations": animations, "reactions": reactions,
         }
     write_json(ASSET_ROOT / "manifest.json", manifest)
+
+
+def approved_reaction_assets(
+    catalogue: dict[str, Any], characters: Sequence[str] | None = None,
+) -> list[tuple[dict[str, Any], Path, Path]]:
+    """Return every promoted numbered reaction and its metadata sidecar."""
+    selected = set(characters or ())
+    unknown = selected - {character["id"] for character in catalogue["characters"]}
+    if unknown:
+        raise PipelineError(f"Unknown character(s): {', '.join(sorted(unknown))}")
+    assets = []
+    for character in catalogue["characters"]:
+        if selected and character["id"] not in selected:
+            continue
+        directory = ASSET_ROOT / character["id"] / "animations"
+        for runtime in sorted(directory.glob("*-variant-*.webp")):
+            metadata = runtime.with_suffix(".json")
+            if not metadata.is_file():
+                raise PipelineError(f"Reaction sidecar is missing: {metadata}")
+            assets.append((character, runtime, metadata))
+    if not assets:
+        raise PipelineError("No approved numbered reaction assets were found")
+    return assets
+
+
+def command_audit_reactions(args: argparse.Namespace) -> int:
+    """Run the anchor audit over promoted WebPs without regenerating media."""
+    catalogue = load_catalogue(args.catalogue)
+    assets = approved_reaction_assets(catalogue, args.character)
+    records = []
+    counts: dict[str, int] = {}
+    for character, runtime, metadata_path in assets:
+        frames = decode_webp_frames(runtime)
+        metrics = anchor_frame_audit(
+            frames, Image.open(ASSET_ROOT / character["id"] / "idle.png").convert("RGBA")
+        )
+        flags = anchor_review_flags(metrics)
+        for flag in flags:
+            counts[flag] = counts.get(flag, 0) + 1
+        records.append({
+            "path": str(runtime.relative_to(ROOT)),
+            **metrics,
+            "automatic_review_flags": flags,
+        })
+        if args.update_sidecars:
+            details = read_json(metadata_path)
+            existing = [
+                flag for flag in details.get("automatic_review_flags", [])
+                if not flag.startswith("anchor-")
+            ]
+            details.update(metrics)
+            details["automatic_review_flags"] = existing + flags
+            write_json(metadata_path, details)
+    report = {
+        "schema_version": 1,
+        "clips_audited": len(records),
+        "clips_flagged": sum(bool(record["automatic_review_flags"]) for record in records),
+        "flag_counts": dict(sorted(counts.items())),
+        "records": records,
+    }
+    if args.report is not None:
+        write_json(args.report, report)
+    print(
+        f"Anchor audit: {report['clips_audited']} clips, "
+        f"{report['clips_flagged']} flagged; {json.dumps(report['flag_counts'], sort_keys=True)}"
+    )
+    return 0
+
+
+def _refresh_reaction_approval_hashes(approvals: dict[str, Any]) -> None:
+    for reactions in approvals.get("reaction_variants", {}).values():
+        for variants in reactions.values():
+            for record in variants.values():
+                if record.get("approved") and record.get("path"):
+                    runtime = ROOT / record["path"]
+                    if runtime.is_file():
+                        record["sha256"] = sha256_path(runtime)
+
+
+def command_rebuild_reactions(args: argparse.Namespace) -> int:
+    """Re-register and SDF-bookend every approved numbered reaction asset."""
+    catalogue = load_catalogue(args.catalogue)
+    approvals = require_catalogue_approval(args.catalogue)
+    assets = approved_reaction_assets(catalogue, args.character)
+    print(f"Reaction seam rebuild plan: {len(assets)} approved clip(s)")
+    if not args.execute:
+        print("Dry run only; add --execute to rebuild and promote the complete set.")
+        return 0
+    if args.max_concurrency < 1 or args.max_concurrency > 8:
+        raise PipelineError("--max-concurrency must be between 1 and 8")
+    staging_root = args.artifact_root / "reaction-seam-rebuild"
+
+    def rebuild_one(
+        character: dict[str, Any], runtime: Path, metadata_path: Path,
+    ) -> tuple[Path, Path]:
+        staged_runtime = staging_root / "runtime" / character["id"] / runtime.name
+        staged_metadata = staged_runtime.with_suffix(".json")
+        if args.resume and staged_runtime.is_file() and staged_metadata.is_file():
+            staged_details = read_json(staged_metadata)
+            ramp = staged_details.get("idle_morph_ramp") or {}
+            if (
+                ramp.get("method") == "signed-distance-field"
+                and ramp.get("pipeline_version") == REACTION_SEAM_PIPELINE_VERSION
+            ):
+                return staged_runtime, staged_metadata
+        details = read_json(metadata_path)
+        source = ROOT / details.get("source", "")
+        if not source.is_file():
+            raise PipelineError(f"Reaction source video is missing: {source}")
+        idle = approved_idle_path(character, approvals)
+        debug = staging_root / "debug" / character["id"] / runtime.stem
+        with tempfile.TemporaryDirectory(prefix="vim-wilds-reaction-rebuild-") as directory:
+            master = Path(directory) / "master.webp"
+            conversion = convert_video_asset(
+                source,
+                idle,
+                master,
+                staged_runtime,
+                debug,
+                duration_seconds=int(details.get("duration_seconds", 4)),
+                cover_rectangles=details.get("review_conversion", {}).get("cover_rectangles", []),
+                canvas_mode="anchor",
+                write_master=False,
+            )
+        details.update(conversion)
+        # The repository-only rebuild deliberately does not retain a lossless
+        # master, so an earlier candidate's byte count would be misleading.
+        details.pop("master_bytes", None)
+        write_json(staged_metadata, details)
+        return staged_runtime, staged_metadata
+
+    staged: dict[Path, tuple[Path, Path]] = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.max_concurrency) as executor:
+        futures = {
+            executor.submit(rebuild_one, character, runtime, metadata): runtime
+            for character, runtime, metadata in assets
+        }
+        for completed, future in enumerate(concurrent.futures.as_completed(futures), 1):
+            runtime = futures[future]
+            staged[runtime] = future.result()
+            print(f"Rebuilt {completed}/{len(assets)}: {runtime.relative_to(ROOT)}", flush=True)
+
+    # Promotion starts only after every source converted successfully.
+    for _, runtime, metadata in assets:
+        staged_runtime, staged_metadata = staged[runtime]
+        shutil.copy2(staged_runtime, runtime)
+        shutil.copy2(staged_metadata, metadata)
+    _refresh_reaction_approval_hashes(approvals)
+    write_json(APPROVALS_PATH, approvals)
+    write_manifest(catalogue, approvals)
+    print(f"Promoted {len(assets)} rebuilt reaction clips and refreshed the manifest.")
+    return 0
 
 
 def command_convert(args: argparse.Namespace) -> int:
@@ -1897,6 +2228,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--quota-backoff-seconds", type=float, default=60.0,
         help="Wait this long after a temporary Vertex 429 before retrying (default: 60).",
     )
+    videos.add_argument(
+        "--anchor-retries", type=int, default=2, choices=range(0, 6),
+        help="Automatic retries after a reaction fails the idle-anchor gate (default: 2).",
+    )
     videos.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     videos.add_argument("--project", default=os.environ.get("GOOGLE_CLOUD_PROJECT", "YOUR_PROJECT_ID"))
     videos.add_argument("--location", default=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"))
@@ -1943,6 +2278,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="Resynchronise existing numbered reaction slots from the curated folder.",
     )
     import_selected.set_defaults(handler=command_import_selected_reactions)
+
+    audit_reactions = subparsers.add_parser(
+        "audit-reactions",
+        help="Compare every approved numbered reaction endpoint with its idle anchor",
+    )
+    audit_reactions.add_argument("--character", action="append")
+    audit_reactions.add_argument("--update-sidecars", action="store_true")
+    audit_reactions.add_argument("--report", type=Path)
+    audit_reactions.set_defaults(handler=command_audit_reactions)
+
+    rebuild_reactions = subparsers.add_parser(
+        "rebuild-reactions",
+        help="Re-register and SDF-bookend approved numbered reaction clips",
+    )
+    rebuild_reactions.add_argument("--character", action="append")
+    rebuild_reactions.add_argument("--execute", action="store_true")
+    rebuild_reactions.add_argument("--resume", action="store_true")
+    rebuild_reactions.add_argument("--max-concurrency", type=int, default=2)
+    rebuild_reactions.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
+    rebuild_reactions.set_defaults(handler=command_rebuild_reactions)
     return parser
 
 

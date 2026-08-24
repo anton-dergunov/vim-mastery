@@ -1,23 +1,22 @@
 {
-  "frames": 48,
+  "frames": 55,
   "fps": 12,
   "duration_seconds": 4,
   "loop": 1,
   "canvas_size": [
-    368,
-    368
+    370,
+    370
   ],
   "canvas_mode": "anchor",
   "base_size": 256,
-  "css_scale": 1.4375,
+  "css_scale": 1.4453125,
   "presentation": {
     "object_fit": "contain",
     "object_position": "center center",
     "preserve_full_native_canvas": false
   },
   "border_variation": 2.0,
-  "runtime_bytes": 2002832,
-  "master_bytes": 2006144,
+  "runtime_bytes": 2249164,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -26,297 +25,339 @@
   "all_frames_audited": true,
   "frame_alpha_bounds": [
     [
-      89,
-      14,
-      287,
-      269
+      99,
+      100,
+      277,
+      270
+    ],
+    [
+      101,
+      101,
+      275,
+      268
+    ],
+    [
+      101,
+      101,
+      275,
+      268
+    ],
+    [
+      91,
+      13,
+      288,
+      270
     ],
     [
       98,
-      14,
-      287,
-      269
+      13,
+      288,
+      270
     ],
     [
       89,
-      14,
-      287,
-      357
+      13,
+      288,
+      358
     ],
     [
       87,
-      14,
-      287,
-      357
+      13,
+      288,
+      358
     ],
     [
       87,
-      14,
-      287,
-      357
+      13,
+      288,
+      358
     ],
     [
       87,
-      14,
-      287,
-      357
+      13,
+      288,
+      358
     ],
     [
       87,
-      14,
-      287,
-      357
+      13,
+      288,
+      358
     ],
     [
       87,
-      14,
-      287,
+      13,
+      288,
       308
     ],
     [
       87,
-      14,
-      287,
-      317
+      13,
+      288,
+      318
+    ],
+    [
+      87,
+      13,
+      288,
+      363
+    ],
+    [
+      87,
+      13,
+      288,
+      316
+    ],
+    [
+      87,
+      13,
+      288,
+      363
+    ],
+    [
+      87,
+      13,
+      288,
+      359
+    ],
+    [
+      87,
+      13,
+      288,
+      359
     ],
     [
       87,
       14,
-      287,
-      362
+      288,
+      354
     ],
     [
       87,
-      14,
-      287,
-      315
-    ],
-    [
-      87,
-      14,
-      287,
-      362
-    ],
-    [
-      87,
-      14,
-      287,
-      358
-    ],
-    [
-      87,
-      14,
-      287,
-      358
-    ],
-    [
-      87,
-      15,
-      287,
-      353
-    ],
-    [
-      87,
-      6,
-      286,
+      5,
+      288,
       352
     ],
     [
       87,
-      7,
-      287,
-      308
+      6,
+      288,
+      309
+    ],
+    [
+      87,
+      5,
+      288,
+      316
     ],
     [
       87,
       6,
-      287,
-      314
-    ],
-    [
-      87,
-      6,
-      287,
+      288,
       323
     ],
     [
       87,
-      7,
-      287,
-      335
-    ],
-    [
-      87,
-      7,
-      286,
-      332
+      6,
+      288,
+      336
     ],
     [
       87,
       6,
-      287,
-      332
+      288,
+      333
     ],
     [
       87,
-      8,
-      283,
-      332
+      6,
+      288,
+      333
+    ],
+    [
+      87,
+      7,
+      284,
+      333
+    ],
+    [
+      87,
+      12,
+      281,
+      334
     ],
     [
       87,
       13,
       281,
-      333
+      334
     ],
     [
       87,
-      14,
+      36,
       280,
       333
     ],
     [
       87,
-      37,
-      279,
-      333
+      13,
+      282,
+      327
     ],
     [
       87,
-      14,
+      12,
+      286,
+      335
+    ],
+    [
+      87,
+      12,
+      286,
+      323
+    ],
+    [
+      87,
+      13,
       281,
+      324
+    ],
+    [
+      87,
+      13,
+      277,
+      320
+    ],
+    [
+      87,
+      13,
+      280,
       326
     ],
     [
       87,
       13,
-      285,
-      333
+      288,
+      329
     ],
     [
       87,
       13,
-      285,
-      323
+      288,
+      363
     ],
     [
       87,
-      14,
-      280,
-      324
-    ],
-    [
-      87,
-      14,
-      276,
-      320
-    ],
-    [
-      87,
-      14,
-      279,
-      325
-    ],
-    [
-      87,
-      14,
-      287,
-      328
-    ],
-    [
-      87,
-      14,
-      287,
+      13,
+      288,
       362
     ],
     [
       87,
-      14,
-      287,
-      361
+      13,
+      288,
+      362
     ],
     [
       87,
-      14,
-      287,
-      361
-    ],
-    [
-      87,
-      14,
-      287,
-      361
+      13,
+      288,
+      362
     ],
     [
       91,
-      14,
-      282,
-      350
+      13,
+      283,
+      351
     ],
     [
       91,
-      14,
-      287,
-      354
+      13,
+      288,
+      353
     ],
     [
       91,
-      14,
-      287,
+      13,
+      288,
       356
     ],
     [
       91,
-      14,
-      287,
+      13,
+      288,
+      359
+    ],
+    [
+      91,
+      13,
+      288,
+      362
+    ],
+    [
+      91,
+      13,
+      288,
+      363
+    ],
+    [
+      91,
+      13,
+      288,
+      363
+    ],
+    [
+      91,
+      13,
+      288,
       358
     ],
     [
       91,
-      14,
-      287,
-      361
+      13,
+      288,
+      358
     ],
     [
       91,
-      14,
-      287,
-      362
+      13,
+      288,
+      358
     ],
     [
       91,
-      14,
-      287,
-      362
+      13,
+      288,
+      358
     ],
     [
-      91,
-      14,
-      287,
-      357
+      100,
+      101,
+      275,
+      268
     ],
     [
-      91,
-      14,
-      287,
-      357
+      100,
+      101,
+      275,
+      268
     ],
     [
-      91,
-      14,
-      287,
-      357
+      100,
+      101,
+      275,
+      268
     ],
     [
-      91,
-      14,
-      287,
-      357
+      99,
+      100,
+      277,
+      270
     ]
   ],
-  "minimum_content_edge_clearance_px": 6,
-  "first_last_mean_absolute_error": 0.541,
-  "foreground_area_ratio": 1.11,
+  "minimum_content_edge_clearance_px": 5,
+  "first_last_mean_absolute_error": 0.0,
+  "foreground_area_ratio": 1.184,
   "automatic_review_flags": [
     "runtime-size-outside-target"
   ],
@@ -349,5 +390,27 @@
   "approved_attempt": 1,
   "reaction_slot": 4,
   "selected_source": "reactions-round-04/runtime-candidates/nix/puzzled-attempt-01.webp",
-  "selected_round": 4
+  "selected_round": 4,
+  "anchor_first_frame_iou": 1.0,
+  "anchor_first_frame_area_ratio": 1.0,
+  "anchor_first_body_width_ratio": 1.0,
+  "anchor_first_body_height_ratio": 1.0,
+  "anchor_first_foot_delta_px": 0,
+  "anchor_first_rgb_mean_absolute_error": 0.0,
+  "anchor_last_frame_iou": 1.0,
+  "anchor_last_frame_area_ratio": 1.0,
+  "anchor_last_body_width_ratio": 1.0,
+  "anchor_last_body_height_ratio": 1.0,
+  "anchor_last_foot_delta_px": 0,
+  "anchor_last_rgb_mean_absolute_error": 0.0,
+  "anchor_foot_delta_px": 0,
+  "source_frames": 48,
+  "idle_morph_ramp": {
+    "method": "signed-distance-field",
+    "pipeline_version": 1,
+    "head_intermediate_frames": 2,
+    "tail_intermediate_frames": 3,
+    "added_frames": 7,
+    "duration_ms": 4000
+  }
 }
