@@ -785,6 +785,11 @@ button { font: inherit; }
 }
 .world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .42s ease-in-out forwards; }
 .world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .42s ease-in-out forwards; }
+/* Reaction clips carry their own authored motion; the idle bob would layer a
+   second, unrelated wobble on top and pull the character off the neutral pose
+   the settle just parked it on. Declared before the settle so a swap back to
+   the idle still keeps animating to neutral. */
+.nix.reaction-has-media { animation: none; }
 .nix.reaction-settling {
   animation: nixReactionSettle var(--reaction-settle-duration, 180ms) ease-out forwards;
   will-change: transform;
