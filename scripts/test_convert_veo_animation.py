@@ -108,6 +108,16 @@ class VeoConversionTests(unittest.TestCase):
         self.assertEqual(sum(durations), 4000)
         self.assertLess(durations[0], durations[3])
 
+    def test_sdf_morph_preserves_soft_alpha_when_the_shape_is_unchanged(self) -> None:
+        image = Image.new("RGBA", (32, 32))
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((7, 7, 24, 24), fill=(70, 180, 150, 64))
+        draw.rectangle((9, 9, 22, 22), fill=(70, 180, 150, 255))
+
+        morphed = converter.morph_frame(image, image, 0.5)
+
+        np.testing.assert_array_equal(np.asarray(morphed), np.asarray(image))
+
 
 if __name__ == "__main__":
     unittest.main()

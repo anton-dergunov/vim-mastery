@@ -1517,7 +1517,7 @@ ANCHOR_IOU_THRESHOLD = 0.96
 ANCHOR_FOOT_DELTA_THRESHOLD_PX = 2
 ANCHOR_AREA_RATIO_RANGE = (0.97, 1.03)
 REACTION_ACTIONS = {"attentive", "puzzled", "encouraging"}
-REACTION_SEAM_PIPELINE_VERSION = 1
+REACTION_SEAM_PIPELINE_VERSION = 2
 
 
 def _anchor_endpoint_metrics(
@@ -1706,6 +1706,7 @@ def convert_video_asset(
             {
                 "method": "signed-distance-field",
                 "pipeline_version": REACTION_SEAM_PIPELINE_VERSION,
+                "alpha_coverage": "nearest-endpoint-premultiplied-interpolation",
                 "head_intermediate_frames": len(converter.MORPH_HEAD_TIMES),
                 "tail_intermediate_frames": len(converter.MORPH_TAIL_TIMES),
                 "added_frames": len(frames) - source_frame_count,

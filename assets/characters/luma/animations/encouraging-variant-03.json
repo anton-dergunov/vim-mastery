@@ -16,7 +16,7 @@
     "preserve_full_native_canvas": false
   },
   "border_variation": 1.7320507764816284,
-  "runtime_bytes": 1169052,
+  "runtime_bytes": 1179286,
   "runtime_size_target_bytes": [
     307200,
     716800
@@ -407,7 +407,8 @@
   "source_frames": 48,
   "idle_morph_ramp": {
     "method": "signed-distance-field",
-    "pipeline_version": 1,
+    "pipeline_version": 2,
+    "alpha_coverage": "nearest-endpoint-premultiplied-interpolation",
     "head_intermediate_frames": 2,
     "tail_intermediate_frames": 3,
     "added_frames": 7,

@@ -319,10 +319,24 @@ test("keeps active reaction media inside every target phone viewport", async ({ 
     await page.setViewportSize(viewport);
     await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
     await page.waitForFunction(() => window.VimWilds?.getState && document.querySelector("#characterLayer > .nix"));
+    await page.locator("#characterLayer > .nix").evaluate(async character => {
+      const configured = character.__characterAsset?.reactions?.puzzled || [];
+      const variants = Array.isArray(configured) ? configured : [configured];
+      await Promise.all(variants.map(candidate => new Promise((resolve, reject) => {
+        const image = new Image();
+        image.addEventListener("load", resolve, { once: true });
+        image.addEventListener("error", reject, { once: true });
+        const source = typeof candidate === "string" ? candidate : candidate.src;
+        image.src = source.startsWith("/") ? source : `/${source}`;
+      })));
+    });
     await page.evaluate(() => {
       window.VimWilds.emit("q");
       window.VimWilds.emit("q");
     });
+    await expect.poll(() => page.evaluate(
+      () => window.VimWilds.getState().characterReaction,
+    )).toBe("puzzled");
     await expect(page.locator("#characterLayer > .nix")).toHaveAttribute(
       "data-reaction-media-active",
       "true",

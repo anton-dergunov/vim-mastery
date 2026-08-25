@@ -1227,7 +1227,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/bramble/attentive-attempt-01.webp",
           "path": "assets/characters/bramble/animations/attentive-variant-01.webp",
-          "sha256": "c7a6c34c34d3a0e312c83124d15761c7d944225950284379a616cb7ca86d90e5",
+          "sha256": "053a649bbbe719532a47c2de5d5eb4456e3096ab951eb1239377c7ff11fbb550",
           "approved": true
         },
         "2": {
@@ -1235,7 +1235,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/bramble/attentive-attempt-01.webp",
           "path": "assets/characters/bramble/animations/attentive-variant-02.webp",
-          "sha256": "4dfa1036d339c98f4dce65e8f823eaac4963ad3005d1efe0f702d7acba9f0383",
+          "sha256": "b3c61b53088fe16cdca01b1e3f1dd5e9ed68f84b2de5081fd6043ff63440a72d",
           "approved": true
         },
         "3": {
@@ -1243,7 +1243,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/bramble/attentive-attempt-01.webp",
           "path": "assets/characters/bramble/animations/attentive-variant-03.webp",
-          "sha256": "bdd6a4274a1a243d5cc856bd995620ac3b8abbfc4952a04add8d2a72433383b8",
+          "sha256": "9fb64a4bf748fb12a299a1764d26f88d1efc72ce1b2a416ff9a86d0d182ed26a",
           "approved": true
         },
         "4": {
@@ -1251,7 +1251,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/bramble/attentive-attempt-01.webp",
           "path": "assets/characters/bramble/animations/attentive-variant-04.webp",
-          "sha256": "49b213749d2c3b51d03225189ba8f86893b96f339053d65a8a16fc4977fb5005",
+          "sha256": "ce0b6a43e97d2b02b613fc2764a84819a9c8314d14fe03acdcff2a32f2e695e4",
           "approved": true
         },
         "5": {
@@ -1259,7 +1259,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/bramble/attentive-attempt-01.webp",
           "path": "assets/characters/bramble/animations/attentive-variant-05.webp",
-          "sha256": "05ce630783d7be0e42af5781e6f45b68fbd4f729452f9b728e2aa5d789ba4caa",
+          "sha256": "83c40ea4b940efc5df0b25f725a886962f93a696bd28bab24f528a433d3e0f57",
           "approved": true
         }
       },
@@ -1269,7 +1269,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/bramble/encouraging-attempt-01.webp",
           "path": "assets/characters/bramble/animations/encouraging-variant-01.webp",
-          "sha256": "301cd3436bbd3d54afcd764e1acb02c9a1d5a98157386692703ada3870b462ef",
+          "sha256": "9d6ebb5b4b6c5a14bf5f949cca1a9a34dc1ea24ff026350956cf675d0cdf67a2",
           "approved": true
         },
         "2": {
@@ -1277,7 +1277,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/bramble/encouraging-attempt-01.webp",
           "path": "assets/characters/bramble/animations/encouraging-variant-02.webp",
-          "sha256": "c27e05f6381b7f46a420c10ac06f8b39652df0b0663b970c322c12924675afba",
+          "sha256": "5e135d43417cc307f6eac404b1d29e59882fd63af5e8516731bd2ff6e9cdf1bd",
           "approved": true
         },
         "3": {
@@ -1285,7 +1285,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/bramble/encouraging-attempt-01.webp",
           "path": "assets/characters/bramble/animations/encouraging-variant-03.webp",
-          "sha256": "c17db15cf173434bd60792ad09159249a598cfcf858d4871b252edee03f80700",
+          "sha256": "86be576ad0017e4c955288e81d3766392da6146bbf649cfc3c67453e040e483d",
           "approved": true
         },
         "4": {
@@ -1293,7 +1293,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/bramble/encouraging-attempt-01.webp",
           "path": "assets/characters/bramble/animations/encouraging-variant-04.webp",
-          "sha256": "e96a7913b49b8f8ee57e860db94fc5317de1e93ac4a1ab9174b88693ff2d8460",
+          "sha256": "078dce5db188cac353250ee0980a9c3e8cfea1b90e6c963b06b036569b9e51ea",
           "approved": true
         },
         "5": {
@@ -1301,7 +1301,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/bramble/encouraging-attempt-01.webp",
           "path": "assets/characters/bramble/animations/encouraging-variant-05.webp",
-          "sha256": "b8b80f439c6ad0d7226770de7d4034bf79982335d4956ce8838b4c8afd40a96c",
+          "sha256": "9d402ebc61422cb8a52a6e692d6e0e4a6cc4da403ac546535e225046dd990735",
           "approved": true
         }
       },
@@ -1311,7 +1311,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/bramble/puzzled-attempt-01.webp",
           "path": "assets/characters/bramble/animations/puzzled-variant-01.webp",
-          "sha256": "1e46a854810dc39562212eef45319fc1de93e2850fe3d0bdf84b54384d2a00fd",
+          "sha256": "fd4184f2a478bf864f2f9a3ae5824008edd3dac85dce111c3327b20980a0311c",
           "approved": true
         },
         "2": {
@@ -1319,7 +1319,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/bramble/puzzled-attempt-01.webp",
           "path": "assets/characters/bramble/animations/puzzled-variant-02.webp",
-          "sha256": "480c2889c3532732cef7b92020cbf2607212017c413e4e82afbe5e31765adec9",
+          "sha256": "a84a65deeae45e0541605ad2245870fb092ebff82460cb9acdab08fc070889d9",
           "approved": true
         },
         "3": {
@@ -1327,7 +1327,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/bramble/puzzled-attempt-01.webp",
           "path": "assets/characters/bramble/animations/puzzled-variant-03.webp",
-          "sha256": "b5acbedaa650b4f325482863dd611613a47d2a9b9767dfd466c76267ebd1ae9c",
+          "sha256": "d50cf312be633e96fd2a19448aaf5f7e616a9bd6fe9dd4eec5c66befd55ac873",
           "approved": true
         },
         "4": {
@@ -1335,7 +1335,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/bramble/puzzled-attempt-02.webp",
           "path": "assets/characters/bramble/animations/puzzled-variant-04.webp",
-          "sha256": "e1836067ae0640eaac2fea9a2485e75841da6061139133a33a7900e812ffafe1",
+          "sha256": "42235e6ea923ce01b401bd1ff1327202d940b780232f64116bc4b4ec7164258f",
           "approved": true
         },
         "5": {
@@ -1343,7 +1343,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/bramble/puzzled-attempt-01.webp",
           "path": "assets/characters/bramble/animations/puzzled-variant-05.webp",
-          "sha256": "13fbdeb8a4bbcb7ab3f78d6cd1f359abfe28ecdc801d30b62a0154cb66879f8c",
+          "sha256": "e43f521b911e0fab5157a2f4aef390d679b0d24edc07a2a58c2f2905e8a9f5ca",
           "approved": true
         }
       }
@@ -1355,7 +1355,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/brikk/attentive-attempt-01.webp",
           "path": "assets/characters/brikk/animations/attentive-variant-01.webp",
-          "sha256": "226a02789866fcea12674d29c5950cfd23d9810a6cc37d635c3ffa5b713948f2",
+          "sha256": "5f44c8a843cc305e9e0a61fe13a12f4794efebd1cab96934292ca61a06d13726",
           "approved": true
         },
         "2": {
@@ -1363,7 +1363,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/brikk/attentive-attempt-01.webp",
           "path": "assets/characters/brikk/animations/attentive-variant-02.webp",
-          "sha256": "3d2b792c40bcbfdd485b9603f8f757bcb6bdf7ed26b09228d9826a3492fbf21a",
+          "sha256": "d79a538303932aed6549cd2598b4b138ae4c509fd19dbb6a90f2bb89d130ebc6",
           "approved": true
         },
         "3": {
@@ -1371,7 +1371,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/brikk/attentive-attempt-01.webp",
           "path": "assets/characters/brikk/animations/attentive-variant-03.webp",
-          "sha256": "11b469d1aaadad65f60638e18648093d7f1e9c55ec3ab724475b75ee156f9693",
+          "sha256": "2c7ce2b1dda0e511a018aafb0e19479f8a8f3dd97c5fe9d24b7ee343c72c0493",
           "approved": true
         },
         "4": {
@@ -1379,7 +1379,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/brikk/attentive-attempt-01.webp",
           "path": "assets/characters/brikk/animations/attentive-variant-04.webp",
-          "sha256": "fbda0a036a12d9e73e70b857ad2feaed8defb6ab78a53ee2cbd9d901dd38a2fb",
+          "sha256": "54d87aeba7fae9c91f178153c721b8121df42d0aaae55b5f822d729092f215cb",
           "approved": true
         },
         "5": {
@@ -1387,7 +1387,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/brikk/attentive-attempt-01.webp",
           "path": "assets/characters/brikk/animations/attentive-variant-05.webp",
-          "sha256": "4f06b855b41e031c971ecfd36691457c81e694bac507948a8e318f2a88c66e1a",
+          "sha256": "f3bdedaf00941ac5b01a7992e9406c1f5e49297c436f02d5fd2cc32e0562dd44",
           "approved": true
         }
       },
@@ -1397,7 +1397,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/brikk/encouraging-attempt-01.webp",
           "path": "assets/characters/brikk/animations/encouraging-variant-01.webp",
-          "sha256": "1ee88ae29dda2dff8d067d69c9c923f617e496ddcf590d0a2e25a2113c79bb9f",
+          "sha256": "a4d3a419ffa12bc968a94901ed5bbe26fa7d55840f7f361ed2997ebd33a15995",
           "approved": true
         },
         "2": {
@@ -1405,7 +1405,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/brikk/encouraging-attempt-01.webp",
           "path": "assets/characters/brikk/animations/encouraging-variant-02.webp",
-          "sha256": "8b627305d0a0b239a626b93172d235c40ec8fa133eb2ca289287b57720ec1ec9",
+          "sha256": "d6c87cf5da39ac810148bd2f7145d2bd8c8ecfc097c45c3492ddc2bd46952dd1",
           "approved": true
         },
         "3": {
@@ -1413,7 +1413,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/brikk/encouraging-attempt-01.webp",
           "path": "assets/characters/brikk/animations/encouraging-variant-03.webp",
-          "sha256": "057da6637518bf14291d4476c67c3880699b6d0b246942d4723f58252137c363",
+          "sha256": "5b8a5263b4352c1fe06e030b816e499cf7564ebcb6ffdb7330c156a2661e6734",
           "approved": true
         },
         "4": {
@@ -1421,7 +1421,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/brikk/encouraging-attempt-02.webp",
           "path": "assets/characters/brikk/animations/encouraging-variant-04.webp",
-          "sha256": "49c75c13f44a18287a41e7477b86264d74efc938c9fee327d3e588e8921f098d",
+          "sha256": "a619bfccc1c3dbe6f2e6966e8121a801f14c7cd95f81338a85cbc8b2a86a790e",
           "approved": true
         },
         "5": {
@@ -1429,7 +1429,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/brikk/encouraging-attempt-01.webp",
           "path": "assets/characters/brikk/animations/encouraging-variant-05.webp",
-          "sha256": "fbc14159ad3f0b18a82de5fa47cae9c2c2a3c7ecf742fa4d2d550a3900aee91b",
+          "sha256": "48dc29231c9051130faca03376c7941e2efa1a9317a38377c3a587f22df20910",
           "approved": true
         }
       },
@@ -1439,7 +1439,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/brikk/puzzled-attempt-01.webp",
           "path": "assets/characters/brikk/animations/puzzled-variant-01.webp",
-          "sha256": "aea9327a3f421a3d57f5d3b3f022877b4c618a91fdc94124947a4a6154e38b5f",
+          "sha256": "2cdec307443f854eb7d49dc6d49619172ac5143f2c2b196e392a4aec31880138",
           "approved": true
         },
         "2": {
@@ -1447,7 +1447,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/brikk/puzzled-attempt-01.webp",
           "path": "assets/characters/brikk/animations/puzzled-variant-02.webp",
-          "sha256": "c744d538bba89e4da656e2eaff55001b7bd9cbc5b2196043f382c421fbb54347",
+          "sha256": "e349acd84cc18bfa48a975700578a9dc5550d2c15ab5be954e2835520cdbb617",
           "approved": true
         },
         "3": {
@@ -1455,7 +1455,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/brikk/puzzled-attempt-01.webp",
           "path": "assets/characters/brikk/animations/puzzled-variant-03.webp",
-          "sha256": "39d363465eb6eaf7ed3421b468068475e3e57b1d6a4b8800bf9459fa3f4f36f6",
+          "sha256": "074bec362ecbe1ed41fce7faa22fe2cdf734699590ba1f02052205648356b8a5",
           "approved": true
         },
         "4": {
@@ -1463,7 +1463,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/brikk/puzzled-attempt-02.webp",
           "path": "assets/characters/brikk/animations/puzzled-variant-04.webp",
-          "sha256": "e7f481318f4de260067beeafb0336783fadf008304f56b6b116272090fff91ee",
+          "sha256": "2235d2877f6734422e7996e7cba7056545c7fd9609991231293a93544a57f6bf",
           "approved": true
         },
         "5": {
@@ -1471,7 +1471,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/brikk/puzzled-attempt-01.webp",
           "path": "assets/characters/brikk/animations/puzzled-variant-05.webp",
-          "sha256": "0cd95a2af49a0dfe408e256b42bd6180dbb3bb477645c67a37a18dc8c344fd2a",
+          "sha256": "e43ed1a9d4cbb9a0ad9c43524d0ec05e0396a7fde650cbe9b1f63016cc9981a4",
           "approved": true
         }
       }
@@ -1483,7 +1483,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/cairn/attentive-attempt-01.webp",
           "path": "assets/characters/cairn/animations/attentive-variant-01.webp",
-          "sha256": "a8a509eb751406157ecd478235a6f76a993f73e82484a2f5242a97c0b1f45740",
+          "sha256": "22855cfabfd4e065b8308505a63629f08e1ca5b9b74d5e7fa72717aa85457308",
           "approved": true
         },
         "2": {
@@ -1491,7 +1491,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/cairn/attentive-attempt-01.webp",
           "path": "assets/characters/cairn/animations/attentive-variant-02.webp",
-          "sha256": "3108125a2b7a5c2ecc8083f6fde2854771f85000a9408ccf26ec8b1b1b561824",
+          "sha256": "e5f03b7e61a62cf42bea1fd85bb7d8f166ceed6209d41233b1467b161529c52a",
           "approved": true
         },
         "3": {
@@ -1499,7 +1499,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/cairn/attentive-attempt-01.webp",
           "path": "assets/characters/cairn/animations/attentive-variant-03.webp",
-          "sha256": "c0c5288436b11d75818f39757609944ec764fb9267af883f642d51977e0c945f",
+          "sha256": "092825266681beafb51216866065454adead73f25eed0ca0ccaa489ec4f85545",
           "approved": true
         },
         "4": {
@@ -1507,7 +1507,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/cairn/attentive-attempt-01.webp",
           "path": "assets/characters/cairn/animations/attentive-variant-04.webp",
-          "sha256": "e14af142f8a4874122dc218f741e05f106cfc863bf52b9cf11760a1ee1dfe54c",
+          "sha256": "5fbe49c75cc899488a5ab7812040fba15a1aa927b5bfe3389f529dfa6644accd",
           "approved": true
         },
         "5": {
@@ -1515,7 +1515,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/cairn/attentive-attempt-01.webp",
           "path": "assets/characters/cairn/animations/attentive-variant-05.webp",
-          "sha256": "4836ee23cdb428bd80fba8e9c2fa82e962becbe0d20791177a089315fdcf5c5e",
+          "sha256": "fcdb1fbd275a9f71b56b7893e888bd849efb08568f26adbaa9fbc3a82a607cc0",
           "approved": true
         }
       },
@@ -1525,7 +1525,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/cairn/encouraging-attempt-01.webp",
           "path": "assets/characters/cairn/animations/encouraging-variant-01.webp",
-          "sha256": "b4fd982afc2206486f5f96fb61e11d326e011b3062bb3b711db29c77fa69eac8",
+          "sha256": "165f9bc589e0838febd766732d923a9bfef0558bf6b633f88afcda14e81f83a6",
           "approved": true
         },
         "2": {
@@ -1533,7 +1533,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/cairn/encouraging-attempt-01.webp",
           "path": "assets/characters/cairn/animations/encouraging-variant-02.webp",
-          "sha256": "22003851bee99a56ca3ae8dd12102b560a801dfc031ccb0420713d01a7398c50",
+          "sha256": "ca71bd0d0ba02427c869ef29b49d689f999846b93877ed17c1407d04834a4fc0",
           "approved": true
         },
         "3": {
@@ -1541,7 +1541,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/cairn/encouraging-attempt-01.webp",
           "path": "assets/characters/cairn/animations/encouraging-variant-03.webp",
-          "sha256": "b2ea82bd8fdd8d68d77ff05a543f417faa09d292184631e00d17fc604b7d22ef",
+          "sha256": "f87989e97df936522b6c75b1f8a1e65464b1f33f3138a511ea577f4dc7943e4b",
           "approved": true
         },
         "4": {
@@ -1549,7 +1549,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/cairn/encouraging-attempt-01.webp",
           "path": "assets/characters/cairn/animations/encouraging-variant-04.webp",
-          "sha256": "31ef6302de0607d605028909a7b6705a227e96ff8d12efd73d23c5e145d44fe9",
+          "sha256": "eb07542140f5acc83c1e979f24d521912967c58405a9bfc62c403d5feca3c58d",
           "approved": true
         },
         "5": {
@@ -1557,7 +1557,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/cairn/encouraging-attempt-01.webp",
           "path": "assets/characters/cairn/animations/encouraging-variant-05.webp",
-          "sha256": "65f5059b36de34dd43690f64dd33c73f3ed383fd8e8fe042799b4a397472063f",
+          "sha256": "0c6aa8a6c61b5fcb080a3e5a4105d1b94d78a54bc07d01bc3b78e85e0b1f6126",
           "approved": true
         }
       },
@@ -1567,7 +1567,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/cairn/puzzled-attempt-01.webp",
           "path": "assets/characters/cairn/animations/puzzled-variant-01.webp",
-          "sha256": "735b061bafe94c1da58dd9b9b97269aca469d75295e21da77e3b85f5eeb32828",
+          "sha256": "f3fdce956c784ba302724684945bab39dac81b2c8c104e29fc86e73b9382b3a9",
           "approved": true
         },
         "2": {
@@ -1575,7 +1575,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/cairn/puzzled-attempt-01.webp",
           "path": "assets/characters/cairn/animations/puzzled-variant-02.webp",
-          "sha256": "e16f88dde8675f02d70e1ab74b1810b95e5fc6b3e44640c30990c0f4860031cd",
+          "sha256": "5ff62bc53d6547fc43c5268509d1c8e6ec4762440b09afa07d6934b6c1f92a6e",
           "approved": true
         },
         "3": {
@@ -1583,7 +1583,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/cairn/puzzled-attempt-01.webp",
           "path": "assets/characters/cairn/animations/puzzled-variant-03.webp",
-          "sha256": "44710e24bbdbfa0ec709ca89317c039331a73fa97a12c9ac15f234856cd4977a",
+          "sha256": "e6fcdd25f42e0520808d06c4642093f314c1f27fc3e0c9c49400428aaeda3785",
           "approved": true
         },
         "4": {
@@ -1591,7 +1591,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/cairn/puzzled-attempt-01.webp",
           "path": "assets/characters/cairn/animations/puzzled-variant-04.webp",
-          "sha256": "52142e2735cdabe3c3bc899f76abc70708e1c8c888d3451abd26b519330f4449",
+          "sha256": "53ef10d91c9e54b3adaf52e6f170f5326c7bb0e5912f2bfbe19c230068783e22",
           "approved": true
         },
         "5": {
@@ -1599,7 +1599,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/cairn/puzzled-attempt-01.webp",
           "path": "assets/characters/cairn/animations/puzzled-variant-05.webp",
-          "sha256": "609e1592990b4825eee3cb2050ad40133c9ad91eee4aef012d52398a41a7e8fd",
+          "sha256": "25bb244f648dbdf4c546ee35c9906a0851a4b51466567f0dcd705125057e3e0c",
           "approved": true
         }
       }
@@ -1611,7 +1611,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/cinder/attentive-attempt-01.webp",
           "path": "assets/characters/cinder/animations/attentive-variant-01.webp",
-          "sha256": "cc2fb73a5e2e1d60b15cce5a3a55d4d14cab2cd71631239b3eb998179a454a20",
+          "sha256": "c9961c879b5646659fa260f246129c58c06e06fce354ca85e2be7abe2acaa66d",
           "approved": true
         },
         "2": {
@@ -1619,7 +1619,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/cinder/attentive-attempt-01.webp",
           "path": "assets/characters/cinder/animations/attentive-variant-02.webp",
-          "sha256": "736d7b0a00eac632f39d43c8374935d6f02f3b0eba55585c7dfd23e5d53bea07",
+          "sha256": "90794d8ad48b918a4b6749e5c90bf11bb2942dd456199a251c6cbba4599743b6",
           "approved": true
         },
         "3": {
@@ -1627,7 +1627,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/cinder/attentive-attempt-01.webp",
           "path": "assets/characters/cinder/animations/attentive-variant-03.webp",
-          "sha256": "988b1ee3dbcc673249280c688e928530c8517e1f49e167ad634f916659875fe7",
+          "sha256": "a8dbf81aac99a3f0a997d132687d5cf9cd90366a318ee09002fdbbe64b423c32",
           "approved": true
         },
         "4": {
@@ -1635,7 +1635,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/cinder/attentive-attempt-01.webp",
           "path": "assets/characters/cinder/animations/attentive-variant-04.webp",
-          "sha256": "5216c411713b9516f657665e18f498884f4a4f1030dc357ff120193dff14922f",
+          "sha256": "7e43d29109ee9637d92e94a7c041bfdab7b3272630c0cfb015aa6266f43dc548",
           "approved": true
         },
         "5": {
@@ -1643,7 +1643,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/cinder/attentive-attempt-01.webp",
           "path": "assets/characters/cinder/animations/attentive-variant-05.webp",
-          "sha256": "78ad97750e99b2620680860c467291395dda0132578447d7c5eda07b69c029ef",
+          "sha256": "500a242243e40ad623f931beb12e3bc206a229cabf8d6adbd59fd5d082299554",
           "approved": true
         }
       },
@@ -1653,7 +1653,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/cinder/encouraging-attempt-01.webp",
           "path": "assets/characters/cinder/animations/encouraging-variant-01.webp",
-          "sha256": "d80335df68de83ab2382cbe4b685cb6829f3ce8a47c4bd383c9369cd93333b9d",
+          "sha256": "f89ae9ddf9fc28768f36d71eaa41a3c71cc7c0a8aa2ec2263e047c8336a1906b",
           "approved": true
         },
         "2": {
@@ -1661,7 +1661,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/cinder/encouraging-attempt-01.webp",
           "path": "assets/characters/cinder/animations/encouraging-variant-02.webp",
-          "sha256": "5a91349a7633cc5588f2620aa1811ce75015806d01b1190364a868e2fd80fca4",
+          "sha256": "8568d0051638984c2c85017d35257a799189431bd8d1ae274fc198e148f33d63",
           "approved": true
         },
         "3": {
@@ -1669,7 +1669,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/cinder/encouraging-attempt-01.webp",
           "path": "assets/characters/cinder/animations/encouraging-variant-03.webp",
-          "sha256": "d3240b6d47e9b85ccd7a08d2e3856e4773421b3c8a56ac67a5b1eca40c16be26",
+          "sha256": "f5462a0363a01b01ef0112485d64d8b6b4cf99297f54be70e3e042015efdc324",
           "approved": true
         },
         "4": {
@@ -1677,7 +1677,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/cinder/encouraging-attempt-01.webp",
           "path": "assets/characters/cinder/animations/encouraging-variant-04.webp",
-          "sha256": "0b2e2b6afa567d83b2d0d80527448732f9d88cc19edd409076c74e1b730683ad",
+          "sha256": "b09983ea7057a15c7b216ce449b9e901cc8116cae7a4f4607ed3b3d3f9c4b8de",
           "approved": true
         },
         "5": {
@@ -1685,7 +1685,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/cinder/encouraging-attempt-01.webp",
           "path": "assets/characters/cinder/animations/encouraging-variant-05.webp",
-          "sha256": "239a0a210aa4cd8eaeb10c576e89e0c9a2bfbacdb0df343b55f187173f0ab19f",
+          "sha256": "79216196882f7e0a7985a8e854201b625290bf0b07b62d25ffaa23b21bd2cd97",
           "approved": true
         }
       },
@@ -1695,7 +1695,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/cinder/puzzled-attempt-01.webp",
           "path": "assets/characters/cinder/animations/puzzled-variant-01.webp",
-          "sha256": "ba7ed3d7927d8334a6bf1763b35db0a7c8d1981766ef28f4ed58e0e37be42582",
+          "sha256": "a7706e7dbcfcf12789a3b154ce920329556d856a225d5f6667d4a7d88706ba27",
           "approved": true
         },
         "2": {
@@ -1703,7 +1703,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/cinder/puzzled-attempt-01.webp",
           "path": "assets/characters/cinder/animations/puzzled-variant-02.webp",
-          "sha256": "6300eede12bcfda85e18dbe6e86922ef54d4194a042f318833082c532f310a35",
+          "sha256": "16940dcecd6f818e817a832a94532e9e9faa638d1708a31f4101aa67d0d0861d",
           "approved": true
         },
         "3": {
@@ -1711,7 +1711,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/cinder/puzzled-attempt-01.webp",
           "path": "assets/characters/cinder/animations/puzzled-variant-03.webp",
-          "sha256": "2269ccb66355069573cd0f0b923aa47a57fcf1557a3cf04578785e49bb7f3311",
+          "sha256": "93ef6ca7fc05431391e3f6f2400845f30a8026810cf48cb34943c1e17b510da9",
           "approved": true
         },
         "4": {
@@ -1719,7 +1719,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/cinder/puzzled-attempt-01.webp",
           "path": "assets/characters/cinder/animations/puzzled-variant-04.webp",
-          "sha256": "f392ba5c73d00ae5f9957b8f8c9018f59ce324d6e24dbb0dc301006771b6a68d",
+          "sha256": "85f660bc93c6d4aacd5f7b798065c9fc99de5d5bcc59b9d78eebe3e299df6159",
           "approved": true
         },
         "5": {
@@ -1727,7 +1727,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/cinder/puzzled-attempt-01.webp",
           "path": "assets/characters/cinder/animations/puzzled-variant-05.webp",
-          "sha256": "a26d83b2f885cb5c5495908e4d5bef79d49adff2ad5a2f35684a2ab7c8352f14",
+          "sha256": "41c4ba5ddbecc00ac2d9e84a28ef6eb3e3803ceb680a424e6c470339eafbf5d8",
           "approved": true
         }
       }
@@ -1739,7 +1739,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/fen/attentive-attempt-01.webp",
           "path": "assets/characters/fen/animations/attentive-variant-01.webp",
-          "sha256": "1d06df640fdabbb0283ae9a1426cdc07632a815e10a232c6635f9140687f63ea",
+          "sha256": "e01cc0d65a93bcf349962409e1f36ae7d9d1649900501d09da13d0958ec93cc8",
           "approved": true
         },
         "2": {
@@ -1747,7 +1747,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/fen/attentive-attempt-01.webp",
           "path": "assets/characters/fen/animations/attentive-variant-02.webp",
-          "sha256": "b7d49736d1953dc2d15afb1cbb4c22e46fe3dcd8ea0f98abbf5966f9016885ea",
+          "sha256": "bfc90209269647c73863031d64818418b7a2d63ff63f560e046dbe5db4111b11",
           "approved": true
         },
         "3": {
@@ -1755,7 +1755,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/fen/attentive-attempt-01.webp",
           "path": "assets/characters/fen/animations/attentive-variant-03.webp",
-          "sha256": "a5b6065490296b0f356fed7a0b5c8b70273b28ee5bd867bcf0c9d0befaa6f251",
+          "sha256": "369ac47aea3e20097ad7b97d74e2e9b4293e2d6ee60dbf2b52f5d336b7a9d2b7",
           "approved": true
         },
         "4": {
@@ -1763,7 +1763,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/fen/attentive-attempt-01.webp",
           "path": "assets/characters/fen/animations/attentive-variant-04.webp",
-          "sha256": "23f33ee66555ca54208c36958b8441a0a4da53cfd792f3f430ddc55b349376e5",
+          "sha256": "c6782dcf5a52d49c8291e2bebe34043fa9589eb8fb42a51692462e02a3d13afd",
           "approved": true
         }
       },
@@ -1773,7 +1773,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/fen/encouraging-attempt-01.webp",
           "path": "assets/characters/fen/animations/encouraging-variant-01.webp",
-          "sha256": "19678cc8f989d1f566045c5da04058123854d96ffe9ee337321e1e057d9fb667",
+          "sha256": "e02065dd995deb7f47585bd309704a56e1008af3fccdc839fa0c9e9e9de88bd3",
           "approved": true
         },
         "2": {
@@ -1781,7 +1781,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/fen/encouraging-attempt-01.webp",
           "path": "assets/characters/fen/animations/encouraging-variant-02.webp",
-          "sha256": "4ebe23bc31703712581f62b026b64a95ae26befa33c8642ff1e31494fca9a071",
+          "sha256": "890dd0d51496d14c47938e084727d6849823cb577ce0987df1ade583d8bb9985",
           "approved": true
         },
         "3": {
@@ -1789,7 +1789,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/fen/encouraging-attempt-01.webp",
           "path": "assets/characters/fen/animations/encouraging-variant-03.webp",
-          "sha256": "7f8b506a8a2a9b5b8008607f069cb52cb6ce2a439e1a15fd046789e1c5ee283c",
+          "sha256": "5ee7ab5334f3672570f153cf5b93af54d732498fbaf1199a858455043051aefb",
           "approved": true
         },
         "4": {
@@ -1797,7 +1797,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/fen/encouraging-attempt-01.webp",
           "path": "assets/characters/fen/animations/encouraging-variant-04.webp",
-          "sha256": "33e47f194c896200868f6210ed39fbca9a23bcfa78239fc67f4edff7ebf52f67",
+          "sha256": "15d22832102f578a3635aad6088495699938e12e55acadfb909590b47847dfde",
           "approved": true
         },
         "5": {
@@ -1805,7 +1805,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/fen/encouraging-attempt-01.webp",
           "path": "assets/characters/fen/animations/encouraging-variant-05.webp",
-          "sha256": "7848287f072758fe88a0666ff9ca17e30f92d11ba88723629b1940cd156395d8",
+          "sha256": "b8f82a3cd288616037594f901c3b61340476ded0172dff2f191767f7de9cb1f0",
           "approved": true
         }
       },
@@ -1815,7 +1815,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/fen/puzzled-attempt-01.webp",
           "path": "assets/characters/fen/animations/puzzled-variant-01.webp",
-          "sha256": "7df1ce27943c6cadaf110979a17644757d1881565a6e990b7ff724dd13145c9b",
+          "sha256": "964fb4c5c7576fda1aca9bc8af58c8c952448f6123ee34246b7071b2d1b086ba",
           "approved": true
         },
         "2": {
@@ -1823,7 +1823,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/fen/puzzled-attempt-01.webp",
           "path": "assets/characters/fen/animations/puzzled-variant-02.webp",
-          "sha256": "4cf272a8883528e3f55fd7bd0a859c448bc41b56e8beb164bca179bf497da24f",
+          "sha256": "781cedd4ae253e5d73d902ba92aaa9d85bfeb1a38cc0bd1e09011f42bb816bf3",
           "approved": true
         },
         "3": {
@@ -1831,7 +1831,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/fen/puzzled-attempt-01.webp",
           "path": "assets/characters/fen/animations/puzzled-variant-03.webp",
-          "sha256": "ba435e295e688161002255bb16e2f123ba398efd9e22d8b78bbd3408f83b4be0",
+          "sha256": "bf8303ff70041e7292ffce2cda3d41989dd18cfb31887287c24600a8aa791cdd",
           "approved": true
         },
         "4": {
@@ -1839,7 +1839,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/fen/puzzled-attempt-01.webp",
           "path": "assets/characters/fen/animations/puzzled-variant-04.webp",
-          "sha256": "7392fb1c3d3761ef4c94cbcce85875e6a807a5fc5c66d015385628bb1b4c3deb",
+          "sha256": "3d4ebbc7fd0f468d54eca6c23c0dbbc12e23ac4bfc9ae16f524cb8921c3f25f1",
           "approved": true
         },
         "5": {
@@ -1847,7 +1847,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/fen/puzzled-attempt-01.webp",
           "path": "assets/characters/fen/animations/puzzled-variant-05.webp",
-          "sha256": "805198a2ee8ecd78ac4bf4d4d9edee2940ac80c60850e8dafaaf0371f2d8d9ed",
+          "sha256": "0111fcf9e56dc87377d8bc94d78579736501c66ed03de28f2fe05909bd86b1bd",
           "approved": true
         }
       }
@@ -1859,7 +1859,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/luma/attentive-attempt-01.webp",
           "path": "assets/characters/luma/animations/attentive-variant-01.webp",
-          "sha256": "620cb7c22578ca94ad46fa400299f86aeaba6d6c51b8564c527d45cec82675f9",
+          "sha256": "17b827ad978c5c8a817c1e65c895cfae721fbb41b86b6932ef9fee5ee67b01f1",
           "approved": true
         },
         "2": {
@@ -1867,7 +1867,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/luma/attentive-attempt-01.webp",
           "path": "assets/characters/luma/animations/attentive-variant-02.webp",
-          "sha256": "6ff6145b9c15c98b9cf43896763011d0f0bc91cbc2118b7471defe3c2d3fbc7a",
+          "sha256": "c17f619f1f20e4db2932110e84ab9c98abde878ab3ad6ebc24c6b39260ecb27e",
           "approved": true
         },
         "3": {
@@ -1875,7 +1875,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/luma/attentive-attempt-01.webp",
           "path": "assets/characters/luma/animations/attentive-variant-03.webp",
-          "sha256": "ba08f4ab8b595a1a0af689b61dd2094c4fa893912cd770463b87768770227875",
+          "sha256": "c9cacd760fe7a8b322f92f203b1525e4cce013fa8218e22b5c089b33f8423993",
           "approved": true
         },
         "4": {
@@ -1883,7 +1883,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/luma/attentive-attempt-01.webp",
           "path": "assets/characters/luma/animations/attentive-variant-04.webp",
-          "sha256": "286b6ab0c4cd4e6babfd3927adb38c7dadfe1e9d83a48eba8b203c4f09d7c048",
+          "sha256": "4eb130a82c3c0d2ad6c45bd0d0aaab0fcc2d94ccb545220a234f9673b6412941",
           "approved": true
         },
         "5": {
@@ -1891,7 +1891,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/luma/attentive-attempt-01.webp",
           "path": "assets/characters/luma/animations/attentive-variant-05.webp",
-          "sha256": "0cf4b97874454726cfa6505660eacd947ee841493de06917a9366a67b00980d3",
+          "sha256": "add387982775cc3cceb31840403f57c480a7740826b9845d1cfe68060105f79c",
           "approved": true
         }
       },
@@ -1901,7 +1901,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/luma/encouraging-attempt-01.webp",
           "path": "assets/characters/luma/animations/encouraging-variant-01.webp",
-          "sha256": "886335564ce0f1a676d5b779fb910dbd2cde0c32be7038444c64e92131bbc329",
+          "sha256": "625d57095cde6d7262134f03b0d43d0f4df37259f734d78b5d3f2199f1908740",
           "approved": true
         },
         "2": {
@@ -1909,7 +1909,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/luma/encouraging-attempt-01.webp",
           "path": "assets/characters/luma/animations/encouraging-variant-02.webp",
-          "sha256": "42e6f24b696eaf69c6df9a12419760ae9e145ef53336a554ce9c41bc6431dc0f",
+          "sha256": "cbf327ec9b501df77bd0457bbd5b9f8f111e49304c1fb926dd2534c0e6f16187",
           "approved": true
         },
         "3": {
@@ -1917,7 +1917,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/luma/encouraging-attempt-01.webp",
           "path": "assets/characters/luma/animations/encouraging-variant-03.webp",
-          "sha256": "e08e705d79c2abf8b50153be7c9118ed2262bf9f60abe23b31cbe08a0a048f22",
+          "sha256": "d1391af8692024cddf0d21519129d662cfe30517684cba1d362b8a34d95e2945",
           "approved": true
         },
         "4": {
@@ -1925,7 +1925,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/luma/encouraging-attempt-01.webp",
           "path": "assets/characters/luma/animations/encouraging-variant-04.webp",
-          "sha256": "c9ae77002cb89071926ea6c222ba0406e370574741ff5cbc4ac52546eeab312d",
+          "sha256": "ae06c3a906ec8ebe8c5d78f23d66c0f389d641fd26905aa6b789cce1b084c523",
           "approved": true
         },
         "5": {
@@ -1933,7 +1933,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/luma/encouraging-attempt-01.webp",
           "path": "assets/characters/luma/animations/encouraging-variant-05.webp",
-          "sha256": "6b9bc71c191786aad701cd479c76e67d94d776b055f7d57666e192b3f03d2a4d",
+          "sha256": "576201bdd9c6b9a5c6018aa00fbe5f2ae05831dc487df1f1eaa0a1b9f51469e8",
           "approved": true
         }
       },
@@ -1943,7 +1943,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/luma/puzzled-attempt-01.webp",
           "path": "assets/characters/luma/animations/puzzled-variant-01.webp",
-          "sha256": "c4f27feb99d635fbcdd3924be3ca1467b74765f458a442c0128f2aec3342c40c",
+          "sha256": "9b3bb07544723a760b3d50c0f12662304fa8ab55b2eaa4d79f51f667f6e9e51c",
           "approved": true
         },
         "2": {
@@ -1951,7 +1951,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/luma/puzzled-attempt-01.webp",
           "path": "assets/characters/luma/animations/puzzled-variant-02.webp",
-          "sha256": "f4c77b3018e2f1a26c98897595b453c631987f129aca3a3debb3fbc267d48af7",
+          "sha256": "8656d4479c44c5a380b2f27c46125b3beaa1dc624ef8640e00cb9c296a50cdc1",
           "approved": true
         },
         "3": {
@@ -1959,7 +1959,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/luma/puzzled-attempt-01.webp",
           "path": "assets/characters/luma/animations/puzzled-variant-03.webp",
-          "sha256": "ef0f6bbb3f5dbccd7cf859bc42f0886de0c4513f0a93de96189ef5ac1f5c4136",
+          "sha256": "df98fa7b0118dab32d8f4a2afd4c65050dda5ebd68200034c41d6cad34c8b887",
           "approved": true
         },
         "4": {
@@ -1967,7 +1967,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/luma/puzzled-attempt-01.webp",
           "path": "assets/characters/luma/animations/puzzled-variant-04.webp",
-          "sha256": "821ba68ed2aa1b1f146327fb8a5eb0b353977acc175187aed1405cbcb5676c30",
+          "sha256": "f78c0a034dbbc6be09e3e3cd579ab3bbbbe9ee458f23d06a3af02d950a7e1163",
           "approved": true
         },
         "5": {
@@ -1975,7 +1975,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/luma/puzzled-attempt-01.webp",
           "path": "assets/characters/luma/animations/puzzled-variant-05.webp",
-          "sha256": "087e35d61768421b3325178ba6c0decde3a52a29c90c2e1aa75d97b3e3961d86",
+          "sha256": "a59a634ca06f9c001776032885a1a485d3d97821537199335368929b98dbabd1",
           "approved": true
         }
       }
@@ -1987,7 +1987,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/mello/attentive-attempt-01.webp",
           "path": "assets/characters/mello/animations/attentive-variant-01.webp",
-          "sha256": "ac9c1558dd7fa4f9b52ad214321e819f40882024761396b6c57fce7ec7ba976f",
+          "sha256": "f4a40d49bbf4c7ab92c5a0f9813497d5d9c85e60caa125e86a1b6f89598bed00",
           "approved": true
         },
         "2": {
@@ -1995,7 +1995,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/mello/attentive-attempt-01.webp",
           "path": "assets/characters/mello/animations/attentive-variant-02.webp",
-          "sha256": "3a5edd735c676aeb14307ca97d56cc4794fcab1f7b1eac8057e8ee97cd2dcfee",
+          "sha256": "15224c82069ecc16fdface5d9e85c87018f259fd9430cf9245f6a4bf813b2363",
           "approved": true
         },
         "3": {
@@ -2003,7 +2003,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/mello/attentive-attempt-01.webp",
           "path": "assets/characters/mello/animations/attentive-variant-03.webp",
-          "sha256": "1f223ff211500f1ca01a07b00a271e4b4cb9c22e742a87efa9ffe5d3aa0181ba",
+          "sha256": "f7a5286803a2005164e20ab4452e9cb3acd98289409cc9f191c1e29e89b0160a",
           "approved": true
         },
         "4": {
@@ -2011,7 +2011,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/mello/attentive-attempt-01.webp",
           "path": "assets/characters/mello/animations/attentive-variant-04.webp",
-          "sha256": "e8b5dbe948484d5000b1e9402a557c6db1adfab249b5c60198933f8051896af3",
+          "sha256": "6e79b09000bdf85fd9a582e49d1ee3b5fc83e024a7f7d2e44c3fc25eaedd59e9",
           "approved": true
         },
         "5": {
@@ -2019,7 +2019,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/mello/attentive-attempt-01.webp",
           "path": "assets/characters/mello/animations/attentive-variant-05.webp",
-          "sha256": "22f5a271c2e8df1071341ca561fdd17c8eb66e51cb422451d53c4e35ee9aafa7",
+          "sha256": "dd65115eabcd6e377a88c8018baafbb05fcfb7d49a24c96197a811a1e837959c",
           "approved": true
         }
       },
@@ -2029,7 +2029,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/mello/encouraging-attempt-01.webp",
           "path": "assets/characters/mello/animations/encouraging-variant-01.webp",
-          "sha256": "2fd56ec762d78bb5520effa14c3f17497359db257e5a3d6386c796309c4205a1",
+          "sha256": "9a8f6b13d4adccd3445e79a1f59311d32c2fe5c31343cd92192a92c7d4ec1fbc",
           "approved": true
         },
         "2": {
@@ -2037,7 +2037,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/mello/encouraging-attempt-01.webp",
           "path": "assets/characters/mello/animations/encouraging-variant-02.webp",
-          "sha256": "535ce43e9300be651f3b5945250c2257880a4e0d16434a6985975e78f8e490ce",
+          "sha256": "0acb5b49fee0efb4705acf5955d69d462f2239aaf23825cb2e75b03150f037ca",
           "approved": true
         },
         "3": {
@@ -2045,7 +2045,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/mello/encouraging-attempt-01.webp",
           "path": "assets/characters/mello/animations/encouraging-variant-03.webp",
-          "sha256": "614c9bff52f9feba45d16a12af101844fa961206c2b6864e2d665ee3b936726e",
+          "sha256": "d39867cf29c93c592037b8e761dea5b1013844b9d7c4f05546d2d35f598e62c0",
           "approved": true
         },
         "4": {
@@ -2053,7 +2053,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/mello/encouraging-attempt-01.webp",
           "path": "assets/characters/mello/animations/encouraging-variant-04.webp",
-          "sha256": "4d6b23d0ebdcd159e2f9054f42e1f810537a2cd69cce35b36bebdbb0943dd344",
+          "sha256": "6f8ffff6a196fecd6cd4c0d70dbc1ef925c2936543ec5f1114a2b8effdf728f9",
           "approved": true
         },
         "5": {
@@ -2061,7 +2061,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/mello/encouraging-attempt-01.webp",
           "path": "assets/characters/mello/animations/encouraging-variant-05.webp",
-          "sha256": "b18e054a8e364ae6b5d2586c5364d33eb88cfd835277a713e055be2edc61475d",
+          "sha256": "e9e012a84c0afb4ce4312716315f7e7918a3f4d4a8e744d92ea5aa0f2a79ccc1",
           "approved": true
         }
       },
@@ -2071,7 +2071,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/mello/puzzled-attempt-01.webp",
           "path": "assets/characters/mello/animations/puzzled-variant-01.webp",
-          "sha256": "f0c27a8f23b30033c58a7898de9b7115814d69a0982e18588e40bc31de6b31b4",
+          "sha256": "2b33fa9ea8ae173d755cefcab67df71dccabc88c922589c481d1e8b96f53561e",
           "approved": true
         },
         "2": {
@@ -2079,7 +2079,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/mello/puzzled-attempt-01.webp",
           "path": "assets/characters/mello/animations/puzzled-variant-02.webp",
-          "sha256": "f1f426a1fa049ef9f6773a0055324ee4c78f9f47512702e783cf48d20d96ea9c",
+          "sha256": "bdcc0c058762dba6e762adb42e1bb95dbfdd4e6ddcae13b84344d48fca26291a",
           "approved": true
         },
         "3": {
@@ -2087,7 +2087,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/mello/puzzled-attempt-01.webp",
           "path": "assets/characters/mello/animations/puzzled-variant-03.webp",
-          "sha256": "2700c9257bbddecc8c3157f9bdbe425739f6009c57363955e252c3993e6a0ae2",
+          "sha256": "182caefbfbe4db65155ad6f41d19b92851e5aa1e19ca5f7f76a73ef70cb80234",
           "approved": true
         },
         "4": {
@@ -2095,7 +2095,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/mello/puzzled-attempt-01.webp",
           "path": "assets/characters/mello/animations/puzzled-variant-04.webp",
-          "sha256": "5e4fcaabb455e577371e9de13282785b02d11ff197386de2c1d693ca78e7675b",
+          "sha256": "3036488d218491a48f2de92343138a5ffa46dd1d0012958e23a5ae44c01e7b9c",
           "approved": true
         },
         "5": {
@@ -2103,7 +2103,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/mello/puzzled-attempt-01.webp",
           "path": "assets/characters/mello/animations/puzzled-variant-05.webp",
-          "sha256": "7a590429b0fc554198cbc45ee9d0aeef831b01851d0dbbbca07755935ddcf4df",
+          "sha256": "919a103275b46fada91a3d48e94acb68eb306e843b8139ceea488ad0301a3fcb",
           "approved": true
         }
       }
@@ -2115,7 +2115,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/mica/attentive-attempt-01.webp",
           "path": "assets/characters/mica/animations/attentive-variant-01.webp",
-          "sha256": "95f9599cfc3600902de20da132b9cc1f1e753dfe3a5a1a9f34d9f3b1089d0bd3",
+          "sha256": "f14b6753a5e2e05de67b4327d92b8070f8f08ed5513bea881aaabea629472963",
           "approved": true
         },
         "2": {
@@ -2123,7 +2123,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/mica/attentive-attempt-01.webp",
           "path": "assets/characters/mica/animations/attentive-variant-02.webp",
-          "sha256": "9ff88c80f7e6f624d3102d62ba78cfa2c2741f2f1e91940f1bf6ec5dd9c2bdc8",
+          "sha256": "4f3a9d750b8632a7100a3fc9dd6234a44a22f8f80818659ba745a9feba8cd18e",
           "approved": true
         },
         "3": {
@@ -2131,7 +2131,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/mica/attentive-attempt-01.webp",
           "path": "assets/characters/mica/animations/attentive-variant-03.webp",
-          "sha256": "77aca2ea0647faeedbc83a4e92773942e6eab0060a7122ca408cecabf032f509",
+          "sha256": "1c1a02930e05c53a4f7aa795d1b2b1b1015d04d7ca0f13f2e572be53f73734b2",
           "approved": true
         },
         "4": {
@@ -2139,7 +2139,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/mica/attentive-attempt-01.webp",
           "path": "assets/characters/mica/animations/attentive-variant-04.webp",
-          "sha256": "01e8c5478cd1cac33e88f6636104e217082c465807e97d3c9053fb77d04bb4c0",
+          "sha256": "9b988a5fd6ae469e6bbf517e529784a0e4581452756308b326199cb17a716c74",
           "approved": true
         },
         "5": {
@@ -2147,7 +2147,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/mica/attentive-attempt-01.webp",
           "path": "assets/characters/mica/animations/attentive-variant-05.webp",
-          "sha256": "cd99dd765e69ec919ba6c21a14664d5467e0503efd49b305d14121053d5bc455",
+          "sha256": "2986144eeb59845376997b3e78a1e27c37a02dc35d8162af6a9e49c869915df3",
           "approved": true
         }
       },
@@ -2157,7 +2157,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/mica/encouraging-attempt-01.webp",
           "path": "assets/characters/mica/animations/encouraging-variant-01.webp",
-          "sha256": "376262bcbf662d2bd05ec86aab73582f26bd0d20dcb830717d26ea599c7859b3",
+          "sha256": "575701d6a4f6a62c6ebf6081a74205904792c4bfd3573349ee8ed86565cb04ac",
           "approved": true
         },
         "2": {
@@ -2165,7 +2165,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/mica/encouraging-attempt-02.webp",
           "path": "assets/characters/mica/animations/encouraging-variant-02.webp",
-          "sha256": "266d6baaaa3302917b4c0d9bd684c0373146b1f3667713588c98abfb777278bc",
+          "sha256": "af1f99c5392ca1b1b8a6170fed191ec3ffebc491710519b1d02e919bc23b2f8f",
           "approved": true
         },
         "3": {
@@ -2173,7 +2173,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/mica/encouraging-attempt-01.webp",
           "path": "assets/characters/mica/animations/encouraging-variant-03.webp",
-          "sha256": "e0bc50957419405fd0d32619b728f63eb774ce70a60e7dc92b3a6617bc2e7489",
+          "sha256": "577e79cb24d3246144c410075151ef6c5dc3670811630528c46c90ae19d54ead",
           "approved": true
         },
         "4": {
@@ -2181,7 +2181,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/mica/encouraging-attempt-01.webp",
           "path": "assets/characters/mica/animations/encouraging-variant-04.webp",
-          "sha256": "925d80d1952e58433945624b1ca6ce4dc032b51205e488df572b89c48ef02179",
+          "sha256": "8c7f816776d2770de5d2b3315b9364a614e9c5ba37af670bd0a3ae7957ecb857",
           "approved": true
         }
       },
@@ -2191,7 +2191,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/mica/puzzled-attempt-01.webp",
           "path": "assets/characters/mica/animations/puzzled-variant-01.webp",
-          "sha256": "9dfebce7c30e3325db3bb5e2874723fb94ff602f478ff7208f4df336fe1b28c9",
+          "sha256": "40eba0e5b747903a147d994e0a8d49baabad914d82aa9bca47b3d08e1c7b450b",
           "approved": true
         },
         "2": {
@@ -2199,7 +2199,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/mica/puzzled-attempt-01.webp",
           "path": "assets/characters/mica/animations/puzzled-variant-02.webp",
-          "sha256": "7dcc1d9dec132ef1c31b9c08fc1932dfa17e6e87c0510681b18eb670a641d634",
+          "sha256": "233875ff1cd1b61e78c234eb81373a3807c04ee000bdefcb1b39fd127f54f86f",
           "approved": true
         },
         "3": {
@@ -2207,7 +2207,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/mica/puzzled-attempt-01.webp",
           "path": "assets/characters/mica/animations/puzzled-variant-03.webp",
-          "sha256": "044cb185db9d7f3a8ae51e64df6a61647ed8dd6ffc0392f88bc6f177886c8b08",
+          "sha256": "ea0e6406a7907ee0fd5764e73acf73a7db7f1f77c83830b1764e1139542d1614",
           "approved": true
         },
         "4": {
@@ -2215,7 +2215,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/mica/puzzled-attempt-01.webp",
           "path": "assets/characters/mica/animations/puzzled-variant-04.webp",
-          "sha256": "bb9a3fbeee3c675c5db5e99812e52e3f84d75946b2901232413619c161cbe13d",
+          "sha256": "f62df346de6b1e5e5c4b65a366e4e4fb7477db6408e097da39b6d7df04ed210c",
           "approved": true
         }
       }
@@ -2227,7 +2227,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/nix/attentive-attempt-01.webp",
           "path": "assets/characters/nix/animations/attentive-variant-01.webp",
-          "sha256": "3655ba5d7be820ebee94fcab5a664c1628556492ddb87991a38f6d36402b8ed7",
+          "sha256": "ed0a82bbb29ac01c03812916d6731f13e0a04feb133ceef0b5855bd521232312",
           "approved": true
         },
         "2": {
@@ -2235,7 +2235,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/nix/attentive-attempt-01.webp",
           "path": "assets/characters/nix/animations/attentive-variant-02.webp",
-          "sha256": "e77382ed59fb481c3cc27799fcce62e96c2f8a5bda4d404ecda01224ab9e38de",
+          "sha256": "de457241c75501a0bff939209f496c4fdbb14a07dd3a900efa42222a26d6b86b",
           "approved": true
         },
         "3": {
@@ -2243,7 +2243,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/nix/attentive-attempt-01.webp",
           "path": "assets/characters/nix/animations/attentive-variant-03.webp",
-          "sha256": "a25b192f62bd8d97bd7fc29845feb2371a869dd56cedcbb0c1975a554cf6342a",
+          "sha256": "00e12d650da4fb65ddae7c7211805419e550ba2633e21eab488c089b5ea5db8f",
           "approved": true
         },
         "4": {
@@ -2251,7 +2251,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/nix/attentive-attempt-01.webp",
           "path": "assets/characters/nix/animations/attentive-variant-04.webp",
-          "sha256": "2ee7605c552ed919a1fd0c3d0c3001cca1fa56d35eb49f3717b09882cd12cdcf",
+          "sha256": "c4a0b8181b5dec4c5454b9f9105b042d2e85e25c0a40c29acd5bd92f8d65693b",
           "approved": true
         },
         "5": {
@@ -2259,7 +2259,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/nix/attentive-attempt-01.webp",
           "path": "assets/characters/nix/animations/attentive-variant-05.webp",
-          "sha256": "b5fbdcc194c732189f4029ad409da876261322114b8bb1f1235769a4e9218282",
+          "sha256": "b519a74e5724a4e888692a31cf37607afc1d0ff583f12df9d6e4037c1b3a87d0",
           "approved": true
         }
       },
@@ -2269,7 +2269,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/nix/encouraging-attempt-01.webp",
           "path": "assets/characters/nix/animations/encouraging-variant-01.webp",
-          "sha256": "a82a1584e77d2660b4e8012c04bb28248fbd03996cee7f5d2044438f8c5d4866",
+          "sha256": "cb10851c6a1bf50e9d06d8f0f337863f9482258a37bd6d6b722e772511cb53b7",
           "approved": true
         },
         "2": {
@@ -2277,7 +2277,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/nix/encouraging-attempt-01.webp",
           "path": "assets/characters/nix/animations/encouraging-variant-02.webp",
-          "sha256": "53ddcfa7d981f7f19fd4c5f29386f10396aada63bade5b5d02a9e1e930ecd4ec",
+          "sha256": "37a4ddc1742d4d0946fce1627e67b07696ac60ae2598cf8651333c7adc062fc1",
           "approved": true
         },
         "3": {
@@ -2285,7 +2285,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/nix/encouraging-attempt-01.webp",
           "path": "assets/characters/nix/animations/encouraging-variant-03.webp",
-          "sha256": "d66c02519b115165681ca5d9427c26cd6bcd6b6d14c64d7a2dbed41a981feebe",
+          "sha256": "b111fdb15abfb0965c89e13a265f6a979771f3d12a2398e61a04148cd63b9996",
           "approved": true
         }
       },
@@ -2295,7 +2295,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/nix/puzzled-attempt-01.webp",
           "path": "assets/characters/nix/animations/puzzled-variant-01.webp",
-          "sha256": "4e51888c961e7666cb4d473965d055eb3f81baef89a01cec93c6319f78504f89",
+          "sha256": "b9a7000db7237caf74a05677b18ac54a72974805dc2e94ed283fd88e2a21a053",
           "approved": true
         },
         "2": {
@@ -2303,7 +2303,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/nix/puzzled-attempt-01.webp",
           "path": "assets/characters/nix/animations/puzzled-variant-02.webp",
-          "sha256": "1677f0a6f08bf8c52c239c4728e6288e757db2db1af4e438c7a786a57088e198",
+          "sha256": "1c8c8538471cc88230f6b47708aa3aeac59e8bb6f5add04526adb65b289b10a1",
           "approved": true
         },
         "3": {
@@ -2311,7 +2311,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/nix/puzzled-attempt-01.webp",
           "path": "assets/characters/nix/animations/puzzled-variant-03.webp",
-          "sha256": "f7e39a50c2cf417a8246ace54f00e3d4d513f493ffc1b8c7545e580bd46e0668",
+          "sha256": "05a90f82f6b0e2efd0ce8a6c334f9023a7d87f6ece68c85d004997a9b16f06e5",
           "approved": true
         },
         "4": {
@@ -2319,7 +2319,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/nix/puzzled-attempt-01.webp",
           "path": "assets/characters/nix/animations/puzzled-variant-04.webp",
-          "sha256": "7fb69ca793f52e5b172280a1e54c3e1d268809658fdfd2df4e9016189edbe394",
+          "sha256": "7f7b679a97ff5c7df0c2e77eb8500160dab582e4d0c5c6f6ef2a9131b1c2baff",
           "approved": true
         },
         "5": {
@@ -2327,7 +2327,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/nix/puzzled-attempt-01.webp",
           "path": "assets/characters/nix/animations/puzzled-variant-05.webp",
-          "sha256": "cb9bd70339f53d9220092fcd0495443f2a2e79977b8803143117790e5b0bafb1",
+          "sha256": "7e35e38755f967e066a4f9cd3921bf49f5fe2c1f012e58de85c7ed3bb7fa298e",
           "approved": true
         }
       }
@@ -2339,7 +2339,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/orin/attentive-attempt-01.webp",
           "path": "assets/characters/orin/animations/attentive-variant-01.webp",
-          "sha256": "a572b5f59052c872e4419497fda9e4a34a6c551a128c9f182b5d1f3889c58286",
+          "sha256": "3491f64cfdcd69db312d0524afcde846a73c6ebebfe805abf5ecee3220cc90f1",
           "approved": true
         },
         "2": {
@@ -2347,7 +2347,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/orin/attentive-attempt-01.webp",
           "path": "assets/characters/orin/animations/attentive-variant-02.webp",
-          "sha256": "5c98b926828d9402300b0dcc7a8c87888dd14615ab576e335dc84697a5357d08",
+          "sha256": "c023a0faf2daf7df60e3b9245ec65bce35966b3881cc6aeadb9d96b0cc2a03e6",
           "approved": true
         },
         "3": {
@@ -2355,7 +2355,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/orin/attentive-attempt-01.webp",
           "path": "assets/characters/orin/animations/attentive-variant-03.webp",
-          "sha256": "8cbc3dd7a5f62a9264de98cad1e87eb9e805a41e9a77763f2fcd353ca6f47d88",
+          "sha256": "36d35f09f15d1a3c050bcd3d9764290ed3f8a46130158702ea6e5b86a8305448",
           "approved": true
         },
         "4": {
@@ -2363,7 +2363,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/orin/attentive-attempt-01.webp",
           "path": "assets/characters/orin/animations/attentive-variant-04.webp",
-          "sha256": "0e0b474c41864b136bd0ca4fb84144d9decd5ac86c39860055a66da74a623a5f",
+          "sha256": "b3b70a079282d45e5e10c3064d8a227e57cb5c9a4ee9c70c24d0c32700faeee6",
           "approved": true
         },
         "5": {
@@ -2371,7 +2371,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/orin/attentive-attempt-01.webp",
           "path": "assets/characters/orin/animations/attentive-variant-05.webp",
-          "sha256": "f1ea4850c08a0c7fe47b8252d6024387d0bd35f61645e3a1f86d8ec9e0c8cea1",
+          "sha256": "a2ad2d059b178048d1f9e21030b86b7d08e2282067f87309e632a7069be491af",
           "approved": true
         }
       },
@@ -2381,7 +2381,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/orin/encouraging-attempt-01.webp",
           "path": "assets/characters/orin/animations/encouraging-variant-01.webp",
-          "sha256": "2e8ae412bb311161702b70f2cd4f9418f1e59b09933d95804457421181d78c82",
+          "sha256": "bcd2ef16f7b7e82129c5af41384dd62a573f3f1e89f34a9e349908b1dc47f771",
           "approved": true
         },
         "2": {
@@ -2389,7 +2389,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/orin/encouraging-attempt-01.webp",
           "path": "assets/characters/orin/animations/encouraging-variant-02.webp",
-          "sha256": "f4d32454e85361d83e6209e906da2faf90845cc8dcd3b141ef80f4b878e501c2",
+          "sha256": "9d8d9dbebc385d5e6868c05c53d2fa4a48d1656be3e0973bcf8771c618bb6a11",
           "approved": true
         },
         "3": {
@@ -2397,7 +2397,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/orin/encouraging-attempt-01.webp",
           "path": "assets/characters/orin/animations/encouraging-variant-03.webp",
-          "sha256": "5f28ac13249e286ce969fe95fa869dd1c9b872f8812c54ea50efecb9d7b0c000",
+          "sha256": "046237b7b925a8767bf0e6ed183235df4fd31e928431aa33b90f78d47190b5a5",
           "approved": true
         },
         "4": {
@@ -2405,7 +2405,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/orin/encouraging-attempt-01.webp",
           "path": "assets/characters/orin/animations/encouraging-variant-04.webp",
-          "sha256": "087d2951849b62f439c9e2f001eae79b2d57903e3fdd91471fc681036991524a",
+          "sha256": "bc37a1649de4d7b2388dd9967bb5605cf298e3e902be35a9ca13d0dd5f11a6fb",
           "approved": true
         },
         "5": {
@@ -2413,7 +2413,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/orin/encouraging-attempt-01.webp",
           "path": "assets/characters/orin/animations/encouraging-variant-05.webp",
-          "sha256": "04031d178dd5fe1328bdd737a4f295b05190e36b71b6e9afdec6fa2a0a6c874a",
+          "sha256": "250d968da36af4f08a57c9b2568ddfa928d2021fe5e460706cf0fd7782e43878",
           "approved": true
         }
       },
@@ -2423,7 +2423,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/orin/puzzled-attempt-01.webp",
           "path": "assets/characters/orin/animations/puzzled-variant-01.webp",
-          "sha256": "0016b4986e9958d2f762ee0097a495cfa46cdd914183630f06389df879f7d55f",
+          "sha256": "77df00f8dd3abd232a85f870284aab2309f381131d813088d70c5900b154e69d",
           "approved": true
         },
         "2": {
@@ -2431,7 +2431,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/orin/puzzled-attempt-01.webp",
           "path": "assets/characters/orin/animations/puzzled-variant-02.webp",
-          "sha256": "c96737078555291e6e5126a6958eb940dad875ebd9868e350be6e83884221575",
+          "sha256": "00b25ab9c9d92f7847b9e1a7b115cea658ea2da5a0bcc745a5dc4b22fa244173",
           "approved": true
         },
         "3": {
@@ -2439,7 +2439,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/orin/puzzled-attempt-01.webp",
           "path": "assets/characters/orin/animations/puzzled-variant-03.webp",
-          "sha256": "0bae2d88ea8f6effbef5c4bac298a2d6c970acb95af785f73be64aea63ccacba",
+          "sha256": "bb2162052ca9cb09a8c5b6cc683de873e687a80cd0abaae823a8dde7f0ffdfd5",
           "approved": true
         },
         "4": {
@@ -2447,7 +2447,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/orin/puzzled-attempt-01.webp",
           "path": "assets/characters/orin/animations/puzzled-variant-04.webp",
-          "sha256": "d67963508e3a7013bc75d4237f7617f6d893dfc4f743d9bbb69ccbff0a08878a",
+          "sha256": "c4e2973d0dafb5de6e585302ff1b9ccb6966122e70a33037545de42da00fdbae",
           "approved": true
         },
         "5": {
@@ -2455,7 +2455,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/orin/puzzled-attempt-01.webp",
           "path": "assets/characters/orin/animations/puzzled-variant-05.webp",
-          "sha256": "eae3fdacd1074d1b13506eee9dff6f4c77f173de957cf532ede4648bcb5eed6c",
+          "sha256": "0780c5df3c64466d9f16555b4c386c0e8c786ffe76aec17410f52a49bc9a754c",
           "approved": true
         }
       }
@@ -2467,7 +2467,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/prism/attentive-attempt-01.webp",
           "path": "assets/characters/prism/animations/attentive-variant-01.webp",
-          "sha256": "b11c36ff7bd7678037a713ef564e199fc99f138d4ac28a29ea37211e890a8aec",
+          "sha256": "adf6a9d51d4c326f4d4fe411fe1e4f52c13971bc575953250c63369950714d9e",
           "approved": true
         },
         "2": {
@@ -2475,7 +2475,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/prism/attentive-attempt-01.webp",
           "path": "assets/characters/prism/animations/attentive-variant-02.webp",
-          "sha256": "7a9b8f97755b7e8faed4e4e336ca8dbcc72f5e75d0dfdb42a2bfc36b5f7ace22",
+          "sha256": "28cbcafb2e9b33ffa8acd1cd7c79a769afaba282e4f516e4aa39f74843325be7",
           "approved": true
         },
         "3": {
@@ -2483,7 +2483,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/prism/attentive-attempt-01.webp",
           "path": "assets/characters/prism/animations/attentive-variant-03.webp",
-          "sha256": "0768760529ea334f685ed5fd2451ab089ace7ff6b8cc09e58b5628e9f12c3007",
+          "sha256": "26cbe690d4ee17ad81353e8e95673b2b1937f8bd7005316a4f565fcdc85555c9",
           "approved": true
         },
         "4": {
@@ -2491,7 +2491,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/prism/attentive-attempt-01.webp",
           "path": "assets/characters/prism/animations/attentive-variant-04.webp",
-          "sha256": "776890164b8b9c1f208499884b173d050d82567c34500b34d3fd8cf3afbd4006",
+          "sha256": "6d5d46e9009cae3241c6176f15d9f01c5f1252a844f9616a77415afd84b4efc9",
           "approved": true
         },
         "5": {
@@ -2499,7 +2499,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/prism/attentive-attempt-01.webp",
           "path": "assets/characters/prism/animations/attentive-variant-05.webp",
-          "sha256": "b8f040cbd7627c9547bda908367c96f4c3c9dbfa98bcc016d7180f527c6d8f43",
+          "sha256": "4ed6401b1d1f895f3b026234ec1bbaa568578ed7d0615f6da8a2f0d0dbdbb702",
           "approved": true
         }
       },
@@ -2509,7 +2509,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/prism/encouraging-attempt-01.webp",
           "path": "assets/characters/prism/animations/encouraging-variant-01.webp",
-          "sha256": "ef0c48087e99b01bbabd18d879bf2dbfb0bad2e99bb89d2e312190bf641de996",
+          "sha256": "f8a12f6abe4b2f0cbca90b2c9039f64a060475433efcb669df52dc66e6bb4986",
           "approved": true
         },
         "2": {
@@ -2517,7 +2517,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/prism/encouraging-attempt-01.webp",
           "path": "assets/characters/prism/animations/encouraging-variant-02.webp",
-          "sha256": "6b552f221d0511bca6d0a1649c84f84073d1c0189331e2ecf10eb18165553a23",
+          "sha256": "eb31882b09fbb37b01775a4e6d439bdcdcd7a496206dda9c97a524da98d9fe3c",
           "approved": true
         },
         "3": {
@@ -2525,7 +2525,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/prism/encouraging-attempt-01.webp",
           "path": "assets/characters/prism/animations/encouraging-variant-03.webp",
-          "sha256": "1f297d2f87b58b7d2fbcd210f5f984be87f1c33afe172679b8858cf4717e70c9",
+          "sha256": "99d1fdbbcbe294c86423d424479b211d9779f0254471e51e51b58d4946a55611",
           "approved": true
         },
         "4": {
@@ -2533,7 +2533,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/prism/encouraging-attempt-01.webp",
           "path": "assets/characters/prism/animations/encouraging-variant-04.webp",
-          "sha256": "86be847b2cb98792c1e9d57259f48395acde7d4e8a93e932e63d92f2f8d7a3ac",
+          "sha256": "abe030359a9bccd6bc123bff0ac1050031fae2a2fbed4f64dda4966e5dd857fd",
           "approved": true
         },
         "5": {
@@ -2541,7 +2541,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/prism/encouraging-attempt-01.webp",
           "path": "assets/characters/prism/animations/encouraging-variant-05.webp",
-          "sha256": "5d48425184adf97868f9922e58c92baadf4b822f74dbc12e8706d76db1c69081",
+          "sha256": "bc99d07cf4ac20b22adf815112d0ed7f23dd52f5a2fe8834455d8a3fb56ffb95",
           "approved": true
         }
       },
@@ -2551,7 +2551,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/prism/puzzled-attempt-01.webp",
           "path": "assets/characters/prism/animations/puzzled-variant-01.webp",
-          "sha256": "1f7c74263e7111d399f9ddc2b8d87974de03a560cb6003818643f5a990237cd7",
+          "sha256": "e1bec7f49a7891a1a7da6ef9933ed597df37d742de7f53610d0a09eaf2598b42",
           "approved": true
         },
         "2": {
@@ -2559,7 +2559,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/prism/puzzled-attempt-01.webp",
           "path": "assets/characters/prism/animations/puzzled-variant-02.webp",
-          "sha256": "c23658c7f1c722ebd975855fbe4ae75a110b7bccc497c9b201c47029a2524699",
+          "sha256": "bc45caca5082cd754be682a85919ca27b3b5f9b71268a542c8ee8000a02865c0",
           "approved": true
         },
         "3": {
@@ -2567,7 +2567,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/prism/puzzled-attempt-01.webp",
           "path": "assets/characters/prism/animations/puzzled-variant-03.webp",
-          "sha256": "d0f7485fce2fb8345fba2303361f4d9db1b9161de7c4d9dee934f669618aacb7",
+          "sha256": "b7544ede4d3d3f40bd431c1c50861efa158ec4446ab81a50b69204f9f2899cf8",
           "approved": true
         },
         "4": {
@@ -2575,7 +2575,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/prism/puzzled-attempt-01.webp",
           "path": "assets/characters/prism/animations/puzzled-variant-04.webp",
-          "sha256": "8a135f9b208b7736181e886974f50d5daeb75c78a4ff7408617758ca6083ffa7",
+          "sha256": "9133c9d79ba554388b48a0b13ca6e19660ee6ff23e27196a3d6b6e09241d3605",
           "approved": true
         },
         "5": {
@@ -2583,7 +2583,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/prism/puzzled-attempt-01.webp",
           "path": "assets/characters/prism/animations/puzzled-variant-05.webp",
-          "sha256": "664374867a254612a646175d0470c7a32f6bde65d87ce8cde48d3c4e91603013",
+          "sha256": "9755e88da6c52e121eee5e2973ab0f5e478c606fd5f836a5f8d185092498ca29",
           "approved": true
         }
       }
@@ -2595,7 +2595,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/puddle/attentive-attempt-01.webp",
           "path": "assets/characters/puddle/animations/attentive-variant-01.webp",
-          "sha256": "bd662619de74c33b047fed63b99974e70eaeb0165c521a36d72f371539f090f9",
+          "sha256": "359fb6b07f3b10cb743b58f2ae60a35838fa06b73f309215ad73f4a8cf786f98",
           "approved": true
         },
         "2": {
@@ -2603,7 +2603,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/puddle/attentive-attempt-01.webp",
           "path": "assets/characters/puddle/animations/attentive-variant-02.webp",
-          "sha256": "101ab3867786a2b4e29d19103cfc2865a0abf6730c6aa1f52d0db56c584a421d",
+          "sha256": "99762773092ab594bb6fb92948806d3d535b2dd5d9313f4156f9d78ba390ad50",
           "approved": true
         },
         "3": {
@@ -2611,7 +2611,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/puddle/attentive-attempt-01.webp",
           "path": "assets/characters/puddle/animations/attentive-variant-03.webp",
-          "sha256": "58659f1c4691706aa1440d3a20e5dc158590e43cd7f02f6d342e6d42fad75474",
+          "sha256": "1c76fe7dba938b392e72cc4c54be66c6a6ed2791a06f2743ebe4f68dbaf98d17",
           "approved": true
         },
         "4": {
@@ -2619,7 +2619,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/puddle/attentive-attempt-01.webp",
           "path": "assets/characters/puddle/animations/attentive-variant-04.webp",
-          "sha256": "317dbb57675e9e47e10faaa414a14771a3c6e4a68d25f10e602f22d3ba905e64",
+          "sha256": "60ce1b82ee07d88207fc10b76a8200b737b3291e4e8d9f8420132a0f612b784f",
           "approved": true
         },
         "5": {
@@ -2627,7 +2627,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/puddle/attentive-attempt-01.webp",
           "path": "assets/characters/puddle/animations/attentive-variant-05.webp",
-          "sha256": "550905d76025b179c8bffd0361bbeff2c66e7956c87ea929041905a364a86543",
+          "sha256": "5eef6f01a63ebcad1c31ac1e135a04fee35b3c0631eb9165468e4204c91bc74b",
           "approved": true
         }
       },
@@ -2637,7 +2637,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/puddle/encouraging-attempt-01.webp",
           "path": "assets/characters/puddle/animations/encouraging-variant-01.webp",
-          "sha256": "22424f076660258d1812f178e7a0e6d72de621fa1a19fd834b47abab95b772c7",
+          "sha256": "ba781ac8df96058269943cea8e24df2d42b6108e4880c53f9edd6bf73ad83bfa",
           "approved": true
         },
         "2": {
@@ -2645,7 +2645,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/puddle/encouraging-attempt-01.webp",
           "path": "assets/characters/puddle/animations/encouraging-variant-02.webp",
-          "sha256": "92c4b649bdfb6c347bf05ee7946842864493be1b057959e7e8077c214b1f718f",
+          "sha256": "ccfebd561dc87d11191dd3f69638e9ede03413fd2e8ded63304383e004741019",
           "approved": true
         },
         "3": {
@@ -2653,7 +2653,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/puddle/encouraging-attempt-01.webp",
           "path": "assets/characters/puddle/animations/encouraging-variant-03.webp",
-          "sha256": "02b6c96ba3a8a88e1576a1972a00d22e0e3b93026d9d4f0ef23677979aa2be7e",
+          "sha256": "e1fa00f88184c5f86c0f942bd4b7152452095f6fbcef17256af9631ce721eb77",
           "approved": true
         },
         "4": {
@@ -2661,7 +2661,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/puddle/encouraging-attempt-01.webp",
           "path": "assets/characters/puddle/animations/encouraging-variant-04.webp",
-          "sha256": "46cfc7e3f7edad0b7bebe9ead7339719235462effc7233892362c585d258a2af",
+          "sha256": "acc1d5bc2d77fd8c101add421050ebc9fdd4be0ed01d5208afa2985b5f3557c1",
           "approved": true
         },
         "5": {
@@ -2669,7 +2669,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/puddle/encouraging-attempt-01.webp",
           "path": "assets/characters/puddle/animations/encouraging-variant-05.webp",
-          "sha256": "b44852dcd9ab449bc4cbe624c356197b4b493bce731549e4dfce0245db00c034",
+          "sha256": "32db59cb8ed69cfb521f838dce4366ad82a08a7611bce698b65ebb3a51319071",
           "approved": true
         }
       },
@@ -2679,7 +2679,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/puddle/puzzled-attempt-01.webp",
           "path": "assets/characters/puddle/animations/puzzled-variant-01.webp",
-          "sha256": "4993c6198a86df680d48a333c36d37e1fa5b68825844e9a5bd487cdb15f8dcec",
+          "sha256": "1ce45851075624c9640779d3beca4c06c55726469709e74b23cc643ef46859d0",
           "approved": true
         },
         "2": {
@@ -2687,7 +2687,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/puddle/puzzled-attempt-01.webp",
           "path": "assets/characters/puddle/animations/puzzled-variant-02.webp",
-          "sha256": "f55c0dc7f70a273953029bf5717bcc2e99cdaf144ac9f04b2ce8cbcb30076757",
+          "sha256": "209678869ab046656675760e4fd08b8076558edaadce54d2b69a623022252557",
           "approved": true
         },
         "3": {
@@ -2695,7 +2695,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/puddle/puzzled-attempt-01.webp",
           "path": "assets/characters/puddle/animations/puzzled-variant-03.webp",
-          "sha256": "8f6dd9ab16f410b111ee29dd59dc28a13bac2fbf44da687f701a9b45d462dd03",
+          "sha256": "20098b354e272b26057d6a87852dc9cb899edc674495340760c86e4759cf97b6",
           "approved": true
         },
         "4": {
@@ -2703,7 +2703,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/puddle/puzzled-attempt-01.webp",
           "path": "assets/characters/puddle/animations/puzzled-variant-04.webp",
-          "sha256": "2dc11f39473bd70207e2745c05b39416d48f167f816295e2d30b45af988f6370",
+          "sha256": "23308f547eaff1f5fca40fdbc7c729dba41c30fffe77f59413d18a8f8a64d1fa",
           "approved": true
         },
         "5": {
@@ -2711,7 +2711,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/puddle/puzzled-attempt-01.webp",
           "path": "assets/characters/puddle/animations/puzzled-variant-05.webp",
-          "sha256": "6a5cb4001e26f28ff8af317d03deb493b682458ef37de44b9d038cf88ecd0d90",
+          "sha256": "fcb0823ec9c223ab6fa7afbd883385f11940b7bd5ffd500b8130cdd043f40774",
           "approved": true
         }
       }
@@ -2723,7 +2723,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/tatter/attentive-attempt-01.webp",
           "path": "assets/characters/tatter/animations/attentive-variant-01.webp",
-          "sha256": "ba1a6cc25ad13a29ec8cd3566438649410f54999759ae7ec54f6ddd82894fd96",
+          "sha256": "af31f713a1fb2672db6a53d7672b767a879bfbeeaa686df38bd93ee86a5cf3a9",
           "approved": true
         },
         "2": {
@@ -2731,7 +2731,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/tatter/attentive-attempt-01.webp",
           "path": "assets/characters/tatter/animations/attentive-variant-02.webp",
-          "sha256": "3f29f5e688e7d3be400ddc47e06db95a7251cd8537063229d9df45981c24e805",
+          "sha256": "f14419f73abaf692ccb49b44f9e1cd27d2982f8759f4c7dd4997cec55e192a71",
           "approved": true
         },
         "3": {
@@ -2739,7 +2739,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/tatter/attentive-attempt-01.webp",
           "path": "assets/characters/tatter/animations/attentive-variant-03.webp",
-          "sha256": "bf6cb93942405a2e688f1deeb0152a17951d51c323e00a3b1d0ae7e3f571a664",
+          "sha256": "d043cb9769a0b8fdc244fbcbc19f488a2e620071e1b5118cceb700378f62211b",
           "approved": true
         },
         "4": {
@@ -2747,7 +2747,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/tatter/attentive-attempt-01.webp",
           "path": "assets/characters/tatter/animations/attentive-variant-04.webp",
-          "sha256": "4a663071f23cd548b72e3e2ac5dd28976240633a9de974463231c1930d2cfa73",
+          "sha256": "d0887f0245fd9e15117c3d8bda329d63b0658642a7ada931c13c780e164f8d0c",
           "approved": true
         },
         "5": {
@@ -2755,7 +2755,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/tatter/attentive-attempt-01.webp",
           "path": "assets/characters/tatter/animations/attentive-variant-05.webp",
-          "sha256": "433976dcfa7517923df46e51c72ea98cb42e7155232312ceb627ab49a3d40b41",
+          "sha256": "7ad5f5e2d81436741ca1530463dc407af5c756ffb800798b6b5b6458ddc4ccba",
           "approved": true
         }
       },
@@ -2765,7 +2765,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/tatter/encouraging-attempt-01.webp",
           "path": "assets/characters/tatter/animations/encouraging-variant-01.webp",
-          "sha256": "908507817e37e7eea4dcf2831f6f0ef5c49a5d912abf99f778bd99eded939c8e",
+          "sha256": "3a584133e74983855e2940758fe047ee6cbbff96eb30b0496eee03805b464483",
           "approved": true
         },
         "2": {
@@ -2773,7 +2773,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/tatter/encouraging-attempt-01.webp",
           "path": "assets/characters/tatter/animations/encouraging-variant-02.webp",
-          "sha256": "5762ed9e56d1b80f1b24dc7e7d0af38bc7d673ab8b1cb4b2b402a9c03a1aa22f",
+          "sha256": "5412af43aa92f655b277b87ef6efd9c8dcda5f8a7b2a713493eeae571f9fefad",
           "approved": true
         },
         "3": {
@@ -2781,7 +2781,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/tatter/encouraging-attempt-01.webp",
           "path": "assets/characters/tatter/animations/encouraging-variant-03.webp",
-          "sha256": "3ce86e8b7fd8d09fe60588bb463db888570d85cd0e06dfab4c0f38fa24259954",
+          "sha256": "094e2f1baee18c97f0a2f91c50806b0d91db979cdf92fb94ebf28bea6f3b7187",
           "approved": true
         },
         "4": {
@@ -2789,7 +2789,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/tatter/encouraging-attempt-01.webp",
           "path": "assets/characters/tatter/animations/encouraging-variant-04.webp",
-          "sha256": "d7a9a046c0f5a72ad569ee19443069f3f25988eb6e8195d893a959bfc1c5edb9",
+          "sha256": "48c7fc5f06e75b9acea1a3e76713d2c063b3a788c0bf2e19d7d56f7894d9e0a1",
           "approved": true
         }
       },
@@ -2799,7 +2799,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/tatter/puzzled-attempt-01.webp",
           "path": "assets/characters/tatter/animations/puzzled-variant-01.webp",
-          "sha256": "e8f449e820bec2de32dd84172fc26a101afe6dd6d22c9f65b63e1b35ecd981d1",
+          "sha256": "d0e99cd996c7c3a4aa51100afca1aac7a944d03eaef5923bc05d1298eedb7a38",
           "approved": true
         },
         "2": {
@@ -2807,7 +2807,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/tatter/puzzled-attempt-01.webp",
           "path": "assets/characters/tatter/animations/puzzled-variant-02.webp",
-          "sha256": "34054868d472d52acaa5e66dd0c39c567f1092e3b7f53ae5b16df50df1fd4b3a",
+          "sha256": "e9021bec325465da014d8a26b8d362714b077aae3aa115761d0871a33bc006a6",
           "approved": true
         },
         "3": {
@@ -2815,7 +2815,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/tatter/puzzled-attempt-01.webp",
           "path": "assets/characters/tatter/animations/puzzled-variant-03.webp",
-          "sha256": "09e4fbcf1cbd9cdf6c2b4dbde6f6ad4f1321ab164642103e1982200927307cac",
+          "sha256": "ed039f6f50548f06513ce7861a380378f768d29f6075da402116b5a406fde4b9",
           "approved": true
         },
         "4": {
@@ -2823,7 +2823,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/tatter/puzzled-attempt-01.webp",
           "path": "assets/characters/tatter/animations/puzzled-variant-04.webp",
-          "sha256": "dff32cbab0d95ecfa7a4f96eb83709c39b26419875da782ca0ff61f8bf063ffb",
+          "sha256": "51e132338eef87887edf0504230fc213f42d887cfb53f23f15583830b8f5c50d",
           "approved": true
         }
       }
@@ -2835,7 +2835,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/tock/attentive-attempt-01.webp",
           "path": "assets/characters/tock/animations/attentive-variant-01.webp",
-          "sha256": "6b2dc1b77d91633dca4844ef65d45927a135a1ed0ec549ac9fa4424b5c286393",
+          "sha256": "51db0789c006f7de8143821971f23b8a95c05335471d31f648c89a840b114bd1",
           "approved": true
         },
         "2": {
@@ -2843,7 +2843,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/tock/attentive-attempt-01.webp",
           "path": "assets/characters/tock/animations/attentive-variant-02.webp",
-          "sha256": "396406fe3facb3deadf86be402270eb674b85e0492d1e7cccf637b607e13f302",
+          "sha256": "fd94405b5f893c819a7ea01d7c994c6972c9ca9ab41c39a97af2ae8cba579cbc",
           "approved": true
         },
         "3": {
@@ -2851,7 +2851,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/tock/attentive-attempt-01.webp",
           "path": "assets/characters/tock/animations/attentive-variant-03.webp",
-          "sha256": "5ab350bfb2c99fc565875db3b6aadd4796f999ea0ed1a7903e07a2cb7067f1a2",
+          "sha256": "87710517b69dd9d3d983cc511ee45cb3017a42f70a137765a82efbb9e2d37954",
           "approved": true
         },
         "4": {
@@ -2859,7 +2859,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/tock/attentive-attempt-03.webp",
           "path": "assets/characters/tock/animations/attentive-variant-04.webp",
-          "sha256": "50b67301d29cd5eecd8237861c04a9caaca4c49d36c5937d472ee97e1d52c106",
+          "sha256": "8066a443985348e497f7d9faa9e2d08c223868aa1e86f6343d49d47be1137bcc",
           "approved": true
         },
         "5": {
@@ -2867,7 +2867,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/tock/attentive-attempt-01.webp",
           "path": "assets/characters/tock/animations/attentive-variant-05.webp",
-          "sha256": "30adbf60745861ad6593a274312f56136994075f55865e2684f29e82841c8f27",
+          "sha256": "d7f79eb382789723b3d361f0b4ec4c37570ef9edf9ac930e2f15e49434986ae1",
           "approved": true
         }
       },
@@ -2877,7 +2877,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/tock/encouraging-attempt-01.webp",
           "path": "assets/characters/tock/animations/encouraging-variant-01.webp",
-          "sha256": "f4abec954d4c76b23c0d96549795de8f9c9d49065b87d652dbeccf327fb127b4",
+          "sha256": "d042fdf493efb83ab9c2321682b0ecc6b52c457228d6f51b9c3f9c435bd77088",
           "approved": true
         },
         "2": {
@@ -2885,7 +2885,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/tock/encouraging-attempt-01.webp",
           "path": "assets/characters/tock/animations/encouraging-variant-02.webp",
-          "sha256": "d12d0abde2399261217b0c94b2e65b71ae1dd4b50be45cf98f14d3ea7541f865",
+          "sha256": "147940e454b5a278a643cf82ac87ab56f5661bc2a1b838b508bdaaa93d0e8263",
           "approved": true
         },
         "3": {
@@ -2893,7 +2893,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/tock/encouraging-attempt-01.webp",
           "path": "assets/characters/tock/animations/encouraging-variant-03.webp",
-          "sha256": "40406388f69e173ca14e890dcfb1226a6087681126db788f77eca605d719d2ca",
+          "sha256": "f4f7c264831b2920c48dcd10de4b4432547a3b77cd74d189529e61b9c21bc585",
           "approved": true
         },
         "4": {
@@ -2901,7 +2901,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/tock/encouraging-attempt-02.webp",
           "path": "assets/characters/tock/animations/encouraging-variant-04.webp",
-          "sha256": "7480bfad77bdcd4355f7a437151a56483976229d10aad12d65b8749697fabb46",
+          "sha256": "e34b9b1cbf5f88592ebcbf4edd67cd2193fcb3f88d0e1914cc1abe0105d17f66",
           "approved": true
         },
         "5": {
@@ -2909,7 +2909,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/tock/encouraging-attempt-01.webp",
           "path": "assets/characters/tock/animations/encouraging-variant-05.webp",
-          "sha256": "402a71335fc9cde767ff6627995d30c4c54692c66620e731b84d2d3291ab77a2",
+          "sha256": "7e20715a677d64d92ac2709d936e4c04e2c109097d1c194230f5ad02f5719bdd",
           "approved": true
         }
       },
@@ -2919,7 +2919,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/tock/puzzled-attempt-01.webp",
           "path": "assets/characters/tock/animations/puzzled-variant-01.webp",
-          "sha256": "ff99b85ec2128e4d8e1cd9f9f11f4bdd5178b60d6871c563fe66831aff3744ff",
+          "sha256": "b51b4aa6057764cfe7f1de3cc3e892f6c8cd7a0f4b2ca62078881249ce951a9a",
           "approved": true
         },
         "2": {
@@ -2927,7 +2927,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/tock/puzzled-attempt-01.webp",
           "path": "assets/characters/tock/animations/puzzled-variant-02.webp",
-          "sha256": "cc505535c65aa602a9e2ab9c1c0701e189c8e3b422429df44ab2a5bc84af46d6",
+          "sha256": "88c7fdc0b0a8883915ca69c1aa2cebd70fd9166c036f826cd42db1af213b5906",
           "approved": true
         },
         "3": {
@@ -2935,7 +2935,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/tock/puzzled-attempt-02.webp",
           "path": "assets/characters/tock/animations/puzzled-variant-03.webp",
-          "sha256": "4048be096d259810a5e2397264e5cfda014952d2adc682b86ca6e3a8109f2ad1",
+          "sha256": "5254549d1f3e17f550ef2e8b7b124a53ee5607d0a267ea034221da566f0ed6d3",
           "approved": true
         },
         "4": {
@@ -2943,7 +2943,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/tock/puzzled-attempt-01.webp",
           "path": "assets/characters/tock/animations/puzzled-variant-04.webp",
-          "sha256": "4634ef50d9b7500c118034e9dd043509b467462c413664043944b85e5465f256",
+          "sha256": "784e8878220754c82afb1ff35c44f7a570c3d7108d656150a8a61430c08d8098",
           "approved": true
         }
       }
@@ -2955,7 +2955,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/vela/attentive-attempt-01.webp",
           "path": "assets/characters/vela/animations/attentive-variant-01.webp",
-          "sha256": "f72ebb6bff3a0620c04a402e207c8cc8fe1fa0968a50269a40b86b661dff1a65",
+          "sha256": "1bcd8c8ba60aac28bc761d5d8f3291fa21f3dbc16c889c007f96b79c01ab076e",
           "approved": true
         },
         "2": {
@@ -2963,7 +2963,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/vela/attentive-attempt-01.webp",
           "path": "assets/characters/vela/animations/attentive-variant-02.webp",
-          "sha256": "c45bbf35e19babeb7259a123709b9ebee41a080fd1eae5567aa9854fdd1df38f",
+          "sha256": "c2d1442b3e7aa41045bf8891d9da6d87ca9b210488f7aec80a60b9a41a35408d",
           "approved": true
         },
         "3": {
@@ -2971,7 +2971,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/vela/attentive-attempt-01.webp",
           "path": "assets/characters/vela/animations/attentive-variant-03.webp",
-          "sha256": "611b72996502741a87c0b0147528430a816c150414df9273a47d2a38c478b2cb",
+          "sha256": "0642b0893bd7d46d60a3d5d99c31406044df1b7ad7abe686c78cf29d27016180",
           "approved": true
         },
         "4": {
@@ -2979,7 +2979,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/vela/attentive-attempt-01.webp",
           "path": "assets/characters/vela/animations/attentive-variant-04.webp",
-          "sha256": "d1b0942a2ae8945d7519ef4c1efc13b3dccd45c9f928408813ea94779f895ed3",
+          "sha256": "e3b7ea9ee33f31f3a1fbbcddbcd919f41f4d354f6c1b8847358ac9cce8968f50",
           "approved": true
         },
         "5": {
@@ -2987,7 +2987,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/vela/attentive-attempt-01.webp",
           "path": "assets/characters/vela/animations/attentive-variant-05.webp",
-          "sha256": "e71d9cf70c9fc54053372ddda078e835c5cb31e2772888ff553ba7fe1f0adb1e",
+          "sha256": "a7f9bc074146836608caf74b384ab754b73e8f2ae8dda6946cde3523bcfc8269",
           "approved": true
         }
       },
@@ -2997,7 +2997,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/vela/encouraging-attempt-01.webp",
           "path": "assets/characters/vela/animations/encouraging-variant-01.webp",
-          "sha256": "302eddc2966593c4ceee0f37b1f890f205543241529a87368c486cf07c278387",
+          "sha256": "d00837ddd564b699f2ba94598a88ef2d618e231a02615409b3d784433d06d6d4",
           "approved": true
         },
         "2": {
@@ -3005,7 +3005,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/vela/encouraging-attempt-01.webp",
           "path": "assets/characters/vela/animations/encouraging-variant-02.webp",
-          "sha256": "46adfebd1d98fd370d18b29822bdd9b0849fee73a4e2d8b301c9211767f35969",
+          "sha256": "56f5b2d8b59858f5519ccbc67fbfb7af407fa1bb1e7f721446923c0a44a30c1a",
           "approved": true
         },
         "3": {
@@ -3013,7 +3013,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/vela/encouraging-attempt-01.webp",
           "path": "assets/characters/vela/animations/encouraging-variant-03.webp",
-          "sha256": "36befee29b098a2bb35fa2e3aeeb7e540631b719c79df2faf46b8e38fe248397",
+          "sha256": "04c903291a129bf0f4a6db7731e4d0739afc1c5715566f83fad0ea8e03efd146",
           "approved": true
         },
         "4": {
@@ -3021,7 +3021,7 @@
           "round": 4,
           "selected_source": "reactions-round-04/runtime-candidates/vela/encouraging-attempt-01.webp",
           "path": "assets/characters/vela/animations/encouraging-variant-04.webp",
-          "sha256": "cff899874ac5a58cf2004db7be8b6586794c33c8165247d9572d336fc6827b1a",
+          "sha256": "3c21724882e4161b0148b39d7859ded4dc8aca186cd06cee275d69c2ffdee4f5",
           "approved": true
         },
         "5": {
@@ -3029,7 +3029,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/vela/encouraging-attempt-01.webp",
           "path": "assets/characters/vela/animations/encouraging-variant-05.webp",
-          "sha256": "618cce3e394335c556c4d24560067aa874c9cca4f05730a2cc7a0a6b536a1832",
+          "sha256": "89632538389e5241e4eb2346004dc611f4432246152600df9644739e1155deca",
           "approved": true
         }
       },
@@ -3039,7 +3039,7 @@
           "round": 1,
           "selected_source": "reactions-round-01/runtime-candidates/vela/puzzled-attempt-01.webp",
           "path": "assets/characters/vela/animations/puzzled-variant-01.webp",
-          "sha256": "97160c399511087e06d2025662c06194691daa14f7cb28961c51f41ed2e2a52d",
+          "sha256": "792c412391addd003899f3057d673397dbacb65cf3b4a18b37fc726e1999fc38",
           "approved": true
         },
         "2": {
@@ -3047,7 +3047,7 @@
           "round": 2,
           "selected_source": "reactions-round-02/runtime-candidates/vela/puzzled-attempt-01.webp",
           "path": "assets/characters/vela/animations/puzzled-variant-02.webp",
-          "sha256": "9898d7805bc68434a8b0d1a04c83cd439d222ae065b56f073f1052b99319d0fc",
+          "sha256": "cf0dccd64366178d2669576514814f2cf7725ed665b0fd691cc438df38ebe5b2",
           "approved": true
         },
         "3": {
@@ -3055,7 +3055,7 @@
           "round": 3,
           "selected_source": "reactions-round-03/runtime-candidates/vela/puzzled-attempt-01.webp",
           "path": "assets/characters/vela/animations/puzzled-variant-03.webp",
-          "sha256": "6f11b9354806ccb0357c95d3befa57b87857f36efac5c7e94e7d62ca997f9e21",
+          "sha256": "76ad931d84c17c2bcf0a151fa0c601b757263108ca3edcc660cd56040462c9b3",
           "approved": true
         },
         "4": {
@@ -3063,7 +3063,7 @@
           "round": 5,
           "selected_source": "reactions-round-05/runtime-candidates/vela/puzzled-attempt-01.webp",
           "path": "assets/characters/vela/animations/puzzled-variant-04.webp",
-          "sha256": "ea0925a099d5f4701e81e428d3be6451f8bdf7ffd54e082e4c2463d0b1092320",
+          "sha256": "a760a4554bdd61006d732037ba272e349e2e48df02c97b24bb22dc6193edc92e",
           "approved": true
         }
       }

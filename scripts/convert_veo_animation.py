@@ -505,7 +505,10 @@ def render_anchor_frame(anchor: Image.Image, size: int, canvas_size: int) -> Ima
     return canvas
 
 
-def _signed_distance_and_nearest_rgb(image: Image.Image) -> tuple[np.ndarray, np.ndarray]:
+def _signed_distance_and_nearest_rgba(
+    image: Image.Image,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Prepare an SDF plus edge-safe colour and coverage fields for morphing."""
     rgba = np.asarray(image.convert("RGBA"), dtype=np.uint8)
     mask = rgba[..., 3] >= 28
     if not mask.any():
@@ -513,7 +516,8 @@ def _signed_distance_and_nearest_rgb(image: Image.Image) -> tuple[np.ndarray, np
     signed_distance = ndimage.distance_transform_edt(mask) - ndimage.distance_transform_edt(~mask)
     _, indices = ndimage.distance_transform_edt(~mask, return_indices=True)
     nearest_rgb = rgba[indices[0], indices[1], :3].astype(np.float32) / 255.0
-    return signed_distance.astype(np.float32), nearest_rgb
+    nearest_alpha = rgba[indices[0], indices[1], 3].astype(np.float32) / 255.0
+    return signed_distance.astype(np.float32), nearest_rgb, nearest_alpha
 
 
 def morph_frame(start: Image.Image, end: Image.Image, t: float) -> Image.Image:
@@ -523,34 +527,41 @@ def morph_frame(start: Image.Image, end: Image.Image, t: float) -> Image.Image:
     if not 0 < t < 1:
         raise ConversionError("Morph interpolation must be strictly between zero and one")
     return _morph_prepared(
-        _signed_distance_and_nearest_rgb(start),
-        _signed_distance_and_nearest_rgb(end),
+        _signed_distance_and_nearest_rgba(start),
+        _signed_distance_and_nearest_rgba(end),
         t,
     )
 
 
 def _morph_prepared(
-    start: tuple[np.ndarray, np.ndarray],
-    end: tuple[np.ndarray, np.ndarray],
+    start: tuple[np.ndarray, np.ndarray, np.ndarray],
+    end: tuple[np.ndarray, np.ndarray, np.ndarray],
     t: float,
 ) -> Image.Image:
-    start_sdf, start_rgb = start
-    end_sdf, end_rgb = end
+    start_sdf, start_rgb, start_alpha = start
+    end_sdf, end_rgb, end_alpha = end
     interpolated_sdf = start_sdf * (1 - t) + end_sdf * t
     edge = np.clip((interpolated_sdf + 1.0) / 2.0, 0.0, 1.0)
-    alpha = edge * edge * (3.0 - 2.0 * edge)
-    # Pull colours into the new shape, premultiply, blend, then unpremultiply
-    # so feathered edge pixels cannot pick up a dark halo.
+    occupancy = edge * edge * (3.0 - 2.0 * edge)
+    start_weight = start_alpha * (1 - t)
+    end_weight = end_alpha * t
+    coverage = start_weight + end_weight
+    alpha = occupancy * coverage
+    # Extend endpoint colours only as far as the SDF needs them, then blend by
+    # their original alpha coverage. This keeps antialiasing, glows and wisps
+    # translucent instead of promoting every pixel in the thresholded mask to
+    # a fully opaque outline.
     premultiplied = (
-        start_rgb * alpha[..., None] * (1 - t)
-        + end_rgb * alpha[..., None] * t
+        start_rgb * start_weight[..., None]
+        + end_rgb * end_weight[..., None]
     )
     rgb = np.divide(
         premultiplied,
-        alpha[..., None],
+        coverage[..., None],
         out=np.zeros_like(premultiplied),
-        where=alpha[..., None] > 1e-6,
+        where=coverage[..., None] > 1e-6,
     )
+    rgb = np.where(alpha[..., None] > 1e-6, rgb, 0.0)
     rgba = np.concatenate((rgb, alpha[..., None]), axis=2)
     return Image.fromarray(np.rint(np.clip(rgba, 0, 1) * 255).astype(np.uint8), mode="RGBA")
 
@@ -563,9 +574,9 @@ def add_idle_morph_ramp(
         raise ConversionError("Cannot add an idle ramp to an empty clip")
     if any(frame.size != anchor_frame.size for frame in frames):
         raise ConversionError("Every ramp frame must share the anchor canvas")
-    anchor_prepared = _signed_distance_and_nearest_rgb(anchor_frame)
-    first_prepared = _signed_distance_and_nearest_rgb(frames[0])
-    last_prepared = _signed_distance_and_nearest_rgb(frames[-1])
+    anchor_prepared = _signed_distance_and_nearest_rgba(anchor_frame)
+    first_prepared = _signed_distance_and_nearest_rgba(frames[0])
+    last_prepared = _signed_distance_and_nearest_rgba(frames[-1])
     return [
         anchor_frame.copy(),
         *(_morph_prepared(anchor_prepared, first_prepared, t) for t in MORPH_HEAD_TIMES),
