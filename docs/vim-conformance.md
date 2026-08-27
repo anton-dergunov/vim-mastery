@@ -125,3 +125,63 @@ macros are validated through their text and cursor results because the adapter
 stores recorded Insert changes separately from its printable register text.
 Recursive macros remain optional explanatory material and are not part of the
 supported progression.
+
+## Session 01 — engine conformance spike
+
+Session 01 verified the command families that the curriculum review proposes
+before any of them is authored into a lesson. Its fixtures live in
+`conformanceFixtures` in `tests/vim-fixtures.mjs` and run on both tiers:
+`tests/native-vim.test.mjs` asserts them against real Vim, and
+`tests/editor-conformance.spec.js` replays the identical fixtures through the
+browser engine. A fixture that records an accepted divergence carries a
+`browserVerdict` holding what the engine actually does, so a future adapter
+version that closes the gap fails the test instead of passing silently.
+
+`:global`, `:copy`/`:t`, `:move`/`:m`, `:put`, and `:sort` are interpreted by
+`vim-engine.js`, not by the adapter — `executeEx` tries the app's own parsers
+before falling through to `Vim.handleEx`. `executeGlobalOperation` previously
+recognized only nested `delete`, `normal`, and `substitute` and silently
+discarded anything else, so `:g/pat/t$` was inert. It now dispatches nested
+`copy`/`move` through Vim's actual two-phase rule: every matching line is marked
+first, then the command runs on each mark in turn while the remaining marks are
+tracked across the edits. The order reversal of `:g/pat/m0` is a consequence of
+that ordering rather than a special case, and the whole run lands in one
+transaction so a single `u` undoes it. Destination addresses are parsed with the
+existing Ex address parser, so any `{addr}` works, not only the three forms the
+lessons teach.
+
+The Ex and search command lines accept `Ctrl-r{register}`, which
+`vim-engine.js` owns because the app owns the command-line text. Linewise
+register contents lose their trailing newline when inserted this way.
+
+Verified: `:g` with `:t`/`:m`; `:sort n`, `:sort u`, `:sort i`, and `:sort /pat/`;
+the read-only registers `".`, `":`, and `"/`; Insert-mode `Ctrl-r{register}`,
+`Ctrl-o`, `Ctrl-w`, and `Ctrl-u`; command-line `Ctrl-r{register}`; search as an
+operator range (`d/pat`, `y/pat`, `c?pat`) with Vim's exclusive match boundary;
+Visual Block `$` with `A`, `I`, and `d`; and `Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, and
+`g Ctrl-x` over a Visual selection. Five of these needed a versioned adapter
+patch; see `patches/README.md`.
+
+Three candidates are deliberately dropped, each with a fixture recording the
+divergence:
+
+- **Search offsets** (`/pat/e`, `/pat/+1`). The adapter reads everything after
+  an unescaped `/` as search flags and understands only `i`, so an offset is
+  discarded and the search silently succeeds at the wrong position. Honoring
+  offsets means changing query parsing, the search motion, and its
+  operator-pending inclusivity together. Search as an operator range is verified
+  without them.
+- **The `"%` register.** It is not one of the adapter's valid registers, and Vim
+  Wilds has no file name to report. Real Vim returns an empty string here too.
+- **`:global` dry runs** (`:g/pat/p`, `:g/pat/nu`). Vim leaves the buffer alone,
+  prints the matched lines, and moves the cursor to the last match. Vim Wilds
+  has no Ex output surface and the adapter has no `:print` or `:number` command
+  to delegate to, so the command is inert. Giving `:global` a preview is a
+  product change, not a conformance fix.
+
+Known debt: `AGENTS.md` states that the adapter owns Vim command interpretation,
+yet `vim-engine.js` implements `:t`, `:m`, `:put`, `:sort`, and `:global`
+itself. The cleaner arrangement is to register those as adapter Ex commands with
+`Vim.defineEx` and let the adapter's own `:global`, which already tracks line
+handles, compose them. That re-routes code every verified Unit 11 fixture
+depends on, so it was left alone here.

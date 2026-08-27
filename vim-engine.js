@@ -333,6 +333,51 @@ function compileGlobalPattern(pattern) {
   }
 }
 
+/**
+ * Vim's `:global` marks every matching line first, then runs the command on
+ * each mark in turn. `:copy` and `:move` reshape the buffer between those
+ * turns, so every pending mark has to be tracked as the lines around it shift.
+ * The order reversal of `:g/pat/m0` is a consequence of that tracking, not a
+ * special case.
+ */
+function relocateGlobalMatches(cm, { lines, marks, move, address }) {
+  let current = [...lines];
+  const pending = [...marks];
+  let cursorLine = null;
+  for (let index = 0; index < pending.length; index += 1) {
+    const mark = pending[index];
+    if (mark === null) continue;
+    const destination = parseAddress(address, 0, { cm, lines: current, currentLine: mark });
+    if (!destination || destination.index !== address.length) return null;
+    if (destination.line < -1 || destination.line >= current.length) return null;
+    if (move && destination.line === mark) {
+      cursorLine = mark;
+      continue;
+    }
+    const next = [...current];
+    const text = move ? next.splice(mark, 1)[0] : current[mark];
+    let target = destination.line;
+    if (move && target > mark) target -= 1;
+    next.splice(target + 1, 0, text);
+    for (let other = index + 1; other < pending.length; other += 1) {
+      let line = pending[other];
+      if (line === null) continue;
+      if (move) {
+        if (line === mark) {
+          pending[other] = null;
+          continue;
+        }
+        if (line > mark) line -= 1;
+      }
+      if (line > target) line += 1;
+      pending[other] = line;
+    }
+    cursorLine = target + 1;
+    current = next;
+  }
+  return cursorLine === null ? null : { lines: current, cursorLine };
+}
+
 function offsetForLineStart(lines, line) {
   return lines.slice(0, line).reduce((total, value) => total + value.length + 1, 0);
 }
@@ -375,6 +420,7 @@ export class VimEngine {
     this.lastSubstitution = null;
     this.lastSearchQuery = null;
     this.awaitingColonRegister = false;
+    this.awaitingCommandLineRegister = false;
     this.viewportRows = viewportRows;
 
     const start = offsetForPosition(text, cursor);
@@ -547,6 +593,24 @@ export class VimEngine {
     }
 
     if (this.commandLine !== null) {
+      // Vim's command line accepts `Ctrl-r{register}` to insert a register's
+      // text. `"/` and `":` make it possible to reuse a pattern that was just
+      // confirmed visually instead of retyping it.
+      if (this.awaitingCommandLineRegister) {
+        this.awaitingCommandLineRegister = false;
+        const name = literalText(vimKey);
+        const controller = Vim.getRegisterController?.();
+        if (name && controller?.isValidRegister?.(name)) {
+          this.commandLine += (controller.getRegister(name)?.toString() || "").replace(/\n$/, "");
+        }
+        this.syncCommandInput();
+        return finish(true);
+      }
+      if (vimKey === "<C-r>") {
+        this.awaitingCommandLineRegister = true;
+        this.syncCommandInput();
+        return finish(true);
+      }
       if (vimKey === "<Esc>") {
         this.closeCommandLine();
       } else if (vimKey === "<BS>") {
@@ -777,6 +841,25 @@ export class VimEngine {
       return true;
     }
 
+    const relocation = nestedCommand.match(/^(copy|co|t|move|m)(.*)$/);
+    if (relocation) {
+      const result = relocateGlobalMatches(this.cm, {
+        lines,
+        marks: matchingLines,
+        move: relocation[1][0] === "m",
+        address: relocation[2].trim(),
+      });
+      if (!result) return true;
+      const cursorColumn = Math.max(0, result.lines[result.cursorLine].search(/\S/));
+      // One transaction keeps the whole `:global` run inside a single undo
+      // step, matching Vim.
+      this.view.dispatch({
+        changes: { from: 0, to: this.view.state.doc.length, insert: result.lines.join("\n") },
+        selection: EditorSelection.cursor(offsetForLineStart(result.lines, result.cursorLine) + cursorColumn),
+      });
+      return true;
+    }
+
     return true;
   }
 
@@ -893,6 +976,7 @@ export class VimEngine {
     const input = this.cm?.state?.dialog?.querySelector("input");
     this.commandLine = null;
     this.commandPrefix = null;
+    this.awaitingCommandLineRegister = false;
     input?.blur();
   }
 

@@ -36,7 +36,7 @@ showing more rows.** Sessions 02–05 spell out how.
 
 | # | Session | Size | Depends on | Blocks |
 | --- | --- | --- | --- | --- |
-| 01 | [Engine conformance spike](01-engine-conformance-spike.md) | M | — | 03, 05, 11, 12, 13 |
+| 01 | [Engine conformance spike](01-engine-conformance-spike.md) | L | — | 03, 05, 08, 11, 12, 13 |
 | 02 | [Scale mechanics: viewport and impact readout](02-scale-mechanics.md) | M | — | 03, 04, 05 |
 
 ### Track B — Automation arc repair (the core of the review)
@@ -53,7 +53,7 @@ showing more rows.** Sessions 02–05 spell out how.
 | # | Session | Size | Depends on | Blocks |
 | --- | --- | --- | --- | --- |
 | 07 | [Unit 9: split and trim](07-unit-09-split-and-trim.md) | L | — | 18 |
-| 08 | [Unit 8: register rebalance](08-unit-08-register-rebalance.md) | M | — | 11, 18 |
+| 08 | [Unit 8: register rebalance](08-unit-08-register-rebalance.md) | M | 01 | 11, 18 |
 | 09 | [Unit 7: visual selection repair](09-unit-07-visual-repair.md) | M | — | 13, 18 |
 | 10 | [Foundations demotions and de-duplication](10-foundations-demotions.md) | M | — | 12, 18 |
 
@@ -116,7 +116,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 
 ## Progress
 
-- [ ] 01 Engine conformance spike
+- [x] 01 Engine conformance spike
 - [ ] 02 Scale mechanics
 - [ ] 03 Unit 14
 - [ ] 04 Unit 13

@@ -172,3 +172,229 @@ export const inputFixtures = Object.freeze([
     targetCursor: [1, 0],
   },
 ]);
+
+// Session 01 conformance spike. Each entry is the recorded native-Vim verdict
+// for one candidate command family. `tests/native-vim.test.mjs` asserts these
+// against real Vim and `tests/editor-conformance.spec.js` replays the same
+// fixtures through the browser engine, so a command is only ever verified when
+// both tiers agree. See docs/vim-conformance.md.
+export const conformanceFixtures = Object.freeze([
+  {
+    id: "global-copy-to-end",
+    initialCode: ["alpha TODO", "beta", "gamma TODO", "delta", "epsilon TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO/t$", "Enter"],
+    targetCode: [
+      "alpha TODO", "beta", "gamma TODO", "delta", "epsilon TODO",
+      "alpha TODO", "gamma TODO", "epsilon TODO",
+    ],
+    targetCursor: [7, 0],
+  },
+  {
+    id: "global-move-to-top-reverses-order",
+    initialCode: ["alpha TODO", "beta", "gamma TODO", "delta", "epsilon TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO/m0", "Enter"],
+    targetCode: ["epsilon TODO", "gamma TODO", "alpha TODO", "beta", "delta"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "global-move-to-end-preserves-order",
+    initialCode: ["alpha TODO", "beta", "gamma TODO", "delta", "epsilon TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO/m$", "Enter"],
+    targetCode: ["beta", "delta", "alpha TODO", "gamma TODO", "epsilon TODO"],
+    targetCursor: [4, 0],
+  },
+  {
+    // DROPPED. Session 03 wants `:g/pat/p` and `:g/pat/nu` as a dry run before
+    // a destructive `:global`. Vim leaves the buffer alone and moves the cursor
+    // to the last match while printing the matches; Vim Wilds has no Ex output
+    // surface, and the adapter has no `:print`/`:number` command to delegate
+    // to, so the command is inert. Building that surface is a product change,
+    // not a conformance fix.
+    id: "global-print-previews-matches",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO/p", "Enter"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [2, 0],
+    browserVerdict: { targetCursor: [0, 0] },
+  },
+  {
+    id: "sort-numeric-flag",
+    initialCode: ["item 10", "item 9", "item 100", "item 1"],
+    cursor: [0, 0],
+    keys: [...":%sort n", "Enter"],
+    targetCode: ["item 1", "item 9", "item 10", "item 100"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "sort-unique-flag",
+    initialCode: ["pear", "apple", "pear", "fig", "apple"],
+    cursor: [0, 0],
+    keys: [...":%sort u", "Enter"],
+    targetCode: ["apple", "fig", "pear"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "sort-pattern-sorts-on-text-after-match",
+    initialCode: ["x-charlie", "yy-alpha", "zzz-bravo"],
+    cursor: [0, 0],
+    keys: [...":%sort /.*-/", "Enter"],
+    targetCode: ["yy-alpha", "zzz-bravo", "x-charlie"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "read-only-register-last-insert",
+    initialCode: ["one", "two"],
+    cursor: [0, 0],
+    keys: ["A", "!", "Escape", "j", "A", "Ctrl-r", ".", "Escape"],
+    registerNames: ["."],
+    targetCode: ["one!", "two!"],
+    targetCursor: [1, 3],
+    targetRegisters: { ".": { text: "!", type: "characterwise" } },
+  },
+  {
+    id: "read-only-registers-last-command-and-search",
+    initialCode: ["alpha", "beta"],
+    cursor: [0, 0],
+    keys: [...":s/alpha/ALPHA/", "Enter", ..."/beta", "Enter"],
+    registerNames: [":", "/"],
+    targetCode: ["ALPHA", "beta"],
+    targetCursor: [1, 0],
+    targetRegisters: {
+      ":": { text: "s/alpha/ALPHA/", type: "characterwise" },
+      "/": { text: "beta", type: "characterwise" },
+    },
+  },
+  {
+    id: "insert-register-put-yank-zero",
+    initialCode: ["value = 42;", "other = ;"],
+    cursor: [0, 8],
+    keys: ["y", "i", "w", "j", "$", "i", "Ctrl-r", "0", "Escape"],
+    targetCode: ["value = 42;", "other = 42;"],
+    targetCursor: [1, 9],
+  },
+  {
+    id: "insert-one-normal-command",
+    initialCode: ["hello world"],
+    cursor: [0, 0],
+    keys: ["i", "X", "Ctrl-o", "$", "Y", "Escape"],
+    targetCode: ["Xhello worldY"],
+    targetCursor: [0, 12],
+  },
+  {
+    id: "insert-delete-word-before-cursor",
+    initialCode: ["alpha beta"],
+    cursor: [0, 9],
+    keys: ["A", ..." gamma", "Ctrl-w", ..."delta", "Escape"],
+    targetCode: ["alpha beta delta"],
+    targetCursor: [0, 15],
+  },
+  {
+    id: "insert-delete-inserted-text",
+    initialCode: ["keep"],
+    cursor: [0, 3],
+    keys: ["A", ..." one two", "Ctrl-u", ..."three", "Escape"],
+    targetCode: ["keepthree"],
+    targetCursor: [0, 8],
+  },
+  {
+    id: "command-line-register-reuses-search-pattern",
+    initialCode: ["old value", "old thing"],
+    cursor: [0, 0],
+    keys: [..."/old", "Enter", ...":%s/", "Ctrl-r", "/", ..."/new/g", "Enter"],
+    targetCode: ["new value", "new thing"],
+    targetCursor: [1, 0],
+  },
+  {
+    id: "delete-to-search-match-is-exclusive",
+    initialCode: ["const value = compute(input);"],
+    cursor: [0, 0],
+    keys: ["d", ..."/compute", "Enter"],
+    targetCode: ["compute(input);"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "yank-to-search-match",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 0],
+    keys: ["y", ..."/gamma", "Enter", "$", "p"],
+    targetCode: ["alpha beta gammaalpha beta "],
+    targetCursor: [0, 26],
+  },
+  {
+    id: "change-backward-to-search-match",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 15],
+    keys: ["c", ..."?beta", "Enter", "X", "Escape"],
+    targetCode: ["alpha Xa"],
+    targetCursor: [0, 6],
+  },
+  {
+    // DROPPED. The adapter reads everything after an unescaped `/` as search
+    // flags and understands only `i`, so the offset is discarded and the search
+    // silently succeeds at the wrong place. Supporting it means changing query
+    // parsing, the search motion, and its operator-pending inclusivity at once.
+    // `browserVerdict` records what the engine actually does, so this test
+    // fails loudly if a future adapter version starts honoring offsets.
+    id: "search-offset-end-is-inclusive",
+    initialCode: ["const value = compute(input);"],
+    cursor: [0, 0],
+    keys: ["d", ..."/compute/e", "Enter"],
+    targetCode: ["(input);"],
+    targetCursor: [0, 0],
+    browserVerdict: { targetCode: ["compute(input);"], targetCursor: [0, 0] },
+  },
+  {
+    // DROPPED with `search-offset-end-is-inclusive`; same cause.
+    id: "search-offset-line-forward",
+    initialCode: ["one", "two", "three", "four"],
+    cursor: [0, 0],
+    keys: [..."/three/+1", "Enter"],
+    targetCode: ["one", "two", "three", "four"],
+    targetCursor: [3, 0],
+    browserVerdict: { targetCode: ["one", "two", "three", "four"], targetCursor: [2, 0] },
+  },
+  {
+    id: "visual-block-dollar-append-ragged",
+    initialCode: ["a = 1", "bb = 22", "c = 3"],
+    cursor: [0, 0],
+    keys: ["Ctrl-v", "2", "j", "$", "A", ";", "Escape"],
+    targetCode: ["a = 1;", "bb = 22;", "c = 3;"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "visual-block-fixed-column-append-ragged",
+    initialCode: ["a = 1", "bb = 22", "c = 3"],
+    cursor: [0, 0],
+    keys: ["Ctrl-v", "2", "j", "A", ";", "Escape"],
+    targetCode: ["a; = 1", "b;b = 22", "c; = 3"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "visual-block-dollar-delete-ragged",
+    initialCode: ["aXX", "bYYYY", "cZ"],
+    cursor: [0, 1],
+    keys: ["Ctrl-v", "2", "j", "$", "d"],
+    targetCode: ["a", "b", "c"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "visual-increment-sequence",
+    initialCode: ["item 0", "item 0", "item 0", "item 0"],
+    cursor: [0, 0],
+    keys: ["V", "3", "j", "g", "Ctrl-a"],
+    targetCode: ["item 1", "item 2", "item 3", "item 4"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "visual-increment-uniform",
+    initialCode: ["item 0", "item 0", "item 0", "item 0"],
+    cursor: [0, 0],
+    keys: ["V", "3", "j", "Ctrl-a"],
+    targetCode: ["item 1", "item 1", "item 1", "item 1"],
+    targetCursor: [0, 0],
+  },
+]);

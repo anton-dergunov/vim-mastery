@@ -1,6 +1,10 @@
 # Session 05 — Units 11–12: scale and sort flags
 
 **Depends on:** 01 (`:sort` flag fixtures), 02 (viewport) · **Blocks:** 16
+
+> **Session 01 verdict.** All three flags are verified: `:sort n`, `:sort u`,
+> and `:sort /pat/` (which needed a patch — Vim sorts on the text *after* the
+> match). Nothing to drop.
 **Touches:** `content/units/11-command-line-ranges-line-operations.json`,
 `content/units/12-substitution-practical-regex.json`, `content/unit-index.json`
 **Size:** M

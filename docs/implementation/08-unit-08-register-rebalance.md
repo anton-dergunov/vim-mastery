@@ -1,8 +1,15 @@
 # Session 08 — Unit 8: register rebalance
 
-**Depends on:** nothing · **Blocks:** 11, 18
+**Depends on:** 01 (read-only register verdict) · **Blocks:** 11, 18
 **Touches:** `content/units/08-registers-putting.json`, `content/unit-index.json`
 **Size:** M
+
+> **Session 01 verdict.** `".`, `":`, and `"/` are verified. **`"%` is
+> dropped** — it is not a valid engine register and there is no file name to
+> report — so section 3 teaches three registers, not four. Ex-line
+> `Ctrl-r{register}` *is* supported, so teach the `:%s/‹Ctrl-r›//new/g` payoff
+> directly; the `:registers`-only fallback is not needed. See
+> [01](01-engine-conformance-spike.md).
 
 ## Context
 

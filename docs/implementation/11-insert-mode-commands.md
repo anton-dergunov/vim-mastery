@@ -1,6 +1,11 @@
 # Session 11 — Insert-mode command keys
 
 **Depends on:** 01 (conformance verdict), 08 (Unit 8 space freed) · **Blocks:** nothing
+
+> **Session 01 verdict.** All four keys are verified — `Ctrl-r{register}`,
+> `Ctrl-o`, `Ctrl-w`, and `Ctrl-u` (the last needed a patch; the adapter deleted
+> to the start of the line instead of the start of the insert). Command-line
+> `Ctrl-r{register}` is verified too. Nothing to drop.
 **Touches:** `content/units/03-entering-changing-text.json`,
 `content/units/08-registers-putting.json`, possibly `patches/`
 **Size:** L

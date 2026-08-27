@@ -36,3 +36,31 @@ patterns containing the active Ex delimiter remain valid with `nopcre`.
 Unit 13 extends the patch for macro conformance. Uppercase `qA` preserves and
 appends to the lowercase register, while a failed find or search aborts the
 rest of the macro and stops any remaining counted repetitions.
+
+Session 01's conformance spike extends the patch for five native-Vim mismatches
+found by `conformanceFixtures` in `tests/vim-fixtures.mjs`. Each fixture runs on
+both the native and the browser tier.
+
+- `:sort /pat/` sorted on the matched text. Vim sorts on the text that *follows*
+  the match; comparing the match itself is Vim's `r` flag, which this command
+  does not accept. Fixture: `sort-pattern-sorts-on-text-after-match`.
+- Insert-mode `Ctrl-u` deleted to the start of the line. Vim removes only the
+  text entered during the current insert, falling back to the first non-blank
+  and then to column zero. The new `deleteInsertedText` action reads the
+  `vim.insertStart` bookmark that the Unit 9 hunk already records. Fixture:
+  `insert-delete-inserted-text`.
+- That same `vim.insertStart` bookmark was created with `insertLeft: true`,
+  which the adapter maps to a *forward* association, so it drifted along with
+  the text being typed instead of staying anchored to the start of the insert.
+  It now uses the default backward association. This also makes the `'[` mark it
+  feeds point at the first inserted character, as Vim does.
+- A blockwise `d` left the cursor one column past the end of a line the delete
+  had just shortened, because `clipCursorToContent` still saw Visual mode and
+  allowed the extra column. The blockwise branch now clips to Normal-mode
+  bounds. Fixture: `visual-block-dollar-delete-ragged`.
+- `Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, and `g Ctrl-x` did nothing over a Visual
+  selection; the adapter only incremented a single number under the cursor. The
+  new `incrementNumbersInSelection` action adds the count to the first number on
+  each selected line, and the `g` variants make the addend cumulative so a
+  column of identical numbers becomes a sequence. Fixtures:
+  `visual-increment-sequence` and `visual-increment-uniform`.

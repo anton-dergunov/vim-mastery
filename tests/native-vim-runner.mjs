@@ -14,6 +14,7 @@ const specialKeys = {
   "Ctrl-r": "\\<C-r>",
   "Ctrl-u": "\\<C-u>",
   "Ctrl-v": "\\<C-v>",
+  "Ctrl-w": "\\<C-w>",
   "Ctrl-x": "\\<C-x>",
   "Ctrl-y": "\\<C-y>",
   "Ctrl-[": "\\<C-[>",

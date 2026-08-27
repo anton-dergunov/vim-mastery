@@ -1,86 +1,102 @@
 # Session 01 — Engine conformance spike
 
-**Depends on:** nothing · **Blocks:** 03, 05, 11, 12, 13
-**Touches:** `patches/`, `supported-commands.json`, `docs/vim-conformance.md`, conformance fixtures
-**Size:** M · **Authoring:** none — this session writes no lesson content
+**Status:** complete · **Depends on:** nothing · **Blocks:** 03, 05, 08, 11, 12, 13
+**Touches:** `vim-engine.js`, `patches/`, `supported-commands.json`,
+`docs/vim-conformance.md`, conformance fixtures
+**Size:** L (planned M; see "What the brief got wrong") · **Authoring:** none —
+this session wrote no lesson content
 
 ## Context
 
 The curriculum review proposes seven command families that are absent from the
 content. Before any of them is authored into a lesson, the project rule from
 `AGENTS.md` applies: *a command is supported only after it passes both the
-native-Vim fixture and the browser conformance test.* This session establishes
-which of the seven the patched `@replit/codemirror-vim` already handles, which
-need a patch, and which should be dropped.
+native-Vim fixture and the browser conformance test.* This session established
+which of them the patched `@replit/codemirror-vim` already handles, which needed
+work, and which should be dropped.
 
-Doing this as one spike avoids three later sessions each discovering an engine
-problem mid-authoring.
+## What the brief got wrong
 
-## Goal
+The original brief framed every candidate as either an adapter pass or an
+adapter patch. That is not where the Ex commands live. `executeEx` in
+`vim-engine.js` tries the app's own `:global`, `:normal`, and line-operation
+parsers *before* falling through to `Vim.handleEx`, and the adapter has no
+`:copy`/`:t`, `:move`/`:m`, or `:put` at all. `executeGlobalOperation`
+recognized only nested `delete`, `normal`, and `substitute` and silently
+discarded everything else, so `:g/pat/t$` was inert rather than "composition
+only". That candidate was app-engine work, and `vim-engine.js` was missing from
+the brief's `Touches` list.
 
-A decision, backed by fixtures, for every candidate command. Sessions 03, 05,
-11, 12, and 13 should be able to start authoring without further investigation.
+## Verdicts
 
-## Scope
+Every candidate has a fixture in `conformanceFixtures` in
+`tests/vim-fixtures.mjs`, asserted against real Vim by
+`tests/native-vim.test.mjs` and against the browser engine by
+`tests/editor-conformance.spec.js`.
 
-Write a native-Vim fixture and a browser conformance test for each candidate.
-Record the result. Where the engine diverges, add the smallest patch to
-`patches/@replit+codemirror-vim+6.3.0.patch` following the existing conventions
-in `patches/README.md`.
-
-### Candidates, in priority order
-
-| Candidate | Used by session | Prior signal |
+| Candidate | Session | Verdict |
 | --- | --- | --- |
-| `:g/pat/t$`, `:g/pat/m0`, `:g/pat/m$` | 03 | `:g`, `:t`, `:m` are each already verified — this is composition only. Expect a pass. |
-| `:sort n`, `:sort u`, `:sort /pat/` | 05 | `:sort` / `:sort!` verified; flags unverified. |
-| Read-only registers `".` `":` `"/` `"%` | 08, 11 | Engine `validRegisters` already lists `-  "  .  :  _  /  +`. Expect a pass for `.`, `:`, `/`; `%` may be absent. |
-| Insert-mode `Ctrl-r{register}` | 11 | Not present in content. Core need — patch if required. |
-| Insert-mode `Ctrl-o`, `Ctrl-w`, `Ctrl-u` | 11 | Not present in content. |
-| Search as an operator range: `d/pat⏎`, `y/pat⏎`, `c?pat⏎` | 12 | Search motions verified standalone; operator-pending pairing unverified. |
-| Search offsets `/pat/e`, `/pat/+1` | 12 | Unverified. Lower priority than the base pairing — may be deferred. |
-| Visual Block `$` (ragged right edge) | 13 | Block `I`/`A` already patched; same code path. |
-| `g Ctrl-a` over a Visual selection | 13 | `Ctrl-a`/`Ctrl-x` verified for a single number. `g Ctrl-a` likely absent. |
+| `:g/pat/t$`, `:g/pat/m0`, `:g/pat/m$` | 03 | **engine work** — `executeGlobalOperation` now dispatches nested `copy`/`move` with Vim's mark-then-execute ordering. Any `{addr}` works, not just these three. One transaction, so one `u` undoes the run. |
+| `:g/pat/p`, `:g/pat/nu` | 03 | **dropped** — no Ex output surface, and no adapter `:print`/`:number` to delegate to. See "Scope changes" below. |
+| `:sort n`, `:sort u` | 05 | **passes** |
+| `:sort /pat/` | 05 | **patched** — the adapter sorted on the matched text; Vim sorts on the text that follows it. |
+| Read-only registers `".` `":` `"/` | 08, 11 | **passes** |
+| `"%` | 08 | **dropped** — not a valid adapter register, and there is no file name to report. |
+| Insert-mode `Ctrl-r{register}`, `Ctrl-o`, `Ctrl-w` | 11 | **passes** |
+| Insert-mode `Ctrl-u` | 11 | **patched** — the adapter deleted to the start of the line instead of the start of the insert. |
+| Command-line `Ctrl-r{register}` | 08, 11 | **engine work** — added to `vim-engine.js`, which owns the command-line text. |
+| `d/pat⏎`, `y/pat⏎`, `c?pat⏎` | 12 | **passes**, with Vim's exclusive match boundary |
+| Search offsets `/pat/e`, `/pat/+1` | 12 | **dropped** — see "Scope changes". |
+| Visual Block `$` (ragged right edge) | 13 | **passes** for `A` and `I`; **patched** for `d`, which left the cursor one column past the end of a shortened line. |
+| `g Ctrl-a` over a Visual selection | 13 | **patched** — and so is plain `Ctrl-a`, which was *also* missing over a selection. |
 
-### For each candidate, produce
+Five of these needed a versioned adapter patch; `patches/README.md` records each
+hunk and the fixture that motivates it. Full reasoning, including the three
+drops, is in `docs/vim-conformance.md`.
 
-1. A native-Vim fixture capturing real Vim's buffer, cursor, and mode result.
-2. A browser conformance test asserting the same.
-3. One of three verdicts:
-   - **passes** — move to `supported-commands.json` `verified`.
-   - **patched** — smallest possible patch, documented in `patches/README.md`
-     with the session and the fixture it satisfies, then `verified`.
-   - **dropped** — record why in `docs/vim-conformance.md` and note it in this
-     file so the dependent session removes it from scope.
+## Scope changes for dependent sessions
 
-### Note on `g Ctrl-a`
-
-If this one requires a large or fragile patch, prefer dropping it over forcing
-it. It is the lowest-value item on the list. Everything above it in the table
-should be pursued harder.
+- **Session 03** — `:g/pat/t{addr}` and `:g/pat/m{addr}` are ready, including
+  the `m0` order reversal the lesson is built around. **Its dry-run material
+  needs a different mechanism:** `:g/pat/p` and `:g/pat/nu` are dropped, so the
+  acceptance criterion "dry-run and undo-grouping material is present" cannot be
+  met with `:g/pat/p`. Undo grouping is genuinely available — a whole `:g` run
+  is one transaction and one `u` undoes it — so the undo half stands. For the
+  preview half, use Unit 12's `:s///gn` counting habit as the model, or teach the
+  predicate with a `:g` that only reorders rather than deletes.
+- **Session 05** — all three `:sort` flags are available, including `/pat/`,
+  which the brief expected might be dropped. No scope reduction.
+- **Session 08** — drop `"%` from the read-only registers lesson. `".`, `":`,
+  and `"/` are verified, and Ex-line `Ctrl-r` *is* supported, so the
+  `:%s/‹Ctrl-r›//new/g` payoff the session wants can be taught directly. The
+  fallback to `:registers` inspection is not needed.
+- **Session 11** — all four Insert-mode keys are available. No scope reduction.
+- **Session 12** — ship the base operator+search pairing without offsets. The
+  lesson can still teach exclusivity, which is verified; it just cannot present
+  `/pat/e` as the fix for it. Say that offsets exist in real Vim and are not
+  practiced here, rather than implying they do not exist.
+- **Session 13** — both halves are available, and the planned contrast between
+  plain `Ctrl-a` and `g Ctrl-a` over a selection works. The brief expected
+  `g Ctrl-a` to be the likely drop; it was not.
 
 ## Out of scope
 
 - Any lesson, exercise, theory, or demo authoring.
 - Refactoring existing verified command support.
-- Multi-file or `:argdo` support — that is deliberately conceptual, see session 17.
-
-## Acceptance criteria
-
-- Every candidate has a recorded verdict.
-- `supported-commands.json` `verified` and `pending` lists reflect reality.
-- `patches/README.md` documents any new patch hunk, its motivating unit or
-  session, and its fixture.
-- This file is updated in place with the verdict table filled in, so dependent
-  sessions read scope from here.
+- Multi-file or `:argdo` support — deliberately conceptual, see session 17.
+- Giving `:global` an output surface, which is a product change.
 
 ## Validation
 
 ```bash
-node --check app.js && node --check exercise-data.js && git diff --check
+node --check app.js && node --check exercise-data.js && node --check vim-engine.js && git diff --check
 npm test
+npx playwright test tests/editor-conformance.spec.js --workers=1 --grep-invert "@exhaustive"
 ```
 
-`npm test` covers native-Vim conformance and the content checks. Follow the
-browser-process hygiene rules in `AGENTS.md`: one browser command at a time, and
-confirm no orphaned Playwright or Vite process remains afterwards.
+All node tiers pass (525 content, 7 effects, 55 native, 3 media) along with the
+browser smoke suite, and all 83 non-exhaustive browser conformance tests pass,
+which replays every canonical solution in all 14 published units. No regression
+came from the five patch hunks, including the `insertStart` association change
+that Unit 9's `'[` mark depends on and the blockwise-delete clamp that Unit 7
+exercises.

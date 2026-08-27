@@ -1,6 +1,12 @@
 # Session 12 — Search as an operator range
 
 **Depends on:** 01 (conformance verdict), 10 (Unit 5 demotions) · **Blocks:** nothing
+
+> **Session 01 verdict.** The base pairing is verified, exclusivity included.
+> **Section 2's search offsets are dropped** — the engine discards them and the
+> search silently lands in the wrong place. Ship without them, and say offsets
+> exist in real Vim but are not practiced here rather than implying they do not
+> exist. See [01](01-engine-conformance-spike.md).
 **Touches:** `content/units/05-precision-motions-search.json`, possibly `patches/`
 **Size:** M
 

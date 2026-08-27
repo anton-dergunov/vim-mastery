@@ -33,9 +33,20 @@
     "marks and navigation history (m{char}, quote and backtick marks, Ctrl-o, Ctrl-i, g;, g,, gi, gv)",
     "special position marks (., ^, [, ] with linewise quote and exact backtick jumps)",
     "structural bracket motions ([[, ]], [], ][, [{, ]}, [(, ]), [m, ]m, [M, ]M)",
-    "yank and put"
+    "yank and put",
+    "line-predicate relocation (:g/pat/t{addr}, :g/pat/m{addr}, and their :copy/:move spellings, with Vim's mark-then-execute ordering)",
+    ":sort flags (n numeric, u unique, i case-insensitive, and /pat/ sorting on the text that follows the match)",
+    "read-only registers (\". last inserted text, \": last Ex command, \"/ last search pattern)",
+    "Insert-mode command keys (Ctrl-r{register}, Ctrl-o for one Normal command, Ctrl-w, and Ctrl-u)",
+    "command-line register insertion (Ctrl-r{register} on the Ex and search prompts)",
+    "search as an operator range (d/pat, y/pat, c?pat, with Vim's exclusive match boundary)",
+    "Visual Block ragged right edge ($ with A, I, and d)",
+    "Visual increment and decrement over a selection (Ctrl-a, Ctrl-x, g Ctrl-a, g Ctrl-x)"
   ],
   "pending": [
-    "full curriculum matrix: specialized comment and preprocessor motions, replacement case conversion, and \\= replacement expressions"
+    "full curriculum matrix: specialized comment and preprocessor motions, replacement case conversion, and \\= replacement expressions",
+    "dropped: search offsets (/pat/e, /pat/+1). The adapter reads the text after an unescaped / as flags and honors only i, so an offset is discarded and the search silently lands in the wrong place. Supporting it means changing query parsing, the search motion, and its operator-pending inclusivity together.",
+    "dropped: the \"% register. It is not a valid adapter register and Vim Wilds has no file name to report.",
+    "dropped: :global dry runs (:g/pat/p, :g/pat/nu). Vim prints the matched lines; Vim Wilds has no Ex output surface and the adapter has no :print or :number command to delegate to."
   ]
 }

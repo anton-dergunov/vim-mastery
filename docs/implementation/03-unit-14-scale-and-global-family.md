@@ -1,6 +1,12 @@
 # Session 03 — Unit 14: scale and the `:global` family
 
 **Depends on:** 01 (fixtures for `:g/pat/t$`, `m0`), 02 (viewport, impact readout)
+
+> **Session 01 verdict.** `:g/pat/t{addr}` and `:g/pat/m{addr}` are verified,
+> including the `m0` order reversal, and a whole `:g` run is one undo step.
+> **`:g/pat/p` and `:g/pat/nu` are dropped** — there is no Ex output surface —
+> so section 3's dry-run material needs a different mechanism. See
+> [01](01-engine-conformance-spike.md).
 **Blocks:** 16 · **Touches:** `content/units/14-global-normal-automation.json`, `content/unit-index.json`
 **Size:** L
 

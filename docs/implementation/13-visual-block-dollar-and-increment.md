@@ -1,6 +1,11 @@
 # Session 13 — Visual Block `$` and `g Ctrl-a`
 
 **Depends on:** 01 (conformance verdict), 09 (Unit 7 restructure) · **Blocks:** nothing
+
+> **Session 01 verdict.** Both halves are verified. `g Ctrl-a` did not need to
+> be dropped — and note that plain `Ctrl-a` over a selection was *also* missing
+> and is now patched, so section 2's contrast works. Visual Block `$` needed a
+> cursor fix for `d` only; `A` and `I` already conformed.
 **Touches:** `content/units/07-visual-selection.json`, possibly `patches/`
 **Size:** M
 

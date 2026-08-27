@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { conformanceFixtures } from "./vim-fixtures.mjs";
 
 const unit = JSON.parse(readFileSync(new URL("../content/units/10-repeatable-editing.json", import.meta.url), "utf8"));
 const modalUnit = JSON.parse(readFileSync(new URL("../content/units/01-modal-model.json", import.meta.url), "utf8"));
@@ -870,6 +871,61 @@ test.describe("Production lesson flow", () => {
     for (const result of results) {
       expect(result.actual, result.id).toEqual(result.expected);
       expect(result.mode, result.id).toBe("normal");
+    }
+  });
+
+  // Session 01 engine conformance spike. The same fixtures run against real Vim
+  // in tests/native-vim.test.mjs; a candidate is verified only when both tiers
+  // agree. Fixtures carrying `browserVerdict` record a deliberate divergence
+  // from native Vim that the project has accepted — see docs/vim-conformance.md.
+  test("matches native Vim for every session 01 conformance candidate", async ({ page }) => {
+    await page.goto("/?unit=global-normal-automation");
+    const results = await page.evaluate(async fixtures => {
+      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      return fixtures.map(fixture => {
+        resetVimEngineState();
+        const host = document.createElement("div");
+        document.body.append(host);
+        const engine = new VimEngine({
+          parent: host,
+          text: fixture.initialCode.join("\n"),
+          cursor: fixture.cursor,
+          onEvent() {},
+        });
+        let error = null;
+        try {
+          fixture.keys.forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+        } catch (thrown) {
+          error = String(thrown);
+        }
+        const snapshot = engine.getSnapshot();
+        const registers = Object.fromEntries(Object.keys(fixture.targetRegisters || {})
+          .map(name => [name, snapshot.registers[name]]));
+        engine.destroy();
+        host.remove();
+        return {
+          id: fixture.id,
+          error,
+          code: snapshot.text.split("\n"),
+          cursor: snapshot.cursorPosition,
+          mode: snapshot.mode,
+          registers,
+        };
+      });
+    }, conformanceFixtures.map(fixture => ({ ...fixture })));
+
+    const byId = new Map(results.map(result => [result.id, result]));
+    for (const fixture of conformanceFixtures) {
+      const result = byId.get(fixture.id);
+      // Soft assertions so one run reports every divergence, not just the first.
+      expect.soft(result.error, fixture.id).toBeNull();
+      const expected = fixture.browserVerdict || {};
+      expect.soft(result.code, fixture.id).toEqual(expected.targetCode || fixture.targetCode);
+      expect.soft(result.cursor, fixture.id).toEqual(expected.targetCursor || fixture.targetCursor);
+      expect.soft(result.mode, fixture.id).toBe(expected.targetMode || fixture.targetMode || "normal");
+      if (fixture.targetRegisters) {
+        expect.soft(result.registers, fixture.id).toEqual(expected.targetRegisters || fixture.targetRegisters);
+      }
     }
   });
 
