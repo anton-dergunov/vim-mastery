@@ -98,7 +98,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 362);
+  assert.equal(exercises.length, 367);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -759,23 +759,24 @@ test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
 test("Unit 14 preserves the Global-Normal curriculum and complete lesson flow", () => {
   assert.deepEqual(automationUnit.curriculumDefinition, {
     unit: "14. Global and Normal automation",
-    commandsAndConcepts: "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; combined predicates and transformations",
+    commandsAndConcepts: "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; `:copy`/`:move` relocation by predicate; previewing a predicate before it runs; undo grouping; combined predicates and transformations",
     prerequisites: "Units 11–13",
-    learningOutcome: "Apply Normal-mode edits across a controlled line set and choose the lowest-risk automation mechanism",
-    representativeExercises: "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches",
+    learningOutcome: "Apply Normal-mode edits across a controlled line set, relocate matching lines, and choose the lowest-risk automation mechanism",
+    representativeExercises: "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches; gather matching lines at a chosen address",
     priorityAndPortability: "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope",
   });
   assert.deepEqual(automationUnit.prerequisiteSkillIds, [
     "command-line-ranges-line-operations", "substitution-practical-regex", "macros",
   ]);
-  assert.equal(automationUnit.lessons.length, 8);
+  assert.equal(automationUnit.lessons.length, 9);
   const activities = automationUnit.lessons.flatMap(lesson => lesson.activities);
   const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
-  assert.equal(runnableActivities.length, 32);
-  assert.equal(runnableActivities.filter(activity => activity.type === "exercise").length, 24);
+  assert.equal(runnableActivities.length, 38);
+  assert.equal(runnableActivities.filter(activity => activity.type === "exercise").length, 29);
   assert.deepEqual(automationUnit.coverage.map(item => item.concept), [
     "range application with :normal", ":normal! and visual application", ":global delete", ":vglobal inversion",
-    "global substitution", "global Normal commands", "global macro execution", "combined automation and tool choice",
+    "global substitution", "global Normal commands", "global macro execution", ":global collect and reorder",
+    "combined automation and tool choice",
   ]);
   for (const lesson of automationUnit.lessons) {
     const phases = new Set(lesson.activities.map(activity => activity.phase));

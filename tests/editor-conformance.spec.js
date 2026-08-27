@@ -719,7 +719,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 14 Global-Normal activity with native-equivalent state", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 66, exerciseCount: automationExercises.length });
+    expect(runtime).toEqual({ activityCount: 79, exerciseCount: automationExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -2287,8 +2287,8 @@ test.describe("Production lesson flow", () => {
     await page.goto("/?unit=global-normal-automation&activity=global-delete-demo");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     const removed = await state(page);
-    expect(removed.impact).toMatchObject({ lineDelta: -2 });
-    expect(removed.impactMessage).toBe("2 fewer lines");
+    expect(removed.impact).toMatchObject({ lineDelta: -6 });
+    expect(removed.impactMessage).toBe("6 fewer lines");
 
     // A one-line change inside a fully visible buffer needs no readout.
     await page.goto("/?unit=substitution-practical-regex&activity=rename-current-status");
@@ -2308,7 +2308,7 @@ test.describe("Production lesson flow", () => {
       .getPropertyValue("--execution-console-height").trim());
     const before = await height();
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    await expect(page.locator(".impact-readout")).toHaveText("2 fewer lines");
+    await expect(page.locator(".impact-readout")).toHaveText("6 fewer lines");
     expect(await height()).toBe(before);
     const layout = await page.evaluate(() => ({
       readoutVisible: document.querySelector(".impact-readout").getClientRects().length > 0,
@@ -2346,14 +2346,26 @@ test.describe("Production lesson flow", () => {
 
   test("marks every line a global command matched, including unchanged ones", async ({ page }) => {
     // `:g/TODO/normal I// ` leaves the matched lines in place, so the pattern
-    // stays live and the map keeps marking where it hits.
+    // stays live and the map keeps marking where it hits. The rail carries a
+    // tick for every match; the code slab can only highlight the visible ones.
     await page.goto("/?unit=global-normal-automation&activity=global-normal-todos");
     expect((await state(page)).matchLines).toEqual([]);
     await page.evaluate(() => window.VimWilds.solveCurrent());
     const matched = await state(page);
-    expect(matched.matchLines).toEqual([0, 2]);
-    await expect(page.locator(".cm-match-line")).toHaveCount(2);
+    expect(matched.matchLines).toEqual([1, 3, 6, 8, 11, 13, 16]);
+    await expect(page.locator(".buffer-position")).toHaveClass(/has-matches/);
+    await expect(page.locator(".match-tick")).toHaveCount(7);
+    await expect(page.locator(".cm-match-line")).toHaveCount(7);
+    // The window is the point: most of what the command reached sits outside it,
+    // and only the rail reports that.
+    const offscreen = matched.matchLines.filter(line => line < matched.viewport.topLine || line > matched.viewport.bottomLine);
+    expect(offscreen.length).toBeGreaterThan(0);
+
     // A fully visible buffer needs no rail, so the map costs nothing there.
+    await page.goto("/?unit=substitution-practical-regex&activity=count-without-changing");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page)).matchLines).toEqual([0, 1]);
+    await expect(page.locator(".cm-match-line")).toHaveCount(2);
     expect(await page.locator(".buffer-position").count()).toBe(0);
   });
 
@@ -2436,5 +2448,25 @@ test.describe("Production lesson flow", () => {
     }
     expect(drifted).toEqual([]);
     expect(windowed).toBeGreaterThanOrEqual(51);
+
+    // Unit 14 windows a long buffer purely for presentation, so it must
+    // reconstruct the authored window just as exactly while declaring no
+    // dependence on the row count.
+    await page.goto("/?unit=global-normal-automation");
+    const automationCount = await page.evaluate(() => window.VimWilds.activities.length);
+    const automationDrift = [];
+    let presentationWindows = 0;
+    for (let index = 0; index < automationCount; index += 1) {
+      await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
+      const current = await state(page);
+      if (current.setupDrift) automationDrift.push(current.setupDrift);
+      if (!current.viewport || current.viewport.totalLines === current.viewport.bottomLine - current.viewport.topLine + 1) continue;
+      presentationWindows += 1;
+      expect(current.viewportDependent, `automation activity ${index} declares no viewport dependence`).toBe(false);
+      expect(current.viewport, `automation activity ${index} opens on the authored window`)
+        .toMatchObject({ topLine: 0, bottomLine: 6 });
+    }
+    expect(automationDrift).toEqual([]);
+    expect(presentationWindows).toBe(67);
   });
 });

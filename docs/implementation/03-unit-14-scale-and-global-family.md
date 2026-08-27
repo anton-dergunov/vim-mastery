@@ -1,6 +1,6 @@
 # Session 03 — Unit 14: scale and the `:global` family
 
-**Depends on:** 01 (fixtures for `:g/pat/t$`, `m0`), 02 (viewport, impact readout)
+**Status:** complete · **Depends on:** 01 (fixtures for `:g/pat/t$`, `m0`), 02 (viewport, impact readout)
 
 > **Session 01 verdict.** `:g/pat/t{addr}` and `:g/pat/m{addr}` are verified,
 > including the `m0` order reversal, and a whole `:g` run is one undo step.
@@ -9,6 +9,50 @@
 > [01](01-engine-conformance-spike.md).
 **Blocks:** 16 · **Touches:** `content/units/14-global-normal-automation.json`, `content/unit-index.json`
 **Size:** L
+
+## What the brief got wrong
+
+Three corrections, found while executing it.
+
+**Section 5 describes a defect that does not exist.** `commandGroups[].display`
+is never rendered. `app.js` reads only `group.explanation` from the active
+group, and the command history strip is built from live engine key events, one
+`<kbd>` per key. Concatenating each Unit 14 canonical's `display` values
+reproduces its key stream byte for byte, so the spaced `s /old/ new/` form has
+never reached a learner — it was the review tooling joining display strings with
+a space. Confirmed by inspection; nothing changed. Recorded in
+[../curriculum-review-automation-focus.md](../curriculum-review-automation-focus.md)
+§3.5.
+
+**Long buffers import a 30-column line limit.** The brief asks for "16–24 buffer
+lines, using `scenario.initial.viewport`", but `initial.viewport` does nothing
+without `editor.viewportRows`, and session 02 added a 30-column authoring cap for
+every activity that sets it. So "keep line width modest" is not advice here, it
+is a hard gate: every re-authored buffer line is at most 30 characters. That
+rules out most realistic config and log line shapes and drove the whole content
+design.
+
+**The window is fixed, so small activities grew.** `viewportRows` renders that
+many rows whatever the buffer holds, and its schema minimum is 5. Unit 14 is now
+uniformly seven rows, matching Units 9 and 13 and Unit 14's own previous maximum.
+The unit's row ceiling is unchanged, which is what the phone-first constraint
+protects; activities that used to show three rows now show seven.
+
+## What replaced the dry-run material
+
+Section 3 asked for `:g/pat/p` and `:g/pat/nu`, which session 01 dropped. The
+habit is taught instead with the two mechanisms that exist, both woven into
+`global-delete` rather than given their own lesson:
+
+- `global-delete-demo` now searches `/DEBUG` and confirms it before running
+  `:g/DEBUG/delete`. The confirmed search sets the live pattern, so the match map
+  marks every matching line on the rail, including the ones below the window.
+- `preview-global-scope` is a new no-op exercise running `:%s/TEMP/TEMP/gn`,
+  the counting habit Unit 12 already teaches, now applied to a predicate.
+
+`:g/pat/p` remains worth having. It is scoped as
+[19-ex-output-surface.md](19-ex-output-surface.md), which would return it as an
+additional beat.
 
 ## Context
 

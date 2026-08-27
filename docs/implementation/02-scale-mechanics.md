@@ -1,6 +1,6 @@
 # Session 02 — Scale mechanics: viewport and impact readout
 
-**Depends on:** nothing · **Blocks:** 03, 04, 05
+**Status:** complete · **Depends on:** nothing · **Blocks:** 03, 04, 05
 **Touches:** `app.js`, `styles.css`, `content/unit-content.schema.json`, `tests/`
 **Size:** M
 

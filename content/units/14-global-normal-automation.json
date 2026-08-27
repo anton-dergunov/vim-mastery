@@ -7,10 +7,10 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "14. Global and Normal automation",
-    "commandsAndConcepts": "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; combined predicates and transformations",
+    "commandsAndConcepts": "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; `:copy`/`:move` relocation by predicate; previewing a predicate before it runs; undo grouping; combined predicates and transformations",
     "prerequisites": "Units 11–13",
-    "learningOutcome": "Apply Normal-mode edits across a controlled line set and choose the lowest-risk automation mechanism",
-    "representativeExercises": "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches",
+    "learningOutcome": "Apply Normal-mode edits across a controlled line set, relocate matching lines, and choose the lowest-risk automation mechanism",
+    "representativeExercises": "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches; gather matching lines at a chosen address",
     "priorityAndPortability": "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope"
   },
   "prerequisiteSkillIds": [
@@ -56,7 +56,7 @@
           "type": "demo",
           "phase": "demonstrate",
           "title": "Finish selected declarations",
-          "instruction": "Append a semicolon to lines 2 and 3 with one ranged Normal command.",
+          "instruction": "Append a semicolon to the eleven declaration rows with one ranged Normal command.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -65,24 +65,56 @@
                 "// settings",
                 "const port = 3000",
                 "const host = getHost()",
-                "boot()"
+                "const mode = \"prod\"",
+                "const retries = 5",
+                "const timeout = 30",
+                "const region = \"eu-west\"",
+                "const debug = false",
+                "const level = \"info\"",
+                "const cache = true",
+                "const pool = 12",
+                "const burst = 50",
+                "boot();",
+                "start();",
+                "report();",
+                "flush();",
+                "shutdown();",
+                "// end"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
                 "// settings",
                 "const port = 3000;",
                 "const host = getHost();",
-                "boot()"
+                "const mode = \"prod\";",
+                "const retries = 5;",
+                "const timeout = 30;",
+                "const region = \"eu-west\";",
+                "const debug = false;",
+                "const level = \"info\";",
+                "const cache = true;",
+                "const pool = 12;",
+                "const burst = 50;",
+                "boot();",
+                "start();",
+                "report();",
+                "flush();",
+                "shutdown();",
+                "// end"
               ],
               "cursor": [
-                2,
-                22
+                11,
+                16
               ],
               "mode": "normal"
             }
@@ -92,7 +124,8 @@
               ":",
               "2",
               ",",
-              "3",
+              "1",
+              "2",
               "n",
               "o",
               "r",
@@ -113,29 +146,43 @@
               },
               {
                 "from": 1,
-                "to": 13,
-                "display": "2,3normal A;",
+                "to": 14,
+                "display": "2,12normal A;",
                 "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
               },
               {
-                "from": 13,
-                "to": 14,
+                "from": 14,
+                "to": 15,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 14,
+                "afterStep": 15,
                 "lines": [
                   "// settings",
                   "const port = 3000;",
                   "const host = getHost();",
-                  "boot()"
+                  "const mode = \"prod\";",
+                  "const retries = 5;",
+                  "const timeout = 30;",
+                  "const region = \"eu-west\";",
+                  "const debug = false;",
+                  "const level = \"info\";",
+                  "const cache = true;",
+                  "const pool = 12;",
+                  "const burst = 50;",
+                  "boot();",
+                  "start();",
+                  "report();",
+                  "flush();",
+                  "shutdown();",
+                  "// end"
                 ],
                 "cursor": [
-                  2,
-                  22
+                  11,
+                  16
                 ],
                 "mode": "normal"
               }
@@ -170,7 +217,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -181,41 +228,72 @@
               "normal-range"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "normal-python-comments",
           "type": "exercise",
           "phase": "isolate",
           "title": "Comment a known block",
-          "instruction": "Prefix the three-row draft block with “# ”, leaving the surrounding lines alone.",
+          "instruction": "Prefix the eleven-row migration block with “# ”, leaving the import and the trailing calls alone.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "ready = True",
-                "draft = False",
-                "stale = True",
-                "legacy = False",
-                "publish()"
+                "import os",
+                "load_config()",
+                "verify_paths()",
+                "migrate_schema()",
+                "build_indexes()",
+                "compact_tables()",
+                "vacuum_storage()",
+                "analyze_stats()",
+                "write_snapshot()",
+                "publish_release()",
+                "notify_owners()",
+                "finalize_run()",
+                "report()",
+                "cleanup()",
+                "archive()",
+                "close()",
+                "exit(0)"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "ready = True",
-                "# draft = False",
-                "# stale = True",
-                "# legacy = False",
-                "publish()"
+                "import os",
+                "# load_config()",
+                "# verify_paths()",
+                "# migrate_schema()",
+                "# build_indexes()",
+                "# compact_tables()",
+                "# vacuum_storage()",
+                "# analyze_stats()",
+                "# write_snapshot()",
+                "# publish_release()",
+                "# notify_owners()",
+                "# finalize_run()",
+                "report()",
+                "cleanup()",
+                "archive()",
+                "close()",
+                "exit(0)"
               ],
               "cursor": [
-                3,
+                11,
                 1
               ],
               "mode": "normal"
@@ -226,7 +304,8 @@
               ":",
               "2",
               ",",
-              "4",
+              "1",
+              "2",
               "n",
               "o",
               "r",
@@ -248,29 +327,41 @@
               },
               {
                 "from": 1,
-                "to": 14,
-                "display": "2,4normal I# ",
+                "to": 15,
+                "display": "2,12normal I# ",
                 "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
               },
               {
-                "from": 14,
-                "to": 15,
+                "from": 15,
+                "to": 16,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 15,
+                "afterStep": 16,
                 "lines": [
-                  "ready = True",
-                  "# draft = False",
-                  "# stale = True",
-                  "# legacy = False",
-                  "publish()"
+                  "import os",
+                  "# load_config()",
+                  "# verify_paths()",
+                  "# migrate_schema()",
+                  "# build_indexes()",
+                  "# compact_tables()",
+                  "# vacuum_storage()",
+                  "# analyze_stats()",
+                  "# write_snapshot()",
+                  "# publish_release()",
+                  "# notify_owners()",
+                  "# finalize_run()",
+                  "report()",
+                  "cleanup()",
+                  "archive()",
+                  "close()",
+                  "exit(0)"
                 ],
                 "cursor": [
-                  3,
+                  11,
                   1
                 ],
                 "mode": "normal"
@@ -306,7 +397,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "python makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "python keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -317,7 +408,10 @@
               "normal-range"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "normal-css-terminators",
@@ -331,24 +425,54 @@
             "initial": {
               "lines": [
                 "color: red",
-                "display: grid",
-                "gap: 8px"
+                "margin: 0",
+                "padding: 4px",
+                "border: none",
+                "display: flex",
+                "gap: 8px",
+                "width: 100%",
+                "height: auto",
+                "font-size: 14px",
+                "line-height: 1.4",
+                "opacity: 0.9",
+                "z-index: 10",
+                "top: 0",
+                "left: 0",
+                "right: 0",
+                "bottom: 0"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
                 "color: red;",
-                "display: grid;",
-                "gap: 8px;"
+                "margin: 0;",
+                "padding: 4px;",
+                "border: none;",
+                "display: flex;",
+                "gap: 8px;",
+                "width: 100%;",
+                "height: auto;",
+                "font-size: 14px;",
+                "line-height: 1.4;",
+                "opacity: 0.9;",
+                "z-index: 10;",
+                "top: 0;",
+                "left: 0;",
+                "right: 0;",
+                "bottom: 0;"
               ],
               "cursor": [
-                2,
-                8
+                15,
+                9
               ],
               "mode": "normal"
             }
@@ -393,12 +517,25 @@
                 "afterStep": 12,
                 "lines": [
                   "color: red;",
-                  "display: grid;",
-                  "gap: 8px;"
+                  "margin: 0;",
+                  "padding: 4px;",
+                  "border: none;",
+                  "display: flex;",
+                  "gap: 8px;",
+                  "width: 100%;",
+                  "height: auto;",
+                  "font-size: 14px;",
+                  "line-height: 1.4;",
+                  "opacity: 0.9;",
+                  "z-index: 10;",
+                  "top: 0;",
+                  "left: 0;",
+                  "right: 0;",
+                  "bottom: 0;"
                 ],
                 "cursor": [
-                  2,
-                  8
+                  15,
+                  9
                 ],
                 "mode": "normal"
               }
@@ -433,7 +570,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "css makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "css keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -444,40 +581,73 @@
               "normal-range"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "normal-csv-delimiters",
           "type": "exercise",
           "phase": "challenge",
           "title": "Repair a fixed CSV range",
-          "instruction": "Replace the semicolon with a comma on the two middle rows only.",
+          "instruction": "Replace the semicolon with a comma on every data row, leaving the header alone.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "name;",
-                "alpha;",
-                "beta;",
-                "done;"
+                "name,role",
+                "ana,dev;",
+                "bob,ops;",
+                "cyd,sre;",
+                "dee,qa;",
+                "eli,dev;",
+                "fay,ops;",
+                "gus,sre;",
+                "hal,qa;",
+                "ivy,dev;",
+                "jon,ops;",
+                "kai,sre;",
+                "lee,qa;",
+                "mia,dev;",
+                "ned,ops;",
+                "ora,sre;",
+                "pat,qa;"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "name;",
-                "alpha,",
-                "beta,",
-                "done;"
+                "name,role",
+                "ana,dev,",
+                "bob,ops,",
+                "cyd,sre,",
+                "dee,qa,",
+                "eli,dev,",
+                "fay,ops,",
+                "gus,sre,",
+                "hal,qa,",
+                "ivy,dev,",
+                "jon,ops,",
+                "kai,sre,",
+                "lee,qa,",
+                "mia,dev,",
+                "ned,ops,",
+                "ora,sre,",
+                "pat,qa,"
               ],
               "cursor": [
-                2,
-                4
+                16,
+                6
               ],
               "mode": "normal"
             }
@@ -487,7 +657,8 @@
               ":",
               "2",
               ",",
-              "3",
+              "1",
+              "7",
               "n",
               "o",
               "r",
@@ -509,29 +680,42 @@
               },
               {
                 "from": 1,
-                "to": 14,
-                "display": "2,3normal $r,",
+                "to": 15,
+                "display": "2,17normal $r,",
                 "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
               },
               {
-                "from": 14,
-                "to": 15,
+                "from": 15,
+                "to": 16,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 15,
+                "afterStep": 16,
                 "lines": [
-                  "name;",
-                  "alpha,",
-                  "beta,",
-                  "done;"
+                  "name,role",
+                  "ana,dev,",
+                  "bob,ops,",
+                  "cyd,sre,",
+                  "dee,qa,",
+                  "eli,dev,",
+                  "fay,ops,",
+                  "gus,sre,",
+                  "hal,qa,",
+                  "ivy,dev,",
+                  "jon,ops,",
+                  "kai,sre,",
+                  "lee,qa,",
+                  "mia,dev,",
+                  "ned,ops,",
+                  "ora,sre,",
+                  "pat,qa,"
                 ],
                 "cursor": [
-                  2,
-                  4
+                  16,
+                  6
                 ],
                 "mode": "normal"
               }
@@ -566,7 +750,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "csv makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "csv keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -577,7 +761,10 @@
               "normal-range"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -607,24 +794,54 @@
           "scenario": {
             "initial": {
               "lines": [
-                "fetchUser();",
-                "fetchTeam();",
-                "fetchAdmin();"
+                "setup();",
+                "load();",
+                "verify();",
+                "migrate();",
+                "reindex();",
+                "compact();",
+                "vacuum();",
+                "analyze();",
+                "snapshot();",
+                "publish();",
+                "notify();",
+                "finish();",
+                "report();",
+                "cleanup();",
+                "archive();",
+                "close();"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "// fetchUser();",
-                "// fetchTeam();",
-                "// fetchAdmin();"
+                "// setup();",
+                "// load();",
+                "// verify();",
+                "// migrate();",
+                "// reindex();",
+                "// compact();",
+                "// vacuum();",
+                "// analyze();",
+                "// snapshot();",
+                "// publish();",
+                "// notify();",
+                "// finish();",
+                "// report();",
+                "// cleanup();",
+                "// archive();",
+                "// close();"
               ],
               "cursor": [
-                2,
+                15,
                 2
               ],
               "mode": "normal"
@@ -672,12 +889,25 @@
               {
                 "afterStep": 15,
                 "lines": [
-                  "// fetchUser();",
-                  "// fetchTeam();",
-                  "// fetchAdmin();"
+                  "// setup();",
+                  "// load();",
+                  "// verify();",
+                  "// migrate();",
+                  "// reindex();",
+                  "// compact();",
+                  "// vacuum();",
+                  "// analyze();",
+                  "// snapshot();",
+                  "// publish();",
+                  "// notify();",
+                  "// finish();",
+                  "// report();",
+                  "// cleanup();",
+                  "// archive();",
+                  "// close();"
                 ],
                 "cursor": [
-                  2,
+                  15,
                   2
                 ],
                 "mode": "normal"
@@ -713,7 +943,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "javascript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -724,40 +954,75 @@
               "normal-bang-visual"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "visual-normal-commas",
           "type": "exercise",
           "phase": "isolate",
           "title": "Transform a visual range",
-          "instruction": "Add a comma to the two selected mapping rows.",
-          "languageId": "yaml",
+          "instruction": "Add a comma to the eleven selected entry rows.",
+          "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "fixed: true",
-                "alpha: one",
-                "beta: two",
-                "tail: true"
+                "const names = [",
+                "  \"ana\"",
+                "  \"bob\"",
+                "  \"cyd\"",
+                "  \"dee\"",
+                "  \"eli\"",
+                "  \"fay\"",
+                "  \"gus\"",
+                "  \"hal\"",
+                "  \"ivy\"",
+                "  \"jon\"",
+                "  \"kai\"",
+                "  \"lee\",",
+                "  \"mia\",",
+                "  \"ned\",",
+                "  \"ora\",",
+                "  \"pat\"",
+                "]"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "fixed: true",
-                "alpha: one,",
-                "beta: two,",
-                "tail: true"
+                "const names = [",
+                "  \"ana\",",
+                "  \"bob\",",
+                "  \"cyd\",",
+                "  \"dee\",",
+                "  \"eli\",",
+                "  \"fay\",",
+                "  \"gus\",",
+                "  \"hal\",",
+                "  \"ivy\",",
+                "  \"jon\",",
+                "  \"kai\",",
+                "  \"lee\",",
+                "  \"mia\",",
+                "  \"ned\",",
+                "  \"ora\",",
+                "  \"pat\"",
+                "]"
               ],
               "cursor": [
-                2,
-                9
+                11,
+                7
               ],
               "mode": "normal"
             }
@@ -766,6 +1031,8 @@
             "steps": [
               "j",
               "V",
+              "1",
+              "0",
               "j",
               ":",
               "n",
@@ -794,41 +1061,55 @@
               },
               {
                 "from": 2,
-                "to": 3,
-                "display": "j",
-                "explanation": "Move one line down to extend the selection."
+                "to": 5,
+                "display": "10j",
+                "explanation": "Extend the selection over the rows that need the edit."
               },
               {
-                "from": 3,
-                "to": 4,
+                "from": 5,
+                "to": 6,
                 "display": ":",
                 "explanation": "Open Vim’s command line."
               },
               {
-                "from": 4,
-                "to": 13,
+                "from": 6,
+                "to": 15,
                 "display": "normal A,",
                 "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
               },
               {
-                "from": 13,
-                "to": 14,
+                "from": 15,
+                "to": 16,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 14,
+                "afterStep": 16,
                 "lines": [
-                  "fixed: true",
-                  "alpha: one,",
-                  "beta: two,",
-                  "tail: true"
+                  "const names = [",
+                  "  \"ana\",",
+                  "  \"bob\",",
+                  "  \"cyd\",",
+                  "  \"dee\",",
+                  "  \"eli\",",
+                  "  \"fay\",",
+                  "  \"gus\",",
+                  "  \"hal\",",
+                  "  \"ivy\",",
+                  "  \"jon\",",
+                  "  \"kai\",",
+                  "  \"lee\",",
+                  "  \"mia\",",
+                  "  \"ned\",",
+                  "  \"ora\",",
+                  "  \"pat\"",
+                  "]"
                 ],
                 "cursor": [
-                  2,
-                  9
+                  11,
+                  7
                 ],
                 "mode": "normal"
               }
@@ -863,7 +1144,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -874,41 +1155,70 @@
               "normal-bang-visual"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "normal-bang-colons",
           "type": "exercise",
           "phase": "mix",
           "title": "Replace aligned delimiters",
-          "instruction": "Replace the equals sign with a colon on the three assignment rows, leaving the header and footer alone.",
+          "instruction": "Replace the equals sign with a colon on the eleven assignment rows, leaving the header and the colon rows alone.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "header",
-                "alpha = 1",
-                "beta = 2",
-                "gamma = 3",
-                "footer"
+                "[settings]",
+                "host = local",
+                "port = 8080",
+                "mode = fast",
+                "pool = 12",
+                "burst = 50",
+                "level = info",
+                "cache = true",
+                "debug = false",
+                "retry = 5",
+                "delay = 30",
+                "quiet = true",
+                "audit: true",
+                "trace: false",
+                "strict: true",
+                "plain: true"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "header",
-                "alpha : 1",
-                "beta : 2",
-                "gamma : 3",
-                "footer"
+                "[settings]",
+                "host : local",
+                "port : 8080",
+                "mode : fast",
+                "pool : 12",
+                "burst : 50",
+                "level : info",
+                "cache : true",
+                "debug : false",
+                "retry : 5",
+                "delay : 30",
+                "quiet : true",
+                "audit: true",
+                "trace: false",
+                "strict: true",
+                "plain: true"
               ],
               "cursor": [
-                3,
+                11,
                 6
               ],
               "mode": "normal"
@@ -919,7 +1229,8 @@
               ":",
               "2",
               ",",
-              "4",
+              "1",
+              "2",
               "n",
               "o",
               "r",
@@ -944,29 +1255,40 @@
               },
               {
                 "from": 1,
-                "to": 17,
-                "display": "2,4normal! 0f=r:",
+                "to": 18,
+                "display": "2,12normal! 0f=r:",
                 "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
               },
               {
-                "from": 17,
-                "to": 18,
+                "from": 18,
+                "to": 19,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 18,
+                "afterStep": 19,
                 "lines": [
-                  "header",
-                  "alpha : 1",
-                  "beta : 2",
-                  "gamma : 3",
-                  "footer"
+                  "[settings]",
+                  "host : local",
+                  "port : 8080",
+                  "mode : fast",
+                  "pool : 12",
+                  "burst : 50",
+                  "level : info",
+                  "cache : true",
+                  "debug : false",
+                  "retry : 5",
+                  "delay : 30",
+                  "quiet : true",
+                  "audit: true",
+                  "trace: false",
+                  "strict: true",
+                  "plain: true"
                 ],
                 "cursor": [
-                  3,
+                  11,
                   6
                 ],
                 "mode": "normal"
@@ -1002,7 +1324,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "toml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "toml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1013,38 +1335,71 @@
               "normal-bang-visual"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "normal-bang-markers",
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove list markers",
-          "instruction": "Remove the hyphen from all three list items while preserving their indentation.",
+          "instruction": "Remove the hyphen from every list item.",
           "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "  - alpha",
-                "  - beta",
-                "  - gamma"
+                "-alpha",
+                "-bravo",
+                "-charlie",
+                "-delta",
+                "-echo",
+                "-foxtrot",
+                "-golf",
+                "-hotel",
+                "-india",
+                "-juliet",
+                "-kilo",
+                "-lima",
+                "-mike",
+                "-november",
+                "-oscar",
+                "-papa"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "   alpha",
-                "   beta",
-                "   gamma"
+                "alpha",
+                "bravo",
+                "charlie",
+                "delta",
+                "echo",
+                "foxtrot",
+                "golf",
+                "hotel",
+                "india",
+                "juliet",
+                "kilo",
+                "lima",
+                "mike",
+                "november",
+                "oscar",
+                "papa"
               ],
               "cursor": [
-                2,
-                2
+                15,
+                0
               ],
               "mode": "normal"
             }
@@ -1089,13 +1444,26 @@
               {
                 "afterStep": 13,
                 "lines": [
-                  "   alpha",
-                  "   beta",
-                  "   gamma"
+                  "alpha",
+                  "bravo",
+                  "charlie",
+                  "delta",
+                  "echo",
+                  "foxtrot",
+                  "golf",
+                  "hotel",
+                  "india",
+                  "juliet",
+                  "kilo",
+                  "lima",
+                  "mike",
+                  "november",
+                  "oscar",
+                  "papa"
                 ],
                 "cursor": [
-                  2,
-                  2
+                  15,
+                  0
                 ],
                 "mode": "normal"
               }
@@ -1130,7 +1498,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "markdown makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "markdown keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1141,7 +1509,10 @@
               "normal-bang-visual"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -1155,42 +1526,72 @@
           "type": "theory",
           "phase": "explain",
           "title": "Run an Ex command on matching lines",
-          "body": "`:global` (or `:g`) finds lines that match a pattern, then runs an Ex command on each one. Without a range, it checks the whole file.",
+          "body": "`:global` (or `:g`) finds lines that match a pattern, then runs an Ex command on each one. Without a range, it checks the whole file. Confirm the pattern with a search or a counting substitution first: the marks show which lines it selects, including the ones outside the window.",
           "grammar": "[range]g/pattern/delete",
-          "contrast": "The `g` in `:global` selects lines; it is unrelated to the `g` substitution flag.",
+          "contrast": "The `g` in `:global` selects lines; it is unrelated to the `g` substitution flag. Preview before deleting, because the matches you cannot see are deleted too.",
           "demoRef": "global-delete-demo"
         },
         {
           "id": "global-delete-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Remove debug records",
-          "instruction": "Delete every line containing `DEBUG` with `:global`.",
+          "title": "Preview, then remove debug records",
+          "instruction": "Mark the DEBUG rows with a search first, then delete them with `:global`.",
           "languageId": "log",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "INFO start",
-                "DEBUG cache miss",
-                "INFO retry",
-                "DEBUG payload",
-                "INFO done"
+                "INFO boot ok",
+                "DEBUG cache warm",
+                "INFO route ready",
+                "INFO db pool open",
+                "DEBUG token hit",
+                "WARN retry queued",
+                "INFO job started",
+                "DEBUG frame sent",
+                "INFO job finished",
+                "WARN slow response",
+                "DEBUG flush pending",
+                "INFO cache hit",
+                "INFO route closed",
+                "DEBUG idle tick",
+                "WARN disk low",
+                "INFO job resumed",
+                "DEBUG frame acked",
+                "INFO db pool shut",
+                "INFO boot done",
+                "INFO exit clean"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "INFO start",
-                "INFO retry",
-                "INFO done"
+                "INFO boot ok",
+                "INFO route ready",
+                "INFO db pool open",
+                "WARN retry queued",
+                "INFO job started",
+                "INFO job finished",
+                "WARN slow response",
+                "INFO cache hit",
+                "INFO route closed",
+                "WARN disk low",
+                "INFO job resumed",
+                "INFO db pool shut",
+                "INFO boot done",
+                "INFO exit clean"
               ],
               "cursor": [
-                2,
+                11,
                 0
               ],
               "mode": "normal"
@@ -1198,6 +1599,13 @@
           },
           "script": {
             "steps": [
+              "/",
+              "D",
+              "E",
+              "B",
+              "U",
+              "G",
+              "Enter",
               ":",
               "g",
               "/",
@@ -1218,33 +1626,56 @@
             "commandGroups": [
               {
                 "from": 0,
-                "to": 1,
+                "to": 6,
+                "display": "/DEBUG",
+                "explanation": "Search the pattern first so the match map marks every line the predicate will select, including the ones below the window."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "↵",
+                "explanation": "Confirm the search and read the scope before changing anything."
+              },
+              {
+                "from": 7,
+                "to": 8,
                 "display": ":",
                 "explanation": "Open Vim’s command line."
               },
               {
-                "from": 1,
-                "to": 15,
+                "from": 8,
+                "to": 22,
                 "display": "g/DEBUG/delete",
                 "explanation": "Choose matching lines and enter the operation to apply to them."
               },
               {
-                "from": 15,
-                "to": 16,
+                "from": 22,
+                "to": 23,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 16,
+                "afterStep": 23,
                 "lines": [
-                  "INFO start",
-                  "INFO retry",
-                  "INFO done"
+                  "INFO boot ok",
+                  "INFO route ready",
+                  "INFO db pool open",
+                  "WARN retry queued",
+                  "INFO job started",
+                  "INFO job finished",
+                  "WARN slow response",
+                  "INFO cache hit",
+                  "INFO route closed",
+                  "WARN disk low",
+                  "INFO job resumed",
+                  "INFO db pool shut",
+                  "INFO boot done",
+                  "INFO exit clean"
                 ],
                 "cursor": [
-                  2,
+                  11,
                   0
                 ],
                 "mode": "normal"
@@ -1252,9 +1683,9 @@
             ]
           },
           "hints": [
-            "Identify the exact line set before choosing the transformation.",
-            "Read the outer range or predicate separately from the inner command.",
-            "Use `:g/DEBUG/delete`."
+            "A confirmed search marks every matching line, including the ones below the window.",
+            "Read the scope the predicate selects before you give it an operation.",
+            "Search `/DEBUG`, then run `:g/DEBUG/delete`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -1280,7 +1711,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "log keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1291,39 +1722,280 @@
               "global-delete"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
-          "id": "global-delete-comments",
+          "id": "preview-global-scope",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Delete comment-only lines",
-          "instruction": "Remove every comment-only row.",
-          "languageId": "python",
+          "title": "Measure the predicate first",
+          "instruction": "Count how many rows a TEMP predicate would reach, without changing the buffer.",
+          "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "value = 1",
-                "# stale note",
-                "next_value = 2",
-                "# remove me",
-                "return next_value"
+                "build start",
+                "TEMP scratch a",
+                "copy assets",
+                "TEMP scratch b",
+                "link modules",
+                "compile core",
+                "TEMP scratch c",
+                "run tests",
+                "TEMP scratch d",
+                "bundle web",
+                "sign package",
+                "TEMP scratch e",
+                "upload dist",
+                "notify team",
+                "TEMP scratch f",
+                "tag release",
+                "write notes",
+                "TEMP scratch g",
+                "verify hash",
+                "build done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "build start",
+                "TEMP scratch a",
+                "copy assets",
+                "TEMP scratch b",
+                "link modules",
+                "compile core",
+                "TEMP scratch c",
+                "run tests",
+                "TEMP scratch d",
+                "bundle web",
+                "sign package",
+                "TEMP scratch e",
+                "upload dist",
+                "notify team",
+                "TEMP scratch f",
+                "tag release",
+                "write notes",
+                "TEMP scratch g",
+                "verify hash",
+                "build done"
               ],
               "cursor": [
                 0,
                 0
               ],
               "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "T",
+              "E",
+              "M",
+              "P",
+              "/",
+              "T",
+              "E",
+              "M",
+              "P",
+              "/",
+              "g",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
+              },
+              {
+                "from": 3,
+                "to": 9,
+                "display": "/TEMP/",
+                "explanation": "Enter the pattern whose reach you want to measure."
+              },
+              {
+                "from": 9,
+                "to": 14,
+                "display": "TEMP/",
+                "explanation": "Replace the pattern with itself so nothing can change."
+              },
+              {
+                "from": 14,
+                "to": 16,
+                "display": "gn",
+                "explanation": "Count every match on every line instead of editing."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "lines": [
+                  "build start",
+                  "TEMP scratch a",
+                  "copy assets",
+                  "TEMP scratch b",
+                  "link modules",
+                  "compile core",
+                  "TEMP scratch c",
+                  "run tests",
+                  "TEMP scratch d",
+                  "bundle web",
+                  "sign package",
+                  "TEMP scratch e",
+                  "upload dist",
+                  "notify team",
+                  "TEMP scratch f",
+                  "tag release",
+                  "write notes",
+                  "TEMP scratch g",
+                  "verify hash",
+                  "build done"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The safest first move against an unfamiliar buffer changes nothing.",
+            "A substitution can report its reach instead of applying it.",
+            "Use `:%s/TEMP/TEMP/gn`."
+          ],
+          "feedback": {
+            "success": "The count arrived and the buffer is untouched.",
+            "why": "`n` reports how far a pattern reaches without editing, so a predicate can be checked before `:global` acts on it."
+          },
+          "skills": {
+            "primary": [
+              "count-only-flag"
+            ],
+            "supporting": [
+              "global-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "preview",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log gives scattered temporary rows a realistic reason to exist.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "count-only-flag"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "global-delete-comments",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Delete comment-only lines",
+          "instruction": "Remove every comment-only row from the configuration.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# service configuration",
+                "name = gateway",
+                "port = 8080",
+                "# tuning",
+                "workers = 4",
+                "timeout = 30",
+                "retries = 5",
+                "# feature flags",
+                "beta_ui = false",
+                "audit_log = true",
+                "# storage",
+                "driver = postgres",
+                "pool_size = 12",
+                "# limits",
+                "max_body = 1048576",
+                "rate_limit = 200",
+                "# logging",
+                "level = info",
+                "format = json",
+                "ready = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "value = 1",
-                "next_value = 2",
-                "return next_value"
+                "name = gateway",
+                "port = 8080",
+                "workers = 4",
+                "timeout = 30",
+                "retries = 5",
+                "beta_ui = false",
+                "audit_log = true",
+                "driver = postgres",
+                "pool_size = 12",
+                "max_body = 1048576",
+                "rate_limit = 200",
+                "level = info",
+                "format = json",
+                "ready = true"
               ],
               "cursor": [
-                2,
+                11,
                 0
               ],
               "mode": "normal"
@@ -1364,12 +2036,23 @@
               {
                 "afterStep": 8,
                 "lines": [
-                  "value = 1",
-                  "next_value = 2",
-                  "return next_value"
+                  "name = gateway",
+                  "port = 8080",
+                  "workers = 4",
+                  "timeout = 30",
+                  "retries = 5",
+                  "beta_ui = false",
+                  "audit_log = true",
+                  "driver = postgres",
+                  "pool_size = 12",
+                  "max_body = 1048576",
+                  "rate_limit = 200",
+                  "level = info",
+                  "format = json",
+                  "ready = true"
                 ],
                 "cursor": [
-                  2,
+                  11,
                   0
                 ],
                 "mode": "normal"
@@ -1405,7 +2088,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "python makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "toml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1416,7 +2099,10 @@
               "global-delete"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "range-global-delete",
@@ -1429,30 +2115,57 @@
           "scenario": {
             "initial": {
               "lines": [
-                "TEMP outside",
-                "keep one",
-                "TEMP inner",
-                "keep two",
-                "TEMP inner two",
-                "keep three",
-                "TEMP outside"
+                "run start",
+                "stage one",
+                "TEMP scratch a",
+                "stage two",
+                "verify one",
+                "TEMP scratch b",
+                "stage three",
+                "verify two",
+                "TEMP scratch c",
+                "stage four",
+                "verify three",
+                "TEMP scratch d",
+                "stage five",
+                "verify four",
+                "TEMP scratch e",
+                "stage six",
+                "verify five",
+                "TEMP keep me",
+                "stage seven",
+                "run done"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "TEMP outside",
-                "keep one",
-                "keep two",
-                "keep three",
-                "TEMP outside"
+                "run start",
+                "stage one",
+                "stage two",
+                "verify one",
+                "stage three",
+                "verify two",
+                "stage four",
+                "verify three",
+                "stage five",
+                "verify four",
+                "stage six",
+                "verify five",
+                "TEMP keep me",
+                "stage seven",
+                "run done"
               ],
               "cursor": [
-                3,
+                10,
                 0
               ],
               "mode": "normal"
@@ -1463,6 +2176,7 @@
               ":",
               "2",
               ",",
+              "1",
               "6",
               "g",
               "/",
@@ -1483,29 +2197,39 @@
               },
               {
                 "from": 1,
-                "to": 12,
-                "display": "2,6g/TEMP/d",
+                "to": 13,
+                "display": "2,16g/TEMP/d",
                 "explanation": "Choose matching lines and enter the operation to apply to them."
               },
               {
-                "from": 12,
-                "to": 13,
+                "from": 13,
+                "to": 14,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 13,
+                "afterStep": 14,
                 "lines": [
-                  "TEMP outside",
-                  "keep one",
-                  "keep two",
-                  "keep three",
-                  "TEMP outside"
+                  "run start",
+                  "stage one",
+                  "stage two",
+                  "verify one",
+                  "stage three",
+                  "verify two",
+                  "stage four",
+                  "verify three",
+                  "stage five",
+                  "verify four",
+                  "stage six",
+                  "verify five",
+                  "TEMP keep me",
+                  "stage seven",
+                  "run done"
                 ],
                 "cursor": [
-                  3,
+                  10,
                   0
                 ],
                 "mode": "normal"
@@ -1541,7 +2265,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "log keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1552,7 +2276,10 @@
               "global-delete"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-delete-alternation",
@@ -1560,31 +2287,59 @@
           "phase": "challenge",
           "title": "Remove two debt markers",
           "instruction": "Remove both the TODO and FIXME rows.",
-          "languageId": "javascript",
+          "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "ship()",
-                "TODO remove shim",
-                "keep()",
-                "FIXME old branch",
-                "done()"
+                "import core from \"core\"",
+                "// TODO wire retries",
+                "const port = 8080",
+                "// FIXME null guard",
+                "const host = \"local\"",
+                "function boot() {",
+                "// TODO add metrics",
+                "  return init()",
+                "}",
+                "// FIXME leaky handle",
+                "const pool = 12",
+                "function stop() {",
+                "// TODO drain queue",
+                "  return halt()",
+                "}",
+                "// FIXME retry storm",
+                "const level = \"info\"",
+                "// TODO check limits",
+                "export default boot",
+                "// FIXME slow path"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "ship()",
-                "keep()",
-                "done()"
+                "import core from \"core\"",
+                "const port = 8080",
+                "const host = \"local\"",
+                "function boot() {",
+                "  return init()",
+                "}",
+                "const pool = 12",
+                "function stop() {",
+                "  return halt()",
+                "}",
+                "const level = \"info\"",
+                "export default boot"
               ],
               "cursor": [
-                2,
+                11,
                 0
               ],
               "mode": "normal"
@@ -1634,12 +2389,21 @@
               {
                 "afterStep": 17,
                 "lines": [
-                  "ship()",
-                  "keep()",
-                  "done()"
+                  "import core from \"core\"",
+                  "const port = 8080",
+                  "const host = \"local\"",
+                  "function boot() {",
+                  "  return init()",
+                  "}",
+                  "const pool = 12",
+                  "function stop() {",
+                  "  return halt()",
+                  "}",
+                  "const level = \"info\"",
+                  "export default boot"
                 ],
                 "cursor": [
-                  2,
+                  11,
                   0
                 ],
                 "mode": "normal"
@@ -1675,7 +2439,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1686,7 +2450,10 @@
               "global-delete"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -1700,7 +2467,7 @@
           "type": "theory",
           "phase": "explain",
           "title": "Run a command on lines that do not match",
-          "body": "`:vglobal` (or `:v`) selects lines that do not match a pattern. It is often clearer than writing a complicated negative pattern.",
+          "body": "`:vglobal` (or `:v`) selects lines that do not match a pattern. It is often clearer than writing a complicated negative pattern. It is also the easiest predicate to get backwards, so preview it before it deletes anything.",
           "grammar": "[range]v/pattern/command",
           "contrast": "State the lines you intend to preserve before using inverse deletion.",
           "demoRef": "vglobal-demo"
@@ -1716,24 +2483,46 @@
           "scenario": {
             "initial": {
               "lines": [
-                "keep alpha",
-                "drop beta",
-                "keep gamma",
-                "gone delta"
+                "line noise a",
+                "keep boot ok",
+                "line noise b",
+                "line noise c",
+                "keep route ready",
+                "line noise d",
+                "line noise e",
+                "keep db open",
+                "line noise f",
+                "keep job done",
+                "line noise g",
+                "line noise h",
+                "keep cache hit",
+                "line noise i",
+                "keep exit clean",
+                "line noise j",
+                "line noise k",
+                "line noise l"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "keep alpha",
-                "keep gamma"
+                "keep boot ok",
+                "keep route ready",
+                "keep db open",
+                "keep job done",
+                "keep cache hit",
+                "keep exit clean"
               ],
               "cursor": [
-                1,
+                5,
                 0
               ],
               "mode": "normal"
@@ -1781,11 +2570,15 @@
               {
                 "afterStep": 15,
                 "lines": [
-                  "keep alpha",
-                  "keep gamma"
+                  "keep boot ok",
+                  "keep route ready",
+                  "keep db open",
+                  "keep job done",
+                  "keep cache hit",
+                  "keep exit clean"
                 ],
                 "cursor": [
-                  1,
+                  5,
                   0
                 ],
                 "mode": "normal"
@@ -1821,7 +2614,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "prose makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "prose keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1832,7 +2625,10 @@
               "vglobal"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "vglobal-exports",
@@ -1840,29 +2636,52 @@
           "phase": "isolate",
           "title": "Keep exported declarations",
           "instruction": "Remove every row that is not an exported declaration.",
-          "languageId": "javascript",
+          "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "export const api = 1",
-                "const local = 2",
-                "export const ui = 3",
-                "function helper() {}"
+                "import fs from \"fs\"",
+                "export const a = 1",
+                "const helper = 2",
+                "export const b = 3",
+                "function inner() {}",
+                "export const c = 4",
+                "const scratch = 5",
+                "export function d() {}",
+                "let temp = 6",
+                "export function e() {}",
+                "const cache = 7",
+                "export const f = 8",
+                "const local = 9",
+                "export const g = 10",
+                "const draft = 11",
+                "function last() {}",
+                "const tail = 12",
+                "// end of module"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "export const api = 1",
-                "export const ui = 3"
+                "export const a = 1",
+                "export const b = 3",
+                "export const c = 4",
+                "export function d() {}",
+                "export function e() {}",
+                "export const f = 8",
+                "export const g = 10"
               ],
               "cursor": [
-                1,
+                6,
                 0
               ],
               "mode": "normal"
@@ -1913,11 +2732,16 @@
               {
                 "afterStep": 18,
                 "lines": [
-                  "export const api = 1",
-                  "export const ui = 3"
+                  "export const a = 1",
+                  "export const b = 3",
+                  "export const c = 4",
+                  "export function d() {}",
+                  "export function e() {}",
+                  "export const f = 8",
+                  "export const g = 10"
                 ],
                 "cursor": [
-                  1,
+                  6,
                   0
                 ],
                 "mode": "normal"
@@ -1953,7 +2777,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -1964,7 +2788,10 @@
               "vglobal"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "range-vglobal-enabled",
@@ -1977,28 +2804,51 @@
           "scenario": {
             "initial": {
               "lines": [
-                "header",
-                "alpha enabled",
-                "beta disabled",
-                "gamma enabled",
-                "delta disabled",
-                "footer"
+                "# services",
+                "alpha: enabled",
+                "bravo: off",
+                "gamma: enabled",
+                "delta: off",
+                "echo: enabled",
+                "fox: off",
+                "golf: enabled",
+                "hotel: off",
+                "india: enabled",
+                "juliet: off",
+                "kilo: enabled",
+                "lima: off",
+                "mike: enabled",
+                "nov: off",
+                "oscar: enabled",
+                "papa: off",
+                "# end"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "header",
-                "alpha enabled",
-                "gamma enabled",
-                "footer"
+                "# services",
+                "alpha: enabled",
+                "gamma: enabled",
+                "echo: enabled",
+                "golf: enabled",
+                "india: enabled",
+                "kilo: enabled",
+                "mike: enabled",
+                "oscar: enabled",
+                "papa: off",
+                "# end"
               ],
               "cursor": [
-                3,
+                8,
                 0
               ],
               "mode": "normal"
@@ -2009,7 +2859,8 @@
               ":",
               "2",
               ",",
-              "5",
+              "1",
+              "6",
               "v",
               "/",
               "e",
@@ -2032,28 +2883,35 @@
               },
               {
                 "from": 1,
-                "to": 15,
-                "display": "2,5v/enabled/d",
+                "to": 16,
+                "display": "2,16v/enabled/d",
                 "explanation": "Choose matching lines and enter the operation to apply to them."
               },
               {
-                "from": 15,
-                "to": 16,
+                "from": 16,
+                "to": 17,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 16,
+                "afterStep": 17,
                 "lines": [
-                  "header",
-                  "alpha enabled",
-                  "gamma enabled",
-                  "footer"
+                  "# services",
+                  "alpha: enabled",
+                  "gamma: enabled",
+                  "echo: enabled",
+                  "golf: enabled",
+                  "india: enabled",
+                  "kilo: enabled",
+                  "mike: enabled",
+                  "oscar: enabled",
+                  "papa: off",
+                  "# end"
                 ],
                 "cursor": [
-                  3,
+                  8,
                   0
                 ],
                 "mode": "normal"
@@ -2089,7 +2947,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "yaml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -2100,7 +2958,10 @@
               "vglobal"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "vglobal-errors",
@@ -2113,25 +2974,48 @@
           "scenario": {
             "initial": {
               "lines": [
-                "INFO start",
-                "ERROR disk",
-                "DEBUG retry",
-                "ERROR network",
-                "INFO done"
+                "INFO boot ok",
+                "ERROR db refused",
+                "INFO retry queued",
+                "INFO route ready",
+                "ERROR token expired",
+                "INFO cache warm",
+                "INFO job started",
+                "ERROR disk full",
+                "INFO job finished",
+                "INFO route closed",
+                "ERROR socket reset",
+                "INFO cache hit",
+                "INFO db pool open",
+                "ERROR write failed",
+                "INFO flush done",
+                "INFO idle tick",
+                "ERROR auth denied",
+                "INFO boot done",
+                "INFO exit clean",
+                "INFO shutdown ok"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "ERROR disk",
-                "ERROR network"
+                "ERROR db refused",
+                "ERROR token expired",
+                "ERROR disk full",
+                "ERROR socket reset",
+                "ERROR write failed",
+                "ERROR auth denied"
               ],
               "cursor": [
-                1,
+                5,
                 0
               ],
               "mode": "normal"
@@ -2175,11 +3059,15 @@
               {
                 "afterStep": 11,
                 "lines": [
-                  "ERROR disk",
-                  "ERROR network"
+                  "ERROR db refused",
+                  "ERROR token expired",
+                  "ERROR disk full",
+                  "ERROR socket reset",
+                  "ERROR write failed",
+                  "ERROR auth denied"
                 ],
                 "cursor": [
-                  1,
+                  5,
                   0
                 ],
                 "mode": "normal"
@@ -2215,7 +3103,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "log keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -2226,7 +3114,10 @@
               "vglobal"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -2251,29 +3142,59 @@
           "phase": "demonstrate",
           "title": "Activate ready flags",
           "instruction": "On `ready` lines only, substitute `enabled` with `active`.",
-          "languageId": "toml",
+          "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "enabled ready",
-                "enabled draft",
-                "enabled ready"
+                "alpha: ready enabled",
+                "bravo: idle enabled",
+                "gamma: ready enabled",
+                "delta: idle enabled",
+                "echo: ready enabled",
+                "fox: idle enabled",
+                "golf: ready enabled",
+                "hotel: idle enabled",
+                "india: ready enabled",
+                "juliet: idle enabled",
+                "kilo: ready enabled",
+                "lima: idle enabled",
+                "mike: idle enabled",
+                "nov: idle enabled",
+                "oscar: idle enabled",
+                "# end"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "active ready",
-                "enabled draft",
-                "active ready"
+                "alpha: ready active",
+                "bravo: idle enabled",
+                "gamma: ready active",
+                "delta: idle enabled",
+                "echo: ready active",
+                "fox: idle enabled",
+                "golf: ready active",
+                "hotel: idle enabled",
+                "india: ready active",
+                "juliet: idle enabled",
+                "kilo: ready active",
+                "lima: idle enabled",
+                "mike: idle enabled",
+                "nov: idle enabled",
+                "oscar: idle enabled",
+                "# end"
               ],
               "cursor": [
-                2,
+                10,
                 0
               ],
               "mode": "normal"
@@ -2345,12 +3266,25 @@
               {
                 "afterStep": 27,
                 "lines": [
-                  "active ready",
-                  "enabled draft",
-                  "active ready"
+                  "alpha: ready active",
+                  "bravo: idle enabled",
+                  "gamma: ready active",
+                  "delta: idle enabled",
+                  "echo: ready active",
+                  "fox: idle enabled",
+                  "golf: ready active",
+                  "hotel: idle enabled",
+                  "india: ready active",
+                  "juliet: idle enabled",
+                  "kilo: ready active",
+                  "lima: idle enabled",
+                  "mike: idle enabled",
+                  "nov: idle enabled",
+                  "oscar: idle enabled",
+                  "# end"
                 ],
                 "cursor": [
-                  2,
+                  10,
                   0
                 ],
                 "mode": "normal"
@@ -2386,7 +3320,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "toml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "yaml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -2397,7 +3331,10 @@
               "global-substitute"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-substitute-const",
@@ -2410,24 +3347,58 @@
           "scenario": {
             "initial": {
               "lines": [
-                "const old = 1",
-                "let old = 2",
-                "const old = 3"
+                "import old from \"old\"",
+                "const oldPort = 1",
+                "let oldHost = 2",
+                "const oldMode = 3",
+                "function oldBoot() {}",
+                "const oldPool = 5",
+                "let oldCache = 6",
+                "const oldLevel = 7",
+                "function oldStop() {}",
+                "const oldBurst = 9",
+                "let oldDelay = 10",
+                "const oldRetry = 11",
+                "// old comment",
+                "const oldQuiet = 12",
+                "let oldTrace = 13",
+                "const oldAudit = 14",
+                "export default oldBoot",
+                "// old tail"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "const new = 1",
-                "let old = 2",
-                "const new = 3"
+                "import old from \"old\"",
+                "const newPort = 1",
+                "let oldHost = 2",
+                "const newMode = 3",
+                "function oldBoot() {}",
+                "const newPool = 5",
+                "let oldCache = 6",
+                "const newLevel = 7",
+                "function oldStop() {}",
+                "const newBurst = 9",
+                "let oldDelay = 10",
+                "const newRetry = 11",
+                "// old comment",
+                "const newQuiet = 12",
+                "let oldTrace = 13",
+                "const newAudit = 14",
+                "export default oldBoot",
+                "// old tail"
               ],
               "cursor": [
-                2,
+                15,
                 0
               ],
               "mode": "normal"
@@ -2493,12 +3464,27 @@
               {
                 "afterStep": 21,
                 "lines": [
-                  "const new = 1",
-                  "let old = 2",
-                  "const new = 3"
+                  "import old from \"old\"",
+                  "const newPort = 1",
+                  "let oldHost = 2",
+                  "const newMode = 3",
+                  "function oldBoot() {}",
+                  "const newPool = 5",
+                  "let oldCache = 6",
+                  "const newLevel = 7",
+                  "function oldStop() {}",
+                  "const newBurst = 9",
+                  "let oldDelay = 10",
+                  "const newRetry = 11",
+                  "// old comment",
+                  "const newQuiet = 12",
+                  "let oldTrace = 13",
+                  "const newAudit = 14",
+                  "export default oldBoot",
+                  "// old tail"
                 ],
                 "cursor": [
-                  2,
+                  15,
                   0
                 ],
                 "mode": "normal"
@@ -2534,7 +3520,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -2545,7 +3531,10 @@
               "global-substitute"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "range-global-substitute",
@@ -2558,28 +3547,58 @@
           "scenario": {
             "initial": {
               "lines": [
-                "ERROR open",
-                "INFO open",
-                "ERROR open",
-                "WARN open",
-                "ERROR open"
+                "INFO boot ok",
+                "ERROR port open",
+                "INFO route ready",
+                "ERROR sock open",
+                "INFO cache warm",
+                "ERROR file open",
+                "INFO job started",
+                "ERROR pipe open",
+                "INFO job finished",
+                "ERROR lock open",
+                "INFO route closed",
+                "ERROR pool open",
+                "INFO cache hit",
+                "ERROR conn open",
+                "INFO idle tick",
+                "INFO flush done",
+                "ERROR gate open",
+                "INFO exit clean"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "ERROR open",
-                "INFO open",
-                "ERROR closed",
-                "WARN open",
-                "ERROR open"
+                "INFO boot ok",
+                "ERROR port closed",
+                "INFO route ready",
+                "ERROR sock closed",
+                "INFO cache warm",
+                "ERROR file closed",
+                "INFO job started",
+                "ERROR pipe closed",
+                "INFO job finished",
+                "ERROR lock closed",
+                "INFO route closed",
+                "ERROR pool closed",
+                "INFO cache hit",
+                "ERROR conn closed",
+                "INFO idle tick",
+                "INFO flush done",
+                "ERROR gate open",
+                "INFO exit clean"
               ],
               "cursor": [
-                2,
+                13,
                 0
               ],
               "mode": "normal"
@@ -2590,7 +3609,8 @@
               ":",
               "2",
               ",",
-              "4",
+              "1",
+              "6",
               "g",
               "/",
               "E",
@@ -2624,41 +3644,54 @@
               },
               {
                 "from": 1,
-                "to": 13,
-                "display": "2,4g/ERROR/s",
+                "to": 14,
+                "display": "2,16g/ERROR/s",
                 "explanation": "Choose the line scope and start a substitution."
               },
               {
-                "from": 13,
-                "to": 19,
+                "from": 14,
+                "to": 20,
                 "display": "/open/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
-                "from": 19,
-                "to": 26,
+                "from": 20,
+                "to": 27,
                 "display": "closed/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 26,
-                "to": 27,
+                "from": 27,
+                "to": 28,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 27,
+                "afterStep": 28,
                 "lines": [
-                  "ERROR open",
-                  "INFO open",
-                  "ERROR closed",
-                  "WARN open",
-                  "ERROR open"
+                  "INFO boot ok",
+                  "ERROR port closed",
+                  "INFO route ready",
+                  "ERROR sock closed",
+                  "INFO cache warm",
+                  "ERROR file closed",
+                  "INFO job started",
+                  "ERROR pipe closed",
+                  "INFO job finished",
+                  "ERROR lock closed",
+                  "INFO route closed",
+                  "ERROR pool closed",
+                  "INFO cache hit",
+                  "ERROR conn closed",
+                  "INFO idle tick",
+                  "INFO flush done",
+                  "ERROR gate open",
+                  "INFO exit clean"
                 ],
                 "cursor": [
-                  2,
+                  13,
                   0
                 ],
                 "mode": "normal"
@@ -2694,7 +3727,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "log keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -2705,7 +3738,10 @@
               "global-substitute"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "inverse-global-substitute",
@@ -2713,31 +3749,63 @@
           "phase": "challenge",
           "title": "Update non-archive rows",
           "instruction": "Change “draft” to “live” on every row that is not an archive.",
-          "languageId": "csv",
+          "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "draft active",
-                "draft archive",
-                "draft current",
-                "draft archive"
+                "draft intro",
+                "archive notes 1",
+                "draft chapter one",
+                "draft chapter two",
+                "archive notes 2",
+                "draft chapter three",
+                "draft chapter four",
+                "archive notes 3",
+                "draft chapter five",
+                "draft chapter six",
+                "archive notes 4",
+                "draft chapter seven",
+                "draft chapter eight",
+                "archive notes 5",
+                "draft summary",
+                "draft appendix",
+                "archive notes 6",
+                "draft colophon"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "live active",
-                "draft archive",
-                "live current",
-                "draft archive"
+                "live intro",
+                "archive notes 1",
+                "live chapter one",
+                "live chapter two",
+                "archive notes 2",
+                "live chapter three",
+                "live chapter four",
+                "archive notes 3",
+                "live chapter five",
+                "live chapter six",
+                "archive notes 4",
+                "live chapter seven",
+                "live chapter eight",
+                "archive notes 5",
+                "live summary",
+                "live appendix",
+                "archive notes 6",
+                "live colophon"
               ],
               "cursor": [
-                2,
+                17,
                 0
               ],
               "mode": "normal"
@@ -2807,13 +3875,27 @@
               {
                 "afterStep": 25,
                 "lines": [
-                  "live active",
-                  "draft archive",
-                  "live current",
-                  "draft archive"
+                  "live intro",
+                  "archive notes 1",
+                  "live chapter one",
+                  "live chapter two",
+                  "archive notes 2",
+                  "live chapter three",
+                  "live chapter four",
+                  "archive notes 3",
+                  "live chapter five",
+                  "live chapter six",
+                  "archive notes 4",
+                  "live chapter seven",
+                  "live chapter eight",
+                  "archive notes 5",
+                  "live summary",
+                  "live appendix",
+                  "archive notes 6",
+                  "live colophon"
                 ],
                 "cursor": [
-                  2,
+                  17,
                   0
                 ],
                 "mode": "normal"
@@ -2849,7 +3931,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "csv makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "markdown keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -2860,7 +3942,10 @@
               "global-substitute"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -2885,30 +3970,64 @@
           "phase": "demonstrate",
           "title": "Terminate constants only",
           "instruction": "Append semicolons only to lines beginning with `const`.",
-          "languageId": "javascript",
+          "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "const a = 1",
-                "let b = 2",
-                "const c = 3"
+                "import fs from \"fs\"",
+                "const port = 3000",
+                "let host = \"local\"",
+                "const mode = \"prod\"",
+                "function boot() {}",
+                "const pool = 12",
+                "let cache = true",
+                "const level = \"info\"",
+                "function stop() {}",
+                "const burst = 50",
+                "let delay = 30",
+                "const retry = 5",
+                "// tail comment",
+                "const quiet = true",
+                "let trace = false",
+                "const audit = true",
+                "export default boot",
+                "// end of module"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "const a = 1;",
-                "let b = 2",
-                "const c = 3;"
+                "import fs from \"fs\"",
+                "const port = 3000;",
+                "let host = \"local\"",
+                "const mode = \"prod\";",
+                "function boot() {}",
+                "const pool = 12;",
+                "let cache = true",
+                "const level = \"info\";",
+                "function stop() {}",
+                "const burst = 50;",
+                "let delay = 30",
+                "const retry = 5;",
+                "// tail comment",
+                "const quiet = true;",
+                "let trace = false",
+                "const audit = true;",
+                "export default boot",
+                "// end of module"
               ],
               "cursor": [
-                2,
-                11
+                15,
+                18
               ],
               "mode": "normal"
             }
@@ -2960,13 +4079,28 @@
               {
                 "afterStep": 20,
                 "lines": [
-                  "const a = 1;",
-                  "let b = 2",
-                  "const c = 3;"
+                  "import fs from \"fs\"",
+                  "const port = 3000;",
+                  "let host = \"local\"",
+                  "const mode = \"prod\";",
+                  "function boot() {}",
+                  "const pool = 12;",
+                  "let cache = true",
+                  "const level = \"info\";",
+                  "function stop() {}",
+                  "const burst = 50;",
+                  "let delay = 30",
+                  "const retry = 5;",
+                  "// tail comment",
+                  "const quiet = true;",
+                  "let trace = false",
+                  "const audit = true;",
+                  "export default boot",
+                  "// end of module"
                 ],
                 "cursor": [
-                  2,
-                  11
+                  15,
+                  18
                 ],
                 "mode": "normal"
               }
@@ -3001,7 +4135,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3012,7 +4146,10 @@
               "global-normal"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-normal-todos",
@@ -3025,24 +4162,58 @@
           "scenario": {
             "initial": {
               "lines": [
-                "TODO alpha",
-                "ready beta",
-                "TODO gamma"
+                "import core from \"core\"",
+                "TODO wire retries",
+                "const port = 8080",
+                "TODO add metrics",
+                "const host = \"local\"",
+                "function boot() {}",
+                "TODO drain queue",
+                "const pool = 12",
+                "TODO check limits",
+                "function stop() {}",
+                "const level = \"info\"",
+                "TODO audit writes",
+                "const burst = 50",
+                "TODO trace spans",
+                "export default boot",
+                "const delay = 30",
+                "TODO retire flags",
+                "// end of module"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "// TODO alpha",
-                "ready beta",
-                "// TODO gamma"
+                "import core from \"core\"",
+                "// TODO wire retries",
+                "const port = 8080",
+                "// TODO add metrics",
+                "const host = \"local\"",
+                "function boot() {}",
+                "// TODO drain queue",
+                "const pool = 12",
+                "// TODO check limits",
+                "function stop() {}",
+                "const level = \"info\"",
+                "// TODO audit writes",
+                "const burst = 50",
+                "// TODO trace spans",
+                "export default boot",
+                "const delay = 30",
+                "// TODO retire flags",
+                "// end of module"
               ],
               "cursor": [
-                2,
+                16,
                 2
               ],
               "mode": "normal"
@@ -3095,12 +4266,27 @@
               {
                 "afterStep": 20,
                 "lines": [
-                  "// TODO alpha",
-                  "ready beta",
-                  "// TODO gamma"
+                  "import core from \"core\"",
+                  "// TODO wire retries",
+                  "const port = 8080",
+                  "// TODO add metrics",
+                  "const host = \"local\"",
+                  "function boot() {}",
+                  "// TODO drain queue",
+                  "const pool = 12",
+                  "// TODO check limits",
+                  "function stop() {}",
+                  "const level = \"info\"",
+                  "// TODO audit writes",
+                  "const burst = 50",
+                  "// TODO trace spans",
+                  "export default boot",
+                  "const delay = 30",
+                  "// TODO retire flags",
+                  "// end of module"
                 ],
                 "cursor": [
-                  2,
+                  16,
                   2
                 ],
                 "mode": "normal"
@@ -3136,7 +4322,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3147,38 +4333,75 @@
               "global-normal"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "inverse-global-normal",
           "type": "exercise",
           "phase": "mix",
-          "title": "Annotate uncommented calls",
-          "instruction": "Append “ # reviewed” to every call that is not already commented out.",
-          "languageId": "python",
+          "title": "Annotate every non-heading row",
+          "instruction": "Append “ # reviewed” to every row that is not a heading.",
+          "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha()",
-                "# beta()",
-                "gamma()"
+                "# notes",
+                "alpha item",
+                "bravo item",
+                "# section one",
+                "charlie item",
+                "delta item",
+                "# section two",
+                "echo item",
+                "foxtrot item",
+                "# section three",
+                "golf item",
+                "hotel item",
+                "# section four",
+                "india item",
+                "juliet item",
+                "# section five",
+                "kilo item",
+                "lima item"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "alpha() # reviewed",
-                "# beta()",
-                "gamma() # reviewed"
+                "# notes",
+                "alpha item # reviewed",
+                "bravo item # reviewed",
+                "# section one",
+                "charlie item # reviewed",
+                "delta item # reviewed",
+                "# section two",
+                "echo item # reviewed",
+                "foxtrot item # reviewed",
+                "# section three",
+                "golf item # reviewed",
+                "hotel item # reviewed",
+                "# section four",
+                "india item # reviewed",
+                "juliet item # reviewed",
+                "# section five",
+                "kilo item # reviewed",
+                "lima item # reviewed"
               ],
               "cursor": [
-                2,
-                17
+                17,
+                19
               ],
               "mode": "normal"
             }
@@ -3236,13 +4459,28 @@
               {
                 "afterStep": 26,
                 "lines": [
-                  "alpha() # reviewed",
-                  "# beta()",
-                  "gamma() # reviewed"
+                  "# notes",
+                  "alpha item # reviewed",
+                  "bravo item # reviewed",
+                  "# section one",
+                  "charlie item # reviewed",
+                  "delta item # reviewed",
+                  "# section two",
+                  "echo item # reviewed",
+                  "foxtrot item # reviewed",
+                  "# section three",
+                  "golf item # reviewed",
+                  "hotel item # reviewed",
+                  "# section four",
+                  "india item # reviewed",
+                  "juliet item # reviewed",
+                  "# section five",
+                  "kilo item # reviewed",
+                  "lima item # reviewed"
                 ],
                 "cursor": [
-                  2,
-                  17
+                  17,
+                  19
                 ],
                 "mode": "normal"
               }
@@ -3277,7 +4515,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "python makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "markdown keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3288,7 +4526,10 @@
               "global-normal"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-normal-delimiters",
@@ -3296,30 +4537,64 @@
           "phase": "challenge",
           "title": "Change structural delimiters",
           "instruction": "Replace the equals sign with a colon only on rows whose value is “enabled”.",
-          "languageId": "yaml",
+          "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha = enabled",
-                "beta = disabled",
-                "gamma = enabled"
+                "[flags]",
+                "beta = enabled",
+                "alpha = off",
+                "gamma = enabled",
+                "delta = off",
+                "epsilon = enabled",
+                "zeta = off",
+                "eta = enabled",
+                "theta = off",
+                "iota = enabled",
+                "kappa = off",
+                "lambda = enabled",
+                "mu = off",
+                "nu = enabled",
+                "xi = off",
+                "omicron = enabled",
+                "pi = off",
+                "# end"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "alpha : enabled",
-                "beta = disabled",
-                "gamma : enabled"
+                "[flags]",
+                "beta : enabled",
+                "alpha = off",
+                "gamma : enabled",
+                "delta = off",
+                "epsilon : enabled",
+                "zeta = off",
+                "eta : enabled",
+                "theta = off",
+                "iota : enabled",
+                "kappa = off",
+                "lambda : enabled",
+                "mu = off",
+                "nu : enabled",
+                "xi = off",
+                "omicron : enabled",
+                "pi = off",
+                "# end"
               ],
               "cursor": [
-                2,
-                6
+                15,
+                8
               ],
               "mode": "normal"
             }
@@ -3375,13 +4650,28 @@
               {
                 "afterStep": 24,
                 "lines": [
-                  "alpha : enabled",
-                  "beta = disabled",
-                  "gamma : enabled"
+                  "[flags]",
+                  "beta : enabled",
+                  "alpha = off",
+                  "gamma : enabled",
+                  "delta = off",
+                  "epsilon : enabled",
+                  "zeta = off",
+                  "eta : enabled",
+                  "theta = off",
+                  "iota : enabled",
+                  "kappa = off",
+                  "lambda : enabled",
+                  "mu = off",
+                  "nu : enabled",
+                  "xi = off",
+                  "omicron : enabled",
+                  "pi = off",
+                  "# end"
                 ],
                 "cursor": [
-                  2,
-                  6
+                  15,
+                  8
                 ],
                 "mode": "normal"
               }
@@ -3416,7 +4706,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "toml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3427,7 +4717,10 @@
               "global-normal"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -3458,14 +4751,33 @@
             "initial": {
               "lines": [
                 "target alpha",
-                "skip beta",
-                "target gamma"
+                "other one",
+                "target bravo",
+                "other two",
+                "other three",
+                "target charlie",
+                "other four",
+                "target delta",
+                "other five",
+                "other six",
+                "target echo",
+                "other seven",
+                "target foxtrot",
+                "other eight",
+                "other nine",
+                "target golf",
+                "other ten",
+                "end of list"
               ],
               "cursor": [
                 0,
                 0
               ],
               "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              },
               "setup": {
                 "cursor": [
                   0,
@@ -3487,11 +4799,26 @@
             "target": {
               "lines": [
                 "// target alpha",
-                "skip beta",
-                "// target gamma"
+                "other one",
+                "// target bravo",
+                "other two",
+                "other three",
+                "// target charlie",
+                "other four",
+                "// target delta",
+                "other five",
+                "other six",
+                "// target echo",
+                "other seven",
+                "// target foxtrot",
+                "other eight",
+                "other nine",
+                "// target golf",
+                "other ten",
+                "end of list"
               ],
               "cursor": [
-                2,
+                15,
                 2
               ],
               "mode": "normal"
@@ -3546,11 +4873,26 @@
                 "afterStep": 21,
                 "lines": [
                   "// target alpha",
-                  "skip beta",
-                  "// target gamma"
+                  "other one",
+                  "// target bravo",
+                  "other two",
+                  "other three",
+                  "// target charlie",
+                  "other four",
+                  "// target delta",
+                  "other five",
+                  "other six",
+                  "// target echo",
+                  "other seven",
+                  "// target foxtrot",
+                  "other eight",
+                  "other nine",
+                  "// target golf",
+                  "other ten",
+                  "end of list"
                 ],
                 "cursor": [
-                  2,
+                  15,
                   2
                 ],
                 "mode": "normal"
@@ -3586,7 +4928,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "prose makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "prose keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3597,7 +4939,10 @@
               "global-macro"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-macro-semicolons",
@@ -3610,15 +4955,34 @@
           "scenario": {
             "initial": {
               "lines": [
-                "const a = 1",
-                "let b = 2",
-                "const c = 3"
+                "const alpha = 1",
+                "let bravo = 2",
+                "const charlie = 3",
+                "let delta = 4",
+                "const echo = 5",
+                "let foxtrot = 6",
+                "const golf = 7",
+                "let hotel = 8",
+                "const india = 9",
+                "let juliet = 10",
+                "const kilo = 11",
+                "let lima = 12",
+                "const mike = 13",
+                "let november = 14",
+                "const oscar = 15",
+                "let papa = 16",
+                "// end of module",
+                "export default alpha"
               ],
               "cursor": [
                 0,
-                10
+                14
               ],
               "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              },
               "setup": {
                 "cursor": [
                   0,
@@ -3637,13 +5001,28 @@
             },
             "target": {
               "lines": [
-                "const a = 1;",
-                "let b = 2",
-                "const c = 3;"
+                "const alpha = 1;",
+                "let bravo = 2",
+                "const charlie = 3;",
+                "let delta = 4",
+                "const echo = 5;",
+                "let foxtrot = 6",
+                "const golf = 7;",
+                "let hotel = 8",
+                "const india = 9;",
+                "let juliet = 10",
+                "const kilo = 11;",
+                "let lima = 12",
+                "const mike = 13;",
+                "let november = 14",
+                "const oscar = 15;",
+                "let papa = 16",
+                "// end of module",
+                "export default alpha"
               ],
               "cursor": [
-                2,
-                11
+                14,
+                16
               ],
               "mode": "normal"
             }
@@ -3695,13 +5074,28 @@
               {
                 "afterStep": 20,
                 "lines": [
-                  "const a = 1;",
-                  "let b = 2",
-                  "const c = 3;"
+                  "const alpha = 1;",
+                  "let bravo = 2",
+                  "const charlie = 3;",
+                  "let delta = 4",
+                  "const echo = 5;",
+                  "let foxtrot = 6",
+                  "const golf = 7;",
+                  "let hotel = 8",
+                  "const india = 9;",
+                  "let juliet = 10",
+                  "const kilo = 11;",
+                  "let lima = 12",
+                  "const mike = 13;",
+                  "let november = 14",
+                  "const oscar = 15;",
+                  "let papa = 16",
+                  "// end of module",
+                  "export default alpha"
                 ],
                 "cursor": [
-                  2,
-                  11
+                  14,
+                  16
                 ],
                 "mode": "normal"
               }
@@ -3736,7 +5130,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3747,7 +5141,10 @@
               "global-macro"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-macro-colons",
@@ -3755,20 +5152,39 @@
           "phase": "mix",
           "title": "Normalize every matching delimiter",
           "instruction": "Replace equals signs only on rows whose value is “enabled”.",
-          "languageId": "yaml",
+          "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
                 "alpha = enabled",
-                "beta = disabled",
-                "gamma = enabled"
+                "bravo = off",
+                "gamma = enabled",
+                "delta = off",
+                "epsilon = enabled",
+                "zeta = off",
+                "eta = enabled",
+                "theta = off",
+                "iota = enabled",
+                "kappa = off",
+                "lambda = enabled",
+                "mu = off",
+                "nu = enabled",
+                "xi = off",
+                "omicron = enabled",
+                "pi = off",
+                "rho = off",
+                "# end of flags"
               ],
               "cursor": [
                 0,
                 6
               ],
               "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              },
               "setup": {
                 "cursor": [
                   0,
@@ -3790,12 +5206,27 @@
             "target": {
               "lines": [
                 "alpha : enabled",
-                "beta = disabled",
-                "gamma : enabled"
+                "bravo = off",
+                "gamma : enabled",
+                "delta = off",
+                "epsilon : enabled",
+                "zeta = off",
+                "eta : enabled",
+                "theta = off",
+                "iota : enabled",
+                "kappa = off",
+                "lambda : enabled",
+                "mu = off",
+                "nu : enabled",
+                "xi = off",
+                "omicron : enabled",
+                "pi = off",
+                "rho = off",
+                "# end of flags"
               ],
               "cursor": [
-                2,
-                6
+                14,
+                8
               ],
               "mode": "normal"
             }
@@ -3849,12 +5280,27 @@
                 "afterStep": 21,
                 "lines": [
                   "alpha : enabled",
-                  "beta = disabled",
-                  "gamma : enabled"
+                  "bravo = off",
+                  "gamma : enabled",
+                  "delta = off",
+                  "epsilon : enabled",
+                  "zeta = off",
+                  "eta : enabled",
+                  "theta = off",
+                  "iota : enabled",
+                  "kappa = off",
+                  "lambda : enabled",
+                  "mu = off",
+                  "nu : enabled",
+                  "xi = off",
+                  "omicron : enabled",
+                  "pi = off",
+                  "rho = off",
+                  "# end of flags"
                 ],
                 "cursor": [
-                  2,
-                  6
+                  14,
+                  8
                 ],
                 "mode": "normal"
               }
@@ -3889,7 +5335,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "toml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -3900,7 +5346,10 @@
               "global-macro"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "global-macro-status",
@@ -3908,20 +5357,39 @@
           "phase": "challenge",
           "title": "Update every matching status",
           "instruction": "Change only the TODO statuses to DONE.",
-          "languageId": "log",
+          "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
                 "TODO alpha",
-                "ready beta",
-                "TODO gamma"
+                "note one",
+                "note two",
+                "TODO bravo",
+                "note three",
+                "TODO charlie",
+                "note four",
+                "note five",
+                "TODO delta",
+                "note six",
+                "TODO echo",
+                "note seven",
+                "note eight",
+                "TODO foxtrot",
+                "note nine",
+                "TODO golf",
+                "note ten",
+                "end of list"
               ],
               "cursor": [
                 0,
                 0
               ],
               "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              },
               "setup": {
                 "cursor": [
                   0,
@@ -3946,11 +5414,26 @@
             "target": {
               "lines": [
                 "DONE alpha",
-                "ready beta",
-                "DONE gamma"
+                "note one",
+                "note two",
+                "DONE bravo",
+                "note three",
+                "DONE charlie",
+                "note four",
+                "note five",
+                "DONE delta",
+                "note six",
+                "DONE echo",
+                "note seven",
+                "note eight",
+                "DONE foxtrot",
+                "note nine",
+                "DONE golf",
+                "note ten",
+                "end of list"
               ],
               "cursor": [
-                2,
+                15,
                 3
               ],
               "mode": "normal"
@@ -4002,11 +5485,26 @@
                 "afterStep": 18,
                 "lines": [
                   "DONE alpha",
-                  "ready beta",
-                  "DONE gamma"
+                  "note one",
+                  "note two",
+                  "DONE bravo",
+                  "note three",
+                  "DONE charlie",
+                  "note four",
+                  "note five",
+                  "DONE delta",
+                  "note six",
+                  "DONE echo",
+                  "note seven",
+                  "note eight",
+                  "DONE foxtrot",
+                  "note nine",
+                  "DONE golf",
+                  "note ten",
+                  "end of list"
                 ],
                 "cursor": [
-                  2,
+                  15,
                   3
                 ],
                 "mode": "normal"
@@ -4042,7 +5540,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "log makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "prose keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -4053,7 +5551,754 @@
               "global-macro"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "global-collect-reorder",
+      "title": "Collect and reorder by predicate",
+      "objective": "Copy or move every matching line to a chosen address.",
+      "activities": [
+        {
+          "id": "global-relocate-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Send matching lines somewhere else",
+          "body": "The command nested inside `:global` can take an address instead of editing text. `:t{addr}` copies each matching line below that address and `:m{addr}` moves it, so one predicate can gather scattered lines into a block.",
+          "grammar": "g/pattern/t{address} or g/pattern/m{address}",
+          "contrast": "`$` grows as lines arrive, so the block keeps its order; `0` never moves, so every match lands above the last one and the block arrives reversed.",
+          "demoRef": "global-copy-demo"
+        },
+        {
+          "id": "global-copy-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Gather every matching row",
+          "instruction": "Copy every ERROR row to the end of the buffer, leaving the originals in place.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO boot ok",
+                "INFO route ready",
+                "ERROR db refused",
+                "INFO cache warm",
+                "INFO job started",
+                "ERROR token expired",
+                "INFO job finished",
+                "ERROR disk full",
+                "INFO route closed",
+                "INFO idle tick",
+                "ERROR socket reset",
+                "INFO flush done",
+                "INFO db pool open",
+                "ERROR write failed",
+                "INFO cache hit",
+                "INFO boot done",
+                "ERROR auth denied",
+                "INFO exit clean"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "INFO boot ok",
+                "INFO route ready",
+                "ERROR db refused",
+                "INFO cache warm",
+                "INFO job started",
+                "ERROR token expired",
+                "INFO job finished",
+                "ERROR disk full",
+                "INFO route closed",
+                "INFO idle tick",
+                "ERROR socket reset",
+                "INFO flush done",
+                "INFO db pool open",
+                "ERROR write failed",
+                "INFO cache hit",
+                "INFO boot done",
+                "ERROR auth denied",
+                "INFO exit clean",
+                "ERROR db refused",
+                "ERROR token expired",
+                "ERROR disk full",
+                "ERROR socket reset",
+                "ERROR write failed",
+                "ERROR auth denied"
+              ],
+              "cursor": [
+                23,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
+              "/",
+              "t",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 11,
+                "display": "g/ERROR/t$",
+                "explanation": "Choose matching lines and copy each one to the address that follows."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "INFO boot ok",
+                  "INFO route ready",
+                  "ERROR db refused",
+                  "INFO cache warm",
+                  "INFO job started",
+                  "ERROR token expired",
+                  "INFO job finished",
+                  "ERROR disk full",
+                  "INFO route closed",
+                  "INFO idle tick",
+                  "ERROR socket reset",
+                  "INFO flush done",
+                  "INFO db pool open",
+                  "ERROR write failed",
+                  "INFO cache hit",
+                  "INFO boot done",
+                  "ERROR auth denied",
+                  "INFO exit clean",
+                  "ERROR db refused",
+                  "ERROR token expired",
+                  "ERROR disk full",
+                  "ERROR socket reset",
+                  "ERROR write failed",
+                  "ERROR auth denied"
+                ],
+                "cursor": [
+                  23,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The nested command can be an address-taking command, not only an edit.",
+            "`:t` copies the current line below an address.",
+            "Use `:g/ERROR/t$`."
+          ],
+          "feedback": {
+            "success": "Every match now has a copy collected at the end.",
+            "why": "The predicate chose the lines and `:t$` sent a copy of each one below the last line, in the order they were found."
+          },
+          "skills": {
+            "primary": [
+              "global-relocate"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "line-scope",
+              "relocation",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes a scattered severity predicate and a gathered summary immediately readable.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-relocate"
+            ]
+          },
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "global-collect-warnings",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Move matches to the end",
+          "instruction": "Relocate every WARN row to the end of the buffer, keeping their original order.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "INFO start",
+                "WARN cache miss",
+                "INFO route ready",
+                "INFO db open",
+                "WARN slow query",
+                "INFO job started",
+                "WARN retry queued",
+                "INFO job finished",
+                "INFO route closed",
+                "WARN disk low",
+                "INFO idle tick",
+                "INFO flush done",
+                "WARN clock skew",
+                "INFO cache hit",
+                "INFO boot done",
+                "WARN quota near",
+                "INFO exit clean",
+                "INFO shutdown ok"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "INFO start",
+                "INFO route ready",
+                "INFO db open",
+                "INFO job started",
+                "INFO job finished",
+                "INFO route closed",
+                "INFO idle tick",
+                "INFO flush done",
+                "INFO cache hit",
+                "INFO boot done",
+                "INFO exit clean",
+                "INFO shutdown ok",
+                "WARN cache miss",
+                "WARN slow query",
+                "WARN retry queued",
+                "WARN disk low",
+                "WARN clock skew",
+                "WARN quota near"
+              ],
+              "cursor": [
+                17,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "W",
+              "A",
+              "R",
+              "N",
+              "/",
+              "m",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 10,
+                "display": "g/WARN/m$",
+                "explanation": "Choose matching lines and move each one to the address that follows."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "INFO start",
+                  "INFO route ready",
+                  "INFO db open",
+                  "INFO job started",
+                  "INFO job finished",
+                  "INFO route closed",
+                  "INFO idle tick",
+                  "INFO flush done",
+                  "INFO cache hit",
+                  "INFO boot done",
+                  "INFO exit clean",
+                  "INFO shutdown ok",
+                  "WARN cache miss",
+                  "WARN slow query",
+                  "WARN retry queued",
+                  "WARN disk low",
+                  "WARN clock skew",
+                  "WARN quota near"
+                ],
+                "cursor": [
+                  17,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Moving differs from copying only in whether the original stays.",
+            "An address of `$` appends after the last line, which grows as the run proceeds.",
+            "Use `:g/WARN/m$`."
+          ],
+          "feedback": {
+            "success": "The warnings are collected at the end in their original order.",
+            "why": "Each match is appended after the previous one, so a trailing address preserves the order the predicate found them in."
+          },
+          "skills": {
+            "primary": [
+              "global-relocate"
+            ],
+            "supporting": [
+              "global-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "relocation",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log keeps severity a plain text predicate, so the reorder is the only thing to read.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-relocate"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "global-reverse-imports",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Hoist matches to the top",
+          "instruction": "Relocate every import to the top of the file and note the order they arrive in.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "// module header",
+                "import fs from \"fs\"",
+                "const port = 8080",
+                "import os from \"os\"",
+                "const host = \"local\"",
+                "function boot() {}",
+                "import net from \"net\"",
+                "const pool = 12",
+                "import url from \"url\"",
+                "function stop() {}",
+                "const level = \"info\"",
+                "import zlib from \"zlib\"",
+                "const burst = 50",
+                "import path from \"path\"",
+                "export default boot",
+                "const delay = 30",
+                "// tail comment",
+                "const quiet = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "import path from \"path\"",
+                "import zlib from \"zlib\"",
+                "import url from \"url\"",
+                "import net from \"net\"",
+                "import os from \"os\"",
+                "import fs from \"fs\"",
+                "// module header",
+                "const port = 8080",
+                "const host = \"local\"",
+                "function boot() {}",
+                "const pool = 12",
+                "function stop() {}",
+                "const level = \"info\"",
+                "const burst = 50",
+                "export default boot",
+                "const delay = 30",
+                "// tail comment",
+                "const quiet = true"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "i",
+              "m",
+              "p",
+              "o",
+              "r",
+              "t",
+              "/",
+              "m",
+              "0",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 13,
+                "display": "g/^import/m0",
+                "explanation": "Choose matching lines and move each one above the first line."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "import path from \"path\"",
+                  "import zlib from \"zlib\"",
+                  "import url from \"url\"",
+                  "import net from \"net\"",
+                  "import os from \"os\"",
+                  "import fs from \"fs\"",
+                  "// module header",
+                  "const port = 8080",
+                  "const host = \"local\"",
+                  "function boot() {}",
+                  "const pool = 12",
+                  "function stop() {}",
+                  "const level = \"info\"",
+                  "const burst = 50",
+                  "export default boot",
+                  "const delay = 30",
+                  "// tail comment",
+                  "const quiet = true"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "A fixed address does not move as the run proceeds.",
+            "Every match lands at the same place, ahead of the ones already moved.",
+            "Use `:g/^import/m0`."
+          ],
+          "feedback": {
+            "success": "The imports are hoisted, and their order is reversed.",
+            "why": "`0` never moves, so each match is inserted above the previous one and the block arrives back to front. `$` grows with the buffer, which is why it preserves order."
+          },
+          "skills": {
+            "primary": [
+              "global-relocate"
+            ],
+            "supporting": [
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "relocation",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "typescript makes scattered imports a realistic thing to gather at the top.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-relocate"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "global-gather-inverted",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Sink everything the pattern misses",
+          "instruction": "Relocate every row that is not a heading below the headings, keeping their order.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# alpha section",
+                "item one",
+                "item two",
+                "# bravo section",
+                "item three",
+                "item four",
+                "# charlie section",
+                "item five",
+                "item six",
+                "# delta section",
+                "item seven",
+                "item eight",
+                "# echo section",
+                "item nine",
+                "item ten",
+                "# foxtrot section",
+                "item eleven",
+                "item twelve"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "# alpha section",
+                "# bravo section",
+                "# charlie section",
+                "# delta section",
+                "# echo section",
+                "# foxtrot section",
+                "item one",
+                "item two",
+                "item three",
+                "item four",
+                "item five",
+                "item six",
+                "item seven",
+                "item eight",
+                "item nine",
+                "item ten",
+                "item eleven",
+                "item twelve"
+              ],
+              "cursor": [
+                17,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "^",
+              "#",
+              "/",
+              "m",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 8,
+                "display": "v/^#/m$",
+                "explanation": "Choose the lines the pattern misses and move each one to the end."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "# alpha section",
+                  "# bravo section",
+                  "# charlie section",
+                  "# delta section",
+                  "# echo section",
+                  "# foxtrot section",
+                  "item one",
+                  "item two",
+                  "item three",
+                  "item four",
+                  "item five",
+                  "item six",
+                  "item seven",
+                  "item eight",
+                  "item nine",
+                  "item ten",
+                  "item eleven",
+                  "item twelve"
+                ],
+                "cursor": [
+                  17,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Inverting the predicate and relocating are independent choices.",
+            "The lines that stay are the ones the pattern matches.",
+            "Use `:v/^#/m$`."
+          ],
+          "feedback": {
+            "success": "The headings float to the top and the items follow in order.",
+            "why": "`:v` selected the complement of the pattern and the trailing address preserved the order, so one command partitioned the file."
+          },
+          "skills": {
+            "primary": [
+              "global-relocate"
+            ],
+            "supporting": [
+              "vglobal-inversion"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "relocation",
+              "inversion",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "markdown gives headings and items an obvious structural difference to partition on.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-relocate"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -4067,7 +6312,7 @@
           "type": "theory",
           "phase": "explain",
           "title": "Choose the simplest automation for the task",
-          "body": "Use a range for known lines, substitution for direct text replacement, `:normal` for one structural edit, `:global` to choose lines by text, and a macro for a true multi-step edit.",
+          "body": "Use a range for known lines, substitution for direct text replacement, `:normal` for one structural edit, `:global` to choose lines by text, and a macro for a true multi-step edit. Weigh the cost of reversing too: a whole `:global` run undoes in one step, while a macro replayed ten times takes ten.",
           "grammar": "scope → predicate → transformation",
           "contrast": "Advanced commands are valuable because they clarify intent, not because they are advanced.",
           "demoRef": "integrated-range-normal"
@@ -4077,34 +6322,64 @@
           "type": "demo",
           "phase": "demonstrate",
           "title": "Choose a known range",
-          "instruction": "The three item rows are adjacent and known; append commas with ranged `:normal`.",
-          "languageId": "yaml",
+          "instruction": "The entry rows are contiguous and their line numbers are known; append commas with ranged `:normal`.",
+          "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "items:",
-                "  alpha",
-                "  beta",
-                "  gamma",
-                "done: true"
+                "const list = [",
+                "  \"ana\"",
+                "  \"bob\"",
+                "  \"cyd\"",
+                "  \"dee\"",
+                "  \"eli\"",
+                "  \"fay\"",
+                "  \"gus\"",
+                "  \"hal\"",
+                "  \"ivy\"",
+                "  \"jon\"",
+                "  \"kai\"",
+                "  \"lee\"",
+                "  \"mia\"",
+                "  \"ned\"",
+                "  \"ora\"",
+                "  \"pat\",",
+                "]"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "items:",
-                "  alpha,",
-                "  beta,",
-                "  gamma,",
-                "done: true"
+                "const list = [",
+                "  \"ana\",",
+                "  \"bob\",",
+                "  \"cyd\",",
+                "  \"dee\",",
+                "  \"eli\",",
+                "  \"fay\",",
+                "  \"gus\",",
+                "  \"hal\",",
+                "  \"ivy\",",
+                "  \"jon\",",
+                "  \"kai\",",
+                "  \"lee\",",
+                "  \"mia\",",
+                "  \"ned\",",
+                "  \"ora\",",
+                "  \"pat\",",
+                "]"
               ],
               "cursor": [
-                3,
+                15,
                 7
               ],
               "mode": "normal"
@@ -4115,7 +6390,8 @@
               ":",
               "2",
               ",",
-              "4",
+              "1",
+              "6",
               "n",
               "o",
               "r",
@@ -4136,29 +6412,42 @@
               },
               {
                 "from": 1,
-                "to": 13,
-                "display": "2,4normal A,",
+                "to": 14,
+                "display": "2,16normal A,",
                 "explanation": "Choose the line set and enter the Normal-mode transformation to apply there."
               },
               {
-                "from": 13,
-                "to": 14,
+                "from": 14,
+                "to": 15,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 14,
+                "afterStep": 15,
                 "lines": [
-                  "items:",
-                  "  alpha,",
-                  "  beta,",
-                  "  gamma,",
-                  "done: true"
+                  "const list = [",
+                  "  \"ana\",",
+                  "  \"bob\",",
+                  "  \"cyd\",",
+                  "  \"dee\",",
+                  "  \"eli\",",
+                  "  \"fay\",",
+                  "  \"gus\",",
+                  "  \"hal\",",
+                  "  \"ivy\",",
+                  "  \"jon\",",
+                  "  \"kai\",",
+                  "  \"lee\",",
+                  "  \"mia\",",
+                  "  \"ned\",",
+                  "  \"ora\",",
+                  "  \"pat\",",
+                  "]"
                 ],
                 "cursor": [
-                  3,
+                  15,
                   7
                 ],
                 "mode": "normal"
@@ -4194,7 +6483,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "yaml makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -4205,7 +6494,10 @@
               "automation-choice"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "integrated-global-delete",
@@ -4213,29 +6505,61 @@
           "phase": "isolate",
           "title": "Choose predicate deletion",
           "instruction": "Remove every obsolete row, leaving only the active entries.",
-          "languageId": "prose",
+          "languageId": "toml",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "active one",
-                "obsolete two",
-                "active three",
-                "obsolete four"
+                "name = gateway",
+                "port = 8080",
+                "obsolete = legacy_a",
+                "workers = 4",
+                "timeout = 30",
+                "obsolete = legacy_b",
+                "retries = 5",
+                "beta_ui = false",
+                "obsolete = legacy_c",
+                "audit_log = true",
+                "driver = postgres",
+                "obsolete = legacy_d",
+                "pool_size = 12",
+                "max_body = 65536",
+                "obsolete = legacy_e",
+                "rate_limit = 200",
+                "level = info",
+                "obsolete = legacy_f",
+                "format = json",
+                "ready = true"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "active one",
-                "active three"
+                "name = gateway",
+                "port = 8080",
+                "workers = 4",
+                "timeout = 30",
+                "retries = 5",
+                "beta_ui = false",
+                "audit_log = true",
+                "driver = postgres",
+                "pool_size = 12",
+                "max_body = 65536",
+                "rate_limit = 200",
+                "level = info",
+                "format = json",
+                "ready = true"
               ],
               "cursor": [
-                1,
+                12,
                 0
               ],
               "mode": "normal"
@@ -4282,11 +6606,23 @@
               {
                 "afterStep": 14,
                 "lines": [
-                  "active one",
-                  "active three"
+                  "name = gateway",
+                  "port = 8080",
+                  "workers = 4",
+                  "timeout = 30",
+                  "retries = 5",
+                  "beta_ui = false",
+                  "audit_log = true",
+                  "driver = postgres",
+                  "pool_size = 12",
+                  "max_body = 65536",
+                  "rate_limit = 200",
+                  "level = info",
+                  "format = json",
+                  "ready = true"
                 ],
                 "cursor": [
-                  1,
+                  12,
                   0
                 ],
                 "mode": "normal"
@@ -4322,7 +6658,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "prose makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "toml keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -4333,7 +6669,10 @@
               "automation-choice"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "integrated-global-substitute",
@@ -4346,24 +6685,58 @@
           "scenario": {
             "initial": {
               "lines": [
-                "export internal alpha",
-                "const internal beta",
-                "export internal gamma"
+                "const internalPort = 1",
+                "export const internalA = 2",
+                "let internalHost = 3",
+                "export const internalB = 4",
+                "function internalBoot() {}",
+                "export const internalC = 5",
+                "const internalPool = 6",
+                "export const internalD = 7",
+                "let internalCache = 8",
+                "export const internalE = 9",
+                "const internalLevel = 10",
+                "export const internalF = 11",
+                "let internalBurst = 12",
+                "export const internalG = 13",
+                "// internal comment",
+                "const internalDelay = 14",
+                "export const internalH = 15",
+                "// end of module"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "export public alpha",
-                "const internal beta",
-                "export public gamma"
+                "const internalPort = 1",
+                "export const publicA = 2",
+                "let internalHost = 3",
+                "export const publicB = 4",
+                "function internalBoot() {}",
+                "export const publicC = 5",
+                "const internalPool = 6",
+                "export const publicD = 7",
+                "let internalCache = 8",
+                "export const publicE = 9",
+                "const internalLevel = 10",
+                "export const publicF = 11",
+                "let internalBurst = 12",
+                "export const publicG = 13",
+                "// internal comment",
+                "const internalDelay = 14",
+                "export const publicH = 15",
+                "// end of module"
               ],
               "cursor": [
-                2,
+                16,
                 0
               ],
               "mode": "normal"
@@ -4438,12 +6811,27 @@
               {
                 "afterStep": 30,
                 "lines": [
-                  "export public alpha",
-                  "const internal beta",
-                  "export public gamma"
+                  "const internalPort = 1",
+                  "export const publicA = 2",
+                  "let internalHost = 3",
+                  "export const publicB = 4",
+                  "function internalBoot() {}",
+                  "export const publicC = 5",
+                  "const internalPool = 6",
+                  "export const publicD = 7",
+                  "let internalCache = 8",
+                  "export const publicE = 9",
+                  "const internalLevel = 10",
+                  "export const publicF = 11",
+                  "let internalBurst = 12",
+                  "export const publicG = 13",
+                  "// internal comment",
+                  "const internalDelay = 14",
+                  "export const publicH = 15",
+                  "// end of module"
                 ],
                 "cursor": [
-                  2,
+                  16,
                   0
                 ],
                 "mode": "normal"
@@ -4479,7 +6867,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "typescript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -4490,40 +6878,75 @@
               "automation-choice"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "integrated-combined-normal",
           "type": "exercise",
           "phase": "challenge",
           "title": "Combine predicates carefully",
-          "instruction": "Add semicolons to the const and let declarations, leaving the var and return rows unchanged.",
-          "languageId": "javascript",
+          "instruction": "Add semicolons to the const and let declarations, leaving the import, functions, and comments unchanged.",
+          "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "const a = 1",
-                "var b = 2",
-                "let c = 3",
-                "return c"
+                "import fs from \"fs\"",
+                "const port = 3000",
+                "function boot() {}",
+                "let host = \"local\"",
+                "// setup comment",
+                "const mode = \"prod\"",
+                "function stop() {}",
+                "let pool = 12",
+                "// tuning comment",
+                "const level = \"info\"",
+                "export default boot",
+                "let burst = 50",
+                "// limits comment",
+                "const retry = 5",
+                "function halt() {}",
+                "let delay = 30",
+                "// end of module",
+                "export { boot, stop }"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "const a = 1;",
-                "var b = 2",
-                "let c = 3;",
-                "return c"
+                "import fs from \"fs\"",
+                "const port = 3000;",
+                "function boot() {}",
+                "let host = \"local\";",
+                "// setup comment",
+                "const mode = \"prod\";",
+                "function stop() {}",
+                "let pool = 12;",
+                "// tuning comment",
+                "const level = \"info\";",
+                "export default boot",
+                "let burst = 50;",
+                "// limits comment",
+                "const retry = 5;",
+                "function halt() {}",
+                "let delay = 30;",
+                "// end of module",
+                "export { boot, stop }"
               ],
               "cursor": [
-                2,
-                9
+                15,
+                14
               ],
               "mode": "normal"
             }
@@ -4581,14 +7004,28 @@
               {
                 "afterStep": 26,
                 "lines": [
-                  "const a = 1;",
-                  "var b = 2",
-                  "let c = 3;",
-                  "return c"
+                  "import fs from \"fs\"",
+                  "const port = 3000;",
+                  "function boot() {}",
+                  "let host = \"local\";",
+                  "// setup comment",
+                  "const mode = \"prod\";",
+                  "function stop() {}",
+                  "let pool = 12;",
+                  "// tuning comment",
+                  "const level = \"info\";",
+                  "export default boot",
+                  "let burst = 50;",
+                  "// limits comment",
+                  "const retry = 5;",
+                  "function halt() {}",
+                  "let delay = 30;",
+                  "// end of module",
+                  "export { boot, stop }"
                 ],
                 "cursor": [
-                  2,
-                  9
+                  15,
+                  14
                 ],
                 "mode": "normal"
               }
@@ -4623,7 +7060,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "global-normal-automation-v1",
-            "languageRationale": "javascript makes the qualifying rows and local transformation compact and visible.",
+            "languageRationale": "typescript keeps the qualifying rows scattered and every line inside the fixed window.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "reviewed"
@@ -4634,7 +7071,201 @@
               "automation-choice"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "undo-a-global-run",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Reverse a whole run",
+          "instruction": "Delete every DEBUG row, then put the buffer back exactly as it was.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "DEBUG probe a",
+                "INFO start run",
+                "INFO load config",
+                "DEBUG probe b",
+                "INFO open socket",
+                "INFO read frame",
+                "DEBUG probe c",
+                "INFO write frame",
+                "INFO close socket",
+                "DEBUG probe d",
+                "INFO flush cache",
+                "INFO rotate log",
+                "DEBUG probe e",
+                "INFO sync disk",
+                "INFO check quota",
+                "DEBUG probe f",
+                "INFO emit metrics",
+                "INFO stop run",
+                "INFO exit clean",
+                "INFO shutdown ok"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "DEBUG probe a",
+                "INFO start run",
+                "INFO load config",
+                "DEBUG probe b",
+                "INFO open socket",
+                "INFO read frame",
+                "DEBUG probe c",
+                "INFO write frame",
+                "INFO close socket",
+                "DEBUG probe d",
+                "INFO flush cache",
+                "INFO rotate log",
+                "DEBUG probe e",
+                "INFO sync disk",
+                "INFO check quota",
+                "DEBUG probe f",
+                "INFO emit metrics",
+                "INFO stop run",
+                "INFO exit clean",
+                "INFO shutdown ok"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "D",
+              "E",
+              "B",
+              "U",
+              "G",
+              "/",
+              "d",
+              "Enter",
+              "u"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 10,
+                "display": "g/DEBUG/d",
+                "explanation": "Choose matching lines and enter the operation to apply to them."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "↵",
+                "explanation": "Run the command."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "u",
+                "explanation": "Undo the whole run. One step reverses every line the command touched."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "DEBUG probe a",
+                  "INFO start run",
+                  "INFO load config",
+                  "DEBUG probe b",
+                  "INFO open socket",
+                  "INFO read frame",
+                  "DEBUG probe c",
+                  "INFO write frame",
+                  "INFO close socket",
+                  "DEBUG probe d",
+                  "INFO flush cache",
+                  "INFO rotate log",
+                  "DEBUG probe e",
+                  "INFO sync disk",
+                  "INFO check quota",
+                  "DEBUG probe f",
+                  "INFO emit metrics",
+                  "INFO stop run",
+                  "INFO exit clean",
+                  "INFO shutdown ok"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Count the undo steps a mechanism costs before you run it.",
+            "A `:global` run is a single change, however many lines it touched.",
+            "Run `:g/DEBUG/d`, then press `u` once."
+          ],
+          "feedback": {
+            "success": "One undo reversed every deleted row.",
+            "why": "A whole `:global` run is one change, so it costs one `u`. A macro replayed ten times is ten changes and costs ten."
+          },
+          "skills": {
+            "primary": [
+              "automation-choice"
+            ],
+            "supporting": [
+              "global-delete"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "line-scope",
+              "undo-cost",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log makes a wide, scattered deletion easy to recognize before and after the undo.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-delete"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "choose-lowest-risk-tool",
@@ -4661,15 +7292,43 @@
           "questionKind": "command-classification"
         },
         {
+          "id": "undo-cost-of-automation",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Compare the cost of reversing",
+          "prompt": "The same edit can run as one `:global` command or as a macro replayed on twelve lines. The result is wrong and must be reversed. What does each cost?",
+          "options": [
+            {
+              "id": "one-versus-twelve",
+              "label": "One undo for `:global`, twelve for the macro"
+            },
+            {
+              "id": "one-each",
+              "label": "One undo either way"
+            },
+            {
+              "id": "twelve-each",
+              "label": "Twelve undos either way"
+            }
+          ],
+          "correctOptionId": "one-versus-twelve",
+          "explanation": "A `:global` run is a single change however many lines it touched. Each macro replay is its own change, so reversing twelve replays takes twelve undos.",
+          "questionKind": "command-classification",
+          "remediationRef": "undo-a-global-run"
+        },
+        {
           "id": "global-normal-automation-summary",
           "type": "summary",
           "phase": "summary",
           "title": "Scope first, transform second",
-          "body": "Use `:normal` for one Normal command across known lines, `:global` or `:vglobal` when text decides membership, substitution for clear textual replacement, and a macro only when the local edit is genuinely multi-step. Prefer the lowest-risk command that states the intent.",
+          "body": "Use `:normal` for one Normal command across known lines, `:global` or `:vglobal` when text decides membership, substitution for clear textual replacement, `:t` and `:m` when matching lines belong somewhere else, and a macro only when the local edit is genuinely multi-step. Prefer the lowest-risk command that states the intent.",
           "takeaways": [
             "Verify the range or predicate before Enter.",
+            "Preview a predicate with a search or a counting substitution.",
             "Keep nested Normal commands line-local.",
+            "Remember that a fixed relocation address reverses the block.",
             "Test macros on representative rows before global replay.",
+            "One `u` reverses a whole `:global` run; a replayed macro costs one undo per replay.",
             "Use `:normal!` when automation must ignore mappings."
           ]
         }
@@ -4783,6 +7442,21 @@
       ]
     },
     {
+      "id": "global-relocate-reference",
+      "command": "[range]g/pattern/t{address} and [range]g/pattern/m{address}",
+      "purpose": "Copy or move every matching line to a chosen address.",
+      "notes": [
+        "g/pattern/t{address} or g/pattern/m{address}",
+        "`$` grows as lines arrive, so the block keeps its order; `0` never moves, so every match lands above the last one and the block arrives reversed."
+      ],
+      "exampleActivityRefs": [
+        "global-copy-demo",
+        "global-collect-warnings",
+        "global-reverse-imports",
+        "global-gather-inverted"
+      ]
+    },
+    {
       "id": "automation-choice-reference",
       "command": "range, substitute, normal, global, or macro",
       "purpose": "Select among ranges, predicates, substitutions, Normal commands, and macros.",
@@ -4844,6 +7518,7 @@
         "global-delete-demo"
       ],
       "isolate": [
+        "preview-global-scope",
         "global-delete-comments"
       ],
       "mix": [
@@ -4926,6 +7601,24 @@
       ]
     },
     {
+      "concept": ":global collect and reorder",
+      "explain": [
+        "global-relocate-meaning"
+      ],
+      "demonstrate": [
+        "global-copy-demo"
+      ],
+      "isolate": [
+        "global-collect-warnings"
+      ],
+      "mix": [
+        "global-reverse-imports"
+      ],
+      "challenge": [
+        "global-gather-inverted"
+      ]
+    },
+    {
       "concept": "combined automation and tool choice",
       "explain": [
         "automation-choice-meaning"
@@ -4940,7 +7633,8 @@
         "integrated-global-substitute"
       ],
       "challenge": [
-        "integrated-combined-normal"
+        "integrated-combined-normal",
+        "undo-a-global-run"
       ]
     }
   ]

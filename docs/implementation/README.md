@@ -74,6 +74,7 @@ showing more rows.** Sessions 02–05 spell out how.
 | 16 | [Unit 15: capstones](16-unit-15-capstones.md) | XL | 03, 04, 05 | 17 |
 | 17 | [Unit 16: mastery loops and CLI field notes](17-unit-16-mastery-and-cli.md) | L | 16 | — |
 | 18 | [Curriculum graph and portability surfacing](18-curriculum-graph-and-portability.md) | M | 07, 08, 09, 10 | — |
+| 19 | [An Ex output surface for `:global` dry runs](19-ex-output-surface.md) | M | 01, 02 | — |
 
 ## Recommended execution order
 
@@ -117,8 +118,8 @@ review, content work needs canonical-solution replay and the viewport matrix.
 ## Progress
 
 - [x] 01 Engine conformance spike
-- [ ] 02 Scale mechanics
-- [ ] 03 Unit 14
+- [x] 02 Scale mechanics
+- [x] 03 Unit 14
 - [ ] 04 Unit 13
 - [ ] 05 Units 11–12
 - [ ] 06 Tool-choice activities
@@ -134,3 +135,4 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [ ] 16 Unit 15 capstones
 - [ ] 17 Unit 16 mastery loops
 - [ ] 18 Curriculum graph and portability
+- [ ] 19 Ex output surface

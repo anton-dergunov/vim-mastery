@@ -274,12 +274,18 @@ isolate in the same unit.
   14px code-size floor in `AGENTS.md`, that is worth a visual check — wide lines
   in the automation units are the most likely place for horizontal overflow.
 
-### 3.5 Rendering artifact to verify
+### 3.5 Rendering artifact to verify — resolved, no defect
 
-Several Unit 14 canonicals render as `: g/^const/s /old/ new/ ↵` — with spaces
-after `s` and inside the replacement. This is probably a `commandGroups` display
-boundary rather than the actual key stream, but it should be confirmed, because
-if it reaches the learner as shown it teaches an invalid command.
+Several Unit 14 canonicals were read as rendering `: g/^const/s /old/ new/ ↵` —
+with spaces after `s` and inside the replacement.
+
+**Confirmed benign.** `commandGroups[].display` is never rendered: `app.js` reads
+only `group.explanation` from the active group, and the command history is built
+from live engine key events, one `<kbd>` per key. Concatenating every Unit 14
+canonical's `display` values reproduces its key stream byte for byte, so no
+learner has ever seen the spaced form. The appearance came from this review's own
+tooling joining the display strings with a space. No content or code change was
+made.
 
 ---
 
