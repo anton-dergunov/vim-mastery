@@ -141,6 +141,37 @@ function parseSubstitution(input) {
   };
 }
 
+/**
+ * Count how many times a substitution would fire on one line. Vim replaces the
+ * first match per line unless the `g` flag is present, so the flag decides
+ * whether this counts once or exhausts the line.
+ */
+function countLineMatches(expression, text, global) {
+  if (!global) return expression.test(text) ? 1 : 0;
+  const scanner = new RegExp(expression.source, "g");
+  let count = 0;
+  let match = scanner.exec(text);
+  while (match !== null) {
+    count += 1;
+    // A zero-width match would otherwise pin `lastIndex` and loop forever.
+    if (match.index === scanner.lastIndex) scanner.lastIndex += 1;
+    match = scanner.exec(text);
+  }
+  return count;
+}
+
+function countSubstitutions(expression, lines, start, end, global) {
+  let substitutions = 0;
+  const matched = [];
+  for (let line = Math.max(0, start); line <= Math.min(lines.length - 1, end); line += 1) {
+    const count = countLineMatches(expression, lines[line], global);
+    if (!count) continue;
+    substitutions += count;
+    matched.push(line);
+  }
+  return substitutions ? { substitutions, lines: matched } : null;
+}
+
 function lineForMark(cm, name) {
   const marker = cm?.state?.vim?.marks?.[name];
   const position = marker?.find?.() || marker;
@@ -419,6 +450,14 @@ export class VimEngine {
     this.lastExCommand = null;
     this.lastSubstitution = null;
     this.lastSearchQuery = null;
+    // Vim prints a buffer-level report after a command and clears it on the
+    // next keystroke. `matchPattern` instead behaves like `hlsearch`: it holds
+    // the live pattern and matching lines are rescanned from the current
+    // document, so the marks can never point at stale line numbers.
+    this.lastImpact = null;
+    this.matchPattern = null;
+    this.pendingDecorations = null;
+    this.decorationFlush = false;
     this.awaitingColonRegister = false;
     this.awaitingCommandLineRegister = false;
     this.viewportRows = viewportRows;
@@ -537,7 +576,26 @@ export class VimEngine {
         register: macroMode?.latestRegister || null,
       },
       viewport: this.getViewport(),
+      impact: this.lastImpact,
+      matchLines: this.getMatchLines(),
     };
+  }
+
+  getMatchLines() {
+    if (!this.matchPattern) return [];
+    const expression = compileGlobalPattern(this.matchPattern);
+    if (!expression) return [];
+    const { doc } = this.view.state;
+    const lines = [];
+    for (let line = 1; line <= doc.lines; line += 1) {
+      expression.lastIndex = 0;
+      if (expression.test(doc.line(line).text)) lines.push(line - 1);
+    }
+    return lines;
+  }
+
+  setMatchPattern(pattern) {
+    this.matchPattern = pattern || null;
   }
 
   getViewport() {
@@ -557,8 +615,17 @@ export class VimEngine {
     if ((this.locked && !bypassLock) || !this.cm) return false;
     const vimKey = toVimKey(key);
     const canonicalKey = canonicalKeyToken(vimKey);
+    // Vim's report lives until the next keystroke, so retire it before this
+    // key runs. Commands that produce a new report set it again below.
+    this.lastImpact = null;
     this.effects.beginKey({ key: canonicalKey, source, before: this.getSnapshot() });
     const finish = handled => {
+      // CodeMirror defers scroll measurement, so flush it before snapshotting
+      // or the reported window lags the rendered one. This has to live in
+      // finish(): the command-line and confirmation paths return early and
+      // would otherwise never measure, which is how an Ex command could scroll
+      // the buffer while the position rail still showed the old window.
+      if (this.viewportRows) this.cm?.refresh?.();
       const after = this.getSnapshot();
       const pending = Boolean(
         this.cm?.state?.vim?.inputState?.operator
@@ -640,6 +707,8 @@ export class VimEngine {
             input.dispatchEvent(enterEvent);
           }
           this.lastSearchQuery = this.commandLine;
+          // A confirmed search is the live pattern, exactly like `hlsearch`.
+          this.setMatchPattern(this.commandLine);
           this.commandLine = null;
           this.commandPrefix = null;
         }
@@ -711,7 +780,6 @@ export class VimEngine {
       this.commandLine = commandInput.value || "";
       this.syncCommandInput();
     }
-    if (this.viewportRows) this.cm.refresh?.();
     this.disableNativeInputs();
     return finish(Boolean(handled));
   }
@@ -745,17 +813,62 @@ export class VimEngine {
     this.view.dispatch({ selection: EditorSelection.cursor(line.from) });
   }
 
-  showPreviewRange(range) {
-    if (!range) {
-      this.view.dispatch({ effects: setPreviewRange.of(Decoration.none) });
+  /**
+   * Decorations are requested from inside key handling, where dispatching
+   * straight away would re-enter CodeMirror while the Vim adapter is still
+   * mid-operation and leave `cm.state.vim` null. Deferring to a microtask
+   * applies them after the key has fully settled, and collapsing repeated
+   * requests keeps one dispatch per key.
+   */
+  scheduleDecorations(compute) {
+    this.pendingDecorations = compute;
+    if (this.decorationFlush) return;
+    this.decorationFlush = true;
+    queueMicrotask(() => {
+      this.decorationFlush = false;
+      const pending = this.pendingDecorations;
+      this.pendingDecorations = null;
+      if (!pending || !this.view.dom.isConnected) return;
+      this.view.dispatch({ effects: setPreviewRange.of(pending()) });
+    });
+  }
+
+  showPreviewRange(ranges) {
+    const list = (Array.isArray(ranges) ? ranges : [ranges]).filter(Boolean);
+    this.scheduleDecorations(() => {
+      const text = this.view.state.doc.toString();
+      const marks = [];
+      for (const range of list) {
+        const from = offsetForPosition(text, range.from);
+        const to = offsetForPosition(text, range.to);
+        if (from < to) marks.push(Decoration.mark({ class: range.className || "cm-preview-range" }).range(from, to));
+      }
+      // Decoration sets must be sorted by start offset.
+      marks.sort((left, right) => left.from - right.from);
+      return marks.length ? Decoration.set(marks) : Decoration.none;
+    });
+  }
+
+  /**
+   * Mark every on-screen line the live pattern matches. The rail ticks show
+   * where matches sit in the whole buffer; these marks give the visible ones a
+   * referent inside the code.
+   */
+  showMatchLines() {
+    const lines = this.getMatchLines();
+    if (!lines.length) {
+      this.showPreviewRange(null);
       return;
     }
-    const from = offsetForPosition(this.view.state.doc.toString(), range.from);
-    const to = offsetForPosition(this.view.state.doc.toString(), range.to);
-    const decoration = from < to
-      ? Decoration.set([Decoration.mark({ class: "cm-preview-range" }).range(from, to)])
-      : Decoration.none;
-    this.view.dispatch({ effects: setPreviewRange.of(decoration) });
+    const { doc } = this.view.state;
+    this.showPreviewRange(lines.map(line => {
+      const row = doc.line(line + 1);
+      return {
+        from: [line, 0],
+        to: [line, row.length],
+        className: "cm-match-line",
+      };
+    }));
   }
 
   clearEffects() {
@@ -763,11 +876,59 @@ export class VimEngine {
   }
 
   executeEx(command) {
-    if (this.executeGlobalOperation(command)) return;
-    if (this.executeNormalOperation(command)) return;
-    if (this.executeLineOperation(command)) return;
-    Vim.handleEx(this.cm, command);
-    this.moveCursorToLineStart();
+    const before = this.view.state.doc.toString().split("\n");
+    // `:nohlsearch` retires the live pattern, so the match map goes with it.
+    if (/^noh(?:l(?:search)?)?!?$/.test(command.trim())) this.setMatchPattern(null);
+    // `:global` reports its own substitution counts from the per-line loop it
+    // already runs, so only a bare `:substitute` is planned here.
+    const planned = parseGlobalOperation(this.cm, command) ? null : this.planSubstitutionReport(command);
+    if (!this.executeGlobalOperation(command) && !this.executeNormalOperation(command)
+      && !this.executeLineOperation(command)) {
+      Vim.handleEx(this.cm, command);
+      this.moveCursorToLineStart();
+      if (planned) this.reportSubstitutions(planned);
+    }
+    this.reportBufferChange(before);
+  }
+
+  /**
+   * Count the substitutions a `:s` command is about to make. Vim reports the
+   * same numbers, and counting before the edit keeps the source text intact.
+   */
+  planSubstitutionReport(command) {
+    const substitution = parseSubstitution(command);
+    if (!substitution) return null;
+    const pattern = substitution.pattern || this.lastSearchQuery;
+    if (!pattern) return null;
+    const range = parseRangePrefix(this.cm, command);
+    if (!range) return null;
+    const expression = compileGlobalPattern(pattern);
+    if (!expression) return null;
+    const report = countSubstitutions(expression, range.lines, range.start, range.end, substitution.flags.includes("g"));
+    return report ? { ...report, pattern } : null;
+  }
+
+  reportSubstitutions({ substitutions, lines, pattern }) {
+    this.lastImpact = { ...(this.lastImpact || {}), substitutions, substitutionLines: lines.length };
+    this.setMatchPattern(pattern);
+  }
+
+  /**
+   * A `:global` that rewrites lines in place changes no line count and reports
+   * no substitutions, yet it is exactly the command whose reach a learner
+   * cannot see through a small window. Counting the lines whose text actually
+   * changed gives that case a signal too.
+   */
+  reportBufferChange(before) {
+    const after = this.view.state.doc.toString().split("\n");
+    const lineDelta = after.length - before.length;
+    if (lineDelta) {
+      this.lastImpact = { ...(this.lastImpact || {}), lineDelta };
+      return;
+    }
+    const changedLines = before.reduce((count, line, index) => count + (line === after[index] ? 0 : 1), 0);
+    if (!changedLines && !this.lastImpact) return;
+    this.lastImpact = { ...(this.lastImpact || {}), lineDelta: 0, changedLines };
   }
 
   executeNormalKeys(keys, line) {
@@ -807,6 +968,9 @@ export class VimEngine {
       expression.lastIndex = 0;
       if (expression.test(lines[line]) !== inverted) matchingLines.push(line);
     }
+    // `:g` and `:v` both make the searched pattern the live one, matching how
+    // Vim leaves it in the search register.
+    this.setMatchPattern(pattern);
     if (!matchingLines.length || !nestedCommand) return true;
 
     if (/^(delete|d)(?:\s+["0-9a-z+_-])?$/.test(nestedCommand)) {
@@ -836,8 +1000,24 @@ export class VimEngine {
     }
 
     if (/^(substitute|s)(?=[^A-Za-z0-9\s])/.test(nestedCommand)) {
-      for (const line of matchingLines) Vim.handleEx(this.cm, `${line + 1}${nestedCommand}`);
+      const nested = parseSubstitution(nestedCommand);
+      const nestedExpression = nested && compileGlobalPattern(nested.pattern || this.lastSearchQuery || "");
+      let substitutions = 0;
+      const substituted = [];
+      for (const line of matchingLines) {
+        if (nestedExpression) {
+          const count = countLineMatches(nestedExpression, lines[line], nested.flags.includes("g"));
+          if (count) {
+            substitutions += count;
+            substituted.push(line);
+          }
+        }
+        Vim.handleEx(this.cm, `${line + 1}${nestedCommand}`);
+      }
       this.moveCursorToLineStart();
+      // The nested pattern is the one the learner sees replaced, so it wins the
+      // match map over the `:g` selector.
+      if (substitutions) this.reportSubstitutions({ substitutions, lines: substituted, pattern: nested.pattern || this.lastSearchQuery });
       return true;
     }
 

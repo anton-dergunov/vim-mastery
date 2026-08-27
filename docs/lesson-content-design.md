@@ -89,7 +89,22 @@ Runnable activities may use the optional `editor` configuration:
 - `editor.viewportRows` fixes the editor to that many 24px logical rows. Unit 9
   uses seven rows so the middle row and every viewport command remain identical
   at all supported phone widths. Initial states, targets, and checkpoints may
-  include a semantic `viewport` with zero-based `topLine` and `bottomLine`.
+  include a semantic `viewport` with zero-based `topLine` and `bottomLine`. A
+  windowed buffer is the way to author realistic automation scale without
+  showing more rows: the buffer can be long while the window stays small.
+- `editor.viewportDependent: true` declares that the activity's *correctness*
+  depends on how many rows are visible, as opposed to the window being mere
+  presentation. An activity is viewport-dependent exactly when it asserts a
+  semantic `viewport` in `scenario.target` or in a `script` checkpoint, because
+  those assertions are what a larger editor would silently break. Declare it
+  alongside `viewportRows`; the flag and that derived signal are asserted to
+  agree, so a presentation-only windowed activity must omit it and must not
+  assert a viewport.
+- Lines in a windowed activity must fit the fixed window horizontally. At
+  360x740 a 306px scroller less the 26px gutter and 18px of padding leaves
+  261px, and the 14px monospace advance is 8.65px, so **30 columns** is the
+  authoring limit. Overflow is unrecoverable there: the scroller hides it and
+  direct scrolling is suppressed. Unit 9 predates this limit and is exempt.
 
 Activities without these fields retain the normal unwrapped editor with
 whitespace hidden. Editor indentation is fixed at two spaces so shift and
@@ -110,6 +125,31 @@ viewport position. Temporary edits are allowed only when the setup restores the
 authored visible text before control reaches the learner. Setup never appears in
 attempt history or replaces a normal teaching script. Reset reconstructs and
 verifies the seeded state.
+
+`initial.viewport` is an assertion, not an instruction: the window position
+comes from replaying `initial.setup.steps`, and the authored value records where
+that replay is expected to land. A mismatch is reported as setup drift rather
+than being silently corrected.
+
+## Reporting a command's reach
+
+Two affordances make an edit legible when most of the lines it touches sit
+outside the window, and neither costs a code row.
+
+- The **impact readout** restates a command's buffer-level effect the way Vim
+  does—`7 fewer lines`, `9 substitutions on 6 lines`, `3 more lines`. It shares
+  the reserved history-label row in the status tray and is announced to screen
+  readers. It appears only when the effect spans more than one line or reaches a
+  line outside the window, so a single-line edit stays quiet. That threshold is
+  a deliberate superset of Vim's `'report'` default of 2.
+- The **match map** marks every buffer line the live pattern hits on the
+  existing position rail, off-screen lines included, and highlights the matched
+  lines that are currently visible. The pattern comes from a confirmed search or
+  from `:s`, `:g`, and `:v`; `:nohlsearch` retires it. Matching lines are
+  rescanned from the current buffer, so the marks can never go stale, and the
+  map disappears on its own once nothing matches. Rail ticks and the window
+  thumb share one line-proportional mapping: a tick inside the thumb is a match
+  that is currently on screen.
 
 ## Scripts, playback, and reset
 

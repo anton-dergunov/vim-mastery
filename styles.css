@@ -1352,11 +1352,27 @@ html.next-ui .command-explanation {
 
 html.next-ui .command-history-label {
   margin-top: 2px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
   color: #789487;
   font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
+
+/* Vim's own buffer report. The label yields the row so the message never has
+   to ellipsize at 360px. */
+html.next-ui .impact-readout {
+  color: color-mix(in srgb, var(--theme-bright) 78%, #cfe3d6);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+  text-transform: none;
+  white-space: nowrap;
+}
+html.next-ui .command-history-label.has-impact .history-label { display: none; }
+html.next-ui .command-history-label:not(.has-impact) .impact-readout { display: none; }
 
 html.next-ui .execution-status {
   min-width: 0;
@@ -1523,15 +1539,31 @@ html.next-ui .buffer-track {
   border-radius: 3px;
   background: rgba(137, 174, 156, .13);
 }
+/* The thumb is the window itself: a lit band the match ticks are read
+   against, so a tick sitting on the band is a match that is on screen. */
 html.next-ui .buffer-track i {
   position: absolute;
-  left: 0;
-  width: 3px;
+  left: -2px;
+  width: 7px;
   min-height: 14px;
   border-radius: 3px;
-  background: color-mix(in srgb, var(--theme-bright) 62%, #789083);
-  box-shadow: 0 0 4px color-mix(in srgb, var(--theme-bright) 28%, transparent);
+  background: color-mix(in srgb, var(--theme-bright) 26%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--theme-bright) 52%, transparent);
 }
+/* The match map. Ticks share the thumb's line-proportional mapping, so a tick
+   inside the thumb is a match that is currently on screen. */
+html.next-ui .match-tick {
+  position: absolute;
+  left: -1px;
+  z-index: 1;
+  width: 5px;
+  min-height: 2px;
+  max-height: 4px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--theme-warm) 82%, #ffd98a);
+  box-shadow: 0 0 3px color-mix(in srgb, var(--theme-warm) 45%, transparent);
+}
+
 html.next-ui .buffer-cue {
   color: color-mix(in srgb, var(--theme-warm) 76%, #7f9187);
   font: 700 7px/10px ui-monospace, monospace;
@@ -2758,6 +2790,9 @@ html.next-ui .inspection-choice .choice-options { margin-top: 9px; gap: 5px; }
 html.next-ui .inspection-choice .choice-option { min-height: 38px; padding: 7px 10px; font-size: 12px; }
 html.next-ui .inspection-choice .choice-feedback { margin: 8px 0 0; font-size: 12px; }
 html.next-ui .cm-preview-range { background: rgba(255, 207, 101, .3); outline: 1px solid rgba(255, 222, 139, .75); }
+/* Matched lines sit behind the preview range in emphasis: they mark where the
+   live pattern hits without competing with an authored checkpoint range. */
+html.next-ui .cm-match-line { background: rgba(255, 207, 101, .14); border-radius: 2px; }
 
 /* Semantic Vim effects stay inside CodeMirror's decoration layer. They use
    borders and low-alpha color so the affected text remains fully readable. */
@@ -3170,6 +3205,7 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .command-explanation { font-size: 14px; line-height: 1.28; }
   html.next-ui .command-explanation code { padding-inline: .12em; }
   html.next-ui .command-history-label { display: none; }
+  html.next-ui .command-history-label.has-impact { display: flex; grid-row: 3; margin-top: 0; }
   html.next-ui .next-command-tray .command-text { grid-row: 2; align-self: stretch; font-size: 13px; }
   html.next-ui .execution-copy { grid-template-rows: auto minmax(25px, 1fr); }
   html.next-ui .world { min-height: 220px; }
@@ -3226,6 +3262,8 @@ html.next-ui .keyboard-options small { color: #91aa9d; font-size: 13px; line-hei
   html.next-ui .execution-copy { padding: 7px 8px; gap: 3px; }
   html.next-ui .command-explanation { font-size: 11px; line-height: 1.2; }
   html.next-ui .command-history-label { display: none; }
+  html.next-ui .command-history-label.has-impact { display: flex; grid-row: 3; margin-top: 0; }
+  html.next-ui .command-history-label.has-impact .impact-readout { font-size: 9px; }
   html.next-ui .next-command-tray .command-text { grid-row: 2; font-size: 10px; line-height: 1.2; }
   html.next-ui .execution-copy { grid-template-rows: minmax(0, 1fr) auto; }
   html.next-ui .next-command-tray.is-step-status .status-primary,

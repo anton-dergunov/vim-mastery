@@ -422,7 +422,10 @@ test("runnable activities reserve every authored editor row before execution", (
     maximum: 12,
     description: "Reserve at least this many logical rows when authored transient states need more space than initial, target, or checkpoints reveal.",
   });
-  assert.deepEqual(schema.$defs.editorConfig.allOf, [{ not: { required: ["requiredRows", "viewportRows"] } }]);
+  assert.deepEqual(schema.$defs.editorConfig.allOf, [
+    { not: { required: ["requiredRows", "viewportRows"] } },
+    { if: { required: ["viewportDependent"] }, then: { required: ["viewportRows"] } },
+  ]);
 
   const growing = [];
   for (const { data } of units) {
@@ -1576,4 +1579,60 @@ test("native Vim accepts gj and gk as logical-line equivalents without wrapping"
   const up = runNativeVim({ initialCode, cursor: [2, 2], keys: ["g", "k"] });
   assert.deepEqual(down.cursor, [1, 2]);
   assert.deepEqual(up.cursor, [1, 2]);
+});
+
+test("viewport dependence is declared wherever a semantic viewport is asserted", () => {
+  assert.deepEqual(schema.$defs.editorConfig.properties.viewportDependent, {
+    type: "boolean",
+    description: "Declare that this activity's correctness depends on the visible row count, because it asserts a semantic viewport in scenario.target or script.checkpoints. Presentation-only viewport activities frame a long buffer without asserting one and must omit this flag.",
+  });
+
+  // An activity is viewport-dependent exactly when it asserts a viewport: those
+  // assertions are what a larger desktop editor would silently break. Comparing
+  // the declared flag against that derived signal catches a missing flag and a
+  // stray assertion on a presentation-only activity alike.
+  for (const { data } of units) {
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities) {
+        const assertsViewport = Boolean(activity.scenario?.target?.viewport)
+          || (activity.script?.checkpoints || []).some(checkpoint => checkpoint.viewport);
+        const declared = Boolean(activity.editor?.viewportDependent);
+        assert.equal(declared, assertsViewport, `${data.id}/${activity.id} declares viewportDependent ${declared} but asserts viewport ${assertsViewport}`);
+        if (declared) {
+          assert(activity.editor?.viewportRows, `${data.id}/${activity.id} declares viewportDependent without viewportRows`);
+        }
+      }
+    }
+  }
+});
+
+test("viewport activities keep every buffer line inside the fixed window", () => {
+  // `.has-viewport .cm-scroller` hides overflow, so a line wider than the slab
+  // is clipped with no way to reveal its tail. Measured at 360x740: a 306px
+  // scroller less the 26px gutter and 18px of padding leaves 261px, and the
+  // 14px monospace advance is 8.65px, so 30 columns is the authoring limit.
+  //
+  // Unit 9 predates this guard and ships lines up to 59 columns, overflowing to
+  // 555px against that 306px scroller. Re-authoring those 30-line buffers is
+  // content work outside this session; the exemption keeps the known gap
+  // visible instead of loosening the limit for new content.
+  const maximumColumns = 30;
+  const exempt = new Set(["long-range-navigation"]);
+  for (const { data } of units) {
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities) {
+        if (!activity.editor?.viewportRows || exempt.has(data.id)) continue;
+        const authored = [
+          activity.scenario?.initial?.lines,
+          activity.scenario?.target?.lines,
+          ...(activity.script?.checkpoints || []).map(checkpoint => checkpoint.lines),
+        ].filter(Array.isArray);
+        for (const lines of authored) {
+          for (const line of lines) {
+            assert(line.length <= maximumColumns, `${data.id}/${activity.id} viewport line exceeds ${maximumColumns} columns: ${line.length}`);
+          }
+        }
+      }
+    }
+  }
 });

@@ -2247,4 +2247,194 @@ test.describe("Production lesson flow", () => {
       }
     }
   });
+
+  test("reports a substitution's buffer-level impact the way Vim does", async ({ page }) => {
+    await page.goto("/?unit=substitution-practical-regex&activity=terminal-substitute-demo");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const current = await state(page);
+    expect(current.impact).toMatchObject({ substitutions: 3, substitutionLines: 3 });
+    expect(current.impactMessage).toBe("3 substitutions on 3 lines");
+    await expect(page.locator(".impact-readout")).toHaveText("3 substitutions on 3 lines");
+    await expect(page.locator(".command-history-label")).toHaveClass(/has-impact/);
+
+    // Resetting the activity retires the report with the buffer it described.
+    await page.getByRole("button", { name: "Reset", exact: true }).click();
+    expect((await state(page)).impactMessage).toBe("");
+    await expect(page.locator(".impact-readout")).toHaveText("");
+  });
+
+  test("retires the impact readout on the next demo step", async ({ page }) => {
+    // `:2,3yank` reports nothing, `:4put` adds two lines, and the report lasts
+    // exactly as long as the keystroke that follows it takes to arrive.
+    await page.goto("/?unit=command-line-ranges-line-operations&activity=range-yank-put-demo");
+    const keys = keysFor(rangeActivities.find(activity => activity.id === "range-yank-put-demo"));
+    const enterSteps = keys.reduce((stops, key, index) => key === "Enter" ? [...stops, index] : stops, []);
+    expect(enterSteps).toHaveLength(2);
+
+    for (let step = 0; step <= enterSteps[0]; step += 1) {
+      await page.getByRole("button", { name: "Step" }).click();
+    }
+    expect((await state(page)).impactMessage).toBe("");
+
+    for (let step = enterSteps[0] + 1; step <= enterSteps[1]; step += 1) {
+      await page.getByRole("button", { name: "Step" }).click();
+    }
+    expect((await state(page)).impactMessage).toBe("2 more lines");
+    await expect(page.locator(".impact-readout")).toHaveText("2 more lines");
+  });
+
+  test("reports removed lines and suppresses the readout for a single-line edit", async ({ page }) => {
+    await page.goto("/?unit=global-normal-automation&activity=global-delete-demo");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const removed = await state(page);
+    expect(removed.impact).toMatchObject({ lineDelta: -2 });
+    expect(removed.impactMessage).toBe("2 fewer lines");
+
+    // A one-line change inside a fully visible buffer needs no readout.
+    await page.goto("/?unit=substitution-practical-regex&activity=rename-current-status");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const single = await state(page);
+    expect(single.impact).toMatchObject({ substitutions: 1, substitutionLines: 1 });
+    expect(single.impactMessage).toBe("");
+    await expect(page.locator(".impact-readout")).toHaveText("");
+  });
+
+  test("keeps the execution console height stable when the impact readout appears", async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/?unit=global-normal-automation&activity=global-delete-demo");
+    const height = () => page.evaluate(() => getComputedStyle(document.querySelector("#phone"))
+      .getPropertyValue("--execution-console-height").trim());
+    await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone"))
+      .getPropertyValue("--execution-console-height").trim());
+    const before = await height();
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    await expect(page.locator(".impact-readout")).toHaveText("2 fewer lines");
+    expect(await height()).toBe(before);
+    const layout = await page.evaluate(() => ({
+      readoutVisible: document.querySelector(".impact-readout").getClientRects().length > 0,
+      clipped: document.querySelector(".impact-readout").scrollWidth > document.querySelector(".impact-readout").clientWidth + 1,
+      ellipsis: getComputedStyle(document.querySelector(".impact-readout")).textOverflow === "ellipsis",
+      overflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
+    }));
+    expect(layout).toEqual({ readoutVisible: true, clipped: false, ellipsis: false, overflow: false });
+  });
+
+  test("maps the buffer window onto the rail with line-proportional geometry", async ({ page }) => {
+    await page.goto("/?unit=macros&activity=count-ten-csv-rows");
+    const start = await state(page);
+    expect(start.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 12 });
+    expect(start.matchLines).toEqual([]);
+    await expect(page.locator(".buffer-position")).not.toHaveClass(/has-matches/);
+    expect(await page.locator(".match-tick").count()).toBe(0);
+
+    // Thumb and ticks share one mapping: a line occupies the same fraction of
+    // the track either way, so a tick inside the thumb is a match on screen.
+    const parse = () => page.evaluate(() => {
+      const thumb = document.querySelector(".buffer-track i");
+      return { top: Number.parseFloat(thumb.style.top), height: Number.parseFloat(thumb.style.height) };
+    });
+    const before = await parse();
+    expect(before.top).toBeCloseTo(0, 3);
+    expect(before.height).toBeCloseTo(700 / 12, 3);
+
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const after = await parse();
+    expect((await state(page)).viewport).toMatchObject({ topLine: 5, bottomLine: 11, totalLines: 12 });
+    expect(after.top).toBeCloseTo(500 / 12, 3);
+    expect(after.height).toBeCloseTo(700 / 12, 3);
+  });
+
+  test("marks every line a global command matched, including unchanged ones", async ({ page }) => {
+    // `:g/TODO/normal I// ` leaves the matched lines in place, so the pattern
+    // stays live and the map keeps marking where it hits.
+    await page.goto("/?unit=global-normal-automation&activity=global-normal-todos");
+    expect((await state(page)).matchLines).toEqual([]);
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const matched = await state(page);
+    expect(matched.matchLines).toEqual([0, 2]);
+    await expect(page.locator(".cm-match-line")).toHaveCount(2);
+    // A fully visible buffer needs no rail, so the map costs nothing there.
+    expect(await page.locator(".buffer-position").count()).toBe(0);
+  });
+
+  test("clears the match map when the pattern stops matching", async ({ page }) => {
+    await page.goto("/?unit=global-normal-automation&activity=global-delete-demo");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    // `:g/DEBUG/delete` removes every match, so the map has nothing left to
+    // mark and disappears on its own.
+    expect((await state(page)).matchLines).toEqual([]);
+    expect(await page.locator(".match-tick").count()).toBe(0);
+  });
+
+  test("follows the cursor and restores the window for a non-viewport lesson", async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/?unit=macros&activity=count-ten-csv-rows");
+    const start = await state(page);
+    expect(start.viewportDependent).toBe(false);
+    expect(start.setupDrift).toBeNull();
+    expect(start.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 12 });
+
+    // The macro walks the cursor to the last row, so the window has to follow.
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const solved = await state(page);
+    expect(solved.complete).toBe(true);
+    expect(solved.cursor[0]).toBeGreaterThan(solved.viewport.topLine - 1);
+    expect(solved.viewport.topLine).toBeGreaterThan(0);
+    expect(solved.viewport.bottomLine).toBe(11);
+
+    // Remounting rebuilds the authored window rather than leaving it where the
+    // solved macro left it.
+    const index = (await state(page)).activityIndex;
+    await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
+    const remounted = await state(page);
+    expect(remounted.viewport).toEqual(start.viewport);
+    expect(remounted.setupDrift).toBeNull();
+    expect(remounted.complete).toBe(false);
+
+    const fit = await page.evaluate(() => {
+      const scroller = document.querySelector(".cm-scroller");
+      return {
+        horizontal: scroller.scrollWidth > scroller.clientWidth + 1,
+        overflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
+      };
+    });
+    expect(fit).toEqual({ horizontal: false, overflow: false });
+  });
+
+  test("reports the window that is actually rendered, not the one it left", async ({ page }) => {
+    // CodeMirror defers scroll measurement, so every sendKey path has to flush
+    // it before snapshotting. The command-line and confirmation paths return
+    // early, which is how an Ex command could scroll the buffer while the
+    // reported viewport and its rail still showed the previous window.
+    await page.goto("/?unit=macros&activity=count-ten-csv-rows");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const solved = await state(page);
+    const scrollTop = await page.evaluate(() => Math.round(document.querySelector(".cm-scroller").scrollTop / 24));
+    expect(solved.viewport.topLine).toBe(scrollTop);
+    expect(solved.viewport.topLine).toBeGreaterThan(0);
+
+    // The rail has to agree with both.
+    const thumbTop = await page.evaluate(() => Number.parseFloat(document.querySelector(".buffer-track i").style.top));
+    expect(thumbTop).toBeCloseTo(solved.viewport.topLine * 100 / solved.viewport.totalLines, 3);
+  });
+
+  test("reconstructs the authored window with no drift across every viewport activity", async ({ page }) => {
+    await page.goto("/?unit=long-range-navigation");
+    const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
+    const drifted = [];
+    let windowed = 0;
+    for (let index = 0; index < activityCount; index += 1) {
+      await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
+      const current = await state(page);
+      if (current.setupDrift) drifted.push(current.setupDrift);
+      if (!current.viewport || current.viewport.totalLines === current.viewport.bottomLine - current.viewport.topLine + 1) continue;
+      // Unit 9's correctness depends on the visible row count, so every one of
+      // its windowed activities declares that dependence.
+      windowed += 1;
+      expect(current.viewportDependent, `activity ${index} declares viewport dependence`).toBe(true);
+      expect(current.viewport.bottomLine - current.viewport.topLine + 1, `activity ${index} window rows`).toBe(7);
+    }
+    expect(drifted).toEqual([]);
+    expect(windowed).toBeGreaterThanOrEqual(51);
+  });
 });

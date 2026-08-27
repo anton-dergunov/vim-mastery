@@ -85,12 +85,13 @@
     },
     "editorConfig": {
       "type":"object","additionalProperties":false,
-      "allOf":[{"not":{"required":["requiredRows","viewportRows"]}}],
+      "allOf":[{"not":{"required":["requiredRows","viewportRows"]}},{"if":{"required":["viewportDependent"]},"then":{"required":["viewportRows"]}}],
       "properties":{
         "wrapColumns":{"type":"integer","minimum":12,"maximum":80},
         "textWidth":{"type":"integer","minimum":20,"maximum":80,"description":"Set Vim textwidth for deterministic gq/gw formatting."},
         "requiredRows":{"type":"integer","minimum":1,"maximum":12,"description":"Reserve at least this many logical rows when authored transient states need more space than initial, target, or checkpoints reveal."},
         "viewportRows":{"type":"integer","minimum":5,"maximum":12,"description":"Fix the editor to an exact number of 24px logical rows for deterministic viewport lessons."},
+        "viewportDependent":{"type":"boolean","description":"Declare that this activity's correctness depends on the visible row count, because it asserts a semantic viewport in scenario.target or script.checkpoints. Presentation-only viewport activities frame a long buffer without asserting one and must omit this flag."},
         "visualizeWhitespace":{"type":"boolean","description":"Render spaces as dots and tabs as arrows for this activity."}
       }
     },

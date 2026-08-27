@@ -258,7 +258,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -467,7 +468,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -674,7 +676,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -881,7 +884,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -1106,7 +1110,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -1314,7 +1319,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -1522,7 +1528,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -1730,7 +1737,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -1954,7 +1962,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -2161,7 +2170,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -2368,7 +2378,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -2575,7 +2586,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -2799,7 +2811,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -3006,7 +3019,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -3232,7 +3246,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -3458,7 +3473,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -3690,7 +3706,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -3906,7 +3923,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -4119,7 +4137,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -4332,7 +4351,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -4559,7 +4579,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -4784,7 +4805,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -4995,7 +5017,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -5206,7 +5229,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -5436,7 +5460,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -5649,7 +5674,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -5862,7 +5888,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -6082,7 +6109,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -6299,7 +6327,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -6531,7 +6560,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -6746,7 +6776,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -6961,7 +6992,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -7176,7 +7208,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -7411,7 +7444,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -7650,7 +7684,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -7910,7 +7945,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -8129,7 +8165,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -8354,7 +8391,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -8562,7 +8600,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -8770,7 +8809,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -8978,7 +9018,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -9186,7 +9227,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -9394,7 +9436,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -9602,7 +9645,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -9810,7 +9854,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -10018,7 +10063,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -10226,7 +10272,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         }
       ]
@@ -10477,7 +10524,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -10687,7 +10735,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -10915,7 +10964,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {
@@ -11136,7 +11186,8 @@
             ]
           },
           "editor": {
-            "viewportRows": 7
+            "viewportRows": 7,
+            "viewportDependent": true
           }
         },
         {

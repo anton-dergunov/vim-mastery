@@ -184,6 +184,7 @@ const state = {
   complete: false,
   choiceResult: null,
   editorSnapshot: null,
+  setupDrift: null,
   playbackStep: 0,
   playbackTimer: null,
   playbackMode: null,
@@ -742,6 +743,22 @@ function mountEditor() {
     && state.editorSnapshot.cursorPosition[1] === initial.cursor[1]
     && (!initial.viewport || (state.editorSnapshot.viewport.topLine === initial.viewport.topLine
       && state.editorSnapshot.viewport.bottomLine === initial.viewport.bottomLine));
+  // Authored `initial.viewport` is an assertion, not an instruction: the real
+  // scroll comes from replaying `setup.steps`. Recording the drift makes that
+  // contract testable instead of console-only.
+  state.setupDrift = setupMatches ? null : {
+    activityId: activity.id,
+    expected: {
+      cursor: initial.cursor,
+      mode: initial.mode,
+      viewport: initial.viewport || null,
+    },
+    actual: {
+      cursor: state.editorSnapshot.cursorPosition,
+      mode: state.editorSnapshot.mode,
+      viewport: state.editorSnapshot.viewport,
+    },
+  };
   if (!setupMatches) console.warn(`Initial editor setup drifted for ${activity.id}`, state.editorSnapshot, initial);
   vimEngine.setLocked(!isPractice(activity));
   if (state.complete && activity.inspection?.revealRange) vimEngine.showPreviewRange(activity.inspection.revealRange);
@@ -805,6 +822,9 @@ function executionContent(activity, step, history, complete = false, preview = {
   const policy = preview.policy === undefined ? practicePolicy(activity) : preview.policy;
   const recallFeedback = preview.recallFeedback === undefined ? state.recallFeedback : preview.recallFeedback;
   const exploreTargetReached = preview.exploreTargetReached === undefined ? state.exploreTargetReached : preview.exploreTargetReached;
+  const impact = preview.impact === undefined
+    ? (shouldReportImpact() ? impactMessage() : "")
+    : preview.impact;
   const explore = policy === practicePolicyValues.explore;
   const recall = policy === practicePolicyValues.recall && !done;
   const reveal = recall && recallFeedback === "reveal";
@@ -820,6 +840,7 @@ function executionContent(activity, step, history, complete = false, preview = {
       stepStatus: false,
       key: null,
       assembly: [],
+      impact,
     };
   }
   return {
@@ -832,6 +853,7 @@ function executionContent(activity, step, history, complete = false, preview = {
     stepStatus: !done && activity.type === "demo",
     key: done || (recall && !reveal) ? null : keys[step],
     assembly: executionAssembly(activity.script.steps, step, done),
+    impact,
   };
 }
 
@@ -843,6 +865,11 @@ function applyExecutionContent(root, content) {
   const history = $(".command-text", root);
   history.innerHTML = renderHistory(content.history);
   history.scrollTop = history.scrollHeight;
+  const impact = $(".impact-readout", root);
+  impact.textContent = content.impact || "";
+  // The readout takes the whole row when it is present so it never has to
+  // ellipsize beside the label at 360px.
+  $(".command-history-label", root).classList.toggle("has-impact", Boolean(content.impact));
   $(".status-primary", root).textContent = content.primary;
   $(".status-secondary", root).textContent = content.secondary;
   root.classList.toggle("is-step-status", content.stepStatus);
@@ -859,11 +886,19 @@ function executionMeasurementContents(activity) {
       contents.push(executionContent(activity, step, keys.slice(0, step), step >= keys.length, {
         policy,
         recallFeedback,
+        impact: "",
       }));
     }
   };
+  // The readout shares the reserved history-label row, but measuring a
+  // representative message keeps the console height stable if it ever wraps.
+  const addImpactVariant = policy => contents.push(executionContent(activity, 0, keys.slice(0, 1), false, {
+    policy,
+    impact: "99 substitutions on 99 lines",
+  }));
   if (isDemo(activity)) {
     addSequence(null);
+    addImpactVariant(null);
   } else {
     const policy = basePracticePolicy(activity);
     addSequence(policy);
@@ -878,7 +913,9 @@ function executionMeasurementContents(activity) {
     contents.push(executionContent(activity, 0, keys, false, {
       policy: practicePolicyValues.explore,
       exploreTargetReached: true,
+      impact: "",
     }));
+    addImpactVariant(basePracticePolicy(activity));
   }
   return contents;
 }
@@ -897,6 +934,10 @@ function measureExecutionConsole() {
   probe.removeAttribute("id");
   probe.removeAttribute("aria-live");
   probe.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+  probe.querySelectorAll("[aria-live], [role=status]").forEach(node => {
+    node.removeAttribute("aria-live");
+    node.removeAttribute("role");
+  });
   probe.classList.remove("hidden");
   probe.classList.add("execution-measure");
   probe.style.width = `${elements.commandTray.getBoundingClientRect().width}px`;
@@ -1231,18 +1272,82 @@ function isTargetSnapshot(snapshot) {
     && viewportMatches;
 }
 
+/**
+ * A demo checkpoint's affected range is the more specific signal, so it wins
+ * over the live pattern's match lines whenever one is authored.
+ */
+function renderEditorMarks(range = null) {
+  if (!vimEngine) return;
+  if (range) vimEngine.showPreviewRange(range);
+  else vimEngine.showMatchLines();
+}
+
 function renderBufferPosition() {
   const rail = $(".buffer-position", elements.worldGrid);
   const viewport = state.editorSnapshot?.viewport;
   if (!rail || !viewport) return;
   const visibleLines = viewport.bottomLine - viewport.topLine + 1;
-  const travel = Math.max(0, viewport.totalLines - visibleLines);
   const thumb = $(".buffer-track i", rail);
-  const ratio = Math.min(1, visibleLines / viewport.totalLines);
+  // Both the thumb and the match ticks map a buffer line to the same fraction
+  // of the track, so a tick inside the thumb means that line is on screen.
+  const rowHeight = 100 / viewport.totalLines;
   rail.classList.toggle("has-above", viewport.topLine > 0);
   rail.classList.toggle("has-below", viewport.bottomLine < viewport.totalLines - 1);
-  thumb.style.height = `${Math.max(14, ratio * 100)}%`;
-  thumb.style.top = `${travel ? (viewport.topLine / travel) * (100 - Math.max(14, ratio * 100)) : 0}%`;
+  thumb.style.height = `${visibleLines * rowHeight}%`;
+  thumb.style.top = `${viewport.topLine * rowHeight}%`;
+  renderMatchMap(rail, viewport);
+}
+
+function renderMatchMap(rail, viewport) {
+  const track = $(".buffer-track", rail);
+  const matches = state.editorSnapshot?.matchLines || [];
+  track.querySelectorAll(".match-tick").forEach(tick => tick.remove());
+  rail.classList.toggle("has-matches", matches.length > 0);
+  const rowHeight = 100 / viewport.totalLines;
+  for (const line of matches) {
+    const tick = document.createElement("span");
+    tick.className = "match-tick";
+    tick.style.top = `${line * rowHeight}%`;
+    tick.style.height = `${rowHeight}%`;
+    track.append(tick);
+  }
+}
+
+/**
+ * Vim prints a buffer-level report after a command. Reproducing it is what
+ * makes an edit legible when most of the lines it touched are off-screen.
+ */
+function impactMessage(snapshot = state.editorSnapshot) {
+  const impact = snapshot?.impact;
+  if (!impact) return "";
+  if (impact.substitutions) {
+    const substitutions = `${impact.substitutions} substitution${impact.substitutions === 1 ? "" : "s"}`;
+    const lines = `${impact.substitutionLines} line${impact.substitutionLines === 1 ? "" : "s"}`;
+    return `${substitutions} on ${lines}`;
+  }
+  const delta = impact.lineDelta || 0;
+  if (delta) {
+    const count = Math.abs(delta);
+    return `${count} ${delta > 0 ? "more" : "fewer"} line${count === 1 ? "" : "s"}`;
+  }
+  const changed = impact.changedLines || 0;
+  return changed ? `${changed} line${changed === 1 ? "" : "s"} changed` : "";
+}
+
+/**
+ * A single-line edit needs no readout. Report only when the effect spans more
+ * than one line or reaches past the visible window, which is a superset of
+ * Vim's `'report'` threshold.
+ */
+function shouldReportImpact(snapshot = state.editorSnapshot) {
+  const impact = snapshot?.impact;
+  if (!impact) return false;
+  const touchedLines = impact.substitutions
+    ? impact.substitutionLines
+    : Math.abs(impact.lineDelta || 0) || impact.changedLines || 0;
+  if (touchedLines > 1) return true;
+  const viewport = snapshot?.viewport;
+  return (snapshot?.matchLines || []).some(line => viewport && (line < viewport.topLine || line > viewport.bottomLine));
 }
 
 function completeActivity() {
@@ -1276,6 +1381,7 @@ function handleEngineEvent(event) {
   if (event.kind === "key" && event.source === "physical") return;
   state.editorSnapshot = event.snapshot;
   renderBufferPosition();
+  renderEditorMarks();
   // Only the gate's explicit injection is evidence of learner/demo progress.
   // CodeMirror can also report keypresses from its transient search prompt;
   // those must not turn an accepted sequence into a different one.
@@ -1375,7 +1481,7 @@ function rawDemoStep() {
   state.playbackStep += 1;
   const renderedStep = state.playbackStep;
   const checkpoint = currentActivity().script.checkpoints?.find(item => item.afterStep === renderedStep);
-  vimEngine.showPreviewRange(checkpoint?.affectedRange || null);
+  renderEditorMarks(checkpoint?.affectedRange || null);
   // CodeMirror positions its block cursor in its next measurement frame.
   // Defer the surrounding demo status by the same frame so a visible step
   // never advertises a new command while showing the previous cursor.
@@ -1426,7 +1532,7 @@ function backDemo() {
   state.playbackStops = remainingStops;
   while (state.playbackStep < target) rawDemoStep();
   const checkpoint = currentActivity().script.checkpoints?.find(item => item.afterStep === target);
-  vimEngine.showPreviewRange(checkpoint?.affectedRange || null);
+  renderEditorMarks(checkpoint?.affectedRange || null);
   renderCommand();
   renderActivityControls();
   vibrate(5);
@@ -1917,6 +2023,11 @@ window.VimWilds = Object.freeze({
       cursor: snapshot?.cursorPosition || [0, 0],
       registers: snapshot?.registers || {},
       viewport: snapshot?.viewport || null,
+      viewportDependent: Boolean(currentActivity().editor?.viewportDependent),
+      matchLines: snapshot?.matchLines || [],
+      impact: snapshot?.impact || null,
+      impactMessage: shouldReportImpact(snapshot) ? impactMessage(snapshot) : "",
+      setupDrift: state.setupDrift || null,
       selection,
       mode: state.complete ? "Complete" : (snapshot?.mode || "normal"),
       modifiers: [...state.modifiers],
