@@ -123,6 +123,10 @@ cover Insert text containing `/`, touch and physical entry of `@`, reset
 isolation, and command-only macro text put/edit/yank workflows. Insert-heavy
 macros are validated through their text and cursor results because the adapter
 stores recorded Insert changes separately from its printable register text.
+Inspection content therefore never seeds a register by recording: Vim writes
+K_SPECIAL prefixes into a recorded register, and while `getreg` readouts hide
+them, `"ap` puts those raw bytes into the buffer. Unit 13 keeps macro text as
+buffer text and loads it with `"ay$`, which is the verified round trip.
 Recursive macros remain optional explanatory material and are not part of the
 supported progression.
 

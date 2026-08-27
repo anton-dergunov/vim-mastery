@@ -1,8 +1,50 @@
 # Session 04 — Unit 13: macro rework
 
-**Depends on:** 02 (viewport) · **Blocks:** 16
+**Status:** complete · **Depends on:** 02 (viewport) · **Blocks:** 16
 **Touches:** `content/units/13-macros.json`
 **Size:** L
+
+## What executing it changed
+
+**The window is per activity, not seven everywhere.** Session 03 put all of Unit
+14 on a uniform seven-row window. Unit 13 instead takes the smallest window each
+activity needs: five rows for short recordings, six as the default, and seven
+only for the three activities whose lesson *is* reach beyond the window
+(`count-scattered-csv`, `failed-semicolon-demo`, `selective-error-log`).
+Measured at 360×740, a seven-row window leaves the board 246px and a six-row one
+268px, with the keyboard bottom at 733px of 740 either way. Nothing overflows at
+seven rows, but rows are not free, so the unit only spends them where they teach.
+
+**A macro register cannot be seeded by recording during setup.** Vim stores
+K_SPECIAL prefixes inside a recorded register. `getreg` readouts hide them (the
+native runner strips them), but `"ap` puts the raw bytes into the buffer, so an
+inspect-or-repair activity seeded that way shows mojibake. The lesson therefore
+keeps macro text as *buffer* text and yanks it with `"ay$` — which is also the
+workflow `docs/vim-conformance.md` records as verified. `put-macro-demo` makes
+that the teaching point rather than a workaround: a yanked line of commands
+replays exactly like a recorded one.
+
+**A self-advancing search has to change the row it just edited.** A macro that
+edits and *then* searches for the same anchor re-finds its own row, because the
+search starts at the cursor and the anchor is still there. Two shapes avoid it,
+and the unit teaches both deliberately: search first, then edit (Unit 13's
+counted lessons), or edit the row's start so the anchored pattern stops matching
+it (`final-search-errors`, `selective-*`).
+
+**Long buffers import the 30-column cap.** Same gate session 03 hit: setting
+`editor.viewportRows` makes every authored line at most 30 characters, so the
+rows are terse — `user: alice, admin`, not a realistic log line. It is what
+shaped the content.
+
+**Exercises stayed `guided-then-recall`.** Recall-only delivery would have been
+the sharpest hint-level escalation for the challenges, but a 25-key macro
+recalled from memory is not a 15–90 second phone exercise. Challenges escalate on
+buffer size, replay count, irregularity, and hint count instead.
+
+**Out of scope but fixed:** `tests/vim-effects.spec.js` still expected two
+`:g/DEBUG/delete` match ranges from Unit 14's pre-session-03 buffer. That spec is
+not in the quick tier, so it went unnoticed; it now expects the six ranges the
+current buffer produces.
 
 ## Context
 
@@ -92,9 +134,22 @@ not.
 
 ```bash
 npm test
-npm run test:targeted -- <unit spec> --grep "macro" # one worker
+npm run test:targeted -- tests/editor-conformance.spec.js --grep "Unit 13|window|rail|recording state"
+npm run test:targeted -- tests/vim-effects.spec.js
 ```
 
-Replay every canonical. Macro exercises are the most fragile in the product:
-confirm register contents, the final cursor position after each replay, and that
-counted replays stop where the lesson says they stop.
+Every target, checkpoint, and register expectation was derived by replaying the
+canonical through native Vim rather than reasoned about, then replayed again
+through the browser engine, where all 32 activities reproduce the same buffer,
+cursor, and register state. Command-only macros assert register `a`; macros that
+record Insert text do not, because the adapter stores recorded Insert changes
+separately from its printable register text.
+
+The acceptance criteria are now guarded by tests rather than by review: unique
+canonicals across the unit, 12–20 line buffers, a five-to-seven row presentation
+window opening on the authored lines, `0f:` in no more than a quarter of the
+exercise canonicals, and counted replays that stop with untouched rows below.
+
+Fit was measured, not assumed: 360×740, 390×844, 412×915, 430×932, and 432×960,
+for five-, six-, and seven-row activities. No document scrolling, no horizontal
+overflow, keyboard fully on screen.

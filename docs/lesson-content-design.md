@@ -92,6 +92,11 @@ Runnable activities may use the optional `editor` configuration:
   include a semantic `viewport` with zero-based `topLine` and `bottomLine`. A
   windowed buffer is the way to author realistic automation scale without
   showing more rows: the buffer can be long while the window stays small.
+  Rows are not free. Seven is the ceiling a 360x740 phone accepts, and each row
+  it spends comes out of the board, so a presentation-only window should take the
+  smallest row count that still shows the activity's work — Unit 13 uses five,
+  six, or seven depending on the lesson, and reserves seven for the activities
+  whose point is reach beyond the window.
 - `editor.viewportDependent: true` declares that the activity's *correctness*
   depends on how many rows are visible, as opposed to the window being mere
   presentation. An activity is viewport-dependent exactly when it asserts a

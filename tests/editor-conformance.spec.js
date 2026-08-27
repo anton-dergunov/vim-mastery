@@ -688,7 +688,7 @@ test.describe("Production lesson flow", () => {
     test.setTimeout(120000);
     await page.goto("/?unit=macros");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 66, exerciseCount: macroExercises.length });
+    expect(runtime).toEqual({ activityCount: 67, exerciseCount: macroExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -709,9 +709,9 @@ test.describe("Production lesson flow", () => {
     });
     expect(failures).toEqual([]);
 
-    await page.goto("/?unit=macros&activity=anchor-colon-demo");
+    await page.goto("/?unit=macros&activity=append-advance-demo");
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    expect((await state(page)).registers.a).toEqual({ text: "0f:r=j", type: "characterwise" });
+    expect((await state(page)).registers.a).toEqual({ text: "f-r_j0", type: "characterwise" });
     await page.goto("/?unit=macros&activity=beacon-macro-demo");
     expect((await state(page)).registers.a?.text || "").toBe("");
   });
@@ -2320,9 +2320,9 @@ test.describe("Production lesson flow", () => {
   });
 
   test("maps the buffer window onto the rail with line-proportional geometry", async ({ page }) => {
-    await page.goto("/?unit=macros&activity=count-ten-csv-rows");
+    await page.goto("/?unit=macros&activity=count-scattered-csv");
     const start = await state(page);
-    expect(start.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 12 });
+    expect(start.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 18 });
     expect(start.matchLines).toEqual([]);
     await expect(page.locator(".buffer-position")).not.toHaveClass(/has-matches/);
     expect(await page.locator(".match-tick").count()).toBe(0);
@@ -2335,13 +2335,13 @@ test.describe("Production lesson flow", () => {
     });
     const before = await parse();
     expect(before.top).toBeCloseTo(0, 3);
-    expect(before.height).toBeCloseTo(700 / 12, 3);
+    expect(before.height).toBeCloseTo(700 / 18, 3);
 
     await page.evaluate(() => window.VimWilds.solveCurrent());
     const after = await parse();
-    expect((await state(page)).viewport).toMatchObject({ topLine: 5, bottomLine: 11, totalLines: 12 });
-    expect(after.top).toBeCloseTo(500 / 12, 3);
-    expect(after.height).toBeCloseTo(700 / 12, 3);
+    expect((await state(page)).viewport).toMatchObject({ topLine: 10, bottomLine: 16, totalLines: 18 });
+    expect(after.top).toBeCloseTo(1000 / 18, 3);
+    expect(after.height).toBeCloseTo(700 / 18, 3);
   });
 
   test("marks every line a global command matched, including unchanged ones", async ({ page }) => {
@@ -2380,19 +2380,19 @@ test.describe("Production lesson flow", () => {
 
   test("follows the cursor and restores the window for a non-viewport lesson", async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 740 });
-    await page.goto("/?unit=macros&activity=count-ten-csv-rows");
+    await page.goto("/?unit=macros&activity=count-scattered-csv");
     const start = await state(page);
     expect(start.viewportDependent).toBe(false);
     expect(start.setupDrift).toBeNull();
-    expect(start.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 12 });
+    expect(start.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 18 });
 
-    // The macro walks the cursor to the last row, so the window has to follow.
+    // The macro walks the cursor to the last record, so the window has to follow.
     await page.evaluate(() => window.VimWilds.solveCurrent());
     const solved = await state(page);
     expect(solved.complete).toBe(true);
     expect(solved.cursor[0]).toBeGreaterThan(solved.viewport.topLine - 1);
     expect(solved.viewport.topLine).toBeGreaterThan(0);
-    expect(solved.viewport.bottomLine).toBe(11);
+    expect(solved.viewport.bottomLine).toBe(16);
 
     // Remounting rebuilds the authored window rather than leaving it where the
     // solved macro left it.
@@ -2418,7 +2418,7 @@ test.describe("Production lesson flow", () => {
     // it before snapshotting. The command-line and confirmation paths return
     // early, which is how an Ex command could scroll the buffer while the
     // reported viewport and its rail still showed the previous window.
-    await page.goto("/?unit=macros&activity=count-ten-csv-rows");
+    await page.goto("/?unit=macros&activity=count-scattered-csv");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     const solved = await state(page);
     const scrollTop = await page.evaluate(() => Math.round(document.querySelector(".cm-scroller").scrollTop / 24));

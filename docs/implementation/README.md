@@ -120,7 +120,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 01 Engine conformance spike
 - [x] 02 Scale mechanics
 - [x] 03 Unit 14
-- [ ] 04 Unit 13
+- [x] 04 Unit 13
 - [ ] 05 Units 11–12
 - [ ] 06 Tool-choice activities
 - [ ] 07 Unit 9

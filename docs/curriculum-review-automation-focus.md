@@ -78,7 +78,7 @@ Units are graded on fit-for-purpose. "Fine as is" means no action needed.
 | 10. Repeatable editing | **Minor** | Teaches the older `n .` idiom as primary; one canonical contradicts its own lesson. |
 | 11. Command-line ranges | **Fine as is** | Best-constructed unit in Arc 3. Genuinely varied addresses. Missing `:sort n`/`u`. |
 | 12. Substitution and regex | **Minor** | Well-sequenced. Buffers too small to make `%` ranges feel meaningful. |
-| 13. Macros | **Needs significant treatment** | Macros are taught exclusively on the one case where macros are the *wrong* tool. |
+| 13. Macros | **Resolved (session 04)** | Macros were taught exclusively on the one case where macros are the *wrong* tool. |
 | 14. Global and Normal automation | **Needs treatment** | Buffer scale defeats the lesson; missing the `:g` collect/reorder family. |
 
 ### Notes on the units marked "needs treatment"
@@ -132,6 +132,14 @@ reskin. `append-csharp-fields` and `append-xml-attributes` are likewise
 identical. The "stable anchors" lesson intends to teach structural anchoring,
 but `0f:` is the answer nearly every time, so the learner pattern-matches a
 skeleton instead of analyzing structure.
+
+**Resolved in session 04.** Every activity was re-authored onto a 12–20 line
+buffer, most of the unit now operates on rows that differ from each other, and
+`0f:` has left the unit entirely. Anchors spread across `di(`, `ci"`, `ct,`,
+`^`, `$`, `%`, `F`, and anchored searches; the closing lesson now names the
+uniform adjacent case as a substitution's, not a macro's. Unique canonicals,
+buffer length, window size, the anchor share, and the counted-replay guard are
+asserted in `tests/content-data.test.mjs` so the shape cannot quietly return.
 
 **Unit 14 — the scale problem in its purest form.** Buffers are 3–7 lines, most
 commonly 3. `:g/TODO/normal I// ` over a 3-line buffer with two matches is
@@ -256,7 +264,10 @@ isolate in the same unit.
   Unit 13 exercises should have *irregular* rows — differing field counts,
   differing delimiters, a line that legitimately has nothing to change — so the
   macro's assumptions and the `failure-as-guard` lesson have something real to
-  bite on.
+  bite on. **Done in session 04, well past the minimum:** wrapped arguments,
+  mixed indentation depth, differing field counts, trailing comments, rows that
+  gain a line, and four activities whose counted replay halts at a row the macro
+  cannot handle.
 
 ### 3.4 Buffer-content observations
 

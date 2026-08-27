@@ -715,10 +715,10 @@ test("Unit 12 preserves the substitution curriculum and complete lesson flow", (
 test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
   assert.deepEqual(macroUnit.curriculumDefinition, {
     unit: "13. Macros",
-    commandsAndConcepts: "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors; deliberate final cursor position; stopping on failed motion/search; optional recursion",
+    commandsAndConcepts: "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors over irregular rows; deliberate final cursor position; stopping on failed motion/search; recognizing when a macro is the wrong tool; optional recursion",
     prerequisites: "Units 4, 5, 8, and 10",
-    learningOutcome: "Record a robust transformation, replay it safely, inspect or repair it, and state the assumptions that make it valid",
-    representativeExercises: "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion",
+    learningOutcome: "Record a robust transformation, replay it safely, inspect or repair it, state the assumptions that make it valid, and recognize the uniform case where a smaller tool wins",
+    representativeExercises: "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion; let a malformed row stop a counted replay",
     priorityAndPortability: "Core automation. Recursive macros are optional and never required for normal progression",
   });
   assert.deepEqual(macroUnit.prerequisiteSkillIds, ["operator-grammar", "precision-motions-search", "registers-putting", "repeatable-editing"]);
@@ -752,8 +752,60 @@ test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
   for (const activity of runnableActivities) languages.set(activity.languageId, (languages.get(activity.languageId) || 0) + 1);
   assert(languages.size >= 12);
   assert((languages.get("python") || 0) >= 3);
-  assert.equal(activities.find(activity => activity.id === "count-ten-csv-rows").editor.viewportRows, 7);
+  assert.equal(activities.find(activity => activity.id === "count-scattered-csv").editor.viewportRows, 7);
   assert.match(activities.find(activity => activity.id === "macros-unit-summary").body, /Recursive macros exist, but they remain optional/);
+  // The unit now has to admit when a macro is the wrong tool, so the closing
+  // lesson pairs the macro-wins choice with a case a substitution owns.
+  assert.match(activities.find(activity => activity.id === "macros-unit-summary").body, /uniform and adjacent/);
+  assert.equal(activities.find(activity => activity.id === "choose-normal-over-macro").correctOptionId, "substitute");
+});
+
+test("Unit 13 teaches macros at a scale and irregularity that justify recording", () => {
+  const runnableActivities = macroUnit.lessons.flatMap(lesson => lesson.activities)
+    .filter(activity => activity.type === "demo" || activity.type === "exercise");
+  const exercises = runnableActivities.filter(activity => activity.type === "exercise");
+
+  // A macro is for a multi-step edit over rows that differ, so every activity
+  // needs a buffer long enough that replaying beats editing by hand. Seven rows
+  // is the phone ceiling; activities take the smallest window that still shows
+  // their work.
+  for (const activity of runnableActivities) {
+    const rows = activity.editor?.viewportRows;
+    assert(rows >= 5 && rows <= 7, `${activity.id} window is ${rows} rows`);
+    const lines = activity.scenario.initial.lines.length;
+    assert(lines >= 12 && lines <= 20, `${activity.id} buffer is ${lines} lines`);
+    assert.deepEqual(
+      activity.scenario.initial.viewport,
+      { topLine: 0, bottomLine: rows - 1 },
+      `${activity.id} must open on its authored window`,
+    );
+    assert.equal(activity.editor.viewportDependent, undefined, `${activity.id} windows for presentation only`);
+    assert(activity.scenario.initial.cursor[0] < rows, `${activity.id} must start inside its window`);
+  }
+
+  // Phases used to escalate by reskinning the same key stream into another
+  // language. No two activities may share a canonical again.
+  const streams = new Map();
+  for (const activity of runnableActivities) {
+    const stream = keysOf(activity).join(" ");
+    assert(!streams.has(stream), `${activity.id} repeats the canonical of ${streams.get(stream)}`);
+    streams.set(stream, activity.id);
+  }
+
+  // `0f:` used to be the answer nearly every time, which trained skeleton
+  // matching instead of structural analysis.
+  const findColon = exercises.filter(activity => keysOf(activity).join("").includes("0f:"));
+  assert(findColon.length <= exercises.length / 4, `0f: appears in ${findColon.length} of ${exercises.length} exercises`);
+
+  // Failure is only instructive when a row genuinely breaks the macro, so a
+  // counted replay has to stop with work visibly left undone.
+  const guarded = runnableActivities.filter(activity => {
+    const changed = activity.scenario.target.lines.filter((line, index) => line !== activity.scenario.initial.lines[index]);
+    const trailingUnchanged = activity.scenario.target.lines.slice(activity.scenario.target.cursor[0] + 1)
+      .some((line, index) => line === activity.scenario.initial.lines[activity.scenario.target.cursor[0] + 1 + index]);
+    return changed.length && trailingUnchanged && /\d@a/.test(activity.script.commandGroups.map(group => group.display).join(" "));
+  });
+  assert(guarded.length >= 4, "the unit must keep counted replays that stop before untouched rows");
 });
 
 test("Unit 14 preserves the Global-Normal curriculum and complete lesson flow", () => {
@@ -1556,10 +1608,23 @@ for (const activity of automationRunnable) {
 
 test("Unit 13 failure guards stop before later macro keys", () => {
   const byId = new Map(macroRunnable.map(activity => [activity.id, activity]));
-  assert.deepEqual(byId.get("failed-semicolon-demo").scenario.target.lines, ["ab", "no delimiter", "c;d", "e;f"]);
-  assert.deepEqual(byId.get("failed-search-python").scenario.target.lines, ["header", "ARGET one", "plain_tail"]);
-  assert.equal(byId.get("append-colon-demo").scenario.target.registers.a.text, "0f:r=j");
-  assert.equal(byId.get("repair-colon-macro").scenario.target.registers.a.text, "0f:r=j");
+
+  // The find has nothing to reach on the malformed row, so the run ends there
+  // and the eight rows below it keep their original separator.
+  const stopped = byId.get("failed-semicolon-demo");
+  assert.deepEqual(stopped.scenario.target.lines.slice(7, 10), ["team=core", "zone a", "site;hq"]);
+  assert.deepEqual(stopped.scenario.target.cursor, [8, 0]);
+
+  // A search-advancing macro stops the same way once nothing matches, which is
+  // what makes a generous count safe.
+  const exhausted = byId.get("failed-search-python");
+  assert.equal(exhausted.scenario.target.lines.filter(line => line.startsWith("  # print")).length, 4);
+  assert.equal(exhausted.scenario.target.lines.filter(line => /^ {2}print/.test(line)).length, 0);
+
+  assert.equal(byId.get("append-advance-demo").scenario.target.registers.a.text, "f-r_j0");
+  assert.equal(byId.get("append-shell-pipes").scenario.target.registers.a.text, "f|r=$xj0");
+  assert.equal(byId.get("repair-delimiter-macro").scenario.target.registers.a.text, "f;r:j0");
+  assert.equal(byId.get("repair-final-motion").scenario.target.registers.a.text, "f,r;j0");
 });
 
 test("native Vim method-boundary fixture covers all four directions", () => {

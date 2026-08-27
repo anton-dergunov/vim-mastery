@@ -109,7 +109,11 @@ test.describe("Semantic Vim effects", () => {
     expect(globalDelete).toMatchObject({ type: "matches", phase: "global", operation: null });
     expect(globalDelete.ranges).toEqual([
       { from: [1, 0], to: [2, 0] },
-      { from: [3, 0], to: [4, 0] },
+      { from: [4, 0], to: [5, 0] },
+      { from: [7, 0], to: [8, 0] },
+      { from: [10, 0], to: [11, 0] },
+      { from: [13, 0], to: [14, 0] },
+      { from: [16, 0], to: [17, 0] },
     ]);
 
     await openActivity(page, "macros", "beacon-macro-demo");
