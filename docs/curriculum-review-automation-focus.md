@@ -11,7 +11,8 @@ Exercise-level claims below are derived from the authored `script.commandGroups`
 and `scenario` data, not from spot reading.
 
 This document records observations and recommendations only. It changes no unit
-file.
+file. The execution plan derived from it lives in
+[implementation/README.md](./implementation/README.md).
 
 ---
 
@@ -38,7 +39,10 @@ Five problems are worth acting on, in descending order of importance:
    and what isolated unit lessons cannot.
 2. **Automation is taught at a scale where automation loses.** Units 11–14
    average 4.0–4.8-line buffers. `:g/TODO/normal I// ` on a 3-line buffer costs
-   more keystrokes than doing it by hand. See [Part 3](#part-3--exercise-level-findings).
+   more keystrokes than doing it by hand. This is *not* a conflict with the
+   phone-first constraint: the schema already separates buffer length from
+   visible rows, and Unit 9 ships 30-line buffers on a phone today. See
+   [Part 3](#part-3--exercise-level-findings).
 3. **The `challenge` phase frequently repeats the `isolate` phase verbatim.**
    Roughly 30 exercises are exact keystroke duplicates of another exercise in
    the same unit, several of them spanning isolate → mix → challenge. Difficulty
@@ -187,13 +191,28 @@ Measured average and maximum initial buffer length, by unit:
 | 13 Macros | 4.8 | 12 | **Too small** — `3@a` on 5 lines does not motivate a macro |
 | 14 `:global` | 4.0 | 7 | **Far too small** — `:g` loses to hand-editing at this scale |
 
-Unit 9 proves 30-line buffers render fine. **Recommendation:** automation-unit
-buffers should be 15–40 lines with 5–12 matches that are **non-adjacent and
-interleaved with non-matching lines**. Adjacency matters as much as count: if
-matches are contiguous, `V3j:normal` or plain `3.` wins and `:g` still looks
-pointless. The predicate has to be doing work that position cannot do.
+**This finding does not ask for more visible rows.** The content schema already
+separates the two concepts: `scenario.initial.lines` is the whole buffer, and
+`scenario.initial.viewport` (`topLine`/`bottomLine`) is the visible window.
+**51 activities use it — every one of them in Unit 9**, which ships 30-line
+buffers on a phone today. The automation units simply never adopted the
+mechanism Unit 9 proved. This is a content gap, not a platform limit, and no
+change to the phone layout is implied.
 
-This single change would do more for the automation arc than any new command.
+**Recommendation:** automation-unit buffers of **16–24 lines** with **5–9
+matches that are non-adjacent and interleaved with non-matching lines**, with
+`viewport` holding the visible window at whatever the phone already shows.
+
+Adjacency matters as much as count: if matches are contiguous, `V3j:normal` or
+plain `3.` wins and `:g` still looks pointless. **The predicate has to do work
+that position cannot do.**
+
+The one genuinely new piece of platform work is a way to perceive effects
+outside the window — an impact readout (`7 fewer lines`, which real Vim prints
+anyway) and a one-character match-map gutter marking off-screen matches. Without
+those, a scattered-match exercise reads as arbitrary through a seven-row window.
+
+This change would do more for the automation arc than any new command.
 
 ### 3.2 Duplicate canonical sequences
 
@@ -416,9 +435,11 @@ demotions bring Unit 9 to about 7, matching the rest.
 
 Ordered by return on effort, cheapest and highest-value first.
 
-1. **Enlarge automation-unit buffers** (Units 12–14) to 15–40 lines with
-   scattered, non-adjacent matches. Data-only change, no engine work, and it
-   repairs the central credibility problem of the automation arc.
+1. **Enlarge automation-unit buffers** (Units 12–14) to 16–24 lines with
+   scattered, non-adjacent matches, using the existing `viewport` mechanism so
+   visible rows are unchanged. Almost entirely a content change, plus a small
+   impact readout and match map. Repairs the central credibility problem of the
+   automation arc.
 2. **Add tool-choice `choice` activities across Arc 3.** No engine work, no
    fixtures, directly targets the judgment the product exists to build.
 3. **De-duplicate the challenge phase** — Units 6, 7, 13 first. Give each
