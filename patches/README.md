@@ -64,3 +64,10 @@ both the native and the browser tier.
   each selected line, and the `g` variants make the addend cumulative so a
   column of identical numbers becomes a sequence. Fixtures:
   `visual-increment-sequence` and `visual-increment-uniform`.
+
+Unit 8's read-only registers extend the patch once more. After a substitution
+the adapter left its own internally encoded query in the last-search register,
+so `:%s/draft/entry/g` reported `draft/g` where Vim reports `draft`. The flag
+suffix is an encoding `parseQuery` needs, not part of the pattern, so
+`substitute` now remembers the bare pattern and restores it to `"/` once the
+query is installed. Fixture: `substitute-leaves-bare-pattern-in-search-register`.

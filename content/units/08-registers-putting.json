@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "1.0.0",
+  "contentVersion": "2.0.0",
   "unitNumber": 8,
   "id": "registers-putting",
   "title": "Registers and putting",
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "8. Registers and putting",
-    "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; `p P gp gP`; `:registers` as inspection",
+    "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`",
     "prerequisites": "Units 1–6, especially `y d c p`",
-    "learningOutcome": "Preserve yanks, select storage deliberately, reuse multiple snippets, and understand why delete/change affects later puts",
-    "representativeExercises": "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; choose where to put text and where the cursor should land",
-    "priorityAndPortability": "Core through named and black-hole registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard"
+    "learningOutcome": "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
+    "representativeExercises": "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
+    "priorityAndPortability": "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed"
   },
   "prerequisiteSkillIds": [
     "modal-model",
@@ -703,17 +703,17 @@
     },
     {
       "id": "choose-put-landing",
-      "title": "Choose the put side and landing",
-      "objective": "Distinguish before versus after placement from where the cursor finishes.",
+      "title": "Continue after a put",
+      "objective": "Finish just after inserted text so the next edit starts where the put ended.",
       "activities": [
         {
           "id": "put-landing-meaning",
           "type": "theory",
           "phase": "explain",
-          "title": "Choose where put starts and ends",
-          "body": "Use `p` to put after the cursor or line and `P` to put before it. Use `gp` or `gP` when you want the cursor to finish just after the inserted text.",
-          "grammar": "p/P = side · gp/gP = side plus cursor after",
-          "contrast": "The inserted text is identical; only placement and final cursor differ.",
+          "title": "Land after the text you put",
+          "body": "Unit 4 chose the side: `p` puts after the cursor or line, `P` before it. `gp` and `gP` put on the same sides but leave the cursor just past the inserted text.",
+          "grammar": "p/P = side · gp/gP = same side, cursor after",
+          "contrast": "The inserted text and the side are identical; only where the cursor finishes differs.",
           "demoRef": "character-gp-demo"
         },
         {
@@ -1364,7 +1364,9 @@
             ]
           }
         }
-      ]
+      ],
+      "track": "advanced",
+      "trackNote": "Advanced and less commonly used: `p` and `P` cover almost every put, and the `g` variants matter only when the next edit begins where this one ended."
     },
     {
       "id": "preserve-yank-zero",
@@ -3149,21 +3151,25 @@
             ]
           }
         }
-      ]
+      ],
+      "track": "advanced",
+      "trackNote": "Advanced and less commonly used: in practice people reach for `u` rather than `\"2p`, but the delete history is real and worth recognizing when undo has already moved on."
     },
     {
-      "id": "control-small-and-discarded-deletes",
-      "title": "Control small and discarded deletes",
-      "objective": "Recover the latest small deletion or deliberately avoid changing useful register state.",
+      "id": "recover-small-deletes",
+      "title": "Recover small deletes",
+      "objective": "Retrieve the latest deletion or change that was shorter than a line.",
+      "track": "advanced",
+      "trackNote": "Advanced and less commonly used: `u` undoes a small delete faster than `\"-p` restores it, but the register explains why a small delete never enters the numbered history.",
       "activities": [
         {
           "id": "small-black-hole-meaning",
           "type": "theory",
           "phase": "explain",
-          "title": "Keep or discard deleted text deliberately",
-          "body": "A small delete of less than one line is also saved in register `-`. Prefix an operation with `\"_` to discard its text without replacing useful register values.",
-          "grammar": "small delete → \"- · disposable edit → \"_",
-          "contrast": "Use the small-delete register to recover; use black-hole when there should be nothing to recover.",
+          "title": "Small deletes have their own register",
+          "body": "A delete or change shorter than one line is saved in register `-` rather than in the numbered history. Only the most recent one is kept.",
+          "grammar": "less than a line → \"- · a whole line → \"1",
+          "contrast": "Numbered registers collect whole lines; the small-delete register collects everything shorter.",
           "demoRef": "small-delete-demo"
         },
         {
@@ -3342,6 +3348,994 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "small-delete-register"
+            ]
+          }
+        },
+        {
+          "id": "small-delete-word",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Move a qualifier to the next setting",
+          "instruction": "Take the leading word off the timeout setting and place it in front of the backoff setting.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "retry timeout = 30",
+                "backoff = 2"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "timeout = 30",
+                "retry backoff = 2"
+              ],
+              "cursor": [
+                1,
+                5
+              ],
+              "mode": "normal",
+              "registers": {
+                "\"": {
+                  "type": "characterwise",
+                  "text": "retry "
+                },
+                "-": {
+                  "type": "characterwise",
+                  "text": "retry "
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "w",
+              "j",
+              "\"",
+              "-",
+              "P"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "dw",
+                "explanation": "Delete the leading word, which is shorter than a line."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move to the backoff setting."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "\"-P",
+                "explanation": "Put the small deletion before the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "timeout = 30",
+                  "backoff = 2"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "retry "
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "retry "
+                  }
+                },
+                "caption": "The deleted word lands in the small-delete register."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "timeout = 30",
+                  "retry backoff = 2"
+                ],
+                "cursor": [
+                  1,
+                  5
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "retry "
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "retry "
+                  }
+                },
+                "caption": "Put it back in front of the second setting."
+              }
+            ]
+          },
+          "hints": [
+            "A word is shorter than a line, so it goes somewhere other than the numbered history.",
+            "Use `dw` then `j\"-P`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "A word delete is a small delete, so `\"-` still holds it when the cursor reaches the second row."
+          },
+          "skills": {
+            "primary": [
+              "small-delete-register"
+            ],
+            "supporting": [
+              "operator-grammar",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "small-delete-register",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Two settings make the moved qualifier readable without needing surrounding configuration.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "small-delete-register"
+            ]
+          }
+        },
+        {
+          "id": "small-delete-character",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Recover one removed marker",
+          "instruction": "Remove “?” and “!” separately, then restore “!” from the small-delete register.",
+          "languageId": "typescript",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "a?b!c"
+              ],
+              "cursor": [
+                0,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ab!c"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal",
+              "registers": {
+                "\"": {
+                  "type": "characterwise",
+                  "text": "!"
+                },
+                "-": {
+                  "type": "characterwise",
+                  "text": "!"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "x",
+              "l",
+              "x",
+              "\"",
+              "-",
+              "P"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "x",
+                "explanation": "Delete the question mark."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "l",
+                "explanation": "Move one column right."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "x",
+                "explanation": "Delete the character under the cursor."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "\"-P",
+                "explanation": "Restore the latest small deletion before the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "ab!c"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "?"
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "?"
+                  }
+                },
+                "caption": "Delete the question mark."
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "abc"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "!"
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "!"
+                  }
+                },
+                "caption": "Move and delete the exclamation mark."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "ab!c"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "!"
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "!"
+                  }
+                },
+                "caption": "Restore the latest small deletion before the cursor."
+              }
+            ]
+          },
+          "hints": [
+            "Delete the question mark.",
+            "Use `x` then `lx` then `\"-P`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "Delete two marker characters, then restore the latest one from the small-delete register."
+          },
+          "skills": {
+            "primary": [
+              "small-delete-register"
+            ],
+            "supporting": [
+              "operator-grammar",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "small-delete-register",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "The compact buffer makes stored text, register shape, and put placement visible without domain trivia.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "small-delete-register"
+            ]
+          }
+        },
+        {
+          "id": "small-change-register",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Record the value a change replaced",
+          "instruction": "Set the mode to “live” and record the value it replaced as the previous entry.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode: draft",
+                "previous: "
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode: live",
+                "previous: draft"
+              ],
+              "cursor": [
+                1,
+                14
+              ],
+              "mode": "normal",
+              "registers": {
+                "\"": {
+                  "type": "characterwise",
+                  "text": "draft"
+                },
+                "-": {
+                  "type": "characterwise",
+                  "text": "draft"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "w",
+              "l",
+              "i",
+              "v",
+              "e",
+              "Escape",
+              "j",
+              "$",
+              "\"",
+              "-",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "cw",
+                "explanation": "Change the value word."
+              },
+              {
+                "from": 2,
+                "to": 6,
+                "display": "live",
+                "explanation": "Type the new mode."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "j$",
+                "explanation": "Reach the end of the empty entry."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "\"-p",
+                "explanation": "Put the replaced value from the small-delete register."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "mode: live",
+                  "previous: "
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "draft"
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "draft"
+                  }
+                },
+                "caption": "A small change stores what it replaced."
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "mode: live",
+                  "previous: draft"
+                ],
+                "cursor": [
+                  1,
+                  14
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "draft"
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "draft"
+                  }
+                },
+                "caption": "Put the replaced value into the second entry."
+              }
+            ]
+          },
+          "hints": [
+            "A change saves the text it removed, exactly as a delete does.",
+            "Use `cw` then `j$\"-p`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "`c` fills the small-delete register too, so the replaced value survives long enough to record it.",
+            "contrast": "A change smaller than a line behaves like a small delete, not like a numbered one."
+          },
+          "skills": {
+            "primary": [
+              "small-delete-register"
+            ],
+            "supporting": [
+              "operator-grammar",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "small-delete-register",
+              "insert-mode-return",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A two-key mapping shows the replaced value being recorded beside the new one.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "small-delete-register"
+            ]
+          }
+        },
+        {
+          "id": "small-delete-not-numbered",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Recover from both delete histories",
+          "instruction": "Restore the removed word where it belongs, then move the removed header to the bottom of the file.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "header = old",
+                "alpha beta",
+                "tail"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha beta",
+                "tail",
+                "header = old"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "type": "linewise",
+                  "text": "header = old\n"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "alpha "
+                },
+                "-": {
+                  "type": "characterwise",
+                  "text": "alpha "
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "d",
+              "d",
+              "w",
+              "\"",
+              "-",
+              "P",
+              "G",
+              "\"",
+              "1",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "dd",
+                "explanation": "Delete the header row into the numbered history."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "dw",
+                "explanation": "Delete one word, which is too small for that history."
+              },
+              {
+                "from": 4,
+                "to": 7,
+                "display": "\"-P",
+                "explanation": "Restore the word from the small-delete register."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "G",
+                "explanation": "Move to the last row."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "\"1p",
+                "explanation": "Recover the header, still first in the numbered history."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "alpha beta",
+                  "tail"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "header = old\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "header = old\n"
+                  }
+                },
+                "caption": "A line delete becomes the newest numbered entry."
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "beta",
+                  "tail"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "header = old\n"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "alpha "
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "alpha "
+                  }
+                },
+                "caption": "The word delete fills the small-delete register and leaves the numbered one alone."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "alpha beta",
+                  "tail"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "header = old\n"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "alpha "
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "alpha "
+                  }
+                },
+                "caption": "Restore the word from the small-delete register."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "alpha beta",
+                  "tail",
+                  "header = old"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "header = old\n"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "alpha "
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "alpha "
+                  }
+                },
+                "caption": "The header is still the newest numbered entry, so one register reaches it."
+              }
+            ]
+          },
+          "hints": [
+            "The word delete did not push the line delete further down the history.",
+            "Use `dd` then `dw\"-P` then `G\"1p`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "Small deletes never enter the numbered history, so the line deleted first is still `\"1` after a word is deleted.",
+            "contrast": "Had the word delete been a line delete, the header would have moved to `\"2`."
+          },
+          "skills": {
+            "primary": [
+              "small-delete-register"
+            ],
+            "supporting": [
+              "numbered-register",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "small-delete-register",
+              "numbered-register",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Three plain rows keep attention on which register each delete filled.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "small-delete-register",
+              "numbered-register"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "discard-with-the-black-hole",
+      "title": "Discard text on purpose",
+      "objective": "Delete text that should leave no trace so every register you still need survives.",
+      "activities": [
+        {
+          "id": "black-hole-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Delete without storing anything",
+          "body": "Prefix an operation with `\"_` to send its text to the black-hole register, which keeps nothing. Every other register holds the value it already had.",
+          "grammar": "\"_ + operator → discard, registers untouched",
+          "contrast": "A plain delete replaces the unnamed register; a black-hole delete leaves it for the put you still intend to make.",
+          "demoRef": "black-hole-line-demo"
+        },
+        {
+          "id": "black-hole-line-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Discard a row and keep the copy",
+          "instruction": "Copy the export line, drop the scratch row for good, then repeat the copy at the end of the file.",
+          "languageId": "shell",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export mode",
+                "scratch note",
+                "final row"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export mode",
+                "final row",
+                "export mode"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "linewise",
+                  "text": "export mode\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "export mode\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "y",
+              "y",
+              "j",
+              "\"",
+              "_",
+              "d",
+              "d",
+              "G",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "yy",
+                "explanation": "Yank the export line."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move to the scratch row."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "\"_dd",
+                "explanation": "Discard the row through the black-hole register."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "G",
+                "explanation": "Move to the last row."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "p",
+                "explanation": "Put the yank the delete never touched."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "export mode",
+                  "scratch note",
+                  "final row"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "linewise",
+                    "text": "export mode\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "export mode\n"
+                  }
+                },
+                "caption": "Yank the export line."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "export mode",
+                  "final row"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "linewise",
+                    "text": "export mode\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "export mode\n"
+                  }
+                },
+                "caption": "The row is gone and both registers still hold the yank."
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "export mode",
+                  "final row",
+                  "export mode"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "linewise",
+                    "text": "export mode\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "export mode\n"
+                  }
+                },
+                "caption": "Put the preserved yank below the final row."
+              }
+            ]
+          },
+          "hints": [
+            "Send the discarded row somewhere that keeps nothing.",
+            "Use `yy` then `j\"_dd` then `Gp`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "The black-hole delete removed the row without replacing the yank, so a plain put still finds it."
+          },
+          "skills": {
+            "primary": [
+              "black-hole-register"
+            ],
+            "supporting": [
+              "operator-grammar",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "black-hole-register",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A short script shows one line worth keeping beside one line worth discarding.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "black-hole-register"
             ]
           }
         },
@@ -3541,41 +4535,235 @@
           }
         },
         {
-          "id": "small-delete-character",
+          "id": "black-hole-word",
           "type": "exercise",
           "phase": "mix",
-          "title": "Recover one removed marker",
-          "instruction": "Remove “?” and “!” separately, then restore “!” from the small-delete register.",
-          "languageId": "typescript",
+          "title": "Replace a word with the copied one",
+          "instruction": "Copy the value word on the first row and make the field row end with it instead of its stale word.",
+          "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "a?b!c"
+                "value alpha",
+                "field old"
               ],
               "cursor": [
                 0,
-                1
+                6
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "ab!c"
+                "value alpha",
+                "field alpha"
+              ],
+              "cursor": [
+                1,
+                10
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "alpha"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "alpha"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "y",
+              "w",
+              "j",
+              "\"",
+              "_",
+              "d",
+              "w",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "yw",
+                "explanation": "Yank the value word."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Drop to the field row."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "\"_dw",
+                "explanation": "Discard the stale word without storing it."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "p",
+                "explanation": "Put the yank a plain delete would have replaced."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "value alpha",
+                  "field old"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "alpha"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "alpha"
+                  }
+                },
+                "caption": "Yank the value word."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "value alpha",
+                  "field "
+                ],
+                "cursor": [
+                  1,
+                  5
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "alpha"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "alpha"
+                  }
+                },
+                "caption": "The stale word is gone and the yank is intact."
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "value alpha",
+                  "field alpha"
+                ],
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "alpha"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "alpha"
+                  }
+                },
+                "caption": "Put the preserved yank in its place."
+              }
+            ]
+          },
+          "hints": [
+            "A plain delete of the stale word would replace what you copied.",
+            "Use `yw` then `j\"_dw` then `p`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "Discarding the stale word through `\"_` leaves the unnamed register holding the yank, so a bare put is enough.",
+            "contrast": "With a plain `dw`, the same put would have restored the stale word."
+          },
+          "skills": {
+            "primary": [
+              "black-hole-register"
+            ],
+            "supporting": [
+              "unnamed-register",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "black-hole-register",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Two short rows isolate the delete-then-put trap without other edits competing for attention.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "black-hole-register"
+            ]
+          }
+        },
+        {
+          "id": "black-hole-character",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Move one mark and drop another",
+          "instruction": "Move the question mark to the end of the second row and remove the stray semicolon for good.",
+          "languageId": "typescript",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha? beta",
+                "gamma;"
               ],
               "cursor": [
                 0,
-                2
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha beta",
+                "gamma?"
+              ],
+              "cursor": [
+                1,
+                5
               ],
               "mode": "normal",
               "registers": {
                 "\"": {
                   "type": "characterwise",
-                  "text": "!"
+                  "text": "?"
                 },
                 "-": {
                   "type": "characterwise",
-                  "text": "!"
+                  "text": "?"
                 }
               }
             }
@@ -3583,47 +4771,51 @@
           "script": {
             "steps": [
               "x",
-              "l",
+              "j",
+              "$",
+              "\"",
+              "_",
               "x",
               "\"",
               "-",
-              "P"
+              "p"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 1,
                 "display": "x",
-                "explanation": "Delete the question mark."
+                "explanation": "Delete the question mark into the small-delete register."
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "l",
-                "explanation": "Move one column right."
-              },
-              {
-                "from": 2,
                 "to": 3,
-                "display": "x",
-                "explanation": "Delete the character under the cursor."
+                "display": "j$",
+                "explanation": "Reach the end of the second row."
               },
               {
                 "from": 3,
                 "to": 6,
-                "display": "\"-P",
-                "explanation": "Restore the latest small deletion before the cursor."
+                "display": "\"_x",
+                "explanation": "Discard the semicolon without replacing the stored mark."
+              },
+              {
+                "from": 6,
+                "to": 9,
+                "display": "\"-p",
+                "explanation": "Put the question mark that is still stored."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 1,
                 "lines": [
-                  "ab!c"
+                  "alpha beta",
+                  "gamma;"
                 ],
                 "cursor": [
                   0,
-                  1
+                  5
                 ],
                 "mode": "normal",
                 "registers": {
@@ -3636,74 +4828,78 @@
                     "text": "?"
                   }
                 },
-                "caption": "Delete the question mark."
-              },
-              {
-                "afterStep": 3,
-                "lines": [
-                  "abc"
-                ],
-                "cursor": [
-                  0,
-                  2
-                ],
-                "mode": "normal",
-                "registers": {
-                  "\"": {
-                    "type": "characterwise",
-                    "text": "!"
-                  },
-                  "-": {
-                    "type": "characterwise",
-                    "text": "!"
-                  }
-                },
-                "caption": "Move and delete the exclamation mark."
+                "caption": "The question mark is now the latest small deletion."
               },
               {
                 "afterStep": 6,
                 "lines": [
-                  "ab!c"
+                  "alpha beta",
+                  "gamma"
                 ],
                 "cursor": [
-                  0,
-                  2
+                  1,
+                  4
                 ],
                 "mode": "normal",
                 "registers": {
                   "\"": {
                     "type": "characterwise",
-                    "text": "!"
+                    "text": "?"
                   },
                   "-": {
                     "type": "characterwise",
-                    "text": "!"
+                    "text": "?"
                   }
                 },
-                "caption": "Restore the latest small deletion before the cursor."
+                "caption": "The semicolon is gone and the stored mark is untouched."
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "alpha beta",
+                  "gamma?"
+                ],
+                "cursor": [
+                  1,
+                  5
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "?"
+                  },
+                  "-": {
+                    "type": "characterwise",
+                    "text": "?"
+                  }
+                },
+                "caption": "Put the question mark at the end of the second row."
               }
             ]
           },
           "hints": [
-            "Delete the question mark.",
-            "Use `x` then `lx` then `\"-P`."
+            "Deleting the semicolon normally would overwrite the mark you still need.",
+            "Use `x` then `j$\"_x` then `\"-p`."
           ],
           "feedback": {
             "success": "The intended text and register state are exact.",
-            "why": "Delete two marker characters, then restore the latest one from the small-delete register."
+            "why": "The black-hole prefix protects the small-delete register as well as the unnamed one, so the question mark survives the second deletion.",
+            "contrast": "A plain second `x` would have left the semicolon in `\"-` and lost the question mark."
           },
           "skills": {
             "primary": [
-              "small-delete-register"
+              "black-hole-register"
             ],
             "supporting": [
-              "operator-grammar",
+              "small-delete-register",
               "put-placement"
             ]
           },
           "difficulty": {
             "level": "medium",
             "dimensions": [
+              "black-hole-register",
               "small-delete-register",
               "register-state"
             ]
@@ -3712,7 +4908,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "registers-putting-v1",
-            "languageRationale": "The compact buffer makes stored text, register shape, and put placement visible without domain trivia.",
+            "languageRationale": "Punctuation repair keeps both single-character deletions visible on one screen.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -3720,6 +4916,7 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
+              "black-hole-register",
               "small-delete-register"
             ]
           }
@@ -3919,6 +5116,243 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "black-hole-register"
+            ]
+          }
+        },
+        {
+          "id": "black-hole-visual-named",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Clear a block and keep a named line",
+          "instruction": "Store the handler line under a name, clear both temporary rows, then repeat the stored line directly above the last row.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "handler = auth",
+                "debug row",
+                "trace row",
+                "route = main",
+                "final"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "handler = auth",
+                "route = main",
+                "handler = auth",
+                "final"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "linewise",
+                  "text": "handler = auth\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "handler = auth\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "\"",
+              "a",
+              "y",
+              "y",
+              "j",
+              "V",
+              "j",
+              "\"",
+              "_",
+              "d",
+              "j",
+              "\"",
+              "a",
+              "P"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "\"ayy",
+                "explanation": "Store the handler line under a name."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move to the first temporary row."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "Vj",
+                "explanation": "Select both temporary rows."
+              },
+              {
+                "from": 7,
+                "to": 10,
+                "display": "\"_d",
+                "explanation": "Discard the selection without disturbing any register."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "j",
+                "explanation": "Move to the final row."
+              },
+              {
+                "from": 11,
+                "to": 14,
+                "display": "\"aP",
+                "explanation": "Put the named line above it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "handler = auth",
+                  "debug row",
+                  "trace row",
+                  "route = main",
+                  "final"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "handler = auth\n"
+                  }
+                },
+                "caption": "Store the handler line under a name."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "handler = auth",
+                  "debug row",
+                  "trace row",
+                  "route = main",
+                  "final"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-line",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "handler = auth\n"
+                  }
+                },
+                "caption": "Both temporary rows are selected."
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "handler = auth",
+                  "route = main",
+                  "final"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "handler = auth\n"
+                  }
+                },
+                "caption": "The selection is gone and the named register is unchanged."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "handler = auth",
+                  "route = main",
+                  "handler = auth",
+                  "final"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "handler = auth\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "handler = auth\n"
+                  }
+                },
+                "caption": "Put the named line above the final row."
+              }
+            ]
+          },
+          "hints": [
+            "A Visual delete replaces registers exactly as an operator delete does.",
+            "Use `\"ayy` then `jVj\"_d` then `j\"aP`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "The black-hole prefix works on a Visual selection too, so the named register survives a multi-row cleanup.",
+            "contrast": "A plain Visual delete would leave the temporary rows in the unnamed register but the name would still be safe; the prefix protects both."
+          },
+          "skills": {
+            "primary": [
+              "black-hole-register"
+            ],
+            "supporting": [
+              "named-register",
+              "visual-line-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "black-hole-register",
+              "named-register",
+              "visual-selection"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A short configuration block gives two temporary rows worth clearing between two rows worth keeping.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "black-hole-register",
+              "named-register"
             ]
           }
         }
@@ -6293,6 +7727,1052 @@
       ]
     },
     {
+      "id": "reuse-read-only-registers",
+      "title": "Reuse what Vim recorded",
+      "objective": "Read back the last insertion, the last Ex command, and the last search pattern instead of typing them again.",
+      "activities": [
+        {
+          "id": "read-only-register-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Vim fills three registers for you",
+          "body": "Register `.` holds the text you last inserted, `:` the last Ex command, and `/` the last search pattern. You cannot write them, but you can put them with `\"{register}p` or drop them into the command line with `Ctrl-r{register}`.",
+          "grammar": "\". last insert · \": last Ex command · \"/ last search",
+          "contrast": "Named registers hold what you decided to keep; these hold what you just did.",
+          "demoRef": "search-reuse-demo"
+        },
+        {
+          "id": "search-reuse-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Substitute the pattern you just confirmed",
+          "instruction": "Confirm every use of the old name with a search, then rename them all without typing that name a second time.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "const draft = load();",
+                "render(draft);",
+                "publish(draft);"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "const entry = load();",
+                "render(entry);",
+                "publish(entry);"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "/": {
+                  "type": "characterwise",
+                  "text": "draft"
+                },
+                ":": {
+                  "type": "characterwise",
+                  "text": "%s/draft/entry/g"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Enter",
+              ":",
+              "%",
+              "s",
+              "/",
+              "Ctrl-r",
+              "/",
+              "/",
+              "e",
+              "n",
+              "t",
+              "r",
+              "y",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 7,
+                "display": "/draft↵",
+                "explanation": "Search for the name so every match is visible first."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "%s/",
+                "explanation": "Start a substitution over the whole file."
+              },
+              {
+                "from": 11,
+                "to": 13,
+                "display": "Ctrl-r/",
+                "explanation": "Insert the confirmed pattern instead of retyping it."
+              },
+              {
+                "from": 13,
+                "to": 21,
+                "display": "/entry/g",
+                "explanation": "Give the replacement and the global flag."
+              },
+              {
+                "from": 21,
+                "to": 22,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "const draft = load();",
+                  "render(draft);",
+                  "publish(draft);"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal",
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "draft"
+                  }
+                },
+                "caption": "The confirmed pattern is now stored in the search register."
+              },
+              {
+                "afterStep": 22,
+                "lines": [
+                  "const entry = load();",
+                  "render(entry);",
+                  "publish(entry);"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "draft"
+                  },
+                  ":": {
+                    "type": "characterwise",
+                    "text": "%s/draft/entry/g"
+                  }
+                },
+                "caption": "The command line held the exact pattern the search stored."
+              }
+            ]
+          },
+          "hints": [
+            "The search already stored the pattern; the command line can read it back.",
+            "Use `/draft↵` then `:%s/` with `Ctrl-r/` before `/entry/g↵`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "The search filled `\"/`, and `Ctrl-r/` pasted it into the command line, so the pattern that ran is the pattern that was confirmed.",
+            "contrast": "Retyping the pattern is where substitutions quietly miss a match or hit an extra one."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "command-line-register",
+              "search-pattern"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "read-only-registers",
+              "command-line-register"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A three-line module gives the same identifier three times, which is what makes a global rename worth confirming.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers",
+              "command-line-register"
+            ]
+          }
+        },
+        {
+          "id": "put-last-inserted-text",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Repeat the value you just typed",
+          "instruction": "Give the first flag the value “ = true”, then give the second flag the same value without typing it again.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "enabled",
+                "verbose"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "enabled = true",
+                "verbose = true"
+              ],
+              "cursor": [
+                1,
+                13
+              ],
+              "mode": "normal",
+              "registers": {
+                ".": {
+                  "type": "characterwise",
+                  "text": " = true"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              " ",
+              "=",
+              " ",
+              "t",
+              "r",
+              "u",
+              "e",
+              "Escape",
+              "j",
+              "$",
+              "\"",
+              ".",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Append at the end of the first flag."
+              },
+              {
+                "from": 1,
+                "to": 8,
+                "display": " = true",
+                "explanation": "Type the value."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "j$",
+                "explanation": "Reach the end of the second flag."
+              },
+              {
+                "from": 11,
+                "to": 14,
+                "display": "\".p",
+                "explanation": "Put the text that was just inserted."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "enabled = true",
+                  "verbose"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "mode": "normal",
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": " = true"
+                  }
+                },
+                "caption": "Leaving Insert mode stores the inserted text."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "enabled = true",
+                  "verbose = true"
+                ],
+                "cursor": [
+                  1,
+                  13
+                ],
+                "mode": "normal",
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": " = true"
+                  }
+                },
+                "caption": "Put it again on the second flag."
+              }
+            ]
+          },
+          "hints": [
+            "Leaving Insert mode saves what was typed, without any yank.",
+            "Use `A = true` then `Esc`, then `j$\".p`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "Vim stored the whole insertion in `\".`, so the second flag repeats it as a put rather than as typing."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "insert-mode-entry",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "read-only-registers",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Two bare flags make the repeated value the only difference between the rows.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers"
+            ]
+          }
+        },
+        {
+          "id": "rerun-last-ex-command",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Apply the same fix to a later row",
+          "instruction": "Bring the status row up to date, leave the build row alone, then bring the deploy row up to date the same way without retyping the command.",
+          "languageId": "yaml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status: old",
+                "build: keep",
+                "deploy: old"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "status: new",
+                "build: keep",
+                "deploy: new"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                ":": {
+                  "type": "characterwise",
+                  "text": "s/old/new/"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "s",
+              "/",
+              "o",
+              "l",
+              "d",
+              "/",
+              "n",
+              "e",
+              "w",
+              "/",
+              "Enter",
+              "j",
+              "j",
+              ":",
+              "Ctrl-r",
+              ":",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 11,
+                "display": "s/old/new/",
+                "explanation": "Substitute on the current row only."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "↵",
+                "explanation": "Run the command."
+              },
+              {
+                "from": 12,
+                "to": 14,
+                "display": "jj",
+                "explanation": "Skip the row that must not change."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": ":",
+                "explanation": "Open the command line again."
+              },
+              {
+                "from": 15,
+                "to": 17,
+                "display": "Ctrl-r:",
+                "explanation": "Insert the last Ex command instead of retyping it."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "↵",
+                "explanation": "Run the recalled command here."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "status: new",
+                  "build: keep",
+                  "deploy: old"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  ":": {
+                    "type": "characterwise",
+                    "text": "s/old/new/"
+                  }
+                },
+                "caption": "Running an Ex command stores it for reuse."
+              },
+              {
+                "afterStep": 18,
+                "lines": [
+                  "status: new",
+                  "build: keep",
+                  "deploy: new"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  ":": {
+                    "type": "characterwise",
+                    "text": "s/old/new/"
+                  }
+                },
+                "caption": "The recalled command runs against the row under the cursor."
+              }
+            ]
+          },
+          "hints": [
+            "Vim kept the command you already ran; the command line can read it back.",
+            "Use `:s/old/new/↵` then `jj:` with `Ctrl-r:` and `↵`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "`\":` holds the last Ex command, so `Ctrl-r:` replays it against a different row without a whole-file substitution.",
+            "contrast": "Unit 11’s `@:` is the one-key shorthand for exactly this register."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "command-line-register",
+              "ex-command-line"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "read-only-registers",
+              "command-line-register"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A short manifest gives two rows that need the same fix and one that must be skipped.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers",
+              "command-line-register"
+            ]
+          }
+        },
+        {
+          "id": "inspect-read-only-registers",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Check what Vim recorded",
+          "instruction": "Mark the first row with an exclamation point, search for the second row, then show what the last insertion and the last search left behind.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "alpha",
+                "beta"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "alpha!",
+                "beta"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                ".": {
+                  "type": "characterwise",
+                  "text": "!"
+                },
+                "/": {
+                  "type": "characterwise",
+                  "text": "beta"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              "!",
+              "Escape",
+              "/",
+              "b",
+              "e",
+              "t",
+              "a",
+              "Enter",
+              ":",
+              "r",
+              "e",
+              "g",
+              "i",
+              "s",
+              "t",
+              "e",
+              "r",
+              "s",
+              " ",
+              ".",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Append at the end of the first row."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "!",
+                "explanation": "Type the marker."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 3,
+                "to": 9,
+                "display": "/beta↵",
+                "explanation": "Search for the second row."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 10,
+                "to": 22,
+                "display": "registers ./",
+                "explanation": "Ask for the last-insert and last-search registers."
+              },
+              {
+                "from": 22,
+                "to": 23,
+                "display": "↵",
+                "explanation": "Show what each one holds."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "alpha!",
+                  "beta"
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "mode": "normal",
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": "!"
+                  }
+                },
+                "caption": "The insertion is recorded on the way out of Insert mode."
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "alpha!",
+                  "beta"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": "!"
+                  },
+                  "/": {
+                    "type": "characterwise",
+                    "text": "beta"
+                  }
+                },
+                "caption": "The search records its pattern."
+              },
+              {
+                "afterStep": 23,
+                "lines": [
+                  "alpha!",
+                  "beta"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": "!"
+                  },
+                  "/": {
+                    "type": "characterwise",
+                    "text": "beta"
+                  }
+                },
+                "caption": "Both registers report without changing the text."
+              }
+            ]
+          },
+          "hints": [
+            "The same inspection command that lists named registers accepts these names too.",
+            "Use `A!` then `Esc`, `/beta↵`, and `:registers ./↵`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "Inspection is read-only, so the buffer is untouched and both registers still hold what the earlier keys recorded."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "register-inspection",
+              "search-pattern"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "read-only-registers",
+              "register-inspection"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Two bare words keep the panel readable and put the recorded values in plain view.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers",
+              "register-inspection"
+            ]
+          }
+        },
+        {
+          "id": "substitute-without-retyping",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Rename a constant without retyping it",
+          "instruction": "Check both later uses of the constant, then rename every occurrence to “RETRY_CAP” without spelling the old name a second time.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "MAX_RETRIES = 3",
+                "if attempts < MAX_RETRIES:",
+                "    reset(MAX_RETRIES)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "RETRY_CAP = 3",
+                "if attempts < RETRY_CAP:",
+                "    reset(RETRY_CAP)"
+              ],
+              "cursor": [
+                2,
+                4
+              ],
+              "mode": "normal",
+              "registers": {
+                "/": {
+                  "type": "characterwise",
+                  "text": "MAX_RETRIES"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "M",
+              "A",
+              "X",
+              "_",
+              "R",
+              "E",
+              "T",
+              "R",
+              "I",
+              "E",
+              "S",
+              "Enter",
+              "n",
+              ":",
+              "%",
+              "s",
+              "/",
+              "Ctrl-r",
+              "/",
+              "/",
+              "R",
+              "E",
+              "T",
+              "R",
+              "Y",
+              "_",
+              "C",
+              "A",
+              "P",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 13,
+                "display": "/MAX_RETRIES↵",
+                "explanation": "Search for the constant to reach its first later use."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "n",
+                "explanation": "Step to the remaining use and confirm the count."
+              },
+              {
+                "from": 14,
+                "to": 15,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 15,
+                "to": 18,
+                "display": "%s/",
+                "explanation": "Start a substitution over the whole file."
+              },
+              {
+                "from": 18,
+                "to": 20,
+                "display": "Ctrl-r/",
+                "explanation": "Insert the confirmed pattern instead of retyping it."
+              },
+              {
+                "from": 20,
+                "to": 32,
+                "display": "/RETRY_CAP/g",
+                "explanation": "Give the new name and the global flag."
+              },
+              {
+                "from": 32,
+                "to": 33,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "MAX_RETRIES = 3",
+                  "if attempts < MAX_RETRIES:",
+                  "    reset(MAX_RETRIES)"
+                ],
+                "cursor": [
+                  1,
+                  14
+                ],
+                "mode": "normal",
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "MAX_RETRIES"
+                  }
+                },
+                "caption": "The search stores the pattern and lands on the first later use."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "MAX_RETRIES = 3",
+                  "if attempts < MAX_RETRIES:",
+                  "    reset(MAX_RETRIES)"
+                ],
+                "cursor": [
+                  2,
+                  10
+                ],
+                "mode": "normal",
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "MAX_RETRIES"
+                  }
+                },
+                "caption": "The last use is confirmed before anything changes."
+              },
+              {
+                "afterStep": 33,
+                "lines": [
+                  "RETRY_CAP = 3",
+                  "if attempts < RETRY_CAP:",
+                  "    reset(RETRY_CAP)"
+                ],
+                "cursor": [
+                  2,
+                  4
+                ],
+                "mode": "normal",
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "MAX_RETRIES"
+                  }
+                },
+                "caption": "Every occurrence is renamed from the stored pattern."
+              }
+            ]
+          },
+          "hints": [
+            "The long name only has to be typed once, in the search.",
+            "Use `/MAX_RETRIES↵` and `n`, then `:%s/` with `Ctrl-r/` before `/RETRY_CAP/g↵`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "The search both confirmed the matches and stored the pattern, so the substitution reused the exact text Vim had already matched.",
+            "contrast": "A retyped long constant is the usual reason a rename misses one line."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "command-line-register",
+              "search-pattern"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "read-only-registers",
+              "command-line-register",
+              "search-pattern"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A guard clause and a call site give the constant three occurrences worth checking before a rename.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers",
+              "command-line-register"
+            ]
+          }
+        },
+        {
+          "id": "choose-pattern-source",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Reuse a confirmed pattern",
+          "prompt": "A long pattern is on screen and confirmed by a search. What puts it into the next substitution without retyping it?",
+          "options": [
+            {
+              "id": "command-line-register",
+              "label": "Press `Ctrl-r` then `/` while typing the command line"
+            },
+            {
+              "id": "retype-pattern",
+              "label": "Type the pattern again inside the substitution"
+            },
+            {
+              "id": "put-then-copy",
+              "label": "Put it into the buffer with `\"/p` and copy it by eye"
+            },
+            {
+              "id": "yank-register-zero",
+              "label": "Insert `\"0`, because a search also fills the yank register"
+            }
+          ],
+          "correctOptionId": "command-line-register",
+          "explanation": "`Ctrl-r/` drops the exact pattern Vim stored into the command line. Retyping is where substitutions quietly go wrong, and a search never touches `\"0`.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
       "id": "integrate-register-decisions",
       "title": "Choose the right register and put",
       "objective": "Select storage and placement from the edit's actual risk and desired continuation point.",
@@ -6302,7 +8782,7 @@
           "type": "theory",
           "phase": "explain",
           "title": "Choose a register for how long text must last",
-          "body": "Use the unnamed register for immediate work, `0` for the latest yank, numbered registers for large-delete history, `-` for small deletes, `_` to discard, and a named register for planned reuse.",
+          "body": "Use the unnamed register for immediate work, `0` for the latest yank, numbered registers for large-delete history, `-` for small deletes, `_` to discard, and a named register for planned reuse. Some registers you never fill yourself: `.`, `:`, and `/` already hold what you just typed, ran, and searched for.",
           "grammar": "survival need → register · placement need → put",
           "contrast": "The shortest command is not useful if it destroys the text needed next.",
           "demoRef": "integrated-preserve-demo"
@@ -7118,6 +9598,244 @@
           }
         },
         {
+          "id": "integrated-pattern-reuse",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Clear a row, then rename from the search",
+          "instruction": "Check both settings that name the old value, drop the scratch row for good, then rename that value to “stable” without typing it a second time.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode = legacy",
+                "scratch note",
+                "flag = legacy"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode = stable",
+                "flag = stable"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "\"": {
+                  "type": "characterwise",
+                  "text": ""
+                },
+                "/": {
+                  "type": "characterwise",
+                  "text": "legacy"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "l",
+              "e",
+              "g",
+              "a",
+              "c",
+              "y",
+              "Enter",
+              "j",
+              "\"",
+              "_",
+              "d",
+              "d",
+              ":",
+              "%",
+              "s",
+              "/",
+              "Ctrl-r",
+              "/",
+              "/",
+              "s",
+              "t",
+              "a",
+              "b",
+              "l",
+              "e",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "/legacy↵",
+                "explanation": "Search for the value so both settings are confirmed."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "j",
+                "explanation": "Move to the scratch row."
+              },
+              {
+                "from": 9,
+                "to": 13,
+                "display": "\"_dd",
+                "explanation": "Discard the row without storing it anywhere."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 14,
+                "to": 17,
+                "display": "%s/",
+                "explanation": "Start a substitution over the whole file."
+              },
+              {
+                "from": 17,
+                "to": 19,
+                "display": "Ctrl-r/",
+                "explanation": "Insert the confirmed pattern instead of retyping it."
+              },
+              {
+                "from": 19,
+                "to": 28,
+                "display": "/stable/g",
+                "explanation": "Give the replacement and the global flag."
+              },
+              {
+                "from": 28,
+                "to": 29,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "mode = legacy",
+                  "scratch note",
+                  "flag = legacy"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal",
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "legacy"
+                  }
+                },
+                "caption": "The search confirms both settings and stores the pattern."
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "mode = legacy",
+                  "flag = legacy"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": ""
+                  },
+                  "/": {
+                    "type": "characterwise",
+                    "text": "legacy"
+                  }
+                },
+                "caption": "The scratch row is gone and nothing was stored for it."
+              },
+              {
+                "afterStep": 29,
+                "lines": [
+                  "mode = stable",
+                  "flag = stable"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": ""
+                  },
+                  "/": {
+                    "type": "characterwise",
+                    "text": "legacy"
+                  }
+                },
+                "caption": "Both settings are renamed from the stored pattern."
+              }
+            ]
+          },
+          "hints": [
+            "A discarded row should not be worth storing, and a confirmed pattern should not be worth retyping.",
+            "Use `/legacy↵` then `j\"_dd`, then `:%s/` with `Ctrl-r/` before `/stable/g↵`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "The black-hole delete kept every register untouched and the search register still held the pattern the substitution needed.",
+            "contrast": "Two registers are doing different jobs here: one deliberately stores nothing, the other stores something you refuse to retype."
+          },
+          "skills": {
+            "primary": [
+              "register-choice"
+            ],
+            "supporting": [
+              "black-hole-register",
+              "read-only-registers",
+              "command-line-register"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "black-hole-register",
+              "read-only-registers",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A settings fragment gives two rows that share a value and one row that should simply disappear.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "black-hole-register",
+              "read-only-registers"
+            ]
+          }
+        },
+        {
           "id": "choose-safe-register",
           "type": "choice",
           "phase": "challenge",
@@ -7149,6 +9867,7 @@
           "takeaways": [
             "Use zero, numbered history, or small-delete when earlier text must be recovered.",
             "Use black-hole to discard, names to plan reuse, and plus for transferable clipboard grammar.",
+            "Read `\".`, `\":`, and `\"/` back with `Ctrl-r` rather than retyping what Vim already recorded.",
             "Choose `p` or `P` for placement and add `g` when the cursor should continue after the inserted text."
           ]
         }
@@ -7256,6 +9975,34 @@
       ]
     },
     {
+      "id": "read-only-reference",
+      "command": "\". \": \"/",
+      "purpose": "Read back the last inserted text, the last Ex command, and the last search pattern.",
+      "notes": [
+        "Vim fills these; no command writes them directly.",
+        "`\":` is what Unit 11's `@:` replays."
+      ],
+      "exampleActivityRefs": [
+        "put-last-inserted-text",
+        "rerun-last-ex-command",
+        "inspect-read-only-registers"
+      ]
+    },
+    {
+      "id": "command-line-register-reference",
+      "command": "Ctrl-r{register}",
+      "purpose": "Insert a register's text into the command line instead of retyping it.",
+      "notes": [
+        "`Ctrl-r/` reuses the pattern a search just confirmed.",
+        "Any readable register works, including named ones."
+      ],
+      "exampleActivityRefs": [
+        "search-reuse-demo",
+        "substitute-without-retyping",
+        "integrated-pattern-reuse"
+      ]
+    },
+    {
       "id": "registers-command-reference",
       "command": ":registers",
       "purpose": "Inspect current emulated register contents.",
@@ -7349,31 +10096,34 @@
         "small-delete-demo"
       ],
       "isolate": [
-        "black-hole-preserve-yank"
+        "small-delete-word"
       ],
       "mix": [
-        "small-delete-character"
+        "small-delete-character",
+        "small-change-register"
       ],
       "challenge": [
-        "black-hole-cleanup"
+        "small-delete-not-numbered"
       ]
     },
     {
       "concept": "black-hole register",
       "explain": [
-        "small-black-hole-meaning"
+        "black-hole-meaning"
       ],
       "demonstrate": [
-        "small-delete-demo"
+        "black-hole-line-demo"
       ],
       "isolate": [
         "black-hole-preserve-yank"
       ],
       "mix": [
-        "small-delete-character"
+        "black-hole-word",
+        "black-hole-character"
       ],
       "challenge": [
-        "black-hole-cleanup"
+        "black-hole-cleanup",
+        "black-hole-visual-named"
       ]
     },
     {
@@ -7431,6 +10181,26 @@
       ]
     },
     {
+      "concept": "read-only registers",
+      "explain": [
+        "read-only-register-meaning"
+      ],
+      "demonstrate": [
+        "search-reuse-demo"
+      ],
+      "isolate": [
+        "put-last-inserted-text"
+      ],
+      "mix": [
+        "rerun-last-ex-command",
+        "inspect-read-only-registers"
+      ],
+      "challenge": [
+        "substitute-without-retyping",
+        "choose-pattern-source"
+      ]
+    },
+    {
       "concept": "integrated register choice",
       "explain": [
         "register-choice-meaning"
@@ -7442,7 +10212,8 @@
         "integrated-named-gp"
       ],
       "mix": [
-        "integrated-plus-gp"
+        "integrated-plus-gp",
+        "integrated-pattern-reuse"
       ],
       "challenge": [
         "integrated-numbered-recovery"

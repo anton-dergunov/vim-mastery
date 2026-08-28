@@ -641,6 +641,65 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "registers-putting", unitNumber: 8, activityId: "unnamed-register-meaning" });
   });
 
+  test("marks Unit 8's rare register lessons and keeps the black hole core", async ({ page }) => {
+    // The rebalance is only real if a learner can see it: the three lessons the
+    // review judged rare are labelled, and the black-hole lesson that changes
+    // daily behavior is not.
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/?unit=registers-putting&activity=unnamed-register-meaning");
+    await page.getByRole("button", { name: "Open table of contents" }).click();
+    const marked = page.locator(".toc-unit[open] .toc-lesson").filter({ has: page.locator(".track-badge") });
+    await expect(marked).toHaveCount(3);
+    await expect(marked.nth(0)).toContainText("Continue after a put");
+    await expect(marked.nth(1)).toContainText("Recover older linewise deletes");
+    await expect(marked.nth(2)).toContainText("Recover small deletes");
+    await expect(page.locator(".toc-unit[open] .toc-lesson").filter({ hasText: "Discard text on purpose" }).locator(".track-badge")).toHaveCount(0);
+    await page.keyboard.press("Escape");
+
+    await page.goto("/?unit=registers-putting&activity=small-black-hole-meaning");
+    await expect(page.locator(".field-note .track-note")).toHaveText(/^Advanced and less commonly used: /);
+    await page.goto("/?unit=registers-putting&activity=black-hole-meaning");
+    await expect(page.locator(".field-note .track-note")).toHaveCount(0);
+  });
+
+  test("enters Unit 8 command-line register chords from touch and physical keyboards", async ({ page }) => {
+    // `Ctrl-r` on the command line is the whole point of the read-only register
+    // lesson, so it has to survive the latching touch keyboard as well as a
+    // physical Ctrl chord.
+    const search = ["/", ..."MAX_RETRIES", "Enter", "n"];
+    const tail = [..."RETRY_CAP", "/", "g", "Enter"];
+
+    await page.goto("/?unit=registers-putting&activity=substitute-without-retyping");
+    for (const key of search) await page.evaluate(token => window.VimWilds.emit(token), key);
+    // `:` and `%` are Shift chords on the physical-style keyboard.
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key=";"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="5"]').click();
+    await page.locator('.key[data-key="s"]').click();
+    await page.locator('.key[data-key="/"]').click();
+    await page.locator('[data-mod="Ctrl"]').click();
+    await page.locator('.key[data-key="r"]').click();
+    await page.locator('.key[data-key="/"]').click();
+    await page.locator('.key[data-key="/"]').click();
+    for (const key of tail) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await expect.poll(() => state(page)).toMatchObject({
+      complete: true,
+      modifiers: [],
+      code: ["RETRY_CAP = 3", "if attempts < RETRY_CAP:", "    reset(RETRY_CAP)"],
+    });
+
+    await page.goto("/?unit=registers-putting&activity=substitute-without-retyping-recall");
+    await page.locator(".cm-content").focus();
+    for (const key of [...search, ...":%s/"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await page.keyboard.press("Control+r");
+    for (const key of ["/", "/", ...tail]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await expect.poll(() => state(page)).toMatchObject({
+      complete: true,
+      registers: { "/": { text: "MAX_RETRIES", type: "characterwise" } },
+    });
+  });
+
   test("runs every Unit 8 register activity with internal clipboard state", async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "clipboard", {
@@ -653,7 +712,7 @@ test.describe("Production lesson flow", () => {
     });
     await page.goto("/?unit=registers-putting");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 74, exerciseCount: registerExercises.length });
+    expect(runtime).toEqual({ activityCount: 101, exerciseCount: registerExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {

@@ -782,7 +782,7 @@ export class VimEngine {
       this.awaitingColonRegister = false;
       if (vimKey === ":" && this.lastExCommand !== null) {
         Vim.handleEx(this.cm, this.lastExCommand);
-        this.moveCursorToLineStart();
+        this.moveCursorToFirstNonBlank();
         return finish(true);
       }
       pendingAtPrefix = true;
@@ -862,9 +862,17 @@ export class VimEngine {
     }
   }
 
-  moveCursorToLineStart() {
+  /**
+   * Ex commands leave the cursor on the first non-blank of the line they
+   * touched, not in column zero. The two only agree on an unindented line,
+   * which is why `:%s` looked correct until a lesson substituted inside an
+   * indented block. `executeLineOperation` already places the cursor this way.
+   * Fixture: `substitute-leaves-cursor-on-first-non-blank`.
+   */
+  moveCursorToFirstNonBlank() {
     const line = this.view.state.doc.lineAt(this.view.state.selection.main.head);
-    this.view.dispatch({ selection: EditorSelection.cursor(line.from) });
+    const firstNonBlank = line.text.search(/\S/);
+    this.view.dispatch({ selection: EditorSelection.cursor(line.from + Math.max(0, firstNonBlank)) });
   }
 
   /**
@@ -939,7 +947,7 @@ export class VimEngine {
     if (!this.executeGlobalOperation(command) && !this.executeNormalOperation(command)
       && !this.executeLineOperation(command)) {
       Vim.handleEx(this.cm, command);
-      this.moveCursorToLineStart();
+      this.moveCursorToFirstNonBlank();
       if (planned) this.reportSubstitutions(planned);
     }
     this.reportBufferChange(before);
@@ -1068,7 +1076,7 @@ export class VimEngine {
         }
         Vim.handleEx(this.cm, `${line + 1}${nestedCommand}`);
       }
-      this.moveCursorToLineStart();
+      this.moveCursorToFirstNonBlank();
       // The nested pattern is the one the learner sees replaced, so it wins the
       // match map over the `:g` selector.
       if (substitutions) this.reportSubstitutions({ substitutions, lines: substituted, pattern: nested.pattern || this.lastSearchQuery });
@@ -1204,6 +1212,15 @@ export class VimEngine {
   rememberSubstitution(command) {
     const substitution = parseSubstitution(command);
     if (substitution) this.lastSubstitution = substitution;
+  }
+
+  /**
+   * True while this bridge, not the adapter, owns the text of an open prompt.
+   * The adapter's panel still holds DOM focus, so its own handlers have to be
+   * kept away from keys the app has already interpreted.
+   */
+  ownsPrompt() {
+    return this.commandLine !== null || Boolean(this.confirmationInput());
   }
 
   closeCommandLine() {

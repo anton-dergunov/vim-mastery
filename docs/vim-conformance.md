@@ -167,6 +167,25 @@ The engine now parses `[flags] [/pattern/]` itself and declines anything outside
 sorting on a guess. `sort-numeric-flag-in-range` and its neighbours pin the
 cursor against a range that starts lower down.
 
+One divergence was the app's, not the adapter's. The document key handler
+interprets a physical keydown and stops it before the adapter's prompt input
+sees it, but the matching keyup still arrived there, and the adapter re-parses
+its prompt on every keyup. For a `:s` command that reparse writes the
+half-typed pattern into `"/`, so physically typing `:%s/` cleared the pattern
+that `Ctrl-r/` was about to insert — while touch input, which produces no
+keyup, worked. The handler now suppresses keyup for the same keys it already
+owns, gated on `VimEngine.ownsPrompt()`.
+
+The last-search register needed a sixth patch hunk once Unit 8 started asserting
+`"/`. The adapter encodes a substitution's flags into the query string it hands
+to `parseQuery`, and `parseQuery` writes that string straight into `"/`, so
+`:%s/draft/entry/g` left `draft/g` where Vim leaves `draft`. The behaviour built
+on the query was already right — `n` and the highlight both parsed the suffix
+back off — so only the register was wrong, which is exactly what a lesson about
+reusing `"/` would have taught incorrectly. `substitute` now restores the bare
+pattern after installing the query. Fixture:
+`substitute-leaves-bare-pattern-in-search-register`.
+
 Verified: `:g` with `:t`/`:m`; `:sort n`, `:sort u`, `:sort i`, and `:sort /pat/`;
 the read-only registers `".`, `":`, and `"/`; Insert-mode `Ctrl-r{register}`,
 `Ctrl-o`, `Ctrl-w`, and `Ctrl-u`; command-line `Ctrl-r{register}`; search as an

@@ -173,7 +173,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 05 Units 11–12
 - [x] 06 Tool-choice activities
 - [x] 07 Unit 9 split, marked, and narrowed
-- [ ] 08 Unit 8
+- [x] 08 Unit 8 register rebalance
 - [ ] 09 Unit 7
 - [ ] 10 Foundations demotions
 - [ ] 11 Insert-mode commands

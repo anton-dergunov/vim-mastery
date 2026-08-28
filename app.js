@@ -1798,7 +1798,16 @@ document.addEventListener("keyup", event => {
     state.physicalShift = false;
     renderModifiers();
   }
-});
+  if (event.vimWildsPrompt || !vimEngine?.ownsPrompt()) return;
+  // The keydown was already interpreted here and never reached the adapter's
+  // prompt input. Its keyup still would, and the adapter re-parses the prompt
+  // on every keyup: for a `:s` command that reparse rewrites the last-search
+  // register from the half-typed command, wiping the pattern `Ctrl-r/` is
+  // about to insert. Touch input never produces these events, so this only
+  // ever broke the physical keyboard.
+  event.preventDefault();
+  event.stopImmediatePropagation();
+}, true);
 
 // Demo controls advance the editor through a transient CodeMirror prompt.
 // Keep touch/pointer activation from moving focus to the button: the adapter

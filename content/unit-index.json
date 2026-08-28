@@ -13,7 +13,7 @@
     { "id": "precision-motions-search", "unitNumber": 5, "title": "Precision motions and search", "lessonCount": 8, "path": "content/units/05-precision-motions-search.json" },
     { "id": "text-objects", "unitNumber": 6, "title": "Text objects", "lessonCount": 9, "path": "content/units/06-text-objects.json" },
     { "id": "visual-selection", "unitNumber": 7, "title": "Visual selection", "lessonCount": 9, "path": "content/units/07-visual-selection.json" },
-    { "id": "registers-putting", "unitNumber": 8, "title": "Registers and putting", "lessonCount": 9, "path": "content/units/08-registers-putting.json" },
+    { "id": "registers-putting", "unitNumber": 8, "title": "Registers and putting", "lessonCount": 11, "path": "content/units/08-registers-putting.json" },
     { "id": "position-memory", "unitNumber": 9, "title": "Position memory", "lessonCount": 6, "path": "content/units/09-position-memory.json" },
     { "id": "viewport-control", "unitNumber": 10, "title": "Viewport control", "lessonCount": 5, "path": "content/units/10-viewport-control.json" },
     { "id": "repeatable-editing", "unitNumber": 11, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/11-repeatable-editing.json" },

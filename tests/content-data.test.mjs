@@ -99,7 +99,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 370);
+  assert.equal(exercises.length, 381);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -517,15 +517,15 @@ test("Unit 7 curriculum definition is preserved verbatim", () => {
 test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   assert.deepEqual(registerUnit.curriculumDefinition, {
     unit: "8. Registers and putting",
-    commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; `p P gp gP`; `:registers` as inspection",
+    commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`",
     prerequisites: "Units 1–6, especially `y d c p`",
-    learningOutcome: "Preserve yanks, select storage deliberately, reuse multiple snippets, and understand why delete/change affects later puts",
-    representativeExercises: "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; choose where to put text and where the cursor should land",
-    priorityAndPortability: "Core through named and black-hole registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard",
+    learningOutcome: "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
+    representativeExercises: "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
+    priorityAndPortability: "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed",
   });
   assert.deepEqual(registerUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects"]);
-  assert.equal(registerUnit.lessons.length, 9);
-  assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 36);
+  assert.equal(registerUnit.lessons.length, 11);
+  assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 49);
   assert.deepEqual(registerUnit.coverage.map(item => item.concept), [
     "unnamed register",
     "p P gp gP",
@@ -536,6 +536,7 @@ test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
     "named registers",
     "uppercase register append",
     "emulated plus register and inspection",
+    "read-only registers",
     "integrated register choice",
   ]);
   assert(!registerUnit.curriculumDefinition.commandsAndConcepts.includes('"*'));
