@@ -9,8 +9,10 @@
 Two loose ends, both cheap, both worth closing once the restructuring sessions
 have settled the unit numbering.
 
-**Prerequisites are declared but flat.** Units 5 through 11 all declare
-essentially the same six-unit `prerequisiteSkillIds` list. That is accurate but
+**Prerequisites are declared but flat.** Units 5 through 12 all declare
+essentially the same six-unit `prerequisiteSkillIds` list. (Unit 10 Viewport
+control is the one exception session 07 created: it additionally requires
+Unit 9.) That is accurate but
 it does not discriminate: the graph cannot recommend an order within Arc 2, and a
 learner skipping toward automation gets no useful guidance about what they
 genuinely need versus what is merely conventional. Units 12 and 13 do this
@@ -45,12 +47,15 @@ this distinction in prose ("Units 1–6; Unit 8 recommended") — encode it in d
 
 ### 2. Update the graph for restructuring
 
-Sessions 07 through 10 change unit numbering, split Unit 9, and merge lessons.
-Reconcile:
+Session 07 already did the numbering work: Unit 9 became Units 9 and 10, Units
+10–14 became 11–15, and `unit-index.json`, `presentation.json`, and every spec
+were reconciled. **No unit ever named `long-range-navigation` as a prerequisite**,
+so the cascade this brief anticipated did not exist.
 
-- `unit-index.json` arcs, unit numbers, titles, and `lessonCount`.
-- Every `prerequisiteSkillIds` reference — several units name
-  `long-range-navigation`, which session 07 may split or renumber.
+What is left here:
+
+- Confirm sessions 08–10 did not change any `lessonCount` without updating the
+  catalog. Note that session 08 now *adds* a lesson rather than merging two.
 - Every `coverage` array whose lessons moved.
 
 ### 3. Surface portability
@@ -59,8 +64,13 @@ Show `priorityAndPortability` as a short "in your editor" note at each unit
 summary. Keep it to a sentence or two. Link to the host-reality reference card
 from session 14 rather than repeating its content.
 
+Keep it host-neutral, per constraint 8 in [README.md](README.md): the baseline is
+Vim itself, and an embedding editor is a variation the learner should be warned
+about, not the assumed environment. Units 9 and 10 already carry notes in this
+form and are the model.
+
 Do not teach configuration. The goal is only that a learner is not confused when
-a practiced command does nothing in VS Code.
+a practiced command does nothing in the host they happen to be using.
 
 ### 4. Make test-out real
 
@@ -94,6 +104,7 @@ renumbering content, a stale reference is the most likely defect in this plan.
 - Required versus recommended prerequisites are distinguished in data.
 - Every id reference in every unit resolves; a test enforces this.
 - `unit-index.json` matches the post-restructuring reality.
+- Every lesson marked `advanced` or `optional` is reachable and visibly marked.
 - Each unit surfaces a short portability note linking to the host-reality card.
 - The experienced-user path into Arc 3 works end to end.
 

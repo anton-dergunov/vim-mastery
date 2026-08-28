@@ -40,39 +40,57 @@ Cards 5 and 6 are the ones that serve automation directly, and a conventional
 ### 2. The host column
 
 **This is what turns the deck from trivia into usable knowledge.** Every card
-carries two columns: what the command does in terminal Vim, and what happens in
-VS Code (`:w` works; `:q` closes the editor tab; `:sp` splits the editor group).
+carries two columns: what the command does in terminal Vim — the reference
+behavior — and how an embedding editor is likely to differ (`:w` works; `:q`
+closes a tab; `:sp` splits an editor group).
+
+Terminal Vim is the left column and the baseline, because that is what the
+curriculum teaches. Name specific hosts only as examples inside the right column;
+this is a reference card, the one place a host name is useful, and even here no
+single host is *the* target.
 
 ### 3. Host-reality card
 
-One card listing the chords the primary target host claims by default, because
-they affect commands the curriculum actually teaches:
+One card listing chords that embedding editors commonly claim, because they
+affect commands the curriculum actually teaches. **All of these work natively in
+terminal Vim** — that is the point of the card, and the reason none of this is a
+reason to stop teaching them:
 
-| Chord | VS Code default | Affects |
-| --- | --- | --- |
-| `Ctrl-f` | Find | Unit 9 |
-| `Ctrl-b` | Toggle sidebar | Unit 9 |
-| `Ctrl-e` | Quick open | Unit 9 |
-| `Ctrl-y` | Redo | Unit 9 |
-| `Ctrl-d` | Add cursor at next match | Unit 9 |
-| `Ctrl-w` | Close editor | Unit 3 (after session 11) |
-| `Ctrl-r` | Recent files | Units 3, 8 |
-| `Ctrl-v` | Paste (Win/Linux) | Unit 7 |
-| `Ctrl-a` / `Ctrl-x` | Select all / cut | Unit 3 |
+| Chord | Vim | Commonly claimed by a host as | Affects |
+| --- | --- | --- | --- |
+| `Ctrl-f` | Page forward | Find | Unit 10 |
+| `Ctrl-b` | Page back | Toggle sidebar | Unit 10 |
+| `Ctrl-e` | Scroll down one row | Quick open | Unit 10 |
+| `Ctrl-y` | Scroll up one row | Redo | Unit 10 |
+| `Ctrl-d` | Half page down | Add cursor at next match | Unit 10 |
+| `Ctrl-o` | Jump back | — | Unit 9 |
+| `Ctrl-w` | Delete word before cursor | Close editor | Unit 3 (after session 11) |
+| `Ctrl-r` | Redo; register insert | Recent files | Units 3, 8 |
+| `Ctrl-v` | Visual Block | Paste (Windows/Linux) | Unit 7 |
+| `Ctrl-a` / `Ctrl-x` | Increment / decrement | Select all / cut | Unit 3 |
 
-Also note that `gq` and `=` behave differently or not at all without
-configuration, and that `:normal` and `:g` support in the VS Code extension is
-narrower than real Vim.
+Also note that `gq` and `=` depend on an authored `textwidth` and `equalprg`
+even in terminal Vim, and that `:normal` and `:g` support in embedded Vim
+emulators is usually narrower than the real thing.
 
-**Do not teach configuration.** Tell the learner which keys need a decision and
-stop there. The point is that they are not confused when a practiced command
-does nothing.
+**Do not teach configuration.** Tell the learner which keys need a decision in
+whichever host they use, and stop there. The point is that they are not confused
+when a practiced command does nothing — not that they should avoid the command.
 
 ### 4. Tier 3 reference entries
 
 Fold in the remaining reference-only items from the review: `q:` command-line
-window, `:earlier`/`:later`, `"*` versus `"+`, and the material demoted by
-sessions 07 and 10 (section motions, scroll chords, sentence motions, `gq`).
+window, `:earlier`/`:later`, and `"*` versus `"+`.
+
+**Note what is *not* in this list.** Section motions, scroll chords, sentence
+motions, and `gq` were never demoted — sessions 07 and 10 mark them
+`advanced`/`optional` and keep them as full lessons, per constraint 7 in
+[README.md](README.md). They may gain reference entries here in addition to
+their lessons; they do not move here instead of them.
+
+Once this deck exists, "demote to reference" becomes an available disposition for
+the first time. It still should not be used on material the author has not yet
+walked.
 
 ## Out of scope
 
@@ -86,7 +104,7 @@ sessions 07 and 10 (section motions, scroll chords, sentence motions, `gq`).
 - The survival deck exists under Reference with six cards and no progression.
 - Every card has a terminal-Vim column and a VS Code column.
 - The host-reality card lists every reserved chord affecting a taught command.
-- Demoted material from sessions 07 and 10 has a reference home.
+- Marked material from sessions 07 and 10 keeps its lessons and may also have a reference entry.
 - Cards are readable at 360px without horizontal scrolling — two-column content
   is the risk here; stack the columns on narrow screens.
 

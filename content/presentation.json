@@ -201,7 +201,7 @@
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
         "storyImage": "assets/worlds/story/units/modal-model.webp",
         "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
-        "copy": "The Mode Lantern wakes. One key can hold more than one meaning\u2014and now the Wilds remember how to listen.",
+        "copy": "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
         "nextHook": {
           "copy": "A path glimmers beyond camp."
         }
@@ -520,7 +520,7 @@
         "actionId": "repair-scribes-spring",
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
         "action": "Tatter repairs a split channel; luminous ink begins to flow",
-        "copy": "Tatter opens the Scribe\u2019s Spring. The Wilds can accept new words and reshape old ones again.",
+        "copy": "Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.",
         "nextHook": {
           "copy": "A sealed gate waits for both an action and a range."
         },
@@ -1203,8 +1203,8 @@
       },
       "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.webp"
     },
-    "long-range-navigation": {
-      "id": "long-range-navigation",
+    "position-memory": {
+      "id": "position-memory",
       "worldId": "archive-of-echoes",
       "guideCharacterId": "luma",
       "landmark": {
@@ -1240,11 +1240,140 @@
         "actionId": "connect-far-beacons",
         "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
         "action": "Luma sends a thread of light between two distant beacons",
-        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances\u2014and return without losing their place.",
+        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
+        "nextHook": {
+          "copy": "One beacon is lit, but the window onto the Wilds is still fogged."
+        },
+        "storyImage": "assets/worlds/story/units/position-memory.webp"
+      },
+      "sceneId": "far-beacons",
+      "scenes": {
+        "far-beacons": {
+          "id": "far-beacons",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.04,
+              "y": 0.66,
+              "width": 0.26,
+              "height": 0.24
+            },
+            "phase-b": {
+              "x": 0.7,
+              "y": 0.64,
+              "width": 0.26,
+              "height": 0.25
+            },
+            "phase-c": {
+              "x": 0.39,
+              "y": 0.04,
+              "width": 0.22,
+              "height": 0.2
+            }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "tall",
+              "compact",
+              "wide"
+            ],
+            "siteIds": [
+              "upper-left-niche",
+              "upper-right-niche",
+              "left-drawer-bank",
+              "right-drawer-bank",
+              "left-landing",
+              "right-landing",
+              "lower-left-ledge",
+              "lower-right-ledge",
+              "distant-left-shelf",
+              "distant-right-shelf"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
+            },
+            "format": "webp",
+            "registrationProfile": "compact",
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp"
+    },
+    "viewport-control": {
+      "id": "viewport-control",
+      "worldId": "archive-of-echoes",
+      "guideCharacterId": "luma",
+      "landmark": {
+        "id": "beacon-glass",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/beacon-glass-dormant.webp",
+          "restored": "assets/worlds/landmarks/beacon-glass-restored.webp"
+        },
+        "placements": {
+          "portrait": {
+            "x": 82,
+            "y": 78,
+            "scale": 0.62
+          },
+          "square": {
+            "x": 84,
+            "y": 70,
+            "scale": 0.74
+          },
+          "wide": {
+            "x": 88,
+            "y": 64,
+            "scale": 0.86
+          },
+          "shallow": {
+            "x": 91,
+            "y": 58,
+            "scale": 0.66
+          }
+        }
+      },
+      "completion": {
+        "actionId": "clear-the-beacon-window",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
+        "action": "Luma wipes the lens of the beacon glass; the fog lifts and the far shore resolves",
+        "copy": "Luma clears the beacon glass. The Wilds can look far ahead, or close at hand, without moving a step.",
         "nextHook": {
           "copy": "Across the causeway, a stopped clock begins to tick."
         },
-        "storyImage": "assets/worlds/story/units/long-range-navigation.webp"
+        "storyImage": "assets/worlds/story/units/viewport-control.webp"
       },
       "sceneId": "far-beacons",
       "scenes": {
@@ -1885,7 +2014,7 @@
         "actionId": "open-meridian-engine",
         "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp",
         "action": "Cairn connects the restored systems; energy crosses all four worlds",
-        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together\u2014and the Wilds answer again.",
+        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
         "nextHook": {
           "speaker": "Nix",
           "copy": "The language is alive. What you restore next is up to you."
@@ -1996,7 +2125,7 @@
         "id": "nix-at-the-threshold",
         "asset": "assets/worlds/story/intro/nix-at-the-threshold.webp",
         "speaker": "Nix",
-        "copy": "The language was not lost\u2014only forgotten. Learn it with us, and the Wilds will remember."
+        "copy": "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember."
       }
     ],
     "ending": {

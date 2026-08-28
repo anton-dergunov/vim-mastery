@@ -1,6 +1,6 @@
 # Session 11 — Insert-mode command keys
 
-**Depends on:** 01 (conformance verdict), 08 (Unit 8 space freed) · **Blocks:** nothing
+**Depends on:** 01 (conformance verdict), 08 (Unit 8 read-only registers), 22 (`"%`) · **Blocks:** nothing
 
 > **Session 01 verdict.** All four keys are verified — `Ctrl-r{register}`,
 > `Ctrl-o`, `Ctrl-w`, and `Ctrl-u` (the last needed a patch; the adapter deleted
@@ -61,16 +61,22 @@ editing sentence and the unit currently cannot express it.
 
 ### 3. Connect to the read-only registers
 
-Session 08 added `".`, `":`, `"/`. With Insert-mode `Ctrl-r` available, close the
-loop: `Ctrl-r/` on the Ex line to reuse the pattern you just searched for, and
-`Ctrl-r.` to retype what you last inserted.
+Session 08 added `".`, `":`, `"/`, and [session 22](22-file-name-register.md)
+adds `"%`. With Insert-mode `Ctrl-r` available, close the loop: `Ctrl-r/` on the
+Ex line to reuse the pattern you just searched for, `Ctrl-r.` to retype what you
+last inserted, and `Ctrl-r%` to drop in the file name.
 
 ### 4. Host portability note
 
-VS Code claims `Ctrl-r` (recent files), `Ctrl-w` (close editor), and `Ctrl-u` by
-default. These need a `vim.handleKeys` decision from the learner. State the
-conflict plainly per unit; do not teach the configuration itself — that belongs
-on the host-reality reference card in session 14.
+In terminal Vim all four keys are native and unclaimed. An editor that *embeds*
+Vim may claim some of them for itself — VS Code takes `Ctrl-r`, `Ctrl-w`, and
+`Ctrl-u` by default, and other hosts make their own choices — so the learner has
+a decision to make in whichever host they use.
+
+State that plainly and generically per unit: name the command, say that some
+hosts claim the chord, and stop. Do not name one host as *the* host, and do not
+teach configuration — the per-host table belongs on the reference card in session
+14. Per constraint 8 in [README.md](README.md), no unit content names a host.
 
 ## Out of scope
 
@@ -85,7 +91,7 @@ on the host-reality reference card in session 14.
 - Unit 8 teaches `Ctrl-r0`, `Ctrl-r"`, `Ctrl-ra`.
 - At least one exercise composes yank → navigate → insert → `Ctrl-r0` as a single
   workflow.
-- Every affected unit carries the VS Code chord-conflict note.
+- Every affected unit carries a host-neutral chord-conflict note that names no editor.
 - `supported-commands.json` lists the new families as verified.
 - `unit-index.json` `lessonCount` updated.
 

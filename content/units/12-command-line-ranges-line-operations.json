@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "contentVersion": "1.0.0",
-  "unitNumber": 11,
+  "unitNumber": 12,
   "id": "command-line-ranges-line-operations",
   "title": "Command-line ranges and line operations",
   "releaseStatus": "authoring",
   "curriculumDefinition": {
-    "unit": "11. Command-line ranges and line operations",
+    "unit": "12. Command-line ranges and line operations",
     "commandsAndConcepts": "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort` with the `n`, `u`, and `/pat/` flags; safe undo and preview habits",
     "prerequisites": "Units 1–6",
     "learningOutcome": "Read and construct a range, then apply a deterministic line operation to it",

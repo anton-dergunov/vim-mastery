@@ -119,6 +119,8 @@ const contextualizeActivity = (activity, lesson, activityIndex, extra = {}) => (
   ...extra,
   lessonId: lesson.id,
   lessonTitle: lesson.title,
+  lessonTrack: lesson.track,
+  lessonTrackNote: lesson.trackNote,
   lessonIndex: lesson.lessonIndex,
   authoredActivityIndex: activityIndex,
 });
@@ -576,6 +578,21 @@ function renderTheoryPresentation(presentation) {
     <div class="forge-part role-${part.role}"><kbd>${escapeHtml(part.keys)}</kbd><strong>${escapeHtml(part.role)}</strong><small>${escapeHtml(part.meaning)}</small></div>`).join("")}</div>`;
 }
 
+// A lesson off the core path is marked, never removed: `track` says how far off
+// and `trackNote` says why, so a learner meets the material with its weight
+// attached instead of not meeting it at all.
+const trackLabels = { core: "Core", advanced: "Advanced", optional: "Optional" };
+
+function renderTrackBadge(track) {
+  if (!track || track === "core") return "";
+  return `<span class="track-badge track-${escapeHtml(track)}">${escapeHtml(trackLabels[track] || track)}</span>`;
+}
+
+function renderTrackNote(activity) {
+  if (!activity.lessonTrack || activity.lessonTrack === "core" || !activity.lessonTrackNote) return "";
+  return `<p class="track-note track-${escapeHtml(activity.lessonTrack)}">${renderInline(activity.lessonTrackNote)}</p>`;
+}
+
 function renderFieldNote(activity) {
   if (activity.type === "theory") {
     const lessonTheories = lessons[activity.lessonIndex].activities.filter(item => item.type === "theory");
@@ -585,8 +602,10 @@ function renderFieldNote(activity) {
       : activity.routes?.length ? renderRoutes(activity.routes) : isFinalTheory && activity.demoRef
       ? `<button class="note-action" type="button" data-action="show-demo" data-demo="${activity.demoRef}">Show example →</button>`
       : '<button class="note-action" type="button" data-action="next">Next →</button>';
+    const isFirstTheory = lessonTheories[0]?.id === activity.id;
     return `<article class="field-note" aria-label="Theory">
       <span class="field-note-kicker">Field note · explain</span>
+      ${isFirstTheory ? renderTrackNote(activity) : ""}
       <h2>${renderInline(activity.title)}</h2>
       <p>${renderInline(activity.body)}</p>
       ${renderTheoryPresentation(activity.presentation)}
@@ -1106,7 +1125,7 @@ function renderTableOfContents() {
       </button>`;
     }).join("");
     return `<details class="toc-lesson" ${lesson.id === current.lessonId ? "open" : ""}>
-      <summary><span>${lessonIndex + 1}</span><strong>${renderInline(lesson.title)}</strong><small>${lessonActivities.length} activities</small></summary>
+      <summary><span>${lessonIndex + 1}</span><strong>${renderInline(lesson.title)}</strong>${renderTrackBadge(lesson.track)}<small>${lessonActivities.length} activities</small></summary>
       <div class="toc-activities">${rows}</div>
     </details>`;
   }).join("");

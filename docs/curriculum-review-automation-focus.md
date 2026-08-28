@@ -305,17 +305,36 @@ made.
 Rare in **both** target environments. The recommendation is not deletion — the
 reference value is real — but to stop spending full five-phase cycles on them.
 
+> **Superseded in part, by decision of the author (session 07).** This section
+> was right that deletion is wrong, and the implementation briefs escalated it
+> anyway. Two corrections now govern every row below:
+>
+> 1. **Nothing is removed, and nothing loses its five-phase cycle.** Material
+>    judged rare is marked with `lesson.track` (`advanced` or `optional`) plus a
+>    one-sentence note, and keeps its lessons and activities. The author has not
+>    yet walked the course end to end, so a reviewer's judgement of rarity is a
+>    label, not a verdict. See constraint 7 in `docs/implementation/README.md`.
+> 2. **"Bound away by VS Code defaults" is not a reason.** The product teaches
+>    Vim, including terminal Vim, where the scroll chords are native and
+>    unclaimed; no unit content names a host. A claimed chord is a portability
+>    note attached to a command that is still taught. This affects the scroll
+>    chord and `gq` rows specifically, whose stated reasons were host-based.
+>
+> The "net" line below therefore no longer holds: no lessons are reclaimed, and
+> Arc 1 and Arc 2 stay the length they are. Tier 1 additions are funded by
+> adding lessons, which is the honest cost.
+
 | Topic | Current cost | Recommendation | Reason |
 | --- | --- | --- | --- |
-| Section/method motions `[[ ]] [] ][ [m ]m [M ]M` | Unit 9, 1 lesson | Reference; keep `[{`/`]}` as one activity | Syntax-dependent, unreliable in emulators, rarely used even by fluent users. The curriculum doc already calls these advanced — follow through. |
-| Scroll chords `Ctrl-f Ctrl-b Ctrl-e Ctrl-y` | Unit 9, ~2 lessons | Compress to 1; keep `Ctrl-d`/`Ctrl-u`, `zz zt zb`, `H M L` | All four are bound away by VS Code defaults. |
-| Bracket marks `` '[ '] `[ `] `` | Unit 9, 1 lesson | Fold into `set-and-use-marks` | Useful (`` `[v`] ``) but not a lesson's worth. |
+| Section/method motions `[[ ]] [] ][ [m ]m [M ]M` | Unit 9, 1 lesson | ~~Reference~~ **Lesson kept, marked advanced.** All eleven activities retained | Syntax-dependent, but verified against native Vim and used by the author. Marked, not removed. |
+| Scroll chords `Ctrl-f Ctrl-b Ctrl-e Ctrl-y` | Unit 10, 2 lessons | ~~Compress to 1~~ **Both lessons kept.** `Ctrl-e`/`Ctrl-y` marked advanced; paging stays core | ~~All four are bound away by VS Code defaults~~ — they are native, unclaimed terminal-Vim commands. Only one-row scrolling is genuinely niche. |
+| Bracket marks `` '[ '] `[ `] `` | Unit 9, 1 lesson | ~~Fold~~ **Lesson kept, marked advanced** | Useful (`` `[v`] ``); a short lesson is not a reason to dissolve it. |
 | Sentence motions `( )` and `is`/`as` | Units 5 and 6 | Keep paragraphs core; mark sentences optional | Near-useless in code; matters only in Markdown and commit messages. |
-| `gq` / `gw` reflow | Unit 4, 1 lesson | Mark optional + portability note | Requires `textwidth`; inert under VS Code defaults. Poor use of a core-path lesson. |
-| Numbered registers `"1`–`"9`, small-delete `"-` | Unit 8, 2 lessons | Merge into 1 "recovery registers" lesson; keep `"_` core | People reach for `u`, not `"2p`. `"_` is the one that changes daily behavior. |
-| `gp` / `gP` | Unit 8, part of a lesson | Reduce to one activity | Rare; `p` vs `P` is the part that matters. |
-| Replace mode `R` | Unit 3 | One activity, not a co-equal of `s`/`S` | `r` and `c` cover nearly all real cases. |
-| Angle-bracket objects `i<` `a<` | Unit 6, 1 lesson | Fold into `bracket-and-brace-objects` | Mechanics identical to other pairs; the separate lesson teaches nothing new. |
+| `gq` / `gw` reflow | Unit 4, 1 lesson | Mark optional + portability note; keep the lesson | Requires an authored `textwidth` — true in terminal Vim too, so the note is about configuration, not about a host. |
+| Numbered registers `"1`–`"9`, small-delete `"-` | Unit 8, 2 lessons | ~~Merge into 1~~ **Both kept, marked advanced**; `"_` stays core | People reach for `u`, not `"2p`. `"_` is the one that changes daily behavior. |
+| `gp` / `gP` | Unit 8, part of a lesson | ~~Reduce to one activity~~ **Kept, marked** | Rare; `p` vs `P` is the part that matters. |
+| Replace mode `R` | Unit 3 | ~~One activity~~ **Kept, marked**; de-emphasized in theory | `r` and `c` cover nearly all real cases. |
+| Angle-bracket objects `i<` `a<` | Unit 6, 1 lesson | ~~Fold~~ **Lesson kept, marked advanced** | Mechanics identical to other pairs, which makes it a cheap lesson rather than a wasted one. |
 | `;` in Ex ranges, address offsets | Unit 11 | Keep lesson, reduce drilling | One clear `,` vs `;` contrast is enough. |
 
 Net: roughly 8–10 lessons reclaimed, approximately funding all of Tier 1. The

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "contentVersion": "2.0.0",
-  "unitNumber": 13,
+  "unitNumber": 14,
   "id": "macros",
   "title": "Macros",
   "releaseStatus": "authoring",
   "curriculumDefinition": {
-    "unit": "13. Macros",
+    "unit": "14. Macros",
     "commandsAndConcepts": "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors over irregular rows; deliberate final cursor position; stopping on failed motion/search; recognizing when a macro is the wrong tool; optional recursion",
-    "prerequisites": "Units 4, 5, 8, and 10",
+    "prerequisites": "Units 4, 5, 8, and 11",
     "learningOutcome": "Record a robust transformation, replay it safely, inspect or repair it, state the assumptions that make it valid, and recognize the uniform case where a smaller tool wins",
     "representativeExercises": "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion; let a malformed row stop a counted replay",
     "priorityAndPortability": "Core automation. Recursive macros are optional and never required for normal progression"

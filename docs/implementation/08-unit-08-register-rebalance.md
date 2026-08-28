@@ -4,12 +4,20 @@
 **Touches:** `content/units/08-registers-putting.json`, `content/unit-index.json`
 **Size:** M
 
-> **Session 01 verdict.** `".`, `":`, and `"/` are verified. **`"%` is
-> dropped** — it is not a valid engine register and there is no file name to
-> report — so section 3 teaches three registers, not four. Ex-line
+> **Session 01 verdict.** `".`, `":`, and `"/` are verified. Ex-line
 > `Ctrl-r{register}` *is* supported, so teach the `:%s/‹Ctrl-r›//new/g` payoff
 > directly; the `:registers`-only fallback is not needed. See
 > [01](01-engine-conformance-spike.md).
+>
+> **`"%` is deferred, not dropped.** Session 01 dropped it because the buffer had
+> no name; [session 22](22-file-name-register.md) gives each activity an authored
+> `fileName` so it reports something true. Teach four read-only registers if 22
+> has landed, three if it has not — and do not describe `"%` as unsupported.
+>
+> **Nothing here is removed.** Constraint 7 in [README.md](README.md) applies:
+> the demotions below are now `lesson.track` markers, not merges or deletions.
+> The author has not yet walked the course, and `unit.reference` renders nowhere
+> until session 14.
 
 ## Context
 
@@ -17,11 +25,11 @@ Unit 8 spends two full lessons on recovery paths people rarely take, and a
 lesson-share on `gp`/`gP`, while the single most common real-world register use
 is absent entirely.
 
-Demote:
+Mark as `advanced` — keep every lesson and every activity:
 
 - **Numbered registers `"1`–`"9`** (`recover-numbered-deletes`) and
   **small-delete `"-`** (`control-small-and-discarded-deletes`) — in practice
-  people reach for `u`, not `"2p`. Two lessons for this is too much.
+  people reach for `u`, not `"2p`.
 - **`gp` / `gP`** — rare. The `p` versus `P` distinction is the part that
   matters.
 
@@ -33,23 +41,29 @@ when Insert-mode `Ctrl-r` arrives.
 
 ## Scope
 
-### 1. Merge the recovery lessons
+### 1. Mark the recovery lessons
 
-`recover-numbered-deletes` and `control-small-and-discarded-deletes` become one
-"recovery registers" lesson covering `"1`–`"9`, `"-`, and `"_`, with `"_`
-carrying the emphasis and the most exercises.
+`recover-numbered-deletes` and `control-small-and-discarded-deletes` both stay,
+both keep their five phases, and both take `track: "advanced"` with a note saying
+that `u` is what people actually reach for. `"_` stays core — it is the one
+register in the group that changes daily behavior.
 
 Note that `numbered-three` (canonical `dd dd dd "3P`) is a *good* exercise — it
 demonstrates exactly what numbered registers are for. Keep it.
 
-### 2. Reduce `gp` / `gP`
+### 2. Mark `gp` / `gP`
 
-From a lesson-share to a single activity inside `choose-put-landing`.
+Keep the activities; mark their lesson-share `advanced` if it is separable, and
+otherwise say so in the lesson's own theory. Do not reduce it to one activity.
 
 ### 3. Add read-only registers
 
-New lesson using the freed space: `".` (last inserted text), `":` (last Ex
-command), `"/` (last search pattern), and `"%` if session 01 verified it.
+A new lesson: `".` (last inserted text), `":` (last Ex command), `"/` (last
+search pattern), and `"%` once [session 22](22-file-name-register.md) lands.
+
+This adds a lesson rather than reusing space freed by a merge, because nothing is
+being merged. Unit 8 gets longer, which is the correct outcome: the material is
+good and the unit was not too long, it was unevenly weighted.
 
 The payoff is a safety habit worth teaching directly:
 `:%s/‹Ctrl-r›//new/g` — reuse the pattern you just confirmed visually with `/`,
@@ -78,10 +92,11 @@ append. Leave these alone.
 
 ## Acceptance criteria
 
-- Recovery registers occupy one lesson, not two.
+- Both recovery lessons survive, marked `advanced` with notes.
 - `"_` carries more weight than `"1`–`"9` and `"-` combined.
-- `gp`/`gP` is one activity, not a lesson-share.
+- `gp`/`gP` keeps its activities and is marked rather than cut.
 - A read-only registers lesson exists and links `":` to `@:`.
+- No activity was removed from the unit.
 - `unit-index.json` `lessonCount` updated.
 
 ## Validation

@@ -1,4 +1,8 @@
-# Session 16 — Unit 15: real-code workflow capstones
+# Session 16 — Unit 16: real-code workflow capstones
+
+> **Renumbered by session 07.** The capstones unit is now **16**, not 15: the
+> Unit 9 split pushed every unit from 10 onward up by one, so the built
+> curriculum ends at Unit 15 (Global and Normal automation).
 
 **Depends on:** 03, 04, 05 (automation content settled) · **Blocks:** 17
 **Touches:** new `content/units/15-capstones.json`, `content/unit-index.json`
@@ -6,7 +10,7 @@
 
 ## Context
 
-`unit-index.json` stops at Unit 14. Units 15 and 16 are fully specified in
+`unit-index.json` stops at Unit 15. Units 16 and 17 are fully specified in
 `docs/curriculum-and-progression.md` and have no content.
 
 **This is the largest single win for automation judgment in the plan.** Isolated
@@ -83,7 +87,7 @@ splitting, put those in the second half.
 ## Acceptance criteria
 
 - Eight capstones exist, each with multiple staged targets.
-- No capstone introduces a command not already taught in Units 1–14.
+- No capstone introduces a command not already taught in Units 1–15.
 - Each opens with a mechanism-choice activity.
 - Each closes with a rationale comparing alternatives on clarity, setup cost,
   repeatability, and risk.
@@ -92,7 +96,7 @@ splitting, put those in the second half.
   may well land at 20–40 lines, but that range is a consequence to check
   against, not a target to author to — see constraint 5 in [README.md](README.md).
 - Every stage is independently completable in under 90 seconds.
-- `unit-index.json` includes Unit 15 and its arc.
+- `unit-index.json` includes Unit 16 and its arc.
 
 ## Validation
 

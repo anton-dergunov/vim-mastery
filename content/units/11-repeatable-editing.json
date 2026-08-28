@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "contentVersion": "1.0.0",
-  "unitNumber": 10,
+  "unitNumber": 11,
   "id": "repeatable-editing",
   "title": "Repeatable editing",
   "releaseStatus": "authoring",
   "curriculumDefinition": {
-    "unit": "10. Repeatable editing",
+    "unit": "11. Repeatable editing",
     "commandsAndConcepts": "Deliberate `.`, `;`/`,` plus `.`, `n`/`N` plus `.`, `@:`, `&`, `:~`; count vs repeat; repeat-friendly cursor placement",
     "prerequisites": "Units 1–6; Unit 8 recommended",
     "learningOutcome": "Design one change that can be replayed across nearby or searched instances, and recognize when repeat is the wrong tool",

@@ -3,10 +3,12 @@
 **Depends on:** 01 (conformance verdict), 10 (Unit 5 demotions) · **Blocks:** nothing
 
 > **Session 01 verdict.** The base pairing is verified, exclusivity included.
-> **Section 2's search offsets are dropped** — the engine discards them and the
-> search silently lands in the wrong place. Ship without them, and say offsets
-> exist in real Vim but are not practiced here rather than implying they do not
-> exist. See [01](01-engine-conformance-spike.md).
+> **Section 2's search offsets are deferred, not abandoned** — the engine
+> discards them today and the search silently lands in the wrong place, so they
+> cannot ship as-is. [Session 21](21-search-offsets.md) fixes the engine. Until
+> it lands, ship the base pairing and say offsets exist in real Vim but are not
+> practiced *yet*; do not imply they do not exist. See
+> [01](01-engine-conformance-spike.md).
 **Touches:** `content/units/05-precision-motions-search.json`, possibly `patches/`
 **Size:** M
 
@@ -43,8 +45,11 @@ surprises people and is the reason offsets exist.
 - `/pattern/e` — land on the match end, making the range inclusive.
 - `/pattern/+1`, `/pattern/-1` — line offsets.
 
-Gate on session 01. If offsets failed conformance, ship the base pairing without
-them and note the drop — the base pairing carries most of the value.
+Gate on [session 21](21-search-offsets.md). Until it lands, ship the base
+pairing without offsets — it carries most of the value — and leave the lesson
+shaped so an offset beat slots in afterwards without a restructure. This matters
+because the exclusivity the lesson teaches is exactly what offsets exist to fix:
+teaching the sharp edge without the tool is the weaker half of the lesson.
 
 ### 3. Make the bridge explicit
 
@@ -69,7 +74,7 @@ settled unit.
 
 - Unit 5 teaches `d/pattern⏎` and at least two other operator-search pairings.
 - The exclusive-versus-inclusive distinction is taught explicitly.
-- Offsets are taught or explicitly dropped with a recorded conformance reason.
+- Offsets are taught, or deferred to session 21 with the reason recorded and the lesson left ready for them.
 - The forward connection to Ex addresses and `:global` is stated.
 - `supported-commands.json` updated.
 

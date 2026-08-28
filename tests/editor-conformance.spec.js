@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { conformanceFixtures } from "./vim-fixtures.mjs";
 
-const unit = JSON.parse(readFileSync(new URL("../content/units/10-repeatable-editing.json", import.meta.url), "utf8"));
+const unit = JSON.parse(readFileSync(new URL("../content/units/11-repeatable-editing.json", import.meta.url), "utf8"));
 const modalUnit = JSON.parse(readFileSync(new URL("../content/units/01-modal-model.json", import.meta.url), "utf8"));
 const cursorUnit = JSON.parse(readFileSync(new URL("../content/units/02-cursor-movement.json", import.meta.url), "utf8"));
 const changingUnit = JSON.parse(readFileSync(new URL("../content/units/03-entering-changing-text.json", import.meta.url), "utf8"));
@@ -11,11 +11,12 @@ const precisionUnit = JSON.parse(readFileSync(new URL("../content/units/05-preci
 const textObjectUnit = JSON.parse(readFileSync(new URL("../content/units/06-text-objects.json", import.meta.url), "utf8"));
 const visualUnit = JSON.parse(readFileSync(new URL("../content/units/07-visual-selection.json", import.meta.url), "utf8"));
 const registerUnit = JSON.parse(readFileSync(new URL("../content/units/08-registers-putting.json", import.meta.url), "utf8"));
-const navigationUnit = JSON.parse(readFileSync(new URL("../content/units/09-long-range-navigation.json", import.meta.url), "utf8"));
-const rangeUnit = JSON.parse(readFileSync(new URL("../content/units/11-command-line-ranges-line-operations.json", import.meta.url), "utf8"));
-const substitutionUnit = JSON.parse(readFileSync(new URL("../content/units/12-substitution-practical-regex.json", import.meta.url), "utf8"));
-const macroUnit = JSON.parse(readFileSync(new URL("../content/units/13-macros.json", import.meta.url), "utf8"));
-const automationUnit = JSON.parse(readFileSync(new URL("../content/units/14-global-normal-automation.json", import.meta.url), "utf8"));
+const positionUnit = JSON.parse(readFileSync(new URL("../content/units/09-position-memory.json", import.meta.url), "utf8"));
+const viewportUnit = JSON.parse(readFileSync(new URL("../content/units/10-viewport-control.json", import.meta.url), "utf8"));
+const rangeUnit = JSON.parse(readFileSync(new URL("../content/units/12-command-line-ranges-line-operations.json", import.meta.url), "utf8"));
+const substitutionUnit = JSON.parse(readFileSync(new URL("../content/units/13-substitution-practical-regex.json", import.meta.url), "utf8"));
+const macroUnit = JSON.parse(readFileSync(new URL("../content/units/14-macros.json", import.meta.url), "utf8"));
+const automationUnit = JSON.parse(readFileSync(new URL("../content/units/15-global-normal-automation.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -32,8 +33,10 @@ const visualActivities = visualUnit.lessons.flatMap(lesson => lesson.activities.
 const visualExercises = visualActivities.filter(activity => activity.type === "exercise");
 const registerActivities = registerUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const registerExercises = registerActivities.filter(activity => activity.type === "exercise");
-const navigationActivities = navigationUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
-const navigationExercises = navigationActivities.filter(activity => activity.type === "exercise");
+const positionActivities = positionUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const positionExercises = positionActivities.filter(activity => activity.type === "exercise");
+const viewportActivities = viewportUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const viewportExercises = viewportActivities.filter(activity => activity.type === "exercise");
 const rangeActivities = rangeUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const rangeExercises = rangeActivities.filter(activity => activity.type === "exercise");
 const substitutionActivities = substitutionUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -74,7 +77,8 @@ test.describe("Production lesson flow", () => {
       textObjectUnit.id,
       visualUnit.id,
       registerUnit.id,
-      navigationUnit.id,
+      positionUnit.id,
+      viewportUnit.id,
       unit.id,
       rangeUnit.id,
       substitutionUnit.id,
@@ -163,7 +167,7 @@ test.describe("Production lesson flow", () => {
     // object. Matching only single backticks turned each of those into an empty
     // chip, a chip holding the wrong characters, and a loose backtick — which
     // also overflowed the field note at 390x844.
-    await page.goto("/?unit=long-range-navigation&activity=local-mark-meaning");
+    await page.goto("/?unit=position-memory&activity=local-mark-meaning");
     const body = page.locator(".field-note p").first();
     await expect(body.locator("code")).toHaveText(["ma", "a", "'a", "`a"]);
     await expect(body).not.toContainText("``");
@@ -182,7 +186,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(14);
+    await expect(page.locator(".toc-unit")).toHaveCount(15);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(73);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -195,6 +199,38 @@ test.describe("Production lesson flow", () => {
     expect(badgeColors.recall).toBe("rgb(243, 154, 195)");
     await page.locator('[data-activity-index="6"]').click();
     expect((await state(page))).toMatchObject({ activityId: "dot-python-values-recall", practiceMode: "recall" });
+  });
+
+  test("marks advanced lessons in the contents and on the lesson itself", async ({ page }) => {
+    // Rare material stays on the path and is labelled instead of being cut, so
+    // the badge and the note are the whole mechanism: if they do not render,
+    // the lesson silently reads as core.
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/?unit=position-memory&activity=local-mark-meaning");
+    await page.getByRole("button", { name: "Open table of contents" }).click();
+    const badges = page.locator(".toc-unit[open] .track-badge");
+    await expect(badges).toHaveText(["Advanced", "Advanced"]);
+    const marked = page.locator(".toc-lesson").filter({ has: page.locator(".track-badge") });
+    await expect(marked).toHaveCount(2);
+    await expect(marked.first()).toContainText("Revisit an operated range");
+    await expect(marked.last()).toContainText("Navigate code structure");
+    // Core lessons carry no badge at all; absence is what "core" means.
+    await expect(page.locator(".toc-lesson").first().locator(".track-badge")).toHaveCount(0);
+    const summaryOverflow = await marked.last().locator("summary").evaluate(node => ({
+      overflow: node.scrollWidth - node.clientWidth,
+      badgeSize: getComputedStyle(node.querySelector(".track-badge")).fontSize,
+    }));
+    expect(summaryOverflow.overflow).toBeLessThanOrEqual(0);
+    expect(summaryOverflow.badgeSize).toBe("10px");
+    await page.keyboard.press("Escape");
+
+    await page.goto("/?unit=position-memory&activity=structural-motion-meaning");
+    const note = page.locator(".field-note .track-note");
+    await expect(note).toHaveText(/^Advanced and less commonly used: /);
+    expect(await note.evaluate(node => getComputedStyle(node).fontSize)).toBe("11px");
+    // The note belongs to the lesson, not to every activity inside it.
+    await page.goto("/?unit=position-memory&activity=local-mark-meaning");
+    await expect(page.locator(".field-note .track-note")).toHaveCount(0);
   });
 
   test("starts at Unit 1 and exposes all numbered units through the course contents", async ({ page }) => {
@@ -210,18 +246,19 @@ test.describe("Production lesson flow", () => {
       { id: "text-objects", unitNumber: 6, title: "Text objects" },
       { id: "visual-selection", unitNumber: 7, title: "Visual selection" },
       { id: "registers-putting", unitNumber: 8, title: "Registers and putting" },
-      { id: "long-range-navigation", unitNumber: 9, title: "Long-range navigation" },
-      { id: "repeatable-editing", unitNumber: 10, title: "Repeatable editing" },
-      { id: "command-line-ranges-line-operations", unitNumber: 11, title: "Command-line ranges and line operations" },
-      { id: "substitution-practical-regex", unitNumber: 12, title: "Substitution and practical regex" },
-      { id: "macros", unitNumber: 13, title: "Macros" },
-      { id: "global-normal-automation", unitNumber: 14, title: "Global and Normal automation" },
+      { id: "position-memory", unitNumber: 9, title: "Position memory" },
+      { id: "viewport-control", unitNumber: 10, title: "Viewport control" },
+      { id: "repeatable-editing", unitNumber: 11, title: "Repeatable editing" },
+      { id: "command-line-ranges-line-operations", unitNumber: 12, title: "Command-line ranges and line operations" },
+      { id: "substitution-practical-regex", unitNumber: 13, title: "Substitution and practical regex" },
+      { id: "macros", unitNumber: 14, title: "Macros" },
+      { id: "global-normal-automation", unitNumber: 15, title: "Global and Normal automation" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(14);
+    await expect(page.locator(".toc-unit")).toHaveCount(15);
     await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation"]);
     await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
-    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(4);
+    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(5);
     await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(4);
     await expect(page.locator(".toc-arc-divider")).toHaveCount(2);
     const arcPresentation = await page.evaluate(() => {
@@ -240,12 +277,13 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
     await expect(page.locator('[data-unit-id="visual-selection"]')).toContainText("Unit 7");
     await expect(page.locator('[data-unit-id="registers-putting"]')).toContainText("Unit 8");
-    await expect(page.locator('[data-unit-id="long-range-navigation"]')).toContainText("Unit 9");
-    await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 10");
-    await expect(page.locator('[data-unit-id="command-line-ranges-line-operations"]')).toContainText("Unit 11");
-    await expect(page.locator('[data-unit-id="substitution-practical-regex"]')).toContainText("Unit 12");
-    await expect(page.locator('[data-unit-id="macros"]')).toContainText("Unit 13");
-    await expect(page.locator('[data-unit-id="global-normal-automation"]')).toContainText("Unit 14");
+    await expect(page.locator('[data-unit-id="position-memory"]')).toContainText("Unit 9");
+    await expect(page.locator('[data-unit-id="viewport-control"]')).toContainText("Unit 10");
+    await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 11");
+    await expect(page.locator('[data-unit-id="command-line-ranges-line-operations"]')).toContainText("Unit 12");
+    await expect(page.locator('[data-unit-id="substitution-practical-regex"]')).toContainText("Unit 13");
+    await expect(page.locator('[data-unit-id="macros"]')).toContainText("Unit 14");
+    await expect(page.locator('[data-unit-id="global-normal-automation"]')).toContainText("Unit 15");
   });
 
   test("routes confident learners into the recall-only quick check", async ({ page }) => {
@@ -656,14 +694,18 @@ test.describe("Production lesson flow", () => {
     await page.goto("/?unit=registers-putting&activity=registers-putting-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 9" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 9" }).click();
-    await page.waitForURL(/unit=long-range-navigation/);
-    expect((await state(page))).toMatchObject({ unitId: "long-range-navigation", unitNumber: 9, activityId: "window-landmarks-meaning" });
+    await page.waitForURL(/unit=position-memory/);
+    expect((await state(page))).toMatchObject({ unitId: "position-memory", unitNumber: 9, activityId: "local-mark-meaning" });
   });
 
-  test("runs every Unit 9 activity with exact cursor and semantic viewport targets", async ({ page }) => {
-    await page.goto("/?unit=long-range-navigation");
+  for (const { number, unitId, exercises } of [
+    { number: 9, unitId: "position-memory", exercises: positionExercises },
+    { number: 10, unitId: "viewport-control", exercises: viewportExercises },
+  ]) {
+  test(`runs every Unit ${number} activity with exact cursor and semantic viewport targets`, async ({ page }) => {
+    await page.goto(`/?unit=${unitId}`);
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 104, exerciseCount: navigationExercises.length });
+    expect(runtime.exerciseCount).toEqual(exercises.length);
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -681,27 +723,36 @@ test.describe("Production lesson flow", () => {
       return result;
     });
     expect(failures).toEqual([]);
+  });
+  }
 
-    await page.goto("/?unit=long-range-navigation&activity=long-range-navigation-summary");
+  test("continues from Position memory through Viewport control into Repeatable editing", async ({ page }) => {
+    await page.goto("/?unit=position-memory&activity=position-memory-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 10" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 10" }).click();
+    await page.waitForURL(/unit=viewport-control/);
+    expect((await state(page))).toMatchObject({ unitId: "viewport-control", unitNumber: 10, activityId: "window-landmarks-meaning" });
+
+    await page.goto("/?unit=viewport-control&activity=navigation-and-viewport-summary");
+    await expect(page.getByRole("button", { name: "Continue to Unit 11" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 11" }).click();
     await page.waitForURL(/unit=repeatable-editing/);
-    expect((await state(page))).toMatchObject({ unitId: "repeatable-editing", unitNumber: 10, activityId: "dot-is-a-change" });
+    expect((await state(page))).toMatchObject({ unitId: "repeatable-editing", unitNumber: 11, activityId: "dot-is-a-change" });
   });
 
   test("makes the middle-row and change-list movements visibly observable", async ({ page }) => {
-    await page.goto("/?unit=long-range-navigation&activity=window-middle-isolate");
+    await page.goto("/?unit=viewport-control&activity=window-middle-isolate");
     expect(await state(page)).toMatchObject({ cursor: [10, 0], viewport: { topLine: 9, bottomLine: 15, totalLines: 30 } });
     await page.evaluate(() => window.VimWilds.emit("M"));
     expect(await state(page)).toMatchObject({ complete: true, cursor: [12, 0], viewport: { topLine: 9, bottomLine: 15, totalLines: 30 } });
 
-    await page.goto("/?unit=long-range-navigation&activity=change-list-oldest-isolate");
+    await page.goto("/?unit=position-memory&activity=change-list-oldest-isolate");
     for (const key of ["g", ";"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     expect(await state(page)).toMatchObject({ cursor: [20, 2], viewport: { topLine: 14, bottomLine: 20, totalLines: 30 } });
     for (const key of ["g", ";"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     expect(await state(page)).toMatchObject({ complete: true, cursor: [4, 9], viewport: { topLine: 4, bottomLine: 10, totalLines: 30 } });
 
-    await page.goto("/?unit=long-range-navigation&activity=change-list-newer-mix");
+    await page.goto("/?unit=position-memory&activity=change-list-newer-mix");
     for (const key of ["g", ";", "g", ";"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     expect(await state(page)).toMatchObject({ cursor: [4, 9], viewport: { topLine: 4, bottomLine: 10, totalLines: 30 } });
     for (const key of ["g", ","]) await page.evaluate(token => window.VimWilds.emit(token), key);
@@ -985,34 +1036,34 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ modifiers: [], history: [...beforeReplay, "@"] });
   });
 
-  test("continues from Unit 10 through published Units 11, 12, 13, and 14", async ({ page }) => {
+  test("continues from Unit 11 through published Units 12, 13, 14, and 15", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=repeat-unit-summary");
-    await expect(page.getByRole("button", { name: "Continue to Unit 11" })).toBeVisible();
-    await page.getByRole("button", { name: "Continue to Unit 11" }).click();
-    await page.waitForURL(/unit=command-line-ranges-line-operations/);
-    expect((await state(page))).toMatchObject({ unitId: "command-line-ranges-line-operations", unitNumber: 11, activityId: "addresses-before-actions" });
-
-    await page.goto("/?unit=command-line-ranges-line-operations&activity=command-line-ranges-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 12" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 12" }).click();
-    await page.waitForURL(/unit=substitution-practical-regex/);
-    expect((await state(page))).toMatchObject({ unitId: "substitution-practical-regex", unitNumber: 12, activityId: "substitution-parts" });
+    await page.waitForURL(/unit=command-line-ranges-line-operations/);
+    expect((await state(page))).toMatchObject({ unitId: "command-line-ranges-line-operations", unitNumber: 12, activityId: "addresses-before-actions" });
 
-    await page.goto("/?unit=substitution-practical-regex&activity=substitution-regex-unit-summary");
+    await page.goto("/?unit=command-line-ranges-line-operations&activity=command-line-ranges-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 13" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 13" }).click();
-    await page.waitForURL(/unit=macros/);
-    expect((await state(page))).toMatchObject({ unitId: "macros", unitNumber: 13, activityId: "macro-recording-meaning" });
+    await page.waitForURL(/unit=substitution-practical-regex/);
+    expect((await state(page))).toMatchObject({ unitId: "substitution-practical-regex", unitNumber: 13, activityId: "substitution-parts" });
 
-    await page.goto("/?unit=macros&activity=macros-unit-summary");
+    await page.goto("/?unit=substitution-practical-regex&activity=substitution-regex-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 14" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 14" }).click();
+    await page.waitForURL(/unit=macros/);
+    expect((await state(page))).toMatchObject({ unitId: "macros", unitNumber: 14, activityId: "macro-recording-meaning" });
+
+    await page.goto("/?unit=macros&activity=macros-unit-summary");
+    await expect(page.getByRole("button", { name: "Continue to Unit 15" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 15" }).click();
     await page.waitForURL(/unit=global-normal-automation/);
-    expect((await state(page))).toMatchObject({ unitId: "global-normal-automation", unitNumber: 14, activityId: "normal-range-meaning" });
+    expect((await state(page))).toMatchObject({ unitId: "global-normal-automation", unitNumber: 15, activityId: "normal-range-meaning" });
 
     await page.goto("/?unit=global-normal-automation&activity=global-normal-automation-summary");
-    await expect(page.getByRole("button", { name: "Complete Unit 14" })).toBeVisible();
-    await page.getByRole("button", { name: "Complete Unit 14" }).click();
+    await expect(page.getByRole("button", { name: "Complete Unit 15" })).toBeVisible();
+    await page.getByRole("button", { name: "Complete Unit 15" }).click();
     const storySurface = page.locator(".story-surface");
     if (await storySurface.getAttribute("data-kind") === "unit") {
       await page.getByRole("button", { name: "Continue to finale" }).click();
@@ -1022,8 +1073,8 @@ test.describe("Production lesson flow", () => {
     await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   });
 
-  test("locks direct scrolling while Vim updates the Unit 9 position rail", async ({ page }) => {
-    await page.goto("/?unit=long-range-navigation&activity=scroll-down-twice-mix");
+  test("locks direct scrolling while Vim updates the Unit 10 position rail", async ({ page }) => {
+    await page.goto("/?unit=viewport-control&activity=scroll-down-twice-mix");
     const before = await state(page);
     const scroller = page.locator(".cm-scroller");
     const box = await scroller.boundingBox();
@@ -1054,7 +1105,7 @@ test.describe("Production lesson flow", () => {
   });
 
   test("reconstructs Unit 9 marks and history on reset and accepts touch and physical Ctrl chords", async ({ page }) => {
-    await page.goto("/?unit=long-range-navigation&activity=change-list-newer-mix");
+    await page.goto("/?unit=position-memory&activity=change-list-newer-mix");
     const seeded = await state(page);
     await page.evaluate(() => window.VimWilds.emit("g"));
     await page.getByRole("button", { name: "Reset activity" }).click();
@@ -1062,19 +1113,19 @@ test.describe("Production lesson flow", () => {
     await page.evaluate(() => window.VimWilds.solveCurrent());
     expect((await state(page)).complete).toBe(true);
 
-    await page.goto("/?unit=long-range-navigation&activity=half-page-down-mix");
+    await page.goto("/?unit=viewport-control&activity=half-page-down-mix");
     await page.locator('[data-mod="Ctrl"]').click();
     await page.locator('.key[data-key="d"]').click();
     expect((await state(page))).toMatchObject({ complete: true, cursor: [15, 0], viewport: { topLine: 12, bottomLine: 18, totalLines: 30 }, modifiers: [] });
-    await page.goto("/?unit=long-range-navigation&activity=page-backward-isolate");
+    await page.goto("/?unit=viewport-control&activity=page-backward-isolate");
     await page.locator(".cm-content").focus();
     await page.keyboard.press("Control+b");
     expect((await state(page))).toMatchObject({ complete: true, cursor: [7, 0], viewport: { topLine: 4, bottomLine: 10, totalLines: 30 } });
   });
 
   test("matches native Vim for every method-boundary direction", async ({ page }) => {
-    await page.goto("/?unit=long-range-navigation");
-    const lines = navigationActivities.find(activity => activity.id === "method-start-mix").scenario.initial.lines;
+    await page.goto("/?unit=position-memory");
+    const lines = positionActivities.find(activity => activity.id === "method-start-mix").scenario.initial.lines;
     const results = await page.evaluate(async sourceLines => {
       const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
       const cases = [
@@ -1560,7 +1611,7 @@ test.describe("Production lesson flow", () => {
     for (const [unitId, activityId, stepsBefore] of [
       ["precision-motions-search", "pattern-search-demo", 2],
       ["registers-putting", "unnamed-line-demo", 2],
-      ["long-range-navigation", "last-change-line-demo", 1],
+      ["position-memory", "last-change-line-demo", 1],
     ]) {
       await page.goto(`/?unit=${unitId}&activity=${activityId}`);
       for (let index = 0; index < stepsBefore; index += 1) {
@@ -2262,7 +2313,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "long-range-navigation", "repeatable-editing", "command-line-ranges-line-operations", "substitution-practical-regex", "macros", "global-normal-automation"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "position-memory", "viewport-control", "repeatable-editing", "command-line-ranges-line-operations", "substitution-practical-regex", "macros", "global-normal-automation"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {
@@ -2482,20 +2533,22 @@ test.describe("Production lesson flow", () => {
   });
 
   test("reconstructs the authored window with no drift across every viewport activity", async ({ page }) => {
-    await page.goto("/?unit=long-range-navigation");
-    const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
     const drifted = [];
     let windowed = 0;
-    for (let index = 0; index < activityCount; index += 1) {
-      await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
-      const current = await state(page);
-      if (current.setupDrift) drifted.push(current.setupDrift);
-      if (!current.viewport || current.viewport.totalLines === current.viewport.bottomLine - current.viewport.topLine + 1) continue;
-      // Unit 9's correctness depends on the visible row count, so every one of
-      // its windowed activities declares that dependence.
-      windowed += 1;
-      expect(current.viewportDependent, `activity ${index} declares viewport dependence`).toBe(true);
-      expect(current.viewport.bottomLine - current.viewport.topLine + 1, `activity ${index} window rows`).toBe(7);
+    for (const unitId of ["position-memory", "viewport-control"]) {
+      await page.goto(`/?unit=${unitId}`);
+      const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
+      for (let index = 0; index < activityCount; index += 1) {
+        await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
+        const current = await state(page);
+        if (current.setupDrift) drifted.push(current.setupDrift);
+        if (!current.viewport || current.viewport.totalLines === current.viewport.bottomLine - current.viewport.topLine + 1) continue;
+        // Units 9 and 10 both depend on the visible row count, so every one of
+        // their windowed activities declares that dependence.
+        windowed += 1;
+        expect(current.viewportDependent, `${unitId} activity ${index} declares viewport dependence`).toBe(true);
+        expect(current.viewport.bottomLine - current.viewport.topLine + 1, `${unitId} activity ${index} window rows`).toBe(7);
+      }
     }
     expect(drifted).toEqual([]);
     expect(windowed).toBeGreaterThanOrEqual(51);

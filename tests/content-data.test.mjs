@@ -16,7 +16,7 @@ import {
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
-const unit = readJson("../content/units/10-repeatable-editing.json");
+const unit = readJson("../content/units/11-repeatable-editing.json");
 const unitDirectory = new URL("../content/units/", import.meta.url);
 const unitFiles = readdirSync(unitDirectory).filter(file => /^\d{2}-.*\.json$/.test(file)).sort();
 const units = unitFiles.map(file => ({ file, data: JSON.parse(readFileSync(new URL(file, unitDirectory), "utf8")) }));
@@ -28,7 +28,8 @@ const precisionUnit = units.find(item => item.data.id === "precision-motions-sea
 const textObjectUnit = units.find(item => item.data.id === "text-objects").data;
 const visualUnit = units.find(item => item.data.id === "visual-selection").data;
 const registerUnit = units.find(item => item.data.id === "registers-putting").data;
-const navigationUnit = units.find(item => item.data.id === "long-range-navigation").data;
+const positionUnit = units.find(item => item.data.id === "position-memory").data;
+const viewportUnit = units.find(item => item.data.id === "viewport-control").data;
 const rangeUnit = units.find(item => item.data.id === "command-line-ranges-line-operations").data;
 const substitutionUnit = units.find(item => item.data.id === "substitution-practical-regex").data;
 const macroUnit = units.find(item => item.data.id === "macros").data;
@@ -60,7 +61,7 @@ test("content files expose the expected schema versions", () => {
   assert.equal(presentationSchema.$id, "https://vimwilds.local/schemas/presentation.schema.json");
   assert.equal(presentation.schemaVersion, 2);
   assert.equal(unit.schemaVersion, 1);
-  assert.equal(unit.unitNumber, 10);
+  assert.equal(unit.unitNumber, 11);
   assert.equal(cursorUnit.schemaVersion, 1);
   assert.equal(cursorUnit.unitNumber, 2);
   assert.equal(operatorUnit.schemaVersion, 1);
@@ -284,9 +285,17 @@ test("presentation manifest preserves the approved unit story table", () => {
       nextSpeaker: null, nextHook: "One memory points to a beacon far beyond the shelves.",
     },
     {
-      id: "long-range-navigation", guide: "luma", world: "archive-of-echoes", landmark: "far-beacons",
+      id: "position-memory", guide: "luma", world: "archive-of-echoes", landmark: "far-beacons",
       action: "Luma sends a thread of light between two distant beacons",
       copy: "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
+      nextSpeaker: null, nextHook: "One beacon is lit, but the window onto the Wilds is still fogged.",
+    },
+    // Unit 10 shares Unit 9's world, guide, and scene art until session 20
+    // draws it its own; only the beat is new.
+    {
+      id: "viewport-control", guide: "luma", world: "archive-of-echoes", landmark: "beacon-glass",
+      action: "Luma wipes the lens of the beacon glass; the fog lifts and the far shore resolves",
+      copy: "Luma clears the beacon glass. The Wilds can look far ahead, or close at hand, without moving a step.",
       nextSpeaker: null, nextHook: "Across the causeway, a stopped clock begins to tick.",
     },
     {
@@ -362,7 +371,7 @@ test("presentation loading falls back cleanly when the optional manifest is miss
     presentationUrl: "presentation",
     fetchImpl: async url => url === "catalog" ? response(unitCatalog) : response(null, { ok: false, status: 404 }),
   });
-  assert.equal(missing.unitCatalog.units.length, 14);
+  assert.equal(missing.unitCatalog.units.length, 15);
   assert.equal(missing.presentation, null);
 
   const invalidPresentation = structuredClone(presentation);
@@ -380,7 +389,7 @@ test("presentation loading falls back cleanly when the optional manifest is miss
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -470,8 +479,9 @@ test("unit continuation follows the next published catalog unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), precisionUnit), textObjectUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), textObjectUnit), visualUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), visualUnit), registerUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), registerUnit), navigationUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), navigationUnit)?.id, unit.id);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), registerUnit), positionUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), positionUnit), viewportUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), viewportUnit)?.id, unit.id);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), unit), rangeUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), rangeUnit), substitutionUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), substitutionUnit), macroUnit);
@@ -483,10 +493,10 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
   assert.equal(unitCatalog.schemaVersion, 2);
   assert.deepEqual(unitCatalog.arcs, [
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
-    { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10] },
-    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [11, 12, 13, 14] },
+    { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10, 11] },
+    { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [12, 13, 14, 15] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -538,45 +548,27 @@ test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   assert((languageCounts.get("python") || 0) >= 3, "Unit 8 should include regular Python practice");
 });
 
-test("Unit 9 preserves the long-range-navigation curriculum and deterministic viewport contract", () => {
-  assert.deepEqual(navigationUnit.curriculumDefinition, {
-    unit: "9. Long-range navigation",
-    commandsAndConcepts: "`H M L`; `zt zz zb`; `Ctrl-f`, `Ctrl-b`, `Ctrl-d`, `Ctrl-u`, `Ctrl-e`, `Ctrl-y`; `m{char}`; `'` and backtick jumps; special marks such as `'.`, ```.```, `'^`, ```^```, `'[`, `']`; `Ctrl-o`, `Ctrl-i`; `g;`, `g,`; `gi`, `gv`; advanced bracket/section motions",
-    prerequisites: "Units 1–6",
-    learningOutcome: "Move through a large edit without losing important locations, and return to prior jumps, changes, insertions, or selections",
-    representativeExercises: "Inspect a distant definition and return; revisit the last change; center a target line; mark two sites and shuttle between them",
-    priorityAndPortability: "Core through marks, jump/change lists, and viewport commands. Code-section motions are advanced and syntax-dependent",
-  });
-  assert.deepEqual(navigationUnit.prerequisiteSkillIds, [
-    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects",
-  ]);
-  assert.equal(navigationUnit.lessons.length, 11);
-  assert.deepEqual(navigationUnit.coverage.map(item => item.concept), [
-    "H M L",
-    "zt zz zb",
-    "page and half-page movement",
-    "one-line viewport scrolling",
-    "named marks and quote/backtick jumps",
-    "previous context and jump list",
-    "last change insertion and selection",
-    "previous operated range marks",
-    "g; and g, change list",
-    "advanced bracket and section motions",
-    "integrated long-range navigation",
-  ]);
-
-  const activities = navigationUnit.lessons.flatMap(lesson => lesson.activities);
+// The two halves of the old long-range-navigation unit share one contract: every
+// activity is navigation-only, runs on a long buffer behind a fixed seven-row
+// window, and reconstructs the marks or history it depends on during setup.
+function assertNavigationContract(data, expectedRunnable) {
+  const activities = data.lessons.flatMap(lesson => lesson.activities);
   const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
   const ids = new Set(activities.map(activity => activity.id));
-  assert.equal(runnable.length, 51);
-  for (const lesson of navigationUnit.lessons) {
+  assert.equal(runnable.length, expectedRunnable);
+  for (const lesson of data.lessons) {
     const phases = new Set(lesson.activities.map(activity => activity.phase));
     for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
       assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
     }
   }
-  for (const entry of navigationUnit.reference) {
+  for (const entry of data.reference) {
     for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
+  }
+  for (const item of data.coverage) {
+    for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+      for (const ref of item[phase]) assert(ids.has(ref), `${item.concept} references missing ${ref}`);
+    }
   }
   for (const activity of runnable) {
     assert.equal(activity.editor?.viewportRows, 7, `${activity.id} must use the seven-row viewport`);
@@ -593,9 +585,61 @@ test("Unit 9 preserves the long-range-navigation curriculum and deterministic vi
     assert.deepEqual(finalCheckpoint.cursor, activity.scenario.target.cursor);
     assert.deepEqual(finalCheckpoint.viewport, activity.scenario.target.viewport);
   }
+  return runnable;
+}
+
+test("Unit 9 preserves the position-memory curriculum and deterministic viewport contract", () => {
+  assert.deepEqual(positionUnit.curriculumDefinition, {
+    unit: "9. Position memory",
+    commandsAndConcepts: "`m{char}`; `'` and backtick jumps; special marks such as `'.`, ```.```, `'^`, ```^```, `'[`, `']`; `Ctrl-o`, `Ctrl-i`; `g;`, `g,`; `gi`, `gv`; advanced bracket/section motions",
+    prerequisites: "Units 1–6",
+    learningOutcome: "Leave a position, work somewhere else, and return to it — by mark, by jump, by change, by insertion, or by selection",
+    representativeExercises: "Mark two sites and shuttle between them; inspect a distant definition and return; revisit the last change; resume the last insertion",
+    priorityAndPortability: "Core through marks, the jump list, and the change list. Bracket marks and code-section motions are advanced, and the section motions read boundaries out of file syntax. All are native Vim; a host editor that embeds Vim may claim `Ctrl-o` and `Ctrl-i` for its own navigation, so check the host you are in",
+  });
+  assert.deepEqual(positionUnit.prerequisiteSkillIds, [
+    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects",
+  ]);
+  assert.equal(positionUnit.lessons.length, 6);
+  assert.deepEqual(positionUnit.coverage.map(item => item.concept), [
+    "named marks and quote/backtick jumps",
+    "previous context and jump list",
+    "last change insertion and selection",
+    "previous operated range marks",
+    "g; and g, change list",
+    "advanced bracket and section motions",
+  ]);
+  // The unit ends on a summary, which is what renders the continuation into
+  // Unit 10; without one the progression stops here.
+  assert.equal(positionUnit.lessons.at(-1).activities.at(-1).type, "summary");
+
+  const runnable = assertNavigationContract(positionUnit, 31);
   const authoredCommands = runnable.flatMap(keysOf).join("");
   assert(!authoredCommands.includes("#"), "specialized preprocessor motions stay outside Unit 9");
-  assert(!navigationUnit.reference.some(entry => /comment|preprocessor/i.test(entry.title)), "specialized comment motions stay outside Unit 9");
+  assert(!positionUnit.reference.some(entry => /comment|preprocessor/i.test(entry.title)), "specialized comment motions stay outside Unit 9");
+});
+
+test("Unit 10 preserves the viewport-control curriculum and deterministic viewport contract", () => {
+  assert.deepEqual(viewportUnit.curriculumDefinition, {
+    unit: "10. Viewport control",
+    commandsAndConcepts: "`H M L`; `zt zz zb`; `Ctrl-f`, `Ctrl-b`, `Ctrl-d`, `Ctrl-u`, `Ctrl-e`, `Ctrl-y`; combining a framing command with a stored position",
+    prerequisites: "Units 1–6; Unit 9",
+    learningOutcome: "Move the window rather than the cursor: reach a visible landmark, frame the line you are working on, and travel a long file without losing context",
+    representativeExercises: "Center a target line; jump to the last visible row; page through a long file and return; reveal the next rows without moving the cursor",
+    priorityAndPortability: "Core through `H M L`, `zt zz zb`, and `Ctrl-d`/`Ctrl-u`. One-row scrolling with `Ctrl-e`/`Ctrl-y` is advanced. All are native Vim; a host editor that embeds Vim may claim the Ctrl chords by default, so check the host you are in",
+  });
+  assert.deepEqual(viewportUnit.prerequisiteSkillIds, [
+    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "position-memory",
+  ]);
+  assert.equal(viewportUnit.lessons.length, 5);
+  assert.deepEqual(viewportUnit.coverage.map(item => item.concept), [
+    "H M L",
+    "zt zz zb",
+    "page and half-page movement",
+    "one-line viewport scrolling",
+    "integrated position and viewport control",
+  ]);
+  assertNavigationContract(viewportUnit, 20);
 });
 
 test("Unit 1 curriculum definition is preserved verbatim", () => {
@@ -611,9 +655,9 @@ test("Unit 1 curriculum definition is preserved verbatim", () => {
   assert(modalUnit.lessons.flatMap(lesson => lesson.activities).length >= 30);
 });
 
-test("Unit 10 curriculum definition is preserved verbatim", () => {
+test("Unit 11 curriculum definition is preserved verbatim", () => {
   assert.deepEqual(unit.curriculumDefinition, {
-    unit: "10. Repeatable editing",
+    unit: "11. Repeatable editing",
     commandsAndConcepts: "Deliberate `.`, `;`/`,` plus `.`, `n`/`N` plus `.`, `@:`, `&`, `:~`; count vs repeat; repeat-friendly cursor placement",
     prerequisites: "Units 1–6; Unit 8 recommended",
     learningOutcome: "Design one change that can be replayed across nearby or searched instances, and recognize when repeat is the wrong tool",
@@ -622,9 +666,9 @@ test("Unit 10 curriculum definition is preserved verbatim", () => {
   });
 });
 
-test("Unit 11 preserves the command-line ranges curriculum and complete lesson flow", () => {
+test("Unit 12 preserves the command-line ranges curriculum and complete lesson flow", () => {
   assert.deepEqual(rangeUnit.curriculumDefinition, {
-    unit: "11. Command-line ranges and line operations",
+    unit: "12. Command-line ranges and line operations",
     commandsAndConcepts: "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort` with the `n`, `u`, and `/pat/` flags; safe undo and preview habits",
     prerequisites: "Units 1–6",
     learningOutcome: "Read and construct a range, then apply a deterministic line operation to it",
@@ -683,11 +727,11 @@ test("Unit 11 preserves the command-line ranges curriculum and complete lesson f
   assert(keysOf(semicolonExercise).join("").includes(";"), "the semicolon contrast must be exercised");
 });
 
-test("Unit 12 preserves the substitution curriculum and complete lesson flow", () => {
+test("Unit 13 preserves the substitution curriculum and complete lesson flow", () => {
   assert.deepEqual(substitutionUnit.curriculumDefinition, {
-    unit: "12. Substitution and practical regex",
+    unit: "13. Substitution and practical regex",
     commandsAndConcepts: "`:s/pattern/replacement/flags`; line, numeric, visual, and `%` ranges; flags `g c i I n`; empty/reused pattern or replacement; alternate delimiters; `. * \\+ \\? \\{m,n}`; `^ $`; classes and negation; Vim classes such as `\\d`, `\\w`, `\\s`; groups `\\(…\\)`; alternation `\\|`; word boundaries `\\< \\>`; captures; `\\zs \\ze`; very magic `\\v`; replacement `&`, `\\0`–`\\9`, `\\r`, case conversion, and `\\=` expressions",
-    prerequisites: "Unit 5 search; Unit 11 ranges",
+    prerequisites: "Unit 5 search; Unit 12 ranges",
     learningOutcome: "Perform safe local and buffer-wide substitutions, capture structure, preview impact, and know when regex is too brittle",
     representativeExercises: "Rename exact tokens; swap captured fields; edit only part of a match; normalize declarations; confirm replacements; count matches without changing them",
     priorityAndPortability: "Core through captures and confirmation. `\\zs`, `\\ze`, case conversion, and expression replacement are advanced",
@@ -726,11 +770,11 @@ test("Unit 12 preserves the substitution curriculum and complete lesson flow", (
   assert(!/\\[uUlLE]/.test(runnableKeys), "replacement case conversion remains theory-only");
 });
 
-test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
+test("Unit 14 preserves the macro curriculum and complete lesson flow", () => {
   assert.deepEqual(macroUnit.curriculumDefinition, {
-    unit: "13. Macros",
+    unit: "14. Macros",
     commandsAndConcepts: "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors over irregular rows; deliberate final cursor position; stopping on failed motion/search; recognizing when a macro is the wrong tool; optional recursion",
-    prerequisites: "Units 4, 5, 8, and 10",
+    prerequisites: "Units 4, 5, 8, and 11",
     learningOutcome: "Record a robust transformation, replay it safely, inspect or repair it, state the assumptions that make it valid, and recognize the uniform case where a smaller tool wins",
     representativeExercises: "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion; let a malformed row stop a counted replay",
     priorityAndPortability: "Core automation. Recursive macros are optional and never required for normal progression",
@@ -774,7 +818,7 @@ test("Unit 13 preserves the macro curriculum and complete lesson flow", () => {
   assert.equal(activities.find(activity => activity.id === "choose-normal-over-macro").correctOptionId, "substitute");
 });
 
-test("Unit 13 teaches macros at a scale and irregularity that justify recording", () => {
+test("Unit 14 teaches macros at a scale and irregularity that justify recording", () => {
   const runnableActivities = macroUnit.lessons.flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "demo" || activity.type === "exercise");
   const exercises = runnableActivities.filter(activity => activity.type === "exercise");
@@ -841,11 +885,11 @@ test("Unit 13 teaches macros at a scale and irregularity that justify recording"
   assert(guarded.length >= 4, "the unit must keep counted replays that stop before untouched rows");
 });
 
-test("Unit 14 preserves the Global-Normal curriculum and complete lesson flow", () => {
+test("Unit 15 preserves the Global-Normal curriculum and complete lesson flow", () => {
   assert.deepEqual(automationUnit.curriculumDefinition, {
-    unit: "14. Global and Normal automation",
+    unit: "15. Global and Normal automation",
     commandsAndConcepts: "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; `:copy`/`:move` relocation by predicate; previewing a predicate before it runs; undo grouping; combined predicates and transformations",
-    prerequisites: "Units 11–13",
+    prerequisites: "Units 12–14",
     learningOutcome: "Apply Normal-mode edits across a controlled line set, relocate matching lines, and choose the lowest-risk automation mechanism",
     representativeExercises: "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches; gather matching lines at a chosen address",
     priorityAndPortability: "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope",
@@ -1479,15 +1523,20 @@ for (const activity of registerRunnable) {
   });
 }
 
-const navigationRunnable = navigationUnit.lessons.flatMap(lesson => lesson.activities)
-  .filter(activity => activity.type === "demo" || activity.type === "exercise");
-const nativeViewportActivityIds = new Set(navigationUnit.lessons.slice(0, 4)
+const navigationRunnable = [positionUnit, viewportUnit].flatMap(data =>
+  data.lessons.flatMap(lesson => lesson.activities)
+    .filter(activity => activity.type === "demo" || activity.type === "exercise")
+    .map(activity => ({ unitNumber: data.unitNumber, activity })));
+// Every runnable in Unit 10 moves the window rather than the buffer, so its
+// cursor is a property of the rendered seven-row frame that headless Vim does
+// not reproduce. The browser conformance suite owns those positions.
+const nativeViewportActivityIds = new Set(viewportUnit.lessons
   .flatMap(lesson => lesson.activities)
   .filter(activity => activity.type === "demo" || activity.type === "exercise")
   .map(activity => activity.id));
 
-for (const activity of navigationRunnable) {
-  test(`native Vim Unit 9 content: ${activity.id}`, () => {
+for (const { unitNumber, activity } of navigationRunnable) {
+  test(`native Vim Unit ${unitNumber} content: ${activity.id}`, () => {
     const setup = activity.scenario.initial.setup;
     const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
     const cursor = setup?.cursor || activity.scenario.initial.cursor;
@@ -1520,7 +1569,7 @@ const rangeRunnable = rangeUnit.lessons.flatMap(lesson => lesson.activities)
   .filter(activity => activity.type === "demo" || activity.type === "exercise");
 
 for (const activity of rangeRunnable) {
-  test(`native Vim Unit 11 content: ${activity.id}`, () => {
+  test(`native Vim Unit 12 content: ${activity.id}`, () => {
     const setup = activity.scenario.initial.setup;
     const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
     const cursor = setup?.cursor || activity.scenario.initial.cursor;
@@ -1556,7 +1605,7 @@ const substitutionRunnable = substitutionUnit.lessons.flatMap(lesson => lesson.a
   .filter(activity => activity.type === "demo" || activity.type === "exercise");
 
 for (const activity of substitutionRunnable) {
-  test(`native Vim Unit 12 content: ${activity.id}`, () => {
+  test(`native Vim Unit 13 content: ${activity.id}`, () => {
     const keys = keysOf(activity);
     const options = {
       initialCode: activity.scenario.initial.lines,
@@ -1579,7 +1628,7 @@ const macroRunnable = macroUnit.lessons.flatMap(lesson => lesson.activities)
   .filter(activity => activity.type === "demo" || activity.type === "exercise");
 
 for (const activity of macroRunnable) {
-  test(`native Vim Unit 13 content: ${activity.id}`, () => {
+  test(`native Vim Unit 14 content: ${activity.id}`, () => {
     const setup = activity.scenario.initial.setup;
     const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
     const cursor = setup?.cursor || activity.scenario.initial.cursor;
@@ -1615,7 +1664,7 @@ const automationRunnable = automationUnit.lessons.flatMap(lesson => lesson.activ
   .filter(activity => activity.type === "demo" || activity.type === "exercise");
 
 for (const activity of automationRunnable) {
-  test(`native Vim Unit 14 content: ${activity.id}`, () => {
+  test(`native Vim Unit 15 content: ${activity.id}`, () => {
     const setup = activity.scenario.initial.setup;
     const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
     const cursor = setup?.cursor || activity.scenario.initial.cursor;
@@ -1639,7 +1688,7 @@ for (const activity of automationRunnable) {
   });
 }
 
-test("Unit 13 failure guards stop before later macro keys", () => {
+test("Unit 14 failure guards stop before later macro keys", () => {
   const byId = new Map(macroRunnable.map(activity => [activity.id, activity]));
 
   // The find has nothing to reach on the malformed row, so the run ends there
@@ -1661,7 +1710,7 @@ test("Unit 13 failure guards stop before later macro keys", () => {
 });
 
 test("native Vim method-boundary fixture covers all four directions", () => {
-  const lines = navigationRunnable.find(activity => activity.id === "method-start-mix").scenario.initial.lines;
+  const lines = navigationRunnable.find(item => item.activity.id === "method-start-mix").activity.scenario.initial.lines;
   for (const fixture of [
     { keys: ["[", "m"], cursor: [12, 13] },
     { keys: ["]", "m"], cursor: [19, 10] },
@@ -1678,6 +1727,46 @@ test("native Vim accepts gj and gk as logical-line equivalents without wrapping"
   const up = runNativeVim({ initialCode, cursor: [2, 2], keys: ["g", "k"] });
   assert.deepEqual(down.cursor, [1, 2]);
   assert.deepEqual(up.cursor, [1, 2]);
+});
+
+test("material off the core path is marked rather than removed", () => {
+  // Nothing leaves the curriculum for being rare. A lesson that is advanced or
+  // host-dependent keeps its full five-phase cycle and carries a `track` plus a
+  // one-sentence `trackNote` explaining the weight. The fixed lead phrases make
+  // every marked lesson greppable from the content as well as from the schema.
+  const leadPhrases = {
+    advanced: "Advanced and less commonly used:",
+    optional: "Optional — depends on configuration or file type:",
+  };
+  assert.deepEqual(schema.$defs.lesson.properties.track.enum, ["core", "advanced", "optional"]);
+  assert.equal(schema.$defs.lesson.properties.trackNote.type, "string");
+  assert.deepEqual(schema.$defs.lesson.if, { required: ["track"] });
+  assert.deepEqual(schema.$defs.lesson.then, { required: ["trackNote"] });
+
+  let marked = 0;
+  for (const { data } of units) {
+    for (const lesson of data.lessons) {
+      if (lesson.track === undefined) {
+        assert.equal(lesson.trackNote, undefined, `${data.id}/${lesson.id} has a trackNote without a track`);
+        continue;
+      }
+      // Core is the default and is expressed by absence, so writing it out
+      // would make the badge and the grep both meaningless.
+      assert(lesson.track !== "core", `${data.id}/${lesson.id} must omit track rather than declare "core"`);
+      assert(leadPhrases[lesson.track], `${data.id}/${lesson.id} has unknown track ${lesson.track}`);
+      assert(
+        lesson.trackNote?.startsWith(leadPhrases[lesson.track]),
+        `${data.id}/${lesson.id} trackNote must open with "${leadPhrases[lesson.track]}"`,
+      );
+      // A marked lesson is still a full lesson: the phase contract applies.
+      const phases = new Set(lesson.activities.map(activity => activity.phase));
+      for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
+        assert(phases.has(phase), `${data.id}/${lesson.id} is marked ${lesson.track} but is missing ${phase}`);
+      }
+      marked += 1;
+    }
+  }
+  assert(marked > 0, "the marker exists to be used");
 });
 
 test("viewport dependence is declared wherever a semantic viewport is asserted", () => {
@@ -1711,16 +1800,11 @@ test("viewport activities keep every buffer line inside the fixed window", () =>
   // scroller less the 26px gutter and 18px of padding leaves 261px, and the
   // 14px monospace advance is 8.65px, so 30 columns is the authoring limit.
   //
-  // Unit 9 predates this guard and ships lines up to 59 columns, overflowing to
-  // 555px against that 306px scroller. Re-authoring those 30-line buffers is
-  // content work outside this session; the exemption keeps the known gap
-  // visible instead of loosening the limit for new content.
   const maximumColumns = 30;
-  const exempt = new Set(["long-range-navigation"]);
   for (const { data } of units) {
     for (const lesson of data.lessons) {
       for (const activity of lesson.activities) {
-        if (!activity.editor?.viewportRows || exempt.has(data.id)) continue;
+        if (!activity.editor?.viewportRows) continue;
         const authored = [
           activity.scenario?.initial?.lines,
           activity.scenario?.target?.lines,

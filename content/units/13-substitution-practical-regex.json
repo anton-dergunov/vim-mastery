@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "contentVersion": "1.0.0",
-  "unitNumber": 12,
+  "unitNumber": 13,
   "id": "substitution-practical-regex",
   "title": "Substitution and practical regex",
   "releaseStatus": "authoring",
   "curriculumDefinition": {
-    "unit": "12. Substitution and practical regex",
+    "unit": "13. Substitution and practical regex",
     "commandsAndConcepts": "`:s/pattern/replacement/flags`; line, numeric, visual, and `%` ranges; flags `g c i I n`; empty/reused pattern or replacement; alternate delimiters; `. * \\+ \\? \\{m,n}`; `^ $`; classes and negation; Vim classes such as `\\d`, `\\w`, `\\s`; groups `\\(…\\)`; alternation `\\|`; word boundaries `\\< \\>`; captures; `\\zs \\ze`; very magic `\\v`; replacement `&`, `\\0`–`\\9`, `\\r`, case conversion, and `\\=` expressions",
-    "prerequisites": "Unit 5 search; Unit 11 ranges",
+    "prerequisites": "Unit 5 search; Unit 12 ranges",
     "learningOutcome": "Perform safe local and buffer-wide substitutions, capture structure, preview impact, and know when regex is too brittle",
     "representativeExercises": "Rename exact tokens; swap captured fields; edit only part of a match; normalize declarations; confirm replacements; count matches without changing them",
     "priorityAndPortability": "Core through captures and confirmation. `\\zs`, `\\ze`, case conversion, and expression replacement are advanced"

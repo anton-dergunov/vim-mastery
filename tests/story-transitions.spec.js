@@ -90,7 +90,8 @@ test("loads every compressed story still in the browser", async ({ page }) => {
     })));
   });
 
-  expect(results).toHaveLength(18);
+  // Fifteen unit stories plus the intro panels and the ending.
+  expect(results).toHaveLength(19);
   expect(results.every(result => result.asset.endsWith(".webp"))).toBe(true);
   expect(results.every(result => result.complete && result.width > 0 && result.height > 0)).toBe(true);
 });
@@ -203,8 +204,8 @@ test("opens direct review URLs for intro, unit-ending candidates, and the finale
   await waitForApp(page);
   await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Story scene review" })).toBeVisible();
-  const unit14Review = page.locator(".story-review-unit").filter({ hasText: "Unit 14" });
-  await expect(unit14Review.getByRole("link", { name: /Candidate/ })).toHaveCount(5);
+  const finalUnitReview = page.locator(".story-review-unit").filter({ hasText: "Unit 15" });
+  await expect(finalUnitReview.getByRole("link", { name: /Candidate/ })).toHaveCount(5);
 });
 
 test("uses a full portrait frame with top narrative text for unit-ending art", async ({ page }) => {
@@ -410,7 +411,7 @@ test("intercepts the final unit boundary, restores on refresh, and archives the 
   expect((await page.evaluate(() => window.VimWilds.getState().story.completedUnitStoryIds))).toEqual(["modal-model"]);
 });
 
-test("chains Unit 14 into the restored-world finale and archives its reverse journey", async ({ page }) => {
+test("chains Unit 15 into the restored-world finale and archives its reverse journey", async ({ page }) => {
   await page.addInitScript(saved => {
     if (!window.localStorage.getItem("vim-wilds.story.v1")) {
       window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));
@@ -421,7 +422,7 @@ test("chains Unit 14 into the restored-world finale and archives its reverse jou
   await waitForApp(page);
 
   const dialog = page.locator("#storyDialog");
-  await page.getByRole("button", { name: "Complete Unit 14" }).click();
+  await page.getByRole("button", { name: "Complete Unit 15" }).click();
   await expect(dialog.locator(".story-surface")).toHaveAttribute("data-kind", "unit");
   await expect(dialog.getByRole("button", { name: "Continue to finale" })).toBeVisible();
   await dialog.getByRole("button", { name: "Continue to finale" }).click();

@@ -45,9 +45,12 @@ real.
 
 ### 1. Restore challenge exercises
 
-Convert the challenge phase to exercises. Keep 1–2 choice activities (matching
-every other unit's pattern), and let session 06 add the tool-choice questions
-that belong in Arc 3 rather than here.
+**Add** challenge exercises — Unit 7 currently has none. Keep the nine choice
+activities too: constraint 7 in [README.md](README.md) means "convert the
+challenge phase to exercises" cannot mean deleting nine working activities, and
+a unit with both is richer than a unit with either. If nine choices later prove
+too many for one unit, that is a judgement to make after the author has walked
+it. Session 06 adds the tool-choice questions that belong in Arc 3, not here.
 
 Each challenge must require the learner to select the selection *shape* as well
 as the operation — that is the unit's actual learning outcome
@@ -80,7 +83,8 @@ they are gated on session 01's conformance verdict.
 
 ## Acceptance criteria
 
-- Unit 7 has challenge-phase exercises, and at most 2 choice activities.
+- Unit 7 has challenge-phase exercises, added alongside its existing choice activities.
+- No activity was removed from the unit.
 - No duplicate canonical sequences within the unit.
 - Every `integrated-*` exercise composes at least two ideas.
 - Non-code content is roughly 40%, down from 71%.

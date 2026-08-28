@@ -124,7 +124,7 @@ test.describe("Semantic Vim effects", () => {
     expect(macroEvents.filter(event => event.phase === "replay")).toHaveLength(2);
     expect(macroEvents.filter(event => event.phase === "replay").every(event => event.type === "repeat" && event.replayType === "materialize")).toBe(true);
 
-    await openActivity(page, "long-range-navigation", "mark-exact-isolate");
+    await openActivity(page, "position-memory", "mark-exact-isolate");
     await emit(page, ["`", "a"]);
     expect((await effects(page)).at(-1)).toMatchObject({
       type: "jump",

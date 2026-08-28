@@ -1,4 +1,6 @@
-# Session 17 — Unit 16: mastery loops and CLI field notes
+# Session 17 — Unit 17: mastery loops and CLI field notes
+
+> **Renumbered by session 07.** The mastery unit is now **17**, not 16.
 
 **Depends on:** 16 · **Blocks:** nothing
 **Touches:** new `content/units/16-*.json`, `content/unit-index.json`, `app.js`

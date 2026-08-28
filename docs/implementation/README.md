@@ -36,6 +36,20 @@ These are product invariants. No session may weaken them.
 6. **Deterministic correctness.** A command is exposed only after it passes both
    the native-Vim fixture and the browser conformance test
    (`docs/vim-conformance.md`). No session ships a command on assumption.
+7. **Nothing is removed for being rare; it is marked.** A lesson judged advanced,
+   niche, or configuration-dependent keeps its full five-phase cycle and carries
+   `lesson.track` (`advanced` or `optional`) plus a one-sentence `trackNote`.
+   Core is the default and is expressed by the field's absence. The author has
+   not yet walked the course end to end, so a reviewer's judgement that material
+   is rarely used is a label, not a deletion. Note also that `unit.reference` is
+   parsed and validated but **rendered nowhere** until session 14 builds the
+   Reference surface: until then, "demote to reference" is not an available
+   disposition, it is deletion under another name.
+8. **Host-neutral.** The curriculum teaches Vim, not Vim inside one editor. No
+   `content/units/*.json` file names a host, and none should. That a particular
+   editor claims a chord by default is a portability note attached to a command
+   that is still taught — never a reason to stop teaching it. `Ctrl-f`,
+   `Ctrl-b`, `Ctrl-e`, and `Ctrl-y` are native, everyday terminal-Vim commands.
 
 Constraints 4 and 5 work together: **the review's "bigger buffers" finding is
 satisfied by scrolling a small window over a longer file where the lesson needs
@@ -43,6 +57,24 @@ one — not by showing more rows, and not by lengthening buffers whose exercises
 never reach past what they already show.** Session 05 revised the blanket
 re-scale mandates that briefs 03–05 originally carried; treat any remaining
 line-count range in a brief as subject to constraint 5.
+
+## A note on unit numbers
+
+Session 07 split the old Unit 9 into **Unit 9 Position memory** and **Unit 10
+Viewport control**, which pushed every later unit up by one:
+
+| Was | Is now |
+| --- | --- |
+| 9 Long-range navigation | 9 Position memory + 10 Viewport control |
+| 10 Repeatable editing | 11 Repeatable editing |
+| 11 Command-line ranges | 12 Command-line ranges |
+| 12 Substitution | 13 Substitution |
+| 13 Macros | 14 Macros |
+| 14 Global and Normal | 15 Global and Normal |
+
+**Session briefs 03, 04, 05, and 06 keep the numbers they were written with**,
+because they record what was done at the time. Read a unit number in a brief
+dated before session 07 against this table.
 
 ## Session list
 
@@ -66,7 +98,7 @@ line-count range in a brief as subject to constraint 5.
 
 | # | Session | Size | Depends on | Blocks |
 | --- | --- | --- | --- | --- |
-| 07 | [Unit 9: split and trim](07-unit-09-split-and-trim.md) | L | — | 18 |
+| 07 | [Unit 9: split, mark, and narrow](07-unit-09-split-and-trim.md) | L | — | 18 |
 | 08 | [Unit 8: register rebalance](08-unit-08-register-rebalance.md) | M | 01 | 11, 18 |
 | 09 | [Unit 7: visual selection repair](09-unit-07-visual-repair.md) | M | — | 13, 18 |
 | 10 | [Foundations demotions and de-duplication](10-foundations-demotions.md) | M | — | 12, 18 |
@@ -89,6 +121,9 @@ line-count range in a brief as subject to constraint 5.
 | 17 | [Unit 16: mastery loops and CLI field notes](17-unit-16-mastery-and-cli.md) | L | 16 | — |
 | 18 | [Curriculum graph and portability surfacing](18-curriculum-graph-and-portability.md) | M | 07, 08, 09, 10 | — |
 | 19 | [An Ex output surface for `:global` dry runs](19-ex-output-surface.md) | M | 01, 02 | — |
+| 20 | [Viewport control art and story beat](20-viewport-control-art.md) | M | 07 | — |
+| 21 | [Search offsets](21-search-offsets.md) | M | 01 | — |
+| 22 | [The file-name register `"%`](22-file-name-register.md) | M | 01 | 08, 11 |
 
 ## Recommended execution order
 
@@ -136,8 +171,8 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 03 Unit 14
 - [x] 04 Unit 13
 - [x] 05 Units 11–12
-- [ ] 06 Tool-choice activities
-- [ ] 07 Unit 9
+- [x] 06 Tool-choice activities
+- [x] 07 Unit 9 split, marked, and narrowed
 - [ ] 08 Unit 8
 - [ ] 09 Unit 7
 - [ ] 10 Foundations demotions
@@ -150,3 +185,6 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [ ] 17 Unit 16 mastery loops
 - [ ] 18 Curriculum graph and portability
 - [ ] 19 Ex output surface
+- [ ] 20 Viewport control art and story beat
+- [ ] 21 Search offsets
+- [ ] 22 The file-name register

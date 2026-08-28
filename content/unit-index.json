@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "arcs": [
     { "id": "foundations", "arcNumber": 1, "title": "Foundations", "unitNumbers": [1, 2, 3, 4, 5, 6] },
-    { "id": "fluency-tracks", "arcNumber": 2, "title": "Fluency tracks", "unitNumbers": [7, 8, 9, 10] },
-    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [11, 12, 13, 14] }
+    { "id": "fluency-tracks", "arcNumber": 2, "title": "Fluency tracks", "unitNumbers": [7, 8, 9, 10, 11] },
+    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [12, 13, 14, 15] }
   ],
   "units": [
     { "id": "modal-model", "unitNumber": 1, "title": "The modal model", "lessonCount": 5, "path": "content/units/01-modal-model.json" },
@@ -14,11 +14,12 @@
     { "id": "text-objects", "unitNumber": 6, "title": "Text objects", "lessonCount": 9, "path": "content/units/06-text-objects.json" },
     { "id": "visual-selection", "unitNumber": 7, "title": "Visual selection", "lessonCount": 9, "path": "content/units/07-visual-selection.json" },
     { "id": "registers-putting", "unitNumber": 8, "title": "Registers and putting", "lessonCount": 9, "path": "content/units/08-registers-putting.json" },
-    { "id": "long-range-navigation", "unitNumber": 9, "title": "Long-range navigation", "lessonCount": 11, "path": "content/units/09-long-range-navigation.json" },
-    { "id": "repeatable-editing", "unitNumber": 10, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/10-repeatable-editing.json" },
-    { "id": "command-line-ranges-line-operations", "unitNumber": 11, "title": "Command-line ranges and line operations", "lessonCount": 8, "path": "content/units/11-command-line-ranges-line-operations.json" },
-    { "id": "substitution-practical-regex", "unitNumber": 12, "title": "Substitution and practical regex", "lessonCount": 8, "path": "content/units/12-substitution-practical-regex.json" },
-    { "id": "macros", "unitNumber": 13, "title": "Macros", "lessonCount": 8, "path": "content/units/13-macros.json" },
-    { "id": "global-normal-automation", "unitNumber": 14, "title": "Global and Normal automation", "lessonCount": 9, "path": "content/units/14-global-normal-automation.json" }
+    { "id": "position-memory", "unitNumber": 9, "title": "Position memory", "lessonCount": 6, "path": "content/units/09-position-memory.json" },
+    { "id": "viewport-control", "unitNumber": 10, "title": "Viewport control", "lessonCount": 5, "path": "content/units/10-viewport-control.json" },
+    { "id": "repeatable-editing", "unitNumber": 11, "title": "Repeatable editing", "lessonCount": 8, "path": "content/units/11-repeatable-editing.json" },
+    { "id": "command-line-ranges-line-operations", "unitNumber": 12, "title": "Command-line ranges and line operations", "lessonCount": 8, "path": "content/units/12-command-line-ranges-line-operations.json" },
+    { "id": "substitution-practical-regex", "unitNumber": 13, "title": "Substitution and practical regex", "lessonCount": 8, "path": "content/units/13-substitution-practical-regex.json" },
+    { "id": "macros", "unitNumber": 14, "title": "Macros", "lessonCount": 8, "path": "content/units/14-macros.json" },
+    { "id": "global-normal-automation", "unitNumber": 15, "title": "Global and Normal automation", "lessonCount": 9, "path": "content/units/15-global-normal-automation.json" }
   ]
 }

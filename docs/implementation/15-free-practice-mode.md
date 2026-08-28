@@ -60,6 +60,10 @@ Offer a random pick and a browsable list. Random is the default — it removes t
 setup step, matching the curriculum doc's rule that setup must not become a
 barrier to a spare-minute session.
 
+**Give every sample buffer a file name** (`routes.ts`, `deploy.sh`, `notes.md`).
+It costs nothing, makes the scratchpad read like a real file, and is what lets
+`"%` and `Ctrl-r%` work here once [session 22](22-file-name-register.md) lands.
+
 ### 3. The compatibility disclaimer
 
 State plainly, once, on entry: this is the **Vim Wilds supported command set**,
@@ -94,7 +98,7 @@ scratchpad only has to be honest about its limits.
 - Free Practice is reachable from primary navigation before any lesson is
   completed.
 - The surface shows only the expanded editor and the keyboard.
-- 20 local sample buffers across at least 12 languages, each 20–60 lines.
+- 20 local sample buffers across at least 12 languages, each 20–60 lines, each with a file name.
 - Random pick is the default entry path.
 - The compatibility disclaimer appears on entry.
 - No progression state changes on entry, edit, or exit.
