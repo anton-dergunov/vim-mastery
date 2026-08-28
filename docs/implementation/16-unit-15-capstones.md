@@ -87,7 +87,10 @@ splitting, put those in the second half.
 - Each opens with a mechanism-choice activity.
 - Each closes with a rationale comparing alternatives on clarity, setup cost,
   repeatability, and risk.
-- Buffers are 20–40 lines with visible rows unchanged from lesson mode.
+- Buffers are as long as each capstone's own staged work needs, with visible
+  rows unchanged from lesson mode. A capstone that has to reach across a file
+  may well land at 20–40 lines, but that range is a consequence to check
+  against, not a target to author to — see constraint 5 in [README.md](README.md).
 - Every stage is independently completable in under 90 seconds.
 - `unit-index.json` includes Unit 15 and its arc.
 

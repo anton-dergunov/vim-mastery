@@ -158,6 +158,15 @@ The Ex and search command lines accept `Ctrl-r{register}`, which
 `vim-engine.js` owns because the app owns the command-line text. Linewise
 register contents lose their trailing newline when inserted this way.
 
+`:sort` flags are owned by `vim-engine.js` for the same reason plain `:sort`
+already was: the adapter sorts the right lines but leaves the cursor where it
+started, while Vim moves it to the first sorted line. Session 01 verified the
+flags only through `:%sort`, which sorts from line 1 and hides that difference.
+The engine now parses `[flags] [/pattern/]` itself and declines anything outside
+`n`, `u`, `i`, and a pattern, so an unmodelled flag still delegates rather than
+sorting on a guess. `sort-numeric-flag-in-range` and its neighbours pin the
+cursor against a range that starts lower down.
+
 Verified: `:g` with `:t`/`:m`; `:sort n`, `:sort u`, `:sort i`, and `:sort /pat/`;
 the read-only registers `".`, `":`, and `"/`; Insert-mode `Ctrl-r{register}`,
 `Ctrl-o`, `Ctrl-w`, and `Ctrl-u`; command-line `Ctrl-r{register}`; search as an
@@ -182,6 +191,15 @@ divergence:
   has no Ex output surface and the adapter has no `:print` or `:number` command
   to delegate to, so the command is inert. Giving `:global` a preview is a
   product change, not a conformance fix.
+- **The cursor after a confirmed substitution.** Vim leaves the cursor at the
+  start of the last line a `c`-flag run changed; the adapter leaves it wherever
+  the first prompt appeared. The two agree only when the run changes one line
+  whose first match is at column 0, which is why every existing confirm fixture
+  passed. Correcting it means reaching into the adapter's prompt loop rather
+  than its command parsing. Unit 12 keeps its confirm exercises on the shape
+  where the two agree, and
+  `substitute-confirm-accept-all-lands-on-the-last-changed-line` records the
+  divergence with a `browserVerdict` so it cannot widen unnoticed.
 
 Known debt: `AGENTS.md` states that the adapter owns Vim command interpretation,
 yet `vim-engine.js` implements `:t`, `:m`, `:put`, `:sort`, and `:global`

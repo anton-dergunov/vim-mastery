@@ -76,9 +76,6 @@
                 "const burst = 50",
                 "boot();",
                 "start();",
-                "report();",
-                "flush();",
-                "shutdown();",
                 "// end"
               ],
               "cursor": [
@@ -107,9 +104,6 @@
                 "const burst = 50;",
                 "boot();",
                 "start();",
-                "report();",
-                "flush();",
-                "shutdown();",
                 "// end"
               ],
               "cursor": [
@@ -175,9 +169,6 @@
                   "const burst = 50;",
                   "boot();",
                   "start();",
-                  "report();",
-                  "flush();",
-                  "shutdown();",
                   "// end"
                 ],
                 "cursor": [
@@ -3159,9 +3150,6 @@
                 "juliet: idle enabled",
                 "kilo: ready enabled",
                 "lima: idle enabled",
-                "mike: idle enabled",
-                "nov: idle enabled",
-                "oscar: idle enabled",
                 "# end"
               ],
               "cursor": [
@@ -3188,9 +3176,6 @@
                 "juliet: idle enabled",
                 "kilo: ready active",
                 "lima: idle enabled",
-                "mike: idle enabled",
-                "nov: idle enabled",
-                "oscar: idle enabled",
                 "# end"
               ],
               "cursor": [
@@ -3278,9 +3263,6 @@
                   "juliet: idle enabled",
                   "kilo: ready active",
                   "lima: idle enabled",
-                  "mike: idle enabled",
-                  "nov: idle enabled",
-                  "oscar: idle enabled",
                   "# end"
                 ],
                 "cursor": [

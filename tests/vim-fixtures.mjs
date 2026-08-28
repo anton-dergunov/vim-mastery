@@ -245,6 +245,71 @@ export const conformanceFixtures = Object.freeze([
     targetCode: ["yy-alpha", "zzz-bravo", "x-charlie"],
     targetCursor: [0, 0],
   },
+  // The `%` fixtures above sort from line 1, where Vim's "cursor to the first
+  // sorted line" rule is indistinguishable from leaving the cursor alone. These
+  // sort a range that starts lower down, which is what actually pins the rule.
+  {
+    id: "sort-numeric-flag-in-range",
+    initialCode: ["head", "item 10", "item 9", "item 100", "item 1", "tail"],
+    cursor: [0, 0],
+    keys: [...":2,5sort n", "Enter"],
+    targetCode: ["head", "item 1", "item 9", "item 10", "item 100", "tail"],
+    targetCursor: [1, 0],
+  },
+  {
+    id: "sort-unique-flag-in-range",
+    initialCode: ["head", "pear", "apple", "pear", "fig", "apple", "tail"],
+    cursor: [0, 0],
+    keys: [...":2,6sort u", "Enter"],
+    targetCode: ["head", "apple", "fig", "pear", "tail"],
+    targetCursor: [1, 0],
+  },
+  {
+    id: "sort-pattern-flag-in-range",
+    initialCode: ["head", "x-charlie", "yy-alpha", "zzz-bravo", "tail"],
+    cursor: [0, 0],
+    keys: [...":2,4sort /.*-/", "Enter"],
+    targetCode: ["head", "yy-alpha", "zzz-bravo", "x-charlie", "tail"],
+    targetCursor: [1, 0],
+  },
+  {
+    id: "sort-bang-reverses-a-flagged-sort",
+    initialCode: ["head", "item 10", "item 9", "item 100", "item 1", "tail"],
+    cursor: [0, 0],
+    keys: [...":2,5sort! n", "Enter"],
+    targetCode: ["head", "item 100", "item 10", "item 9", "item 1", "tail"],
+    targetCursor: [1, 0],
+  },
+  // Vim leaves the cursor at the start of the last line a confirmed substitution
+  // changed. The adapter leaves it wherever the first prompt appeared, which is
+  // invisible when the first match is at column 0 on the only changed line and
+  // wrong otherwise. Unit 12 keeps its confirm exercises on that safe shape;
+  // these fixtures pin the divergence so it cannot widen unnoticed.
+  {
+    id: "substitute-confirm-accept-all-lands-on-the-last-changed-line",
+    initialCode: ["head", "id is draft draft", "id is draft", "tail"],
+    cursor: [0, 0],
+    keys: [...":2,3s/draft/live/gc", "Enter", "a"],
+    targetCode: ["head", "id is live live", "id is live", "tail"],
+    targetCursor: [2, 0],
+    browserVerdict: { targetCursor: [1, 6] },
+  },
+  {
+    id: "substitute-confirm-accept-all-agrees-on-one-line-from-column-zero",
+    initialCode: ["head", "draft is draft", "tail"],
+    cursor: [0, 0],
+    keys: [...":2s/draft/live/gc", "Enter", "a"],
+    targetCode: ["head", "live is live", "tail"],
+    targetCursor: [1, 0],
+  },
+  {
+    id: "sort-numeric-keeps-numberless-lines-first",
+    initialCode: ["b 3", "header", "a 1"],
+    cursor: [0, 0],
+    keys: [...":%sort n", "Enter"],
+    targetCode: ["header", "a 1", "b 3"],
+    targetCursor: [0, 0],
+  },
   {
     id: "read-only-register-last-insert",
     initialCode: ["one", "two"],

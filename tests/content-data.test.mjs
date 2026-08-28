@@ -98,7 +98,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 367);
+  assert.equal(exercises.length, 370);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -452,7 +452,7 @@ test("runnable activities reserve every authored editor row before execution", (
     }
   }
 
-  assert.equal(growing.length, 33);
+  assert.equal(growing.length, 32);
   for (const id of [
     "entering-changing-text/open-middle-line-demo",
     "entering-changing-text/open-beta-above",
@@ -625,7 +625,7 @@ test("Unit 10 curriculum definition is preserved verbatim", () => {
 test("Unit 11 preserves the command-line ranges curriculum and complete lesson flow", () => {
   assert.deepEqual(rangeUnit.curriculumDefinition, {
     unit: "11. Command-line ranges and line operations",
-    commandsAndConcepts: "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort`; safe undo and preview habits",
+    commandsAndConcepts: "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort` with the `n`, `u`, and `/pat/` flags; safe undo and preview habits",
     prerequisites: "Units 1–6",
     learningOutcome: "Read and construct a range, then apply a deterministic line operation to it",
     representativeExercises: "Move a helper below another function; copy a fixture; delete matching line numbers; sort selected imports; join a range",
@@ -637,7 +637,7 @@ test("Unit 11 preserves the command-line ranges curriculum and complete lesson f
   assert.equal(rangeUnit.lessons.length, 8);
   const activities = rangeUnit.lessons.flatMap(lesson => lesson.activities);
   const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
-  assert.equal(runnableActivities.length, 32);
+  assert.equal(runnableActivities.length, 35);
   for (const activity of runnableActivities) {
     assert.equal(activity.provenance.nativeValidation, "passed", `${activity.id} native validation`);
     assert.equal(activity.provenance.browserConformance, "passed", `${activity.id} browser conformance`);
@@ -667,6 +667,20 @@ test("Unit 11 preserves the command-line ranges curriculum and complete lesson f
   for (const entry of rangeUnit.reference) {
     for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
   }
+
+  // `:sort` and `:sort!` alone leave out the two variants people actually reach
+  // for and the one that ignores a prefix. Each flag is asserted through the
+  // canonical it is taught by, so retargeting an exercise cannot quietly drop it.
+  const sortCanonicals = new Map(runnableActivities.map(activity => [activity.id, keysOf(activity).join("")]));
+  assert.equal(sortCanonicals.get("sort-numeric-range"), ":2,9sort nEnter");
+  assert.equal(sortCanonicals.get("dedupe-sorted-range"), ":2,9sort uEnter");
+  assert.equal(sortCanonicals.get("sort-on-pattern"), ":2,9sort /.*-/Enter");
+
+  // The comma-versus-semicolon contrast is the point of `compose-ranges`, and it
+  // has to be an answer rather than only a claim in the theory and the demo.
+  const semicolonExercise = activities.find(activity => activity.id === "semicolon-relative-delete");
+  assert.equal(semicolonExercise.type, "exercise");
+  assert(keysOf(semicolonExercise).join("").includes(";"), "the semicolon contrast must be exercised");
 });
 
 test("Unit 12 preserves the substitution curriculum and complete lesson flow", () => {
@@ -765,15 +779,34 @@ test("Unit 13 teaches macros at a scale and irregularity that justify recording"
     .filter(activity => activity.type === "demo" || activity.type === "exercise");
   const exercises = runnableActivities.filter(activity => activity.type === "exercise");
 
-  // A macro is for a multi-step edit over rows that differ, so every activity
-  // needs a buffer long enough that replaying beats editing by hand. Seven rows
-  // is the phone ceiling; activities take the smallest window that still shows
-  // their work.
+  // What justifies recording a macro is the number of rows the replay
+  // transforms, not the length of the file those rows sit in. This used to
+  // assert a twelve-line minimum, which padded nineteen of these activities with
+  // rows their macros never touch; the count below is the property that rule was
+  // reaching for, and it costs the learner no screen space to satisfy.
+  const transformedRows = activity => {
+    const { lines: before } = activity.scenario.initial;
+    const { lines: after } = activity.scenario.target;
+    return Array.from({ length: Math.max(before.length, after.length) })
+      .filter((_, index) => before[index] !== after[index]).length;
+  };
   for (const activity of runnableActivities) {
+    if (keysOf(activity).includes("@")) {
+      assert(transformedRows(activity) >= 3, `${activity.id} replays a macro over ${transformedRows(activity)} rows`);
+    }
+
+    // Seven rows is the phone ceiling. There is deliberately no minimum: a
+    // buffer is as long as its own macro needs, and an activity whose work
+    // already fits on screen takes no window at all.
     const rows = activity.editor?.viewportRows;
-    assert(rows >= 5 && rows <= 7, `${activity.id} window is ${rows} rows`);
     const lines = activity.scenario.initial.lines.length;
-    assert(lines >= 12 && lines <= 20, `${activity.id} buffer is ${lines} lines`);
+    if (rows === undefined) {
+      assert(lines <= 7, `${activity.id} shows ${lines} rows at once`);
+      assert.equal(activity.scenario.initial.viewport, undefined, `${activity.id} asserts a window it has not fixed`);
+      continue;
+    }
+    assert(rows <= 7, `${activity.id} window is ${rows} rows`);
+    assert(lines > rows, `${activity.id} windows ${lines} lines into ${rows} rows for nothing`);
     assert.deepEqual(
       activity.scenario.initial.viewport,
       { topLine: 0, bottomLine: rows - 1 },

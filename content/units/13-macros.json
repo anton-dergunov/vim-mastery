@@ -332,12 +332,6 @@
                 "  fetchUser();",
                 "  fetchTeam();",
                 "  fetchAdmin();",
-                "  if (debug) {",
-                "    fetchTrace();",
-                "    fetchAudit();",
-                "  }",
-                "  fetchQuota();",
-                "  fetchPlans();",
                 "  report();",
                 "  start();",
                 "}"
@@ -358,12 +352,6 @@
                 "  // fetchUser();",
                 "  // fetchTeam();",
                 "  // fetchAdmin();",
-                "  if (debug) {",
-                "    fetchTrace();",
-                "    fetchAudit();",
-                "  }",
-                "  fetchQuota();",
-                "  fetchPlans();",
                 "  report();",
                 "  start();",
                 "}"
@@ -449,12 +437,6 @@
                   "  // fetchUser();",
                   "  fetchTeam();",
                   "  fetchAdmin();",
-                  "  if (debug) {",
-                  "    fetchTrace();",
-                  "    fetchAudit();",
-                  "  }",
-                  "  fetchQuota();",
-                  "  fetchPlans();",
                   "  report();",
                   "  start();",
                   "}"
@@ -473,12 +455,6 @@
                   "  // fetchUser();",
                   "  // fetchTeam();",
                   "  fetchAdmin();",
-                  "  if (debug) {",
-                  "    fetchTrace();",
-                  "    fetchAudit();",
-                  "  }",
-                  "  fetchQuota();",
-                  "  fetchPlans();",
                   "  report();",
                   "  start();",
                   "}"
@@ -496,12 +472,6 @@
                   "  // fetchUser();",
                   "  // fetchTeam();",
                   "  // fetchAdmin();",
-                  "  if (debug) {",
-                  "    fetchTrace();",
-                  "    fetchAudit();",
-                  "  }",
-                  "  fetchQuota();",
-                  "  fetchPlans();",
                   "  report();",
                   "  start();",
                   "}"
@@ -580,10 +550,6 @@
                 "  run_delta()",
                 "  report()",
                 "  archive()",
-                "  notify_team()",
-                "  cleanup()",
-                "  close_db()",
-                "  log_done()",
                 "  return True"
               ],
               "cursor": [
@@ -605,10 +571,6 @@
                 "  # run_delta()",
                 "  report()",
                 "  archive()",
-                "  notify_team()",
-                "  cleanup()",
-                "  close_db()",
-                "  log_done()",
                 "  return True"
               ],
               "cursor": [
@@ -702,10 +664,6 @@
                   "  run_delta()",
                   "  report()",
                   "  archive()",
-                  "  notify_team()",
-                  "  cleanup()",
-                  "  close_db()",
-                  "  log_done()",
                   "  return True"
                 ],
                 "cursor": [
@@ -724,10 +682,6 @@
                   "  run_delta()",
                   "  report()",
                   "  archive()",
-                  "  notify_team()",
-                  "  cleanup()",
-                  "  close_db()",
-                  "  log_done()",
                   "  return True"
                 ],
                 "cursor": [
@@ -746,10 +700,6 @@
                   "  run_delta()",
                   "  report()",
                   "  archive()",
-                  "  notify_team()",
-                  "  cleanup()",
-                  "  close_db()",
-                  "  log_done()",
                   "  return True"
                 ],
                 "cursor": [
@@ -768,10 +718,6 @@
                   "  # run_delta()",
                   "  report()",
                   "  archive()",
-                  "  notify_team()",
-                  "  cleanup()",
-                  "  close_db()",
-                  "  log_done()",
                   "  return True"
                 ],
                 "cursor": [
@@ -848,11 +794,7 @@
                 "    grpc: 9000",
                 "  debug: false",
                 "limits:",
-                "  cpu: 2",
-                "  memory: 512",
-                "alerts:",
-                "  email: ops@x.io",
-                "  page: oncall"
+                "  cpu: 2"
               ],
               "cursor": [
                 3,
@@ -874,11 +816,7 @@
                 "    # grpc: 9000 (off)",
                 "  # debug: false (off)",
                 "limits:",
-                "  cpu: 2",
-                "  memory: 512",
-                "alerts:",
-                "  email: ops@x.io",
-                "  page: oncall"
+                "  cpu: 2"
               ],
               "cursor": [
                 7,
@@ -998,11 +936,7 @@
                   "    grpc: 9000",
                   "  debug: false",
                   "limits:",
-                  "  cpu: 2",
-                  "  memory: 512",
-                  "alerts:",
-                  "  email: ops@x.io",
-                  "  page: oncall"
+                  "  cpu: 2"
                 ],
                 "cursor": [
                   4,
@@ -1021,11 +955,7 @@
                   "    grpc: 9000",
                   "  debug: false",
                   "limits:",
-                  "  cpu: 2",
-                  "  memory: 512",
-                  "alerts:",
-                  "  email: ops@x.io",
-                  "  page: oncall"
+                  "  cpu: 2"
                 ],
                 "cursor": [
                   5,
@@ -1044,11 +974,7 @@
                   "    # grpc: 9000 (off)",
                   "  debug: false",
                   "limits:",
-                  "  cpu: 2",
-                  "  memory: 512",
-                  "alerts:",
-                  "  email: ops@x.io",
-                  "  page: oncall"
+                  "  cpu: 2"
                 ],
                 "cursor": [
                   6,
@@ -1067,11 +993,7 @@
                   "    # grpc: 9000 (off)",
                   "  # debug: false (off)",
                   "limits:",
-                  "  cpu: 2",
-                  "  memory: 512",
-                  "alerts:",
-                  "  email: ops@x.io",
-                  "  page: oncall"
+                  "  cpu: 2"
                 ],
                 "cursor": [
                   7,
@@ -1652,10 +1574,7 @@
                 "The build is green.",
                 "TODO email users",
                 "Support is standing by.",
-                "Nothing else is open.",
-                "See the archive below.",
-                "## Archive",
-                "Older items live here."
+                "Nothing else is open."
               ],
               "cursor": [
                 0,
@@ -1677,10 +1596,7 @@
                 "The build is green.",
                 "- [ ] email users",
                 "Support is standing by.",
-                "Nothing else is open.",
-                "See the archive below.",
-                "## Archive",
-                "Older items live here."
+                "Nothing else is open."
               ],
               "cursor": [
                 6,
@@ -1784,10 +1700,7 @@
                   "The build is green.",
                   "TODO email users",
                   "Support is standing by.",
-                  "Nothing else is open.",
-                  "See the archive below.",
-                  "## Archive",
-                  "Older items live here."
+                  "Nothing else is open."
                 ],
                 "cursor": [
                   1,
@@ -1806,10 +1719,7 @@
                   "The build is green.",
                   "TODO email users",
                   "Support is standing by.",
-                  "Nothing else is open.",
-                  "See the archive below.",
-                  "## Archive",
-                  "Older items live here."
+                  "Nothing else is open."
                 ],
                 "cursor": [
                   4,
@@ -1828,10 +1738,7 @@
                   "The build is green.",
                   "- [ ] email users",
                   "Support is standing by.",
-                  "Nothing else is open.",
-                  "See the archive below.",
-                  "## Archive",
-                  "Older items live here."
+                  "Nothing else is open."
                 ],
                 "cursor": [
                   6,
@@ -2403,13 +2310,8 @@
                 "  warn(fmt(msg, 2));",
                 "  send(payload, id);",
                 "  flush(buffer);",
-                "  emit(pack(x, y));",
                 "  close();",
-                "}",
-                "report();",
-                "audit();",
-                "finish();",
-                "exit(0);"
+                "}"
               ],
               "cursor": [
                 1,
@@ -2429,13 +2331,8 @@
                 "  warn();",
                 "  send();",
                 "  flush(buffer);",
-                "  emit(pack(x, y));",
                 "  close();",
-                "}",
-                "report();",
-                "audit();",
-                "finish();",
-                "exit(0);"
+                "}"
               ],
               "cursor": [
                 5,
@@ -2529,13 +2426,8 @@
                   "  warn(fmt(msg, 2));",
                   "  send(payload, id);",
                   "  flush(buffer);",
-                  "  emit(pack(x, y));",
                   "  close();",
-                  "}",
-                  "report();",
-                  "audit();",
-                  "finish();",
-                  "exit(0);"
+                  "}"
                 ],
                 "cursor": [
                   2,
@@ -2552,13 +2444,8 @@
                   "  warn(fmt(msg, 2));",
                   "  send(payload, id);",
                   "  flush(buffer);",
-                  "  emit(pack(x, y));",
                   "  close();",
-                  "}",
-                  "report();",
-                  "audit();",
-                  "finish();",
-                  "exit(0);"
+                  "}"
                 ],
                 "cursor": [
                   3,
@@ -2575,13 +2462,8 @@
                   "  warn();",
                   "  send(payload, id);",
                   "  flush(buffer);",
-                  "  emit(pack(x, y));",
                   "  close();",
-                  "}",
-                  "report();",
-                  "audit();",
-                  "finish();",
-                  "exit(0);"
+                  "}"
                 ],
                 "cursor": [
                   4,
@@ -2599,13 +2481,8 @@
                   "  warn();",
                   "  send();",
                   "  flush(buffer);",
-                  "  emit(pack(x, y));",
                   "  close();",
-                  "}",
-                  "report();",
-                  "audit();",
-                  "finish();",
-                  "exit(0);"
+                  "}"
                 ],
                 "cursor": [
                   5,
@@ -2679,12 +2556,7 @@
                 "  - fix links",
                 "    - check anchors",
                 "- tag release",
-                "  - build assets",
-                "  - sign bundle",
-                "- email users",
-                "  - draft note",
-                "- close sprint",
-                "Notes follow below."
+                "  - build assets"
               ],
               "cursor": [
                 1,
@@ -2704,12 +2576,7 @@
                 "  * fix links",
                 "    * check anchors",
                 "- tag release",
-                "  - build assets",
-                "  - sign bundle",
-                "- email users",
-                "  - draft note",
-                "- close sprint",
-                "Notes follow below."
+                "  - build assets"
               ],
               "cursor": [
                 5,
@@ -2779,12 +2646,7 @@
                   "  - fix links",
                   "    - check anchors",
                   "- tag release",
-                  "  - build assets",
-                  "  - sign bundle",
-                  "- email users",
-                  "  - draft note",
-                  "- close sprint",
-                  "Notes follow below."
+                  "  - build assets"
                 ],
                 "cursor": [
                   2,
@@ -2801,12 +2663,7 @@
                   "  * fix links",
                   "    * check anchors",
                   "- tag release",
-                  "  - build assets",
-                  "  - sign bundle",
-                  "- email users",
-                  "  - draft note",
-                  "- close sprint",
-                  "Notes follow below."
+                  "  - build assets"
                 ],
                 "cursor": [
                   5,
@@ -2880,11 +2737,6 @@
                 "$db = \"s3cret\";  // old",
                 "$port = 5432;",
                 "$retries = 3;",
-                "$region = \"eu-west\";",
-                "$tier = \"gold\";",
-                "$debug = false;",
-                "$cache = true;",
-                "$pool = 12;",
                 "return $cfg;"
               ],
               "cursor": [
@@ -2905,11 +2757,6 @@
                 "$db = \"TBD\";  // old",
                 "$port = 5432;",
                 "$retries = 3;",
-                "$region = \"eu-west\";",
-                "$tier = \"gold\";",
-                "$debug = false;",
-                "$cache = true;",
-                "$pool = 12;",
                 "return $cfg;"
               ],
               "cursor": [
@@ -3012,11 +2859,6 @@
                   "$db = \"s3cret\";  // old",
                   "$port = 5432;",
                   "$retries = 3;",
-                  "$region = \"eu-west\";",
-                  "$tier = \"gold\";",
-                  "$debug = false;",
-                  "$cache = true;",
-                  "$pool = 12;",
                   "return $cfg;"
                 ],
                 "cursor": [
@@ -3034,11 +2876,6 @@
                   "$db = \"s3cret\";  // old",
                   "$port = 5432;",
                   "$retries = 3;",
-                  "$region = \"eu-west\";",
-                  "$tier = \"gold\";",
-                  "$debug = false;",
-                  "$cache = true;",
-                  "$pool = 12;",
                   "return $cfg;"
                 ],
                 "cursor": [
@@ -3056,11 +2893,6 @@
                   "$db = \"TBD\";  // old",
                   "$port = 5432;",
                   "$retries = 3;",
-                  "$region = \"eu-west\";",
-                  "$tier = \"gold\";",
-                  "$debug = false;",
-                  "$cache = true;",
-                  "$pool = 12;",
                   "return $cfg;"
                 ],
                 "cursor": [
@@ -3136,10 +2968,6 @@
                 "  probe(scan(z), 3)  // slow",
                 "  flush(q);",
                 "  idle();",
-                "  ready();",
-                "  report(1);",
-                "  audit(2);",
-                "  close();",
                 "}"
               ],
               "cursor": [
@@ -3161,10 +2989,6 @@
                 "  probe(scan(z), 3);  // slow",
                 "  flush(q);",
                 "  idle();",
-                "  ready();",
-                "  report(1);",
-                "  audit(2);",
-                "  close();",
                 "}"
               ],
               "cursor": [
@@ -3264,10 +3088,6 @@
                   "  probe(scan(z), 3)  // slow",
                   "  flush(q);",
                   "  idle();",
-                  "  ready();",
-                  "  report(1);",
-                  "  audit(2);",
-                  "  close();",
                   "}"
                 ],
                 "cursor": [
@@ -3286,10 +3106,6 @@
                   "  probe(scan(z), 3);  // slow",
                   "  flush(q);",
                   "  idle();",
-                  "  ready();",
-                  "  report(1);",
-                  "  audit(2);",
-                  "  close();",
                   "}"
                 ],
                 "cursor": [
@@ -3379,13 +3195,7 @@
                 "port:8080",
                 "[limits]",
                 "cpu:2",
-                "memory:512",
-                "[alerts]",
-                "email:ops",
-                "page:oncall",
-                "[flags]",
-                "debug:false",
-                "trace:false"
+                "memory:512"
               ],
               "cursor": [
                 1,
@@ -3405,13 +3215,7 @@
                 "port=8080",
                 "[limits]",
                 "cpu:2",
-                "memory:512",
-                "[alerts]",
-                "email:ops",
-                "page:oncall",
-                "[flags]",
-                "debug:false",
-                "trace:false"
+                "memory:512"
               ],
               "cursor": [
                 4,
@@ -3496,13 +3300,7 @@
                   "port:8080",
                   "[limits]",
                   "cpu:2",
-                  "memory:512",
-                  "[alerts]",
-                  "email:ops",
-                  "page:oncall",
-                  "[flags]",
-                  "debug:false",
-                  "trace:false"
+                  "memory:512"
                 ],
                 "cursor": [
                   2,
@@ -3520,13 +3318,7 @@
                   "port:8080",
                   "[limits]",
                   "cpu:2",
-                  "memory:512",
-                  "[alerts]",
-                  "email:ops",
-                  "page:oncall",
-                  "[flags]",
-                  "debug:false",
-                  "trace:false"
+                  "memory:512"
                 ],
                 "cursor": [
                   2,
@@ -3543,13 +3335,7 @@
                   "port:8080",
                   "[limits]",
                   "cpu:2",
-                  "memory:512",
-                  "[alerts]",
-                  "email:ops",
-                  "page:oncall",
-                  "[flags]",
-                  "debug:false",
-                  "trace:false"
+                  "memory:512"
                 ],
                 "cursor": [
                   3,
@@ -3566,13 +3352,7 @@
                   "port=8080",
                   "[limits]",
                   "cpu:2",
-                  "memory:512",
-                  "[alerts]",
-                  "email:ops",
-                  "page:oncall",
-                  "[flags]",
-                  "debug:false",
-                  "trace:false"
+                  "memory:512"
                 ],
                 "cursor": [
                   4,
@@ -3648,10 +3428,6 @@
                 "  retryBudget int",
                 "  region string",
                 "  tier string",
-                "  debug bool",
-                "  cache bool",
-                "  pool int",
-                "  burst int",
                 "}"
               ],
               "cursor": [
@@ -3673,10 +3449,6 @@
                 "  RetryBudget int",
                 "  region string",
                 "  tier string",
-                "  debug bool",
-                "  cache bool",
-                "  pool int",
-                "  burst int",
                 "}"
               ],
               "cursor": [
@@ -3747,10 +3519,6 @@
                   "  retryBudget int",
                   "  region string",
                   "  tier string",
-                  "  debug bool",
-                  "  cache bool",
-                  "  pool int",
-                  "  burst int",
                   "}"
                 ],
                 "cursor": [
@@ -3769,10 +3537,6 @@
                   "  RetryBudget int",
                   "  region string",
                   "  tier string",
-                  "  debug bool",
-                  "  cache bool",
-                  "  pool int",
-                  "  burst int",
                   "}"
                 ],
                 "cursor": [
@@ -4337,11 +4101,7 @@
                 "zone a",
                 "site;hq",
                 "lead;Dana",
-                "desk;4",
-                "floor;2",
-                "badge;77",
-                "shift;day",
-                "exit;none"
+                "desk;4"
               ],
               "cursor": [
                 1,
@@ -4366,11 +4126,7 @@
                 "zone a",
                 "site;hq",
                 "lead;Dana",
-                "desk;4",
-                "floor;2",
-                "badge;77",
-                "shift;day",
-                "exit;none"
+                "desk;4"
               ],
               "cursor": [
                 8,
@@ -4453,11 +4209,7 @@
                   "zone a",
                   "site;hq",
                   "lead;Dana",
-                  "desk;4",
-                  "floor;2",
-                  "badge;77",
-                  "shift;day",
-                  "exit;none"
+                  "desk;4"
                 ],
                 "cursor": [
                   2,
@@ -4479,11 +4231,7 @@
                   "zone a",
                   "site;hq",
                   "lead;Dana",
-                  "desk;4",
-                  "floor;2",
-                  "badge;77",
-                  "shift;day",
-                  "exit;none"
+                  "desk;4"
                 ],
                 "cursor": [
                   8,
@@ -4560,10 +4308,7 @@
                 "index rebuilt",
                 "fetch|ok",
                 "flush|ok",
-                "queue|12",
-                "retry|3",
-                "idle|0",
-                "exit|0"
+                "queue|12"
               ],
               "cursor": [
                 0,
@@ -4585,10 +4330,7 @@
                 "index rebuilt",
                 "fetch|ok",
                 "flush|ok",
-                "queue|12",
-                "retry|3",
-                "idle|0",
-                "exit|0"
+                "queue|12"
               ],
               "cursor": [
                 5,
@@ -4668,10 +4410,7 @@
                   "index rebuilt",
                   "fetch|ok",
                   "flush|ok",
-                  "queue|12",
-                  "retry|3",
-                  "idle|0",
-                  "exit|0"
+                  "queue|12"
                 ],
                 "cursor": [
                   1,
@@ -4690,10 +4429,7 @@
                   "index rebuilt",
                   "fetch|ok",
                   "flush|ok",
-                  "queue|12",
-                  "retry|3",
-                  "idle|0",
-                  "exit|0"
+                  "queue|12"
                 ],
                 "cursor": [
                   5,
@@ -5007,9 +4743,7 @@
                 "r22,kim,ok",
                 "r23",
                 "r24,mia,latam,ok",
-                "r25,nils,ok",
-                "r26,olga,eu,ok",
-                "r27,pia,ok"
+                "r25,nils,ok"
               ],
               "cursor": [
                 0,
@@ -5036,9 +4770,7 @@
                 "r22,kim",
                 "r23",
                 "r24,mia,latam,ok",
-                "r25,nils,ok",
-                "r26,olga,eu,ok",
-                "r27,pia,ok"
+                "r25,nils,ok"
               ],
               "cursor": [
                 11,
@@ -5130,9 +4862,7 @@
                   "r22,kim,ok",
                   "r23",
                   "r24,mia,latam,ok",
-                  "r25,nils,ok",
-                  "r26,olga,eu,ok",
-                  "r27,pia,ok"
+                  "r25,nils,ok"
                 ],
                 "cursor": [
                   1,
@@ -5156,9 +4886,7 @@
                   "r22,kim",
                   "r23",
                   "r24,mia,latam,ok",
-                  "r25,nils,ok",
-                  "r26,olga,eu,ok",
-                  "r27,pia,ok"
+                  "r25,nils,ok"
                 ],
                 "cursor": [
                   11,
@@ -5247,12 +4975,8 @@
                 "  home-city,",
                 "  zip-code,",
                 "  phone-number,",
-                "  created-at,",
                 "  updated-at",
-                "FROM users",
-                "WHERE active = 1",
-                "ORDER BY id",
-                "LIMIT 100;"
+                "FROM users"
               ],
               "cursor": [
                 1,
@@ -5272,12 +4996,8 @@
                 "  home_city,",
                 "  zip_code,",
                 "  phone-number,",
-                "  created-at,",
                 "  updated-at",
-                "FROM users",
-                "WHERE active = 1",
-                "ORDER BY id",
-                "LIMIT 100;"
+                "FROM users"
               ],
               "cursor": [
                 5,
@@ -5376,12 +5096,8 @@
                   "  home-city,",
                   "  zip-code,",
                   "  phone-number,",
-                  "  created-at,",
                   "  updated-at",
-                  "FROM users",
-                  "WHERE active = 1",
-                  "ORDER BY id",
-                  "LIMIT 100;"
+                  "FROM users"
                 ],
                 "cursor": [
                   1,
@@ -5405,12 +5121,8 @@
                   "  home-city,",
                   "  zip-code,",
                   "  phone-number,",
-                  "  created-at,",
                   "  updated-at",
-                  "FROM users",
-                  "WHERE active = 1",
-                  "ORDER BY id",
-                  "LIMIT 100;"
+                  "FROM users"
                 ],
                 "cursor": [
                   2,
@@ -5434,12 +5146,8 @@
                   "  home_city,",
                   "  zip_code,",
                   "  phone-number,",
-                  "  created-at,",
                   "  updated-at",
-                  "FROM users",
-                  "WHERE active = 1",
-                  "ORDER BY id",
-                  "LIMIT 100;"
+                  "FROM users"
                 ],
                 "cursor": [
                   5,
@@ -5520,10 +5228,6 @@
                 "DB_PORT|5432;",
                 "CACHE|redis;",
                 "QUEUE|sqs;",
-                "REGION|eu-west;",
-                "TIER|gold;",
-                "DEBUG|false;",
-                "TRACE|false;",
                 "EXIT|0;"
               ],
               "cursor": [
@@ -5545,10 +5249,6 @@
                 "DB_PORT=5432",
                 "CACHE|redis;",
                 "QUEUE|sqs;",
-                "REGION|eu-west;",
-                "TIER|gold;",
-                "DEBUG|false;",
-                "TRACE|false;",
                 "EXIT|0;"
               ],
               "cursor": [
@@ -5663,10 +5363,6 @@
                   "DB_PORT|5432;",
                   "CACHE|redis;",
                   "QUEUE|sqs;",
-                  "REGION|eu-west;",
-                  "TIER|gold;",
-                  "DEBUG|false;",
-                  "TRACE|false;",
                   "EXIT|0;"
                 ],
                 "cursor": [
@@ -5691,10 +5387,6 @@
                   "DB_PORT|5432;",
                   "CACHE|redis;",
                   "QUEUE|sqs;",
-                  "REGION|eu-west;",
-                  "TIER|gold;",
-                  "DEBUG|false;",
-                  "TRACE|false;",
                   "EXIT|0;"
                 ],
                 "cursor": [
@@ -5719,10 +5411,6 @@
                   "DB_PORT=5432",
                   "CACHE|redis;",
                   "QUEUE|sqs;",
-                  "REGION|eu-west;",
-                  "TIER|gold;",
-                  "DEBUG|false;",
-                  "TRACE|false;",
                   "EXIT|0;"
                 ],
                 "cursor": [
@@ -5804,10 +5492,6 @@
                 "  'pass': \"secret\",",
                 "  'zone': \"eu\",",
                 "  \"tier\": \"gold\",",
-                "  \"debug\": false,",
-                "  \"cache\": true,",
-                "  \"pool\": 12,",
-                "  \"burst\": 50,",
                 "  \"retry\": 3",
                 "}"
               ],
@@ -5830,10 +5514,6 @@
                 "  \"pass\": \"secret\",",
                 "  \"zone\": \"eu\",",
                 "  \"tier\": \"gold\",",
-                "  \"debug\": false,",
-                "  \"cache\": true,",
-                "  \"pool\": 12,",
-                "  \"burst\": 50,",
                 "  \"retry\": 3",
                 "}"
               ],
@@ -5950,10 +5630,6 @@
                   "  'pass': \"secret\",",
                   "  'zone': \"eu\",",
                   "  \"tier\": \"gold\",",
-                  "  \"debug\": false,",
-                  "  \"cache\": true,",
-                  "  \"pool\": 12,",
-                  "  \"burst\": 50,",
                   "  \"retry\": 3",
                   "}"
                 ],
@@ -5979,10 +5655,6 @@
                   "  'pass': \"secret\",",
                   "  'zone': \"eu\",",
                   "  \"tier\": \"gold\",",
-                  "  \"debug\": false,",
-                  "  \"cache\": true,",
-                  "  \"pool\": 12,",
-                  "  \"burst\": 50,",
                   "  \"retry\": 3",
                   "}"
                 ],
@@ -6008,10 +5680,6 @@
                   "  \"pass\": \"secret\",",
                   "  \"zone\": \"eu\",",
                   "  \"tier\": \"gold\",",
-                  "  \"debug\": false,",
-                  "  \"cache\": true,",
-                  "  \"pool\": 12,",
-                  "  \"burst\": 50,",
                   "  \"retry\": 3",
                   "}"
                 ],
@@ -6357,10 +6025,6 @@
                 "w|queue full",
                 "i|boot ok",
                 "i|cache warm",
-                "i|sync start",
-                "i|purge ok",
-                "i|index ok",
-                "i|flush ok",
                 "i|idle"
               ],
               "cursor": [
@@ -6382,10 +6046,6 @@
                 "w,queue full",
                 "i|boot ok",
                 "i|cache warm",
-                "i|sync start",
-                "i|purge ok",
-                "i|index ok",
-                "i|flush ok",
                 "i|idle"
               ],
               "cursor": [
@@ -6443,10 +6103,6 @@
                   "w|queue full",
                   "i|boot ok",
                   "i|cache warm",
-                  "i|sync start",
-                  "i|purge ok",
-                  "i|index ok",
-                  "i|flush ok",
                   "i|idle"
                 ],
                 "cursor": [
@@ -6472,10 +6128,6 @@
                   "w|queue full",
                   "i|boot ok",
                   "i|cache warm",
-                  "i|sync start",
-                  "i|purge ok",
-                  "i|index ok",
-                  "i|flush ok",
                   "i|idle"
                 ],
                 "cursor": [
@@ -6500,10 +6152,6 @@
                   "w,queue full",
                   "i|boot ok",
                   "i|cache warm",
-                  "i|sync start",
-                  "i|purge ok",
-                  "i|index ok",
-                  "i|flush ok",
                   "i|idle"
                 ],
                 "cursor": [
@@ -6584,23 +6232,13 @@
                 "- alpha-one",
                 "- beta-two",
                 "- gamma-three",
-                "- delta-four",
-                "- epsilon-five",
-                "- zeta-six",
-                "- eta-seven",
-                "- theta-eight",
-                "- iota-nine",
-                "- kappa-ten"
+                "- delta-four"
               ],
               "cursor": [
                 1,
                 0
               ],
               "mode": "normal",
-              "viewport": {
-                "topLine": 0,
-                "bottomLine": 5
-              },
               "setup": {
                 "cursor": [
                   0,
@@ -6622,13 +6260,7 @@
                 "- alpha-one",
                 "- beta-two",
                 "- gamma-three",
-                "- delta-four",
-                "- epsilon-five",
-                "- zeta-six",
-                "- eta-seven",
-                "- theta-eight",
-                "- iota-nine",
-                "- kappa-ten"
+                "- delta-four"
               ],
               "cursor": [
                 1,
@@ -6673,13 +6305,7 @@
                   "- alpha-one",
                   "- beta-two",
                   "- gamma-three",
-                  "- delta-four",
-                  "- epsilon-five",
-                  "- zeta-six",
-                  "- eta-seven",
-                  "- theta-eight",
-                  "- iota-nine",
-                  "- kappa-ten"
+                  "- delta-four"
                 ],
                 "cursor": [
                   1,
@@ -6701,13 +6327,7 @@
                   "- alpha-one",
                   "- beta-two",
                   "- gamma-three",
-                  "- delta-four",
-                  "- epsilon-five",
-                  "- zeta-six",
-                  "- eta-seven",
-                  "- theta-eight",
-                  "- iota-nine",
-                  "- kappa-ten"
+                  "- delta-four"
                 ],
                 "cursor": [
                   1,
@@ -6765,10 +6385,7 @@
               "macro-inspect-repair"
             ]
           },
-          "delivery": "guided-then-recall",
-          "editor": {
-            "viewportRows": 6
-          }
+          "delivery": "guided-then-recall"
         },
         {
           "id": "repair-delimiter-macro",
@@ -6788,11 +6405,7 @@
                 "delta;4",
                 "epsilon;55",
                 "zeta;666",
-                "eta;7",
-                "theta;88",
-                "iota;999",
-                "kappa;10",
-                "lambda;11"
+                "eta;7"
               ],
               "cursor": [
                 0,
@@ -6813,11 +6426,7 @@
                 "delta:4",
                 "epsilon;55",
                 "zeta;666",
-                "eta;7",
-                "theta;88",
-                "iota;999",
-                "kappa;10",
-                "lambda;11"
+                "eta;7"
               ],
               "cursor": [
                 5,
@@ -6897,11 +6506,7 @@
                   "delta;4",
                   "epsilon;55",
                   "zeta;666",
-                  "eta;7",
-                  "theta;88",
-                  "iota;999",
-                  "kappa;10",
-                  "lambda;11"
+                  "eta;7"
                 ],
                 "cursor": [
                   0,
@@ -6925,11 +6530,7 @@
                   "delta;4",
                   "epsilon;55",
                   "zeta;666",
-                  "eta;7",
-                  "theta;88",
-                  "iota;999",
-                  "kappa;10",
-                  "lambda;11"
+                  "eta;7"
                 ],
                 "cursor": [
                   0,
@@ -6953,11 +6554,7 @@
                   "delta:4",
                   "epsilon;55",
                   "zeta;666",
-                  "eta;7",
-                  "theta;88",
-                  "iota;999",
-                  "kappa;10",
-                  "lambda;11"
+                  "eta;7"
                 ],
                 "cursor": [
                   5,
@@ -7039,10 +6636,7 @@
                 "r16,evangeline",
                 "r17,frank",
                 "r18,gita",
-                "r19,hana",
-                "r20,ian",
-                "r21,jo",
-                "r22,kim"
+                "r19,hana"
               ],
               "cursor": [
                 0,
@@ -7064,10 +6658,7 @@
                 "r16;evangeline",
                 "r17,frank",
                 "r18,gita",
-                "r19,hana",
-                "r20,ian",
-                "r21,jo",
-                "r22,kim"
+                "r19,hana"
               ],
               "cursor": [
                 6,
@@ -7147,10 +6738,7 @@
                   "r16,evangeline",
                   "r17,frank",
                   "r18,gita",
-                  "r19,hana",
-                  "r20,ian",
-                  "r21,jo",
-                  "r22,kim"
+                  "r19,hana"
                 ],
                 "cursor": [
                   0,
@@ -7175,10 +6763,7 @@
                   "r16,evangeline",
                   "r17,frank",
                   "r18,gita",
-                  "r19,hana",
-                  "r20,ian",
-                  "r21,jo",
-                  "r22,kim"
+                  "r19,hana"
                 ],
                 "cursor": [
                   0,
@@ -7203,10 +6788,7 @@
                   "r16;evangeline",
                   "r17,frank",
                   "r18,gita",
-                  "r19,hana",
-                  "r20,ian",
-                  "r21,jo",
-                  "r22,kim"
+                  "r19,hana"
                 ],
                 "cursor": [
                   6,
@@ -7303,9 +6885,7 @@
                 "  flush();",
                 "  debug(\"end\");",
                 "  report();",
-                "  emit();",
                 "  debug(\"tail\");",
-                "  close();",
                 "}"
               ],
               "cursor": [
@@ -7328,9 +6908,7 @@
                 "  flush();",
                 "  // debug(\"end\");",
                 "  report();",
-                "  emit();",
                 "  debug(\"tail\");",
-                "  close();",
                 "}"
               ],
               "cursor": [
@@ -7435,9 +7013,7 @@
                   "  flush();",
                   "  debug(\"end\");",
                   "  report();",
-                  "  emit();",
                   "  debug(\"tail\");",
-                  "  close();",
                   "}"
                 ],
                 "cursor": [
@@ -7458,9 +7034,7 @@
                   "  flush();",
                   "  debug(\"end\");",
                   "  report();",
-                  "  emit();",
                   "  debug(\"tail\");",
-                  "  close();",
                   "}"
                 ],
                 "cursor": [
@@ -7480,9 +7054,7 @@
                   "  flush();",
                   "  debug(\"end\");",
                   "  report();",
-                  "  emit();",
                   "  debug(\"tail\");",
-                  "  close();",
                   "}"
                 ],
                 "cursor": [
@@ -7502,9 +7074,7 @@
                   "  flush();",
                   "  // debug(\"end\");",
                   "  report();",
-                  "  emit();",
                   "  debug(\"tail\");",
-                  "  close();",
                   "}"
                 ],
                 "cursor": [
@@ -7582,10 +7152,8 @@
                 "Packaging is fine.",
                 "A general note follows.",
                 "FIXME missing test",
-                "Upload works today.",
                 "FIXME stale doc",
-                "End of review.",
-                "Signed off by ops."
+                "End of review."
               ],
               "cursor": [
                 1,
@@ -7607,10 +7175,8 @@
                 "Packaging is fine.",
                 "A general note follows.",
                 "! FIXME missing test",
-                "Upload works today.",
                 "FIXME stale doc",
-                "End of review.",
-                "Signed off by ops."
+                "End of review."
               ],
               "cursor": [
                 7,
@@ -7710,10 +7276,8 @@
                   "Packaging is fine.",
                   "A general note follows.",
                   "FIXME missing test",
-                  "Upload works today.",
                   "FIXME stale doc",
-                  "End of review.",
-                  "Signed off by ops."
+                  "End of review."
                 ],
                 "cursor": [
                   1,
@@ -7732,10 +7296,8 @@
                   "Packaging is fine.",
                   "A general note follows.",
                   "FIXME missing test",
-                  "Upload works today.",
                   "FIXME stale doc",
-                  "End of review.",
-                  "Signed off by ops."
+                  "End of review."
                 ],
                 "cursor": [
                   4,
@@ -7754,10 +7316,8 @@
                   "Packaging is fine.",
                   "A general note follows.",
                   "FIXME missing test",
-                  "Upload works today.",
                   "FIXME stale doc",
-                  "End of review.",
-                  "Signed off by ops."
+                  "End of review."
                 ],
                 "cursor": [
                   4,
@@ -7776,10 +7336,8 @@
                   "Packaging is fine.",
                   "A general note follows.",
                   "! FIXME missing test",
-                  "Upload works today.",
                   "FIXME stale doc",
-                  "End of review.",
-                  "Signed off by ops."
+                  "End of review."
                 ],
                 "cursor": [
                   7,

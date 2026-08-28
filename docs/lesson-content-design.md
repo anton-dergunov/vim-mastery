@@ -89,14 +89,21 @@ Runnable activities may use the optional `editor` configuration:
 - `editor.viewportRows` fixes the editor to that many 24px logical rows. Unit 9
   uses seven rows so the middle row and every viewport command remain identical
   at all supported phone widths. Initial states, targets, and checkpoints may
-  include a semantic `viewport` with zero-based `topLine` and `bottomLine`. A
-  windowed buffer is the way to author realistic automation scale without
-  showing more rows: the buffer can be long while the window stays small.
-  Rows are not free. Seven is the ceiling a 360x740 phone accepts, and each row
-  it spends comes out of the board, so a presentation-only window should take the
-  smallest row count that still shows the activity's work — Unit 13 uses five,
-  six, or seven depending on the lesson, and reserves seven for the activities
-  whose point is reach beyond the window.
+  include a semantic `viewport` with zero-based `topLine` and `bottomLine`.
+  Windowing exists for lessons whose subject is reach beyond the visible rows —
+  bulk substitution, `:global`, a macro replayed over many records — where the
+  buffer has to be longer than the window for the lesson to exist at all.
+  Rows are not free. Seven is the ceiling a 360x740 phone accepts and is already
+  tight on real hardware, and each row spent comes out of the board, so a window
+  takes the smallest row count that still shows the activity's work.
+  Both numbers are sized from the lesson: the window from what must be seen at
+  once, the buffer from what the command must reach. Neither is sized from what
+  neighboring activities happen to use. **Do not pick a buffer length for a unit
+  and author its activities to it** — a buffer padded past what its exercise
+  touches spends the page's scarcest resource on rows the learner must read and
+  then discard. Uniform lengths within a unit are fine when they fall out of the
+  lessons and worth nothing when they are engineered, and a test that asserts a
+  minimum length manufactures exactly that padding.
 - `editor.viewportDependent: true` declares that the activity's *correctness*
   depends on how many rows are visible, as opposed to the window being mere
   presentation. An activity is viewport-dependent exactly when it asserts a
@@ -295,3 +302,12 @@ Exact target text remains the authority for the current lessons.
 A complete unit must map every curriculum concept to theory, demonstration,
 isolated practice, mixed practice, and challenge or explain why a phase is not
 applicable. This manifest is tested rather than inferred from titles.
+
+That mapping is a **minimum coverage contract, not a lesson template.** It says
+which kinds of activity a concept must include; it says nothing about how many.
+It imposes no maximum, and satisfying it with exactly one activity per phase
+produces a five-activity lesson — a floor, and usually too thin for a concept to
+stick. A lesson carries as many exercises as its concept needs, and the coverage
+arrays hold as many ids per phase as it takes. Do not treat five as a lesson's
+shape, and do not decline to add practice because a lesson already covers every
+phase.

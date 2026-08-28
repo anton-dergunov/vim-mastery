@@ -446,10 +446,12 @@ test.describe("Production lesson flow", () => {
   });
 
   test("keeps the largest inferred non-viewport buffer fully visible", async ({ page }) => {
+    // Seven rows is the phone ceiling, so the tallest inferred slab must sit at
+    // seven and reserve them before the buffer grows into them.
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960], [888, 1248]];
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      await page.goto("/?unit=command-line-ranges-line-operations&activity=copy-range-to-end");
+      await page.goto("/?unit=registers-putting&activity=append-three-lines");
       await page.waitForFunction(() => getComputedStyle(document.querySelector("#phone")).getPropertyValue("--execution-console-height").trim());
       const result = await page.evaluate(async () => {
         const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -470,9 +472,9 @@ test.describe("Production lesson flow", () => {
           state: window.VimWilds.getState(),
         };
       });
-      expect(result.plannedRows, `${width}×${height} planned rows`).toBe(8);
+      expect(result.plannedRows, `${width}×${height} planned rows`).toBe(7);
       expect(result.afterHeight, `${width}×${height} stable editor`).toBe(result.beforeHeight);
-      expect(result.lineCount, `${width}×${height} rendered lines`).toBe(8);
+      expect(result.lineCount, `${width}×${height} rendered lines`).toBe(7);
       expect(result.linesVisible, `${width}×${height} visible lines`).toBe(true);
       expect(result.documentOverflow, `${width}×${height} viewport overflow`).toBe(false);
       expect(result.state.complete).toBe(true);
@@ -758,7 +760,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 11 Ex range activity with native-equivalent line and register state", async ({ page }) => {
     await page.goto("/?unit=command-line-ranges-line-operations");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 66, exerciseCount: rangeExercises.length });
+    expect(runtime).toEqual({ activityCount: 72, exerciseCount: rangeExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -802,36 +804,49 @@ test.describe("Production lesson flow", () => {
   });
 
   test("supports count-only and interactive confirmation through touch input", async ({ page }) => {
+    const linesOf = id => substitutionActivities.find(activity => activity.id === id).scenario.initial.lines;
+    const targetOf = id => substitutionActivities.find(activity => activity.id === id).scenario.target.lines;
+
+    // The count is worth reporting because most of what it counted is below the
+    // window: eight matches over six lines of a thirteen-line buffer.
     await page.goto("/?unit=substitution-practical-regex&activity=count-without-changing");
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    expect((await state(page))).toMatchObject({ complete: true, code: ["WARN WARN", "WARN INFO"] });
-    await expect(page.locator(".cm-vim-message")).toContainText("3 matches on 2 lines");
+    expect((await state(page))).toMatchObject({ complete: true, code: linesOf("count-without-changing") });
+    await expect(page.locator(".cm-vim-message")).toContainText("8 matches on 6 lines");
 
+    // Every confirmation below addresses a line outside the opening window, so
+    // the prompt only resolves if the view follows it down.
     await page.goto("/?unit=substitution-practical-regex&activity=confirm-all-remaining");
     const acceptAll = substitutionActivities.find(activity => activity.id === "confirm-all-remaining");
     await page.evaluate(keys => keys.slice(0, -1).forEach(key => window.VimWilds.emit(key)), keysFor(acceptAll));
-    expect((await state(page))).toMatchObject({ mode: "command-line", code: ["draft draft draft"] });
+    const prompted = await state(page);
+    expect(prompted).toMatchObject({ mode: "command-line", code: linesOf("confirm-all-remaining") });
+    expect(prompted.viewport.topLine).toBeGreaterThan(0);
     await page.locator('.key[data-key="a"]').click();
-    expect((await state(page))).toMatchObject({ complete: true, code: ["live live live"], mode: "Complete" });
+    expect((await state(page))).toMatchObject({ complete: true, code: targetOf("confirm-all-remaining"), mode: "Complete" });
 
     await page.goto("/?unit=substitution-practical-regex&activity=confirm-skip-match");
     const skip = substitutionActivities.find(activity => activity.id === "confirm-skip-match");
     await page.evaluate(keys => keys.slice(0, -1).forEach(key => window.VimWilds.emit(key)), keysFor(skip));
     await page.locator('.key[data-key="n"]').click();
-    expect((await state(page))).toMatchObject({ complete: true, code: ["old,keep"], modifiers: [] });
+    expect((await state(page))).toMatchObject({ complete: true, code: targetOf("confirm-skip-match"), modifiers: [] });
 
     await page.goto("/?unit=substitution-practical-regex&activity=confirm-all-remaining");
     await page.evaluate(keys => keys.slice(0, -1).forEach(key => window.VimWilds.emit(key)), keysFor(acceptAll));
     await page.getByRole("button", { name: "Reset activity" }).click();
-    expect((await state(page))).toMatchObject({ complete: false, mode: "normal", code: ["draft draft draft"] });
+    const reset = await state(page);
+    expect(reset).toMatchObject({ complete: false, mode: "normal", code: linesOf("confirm-all-remaining") });
+    // Reset rebuilds the authored window rather than leaving it where the
+    // confirmation walked to.
+    expect(reset.viewport).toMatchObject({ topLine: 0, bottomLine: 6 });
 
     await page.goto("/?unit=substitution-practical-regex&activity=confirm-skip-match");
     await page.locator(".cm-content").focus();
-    await page.keyboard.type(":s/old/new/c");
+    await page.keyboard.type(":10s/draft/live/c");
     await page.keyboard.press("Enter");
-    expect((await state(page))).toMatchObject({ mode: "command-line", code: ["old,keep"] });
+    expect((await state(page))).toMatchObject({ mode: "command-line", code: linesOf("confirm-skip-match") });
     await page.keyboard.press("n");
-    expect((await state(page))).toMatchObject({ complete: true, mode: "Complete", code: ["old,keep"] });
+    expect((await state(page))).toMatchObject({ complete: true, mode: "Complete", code: targetOf("confirm-skip-match") });
   });
 
   test("matches native substitution case and replacement edge cases", async ({ page }) => {
@@ -2361,11 +2376,25 @@ test.describe("Production lesson flow", () => {
     const offscreen = matched.matchLines.filter(line => line < matched.viewport.topLine || line > matched.viewport.bottomLine);
     expect(offscreen.length).toBeGreaterThan(0);
 
-    // A fully visible buffer needs no rail, so the map costs nothing there.
+    // `:%s///gn` counts without editing, so the pattern stays live and the map is
+    // the only thing that shows where the six matched lines actually are. Three
+    // of them sit below the window, which is the reason the count is worth
+    // printing at all.
     await page.goto("/?unit=substitution-practical-regex&activity=count-without-changing");
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    expect((await state(page)).matchLines).toEqual([0, 1]);
-    await expect(page.locator(".cm-match-line")).toHaveCount(2);
+    const counted = await state(page);
+    expect(counted.matchLines).toEqual([1, 3, 5, 7, 9, 11]);
+    expect(counted.viewport).toMatchObject({ topLine: 0, bottomLine: 6, totalLines: 13 });
+    await expect(page.locator(".match-tick")).toHaveCount(6);
+    await expect(page.locator(".cm-match-line")).toHaveCount(6);
+    // Half of what the count reported is scrolled out of sight, so the rail is
+    // carrying the part of the answer the slab cannot show.
+    const belowWindow = counted.matchLines.filter(line => line > counted.viewport.bottomLine);
+    expect(belowWindow).toEqual([7, 9, 11]);
+
+    // A fully visible buffer needs no rail, so the map costs nothing there.
+    await page.goto("/?unit=substitution-practical-regex&activity=literal-token-boundary");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
     expect(await page.locator(".buffer-position").count()).toBe(0);
   });
 

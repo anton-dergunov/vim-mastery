@@ -16,19 +16,33 @@ These are product invariants. No session may weaken them.
    within `100dvh` with no document scrolling.
 2. **Bite-sized.** A lesson is 2–5 minutes; an exercise is 15–90 seconds. The
    product exists to use small pockets of time away from a desk.
-3. **Visible lines are scarce and stay scarce.** No session increases the number
-   of code rows shown at once on a phone.
+3. **Visible lines are scarce and stay scarce.** Seven code rows is the maximum
+   a 360×740 phone accepts, and seven is already tight on real hardware: the
+   instruction, the board, and the fixed keyboard compete for the same `100dvh`,
+   and at seven rows the board and character art are fully displaced. No session
+   increases the number of code rows shown at once.
 4. **Buffer length is not visible-line count.** `scenario.initial.viewport`
-   (`topLine`/`bottomLine`) already decouples the two. Unit 9 ships 30-line
-   buffers on a phone today across 51 activities. The automation units simply
-   never adopted this mechanism — that is a content gap, not a platform limit.
-5. **Deterministic correctness.** A command is exposed only after it passes both
+   (`topLine`/`bottomLine`) already decouples the two, which is how Unit 9 ships
+   30-line buffers on a phone across 51 activities. Windowing is the tool for
+   lessons whose subject is reach beyond the visible rows; it is not a house
+   style to be applied unit-wide.
+5. **Sizes come from the lesson, never from a target.** Buffer length is an
+   outcome of what an exercise edits plus the context that makes the edit
+   legible; activity count is an outcome of what a concept needs to stick. No
+   session picks a number for a unit and authors its content to fit — matching a
+   buffer to its neighbors' length is not a reason to grow it, five activities
+   is not a lesson's shape, and a test asserting a minimum size manufactures
+   padding rather than preventing thinness.
+6. **Deterministic correctness.** A command is exposed only after it passes both
    the native-Vim fixture and the browser conformance test
    (`docs/vim-conformance.md`). No session ships a command on assumption.
 
-Constraint 4 is the one worth internalizing: **the review's "bigger buffers"
-finding is satisfied by scrolling a small window over a longer file, not by
-showing more rows.** Sessions 02–05 spell out how.
+Constraints 4 and 5 work together: **the review's "bigger buffers" finding is
+satisfied by scrolling a small window over a longer file where the lesson needs
+one — not by showing more rows, and not by lengthening buffers whose exercises
+never reach past what they already show.** Session 05 revised the blanket
+re-scale mandates that briefs 03–05 originally carried; treat any remaining
+line-count range in a brief as subject to constraint 5.
 
 ## Session list
 
@@ -121,7 +135,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 02 Scale mechanics
 - [x] 03 Unit 14
 - [x] 04 Unit 13
-- [ ] 05 Units 11–12
+- [x] 05 Units 11–12
 - [ ] 06 Tool-choice activities
 - [ ] 07 Unit 9
 - [ ] 08 Unit 8

@@ -4,6 +4,13 @@
 **Touches:** `content/units/13-macros.json`
 **Size:** L
 
+> **Corrected by session 05.** This brief's "12–20 buffer lines" was enforced as
+> a test assertion, and it padded nineteen of Unit 13's thirty-two activities
+> with rows their macros never touch. Buffer length is now sized from each
+> exercise (constraint 5 in [README.md](README.md)); the assertion was replaced
+> with one about the number of rows a macro actually transforms, and the padded
+> buffers were trimmed. The per-activity window finding below stands.
+
 ## What executing it changed
 
 **The window is per activity, not seven everywhere.** Session 03 put all of Unit

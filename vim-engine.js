@@ -277,7 +277,8 @@ function parseLineOperation(cm, input) {
   const argument = match[3]?.trim() || "";
   const command = match[1];
   if (["delete", "d", "yank", "y", "put", "pu"].includes(command) && argument.length > 1) return null;
-  if (["join", "j", "sort"].includes(command) && argument) return null;
+  if (["join", "j"].includes(command) && argument) return null;
+  if (command === "sort" && argument && !parseSortArgument(argument)) return null;
   return { lines, start, end, explicitRange, command, bang: match[2] === "!", argument };
 }
 
@@ -343,6 +344,59 @@ function parseGlobalOperation(cm, input) {
   const nestedCommand = commandText.slice(patternEnd + 1).trimStart();
   const inverted = match[1].startsWith("v") || match[2] === "!";
   return { ...range, pattern, nestedCommand, inverted };
+}
+
+/**
+ * `:sort` takes `[flags] [/pattern/]`. Returning null means the argument is
+ * something this engine does not model, and the caller declines the command
+ * rather than sorting on a guess.
+ */
+function parseSortArgument(argument) {
+  if (!argument) return { flags: "", pattern: null };
+  const patternMatch = argument.match(/\/((?:[^\\/]|\\.)*)\//);
+  const flags = (patternMatch ? argument.replace(patternMatch[0], "") : argument).replace(/\s+/g, "");
+  if (!/^[niu]*$/.test(flags)) return null;
+  if (patternMatch && compileGlobalPattern(patternMatch[1]) === null) return null;
+  return { flags, pattern: patternMatch ? patternMatch[1] : null };
+}
+
+/**
+ * Vim compares a key derived from the flags rather than the whole line: `/pat/`
+ * compares the text *following* the match, `i` compares without case, and `n`
+ * compares the first decimal number, with numberless lines kept ahead of the
+ * rest in their original order. `u` then drops any line that compares equal to
+ * the one before it, so it dedupes on the same key the sort used.
+ */
+function sortLines(selected, argument) {
+  const parsed = parseSortArgument(argument);
+  if (!parsed) return null;
+  const { flags, pattern } = parsed;
+  const expression = pattern === null ? null : compileGlobalPattern(pattern);
+  const textOf = line => {
+    if (!expression) return line;
+    const match = expression.exec(line);
+    return match ? line.slice(match.index + match[0].length) : line;
+  };
+  const keyOf = line => {
+    const text = textOf(line);
+    if (!flags.includes("n")) return flags.includes("i") ? text.toLowerCase() : text;
+    const number = /-?\d+/.exec(text);
+    return number ? Number(number[0]) : null;
+  };
+  const keyed = selected.map((line, index) => ({ line, index, key: keyOf(line) }));
+  const compare = (left, right) => {
+    if (left.key === right.key) return 0;
+    // A numeric sort keeps the lines without a number ahead of the rest.
+    if (left.key === null) return -1;
+    if (right.key === null) return 1;
+    return left.key < right.key ? -1 : 1;
+  };
+  // Ties keep their original order, which is what makes `u` drop the later copy.
+  const sorted = [...keyed].sort((left, right) => compare(left, right) || left.index - right.index);
+  const kept = flags.includes("u")
+    ? sorted.filter((entry, index) => index === 0 || compare(sorted[index - 1], entry) !== 0)
+    : sorted;
+  return kept.map(entry => entry.line);
 }
 
 function compileGlobalPattern(pattern) {
@@ -1135,8 +1189,8 @@ export class VimEngine {
     }
 
     if (command.startsWith("sor")) {
-      const compare = (left, right) => left < right ? -1 : left > right ? 1 : 0;
-      const sorted = [...selected].sort(compare);
+      const sorted = sortLines(selected, argument);
+      if (!sorted) return true;
       if (operation.bang) sorted.reverse();
       const next = [...lines];
       next.splice(start, selected.length, ...sorted);

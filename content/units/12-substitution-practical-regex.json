@@ -649,35 +649,55 @@
           "id": "numeric-range-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Update only the middle rows",
-          "instruction": "Replace `pending` on lines two through four.",
-          "languageId": "csv",
+          "title": "Switch every service at once",
+          "instruction": "Turn on every service in the file with a whole-buffer substitution.",
+          "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "name,state",
-                "Ada,pending",
-                "Bo,pending",
-                "Cy,pending",
-                "END,locked"
+                "[services]",
+                "auth = off",
+                "cache = off",
+                "queue = off",
+                "search = off",
+                "mailer = off",
+                "worker = off",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "name,state",
-                "Ada,ready",
-                "Bo,ready",
-                "Cy,ready",
-                "END,locked"
+                "[services]",
+                "auth = on",
+                "cache = on",
+                "queue = on",
+                "search = on",
+                "mailer = on",
+                "worker = on",
+                "report = on",
+                "export = on",
+                "purge = on",
+                "[locked]",
+                "audit = on",
+                "backup = on"
               ],
               "cursor": [
-                3,
+                12,
                 0
               ],
               "mode": "normal"
@@ -686,25 +706,17 @@
           "script": {
             "steps": [
               ":",
-              "2",
-              ",",
-              "4",
+              "%",
               "s",
               "/",
-              "p",
-              "e",
+              "o",
+              "f",
+              "f",
+              "/",
+              "o",
               "n",
-              "d",
-              "i",
-              "n",
+              "/",
               "g",
-              "/",
-              "r",
-              "e",
-              "a",
-              "d",
-              "y",
-              "/",
               "Enter"
             ],
             "commandGroups": [
@@ -716,41 +728,55 @@
               },
               {
                 "from": 1,
-                "to": 5,
-                "display": "2,4s",
-                "explanation": "Choose the line scope and start a substitution."
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole buffer and start a substitution."
               },
               {
-                "from": 5,
-                "to": 14,
-                "display": "/pending/",
+                "from": 3,
+                "to": 8,
+                "display": "/off/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
-                "from": 14,
-                "to": 20,
-                "display": "ready/",
+                "from": 8,
+                "to": 11,
+                "display": "on/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 20,
-                "to": 21,
+                "from": 11,
+                "to": 12,
+                "display": "g",
+                "explanation": "Set how the substitution should handle its matches."
+              },
+              {
+                "from": 12,
+                "to": 13,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 21,
+                "afterStep": 13,
                 "lines": [
-                  "name,state",
-                  "Ada,ready",
-                  "Bo,ready",
-                  "Cy,ready",
-                  "END,locked"
+                  "[services]",
+                  "auth = on",
+                  "cache = on",
+                  "queue = on",
+                  "search = on",
+                  "mailer = on",
+                  "worker = on",
+                  "report = on",
+                  "export = on",
+                  "purge = on",
+                  "[locked]",
+                  "audit = on",
+                  "backup = on"
                 ],
                 "cursor": [
-                  3,
+                  12,
                   0
                 ],
                 "mode": "normal"
@@ -758,9 +784,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :2,4s/pending/ready/Enter."
+            "`%` is every line, including the ones below the window.",
+            "The readout and the rail report what happened off screen.",
+            "Use `:%s/off/on/g`."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -796,39 +822,64 @@
               "literal-substitute"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "single-line-scope",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Change only line three",
-          "instruction": "Change only the south value from “false” to “true”.",
+          "title": "Switch one service by number",
+          "instruction": "Turn on the mailer service on line six, leaving every other row alone.",
           "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "north = false",
-                "east = false",
-                "south = false",
-                "west = false"
+                "[services]",
+                "auth = off",
+                "cache = off",
+                "queue = off",
+                "search = off",
+                "mailer = off",
+                "worker = off",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "north = false",
-                "east = false",
-                "south = true",
-                "west = false"
+                "[services]",
+                "auth = off",
+                "cache = off",
+                "queue = off",
+                "search = off",
+                "mailer = on",
+                "worker = off",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
-                2,
+                5,
                 0
               ],
               "mode": "normal"
@@ -837,19 +888,15 @@
           "script": {
             "steps": [
               ":",
-              "3",
+              "6",
               "s",
               "/",
+              "o",
               "f",
-              "a",
-              "l",
-              "s",
-              "e",
+              "f",
               "/",
-              "t",
-              "r",
-              "u",
-              "e",
+              "o",
+              "n",
               "/",
               "Enter"
             ],
@@ -863,39 +910,48 @@
               {
                 "from": 1,
                 "to": 3,
-                "display": "3s",
-                "explanation": "Choose the line scope and start a substitution."
+                "display": "6s",
+                "explanation": "Address that one line and start a substitution."
               },
               {
                 "from": 3,
-                "to": 10,
-                "display": "/false/",
+                "to": 8,
+                "display": "/off/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
-                "from": 10,
-                "to": 15,
-                "display": "true/",
+                "from": 8,
+                "to": 11,
+                "display": "on/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 15,
-                "to": 16,
+                "from": 11,
+                "to": 12,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 16,
+                "afterStep": 12,
                 "lines": [
-                  "north = false",
-                  "east = false",
-                  "south = true",
-                  "west = false"
+                  "[services]",
+                  "auth = off",
+                  "cache = off",
+                  "queue = off",
+                  "search = off",
+                  "mailer = on",
+                  "worker = off",
+                  "report = off",
+                  "export = off",
+                  "purge = off",
+                  "[locked]",
+                  "audit = off",
+                  "backup = off"
                 ],
                 "cursor": [
-                  2,
+                  5,
                   0
                 ],
                 "mode": "normal"
@@ -903,9 +959,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :3s/false/true/Enter."
+            "A bare number addresses exactly that one line.",
+            "The cursor does not have to be on the line you address.",
+            "Use `:6s/off/on/`."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -941,36 +997,61 @@
               "literal-substitute"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "visual-range-substitute",
           "type": "exercise",
           "phase": "mix",
-          "title": "Rename the selected pair",
-          "instruction": "Change “old” to “current” only on the selected parse and render rows.",
-          "languageId": "python",
+          "title": "Switch the selected pair",
+          "instruction": "Turn on only the auth and cache services by selecting them first.",
+          "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "old = load()",
-                "old = parse()",
-                "old = render()",
-                "old = archive()"
+                "[services]",
+                "auth = off",
+                "cache = off",
+                "queue = off",
+                "search = off",
+                "mailer = off",
+                "worker = off",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "old = load()",
-                "current = parse()",
-                "current = render()",
-                "old = archive()"
+                "[services]",
+                "auth = on",
+                "cache = on",
+                "queue = off",
+                "search = off",
+                "mailer = off",
+                "worker = off",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
                 2,
@@ -988,16 +1069,11 @@
               "s",
               "/",
               "o",
-              "l",
-              "d",
+              "f",
+              "f",
               "/",
-              "c",
-              "u",
-              "r",
-              "r",
-              "e",
+              "o",
               "n",
-              "t",
               "/",
               "Enter"
             ],
@@ -1030,35 +1106,44 @@
                 "from": 4,
                 "to": 5,
                 "display": "s",
-                "explanation": "Choose the line scope and start a substitution."
+                "explanation": "Substitute inside the selected lines."
               },
               {
                 "from": 5,
                 "to": 10,
-                "display": "/old/",
+                "display": "/off/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
                 "from": 10,
-                "to": 18,
-                "display": "current/",
+                "to": 13,
+                "display": "on/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 18,
-                "to": 19,
+                "from": 13,
+                "to": 14,
                 "display": "↵",
                 "explanation": "Run the command."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 19,
+                "afterStep": 14,
                 "lines": [
-                  "old = load()",
-                  "current = parse()",
-                  "current = render()",
-                  "old = archive()"
+                  "[services]",
+                  "auth = on",
+                  "cache = on",
+                  "queue = off",
+                  "search = off",
+                  "mailer = off",
+                  "worker = off",
+                  "report = off",
+                  "export = off",
+                  "purge = off",
+                  "[locked]",
+                  "audit = off",
+                  "backup = off"
                 ],
                 "cursor": [
                   2,
@@ -1069,9 +1154,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use jVj:s/old/current/Enter."
+            "Select the two rows before opening the command line.",
+            "Vim fills in the selection's range for you.",
+            "Select the pair, then use `:s/off/on/`."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -1107,39 +1192,64 @@
               "literal-substitute"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "range-versus-global",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Limit a repeated replacement",
-          "instruction": "Change every “off” to “on” on the two middle rows only.",
-          "languageId": "log",
+          "title": "Stop the substitution at the locked block",
+          "instruction": "Turn on the six services above the locked block, leaving audit and backup off.",
+          "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "off off keep",
-                "off off change",
-                "off off change",
-                "off off keep"
+                "[services]",
+                "auth = off",
+                "cache = off",
+                "queue = off",
+                "search = off",
+                "mailer = off",
+                "worker = off",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "off off keep",
-                "on on change",
-                "on on change",
-                "off off keep"
+                "[services]",
+                "auth = on",
+                "cache = on",
+                "queue = on",
+                "search = on",
+                "mailer = on",
+                "worker = on",
+                "report = off",
+                "export = off",
+                "purge = off",
+                "[locked]",
+                "audit = off",
+                "backup = off"
               ],
               "cursor": [
-                2,
+                6,
                 0
               ],
               "mode": "normal"
@@ -1150,7 +1260,7 @@
               ":",
               "2",
               ",",
-              "3",
+              "7",
               "s",
               "/",
               "o",
@@ -1173,8 +1283,8 @@
               {
                 "from": 1,
                 "to": 5,
-                "display": "2,3s",
-                "explanation": "Choose the line scope and start a substitution."
+                "display": "2,7s",
+                "explanation": "Address only those six lines and start a substitution."
               },
               {
                 "from": 5,
@@ -1205,13 +1315,22 @@
               {
                 "afterStep": 15,
                 "lines": [
-                  "off off keep",
-                  "on on change",
-                  "on on change",
-                  "off off keep"
+                  "[services]",
+                  "auth = on",
+                  "cache = on",
+                  "queue = on",
+                  "search = on",
+                  "mailer = on",
+                  "worker = on",
+                  "report = off",
+                  "export = off",
+                  "purge = off",
+                  "[locked]",
+                  "audit = off",
+                  "backup = off"
                 ],
                 "cursor": [
-                  2,
+                  6,
                   0
                 ],
                 "mode": "normal"
@@ -1219,9 +1338,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :2,3s/off/on/gEnter."
+            "The locked rows sit below the window, so `%` would change them unseen.",
+            "Count the lines the change is allowed to touch.",
+            "Use `:2,7s/off/on/g`."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -1257,7 +1376,10 @@
               "global-flag"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -1847,26 +1969,54 @@
           "type": "demo",
           "phase": "demonstrate",
           "title": "Accept a reviewed match",
-          "instruction": "Inspect the match and confirm its replacement with `y`.",
-          "languageId": "prose",
+          "instruction": "Review the match on line eight and confirm its replacement with `y`.",
+          "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "foo waits"
+                "[deploy]",
+                "WARN disk usage",
+                "INFO cache warmed",
+                "WARN WARN retry",
+                "INFO worker ready",
+                "WARN queue backlog",
+                "INFO batch done",
+                "WARN cache miss",
+                "INFO sync ok",
+                "WARN WARN slow",
+                "INFO ready",
+                "WARN final check",
+                "[end]"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "bar waits"
+                "[deploy]",
+                "WARN disk usage",
+                "INFO cache warmed",
+                "WARN WARN retry",
+                "INFO worker ready",
+                "WARN queue backlog",
+                "INFO batch done",
+                "ERROR cache miss",
+                "INFO sync ok",
+                "WARN WARN slow",
+                "INFO ready",
+                "WARN final check",
+                "[end]"
               ],
               "cursor": [
-                0,
+                7,
                 0
               ],
               "mode": "normal"
@@ -1875,15 +2025,19 @@
           "script": {
             "steps": [
               ":",
+              "8",
               "s",
               "/",
-              "f",
-              "o",
-              "o",
+              "W",
+              "A",
+              "R",
+              "N",
               "/",
-              "b",
-              "a",
-              "r",
+              "E",
+              "R",
+              "R",
+              "O",
+              "R",
               "/",
               "c",
               "Enter",
@@ -1898,49 +2052,61 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "s",
-                "explanation": "Choose the line scope and start a substitution."
+                "to": 3,
+                "display": "8s",
+                "explanation": "Address that one line and start a substitution."
               },
               {
-                "from": 2,
-                "to": 7,
-                "display": "/foo/",
+                "from": 3,
+                "to": 9,
+                "display": "/WARN/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
-                "from": 7,
-                "to": 11,
-                "display": "bar/",
+                "from": 9,
+                "to": 15,
+                "display": "ERROR/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 11,
-                "to": 12,
+                "from": 15,
+                "to": 16,
                 "display": "c",
                 "explanation": "Set how the substitution should handle its matches."
               },
               {
-                "from": 12,
-                "to": 13,
+                "from": 16,
+                "to": 17,
                 "display": "↵",
                 "explanation": "Run the command."
               },
               {
-                "from": 13,
-                "to": 14,
+                "from": 17,
+                "to": 18,
                 "display": "y",
                 "explanation": "Accept this match and continue to the next one."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 14,
+                "afterStep": 18,
                 "lines": [
-                  "bar waits"
+                  "[deploy]",
+                  "WARN disk usage",
+                  "INFO cache warmed",
+                  "WARN WARN retry",
+                  "INFO worker ready",
+                  "WARN queue backlog",
+                  "INFO batch done",
+                  "ERROR cache miss",
+                  "INFO sync ok",
+                  "WARN WARN slow",
+                  "INFO ready",
+                  "WARN final check",
+                  "[end]"
                 ],
                 "cursor": [
-                  0,
+                  7,
                   0
                 ],
                 "mode": "normal"
@@ -1948,9 +2114,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :s/foo/bar/cEntery."
+            "Line eight sits below the window, so the view follows the prompt.",
+            "The prompt takes `y`, `n`, `a`, `q`, or `l`.",
+            "Use `:8s/WARN/ERROR/c`, then accept."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -1986,32 +2152,61 @@
               "confirm-yes"
             ]
           },
-          "delivery": "guided"
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "count-without-changing",
           "type": "exercise",
           "phase": "isolate",
           "title": "Count before editing",
-          "instruction": "Count the “WARN” matches without changing the buffer.",
+          "instruction": "Count every `WARN` in the file without changing a single line.",
           "languageId": "log",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "WARN WARN",
-                "WARN INFO"
+                "[deploy]",
+                "WARN disk usage",
+                "INFO cache warmed",
+                "WARN WARN retry",
+                "INFO worker ready",
+                "WARN queue backlog",
+                "INFO batch done",
+                "WARN cache miss",
+                "INFO sync ok",
+                "WARN WARN slow",
+                "INFO ready",
+                "WARN final check",
+                "[end]"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "WARN WARN",
-                "WARN INFO"
+                "[deploy]",
+                "WARN disk usage",
+                "INFO cache warmed",
+                "WARN WARN retry",
+                "INFO worker ready",
+                "WARN queue backlog",
+                "INFO batch done",
+                "WARN cache miss",
+                "INFO sync ok",
+                "WARN WARN slow",
+                "INFO ready",
+                "WARN final check",
+                "[end]"
               ],
               "cursor": [
                 0,
@@ -2083,8 +2278,19 @@
               {
                 "afterStep": 18,
                 "lines": [
-                  "WARN WARN",
-                  "WARN INFO"
+                  "[deploy]",
+                  "WARN disk usage",
+                  "INFO cache warmed",
+                  "WARN WARN retry",
+                  "INFO worker ready",
+                  "WARN queue backlog",
+                  "INFO batch done",
+                  "WARN cache miss",
+                  "INFO sync ok",
+                  "WARN WARN slow",
+                  "INFO ready",
+                  "WARN final check",
+                  "[end]"
                 ],
                 "cursor": [
                   0,
@@ -2095,9 +2301,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :%s/WARN/ERROR/gnEnter."
+            "Most of the matches sit below the window.",
+            "The `n` flag reports the count and changes nothing.",
+            "Use `:%s/WARN/ERROR/gn`."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -2133,33 +2339,64 @@
               "global-flag"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "confirm-skip-match",
           "type": "exercise",
           "phase": "mix",
           "title": "Skip a reviewed match",
-          "instruction": "Review the “old” match and decline its replacement.",
-          "languageId": "csv",
+          "instruction": "Review the draft on line ten and decline its replacement.",
+          "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "old,keep"
+                "[posts]",
+                "draft: intro",
+                "live: guide",
+                "draft: setup",
+                "live: faq",
+                "draft: tour",
+                "live: news",
+                "draft: sync draft",
+                "live: tips",
+                "draft: changelog",
+                "live: roadmap",
+                "draft: legal",
+                "[end]"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "old,keep"
+                "[posts]",
+                "draft: intro",
+                "live: guide",
+                "draft: setup",
+                "live: faq",
+                "draft: tour",
+                "live: news",
+                "draft: sync draft",
+                "live: tips",
+                "draft: changelog",
+                "live: roadmap",
+                "draft: legal",
+                "[end]"
               ],
               "cursor": [
-                0,
+                9,
                 0
               ],
               "mode": "normal"
@@ -2168,15 +2405,20 @@
           "script": {
             "steps": [
               ":",
+              "1",
+              "0",
               "s",
               "/",
-              "o",
-              "l",
               "d",
+              "r",
+              "a",
+              "f",
+              "t",
               "/",
-              "n",
+              "l",
+              "i",
+              "v",
               "e",
-              "w",
               "/",
               "c",
               "Enter",
@@ -2191,49 +2433,61 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "s",
-                "explanation": "Choose the line scope and start a substitution."
+                "to": 4,
+                "display": "10s",
+                "explanation": "Address that one line and start a substitution."
               },
               {
-                "from": 2,
-                "to": 7,
-                "display": "/old/",
+                "from": 4,
+                "to": 11,
+                "display": "/draft/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
-                "from": 7,
-                "to": 11,
-                "display": "new/",
+                "from": 11,
+                "to": 16,
+                "display": "live/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 11,
-                "to": 12,
+                "from": 16,
+                "to": 17,
                 "display": "c",
                 "explanation": "Set how the substitution should handle its matches."
               },
               {
-                "from": 12,
-                "to": 13,
+                "from": 17,
+                "to": 18,
                 "display": "↵",
                 "explanation": "Run the command."
               },
               {
-                "from": 13,
-                "to": 14,
+                "from": 18,
+                "to": 19,
                 "display": "n",
-                "explanation": "Move to the next search match."
+                "explanation": "Decline this match and leave the text as it is."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 14,
+                "afterStep": 19,
                 "lines": [
-                  "old,keep"
+                  "[posts]",
+                  "draft: intro",
+                  "live: guide",
+                  "draft: setup",
+                  "live: faq",
+                  "draft: tour",
+                  "live: news",
+                  "draft: sync draft",
+                  "live: tips",
+                  "draft: changelog",
+                  "live: roadmap",
+                  "draft: legal",
+                  "[end]"
                 ],
                 "cursor": [
-                  0,
+                  9,
                   0
                 ],
                 "mode": "normal"
@@ -2241,9 +2495,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :s/old/new/cEntern."
+            "The view follows the prompt down to line ten.",
+            "`n` declines the match the prompt is showing.",
+            "Use `:10s/draft/live/c`, then decline."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -2279,33 +2533,64 @@
               "confirm-no"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "confirm-all-remaining",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Accept all remaining matches",
-          "instruction": "Review the first “draft”, then accept that replacement and all remaining matches.",
-          "languageId": "shell",
+          "title": "Accept every remaining match",
+          "instruction": "Review the first draft on line eight, then accept it and the match after it.",
+          "languageId": "markdown",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "draft draft draft"
+                "[posts]",
+                "draft: intro",
+                "live: guide",
+                "draft: setup",
+                "live: faq",
+                "draft: tour",
+                "live: news",
+                "draft: sync draft",
+                "live: tips",
+                "draft: changelog",
+                "live: roadmap",
+                "draft: legal",
+                "[end]"
               ],
               "cursor": [
                 0,
                 0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "live live live"
+                "[posts]",
+                "draft: intro",
+                "live: guide",
+                "draft: setup",
+                "live: faq",
+                "draft: tour",
+                "live: news",
+                "live: sync live",
+                "live: tips",
+                "draft: changelog",
+                "live: roadmap",
+                "draft: legal",
+                "[end]"
               ],
               "cursor": [
-                0,
+                7,
                 0
               ],
               "mode": "normal"
@@ -2314,6 +2599,7 @@
           "script": {
             "steps": [
               ":",
+              "8",
               "s",
               "/",
               "d",
@@ -2341,49 +2627,61 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "s",
-                "explanation": "Choose the line scope and start a substitution."
+                "to": 3,
+                "display": "8s",
+                "explanation": "Address that one line and start a substitution."
               },
               {
-                "from": 2,
-                "to": 9,
+                "from": 3,
+                "to": 10,
                 "display": "/draft/",
                 "explanation": "Enter the search pattern for the substitution."
               },
               {
-                "from": 9,
-                "to": 14,
+                "from": 10,
+                "to": 15,
                 "display": "live/",
                 "explanation": "Enter the replacement text."
               },
               {
-                "from": 14,
-                "to": 16,
+                "from": 15,
+                "to": 17,
                 "display": "gc",
                 "explanation": "Set how the substitution should handle its matches."
               },
               {
-                "from": 16,
-                "to": 17,
+                "from": 17,
+                "to": 18,
                 "display": "↵",
                 "explanation": "Run the command."
               },
               {
-                "from": 17,
-                "to": 18,
+                "from": 18,
+                "to": 19,
                 "display": "a",
-                "explanation": "Enter Insert mode after the cursor."
+                "explanation": "Accept this match and every remaining one without asking again."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 18,
+                "afterStep": 19,
                 "lines": [
-                  "live live live"
+                  "[posts]",
+                  "draft: intro",
+                  "live: guide",
+                  "draft: setup",
+                  "live: faq",
+                  "draft: tour",
+                  "live: news",
+                  "live: sync live",
+                  "live: tips",
+                  "draft: changelog",
+                  "live: roadmap",
+                  "draft: legal",
+                  "[end]"
                 ],
                 "cursor": [
-                  0,
+                  7,
                   0
                 ],
                 "mode": "normal"
@@ -2391,9 +2689,9 @@
             ]
           },
           "hints": [
-            "Read the addressed line set first.",
-            "Identify the pattern, replacement, and flags.",
-            "Use :s/draft/live/gcEntera."
+            "Line eight sits below the window and holds two matches.",
+            "`a` stops the prompting and takes every remaining match.",
+            "Use `:8s/draft/live/gc`, then accept all."
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
@@ -2429,7 +2727,10 @@
               "confirm-all"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
