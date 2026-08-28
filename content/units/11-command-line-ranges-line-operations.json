@@ -572,6 +572,31 @@
             ]
           },
           "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-address-for-known-lines",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the address, not the search",
+          "prompt": "Three configuration lines sit at known, fixed line numbers 4 through 6 and must be deleted together. What is the simplest way to address them?",
+          "options": [
+            {
+              "id": "numeric-range",
+              "label": "A numeric range like `:4,6delete`"
+            },
+            {
+              "id": "global-predicate",
+              "label": "A `:global` command matching their content"
+            },
+            {
+              "id": "visual-select",
+              "label": "Visual-select them, then delete with `d`"
+            }
+          ],
+          "correctOptionId": "numeric-range",
+          "explanation": "Known, fixed line numbers need no predicate and no mode switch; a numeric range states the address directly and previewing it costs one keystroke.",
+          "questionKind": "command-classification",
+          "remediationRef": "numeric-range-delete-demo"
         }
       ]
     },
@@ -1715,6 +1740,31 @@
             ]
           },
           "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-mark-over-line-number",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose an address that survives edits",
+          "prompt": "A helper must always move to just below a function whose line number keeps shifting as the file changes. Which address keeps working?",
+          "options": [
+            {
+              "id": "mark-address",
+              "label": "A mark set on the function, addressed as `'a`"
+            },
+            {
+              "id": "line-number-address",
+              "label": "A fixed line number address, like `:42`"
+            },
+            {
+              "id": "macro-recording",
+              "label": "A recorded macro that counts down from the top"
+            }
+          ],
+          "correctOptionId": "mark-address",
+          "explanation": "A mark tracks a specific line through edits, so the address stays correct even as line numbers shift; a hardcoded number goes stale immediately, and a macro adds recording overhead for what one mark address already solves.",
+          "questionKind": "command-classification",
+          "remediationRef": "marked-join-demo"
         }
       ]
     },
@@ -2895,6 +2945,31 @@
             ]
           },
           "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-move-over-macro-relocate",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the direct relocation command",
+          "prompt": "A contiguous block of five lines, already located by address, must relocate below a marked line. What should you reach for first?",
+          "options": [
+            {
+              "id": "move-command",
+              "label": "A `:move` (or `:m`) command"
+            },
+            {
+              "id": "macro-cut-paste",
+              "label": "A macro that cuts and pastes each line"
+            },
+            {
+              "id": "global-relocate",
+              "label": "A `:global` command driven by a text pattern"
+            }
+          ],
+          "correctOptionId": "move-command",
+          "explanation": "The block is already addressed by line, not by a pattern to search for, so `:move` relocates it in one deterministic step; a macro repeats per-line work a single range command already does, and `:global` is for line sets defined by a predicate, not a known contiguous range.",
+          "questionKind": "command-classification",
+          "remediationRef": "copy-versus-move"
         }
       ]
     },
@@ -3911,6 +3986,31 @@
             ]
           },
           "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-sort-over-macro-reorder",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the declarative reorder",
+          "prompt": "Import lines are already selected by a range and must end up alphabetized. What should you reach for?",
+          "options": [
+            {
+              "id": "sort-command",
+              "label": "A `:sort` command over the range"
+            },
+            {
+              "id": "recorded-macro",
+              "label": "A recorded macro replayed once per line"
+            },
+            {
+              "id": "manual-visual-move",
+              "label": "Manually cut and paste each line in Visual mode"
+            }
+          ],
+          "correctOptionId": "sort-command",
+          "explanation": "Reordering by a general rule like alphabetical order is exactly what `:sort` states in one command; a macro or manual moves would have to reimplement that ordering logic one comparison at a time.",
+          "questionKind": "command-classification",
+          "remediationRef": "sort-import-range"
         }
       ]
     },
@@ -5347,7 +5447,8 @@
         "move-number-to-end"
       ],
       "challenge": [
-        "sort-whole-buffer"
+        "sort-whole-buffer",
+        "choose-address-for-known-lines"
       ]
     },
     {
@@ -5383,7 +5484,8 @@
         "sort-between-searches"
       ],
       "challenge": [
-        "move-marked-helper"
+        "move-marked-helper",
+        "choose-mark-over-line-number"
       ]
     },
     {
@@ -5419,7 +5521,8 @@
         "move-range-to-bottom"
       ],
       "challenge": [
-        "move-range-to-top"
+        "move-range-to-top",
+        "choose-move-over-macro-relocate"
       ]
     },
     {
@@ -5440,7 +5543,8 @@
       ],
       "challenge": [
         "join-then-sort",
-        "sort-on-pattern"
+        "sort-on-pattern",
+        "choose-sort-over-macro-reorder"
       ]
     },
     {

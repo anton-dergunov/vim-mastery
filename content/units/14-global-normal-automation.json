@@ -756,6 +756,31 @@
           "editor": {
             "viewportRows": 7
           }
+        },
+        {
+          "id": "choose-normal-known-range",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the ranged command for known lines",
+          "prompt": "The same short edit must run on lines 30 through 45, and those exact boundaries are already confirmed. What should you reach for?",
+          "options": [
+            {
+              "id": "ranged-normal",
+              "label": "A ranged `:normal` command over `30,45`"
+            },
+            {
+              "id": "global-predicate",
+              "label": "A `:global` command matching a pattern"
+            },
+            {
+              "id": "macro-with-count",
+              "label": "A recorded macro replayed with a count"
+            }
+          ],
+          "correctOptionId": "ranged-normal",
+          "explanation": "Known, contiguous boundaries need no predicate to find them and no register to hold them; stating the range directly is the smallest command that says exactly what will run and where.",
+          "questionKind": "command-classification",
+          "remediationRef": "normal-range-demo"
         }
       ]
     },
@@ -2445,6 +2470,31 @@
           "editor": {
             "viewportRows": 7
           }
+        },
+        {
+          "id": "choose-global-over-visual-predicate",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the predicate over the manual scan",
+          "prompt": "Every debug-log line must be removed from a long file, and they are scattered unpredictably with no fixed count. What should you reach for?",
+          "options": [
+            {
+              "id": "global-delete",
+              "label": "`:g/pattern/d`"
+            },
+            {
+              "id": "visual-scan-delete",
+              "label": "Scroll and Visual-select each one by eye"
+            },
+            {
+              "id": "vglobal-delete",
+              "label": "`:v/pattern/d` inverting an unrelated pattern"
+            }
+          ],
+          "correctOptionId": "global-delete",
+          "explanation": "A predicate that names the lines to remove directly is `:global`'s own case; scanning by eye does not scale and risks missing a match, and inverting an unrelated pattern with `:vglobal` only helps when it is easier to describe what should survive than what should go.",
+          "questionKind": "command-classification",
+          "remediationRef": "global-delete-demo"
         }
       ]
     },
@@ -3928,6 +3978,31 @@
           "editor": {
             "viewportRows": 7
           }
+        },
+        {
+          "id": "choose-global-substitute-over-percent",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the predicate-scoped substitution",
+          "prompt": "A rename must apply only inside lines that also contain an unrelated marker word, not every match in the file. What should you reach for?",
+          "options": [
+            {
+              "id": "global-substitute",
+              "label": "`:g/marker/s/old/new/`"
+            },
+            {
+              "id": "percent-substitute",
+              "label": "`:%s/old/new/g` across the whole buffer"
+            },
+            {
+              "id": "macro-per-line",
+              "label": "A macro that checks each line, then substitutes"
+            }
+          ],
+          "correctOptionId": "global-substitute",
+          "explanation": "The predicate scopes exactly which lines the substitution reaches, in one command; a plain `%` substitution has no way to skip lines lacking the marker, and a macro reimplements the predicate by hand for no benefit over stating it directly.",
+          "questionKind": "command-classification",
+          "remediationRef": "global-substitute-demo"
         }
       ]
     },
@@ -7470,7 +7545,8 @@
         "normal-css-terminators"
       ],
       "challenge": [
-        "normal-csv-delimiters"
+        "normal-csv-delimiters",
+        "choose-normal-known-range"
       ]
     },
     {
@@ -7507,7 +7583,8 @@
         "range-global-delete"
       ],
       "challenge": [
-        "global-delete-alternation"
+        "global-delete-alternation",
+        "choose-global-over-visual-predicate"
       ]
     },
     {
@@ -7543,7 +7620,8 @@
         "range-global-substitute"
       ],
       "challenge": [
-        "inverse-global-substitute"
+        "inverse-global-substitute",
+        "choose-global-substitute-over-percent"
       ]
     },
     {

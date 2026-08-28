@@ -2020,140 +2020,124 @@
           },
           "script": {
             "steps": [
+              "/",
+              "o",
               "f",
-              "=",
-              "l",
+              "f",
+              "Enter",
               "c",
-              "i",
-              "w",
+              "g",
+              "n",
               "o",
               "n",
               "Escape",
-              ";",
-              "l",
               ".",
-              ";",
-              "l",
               "."
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 2,
-                "display": "f=",
-                "explanation": "Find the requested character on this line."
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
               },
               {
-                "from": 2,
-                "to": 3,
-                "display": "l",
-                "explanation": "Move one column right."
+                "from": 1,
+                "to": 4,
+                "display": "off",
+                "explanation": "Enter the text to search for."
               },
               {
-                "from": 3,
-                "to": 6,
-                "display": "ciw",
-                "explanation": "Change inside the current word and enter Insert mode."
+                "from": 4,
+                "to": 5,
+                "display": "↵",
+                "explanation": "Run the search."
               },
               {
-                "from": 6,
+                "from": 5,
                 "to": 8,
+                "display": "cgn",
+                "explanation": "Change the next search match and enter Insert mode. gn carries the match itself, so no manual cursor nudge is needed."
+              },
+              {
+                "from": 8,
+                "to": 10,
                 "display": "on",
                 "explanation": "Type the requested text."
               },
               {
-                "from": 8,
-                "to": 9,
-                "display": "Esc",
-                "explanation": "Return to Normal mode."
-              },
-              {
-                "from": 9,
-                "to": 10,
-                "display": ";",
-                "explanation": "Repeat the latest character find in the same direction."
-              },
-              {
                 "from": 10,
                 "to": 11,
-                "display": "l",
-                "explanation": "Move one column right."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               },
               {
                 "from": 11,
                 "to": 12,
                 "display": ".",
-                "explanation": "Repeat the latest change."
+                "explanation": "Repeat the latest change; gn finds the next “off” itself."
               },
               {
                 "from": 12,
                 "to": 13,
-                "display": ";",
-                "explanation": "Repeat the latest character find in the same direction."
-              },
-              {
-                "from": 13,
-                "to": 14,
-                "display": "l",
-                "explanation": "Move one column right."
-              },
-              {
-                "from": 14,
-                "to": 15,
                 "display": ".",
-                "explanation": "Repeat the latest change."
+                "explanation": "Repeat the latest change; gn finds the next “off” itself."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 2,
+                "afterStep": 5,
                 "cursor": [
                   0,
-                  5
+                  6
                 ],
                 "mode": "normal"
               },
               {
-                "afterStep": 10,
+                "afterStep": 11,
                 "cursor": [
                   0,
-                  14
+                  7
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "cursor": [
+                  0,
+                  16
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 13,
-                "cursor": [
-                  0,
-                  23
-                ],
-                "mode": "normal"
-              },
-              {
-                "afterStep": 15,
                 "lines": [
                   "flags=on;cache=on;audit=on"
+                ],
+                "cursor": [
+                  0,
+                  25
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Remember the `=` rather than searching for `off` repeatedly.",
-            "After the first value change, use `;l.`.",
-            "Use `f=lciwon Escape ;l. ;l.`."
+            "Search for the literal text, not just the character before it.",
+            "`cgn` selects and changes the next match in one step.",
+            "Use `/off Enter cgnon Escape . .`."
           ],
           "feedback": {
             "success": "All shell flags are enabled.",
-            "why": "The find target stayed stable while dot changed each following word."
+            "why": "`cgn` carried each match into the change, so `.` needed no cursor nudge between repeats."
           },
           "skills": {
             "primary": [
-              "find-dot-repeat"
+              "change-next-match-dot-repeat"
             ],
             "supporting": [
-              "semicolon-repeat",
-              "word-text-object"
+              "change-next-match",
+              "forward-search"
             ]
           },
           "difficulty": {
@@ -2175,7 +2159,7 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "find-dot-repeat"
+              "change-next-match-dot-repeat"
             ]
           }
         }
@@ -2992,6 +2976,228 @@
               "search-dot-repeat"
             ]
           }
+        },
+        {
+          "id": "repeat-tool-contrast",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Weigh three ways to repeat a change",
+          "body": "`n` then `.` moves to the next match and trusts the cursor to land inside it before repeating the change; if a match sits in different surrounding text, that trust can be wrong. `cgn` finds the next match and hands it straight to the change, so the result never depends on cursor position. `:%s//replacement/gc` reviews and confirms every match across the whole buffer before changing anything, at the cost of one keypress per match.",
+          "grammar": "n. → trusts the landing · cgn. → carries the match · :%s//repl/gc → confirms every match",
+          "contrast": "`cgn` costs nothing over `n.` and removes its landing risk, so prefer it once the pattern is trusted; reach for `:s///gc` instead when the pattern, not the cursor, is what still needs checking.",
+          "demoRef": "cgn-repeat-demo"
+        },
+        {
+          "id": "cgn-repeat-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Carry the match into the change",
+          "instruction": "Search for `pending`, change one result with `cgn`, then repeat without repositioning.",
+          "languageId": "toml",
+          "sourceKind": "complete",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "cache = pending",
+                "queue = pending",
+                "worker = pending"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "cache = done",
+                "queue = done",
+                "worker = done"
+              ],
+              "cursor": [
+                2,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "p",
+              "e",
+              "n",
+              "d",
+              "i",
+              "n",
+              "g",
+              "Enter",
+              "c",
+              "g",
+              "n",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape",
+              ".",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 8,
+                "display": "pending",
+                "explanation": "Enter the text to search for."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "cgn",
+                "explanation": "Change the next search match and enter Insert mode."
+              },
+              {
+                "from": 12,
+                "to": 16,
+                "display": "done",
+                "explanation": "Type the requested text."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": ".",
+                "explanation": "Repeat the latest change; gn finds the next match itself."
+              },
+              {
+                "from": 18,
+                "to": 19,
+                "display": ".",
+                "explanation": "Repeat the latest change; gn finds the next match itself."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  0,
+                  8
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "cursor": [
+                  1,
+                  11
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "cache = done",
+                  "queue = done",
+                  "worker = done"
+                ],
+                "cursor": [
+                  2,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Search once; `cgn` will find each later match itself.",
+            "Type the replacement, then repeat with `.` alone — no `n` needed.",
+            "Use `/pending Enter cgndone Escape . .`."
+          ],
+          "feedback": {
+            "success": "Every status is done.",
+            "why": "`cgn` carried the match into the change, so each `.` needed no repositioning."
+          },
+          "skills": {
+            "primary": [
+              "change-next-match-dot-repeat"
+            ],
+            "supporting": [
+              "change-next-match",
+              "forward-search"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "cgn-chain",
+              "three-matches"
+            ]
+          },
+          "portability": "Core Vim search and gn behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "repeatable-editing-v1",
+            "languageRationale": "TOML-style key/value pairs give three plainly repeated status matches.",
+            "nativeValidation": "passed",
+            "browserConformance": "pending",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "change-next-match-dot-repeat"
+            ]
+          }
+        },
+        {
+          "id": "choose-search-replace-tool",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the safer repeat",
+          "prompt": "The same short code must change everywhere it appears in a small file. The pattern is unambiguous, but each match sits inside different surrounding text, so the cursor will not land in the same relative spot after every `n`. Which tool avoids depending on where `n` leaves the cursor?",
+          "options": [
+            {
+              "id": "cgn-chain",
+              "label": "`/code Enter cgnnew Escape . .`"
+            },
+            {
+              "id": "n-dot-chain",
+              "label": "`/code Enter ciwnew Escape n . n .`"
+            },
+            {
+              "id": "confirm-substitute",
+              "label": "`:%s/code/new/gc`, confirming each one"
+            }
+          ],
+          "correctOptionId": "cgn-chain",
+          "explanation": "`cgn` finds and selects the next match itself, so the change never depends on where the cursor lands after `n`; the `n .` idiom trusts the cursor to already sit on the match, which uneven surrounding text can break, and confirming every match adds a keypress per instance for a pattern already known to be safe.",
+          "questionKind": "command-classification",
+          "remediationRef": "repeat-tool-contrast"
         }
       ]
     },
@@ -6033,10 +6239,12 @@
     {
       "concept": "n and N plus .",
       "explain": [
-        "search-repeat-direction"
+        "search-repeat-direction",
+        "repeat-tool-contrast"
       ],
       "demonstrate": [
-        "search-config-demo"
+        "search-config-demo",
+        "cgn-repeat-demo"
       ],
       "isolate": [
         "search-python-backward"
@@ -6045,7 +6253,8 @@
         "search-sql-bidirectional"
       ],
       "challenge": [
-        "search-log-codes"
+        "search-log-codes",
+        "choose-search-replace-tool"
       ]
     },
     {

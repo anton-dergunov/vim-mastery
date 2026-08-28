@@ -169,7 +169,8 @@
         "disable-config-depths"
       ],
       "challenge": [
-        "comment-sql-batch"
+        "comment-sql-batch",
+        "choose-dot-over-macro-uniform-rows"
       ]
     },
     {
@@ -187,7 +188,8 @@
         "count-python-legacy"
       ],
       "challenge": [
-        "count-scattered-csv"
+        "count-scattered-csv",
+        "choose-normal-over-counted-macro"
       ]
     },
     {
@@ -223,7 +225,8 @@
         "final-split-commands"
       ],
       "challenge": [
-        "final-search-errors"
+        "final-search-errors",
+        "choose-macro-over-global-irregular"
       ]
     },
     {
@@ -1292,6 +1295,31 @@
           "editor": {
             "viewportRows": 6
           }
+        },
+        {
+          "id": "choose-dot-over-macro-uniform-rows",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the smaller repeat tool",
+          "prompt": "Ten adjacent, identically shaped rows each need the same short change, and the cursor lands on the next row with a single `j`. What should you reach for?",
+          "options": [
+            {
+              "id": "dot-repeat",
+              "label": "Move with `j`, then repeat the change with `.`"
+            },
+            {
+              "id": "record-macro",
+              "label": "Record a macro that moves and repeats the change"
+            },
+            {
+              "id": "visual-block-change",
+              "label": "A Visual Block change across the rows"
+            }
+          ],
+          "correctOptionId": "dot-repeat",
+          "explanation": "A single known motion between identical rows is dot-repeat's own case; recording adds register management for a sequence `.` already replays, and Visual Block assumes the change sits in the same column on every row, which uniform row shape alone does not guarantee.",
+          "questionKind": "command-classification",
+          "remediationRef": "macro-recording-meaning"
         }
       ]
     },
@@ -2275,6 +2303,31 @@
           "editor": {
             "viewportRows": 7
           }
+        },
+        {
+          "id": "choose-normal-over-counted-macro",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the ranged command over the count",
+          "prompt": "The same short Normal-mode edit must run on lines 8 through 20, and that exact range is already known. What is the more direct tool?",
+          "options": [
+            {
+              "id": "ranged-normal",
+              "label": "A ranged `:normal` command over `8,20`"
+            },
+            {
+              "id": "counted-macro-replay",
+              "label": "Record the edit, then replay it with `12@a`"
+            },
+            {
+              "id": "manual-repeat",
+              "label": "Manually redo the edit on each line"
+            }
+          ],
+          "correctOptionId": "ranged-normal",
+          "explanation": "A known, contiguous line range and a single Normal-mode edit is exactly what a ranged `:normal` states in one line; a recorded macro adds a recording step and a register for the same guaranteed range, and repeating the edit by hand discards the range entirely.",
+          "questionKind": "command-classification",
+          "remediationRef": "macro-count-meaning"
         }
       ]
     },
@@ -4061,6 +4114,31 @@
           "editor": {
             "viewportRows": 6
           }
+        },
+        {
+          "id": "choose-macro-over-global-irregular",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the macro for irregular structure",
+          "prompt": "Several scattered lines need the same multi-step edit, but each line's target field sits in a different position relative to its neighbors. What should you reach for?",
+          "options": [
+            {
+              "id": "search-anchored-macro",
+              "label": "A macro anchored by search, replayed per match"
+            },
+            {
+              "id": "global-normal",
+              "label": "A `:global` command running one Normal sequence"
+            },
+            {
+              "id": "counted-dot-repeat",
+              "label": "A single dot-repeat with a count"
+            }
+          ],
+          "correctOptionId": "search-anchored-macro",
+          "explanation": "Differing local structure is what a macro's own search anchors are built to absorb; `:global` assumes the same Normal sequence works unchanged on every matched line, and a counted dot-repeat assumes uniform adjacent rows — neither holds for this irregular case.",
+          "questionKind": "command-classification",
+          "remediationRef": "macro-final-position-meaning"
         }
       ]
     },

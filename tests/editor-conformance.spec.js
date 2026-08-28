@@ -129,7 +129,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator("#install-ios-tab")).toBeFocused();
   });
 
-  test("uses the polished UI as the only route and derives 70 runtime activities", async ({ page }) => {
+  test("uses the polished UI as the only route and derives 73 runtime activities", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     const runtime = await page.evaluate(() => ({
       activityCount: window.VimWilds.activities.length,
@@ -137,7 +137,7 @@ test.describe("Production lesson flow", () => {
       state: window.VimWilds.getState(),
       legacy: document.querySelectorAll(".legacy-only, #activitySelect, #commandTray").length,
     }));
-    expect(runtime.activityCount).toBe(70);
+    expect(runtime.activityCount).toBe(73);
     expect(runtime.exerciseCount).toBe(authoredExercises.length);
     expect(runtime.state).toMatchObject({ activityId: "dot-python-values", practiceMode: "guided", sourceActivityId: "dot-python-values" });
     expect(runtime.legacy).toBe(0);
@@ -184,7 +184,7 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Open table of contents" }).click();
     await expect(page.locator(".toc-unit")).toHaveCount(14);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
-    await expect(page.locator(".toc-activity")).toHaveCount(70);
+    await expect(page.locator(".toc-activity")).toHaveCount(73);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
     await expect(page.locator(".activity-type.type-recall").first()).toHaveText("recall");
     const badgeColors = await page.evaluate(() => ({
@@ -712,7 +712,7 @@ test.describe("Production lesson flow", () => {
     test.setTimeout(120000);
     await page.goto("/?unit=macros");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 67, exerciseCount: macroExercises.length });
+    expect(runtime).toEqual({ activityCount: 70, exerciseCount: macroExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -743,7 +743,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 14 Global-Normal activity with native-equivalent state", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 79, exerciseCount: automationExercises.length });
+    expect(runtime).toEqual({ activityCount: 82, exerciseCount: automationExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -782,7 +782,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 11 Ex range activity with native-equivalent line and register state", async ({ page }) => {
     await page.goto("/?unit=command-line-ranges-line-operations");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 72, exerciseCount: rangeExercises.length });
+    expect(runtime).toEqual({ activityCount: 76, exerciseCount: rangeExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -807,7 +807,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 12 substitution activity with native-equivalent text and cursor state", async ({ page }) => {
     await page.goto("/?unit=substitution-practical-regex");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 66, exerciseCount: substitutionExercises.length });
+    expect(runtime).toEqual({ activityCount: 70, exerciseCount: substitutionExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -1963,7 +1963,7 @@ test.describe("Production lesson flow", () => {
       expect(result.cursor, demo.id).toEqual(demo.scenario.target.cursor);
     }
 
-    const choice = authoredActivities.find(activity => activity.type === "choice");
+    const choice = authoredActivities.filter(activity => activity.type === "choice").at(-1);
     await page.evaluate(id => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === id)), choice.id);
     const wrong = choice.options.find(option => option.id !== choice.correctOptionId);
     const correct = choice.options.find(option => option.id === choice.correctOptionId);

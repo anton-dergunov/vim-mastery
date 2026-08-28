@@ -627,6 +627,31 @@
             ]
           },
           "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-operator-over-substitute",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the direct edit",
+          "prompt": "One identifier under the cursor needs to become a different, unrelated word, and no other line is affected. What should you reach for?",
+          "options": [
+            {
+              "id": "change-word",
+              "label": "`ciw` and type the replacement"
+            },
+            {
+              "id": "substitute-line",
+              "label": "`:s/old/new/` on the current line"
+            },
+            {
+              "id": "substitute-buffer",
+              "label": "`:%s/old/new/` across the buffer"
+            }
+          ],
+          "correctOptionId": "change-word",
+          "explanation": "A single local edit under the cursor is exactly what an operator and text object are for; writing a pattern and running `:s` adds command-line setup for a change one command already covers.",
+          "questionKind": "command-classification",
+          "remediationRef": "rename-current-status"
         }
       ]
     },
@@ -1380,6 +1405,31 @@
           "editor": {
             "viewportRows": 7
           }
+        },
+        {
+          "id": "choose-global-for-predicate",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the predicate-driven scope",
+          "prompt": "Only lines containing a specific marker word need a change, and those lines are scattered unpredictably through a long file. How should you scope the substitution?",
+          "options": [
+            {
+              "id": "global-substitute",
+              "label": "`:g/marker/s//replacement/`"
+            },
+            {
+              "id": "fixed-range-substitute",
+              "label": "A fixed numeric range like `:10,40s`"
+            },
+            {
+              "id": "repeat-search-and-dot",
+              "label": "Search for the marker, change it, then `n.` down the file"
+            }
+          ],
+          "correctOptionId": "global-substitute",
+          "explanation": "Scattered lines identified by content, not position, are the case `:global` exists for; a numeric range assumes the boundaries are already known, and repeated `n.` risks landing the change on the wrong part of a line the search happens to touch.",
+          "questionKind": "command-classification",
+          "remediationRef": "substitution-ranges"
         }
       ]
     },
@@ -2731,6 +2781,31 @@
           "editor": {
             "viewportRows": 7
           }
+        },
+        {
+          "id": "choose-confirm-for-uncertain-matches",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose review over blind replacement",
+          "prompt": "A pattern probably matches only the intended text, but a few matches elsewhere in the file are not verified. What is the lower-risk substitution?",
+          "options": [
+            {
+              "id": "confirm-flag",
+              "label": "`:%s/pattern/replacement/gc` with confirmation"
+            },
+            {
+              "id": "plain-global-flag",
+              "label": "`:%s/pattern/replacement/g` without confirmation"
+            },
+            {
+              "id": "cgn-chain",
+              "label": "`cgn` chained with `.` down the buffer"
+            }
+          ],
+          "correctOptionId": "confirm-flag",
+          "explanation": "An unverified pattern needs a per-match decision before it changes anything; the `c` flag adds exactly that review. Skipping confirmation trusts the pattern completely, and `cgn` still applies every match without asking, so neither questions an assumption that has not been checked.",
+          "questionKind": "command-classification",
+          "remediationRef": "confirm-selectively-demo"
         }
       ]
     },
@@ -3940,6 +4015,31 @@
             ]
           },
           "delivery": "guided-then-recall"
+        },
+        {
+          "id": "choose-substitute-over-macro-pattern",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the pattern over the recording",
+          "prompt": "Every line has extra leading whitespace of varying width, and the fix is the same regardless of how much whitespace is there. What is the direct fix?",
+          "options": [
+            {
+              "id": "pattern-substitute",
+              "label": "`:%s/^\\s\\+//`"
+            },
+            {
+              "id": "recorded-macro",
+              "label": "A macro that deletes characters until non-blank"
+            },
+            {
+              "id": "visual-block-delete",
+              "label": "A Visual Block delete of the leading columns"
+            }
+          ],
+          "correctOptionId": "pattern-substitute",
+          "explanation": "A regex class like `\\s\\+` already means \"any run of leading whitespace\" in one substitution; a macro would have to loop character by character, and Visual Block assumes every line's indent lines up in the same columns, which varying widths break.",
+          "questionKind": "command-classification",
+          "remediationRef": "trim-leading-space-demo"
         }
       ]
     },
@@ -5334,7 +5434,8 @@
         "replace-all-todos"
       ],
       "challenge": [
-        "literal-token-boundary"
+        "literal-token-boundary",
+        "choose-operator-over-substitute"
       ]
     },
     {
@@ -5352,7 +5453,8 @@
         "visual-range-substitute"
       ],
       "challenge": [
-        "range-versus-global"
+        "range-versus-global",
+        "choose-global-for-predicate"
       ]
     },
     {
@@ -5388,7 +5490,8 @@
         "confirm-skip-match"
       ],
       "challenge": [
-        "confirm-all-remaining"
+        "confirm-all-remaining",
+        "choose-confirm-for-uncertain-matches"
       ]
     },
     {
@@ -5424,7 +5527,8 @@
         "optional-spelling"
       ],
       "challenge": [
-        "bounded-code-class"
+        "bounded-code-class",
+        "choose-substitute-over-macro-pattern"
       ]
     },
     {
