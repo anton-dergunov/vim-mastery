@@ -122,6 +122,12 @@ Activities without these fields retain the normal unwrapped editor with
 whitespace hidden. Editor indentation is fixed at two spaces so shift and
 reindent exercises match the native Vim fixture.
 
+Authored copy is inline Markdown: `` `code` ``, `**bold**`, and `*emphasis*`.
+Code spans follow CommonMark's fence rule, so a command that contains a backtick
+is written with a longer fence — ``` ``a`` ``` for the mark jump, ``` `da` ```
+for the backtick text object — and one space at each end of the fence is a
+separator rather than text.
+
 Unit files also carry an explicit `unitNumber`; the two-digit filename prefix
 must match it. Introductory content may use the reusable `mode-compass` or
 `command-assembly` theory presentations, scenario-backed inspection choices,

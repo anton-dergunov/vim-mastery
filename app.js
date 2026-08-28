@@ -423,14 +423,34 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+/**
+ * CommonMark closes a code span on a run of backticks the same length as the
+ * run that opened it, which is how authored copy spells a command that itself
+ * contains a backtick: ```a`` for the mark jump, `` `da` `` for the text
+ * object. Matching only single backticks split those into an empty chip, a
+ * chip holding the wrong text, and a loose backtick.
+ */
 function renderInline(value) {
   const source = String(value ?? "");
-  return source.split(/(`[^`]*`)/g).map(part => {
-    if (part.startsWith("`") && part.endsWith("`")) return `<code>${escapeHtml(part.slice(1, -1))}</code>`;
+  // Two capture groups, so split emits text, fence, code, text, fence, code...
+  return source.split(/(`+)([\s\S]+?)\1(?!`)/g).map((part, index) => {
+    if (index % 3 === 1) return "";
+    if (index % 3 === 2) return `<code>${escapeHtml(stripCodeSpanPadding(part))}</code>`;
     const escaped = escapeHtml(part);
     const bold = escaped.replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>");
     return bold.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
   }).join("");
+}
+
+/**
+ * The spaces that keep a fence away from its content are separators, not text:
+ * `` `a `` means the two characters `a. One space at each end goes, and only
+ * when both are there and something is left over.
+ */
+function stripCodeSpanPadding(code) {
+  return code.length > 2 && code.startsWith(" ") && code.endsWith(" ") && code.trim()
+    ? code.slice(1, -1)
+    : code;
 }
 
 function displayKeyToken(token) {

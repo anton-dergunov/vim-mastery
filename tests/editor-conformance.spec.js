@@ -157,6 +157,28 @@ test.describe("Production lesson flow", () => {
     expect((await state(page)).activityId).toBe("dot-append-demo");
   });
 
+  test("renders a code span that contains a backtick as one chip", async ({ page }) => {
+    // A command whose own spelling includes a backtick is written with the
+    // CommonMark fence rule: ``a`` for the mark jump, `` `da` `` for the text
+    // object. Matching only single backticks turned each of those into an empty
+    // chip, a chip holding the wrong characters, and a loose backtick — which
+    // also overflowed the field note at 390x844.
+    await page.goto("/?unit=long-range-navigation&activity=local-mark-meaning");
+    const body = page.locator(".field-note p").first();
+    await expect(body.locator("code")).toHaveText(["ma", "a", "'a", "`a"]);
+    await expect(body).not.toContainText("``");
+
+    await page.goto("/?unit=text-objects&activity=delete-around-backticks");
+    // Each opening of the hint card reveals one more hint, and the backtick
+    // text object is named in the second.
+    const hintButton = page.getByRole("button", { name: "Open hints" });
+    await hintButton.click();
+    await hintButton.click();
+    await hintButton.click();
+    await expect(page.locator(".hint-step")).toHaveCount(2);
+    await expect(page.locator(".hint-step code")).toHaveText(["da`"]);
+  });
+
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
