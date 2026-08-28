@@ -383,16 +383,16 @@
           "id": "select-line-range",
           "type": "exercise",
           "phase": "mix",
-          "title": "Delete two complete records",
-          "instruction": "Delete the complete “alpha” and “beta” rows.",
-          "languageId": "log",
-          "sourceKind": "neutral",
+          "title": "Remove obsolete imports",
+          "instruction": "Delete the two obsolete imports while keeping the application import.",
+          "languageId": "python",
+          "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha",
-                "beta",
-                "gamma"
+                "import legacy",
+                "import compat",
+                "from app import run"
               ],
               "cursor": [
                 0,
@@ -402,7 +402,7 @@
             },
             "target": {
               "lines": [
-                "gamma"
+                "from app import run"
               ],
               "cursor": [
                 0,
@@ -459,7 +459,7 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "gamma"
+                  "from app import run"
                 ],
                 "cursor": [
                   0,
@@ -495,7 +495,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "Short log-like records make whole-line selection visible.",
+            "languageRationale": "Adjacent Python imports are a realistic whole-line deletion target.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -512,32 +512,32 @@
           "id": "select-block-range",
           "type": "exercise",
           "phase": "mix",
-          "title": "Replace a marker column",
-          "instruction": "Replace the blank character inside all three markers with “x”.",
-          "languageId": "csv",
-          "sourceKind": "neutral",
+          "title": "Enable aligned flags",
+          "instruction": "Set the aligned value in all three Rust declarations to 1.",
+          "languageId": "rust",
+          "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "a [ ]",
-                "b [ ]",
-                "c [ ]"
+                "let red = 0;",
+                "let tan = 0;",
+                "let sky = 0;"
               ],
               "cursor": [
                 0,
-                3
+                10
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "a [x]",
-                "b [x]",
-                "c [x]"
+                "let red = 1;",
+                "let tan = 1;",
+                "let sky = 1;"
               ],
               "cursor": [
                 0,
-                3
+                10
               ],
               "mode": "normal"
             }
@@ -548,7 +548,7 @@
               "2",
               "j",
               "r",
-              "x"
+              "1"
             ],
             "commandGroups": [
               {
@@ -566,7 +566,7 @@
               {
                 "from": 3,
                 "to": 5,
-                "display": "rx",
+                "display": "r1",
                 "explanation": "Replace every character in the block selection."
               }
             ],
@@ -575,20 +575,20 @@
                 "afterStep": 3,
                 "cursor": [
                   2,
-                  3
+                  10
                 ],
                 "mode": "visual-block"
               },
               {
                 "afterStep": 5,
                 "lines": [
-                  "a [x]",
-                  "b [x]",
-                  "c [x]"
+                  "let red = 1;",
+                  "let tan = 1;",
+                  "let sky = 1;"
                 ],
                 "cursor": [
                   0,
-                  3
+                  10
                 ],
                 "mode": "normal"
               }
@@ -620,7 +620,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "Aligned markers form a natural one-column rectangle.",
+            "languageRationale": "Equal-width Rust declarations expose one aligned value column.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -631,6 +631,54 @@
               "visual-block"
             ]
           },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "selection-shape-column-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Enable four aligned flags",
+          "instruction": "Set the value in all four aligned C declarations to 1.",
+          "languageId": "c",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["int red = 0;", "int tan = 0;", "int sky = 0;", "int ash = 0;"],
+              "cursor": [0, 10],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["int red = 1;", "int tan = 1;", "int sky = 1;", "int ash = 1;"],
+              "cursor": [0, 10],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "3", "j", "r", "1"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to extend the selection." },
+              { "from": 3, "to": 5, "display": "r1", "explanation": "Replace every character in the selected column." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [3, 10], "mode": "visual-block" },
+              { "afterStep": 5, "lines": ["int red = 1;", "int tan = 1;", "int sky = 1;", "int ash = 1;"], "cursor": [0, 10], "mode": "normal" }
+            ]
+          },
+          "hints": ["Match the selection geometry to the aligned target.", "Apply one replacement after the whole column is highlighted."],
+          "feedback": { "success": "All four flags changed together.", "why": "A rectangular selection matched the one-column target." },
+          "skills": { "primary": ["visual-block"], "supporting": ["visual-selection", "visual-replace"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "tool-choice"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned C declarations require the learner to recognize a rectangular value column.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-block", "visual-replace"] },
           "delivery": "guided-then-recall"
         },
         {
@@ -820,13 +868,13 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete the selected token",
-          "instruction": "Select and delete “alpha” without taking the following space.",
+          "instruction": "Delete “alpha” while preserving the comma and the following item.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha beta"
+                "alpha, beta"
               ],
               "cursor": [
                 0,
@@ -836,7 +884,7 @@
             },
             "target": {
               "lines": [
-                " beta"
+                ", beta"
               ],
               "cursor": [
                 0,
@@ -848,7 +896,8 @@
           "script": {
             "steps": [
               "v",
-              "e",
+              "t",
+              ",",
               "d"
             ],
             "commandGroups": [
@@ -860,20 +909,20 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "e",
-                "explanation": "Move to the current word end to extend the selection."
+                "to": 3,
+                "display": "t,",
+                "explanation": "Extend the selection to just before the comma."
               },
               {
-                "from": 2,
-                "to": 3,
+                "from": 3,
+                "to": 4,
                 "display": "d",
                 "explanation": "Delete the selection."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 2,
+                "afterStep": 3,
                 "cursor": [
                   0,
                   4
@@ -881,9 +930,9 @@
                 "mode": "visual"
               },
               {
-                "afterStep": 3,
+                "afterStep": 4,
                 "lines": [
-                  " beta"
+                  ", beta"
                 ],
                 "cursor": [
                   0,
@@ -1187,6 +1236,48 @@
               "visual-replace"
             ]
           },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "character-argument-change-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replace one call argument",
+          "instruction": "Change the first Python call argument to “ready” without removing the comma.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["send(draft, next)"], "cursor": [0, 5], "mode": "normal" },
+            "target": { "lines": ["send(ready, next)"], "cursor": [0, 9], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["v", "t", ",", "c", "r", "e", "a", "d", "y", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "v", "explanation": "Switch to Visual Character mode." },
+              { "from": 1, "to": 3, "display": "t,", "explanation": "Extend the selection to just before the comma." },
+              { "from": 3, "to": 4, "display": "c", "explanation": "Change the selected argument in Insert mode." },
+              { "from": 4, "to": 9, "display": "ready", "explanation": "Type the replacement argument." },
+              { "from": 9, "to": 10, "display": "Esc", "explanation": "Return to Normal mode." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [0, 9], "mode": "visual" },
+              { "afterStep": 10, "lines": ["send(ready, next)"], "cursor": [0, 9], "mode": "normal" }
+            ]
+          },
+          "hints": ["The punctuation defines a characterwise boundary.", "Keep the delimiter outside the highlighted range."],
+          "feedback": { "success": "The argument changed and the comma remained.", "why": "The character selection stopped precisely before the delimiter." },
+          "skills": { "primary": ["visual-change"], "supporting": ["visual-character", "t-motion"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "punctuation-boundary"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A Python call provides a familiar punctuation-bounded edit.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-character", "visual-change"] },
           "delivery": "guided-then-recall"
         },
         {
@@ -1619,16 +1710,17 @@
           "id": "change-selected-lines",
           "type": "exercise",
           "phase": "mix",
-          "title": "Delete two selected lines",
-          "instruction": "Delete the complete “draft” and “stale” rows.",
+          "title": "Delete obsolete settings",
+          "instruction": "Delete the three obsolete settings while keeping the active setting.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "draft",
-                "stale",
-                "keep"
+                "draft: true",
+                "stale: true",
+                "unused: true",
+                "keep: true"
               ],
               "cursor": [
                 0,
@@ -1638,7 +1730,7 @@
             },
             "target": {
               "lines": [
-                "keep"
+                "keep: true"
               ],
               "cursor": [
                 0,
@@ -1650,6 +1742,7 @@
           "script": {
             "steps": [
               "V",
+              "2",
               "j",
               "d"
             ],
@@ -1662,30 +1755,30 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "j",
-                "explanation": "Move one line down to extend the selection."
+                "to": 3,
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
               },
               {
-                "from": 2,
-                "to": 3,
+                "from": 3,
+                "to": 4,
                 "display": "d",
                 "explanation": "Delete the selected lines."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 2,
+                "afterStep": 3,
                 "cursor": [
-                  1,
+                  2,
                   0
                 ],
                 "mode": "visual-line"
               },
               {
-                "afterStep": 3,
+                "afterStep": 4,
                 "lines": [
-                  "keep"
+                  "keep: true"
                 ],
                 "cursor": [
                   0,
@@ -1732,6 +1825,46 @@
               "visual-line-delete"
             ]
           },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "line-indent-branch-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Indent a branch body",
+          "instruction": "Indent both Python statements inside the branch while leaving the surrounding rows unchanged.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["if ready:", "run()", "log()", "finish()"], "cursor": [1, 0], "mode": "normal" },
+            "target": { "lines": ["if ready:", "  run()", "  log()", "finish()"], "cursor": [1, 2], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["V", "j", ">"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 2, "display": "j", "explanation": "Move one line down to extend the selection." },
+              { "from": 2, "to": 3, "display": ">", "explanation": "Indent the selected statements." }
+            ],
+            "checkpoints": [
+              { "afterStep": 2, "cursor": [2, 0], "mode": "visual-line" },
+              { "afterStep": 3, "lines": ["if ready:", "  run()", "  log()", "finish()"], "cursor": [1, 2], "mode": "normal" }
+            ]
+          },
+          "hints": ["The target consists of complete statements.", "Choose a shape that does not require managing columns."],
+          "feedback": { "success": "Both branch statements moved together.", "why": "A linewise selection matched the structure of the Python body." },
+          "skills": { "primary": ["visual-line-shift"], "supporting": ["visual-line", "visual-selection"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "code-structure"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Python indentation makes whole-line geometry consequential and familiar.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-line-shift"] },
           "delivery": "guided-then-recall"
         },
         {
@@ -2367,6 +2500,50 @@
           "delivery": "guided-then-recall"
         },
         {
+          "id": "selection-corner-block-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Repair a numeric rectangle",
+          "instruction": "Replace the three-digit values in all three Go declarations after finishing at the lower-left block corner.",
+          "languageId": "go",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["var aa = 111", "var bb = 222", "var cc = 333"], "cursor": [0, 9], "mode": "normal" },
+            "target": { "lines": ["var aa = 000", "var bb = 000", "var cc = 000"], "cursor": [0, 9], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "2", "j", "2", "l", "O", "r", "0"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 5, "display": "2l", "explanation": "Move two columns right to complete the rectangle." },
+              { "from": 5, "to": 6, "display": "O", "explanation": "Move to the other block corner on the same row." },
+              { "from": 6, "to": 8, "display": "r0", "explanation": "Replace every digit in the selected rectangle." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 9], "mode": "visual-block" },
+              { "afterStep": 5, "cursor": [2, 11], "mode": "visual-block" },
+              { "afterStep": 6, "cursor": [2, 9], "mode": "visual-block" },
+              { "afterStep": 8, "lines": ["var aa = 000", "var bb = 000", "var cc = 000"], "cursor": [0, 9], "mode": "normal" }
+            ]
+          },
+          "hints": ["The values form a rectangle rather than complete lines.", "Move between corners without rebuilding the selection."],
+          "feedback": { "success": "The full value rectangle changed from the requested corner.", "why": "Visual Block and its same-row corner control preserved the rectangular range." },
+          "skills": { "primary": ["visual-block-endpoint"], "supporting": ["visual-block", "visual-replace"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "active-end"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned Go declarations make the rectangular values and active corner easy to inspect.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-block", "visual-block-endpoint"] },
+          "delivery": "guided-then-recall"
+        },
+        {
           "id": "selection-end-check",
           "type": "choice",
           "phase": "challenge",
@@ -2997,6 +3174,50 @@
           "editor": {
             "visualizeWhitespace": true
           }
+        },
+        {
+          "id": "reselection-correction-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Restore an over-indented range",
+          "instruction": "Indent the first three Python statements, then restore that exact range to its original indentation.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["run()", "log()", "save()", "finish()"], "cursor": [0, 0], "mode": "normal" },
+            "target": { "lines": ["run()", "log()", "save()", "finish()"], "cursor": [0, 0], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["V", "2", "j", ">", "g", "v", "<"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": ">", "explanation": "Indent the selected statements." },
+              { "from": 4, "to": 6, "display": "gv", "explanation": "Restore the latest Visual range." },
+              { "from": 6, "to": 7, "display": "<", "explanation": "Remove the extra indentation from the restored selection." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-line" },
+              { "afterStep": 4, "lines": ["  run()", "  log()", "  save()", "finish()"], "cursor": [0, 2], "mode": "normal" },
+              { "afterStep": 6, "cursor": [2, 0], "mode": "visual-line" },
+              { "afterStep": 7, "lines": ["run()", "log()", "save()", "finish()"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": ["The previous range is still the right range.", "Restore it instead of measuring the same three lines again."],
+          "feedback": { "success": "The original range was restored and corrected.", "why": "Reselection reused the exact linewise geometry before the inverse operation." },
+          "skills": { "primary": ["visual-reselect"], "supporting": ["visual-line", "visual-line-shift"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-memory", "correction"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Short Python statements keep attention on restoring the exact line range.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-reselect"] },
+          "delivery": "guided-then-recall"
         },
         {
           "id": "reselection-check",
@@ -3646,6 +3867,46 @@
           }
         },
         {
+          "id": "selection-reindent-code-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Reindent a function body",
+          "instruction": "Correct the indentation of the three statements inside the JavaScript function.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["function main() {", "run();", "log();", "save();", "}"], "cursor": [0, 0], "mode": "normal" },
+            "target": { "lines": ["function main() {", "  run();", "  log();", "  save();", "}"], "cursor": [0, 0], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["V", "3", "j", "="],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "=", "explanation": "Reindent the selected code lines." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [3, 0], "mode": "visual-line" },
+              { "afterStep": 4, "lines": ["function main() {", "  run();", "  log();", "  save();", "}"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": ["Formatting applies to complete code lines.", "Include the function header so indentation has structural context."],
+          "feedback": { "success": "The function body now follows its surrounding structure.", "why": "A linewise selection gave the reindent operation complete code rows." },
+          "skills": { "primary": ["visual-reindent"], "supporting": ["visual-line", "visual-selection"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "code-formatting"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "The supported JavaScript indentation profile makes structural reindentation deterministic in both Vim engines.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-reindent"] },
+          "delivery": "guided-then-recall"
+        },
+        {
           "id": "selection-transform-check",
           "type": "choice",
           "phase": "challenge",
@@ -4205,6 +4466,46 @@
           "delivery": "guided-then-recall"
         },
         {
+          "id": "block-column-delete-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Remove an aligned digit column",
+          "instruction": "Change all four SQL assignment values from two digits to a single zero.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["SET red = 10;", "SET tan = 20;", "SET sky = 30;", "SET ash = 40;"], "cursor": [0, 10], "mode": "normal" },
+            "target": { "lines": ["SET red = 0;", "SET tan = 0;", "SET sky = 0;", "SET ash = 0;"], "cursor": [0, 10], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "3", "j", "d"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "d", "explanation": "Delete the selected digit column." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [3, 10], "mode": "visual-block" },
+              { "afterStep": 4, "lines": ["SET red = 0;", "SET tan = 0;", "SET sky = 0;", "SET ash = 0;"], "cursor": [0, 10], "mode": "normal" }
+            ]
+          },
+          "hints": ["Only one aligned digit from each value should disappear.", "Choose the shape that can cover a single column across rows."],
+          "feedback": { "success": "The tens column disappeared from every assignment.", "why": "Visual Block deleted one exact column without touching the remaining zeros." },
+          "skills": { "primary": ["visual-block-delete"], "supporting": ["visual-block", "visual-selection"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "column-edit"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned SQL assignment values provide a realistic one-column deletion.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-block", "visual-block-delete"] },
+          "delivery": "guided-then-recall"
+        },
+        {
           "id": "block-edit-check",
           "type": "choice",
           "phase": "challenge",
@@ -4398,10 +4699,10 @@
           "id": "append-block-demo",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Append a marker to every row",
-          "instruction": "Append “!” to all three rows as one rectangular edit.",
-          "languageId": "prose",
-          "sourceKind": "neutral",
+          "title": "Force unwrap aligned values",
+          "instruction": "Append Swift’s force-unwrap marker to all three aligned values.",
+          "languageId": "swift",
+          "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
@@ -4527,7 +4828,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "languageRationale": "Equal-width Swift identifiers make a repeated force unwrap concrete.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -4695,7 +4996,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Append a status marker",
-          "instruction": "Append “!” to all three rows as one rectangular edit.",
+          "instruction": "Append the status field “,ok” to all three rows as one rectangular edit.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -4713,9 +5014,9 @@
             },
             "target": {
               "lines": [
-                "one!",
-                "two!",
-                "six!"
+                "one,ok",
+                "two,ok",
+                "six,ok"
               ],
               "cursor": [
                 0,
@@ -4730,7 +5031,9 @@
               "2",
               "j",
               "A",
-              "!",
+              ",",
+              "o",
+              "k",
               "Escape"
             ],
             "commandGroups": [
@@ -4754,13 +5057,13 @@
               },
               {
                 "from": 4,
-                "to": 5,
-                "display": "!",
+                "to": 7,
+                "display": ",ok",
                 "explanation": "Type the requested text."
               },
               {
-                "from": 5,
-                "to": 6,
+                "from": 7,
+                "to": 8,
                 "display": "Esc",
                 "explanation": "Return to Normal mode."
               }
@@ -4775,11 +5078,11 @@
                 "mode": "visual-block"
               },
               {
-                "afterStep": 6,
+                "afterStep": 8,
                 "lines": [
-                  "one!",
-                  "two!",
-                  "six!"
+                  "one,ok",
+                  "two,ok",
+                  "six,ok"
                 ],
                 "cursor": [
                   0,
@@ -4826,6 +5129,49 @@
               "visual-block-append"
             ]
           },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "block-prefix-declarations-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Declare four aligned values",
+          "instruction": "Turn all four aligned C assignments into integer declarations with the same prefix.",
+          "languageId": "c",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["red = 1;", "tan = 2;", "sky = 3;", "ash = 4;"], "cursor": [0, 0], "mode": "normal" },
+            "target": { "lines": ["int red = 1;", "int tan = 2;", "int sky = 3;", "int ash = 4;"], "cursor": [0, 0], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "3", "j", "I", "i", "n", "t", " ", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "I", "explanation": "Insert text at the left edge of every selected row." },
+              { "from": 4, "to": 8, "display": "int ", "explanation": "Type the declaration prefix." },
+              { "from": 8, "to": 9, "display": "Esc", "explanation": "Return to Normal mode and replicate the prefix." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [3, 0], "mode": "visual-block" },
+              { "afterStep": 4, "cursor": [0, 0], "mode": "insert" },
+              { "afterStep": 9, "lines": ["int red = 1;", "int tan = 2;", "int sky = 3;", "int ash = 4;"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": ["Every row needs the same text at the same left edge.", "The insertion should replicate only when Insert mode ends."],
+          "feedback": { "success": "One insertion declared all four values.", "why": "Visual Block insertion replicated the prefix across the selected rows." },
+          "skills": { "primary": ["visual-block-insert"], "supporting": ["visual-block", "visual-selection"] },
+          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "replicated-insert"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned C assignments are a natural target for a shared declaration prefix.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-block", "visual-block-insert"] },
           "delivery": "guided-then-recall"
         },
         {
@@ -5001,32 +5347,32 @@
           "id": "integrated-column-marker",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Repair an aligned marker column",
-          "instruction": "Fill the blank character in all three markers with “x”.",
-          "languageId": "csv",
-          "sourceKind": "neutral",
+          "title": "Repair and normalize assignments",
+          "instruction": "Turn all three annotations into assignments, then uppercase the first variable name.",
+          "languageId": "python",
+          "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "a [ ]",
-                "b [ ]",
-                "c [ ]"
+                "red : 0",
+                "tan : 0",
+                "sky : 0"
               ],
               "cursor": [
                 0,
-                3
+                4
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "a [x]",
-                "b [x]",
-                "c [x]"
+                "RED = 0",
+                "tan = 0",
+                "sky = 0"
               ],
               "cursor": [
                 0,
-                3
+                0
               ],
               "mode": "normal"
             }
@@ -5037,7 +5383,11 @@
               "2",
               "j",
               "r",
-              "x"
+              "=",
+              "0",
+              "v",
+              "e",
+              "U"
             ],
             "commandGroups": [
               {
@@ -5055,8 +5405,32 @@
               {
                 "from": 3,
                 "to": 5,
-                "display": "rx",
+                "display": "r=",
                 "explanation": "Replace every character in the block selection."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "0",
+                "explanation": "Move to the start of the first assignment."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "e",
+                "explanation": "Extend the selection to the end of the variable name."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "U",
+                "explanation": "Uppercase the selected variable name."
               }
             ],
             "checkpoints": [
@@ -5064,20 +5438,49 @@
                 "afterStep": 3,
                 "cursor": [
                   2,
-                  3
+                  4
                 ],
                 "mode": "visual-block"
               },
               {
                 "afterStep": 5,
                 "lines": [
-                  "a [x]",
-                  "b [x]",
-                  "c [x]"
+                  "red = 0",
+                  "tan = 0",
+                  "sky = 0"
                 ],
                 "cursor": [
                   0,
-                  3
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "RED = 0",
+                  "tan = 0",
+                  "sky = 0"
+                ],
+                "cursor": [
+                  0,
+                  0
                 ],
                 "mode": "normal"
               }
@@ -5096,7 +5499,8 @@
               "visual-strategy-block"
             ],
             "supporting": [
-              "visual-selection"
+              "visual-selection",
+              "visual-case"
             ]
           },
           "difficulty": {
@@ -5109,7 +5513,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "The task is inherently rectangular, making Visual Block the clear choice.",
+            "languageRationale": "Aligned Python annotations support a block repair followed by a characterwise normalization.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5117,7 +5521,8 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "visual-strategy-block"
+              "visual-strategy-block",
+              "visual-character"
             ]
           },
           "delivery": "guided-then-recall"
@@ -5126,15 +5531,15 @@
           "id": "integrated-reselect-correction",
           "type": "exercise",
           "phase": "mix",
-          "title": "Reselect and correct the last range",
-          "instruction": "Indent the first two “draft” rows, then reselect them and restore their original indentation.",
+          "title": "Reselect and normalize labels",
+          "instruction": "Toggle all three labels, then reselect the same rows and normalize them to uppercase.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
                 "draft",
-                "draft",
+                "ready",
                 "keep"
               ],
               "cursor": [
@@ -5145,9 +5550,9 @@
             },
             "target": {
               "lines": [
-                "draft",
-                "draft",
-                "keep"
+                "DRAFT",
+                "READY",
+                "KEEP"
               ],
               "cursor": [
                 0,
@@ -5159,11 +5564,12 @@
           "script": {
             "steps": [
               "V",
+              "2",
               "j",
-              ">",
+              "~",
               "g",
               "v",
-              "<"
+              "U"
             ],
             "commandGroups": [
               {
@@ -5174,52 +5580,52 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "j",
-                "explanation": "Move one line down to extend the selection."
-              },
-              {
-                "from": 2,
                 "to": 3,
-                "display": ">",
-                "explanation": "Indent the selected lines."
+                "display": "2j",
+                "explanation": "Move two lines down to extend the selection."
               },
               {
                 "from": 3,
-                "to": 5,
+                "to": 4,
+                "display": "~",
+                "explanation": "Toggle the case of the selected lines."
+              },
+              {
+                "from": 4,
+                "to": 6,
                 "display": "gv",
                 "explanation": "Reselect the latest Visual range."
               },
               {
-                "from": 5,
-                "to": 6,
-                "display": "<",
-                "explanation": "Unindent the selection."
+                "from": 6,
+                "to": 7,
+                "display": "U",
+                "explanation": "Uppercase the restored selection."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 2,
+                "afterStep": 3,
                 "cursor": [
-                  1,
-                  0
-                ],
-                "mode": "visual-line"
-              },
-              {
-                "afterStep": 5,
-                "cursor": [
-                  1,
+                  2,
                   0
                 ],
                 "mode": "visual-line"
               },
               {
                 "afterStep": 6,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 7,
                 "lines": [
-                  "draft",
-                  "draft",
-                  "keep"
+                  "DRAFT",
+                  "READY",
+                  "KEEP"
                 ],
                 "cursor": [
                   0,
@@ -5255,7 +5661,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "Repeated configuration rows make the corrected range easy to inspect.",
+            "languageRationale": "YAML-style labels keep the restored line range visually obvious while case changes compose.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5275,28 +5681,28 @@
           "id": "integrated-character-edit",
           "type": "exercise",
           "phase": "mix",
-          "title": "Inspect one word before deleting",
-          "instruction": "Inspect the “alpha” selection, then delete it without taking the following space.",
-          "languageId": "prose",
-          "sourceKind": "neutral",
+          "title": "Replace one inspected argument",
+          "instruction": "Replace the first Go call argument with “active” while preserving the comma.",
+          "languageId": "go",
+          "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha beta"
+                "send(draft, next)"
               ],
               "cursor": [
                 0,
-                0
+                5
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                " beta"
+                "send(active, next)"
               ],
               "cursor": [
                 0,
-                0
+                10
               ],
               "mode": "normal"
             }
@@ -5304,8 +5710,16 @@
           "script": {
             "steps": [
               "v",
+              "t",
+              ",",
+              "c",
+              "a",
+              "c",
+              "t",
+              "i",
+              "v",
               "e",
-              "d"
+              "Escape"
             ],
             "commandGroups": [
               {
@@ -5316,34 +5730,46 @@
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "e",
-                "explanation": "Move to the current word end to extend the selection."
+                "to": 3,
+                "display": "t,",
+                "explanation": "Extend the selection to just before the comma."
               },
               {
-                "from": 2,
-                "to": 3,
-                "display": "d",
-                "explanation": "Delete the selection."
+                "from": 3,
+                "to": 4,
+                "display": "c",
+                "explanation": "Change the selected argument in Insert mode."
+              },
+              {
+                "from": 4,
+                "to": 10,
+                "display": "active",
+                "explanation": "Type the replacement argument."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 2,
+                "afterStep": 3,
                 "cursor": [
                   0,
-                  4
+                  9
                 ],
                 "mode": "visual"
               },
               {
-                "afterStep": 3,
+                "afterStep": 11,
                 "lines": [
-                  " beta"
+                  "send(active, next)"
                 ],
                 "cursor": [
                   0,
-                  0
+                  10
                 ],
                 "mode": "normal"
               }
@@ -5362,7 +5788,8 @@
               "visual-strategy-character"
             ],
             "supporting": [
-              "visual-selection"
+              "visual-selection",
+              "t-motion"
             ]
           },
           "difficulty": {
@@ -5375,7 +5802,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "Plain text keeps the selected range visually direct.",
+            "languageRationale": "A Go call makes punctuation-bounded character selection practical.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5383,9 +5810,50 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "visual-strategy-character"
+              "visual-strategy-character",
+              "visual-change"
             ]
           },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "visual-strategy-range-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Normalize one inspected argument",
+          "instruction": "Uppercase the first Ruby call argument while leaving its comma and the second argument unchanged.",
+          "languageId": "ruby",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": { "lines": ["deploy(staging, safe)"], "cursor": [0, 7], "mode": "normal" },
+            "target": { "lines": ["deploy(STAGING, safe)"], "cursor": [0, 7], "mode": "normal" }
+          },
+          "script": {
+            "steps": ["v", "t", ",", "U"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "v", "explanation": "Switch to Visual Character mode." },
+              { "from": 1, "to": 3, "display": "t,", "explanation": "Extend the selection to just before the comma." },
+              { "from": 3, "to": 4, "display": "U", "explanation": "Uppercase the inspected argument." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [0, 13], "mode": "visual" },
+              { "afterStep": 4, "lines": ["deploy(STAGING, safe)"], "cursor": [0, 7], "mode": "normal" }
+            ]
+          },
+          "hints": ["Inspect the visible punctuation-bounded range before changing it.", "Keep the comma outside the selection."],
+          "feedback": { "success": "Only the inspected Ruby argument changed case.", "why": "Visual Character made the exact range visible before the transformation." },
+          "skills": { "primary": ["visual-strategy-character"], "supporting": ["visual-character", "visual-case", "t-motion"] },
+          "difficulty": { "level": "medium", "dimensions": ["tool-choice", "punctuation-boundary"] },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A Ruby call provides a compact range whose visible punctuation supports deliberate selection.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-character", "visual-case"] },
           "delivery": "guided-then-recall"
         },
         {
@@ -5531,6 +5999,7 @@
         "select-block-range"
       ],
       "challenge": [
+        "selection-shape-column-challenge",
         "choose-selection-shape-check"
       ]
     },
@@ -5550,6 +6019,7 @@
         "replace-selected-token"
       ],
       "challenge": [
+        "character-argument-change-challenge",
         "character-operation-check"
       ]
     },
@@ -5569,6 +6039,7 @@
         "change-selected-lines"
       ],
       "challenge": [
+        "line-indent-branch-challenge",
         "line-selection-check"
       ]
     },
@@ -5588,6 +6059,7 @@
         "swap-character-end-recall"
       ],
       "challenge": [
+        "selection-corner-block-challenge",
         "selection-end-check"
       ]
     },
@@ -5607,6 +6079,7 @@
         "reselect-line-correction"
       ],
       "challenge": [
+        "reselection-correction-challenge",
         "reselection-check"
       ]
     },
@@ -5627,6 +6100,7 @@
         "format-selected-lines"
       ],
       "challenge": [
+        "selection-reindent-code-challenge",
         "selection-transform-check"
       ]
     },
@@ -5646,6 +6120,7 @@
         "x-block-column"
       ],
       "challenge": [
+        "block-column-delete-challenge",
         "block-edit-check"
       ]
     },
@@ -5665,6 +6140,7 @@
         "append-csv-markers"
       ],
       "challenge": [
+        "block-prefix-declarations-challenge",
         "block-insert-check"
       ]
     },
@@ -5684,6 +6160,7 @@
         "integrated-character-edit"
       ],
       "challenge": [
+        "visual-strategy-range-challenge",
         "visual-or-operator-choice"
       ]
     }

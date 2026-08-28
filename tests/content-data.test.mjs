@@ -99,7 +99,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 381);
+  assert.equal(exercises.length, 390);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -1422,7 +1422,7 @@ const visualActivities = visualUnit.lessons.flatMap(lesson => lesson.activities)
 const visualRunnable = visualActivities.filter(activity => activity.type === "demo" || activity.type === "exercise");
 
 test("Unit 7 covers the Visual curriculum with complete references and learning phases", () => {
-  assert.equal(visualRunnable.length, 37);
+  assert.equal(visualRunnable.length, 46);
   assert.deepEqual(visualUnit.coverage.map(item => item.concept), [
     "Visual Character, Visual Line, and Visual Block",
     "Visual selection d c y x r operations",
@@ -1435,11 +1435,21 @@ test("Unit 7 covers the Visual curriculum with complete references and learning 
     "Visual selection versus operator-motion",
   ]);
   const activityIds = new Set(visualActivities.map(activity => activity.id));
+  const exercises = visualActivities.filter(activity => activity.type === "exercise");
+  const exerciseChallenges = exercises.filter(activity => activity.phase === "challenge");
+  const choiceChallenges = visualActivities.filter(activity => activity.type === "choice" && activity.phase === "challenge");
+  assert.equal(exercises.length, 37);
+  assert.equal(exerciseChallenges.length, 9);
+  assert.equal(choiceChallenges.length, 9);
   for (const lesson of visualUnit.lessons) {
     const phases = new Set(lesson.activities.map(activity => activity.phase));
     for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
       assert(phases.has(phase), `${lesson.id} is missing ${phase}`);
     }
+    assert(
+      lesson.activities.some(activity => activity.type === "exercise" && activity.phase === "challenge"),
+      `${lesson.id} is missing an executable challenge`,
+    );
   }
   for (const entry of visualUnit.reference) {
     for (const ref of entry.exampleActivityRefs) assert(activityIds.has(ref), `${entry.id} references missing ${ref}`);
@@ -1450,6 +1460,27 @@ test("Unit 7 covers the Visual curriculum with complete references and learning 
       for (const ref of entry[phase]) assert(activityIds.has(ref), `${entry.concept} references missing ${ref}`);
     }
   }
+
+  const sequenceOwners = new Map();
+  for (const activity of exercises) {
+    const sequence = JSON.stringify(keysOf(activity));
+    assert(!sequenceOwners.has(sequence), `${activity.id} duplicates ${sequenceOwners.get(sequence)}`);
+    sequenceOwners.set(sequence, activity.id);
+  }
+
+  for (const activity of exerciseChallenges) {
+    assert(["v", "V", "Ctrl-v"].includes(keysOf(activity)[0]), `${activity.id} does not choose a Visual shape`);
+  }
+  assert.equal(new Set(exerciseChallenges.map(activity => activity.languageId)).size, 6);
+  assert.equal(exerciseChallenges.filter(activity => activity.languageId === "python").length, 3);
+
+  const nonCodeProfiles = new Set(["prose", "log", "csv", "markdown"]);
+  assert.equal(exercises.filter(activity => nonCodeProfiles.has(activity.languageId)).length, 15);
+
+  const activityById = new Map(visualActivities.map(activity => [activity.id, activity]));
+  assert.deepEqual(keysOf(activityById.get("integrated-column-marker")), ["Ctrl-v", "2", "j", "r", "=", "0", "v", "e", "U"]);
+  assert.deepEqual(keysOf(activityById.get("integrated-reselect-correction")), ["V", "2", "j", "~", "g", "v", "U"]);
+  assert.deepEqual(keysOf(activityById.get("integrated-character-edit")), ["v", "t", ",", "c", "a", "c", "t", "i", "v", "e", "Escape"]);
 });
 
 for (const activity of visualRunnable) {
