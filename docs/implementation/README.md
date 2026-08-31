@@ -124,6 +124,7 @@ dated before session 07 against this table.
 | 20 | [Viewport control art and story beat](20-viewport-control-art.md) | M | 07 | — |
 | 21 | [Search offsets](21-search-offsets.md) | M | 01 | — |
 | 22 | [The file-name register `"%`](22-file-name-register.md) | M | 01 | 08, 11 |
+| 23 | [Five future unit boards and animation seeds](23-future-unit-boards-and-animation-seeds.md) | L | 07 | — |
 
 ## Recommended execution order
 
@@ -188,3 +189,4 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [ ] 20 Viewport control art and story beat
 - [ ] 21 Search offsets
 - [ ] 22 The file-name register
+- [ ] 23 Future unit boards and animation seeds
