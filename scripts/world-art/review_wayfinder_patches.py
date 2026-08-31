@@ -44,6 +44,7 @@ BASES = {
 LANDMARK_BOUNDS = (0.28, 0.48, 0.44, 0.52)
 AVOID_RECURRING_MOTIFS: tuple[str, ...] = ()
 PRESERVATION_ANCHORS = "paths, water, stones, roots, bridge, central wayfinder, and outer edges"
+PROTECTED_LANDMARK_NAME = "central wayfinder"
 WORK_PACKAGE = "WP-03P-A"
 ROUND = 3
 OUTPUT_COST_USD = 0.067
@@ -258,7 +259,8 @@ def configure_scene(config_path: Path, round_number: int = 3) -> None:
     """Apply a scene-specific inventory while retaining the reviewed workflow."""
     global SCENE_ID, UNIT_ID, SCENE_TITLE, REVIEW_ROOT, VISIBILITY_METRICS
     global MANIFEST_PATH, INVENTORY_PATH, LEDGER_PATH, BASES, LANDMARK_BOUNDS, SITES
-    global AVOID_RECURRING_MOTIFS, PRESERVATION_ANCHORS, WORK_PACKAGE, ROUND
+    global AVOID_RECURRING_MOTIFS, PRESERVATION_ANCHORS, PROTECTED_LANDMARK_NAME
+    global WORK_PACKAGE, ROUND
     config = json.loads(config_path.read_text())
     SCENE_ID = config["sceneId"]
     UNIT_ID = config["unitId"]
@@ -284,6 +286,9 @@ def configure_scene(config_path: Path, round_number: int = 3) -> None:
     PRESERVATION_ANCHORS = config.get(
         "preservationAnchors",
         "paths, water, stones, roots, bridge, central wayfinder, and outer edges",
+    )
+    PROTECTED_LANDMARK_NAME = config.get(
+        "protectedLandmarkName", "the authored landmark"
     )
     WORK_PACKAGE = config.get("workPackage", "WP-03P-A")
 
@@ -548,7 +553,7 @@ The target itself must change substantially: it needs an unmistakably new silhou
 SERIES VARIETY
 This board is part of a curated series. Do not use these recurring concepts in this candidate: {recurring_motifs or "none specified"}. Invent the specifically requested replacement rather than substituting a familiar generic magical prop.
 
-Avoid: changes elsewhere; warped or redrawn board geometry; altered stairs, bridge, central wayfinder, or outer edges; relocated objects; extra unrelated magical effects; characters; text; letters; numbers; code; UI; locator markup; watermark; photorealism; smooth 3D rendering.
+Avoid: changes elsewhere; warped or redrawn board geometry; altered {PROTECTED_LANDMARK_NAME} or outer edges; relocated objects; extra unrelated magical effects; characters; text; letters; numbers; code; UI; locator markup; watermark; photorealism; smooth 3D rendering.
 
 Output exactly one complete 1K 4:3 PNG image."""
 
@@ -568,7 +573,9 @@ def stage() -> None:
             return
     for site in SITES:
         if intersects(site["bounds"], LANDMARK_BOUNDS):
-            raise RuntimeError(f"{site['id']} overlaps the protected Wayfinder")
+            raise RuntimeError(
+                f"{site['id']} overlaps protected landmark {PROTECTED_LANDMARK_NAME}"
+            )
         if len(site["changes"]) != 5:
             raise RuntimeError(f"{site['id']} must define five candidate changes")
     missing = [path for path in BASES.values() if not path.is_file()]
