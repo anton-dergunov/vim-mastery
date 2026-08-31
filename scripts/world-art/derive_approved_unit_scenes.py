@@ -66,12 +66,16 @@ Avoid: a new central black hole; an editor-shaped cavity; floating objects; isol
 Change only what responsive recomposition requires."""
 
 
+class NoImageOutput(RuntimeError):
+    """Vertex accepted a derivation request but returned no image payload."""
+
+
 def extract_image(response: Any) -> bytes:
     for candidate in response.candidates or []:
         for part in candidate.content.parts or []:
             if part.inline_data and part.inline_data.data:
                 return part.inline_data.data
-    raise RuntimeError(f"Gemini returned no image: {response}")
+    raise NoImageOutput(f"Gemini returned no image: {response}")
 
 
 def main() -> int:
@@ -142,6 +146,7 @@ def main() -> int:
                         ),
                     ),
                 )
+                image_bytes = extract_image(response)
                 break
             except errors.ClientError as error:
                 if error.code != 429 or attempt >= args.max_quota_retries:
@@ -152,9 +157,24 @@ def main() -> int:
                     flush=True,
                 )
                 time.sleep(args.quota_backoff_seconds)
+            except NoImageOutput as error:
+                manifest.setdefault("derivationWarnings", []).append({
+                    "profile": profile,
+                    "at": datetime.now(UTC).isoformat(),
+                    "reason": str(error),
+                })
+                manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+                if attempt >= args.max_quota_retries:
+                    raise
+                print(
+                    f"Vertex returned no image; waiting {args.quota_backoff_seconds:.0f}s "
+                    f"before retry {attempt + 2}/{args.max_quota_retries + 1}…",
+                    flush=True,
+                )
+                time.sleep(args.quota_backoff_seconds)
         last_submission = time.monotonic()
         destination = manifest_path.parent / f"{profile}-source.png"
-        destination.write_bytes(extract_image(response))
+        destination.write_bytes(image_bytes)
         manifest.setdefault("derivatives", {})[profile] = {
             "path": destination.name,
             "sha256": sha256(destination),

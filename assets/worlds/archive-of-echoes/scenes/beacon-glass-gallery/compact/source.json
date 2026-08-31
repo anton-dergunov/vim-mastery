@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "unitId": "viewport-control",
+  "sceneId": "beacon-glass-gallery",
+  "worldId": "archive-of-echoes",
+  "source": "base.webp",
+  "sha256": "29b1e201472cc4837ae29cfbabb7d579ffaf0cff79b0f04dbd60ab10a9ff1280",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-r2-01",
+    "approvedAt": "2026-08-31T11:47:12.977755+00:00",
+    "notes": "Owner-approved after compact editor-space review: strongest Beacon Glass Gallery candidate."
+  },
+  "derivatives": {
+    "tall": {
+      "path": "tall-source.png",
+      "sha256": "43f2e12d83ec5132ef49280039e10a254a8adb498a8f070f27a271846301c421",
+      "generatedAt": "2026-08-31T12:59:34.242118+00:00",
+      "model": "gemini-3.1-flash-image"
+    },
+    "wide": {
+      "path": "wide-source.png",
+      "sha256": "eb59ea3c642c0dd2e0a988c96fc054e1be46d455fc63085037626c70fc93a3aa",
+      "generatedAt": "2026-08-31T13:00:22.440791+00:00",
+      "model": "gemini-3.1-flash-image"
+    }
+  }
+}

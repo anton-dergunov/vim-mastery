@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import json
+import argparse
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -53,13 +55,18 @@ def add_editor_preview(image: Image.Image, box: tuple[int, int, int, int]) -> No
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--revision", type=int, default=1, help="candidate generation round to render")
+    args = parser.parse_args()
     box = editor_box()
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
     font = ImageFont.load_default(size=18)
     for directory in sorted(path for path in SCENE_ROOT.iterdir() if path.is_dir() and (path / "manifest.json").exists()):
         manifest = json.loads((directory / "manifest.json").read_text())
-        candidates = manifest["candidates"]
-        columns, rows = 2, 3
+        candidates = [candidate for candidate in manifest["candidates"] if candidate.get("generationRound", 1) == args.revision and (directory / candidate["path"]).is_file()]
+        if not candidates:
+            continue
+        columns, rows = 2, math.ceil(len(candidates) / 2)
         width = columns * FRAME[0] + (columns + 1) * GAP
         height = rows * (FRAME[1] + LABEL_HEIGHT) + (rows + 1) * GAP
         sheet = Image.new("RGB", (width, height), "#07110f")
@@ -74,7 +81,8 @@ def main() -> int:
             sheet.paste(frame, (x, y))
             label = f'{candidate["id"]} · {candidate["directionId"]}'
             draw.text((x + 4, y + FRAME[1] + 10), label, fill="#e8f3ec", font=font)
-        output = OUTPUT_ROOT / f'{manifest["unitId"]}.jpg'
+        suffix = f'-r{args.revision}' if args.revision != 1 else ''
+        output = OUTPUT_ROOT / f'{manifest["unitId"]}{suffix}.jpg'
         sheet.save(output, quality=90, optimize=True)
         print(f"Wrote {output.relative_to(ROOT)}")
     return 0

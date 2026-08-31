@@ -133,6 +133,12 @@ FUTURE_CANDIDATE_DIRECTIONS = (
     ("asymmetric-experiment", "Use a strong asymmetric composition and one surprising but coherent spatial idea; do not default to a central portal."),
 )
 
+# Revision two intentionally does not attach adjacent complete boards. The first
+# run showed that they over-conditioned Nano Banana on prior composition rather
+# than merely preserving the shared pixel-art language. This single style plate
+# has no scene landmark or camera to imitate.
+FUTURE_REVISION_TWO_REFERENCES = (ROOT / "assets/enchanted-ruins.png",)
+
 # Session 23 deliberately keeps future and reserve boards out of the curriculum
 # catalog. These semantic ids are nevertheless generated in the same approval
 # workflow as existing unit scenes so every source, reference and output remains
@@ -150,7 +156,7 @@ FUTURE_SCENES = {
 
 Build a long, physically believable archive balcony across a deep violet stone chamber. Anchor one large teal-glass viewing lens in a thick brass carriage on real floor rails or wall pivots, positioned off-centre and readable on a phone. The carriage may travel vertically or settle at upper, middle, and lower framing stops, but do not mark those stops with symbols. Through and around the lens, show layered archive depth: a far shore, one distant beacon glow, suspended shelves, supported causeways, and a corridor whose restrained circular brass rhythm quietly anticipates the Echo Clock. The same distant place should be visible at more than one scale through nested glass or adjacent apertures, expressing reframing without physical travel. Add localized haze or condensation only where it helps the lens read; the room itself remains clear and safe.
 
-Regional art bible: a warm subterranean archive carved into dark plum and charcoal stone, with crystal drawers, suspended shelves, quiet mechanisms, teal glass, muted brass, amber memory lights, and violet shadows. It is cozy, wondrous, ordered, and deep. Match Image 1 (Far Beacons) and Image 2 (Echo Clock) in rendering language, material vocabulary, palette, architecture, and gently elevated side-on perspective without copying either composition.
+Regional art bible: a warm subterranean archive carved into dark plum and charcoal stone, with crystal drawers, suspended shelves, quiet mechanisms, teal glass, muted brass, amber memory lights, and violet shadows. It is cozy, wondrous, ordered, and deep.
 
 Conceptual feeling: the observer can look far ahead, close at hand, or shift the window while remaining securely in one place. Communicate this through supported lens mechanics, repeated framing, depth, and a stable observation floor—not through camera UI, arrows, scrollbars, or diagrams.
 
@@ -170,7 +176,7 @@ Build a welcoming, smaller-scale multi-level workshop annex into the dark ridge,
 
 The scene should suggest judgment before action: some repairs suit a clamp, some a lens, some a repeated jig, and some careful hand inspection. Express choice and composition through distinct grounded mechanisms and routes, never through tool icons, labels, command symbols, or a literal coding desk. The workshop is busy in structure but calm in state; restoration is complete and ordinary craft has begun.
 
-Regional art bible: a vast precision workshop and command observatory beneath a dark ridge, using charcoal stone, aged brass, copper conduits, thick supported glass, controlled ember light, and narrow cyan current. Powerful, exact, warm, and safe. Match Image 1 (Meridian Engine) and Image 2 (Restored Wilds) in rendering language and material continuity without copying either composition. Avoid smoke, weapons, factory grime, oppressive industry, or excessive gears.
+Regional art bible: a vast precision workshop and command observatory beneath a dark ridge, using charcoal stone, aged brass, copper conduits, thick supported glass, controlled ember light, and narrow cyan current. Powerful, exact, warm, and safe. Avoid smoke, weapons, factory grime, oppressive industry, or excessive gears.
 
 Keep the mender's bench silhouette, at least two contrasting work bays, the incoming Engine current, and the outgoing service route legible around the covered area. One protected bench site must later support dormant and restored story treatment. Avoid: four-way split-screen collage; miniature versions of existing landmarks; literal computer workstation; monitors; terminal window; tool icons; giant central portal; floating tools; unsafe sparks; steampunk clutter.""",
     },
@@ -188,7 +194,7 @@ Build a high but welcoming rail-and-stone waystation on the exterior of the dark
 
 Let the horizon quietly connect the four established regions through material and light rather than a theme-park panorama: moss-dark masonry at one near support, a pale Starwater reflection far below, teal Archive glass in relay housings, and Brass Meridian rails and amber lamps as the dominant structure. The station is already functioning. Some routes are ready for practice, some are cooling after use, and one path remains open beyond the frame. The emotional note is ongoing care, curiosity, and freedom—not graduation pomp or another emergency.
 
-Regional art bible: Brass Meridian precision architecture opened to a calm blue-violet horizon, with charcoal ridge stone, aged brass, copper rails, supported glass conduits, narrow cyan current, restrained amber navigation lights, and subtle material echoes from the restored Wilds. Exact, expansive, safe, and lived in. Match Image 1 (Meridian Engine) and Image 2 (Restored Wilds) without copying either composition.
+Regional art bible: Brass Meridian precision architecture opened to a calm blue-violet horizon, with charcoal ridge stone, aged brass, copper rails, supported glass conduits, narrow cyan current, restrained amber navigation lights, and subtle material echoes from the restored Wilds. Exact, expansive, safe, and lived in.
 
 Keep the relay silhouette, one returning loop, one outward route, and the open horizon legible around the covered area. One protected relay site must later support a story state. Avoid: literal flowchart; progress rings; game level map; checklist; command prompt; readable field notes; arrows; fifth-world portal; graduation stage; trophy; giant central doorway; floating routes; unsafe height without rails.""",
     },
@@ -206,7 +212,7 @@ Build an intimate root-sheltered landing of mossed dark stone beside shallow sti
 
 The scene should feel like the first moment when the Wilds listens back: inviting, responsive, ancient, and safe. Keep the magic localized and modest. This is a beginning, not a grand gate, prophecy, shrine, classroom, or tutorial screen.
 
-Regional art bible: Moonroot's blue-green dusk, enormous roots integrated with mossed charcoal stone, shallow reflective water, turquoise mineral light, small cyan and violet growths, and sparse warm amber guidance. Match Image 1 (the threshold arrival) and Image 2 (Mode Lantern Grounds) in pixel-art language, proportions, material vocabulary, and gently elevated side-on perspective without copying either composition.
+Regional art bible: Moonroot's blue-green dusk, enormous roots integrated with mossed charcoal stone, shallow reflective water, turquoise mineral light, small cyan and violet growths, and sparse warm amber guidance.
 
 Keep the arrival edge, forward path, waterline, and quiet anchor legible around the covered area. Avoid: a second Mode Lantern; compass; writing spring; two-part gate; literal keyboard or keycaps; tutorial arrows; giant monument; throne; danger; monster; central black portal; editor-shaped cavity.""",
     },
@@ -224,7 +230,7 @@ Build a spacious but sheltered ridge overlook from charcoal stone, aged brass ra
 
 The scene should feel earned, quiet, and expansive. It can support one more advanced unit, open practice, a maintenance epilogue, or the handoff into the existing finale. Its visual subject is possibility after mastery, not a trophy, finish line, royal overlook, or farewell cutscene.
 
-Style/medium: polished original 2D pixel-art fantasy with crisp silhouettes and painterly pixel clusters. Let Brass Meridian's precise construction dominate while the distant restored lands retain their established palettes. Use controlled amber warmth, narrow cyan current, blue-violet atmospheric depth, and no celebratory rainbow wash. Match Image 1 (Restored Wilds) and Image 2 (Meridian Engine) in world continuity without copying either composition.
+Style/medium: polished original 2D pixel-art fantasy with crisp silhouettes and painterly pixel clusters. Let Brass Meridian's precise construction dominate while the distant restored lands retain their established palettes. Use controlled amber warmth, narrow cyan current, blue-violet atmospheric depth, and no celebratory rainbow wash.
 
 Keep the arriving path, horizon relay, outgoing trail, safe railing, and at least two distant regional cues legible around the covered area. Avoid: literal world map; four labelled quadrants; fifth-world portal; finish line; trophy; crown; graduation stage; throne; fireworks; giant flag; triumphal statue; cliff danger; central black portal; editor-shaped cavity; floating architecture.""",
     },
@@ -279,14 +285,24 @@ Avoid: a generic black hole; an editor-shaped cavity; a compulsory central doorw
 Output one 2K 4:3 image."""
 
 
-def future_candidate_prompt(scene: dict[str, Any], direction: str) -> str:
+def future_candidate_prompt(scene: dict[str, Any], direction: str, revision: int = 1) -> str:
+    if revision == 2:
+        reference_instructions = """Input images: Image 1 is a Vim Wilds rendering-language reference only: borrow its polished 2D pixel-art medium, palette restraint, grounded materials, and gently elevated side-on perspective, but do not reuse or adapt its composition, camera, landmark, terrain arrangement, or architecture. Image 2 is the compact editor-occlusion measurement only.
+
+DISTINCT-PLACE REQUIREMENT
+This board must read as a genuinely new destination, not as a continuation image, remix, alternate angle, or lightly changed regional board. Invent a new landmark silhouette, a new spatial arrangement, and a new route topology that suit this scene alone. The only continuity is the world’s shared materials and rendering language. Do not reuse another unit’s beacon pair, clock wheel, archive cabinet, Mode Lantern, Meridian Engine, prior horizon arrangement, or a recognizable framing of any existing board.
+
+EDITOR-SPACE REQUIREMENT
+Compose a real, calm, low-frequency environmental sweep through the central board area: contiguous floor, water, sky, ridge shadow, distant depth, or another scene-appropriate supported surface. It must provide readable dark values behind the live editor without becoming an empty editor-shaped rectangle. Place the protected landmark and high-frequency tactile details in the outer thirds, with clear entrance and exit cues around the editor zone. Continue natural scenery behind it; do not draw a panel, cavity, frame, or blank stage."""
+    else:
+        reference_instructions = """Input images: Image 1 and Image 2 are approved adjacent Vim Wilds board references in the fixed order recorded below. Match their rendering language and regional continuity without copying either composition. Image 3 is the compact editor-occlusion measurement only."""
     return f"""Use case: stylized-concept
 Asset type: responsive environmental backdrop for the live Vim Wilds exercise board
-Input images: Image 1 and Image 2 are approved adjacent Vim Wilds board references in the fixed order recorded below. Match their rendering language and regional continuity without copying either composition. Image 3 is the compact editor-occlusion measurement only.
+{reference_instructions}
 Primary request: {scene["prompt"]}
 
 Composition/framing: one complete 2K 4:3 landscape. {direction}
-Image 3 is measurement data only. Do not reproduce its rectangle, hatching, colours, shape, or emptiness. Let ordinary scenery continue naturally behind the covered area. The board must remain a coherent complete illustration when the HTML editor is absent; keep irreplaceable focal detail outside the covered area.
+The final measurement image is data only. Do not reproduce its rectangle, hatching, colours, shape, or emptiness. Let ordinary scenery continue naturally behind the covered area. The board must remain a coherent complete illustration when the HTML editor is absent; keep irreplaceable focal detail outside the covered area.
 
 Constraints: coherent background, middle ground, and foreground; every lens, shelf, bridge, rail, conduit, platform, path, lamp, and light physically supported; polished original 2D pixel-art language; gently elevated side-on game perspective; crisp silhouettes; painterly pixel clusters; grounded objects; dark readable values; narrow cyan light; warm amber accents; restrained violet shadow; no characters.
 Avoid: readable writing; letters; numbers; code; keyboard keys; icons; signs; captions; UI; logos; pseudo-text; watermark; unsupported floating architecture; generic prop-sheet staging; photorealism; smooth 3D rendering; neon cyberpunk clutter; recognizable franchise imagery.
@@ -346,7 +362,8 @@ def build_future_manifest(scene_id: str, scene: dict[str, Any], mask: Path) -> d
                 "id": f"candidate-{index:02d}",
                 "directionId": direction_id,
                 "direction": direction,
-                "prompt": future_candidate_prompt(scene, direction),
+                "generationRound": 1,
+                "prompt": future_candidate_prompt(scene, direction, 1),
                 "path": f"candidate-{index:02d}.png",
                 "approvalState": "pending",
                 "estimatedCostUsd": None,
@@ -354,6 +371,38 @@ def build_future_manifest(scene_id: str, scene: dict[str, Any], mask: Path) -> d
             for index, (direction_id, direction) in enumerate(FUTURE_CANDIDATE_DIRECTIONS, 1)
         ],
     }
+
+
+def ensure_future_revision_two(manifest: dict[str, Any], scene: dict[str, Any], mask: Path) -> None:
+    """Append a non-destructive revised candidate set after explicit review."""
+    candidates = manifest.setdefault("candidates", [])
+    for candidate in candidates:
+        if candidate.get("generationRound", 1) != 1:
+            continue
+        candidate["generationRound"] = 1
+        candidate["approvalState"] = "rejected" if (ARTIFACT_ROOT / manifest["unitId"] / candidate["path"]).is_file() else "cancelled"
+        candidate["reviewNotes"] = "Rejected before approval: adjacent-board references over-conditioned the composition and the center lacked calm editor-safe space."
+    if any(candidate.get("generationRound") == 2 for candidate in candidates):
+        return
+    candidates.extend(
+        {
+            "id": f"candidate-r2-{index:02d}",
+            "directionId": direction_id,
+            "direction": direction,
+            "generationRound": 2,
+            "prompt": future_candidate_prompt(scene, direction, 2),
+            "path": f"candidate-r2-{index:02d}.png",
+            "approvalState": "pending",
+            "estimatedCostUsd": None,
+        }
+        for index, (direction_id, direction) in enumerate(FUTURE_CANDIDATE_DIRECTIONS, 1)
+    )
+    manifest.setdefault("generationRounds", []).append({
+        "round": 2,
+        "createdAt": datetime.now(UTC).isoformat(),
+        "references": reference_metadata((*FUTURE_REVISION_TWO_REFERENCES, mask)),
+        "reason": "Owner rejected round one: use only a style reference, require a distinct place silhouette, and reserve naturally composed calm center/editor space.",
+    })
 
 
 def refresh_unsubmitted_future_manifest(
@@ -367,12 +416,16 @@ def refresh_unsubmitted_future_manifest(
     return refreshed
 
 
+class NoImageOutput(RuntimeError):
+    """Vertex accepted a request but declined to return an image payload."""
+
+
 def extract_image(response: Any) -> bytes:
     for candidate in response.candidates or []:
         for part in candidate.content.parts or []:
             if part.inline_data and part.inline_data.data:
                 return part.inline_data.data
-    raise RuntimeError(f"Gemini returned no image: {response}")
+    raise NoImageOutput(f"Gemini returned no image: {response}")
 
 
 def main() -> int:
@@ -380,6 +433,7 @@ def main() -> int:
     parser.add_argument("--unit", choices=tuple(UNITS), help="generate one existing unit; defaults to all existing units")
     parser.add_argument("--future", choices=tuple(FUTURE_SCENES), help="generate one Session 23 semantic scene")
     parser.add_argument("--future-all", action="store_true", help="generate all five Session 23 semantic scenes")
+    parser.add_argument("--revision", type=int, choices=(1, 2), default=1, help="future-scene prompt revision to generate")
     parser.add_argument("--candidate", type=int, choices=range(1, 6), help="generate one candidate number")
     parser.add_argument("--execute", action="store_true", help="submit paid Vertex requests")
     parser.add_argument("--project", default=os.environ.get("GOOGLE_CLOUD_PROJECT", ""))
@@ -402,7 +456,8 @@ def main() -> int:
         else {}
     )
     required_references = (
-        tuple(path for scene in selected_future.values() for path in scene["references"])
+        FUTURE_REVISION_TWO_REFERENCES if selected_future and args.revision == 2
+        else tuple(path for scene in selected_future.values() for path in scene["references"])
         if selected_future else REFERENCE_PATHS
     )
     missing = [path for path in required_references if not path.is_file()]
@@ -433,13 +488,16 @@ def main() -> int:
             if manifest_path.exists()
             else build_future_manifest(scene_id, scene, mask)
         )
+        if args.revision == 2:
+            ensure_future_revision_two(manifest, scene, mask)
         manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
-        candidates = manifest["candidates"]
+        candidates = [candidate for candidate in manifest["candidates"] if candidate.get("generationRound", 1) == args.revision]
         if args.candidate:
             candidates = [candidates[args.candidate - 1]]
         for candidate in candidates:
             if not (directory / candidate["path"]).exists():
-                jobs.append((manifest_path, manifest, candidate, (*scene["references"], mask)))
+                references = (*FUTURE_REVISION_TWO_REFERENCES, mask) if args.revision == 2 else (*scene["references"], mask)
+                jobs.append((manifest_path, manifest, candidate, references))
 
     print(f"Unit-scene backdrop plan: {len(jobs)} missing {MODEL} candidate(s)")
     if not args.execute:
@@ -479,6 +537,7 @@ def main() -> int:
                         ),
                     ),
                 )
+                image_bytes = extract_image(response)
                 break
             except errors.ClientError as error:
                 if error.code != 429 or attempt >= args.max_quota_retries:
@@ -489,9 +548,21 @@ def main() -> int:
                     flush=True,
                 )
                 time.sleep(args.quota_backoff_seconds)
+            except NoImageOutput as error:
+                candidate["lastNoImageAt"] = datetime.now(UTC).isoformat()
+                candidate["lastNoImageReason"] = str(error)
+                manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+                if attempt >= args.max_quota_retries:
+                    raise
+                print(
+                    f"Vertex returned no image; waiting {args.quota_backoff_seconds:.0f}s "
+                    f"before retry {attempt + 2}/{args.max_quota_retries + 1}…",
+                    flush=True,
+                )
+                time.sleep(args.quota_backoff_seconds)
         last_submission = time.monotonic()
         destination = manifest_path.parent / candidate["path"]
-        destination.write_bytes(extract_image(response))
+        destination.write_bytes(image_bytes)
         candidate["sha256"] = sha256(destination)
         candidate["sourceDimensions"] = list(Image.open(destination).size)
         candidate["generatedAt"] = datetime.now(UTC).isoformat()
