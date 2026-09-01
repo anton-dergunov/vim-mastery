@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "algorithm": "whole-canvas-linear-distance-islands-pixel-hysteresis-feather",
   "algorithmSourceCommit": "7411392",
   "canvas": [
@@ -43,6 +43,7 @@
       "unitId": "viewport-control",
       "worldId": "archive-of-echoes",
       "sceneId": "beacon-glass-gallery",
+      "integrationState": "runtime-active",
       "count": 50,
       "bytes": 2754758,
       "siteIds": [
@@ -65,6 +66,7 @@
       "unitId": "real-code-workflow-capstones",
       "worldId": "brass-meridian",
       "sceneId": "menders-confluence",
+      "integrationState": "future-unit-ready",
       "count": 50,
       "bytes": 3669830,
       "siteIds": [
@@ -87,6 +89,7 @@
       "unitId": "mastery-loops",
       "worldId": "brass-meridian",
       "sceneId": "keepers-relay",
+      "integrationState": "future-unit-ready",
       "count": 50,
       "bytes": 3361258,
       "siteIds": [
@@ -111,6 +114,7 @@
       "unitId": "mosslight-landing",
       "worldId": "moonroot-ruins",
       "sceneId": "mosslight-landing",
+      "integrationState": "reserve-only",
       "count": 50,
       "bytes": 3525118,
       "siteIds": [
@@ -139,6 +143,7 @@
       "unitId": "open-trail-overlook",
       "worldId": "brass-meridian",
       "sceneId": "open-trail-overlook",
+      "integrationState": "reserve-only",
       "count": 50,
       "bytes": 3909578,
       "siteIds": [

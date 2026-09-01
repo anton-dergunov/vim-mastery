@@ -56,26 +56,31 @@ SCENES = (
         "unitId": "viewport-control",
         "worldId": "archive-of-echoes",
         "sceneId": "beacon-glass-gallery",
+        "integrationState": "runtime-active",
     },
     {
         "unitId": "real-code-workflow-capstones",
         "worldId": "brass-meridian",
         "sceneId": "menders-confluence",
+        "integrationState": "future-unit-ready",
     },
     {
         "unitId": "mastery-loops",
         "worldId": "brass-meridian",
         "sceneId": "keepers-relay",
+        "integrationState": "future-unit-ready",
     },
     {
         "unitId": "mosslight-landing",
         "worldId": "moonroot-ruins",
         "sceneId": "mosslight-landing",
+        "integrationState": "reserve-only",
     },
     {
         "unitId": "open-trail-overlook",
         "worldId": "brass-meridian",
         "sceneId": "open-trail-overlook",
+        "integrationState": "reserve-only",
     },
 )
 
@@ -481,6 +486,7 @@ def main() -> int:
             "unitId": config["unitId"],
             "worldId": config["worldId"],
             "sceneId": scene_id,
+            "integrationState": config["integrationState"],
             "count": len(scene_records),
             "bytes": sum(item["bytes"] for item in scene_records),
             "siteIds": list(dict.fromkeys(candidate.rsplit("-c", 1)[0] for candidate in candidate_ids)),
@@ -502,7 +508,7 @@ def main() -> int:
         > MAX_VISIBLE_CONTINUED_CHANGE_PERCENT
     ]
     summary = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "algorithm": ALGORITHM,
         "algorithmSourceCommit": "7411392",
         "canvas": [1200, 896],

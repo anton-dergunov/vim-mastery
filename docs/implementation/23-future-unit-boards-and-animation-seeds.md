@@ -1,28 +1,67 @@
 # Session 23 — Five future unit boards and animation seeds
 
-**Status:** planned prompt pack · **Depends on:** 07 · **Related:** 16, 17, 20
-**Touches when executed later:** `content/presentation.json`, `assets/worlds/`,
-`artifacts/world-generation/`, `scripts/world-art/`, story review docs, media tests
+**Status:** generated, approved, and extracted · Unit 10 integrated · four scenes held inactive
+· **Depends on:** 07 · **Related:** 16, 17, 20
+**Implemented in:** `content/presentation.json`, `assets/worlds/`,
+`scripts/world-art/`, and media-policy/PWA tests
 
 ## Goal
 
-Prepare five new exercise-board locations now, before all of their curriculum
-units exist, so later content work does not have to borrow another unit's art.
-This file is the generation handoff: it fixes the story placement, environment,
-visual meaning, candidate prompt, and initial board-change ideas for each scene.
+Five new exercise-board locations were prepared before all of their curriculum
+units existed, so later content work does not have to borrow another unit's art.
+This file preserves the generation handoff and the resulting integration and
+packaging decisions.
 
 This session is about the **exercise boards and their optional environmental
 changes only**. It does not request character animation. Landmark restoration
 plates and full-frame unit-ending story images should be authored from the
 approved boards in their integration sessions.
 
+## Current integration, packaging, and storage status
+
+All five approved scenes have compact, tall, and wide bases plus fifty approved
+transparent-difference WebP variants. Their lifecycle state is recorded in
+`scripts/world-art/future-scene-patch-summary.json` and reproduced by
+`scripts/world-art/integrate_future_scene_patches.py`.
+
+| Scene | Lifecycle state | PWA behavior |
+| --- | --- | --- |
+| Beacon Glass Gallery | `runtime-active` | Registered to Unit 10 and emitted by the manifest-driven build |
+| Menders' Confluence | `future-unit-ready` | Kept in Git; omitted until Unit 16 exists and references it |
+| Keeper's Relay | `future-unit-ready` | Kept in Git; omitted until Unit 17 exists and references it |
+| Mosslight Landing | `reserve-only` | Kept in Git; omitted unless it receives a real unit assignment |
+| Open Trail Overlook | `reserve-only` | Kept in Git; omitted unless it receives a real unit assignment |
+
+Vite emits only media reachable from the presentation and character manifests.
+Inactive scenes therefore remain versioned and runtime-ready under
+`assets/worlds/` without entering `dist`, the service worker, or the PWA media
+policy. Full-resolution candidates and Nano Banana source outputs remain under
+the ignored `artifacts/world-generation/` tree; only approved runtime bases and
+transparent patches are tracked.
+
+Git LFS is intentionally deferred. The migration audit found roughly 1.3 GB
+across 2,907 historical PNG/WebP objects and would require rewriting 134
+commits, updating every CI/deployment checkout, and forcing collaborators to
+reclone or realign rewritten history. GitHub Actions LFS downloads count against
+the repository owner's bandwidth, and GitHub does not support Git LFS directly
+for Pages sites. The current custom Pages artifact is about 871 MB; revisit the
+hosting architecture before it reaches 950 MiB because published Pages sites
+are limited to 1 GB. If substantial video media is introduced, prefer external
+object/CDN hosting over adding it to either normal Git or the Pages artifact.
+The repository currently tracks animated WebPs rather than MP4, WebM, or MOV
+video files.
+
+- [Git LFS billing](https://docs.github.com/en/billing/concepts/product-billing/git-lfs)
+- [Git LFS and Pages limitation](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage)
+- [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
+
 ## Audit result and numbering correction
 
 The Unit 9 split is complete. The live catalog contains fifteen units:
 
 - Unit 9 is `position-memory` and correctly owns the existing Far Beacons board.
-- Unit 10 is `viewport-control` and temporarily points to the same Far Beacons
-  base profiles and all fifty of the same complete-board variants.
+- Unit 10 is `viewport-control` and now owns Beacon Glass Gallery, its three
+  responsive bases, and fifty transparent-difference variants.
 - `assets/worlds/story/units/viewport-control.*` is a renamed copy required by
   the story manifest, not an independently illustrated scene.
 - Session 20 already records this debt and says to leave Unit 9 intact while
@@ -33,11 +72,11 @@ before the split call them Units 15 and 16; their canonical numbers are now:
 
 | Requested shorthand | Canonical target now | Content state | Art decision |
 | --- | --- | --- | --- |
-| New art for the split Unit 9 | **Unit 10 — Viewport control** | Built, borrowing Unit 9 art | Keep Far Beacons on Unit 9; generate Beacon Glass Gallery for Unit 10 |
-| Future Unit 15 | **Unit 16 — Real-code workflow capstones** | Planned in session 16 | Generate Menders' Confluence |
-| Future Unit 16 | **Unit 17 — Mastery loops** | Planned in session 17 | Generate Keeper's Relay |
-| Early spare | Unnumbered reserve | No content | Generate Mosslight Landing |
-| Late spare | Unnumbered reserve | No content | Generate Open Trail Overlook |
+| New art for the split Unit 9 | **Unit 10 — Viewport control** | Built and integrated | Keep Far Beacons on Unit 9; use Beacon Glass Gallery for Unit 10 |
+| Future Unit 15 | **Unit 16 — Real-code workflow capstones** | Planned in session 16 | Menders' Confluence is ready but unreferenced |
+| Future Unit 16 | **Unit 17 — Mastery loops** | Planned in session 17 | Keeper's Relay is ready but unreferenced |
+| Early spare | Unnumbered reserve | No content | Mosslight Landing remains reserve-only |
+| Late spare | Unnumbered reserve | No content | Open Trail Overlook remains reserve-only |
 
 Do not name a new asset `unit-09`, `unit-15`, or `unit-16` based only on the old
 shorthand. Use semantic ids until the future content files exist.
@@ -85,7 +124,7 @@ perspectives:
 | 7 Visual selection | Prism Crossing: ribbon, row, and rectangular pane crossings | Very strong: the three selection geometries are distinct | The last panes form a plausible bridge toward the Archive | Keep |
 | 8 Registers and putting | Memory Archive: crystal drawers, storage, and one open placement surface | Very strong: capture, retain, choose, and place | Opens the Archive with stored memories as the governing idea | Keep |
 | 9 Position memory | Far Beacons: two fixed sites separated by a ravine and joined by one returnable thread | **Very strong:** mark a place, travel far, and return without losing it | Strong continuation from stored memory into remembered position | Keep exclusively on Unit 9 |
-| 10 Viewport control | Currently the same Far Beacons | Weak after the split: distance travel dominates, while the unit moves the window around a stationary cursor | Repeating the exact scene stalls the Archive journey and makes the fogged-window story action visually false | Replace with Beacon Glass Gallery |
+| 10 Viewport control | Beacon Glass Gallery: a stable observation floor and supported lens frame reveal the same world at changing scales | Strong: the view and frame change while the observer remains anchored | Restores forward movement through the Archive between Far Beacons and Echo Clock | Integrated |
 | 11 Repeatable editing | Echo Clock: one large wheel propagates motion through smaller related wheels | Very strong: one shaped action repeats through matching mechanisms | A cleared view revealing a stopped clock is a clean handoff from new Unit 10 | Keep |
 | 12 Command-line ranges and line operations | Meridian Table: two grounded endpoints joined across a broad work surface | Very strong: addresses define a range and current follows it | Opens Brass Meridian by turning learned language into routed work | Keep |
 | 13 Substitution and practical regex | Mirror Loom: selected threads pass through lenses and change while others remain | Very strong: match, inspect, and transform only qualifying material | Escalates naturally from one exact range to pattern-directed change | Keep |
@@ -635,7 +674,10 @@ This reserve may be calmer than the other four. Variety should come from
 weather, optics, transport, maintenance, plants, distant routes, and reflected
 light—not spectacle.
 
-## Generation sequence for the later session
+## Completed generation sequence
+
+This sequence was completed on 2026-09-01 and remains as the reproducible
+production record.
 
 1. Add these five semantic scene definitions to the unit-scene candidate
    generator without assigning the reserve boards unit numbers.
@@ -685,7 +727,7 @@ A base board is acceptable only if all answers are yes:
 - Would it still make sense with generated backdrops disabled and only the base
   profile visible?
 
-## Later implementation acceptance criteria
+## Current and future acceptance criteria
 
 - Unit 9 alone retains Far Beacons; Unit 10 owns Beacon Glass Gallery and a
   non-shared variant root.
@@ -695,8 +737,10 @@ A base board is acceptable only if all answers are yes:
   needs them; they do not create empty units.
 - Every integrated unit owns distinct base profiles, a distinct variant root,
   and eventually a distinct story image.
-- Each integrated scene exposes ten approved sites and fifty approved
-  complete-board variants without touching its protected landmark.
+- Each prepared scene exposes ten approved sites and fifty approved
+  transparent-difference variants without touching its protected landmark.
+- Future-unit-ready and reserve-only scenes remain absent from the PWA media
+  policy, `dist`, and service worker until intentionally activated.
 - No generated board or variant contains a character, readable text, UI,
   unsupported object, editor-shaped void, or geometry drift.
 - Story progression remains one continuous chain and the Restored Wilds finale
@@ -704,13 +748,14 @@ A base board is acceptable only if all answers are yes:
 - Core and optional media budgets, offline fallbacks, reduced motion, and the
   full viewport matrix continue to pass.
 
-## Validation for the later generation/integration session
+## Validation for packaging and future activation
 
 ```bash
 node --check app.js
 node --check exercise-data.js
 git diff --check
 npm test
+npm run test:pwa
 npm run test:targeted -- tests/story-transitions.spec.js --workers=1
 ```
 

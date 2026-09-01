@@ -13,6 +13,17 @@ import {
 } from "../media-policy.js";
 
 const rootPath = new URL("../", import.meta.url).pathname;
+const futureSceneInventory = JSON.parse(
+  readFileSync(join(rootPath, "scripts", "world-art", "future-scene-patch-summary.json"), "utf8"),
+).scenes;
+
+const expectedFutureSceneStates = {
+  "beacon-glass-gallery": "runtime-active",
+  "menders-confluence": "future-unit-ready",
+  "keepers-relay": "future-unit-ready",
+  "mosslight-landing": "reserve-only",
+  "open-trail-overlook": "reserve-only",
+};
 
 test("media policy is deterministic and fails declared missing runtime assets", () => {
   const presentation = JSON.parse(readFileSync(join(rootPath, "content", "presentation.json"), "utf8"));
@@ -38,6 +49,19 @@ test("media policy is deterministic and fails declared missing runtime assets", 
     "character-reaction",
     "remote-scene-variant",
   ].includes(asset.category)));
+  assert.deepEqual(
+    Object.fromEntries(futureSceneInventory.map(scene => [scene.sceneId, scene.integrationState])),
+    expectedFutureSceneStates,
+  );
+  const packagedPaths = [...first.core, ...first.optional].map(asset => asset.path);
+  for (const scene of futureSceneInventory.filter(scene => scene.integrationState !== "runtime-active")) {
+    assert.equal(
+      packagedPaths.some(path => path.includes(`/scenes/${scene.sceneId}/`)),
+      false,
+      `${scene.sceneId} must remain outside the runtime media policy while ${scene.integrationState}`,
+    );
+  }
+  assert(packagedPaths.some(path => path.includes("/scenes/beacon-glass-gallery/")));
 
   const variedCharacters = structuredClone(characters);
   for (const character of Object.values(variedCharacters.characters)) {

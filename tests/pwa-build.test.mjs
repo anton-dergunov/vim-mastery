@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { collectMediaPolicy } from "../media-policy.js";
 
 const root = new URL("../", import.meta.url);
 const rootPath = root.pathname;
+const GITHUB_PAGES_MAX_BYTES = 1024 ** 3;
 
 function files(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
@@ -26,8 +27,13 @@ test("production PWA precaches core media and streams optional animation and sce
   const presentation = readFileSync(join(rootPath, "content", "presentation.json"), "utf8");
   const presentationData = JSON.parse(presentation);
   const characterManifest = JSON.parse(readFileSync(join(rootPath, "assets", "characters", "manifest.json"), "utf8"));
+  const futureScenes = JSON.parse(
+    readFileSync(join(rootPath, "scripts", "world-art", "future-scene-patch-summary.json"), "utf8"),
+  ).scenes;
   const media = collectMediaPolicy(presentationData, characterManifest);
   const unitFiles = files(join(rootPath, "content", "units")).map(path => path.split("/").at(-1));
+  const emittedPaths = output.map(path => path.slice(dist.length + 1).replaceAll("\\", "/"));
+  const publishedBytes = output.reduce((total, path) => total + statSync(path).size, 0);
 
   assert.equal(existsSync(join(dist, "play", "index.html")), true);
   assert.equal(manifest.start_url, "./play/");
@@ -54,6 +60,10 @@ test("production PWA precaches core media and streams optional animation and sce
     .filter(asset => ["unit-story-image", "story-still", "story-finale"].includes(asset.category))
     .every(asset => asset.path.endsWith(".webp")));
   assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 750);
+  assert(
+    publishedBytes < GITHUB_PAGES_MAX_BYTES,
+    `Published PWA is ${(publishedBytes / 1024 / 1024).toFixed(2)} MiB; GitHub Pages allows less than 1024 MiB`,
+  );
   media.core.forEach(({ path: file }) => {
     assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
     assert.equal(worker.includes(file), true, `${file} must be precached`);
@@ -69,6 +79,25 @@ test("production PWA precaches core media and streams optional animation and sce
       assert.equal(existsSync(join(dist, file)), true);
       assert.equal(worker.includes(file), false, `${file} must stream rather than precache`);
     });
+  }
+  const beaconFiles = emittedPaths.filter(path => (
+    path.startsWith("assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/")
+  ));
+  assert.equal(beaconFiles.filter(path => path.includes("/variants/") && path.endsWith(".webp")).length, 50);
+  for (const profile of ["tall", "compact", "wide"]) {
+    assert(beaconFiles.includes(`assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/${profile}/base.webp`));
+  }
+  for (const scene of futureScenes.filter(scene => scene.integrationState !== "runtime-active")) {
+    assert.equal(
+      emittedPaths.some(path => path.includes(`/scenes/${scene.sceneId}/`)),
+      false,
+      `${scene.sceneId} must not be copied into the PWA while ${scene.integrationState}`,
+    );
+    assert.equal(
+      worker.includes(`/scenes/${scene.sceneId}/`),
+      false,
+      `${scene.sceneId} must not enter the service worker while ${scene.integrationState}`,
+    );
   }
   const characterAnimations = files(join(rootPath, "assets", "characters"))
     .filter(file => file.includes("/animations/") && file.endsWith(".webp"))
