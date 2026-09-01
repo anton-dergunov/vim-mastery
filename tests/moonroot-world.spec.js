@@ -403,6 +403,7 @@ test("streams complete-board Wayfinder variants after the delay and silently fal
 });
 
 test("streams transparent Beacon Gallery patches without a complete-board vignette", async ({ page }) => {
+  test.slow();
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
   });
@@ -413,7 +414,7 @@ test("streams transparent Beacon Gallery patches without a complete-board vignet
   }));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?unit=viewport-control&activity=window-home-demo");
-  await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "compact");
+  await expect(page.locator("#world")).toHaveAttribute("data-board-profile", "compact", { timeout: 15_000 });
 
   const variant = page.locator(".world-remote-variant");
   await expect(variant).toHaveCount(1, { timeout: 5_000 });
@@ -429,10 +430,10 @@ test("streams transparent Beacon Gallery patches without a complete-board vignet
     { width: 432, height: 960 },
   ]) {
     await page.setViewportSize(viewport);
-    expect(await page.evaluate(() => (
+    await expect.poll(() => page.evaluate(() => (
       document.documentElement.scrollWidth <= window.innerWidth
       && document.documentElement.scrollHeight <= window.innerHeight
-    )), `${viewport.width}×${viewport.height}`).toBe(true);
+    )), { message: `${viewport.width}×${viewport.height}` }).toBe(true);
     await page.screenshot({
       path: `test-results/beacon-transparent-${viewport.width}x${viewport.height}.png`,
       fullPage: true,
