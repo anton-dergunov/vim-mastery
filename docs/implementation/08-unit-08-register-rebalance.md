@@ -69,8 +69,9 @@ The payoff is a safety habit worth teaching directly:
 `:%s/‹Ctrl-r›//new/g` — reuse the pattern you just confirmed visually with `/`,
 instead of retyping it. Retyping is where substitutions actually go wrong.
 
-This lesson also completes `@:` from Unit 10 by explaining what `":` holds — a
-connection the curriculum currently never makes.
+This lesson also completes `@:` from Unit 11 by explaining what `":` holds — a
+connection the curriculum currently never makes. (This brief was written before
+session 07 renumbered the later units; see the table in [README.md](README.md).)
 
 Note: `Ctrl-r` *inside Insert mode* is session 11. This session covers the
 read-only registers themselves and their use on the Ex command line. If session

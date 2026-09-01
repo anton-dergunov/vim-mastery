@@ -47,6 +47,32 @@ const runnable = activities.filter(activity => activity.type === "demo" || activ
 const activityById = new Map(activities.map(activity => [activity.id, activity]));
 const profileById = new Map(registry.profiles.map(profile => [profile.id, profile]));
 const keysOf = activity => activity.script.steps.map(step => typeof step === "string" ? step : step.key);
+// Phases used to escalate by reskinning one key stream into another language,
+// which trains recognition of a shape rather than the decision that picks it.
+// The single legitimate repeat is a guided demo and the `mix` exercise in the
+// same lesson that asks the learner to recall it unaided; a `challenge` that
+// replays anything, or a repeat across lessons, is the bug this guards.
+const assertCanonicalsAreDistinct = unitData => {
+  const owners = new Map();
+  for (const lesson of unitData.lessons) {
+    for (const activity of lesson.activities) {
+      if (activity.type !== "demo" && activity.type !== "exercise") continue;
+      const stream = keysOf(activity).join(" ");
+      const owner = owners.get(stream);
+      const recallsItsDemo = owner
+        && owner.lesson === lesson.id
+        && owner.activity.type === "demo"
+        && activity.type === "exercise"
+        && activity.phase === "mix";
+      assert(
+        !owner || recallsItsDemo,
+        `${unitData.id}/${activity.id} repeats the canonical of ${owner?.activity.id}`,
+      );
+      if (!owner) owners.set(stream, { lesson: lesson.id, activity });
+    }
+  }
+};
+
 const plannedRowsOf = activity => Math.max(
   1,
   activity.scenario.initial.lines.length,
@@ -1463,12 +1489,7 @@ test("Unit 7 covers the Visual curriculum with complete references and learning 
     }
   }
 
-  const sequenceOwners = new Map();
-  for (const activity of exercises) {
-    const sequence = JSON.stringify(keysOf(activity));
-    assert(!sequenceOwners.has(sequence), `${activity.id} duplicates ${sequenceOwners.get(sequence)}`);
-    sequenceOwners.set(sequence, activity.id);
-  }
+  assertCanonicalsAreDistinct(visualUnit);
 
   for (const activity of exerciseChallenges) {
     assert(["v", "V", "Ctrl-v"].includes(keysOf(activity)[0]), `${activity.id} does not choose a Visual shape`);
@@ -1482,7 +1503,9 @@ test("Unit 7 covers the Visual curriculum with complete references and learning 
   const activityById = new Map(visualActivities.map(activity => [activity.id, activity]));
   assert.deepEqual(keysOf(activityById.get("integrated-column-marker")), ["Ctrl-v", "2", "j", "r", "=", "0", "v", "e", "U"]);
   assert.deepEqual(keysOf(activityById.get("integrated-reselect-correction")), ["V", "2", "j", "~", "g", "v", "U"]);
-  assert.deepEqual(keysOf(activityById.get("integrated-character-edit")), ["v", "t", ",", "c", "a", "c", "t", "i", "v", "e", "Escape"]);
+  assert.deepEqual(keysOf(activityById.get("integrated-character-edit")), ["v", "t", ",", "c", "a", "c", "t", "i", "v", "e", "Escape", "j", "V", "d"]);
+  assert.deepEqual(keysOf(activityById.get("visual-strategy-demo")), ["v", "e", "U", "V", "j", ">"]);
+  assert.deepEqual(keysOf(activityById.get("line-indent-branch-challenge")), ["V", "j", ">", "G", "V", "<"]);
 });
 
 for (const activity of visualRunnable) {
@@ -1524,6 +1547,7 @@ test("Unit 8 covers every register family with complete learning phases", () => 
   for (const entry of registerUnit.reference) {
     for (const ref of entry.exampleActivityRefs) assert(ids.has(ref), `${entry.id} references missing ${ref}`);
   }
+  assertCanonicalsAreDistinct(registerUnit);
 });
 
 for (const activity of registerRunnable) {

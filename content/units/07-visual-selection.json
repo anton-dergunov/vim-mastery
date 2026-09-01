@@ -1831,40 +1831,174 @@
           "id": "line-indent-branch-challenge",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Indent a branch body",
-          "instruction": "Indent both Python statements inside the branch while leaving the surrounding rows unchanged.",
+          "title": "Repair a branch body",
+          "instruction": "Indent the two Python statements that belong inside the branch, and return the over-indented closing call to the left margin.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
-            "initial": { "lines": ["if ready:", "run()", "log()", "finish()"], "cursor": [1, 0], "mode": "normal" },
-            "target": { "lines": ["if ready:", "  run()", "  log()", "finish()"], "cursor": [1, 2], "mode": "normal" }
+            "initial": {
+              "lines": [
+                "if ready:",
+                "run()",
+                "log()",
+                "  finish()"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "if ready:",
+                "  run()",
+                "  log()",
+                "finish()"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
           },
           "script": {
-            "steps": ["V", "j", ">"],
+            "steps": [
+              "V",
+              "j",
+              ">",
+              "G",
+              "V",
+              "<"
+            ],
             "commandGroups": [
-              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
-              { "from": 1, "to": 2, "display": "j", "explanation": "Move one line down to extend the selection." },
-              { "from": 2, "to": 3, "display": ">", "explanation": "Indent the selected statements." }
+              {
+                "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ">",
+                "explanation": "Indent the selected statements."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "G",
+                "explanation": "Move to the last line of the buffer."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "V",
+                "explanation": "Select that whole line."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "<",
+                "explanation": "Outdent the selected line."
+              }
             ],
             "checkpoints": [
-              { "afterStep": 2, "cursor": [2, 0], "mode": "visual-line" },
-              { "afterStep": 3, "lines": ["if ready:", "  run()", "  log()", "finish()"], "cursor": [1, 2], "mode": "normal" }
+              {
+                "afterStep": 2,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "if ready:",
+                  "  run()",
+                  "  log()",
+                  "  finish()"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  3,
+                  2
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "if ready:",
+                  "  run()",
+                  "  log()",
+                  "finish()"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
             ]
           },
-          "hints": ["The target consists of complete statements.", "Choose a shape that does not require managing columns."],
-          "feedback": { "success": "Both branch statements moved together.", "why": "A linewise selection matched the structure of the Python body." },
-          "skills": { "primary": ["visual-line-shift"], "supporting": ["visual-line", "visual-selection"] },
-          "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "code-structure"] },
+          "hints": [
+            "Every target here is a complete statement, never a fragment of one.",
+            "The branch body moves one way and the closing call moves the other."
+          ],
+          "feedback": {
+            "success": "The branch body and its closing call now sit at the depths the code implies.",
+            "why": "Two shifts in opposite directions each needed their own linewise selection."
+          },
+          "skills": {
+            "primary": [
+              "visual-line-shift"
+            ],
+            "supporting": [
+              "visual-line",
+              "visual-line-indent",
+              "visual-line-outdent",
+              "visual-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "selection-geometry",
+              "code-structure"
+            ]
+          },
           "portability": "Core Vim Visual-mode behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "Python indentation makes whole-line geometry consequential and familiar.",
+            "languageRationale": "Python indentation makes whole-line geometry consequential in both directions.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
           },
-          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-line-shift"] },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line",
+              "visual-line-shift"
+            ]
+          },
           "delivery": "guided-then-recall"
         },
         {
@@ -5219,8 +5353,8 @@
           "id": "visual-strategy-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Inspect lines before indenting",
-          "instruction": "Select two complete statements and indent them after confirming the range.",
+          "title": "Match each shape to its target",
+          "instruction": "Uppercase one call name, then indent the two statements that belong to the branch.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -5240,7 +5374,7 @@
             "target": {
               "lines": [
                 "if ready:",
-                "  run()",
+                "  RUN()",
                 "  log()",
                 "done()"
               ],
@@ -5253,6 +5387,9 @@
           },
           "script": {
             "steps": [
+              "v",
+              "e",
+              "U",
               "V",
               "j",
               ">"
@@ -5261,25 +5398,65 @@
               {
                 "from": 0,
                 "to": 1,
-                "display": "V",
-                "explanation": "Switch to Visual Line mode."
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
               },
               {
                 "from": 1,
                 "to": 2,
-                "display": "j",
-                "explanation": "Move one line down to extend the selection."
+                "display": "e",
+                "explanation": "Extend the selection to the end of the call name."
               },
               {
                 "from": 2,
                 "to": 3,
+                "display": "U",
+                "explanation": "Uppercase the selected name."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "j",
+                "explanation": "Move one line down to extend the selection."
+              },
+              {
+                "from": 5,
+                "to": 6,
                 "display": ">",
-                "explanation": "Indent the selected lines."
+                "explanation": "Indent the selected statements."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 2,
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "visual"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "if ready:",
+                  "RUN()",
+                  "log()",
+                  "done()"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
                 "cursor": [
                   2,
                   0
@@ -5287,10 +5464,10 @@
                 "mode": "visual-line"
               },
               {
-                "afterStep": 3,
+                "afterStep": 6,
                 "lines": [
                   "if ready:",
-                  "  run()",
+                  "  RUN()",
                   "  log()",
                   "done()"
                 ],
@@ -5303,19 +5480,21 @@
             ]
           },
           "hints": [
-            "Choose the selection shape before moving.",
-            "Apply the operation only after the intended range is highlighted."
+            "A word inside a row and a pair of whole rows are different shapes.",
+            "Choose the shape that matches each target before operating."
           ],
           "feedback": {
-            "success": "The intended range changed cleanly.",
-            "why": "The selection made the affected text explicit before the operation."
+            "success": "Two targets, two shapes, one buffer.",
+            "why": "The name needed a character selection and the rows needed a linewise one."
           },
           "skills": {
             "primary": [
               "visual-strategy"
             ],
             "supporting": [
-              "visual-selection"
+              "visual-selection",
+              "visual-character",
+              "visual-line"
             ]
           },
           "difficulty": {
@@ -5328,7 +5507,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "A small Python-like block makes the inspected line range meaningful.",
+            "languageRationale": "A small Python block puts a word target and a line-range target side by side.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5681,14 +5860,15 @@
           "id": "integrated-character-edit",
           "type": "exercise",
           "phase": "mix",
-          "title": "Replace one inspected argument",
-          "instruction": "Replace the first Go call argument with “active” while preserving the comma.",
+          "title": "Fix one call and drop its stale copy",
+          "instruction": "Replace the leading argument of the first Go call with “active”, then remove the stale call on the row below.",
           "languageId": "go",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "send(draft, next)"
+                "send(draft, next)",
+                "send(stale, next)"
               ],
               "cursor": [
                 0,
@@ -5702,7 +5882,7 @@
               ],
               "cursor": [
                 0,
-                10
+                0
               ],
               "mode": "normal"
             }
@@ -5719,7 +5899,10 @@
               "i",
               "v",
               "e",
-              "Escape"
+              "Escape",
+              "j",
+              "V",
+              "d"
             ],
             "commandGroups": [
               {
@@ -5751,6 +5934,24 @@
                 "to": 11,
                 "display": "Esc",
                 "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "j",
+                "explanation": "Move down to the stale call."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "V",
+                "explanation": "Switch to Visual Line mode."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "d",
+                "explanation": "Delete the selected line."
               }
             ],
             "checkpoints": [
@@ -5765,23 +5966,43 @@
               {
                 "afterStep": 11,
                 "lines": [
-                  "send(active, next)"
+                  "send(active, next)",
+                  "send(stale, next)"
                 ],
                 "cursor": [
                   0,
                   10
                 ],
                 "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "send(active, next)"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Choose the selection shape before moving.",
-            "Apply the operation only after the intended range is highlighted."
+            "The argument is a fragment of a row; the stale call is an entire row.",
+            "Each of the two targets wants a different selection shape."
           ],
           "feedback": {
-            "success": "The intended range changed cleanly.",
-            "why": "The selection made the affected text explicit before the operation."
+            "success": "One argument replaced, one whole row gone.",
+            "why": "A character selection bounded the argument, and a linewise selection took the row entire."
           },
           "skills": {
             "primary": [
@@ -5789,20 +6010,23 @@
             ],
             "supporting": [
               "visual-selection",
-              "t-motion"
+              "t-motion",
+              "visual-line",
+              "visual-line-delete"
             ]
           },
           "difficulty": {
             "level": "medium",
             "dimensions": [
-              "selection-geometry"
+              "selection-geometry",
+              "code-structure"
             ]
           },
           "portability": "Core Vim Visual-mode behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "A Go call makes punctuation-bounded character selection practical.",
+            "languageRationale": "A repeated Go call offers a punctuation-bounded argument beside a redundant whole row.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5811,7 +6035,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-strategy-character",
-              "visual-change"
+              "visual-change",
+              "visual-line-delete"
             ]
           },
           "delivery": "guided-then-recall"

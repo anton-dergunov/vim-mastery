@@ -1261,17 +1261,20 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ mode: "visual-line", selection: { kind: "linear", from: [0, 0] } });
   });
 
-  test("matches every new Unit 7 challenge selection checkpoint", async ({ page }) => {
+  test("matches every Unit 7 challenge and composite selection checkpoint", async ({ page }) => {
     const cases = [
       { id: "selection-shape-column-challenge", afterStep: 3, mode: "visual-block", cursor: [3, 10], kind: "block" },
       { id: "character-argument-change-challenge", afterStep: 3, mode: "visual", cursor: [0, 10], kind: "linear" },
       { id: "line-indent-branch-challenge", afterStep: 2, mode: "visual-line", cursor: [2, 5], kind: "linear" },
+      { id: "line-indent-branch-challenge", afterStep: 5, mode: "visual-line", cursor: [3, 10], kind: "linear" },
       { id: "selection-corner-block-challenge", afterStep: 6, mode: "visual-block", cursor: [2, 9], kind: "block" },
       { id: "reselection-correction-challenge", afterStep: 6, mode: "visual-line", cursor: [2, 8], kind: "linear" },
       { id: "selection-reindent-code-challenge", afterStep: 3, mode: "visual-line", cursor: [3, 7], kind: "linear" },
       { id: "block-column-delete-challenge", afterStep: 3, mode: "visual-block", cursor: [3, 10], kind: "block" },
       { id: "block-prefix-declarations-challenge", afterStep: 3, mode: "visual-block", cursor: [3, 0], kind: "block" },
       { id: "visual-strategy-range-challenge", afterStep: 3, mode: "visual", cursor: [0, 14], kind: "linear" },
+      { id: "integrated-character-edit", afterStep: 3, mode: "visual", cursor: [0, 10], kind: "linear" },
+      { id: "integrated-character-edit", afterStep: 13, mode: "visual-line", cursor: [1, 17], kind: "linear" },
     ];
 
     for (const testCase of cases) {
@@ -1329,12 +1332,15 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ playbackStep: 1, mode: "visual" });
   });
 
-  test("keeps new Unit 7 challenges inside every target phone viewport", async ({ page }) => {
+  test("keeps reworked Unit 7 activities inside every target phone viewport", async ({ page }) => {
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
     const activityIds = [
       "character-argument-change-challenge",
       "selection-reindent-code-challenge",
       "block-prefix-declarations-challenge",
+      "line-indent-branch-challenge",
+      "visual-strategy-demo",
+      "integrated-character-edit",
     ];
     const textSelector = [
       ".lesson-label", ".activity-intro h1", ".activity-intro p", ".command-explanation",
