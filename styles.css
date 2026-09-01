@@ -471,7 +471,7 @@ button { font: inherit; }
   background-size: cover;
   filter: saturate(.88) brightness(.82);
 }
-.world-remote-variant::after {
+.world-remote-variant[data-media-mode="complete-board"]::after {
   content: "";
   position: absolute;
   inset: 4px;

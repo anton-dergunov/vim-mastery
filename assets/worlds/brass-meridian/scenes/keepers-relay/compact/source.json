@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "unitId": "mastery-loops",
+  "sceneId": "keepers-relay",
+  "worldId": "brass-meridian",
+  "source": "base.webp",
+  "sha256": "be0e8da2a10aa180685b28814d5f7a8fcc312279ced3e07a6a507b3f53f3a80f",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-r2-01",
+    "approvedAt": "2026-08-31T11:47:13.081979+00:00",
+    "notes": "Owner-approved after compact editor-space review: strongest Keeper Relay candidate."
+  },
+  "derivatives": {
+    "tall": {
+      "path": "tall-source.png",
+      "sha256": "b65a7013731a662ec4be27bc3cd3de3e1ce74a06cc00858a699200c4bb4e77f8",
+      "generatedAt": "2026-08-31T13:02:55.041882+00:00",
+      "model": "gemini-3.1-flash-image"
+    },
+    "wide": {
+      "path": "wide-source.png",
+      "sha256": "15cc3fbe36286d0b19c2cbfa50d40341b73c07a4583907eb37d4f883c005fecd",
+      "generatedAt": "2026-08-31T13:03:45.796126+00:00",
+      "model": "gemini-3.1-flash-image"
+    }
+  },
+  "variantMode": "transparent-patch",
+  "variantAlgorithm": "whole-canvas-linear-distance-islands-pixel-hysteresis-feather"
+}

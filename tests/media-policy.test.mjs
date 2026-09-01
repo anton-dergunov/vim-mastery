@@ -30,9 +30,7 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   assert.equal(warnings.length, coreBytes > CORE_MEDIA_WARNING_BYTES ? 1 : 0);
   assert(first.core.some(asset => asset.category === "registered-patch"));
   assert(first.core.some(asset => asset.category === "character-idle"));
-  // Fourteen backdrops for fifteen units: Units 9 and 10 share one scene, and
-  // the collector deduplicates by path.
-  assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 14);
+  assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 15);
   assert.equal(first.core.filter(asset => asset.category === "unit-story-image").length, 15);
   assert.equal(first.core.filter(asset => asset.category === "story-ui").length, 1);
   assert(first.optional.every(asset => [

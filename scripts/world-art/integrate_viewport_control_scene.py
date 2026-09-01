@@ -17,6 +17,18 @@ ARTIFACT = ROOT / "artifacts/world-generation/unit-scenes/viewport-control"
 PRESENTATION = ROOT / "content/presentation.json"
 SCENE_ROOT = ROOT / "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery"
 SCENE_ID = "beacon-glass-gallery"
+SITE_IDS = [
+    "upper-side-lens",
+    "upper-glass-pane",
+    "right-wheel-counterweight",
+    "left-wall-beacon",
+    "drawer-wall-prism",
+    "crystal-drawer-bank",
+    "right-aperture",
+    "shelf-vial",
+    "corridor-pendulum",
+    "floor-inlays",
+]
 
 
 def sha256(path: Path) -> str:
@@ -67,6 +79,21 @@ def scene_definition() -> dict:
             profile: {"base": f"{root}/{profile}/base.webp", "focalPosition": "50% 50%", "patches": {}}
             for profile in ("tall", "compact", "wide")
         },
+        "remoteVariants": {
+            "profiles": ["tall", "compact", "wide"],
+            "siteIds": SITE_IDS,
+            "variantsPerSite": 5,
+            "timing": {
+                "initialDelayMs": 2500,
+                "fadeMs": 1200,
+                "holdMs": 6500,
+                "gapMs": 4000,
+            },
+            "format": "webp",
+            "registrationProfile": "compact",
+            "mode": "transparent-patch",
+            "assetRoot": f"{root}/variants",
+        },
         "phasePatches": {phase: [] for phase in ("explain", "demonstrate", "isolate", "mix", "challenge", "summary")},
         "landmarkPatches": {"dormant": None, "restored": None},
     }
@@ -102,7 +129,7 @@ def main() -> int:
         webp(source, SCENE_ROOT / profile / "base.webp")
     compact = SCENE_ROOT / "compact" / "base.webp"
     (SCENE_ROOT / "compact" / "source.json").write_text(json.dumps({
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "unitId": manifest["unitId"],
         "sceneId": SCENE_ID,
         "worldId": manifest["worldId"],
@@ -111,11 +138,18 @@ def main() -> int:
         "model": manifest["model"],
         "approval": manifest["approval"],
         "derivatives": manifest["derivatives"],
+        "variantMode": "transparent-patch",
+        "variantAlgorithm": "whole-canvas-linear-distance-islands-pixel-hysteresis-feather",
     }, indent=2) + "\n")
 
     if not args.integrate:
         print(f"Staged {SCENE_ID}; use --integrate after its 50 variants are approved")
         return 0
+
+    variants = sorted((SCENE_ROOT / "variants").glob("*.webp"))
+    expected = {f"{site_id}-c{index:02d}.webp" for site_id in SITE_IDS for index in range(1, 6)}
+    if {path.name for path in variants} != expected:
+        raise RuntimeError(f"{SCENE_ID}: expected exactly 50 approved transparent patches")
 
     presentation = json.loads(PRESENTATION.read_text())
     unit = presentation["units"]["viewport-control"]

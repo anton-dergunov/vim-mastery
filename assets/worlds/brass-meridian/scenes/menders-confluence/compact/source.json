@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "unitId": "real-code-workflow-capstones",
+  "sceneId": "menders-confluence",
+  "worldId": "brass-meridian",
+  "source": "base.webp",
+  "sha256": "0af63d821930f4faf92fec78f3f783654f0994e6aceb46dbb74f66f1f04098d7",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-r2-02",
+    "approvedAt": "2026-08-31T11:47:13.028085+00:00",
+    "notes": "Owner-approved after compact editor-space review: strongest viable Menders Confluence candidate."
+  },
+  "derivatives": {
+    "tall": {
+      "path": "tall-source.png",
+      "sha256": "2f48cee399dceed6deebde7200f70fc31102f7f260e8284ff67a76b44a68c4f5",
+      "generatedAt": "2026-08-31T13:01:11.187456+00:00",
+      "model": "gemini-3.1-flash-image"
+    },
+    "wide": {
+      "path": "wide-source.png",
+      "sha256": "c784209259a29129a72e0215d8697931691d3e34ec253b842d3cb1a4ff173456",
+      "generatedAt": "2026-08-31T13:02:03.839363+00:00",
+      "model": "gemini-3.1-flash-image"
+    }
+  },
+  "variantMode": "transparent-patch",
+  "variantAlgorithm": "whole-canvas-linear-distance-islands-pixel-hysteresis-feather"
+}

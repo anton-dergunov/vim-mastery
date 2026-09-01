@@ -1367,7 +1367,7 @@
       },
       "completion": {
         "actionId": "clear-the-beacon-window",
-        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
+        "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/compact/base.webp",
         "action": "Luma wipes the lens of the beacon glass; the fog lifts and the far shore resolves",
         "copy": "Luma clears the beacon glass. The Wilds can look far ahead, or close at hand, without moving a step.",
         "nextHook": {
@@ -1375,10 +1375,10 @@
         },
         "storyImage": "assets/worlds/story/units/viewport-control.webp"
       },
-      "sceneId": "far-beacons",
+      "sceneId": "beacon-glass-gallery",
       "scenes": {
-        "far-beacons": {
-          "id": "far-beacons",
+        "beacon-glass-gallery": {
+          "id": "beacon-glass-gallery",
           "patchRegions": {
             "phase-a": {
               "x": 0.04,
@@ -1401,17 +1401,17 @@
           },
           "profiles": {
             "tall": {
-              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/tall/base.webp",
+              "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/tall/base.webp",
               "focalPosition": "50% 50%",
               "patches": {}
             },
             "compact": {
-              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
+              "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {}
             },
             "wide": {
-              "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/wide/base.webp",
+              "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/wide/base.webp",
               "focalPosition": "50% 50%",
               "patches": {}
             }
@@ -1423,16 +1423,16 @@
               "wide"
             ],
             "siteIds": [
-              "upper-left-niche",
-              "upper-right-niche",
-              "left-drawer-bank",
-              "right-drawer-bank",
-              "left-landing",
-              "right-landing",
-              "lower-left-ledge",
-              "lower-right-ledge",
-              "distant-left-shelf",
-              "distant-right-shelf"
+              "upper-side-lens",
+              "upper-glass-pane",
+              "right-wheel-counterweight",
+              "left-wall-beacon",
+              "drawer-wall-prism",
+              "crystal-drawer-bank",
+              "right-aperture",
+              "shelf-vial",
+              "corridor-pendulum",
+              "floor-inlays"
             ],
             "variantsPerSite": 5,
             "timing": {
@@ -1443,7 +1443,8 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
-            "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants"
+            "mode": "transparent-patch",
+            "assetRoot": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants"
           },
           "phasePatches": {
             "explain": [],
@@ -1459,7 +1460,7 @@
           }
         }
       },
-      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp"
+      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/compact/base.webp"
     },
     "repeatable-editing": {
       "id": "repeatable-editing",

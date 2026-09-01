@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "unitId": "mosslight-landing",
+  "sceneId": "mosslight-landing",
+  "worldId": "moonroot-ruins",
+  "source": "base.webp",
+  "sha256": "20f79075bb210ad071cf58a9fc4abbbded4e71fc9636819b37642c7d515e2f37",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-r2-05",
+    "approvedAt": "2026-08-31T12:57:48.458047+00:00",
+    "notes": "Owner-approved after compact editor-space review: best Mosslight Landing candidate."
+  },
+  "derivatives": {
+    "tall": {
+      "path": "tall-source.png",
+      "sha256": "5928aa64474b831e6650c1060d742d97bb98f9d2fa3d0ccb5246553a84de5eb2",
+      "generatedAt": "2026-08-31T13:04:34.283120+00:00",
+      "model": "gemini-3.1-flash-image"
+    },
+    "wide": {
+      "path": "wide-source.png",
+      "sha256": "4467057088877e2f1675b871a5610854e3a295fa4a948b2de6c3150ddbc04a4b",
+      "generatedAt": "2026-08-31T13:05:25.367763+00:00",
+      "model": "gemini-3.1-flash-image"
+    }
+  },
+  "variantMode": "transparent-patch",
+  "variantAlgorithm": "whole-canvas-linear-distance-islands-pixel-hysteresis-feather"
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "unitId": "open-trail-overlook",
+  "sceneId": "open-trail-overlook",
+  "worldId": "brass-meridian",
+  "source": "base.webp",
+  "sha256": "912962fc80d50c7daa3521aaa357602be54785f4c62561ee7d91497f7f267cc8",
+  "model": "gemini-3.1-flash-image",
+  "approval": {
+    "candidateId": "candidate-r2-03",
+    "approvedAt": "2026-08-31T12:10:08.508964+00:00",
+    "notes": "Owner-approved: Open Trail Overlook selection."
+  },
+  "derivatives": {
+    "tall": {
+      "path": "tall-source.png",
+      "sha256": "61b6e65389ce808a7396bbc21e3d3337499eed442af9cec42f39f6d72aca1dce",
+      "generatedAt": "2026-08-31T13:06:13.370036+00:00",
+      "model": "gemini-3.1-flash-image"
+    },
+    "wide": {
+      "path": "wide-source.png",
+      "sha256": "b3bd165be0c32dd2480b6f16b7930f77f34e2c3c438c022647915a77edde1d5b",
+      "generatedAt": "2026-08-31T13:07:19.544204+00:00",
+      "model": "gemini-3.1-flash-image"
+    }
+  },
+  "variantMode": "transparent-patch",
+  "variantAlgorithm": "whole-canvas-linear-distance-islands-pixel-hysteresis-feather"
+}

@@ -402,6 +402,44 @@ test("streams complete-board Wayfinder variants after the delay and silently fal
   await expect(variant).toHaveCount(1, { timeout: 3_000 });
 });
 
+test("streams transparent Beacon Gallery patches without a complete-board vignette", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
+  });
+  await page.route("**/assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants/*.webp", route => route.fulfill({
+    path: "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants/upper-side-lens-c01.webp",
+    contentType: "image/webp",
+    headers: { "access-control-allow-origin": "*" },
+  }));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=viewport-control&activity=window-home-demo");
+  await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "compact");
+
+  const variant = page.locator(".world-remote-variant");
+  await expect(variant).toHaveCount(1, { timeout: 5_000 });
+  await expect(variant).toHaveAttribute("data-media-mode", "transparent-patch");
+  expect(await variant.evaluate(element => getComputedStyle(element, "::after").content)).toBe("none");
+  expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+    .toContain("beacon-glass-gallery/compact/base.webp");
+  for (const viewport of [
+    { width: 360, height: 740 },
+    { width: 390, height: 844 },
+    { width: 412, height: 915 },
+    { width: 430, height: 932 },
+    { width: 432, height: 960 },
+  ]) {
+    await page.setViewportSize(viewport);
+    expect(await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+      && document.documentElement.scrollHeight <= window.innerHeight
+    )), `${viewport.width}×${viewport.height}`).toBe(true);
+    await page.screenshot({
+      path: `test-results/beacon-transparent-${viewport.width}x${viewport.height}.png`,
+      fullPage: true,
+    });
+  }
+});
+
 test("falls back to GitHub Pages when a local development variant is missing", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));

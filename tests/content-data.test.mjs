@@ -200,7 +200,8 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
   }
   for (const unitId of Object.keys(presentation.units)) {
     const variants = resolveUnitPresentation(presentation, unitId).scene.remoteVariants;
-    assert.equal(remoteVariantPaths(variants).length, 50, `${unitId} must expose every approved complete-board variant`);
+    assert.equal(remoteVariantPaths(variants).length, 50, `${unitId} must expose every approved scene variant`);
+    assert(["complete-board", "transparent-patch"].includes(variants.mode || "complete-board"));
     assert.match(variants.assetRoot, /\/variants$/);
     assert.equal(
       registeredSceneProfileForBoard("wide", resolveUnitPresentation(presentation, unitId).scene),
@@ -211,6 +212,9 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
       "compact",
     );
   }
+  const viewportVariants = resolveUnitPresentation(presentation, "viewport-control").scene.remoteVariants;
+  assert.equal(viewportVariants.mode, "transparent-patch");
+  assert.match(viewportVariants.assetRoot, /beacon-glass-gallery\/variants$/);
 });
 
 test("registered scene profiles follow the rendered board aspect ratio", () => {
@@ -290,8 +294,6 @@ test("presentation manifest preserves the approved unit story table", () => {
       copy: "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
       nextSpeaker: null, nextHook: "One beacon is lit, but the window onto the Wilds is still fogged.",
     },
-    // Unit 10 shares Unit 9's world, guide, and scene art until session 20
-    // draws it its own; only the beat is new.
     {
       id: "viewport-control", guide: "luma", world: "archive-of-echoes", landmark: "beacon-glass",
       action: "Luma wipes the lens of the beacon glass; the fog lifts and the far shore resolves",

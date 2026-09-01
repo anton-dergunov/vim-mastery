@@ -36,6 +36,9 @@ function validateRemoteVariants(value, path, errors) {
   if (!sceneProfiles.includes(value.registrationProfile)) {
     errors.push(`${path}.registrationProfile must name a supported scene profile`);
   }
+  if (value.mode !== undefined && !["complete-board", "transparent-patch"].includes(value.mode)) {
+    errors.push(`${path}.mode must be complete-board or transparent-patch when provided`);
+  }
   if (value.format !== undefined && !["png", "webp"].includes(value.format)) {
     errors.push(`${path}.format must be png or webp when provided`);
   }

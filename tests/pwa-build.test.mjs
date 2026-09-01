@@ -44,16 +44,16 @@ test("production PWA precaches core media and streams optional animation and sce
   });
   assert.equal(readFileSync(join(dist, "content", "presentation.json"), "utf8"), presentation);
   assert.match(worker, /content\/presentation\.json/);
-  assert.equal(media.core.length, 135);
-  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 14);
-  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 14);
+  assert.equal(media.core.length, 139);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 15);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 15);
   assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);
   assert.equal(media.core.filter(asset => asset.category === "story-finale").length, 1);
   assert.equal(media.core.filter(asset => asset.category === "story-ui").length, 1);
   assert(media.core
     .filter(asset => ["unit-story-image", "story-still", "story-finale"].includes(asset.category))
     .every(asset => asset.path.endsWith(".webp")));
-  assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 700);
+  assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 750);
   media.core.forEach(({ path: file }) => {
     assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
     assert.equal(worker.includes(file), true, `${file} must be precached`);

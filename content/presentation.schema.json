@@ -96,6 +96,7 @@
           "uniqueItems": true
         },
         "registrationProfile": { "enum": ["tall", "compact", "wide"] },
+        "mode": { "enum": ["complete-board", "transparent-patch"] },
         "assetRoot": { "type": "string", "pattern": "^assets/[a-z0-9][a-z0-9./-]*$" },
         "format": { "enum": ["png", "webp"] },
         "siteIds": {
