@@ -114,7 +114,7 @@
       "unitId": "mosslight-landing",
       "worldId": "moonroot-ruins",
       "sceneId": "mosslight-landing",
-      "integrationState": "reserve-only",
+      "integrationState": "runtime-active",
       "count": 50,
       "bytes": 3525118,
       "siteIds": [

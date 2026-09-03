@@ -12,6 +12,9 @@ test.beforeEach(async ({ page }) => {
       introSeen: true,
       completedUnitStoryIds: [],
     }));
+    // The opening reference deck has its own suite; keep every other suite on
+    // the path a returning learner takes.
+    window.localStorage.setItem("vim-wilds.reference.v1", JSON.stringify({ orientationSeen: true }));
   });
   await page.setViewportSize({ width: 390, height: 844 });
 });

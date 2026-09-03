@@ -39,6 +39,8 @@ const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
 const presentation = readJson("../content/presentation.json");
 const presentationSchema = readJson("../content/presentation.schema.json");
+const referenceCatalog = readJson("../content/reference.json");
+const referenceSchema = readJson("../content/reference.schema.json");
 const characterManifest = readJson("../assets/characters/manifest.json");
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -100,6 +102,98 @@ test("content files expose the expected schema versions", () => {
     reset: "initial-state",
     backwardStep: "previous-manual-step",
   });
+});
+
+test("the reference catalog is a deck manifest, not a curriculum", () => {
+  assert.equal(referenceSchema.$schema, "https://json-schema.org/draft/2020-12/schema");
+  assert.equal(referenceSchema.$id, "https://vimwilds.local/schemas/reference.schema.json");
+  assert.equal(referenceSchema.additionalProperties, false);
+  assert.deepEqual(referenceSchema.$defs.deck.properties.role.enum, ["opening", "deck"]);
+  assert.equal(referenceCatalog.schemaVersion, 1);
+  assert.match(referenceCatalog.contentVersion, /^\d+\.\d+\.\d+$/);
+
+  const deckIds = referenceCatalog.decks.map(deck => deck.id);
+  assert.deepEqual(deckIds, ["orientation", "survival", "host-reality", "orientation-only"]);
+  assert.equal(new Set(deckIds).size, deckIds.length);
+  assert.equal(referenceCatalog.decks.filter(deck => deck.role === "opening").length, 1);
+
+  const cardIds = new Set();
+  for (const deck of referenceCatalog.decks) {
+    for (const field of ["kicker", "title", "summary"]) {
+      assert(typeof deck[field] === "string" && deck[field].trim(), `${deck.id}.${field} is required`);
+    }
+    assert(idPattern.test(deck.id), `${deck.id} must be a kebab-case ID`);
+    assert(deck.cards.length >= 1);
+    for (const card of deck.cards) {
+      assert(idPattern.test(card.id), `${card.id} must be a kebab-case ID`);
+      assert(!cardIds.has(card.id), `duplicate reference card ID ${card.id}`);
+      cardIds.add(card.id);
+      assert(
+        (card.body?.length || 0) > 0 || (card.rows?.length || 0) > 0,
+        `${card.id} must carry prose, rows, or both`,
+      );
+      for (const row of card.rows || []) {
+        assert(typeof row.command === "string" && row.command.trim());
+        assert(typeof row.vim === "string" && row.vim.trim());
+      }
+      // A card of commands has to say something about an embedding editor,
+      // either per row or once for the whole card.
+      if (card.rows) {
+        assert(
+          card.rows.every(row => row.host) || typeof card.hostNote === "string",
+          `${card.id} must carry a host column or a hostNote`,
+        );
+      }
+    }
+  }
+
+  // Cards are reference, never progression: nothing here may look like an
+  // activity the player could be scored on.
+  const serialized = JSON.stringify(referenceCatalog);
+  for (const forbidden of ["scenario", "script", "checkpoints", "practiceMode", "phase"]) {
+    assert(!serialized.includes(`"${forbidden}"`), `reference cards must not carry ${forbidden}`);
+  }
+});
+
+test("the host column names an example editor and the Vim column never does", () => {
+  const hosts = /VS Code|VSCodeVim|vscode-neovim|JetBrains|Zed|Cursor|Sublime|Emacs/;
+  let namedHosts = 0;
+  for (const deck of referenceCatalog.decks) {
+    for (const card of deck.cards) {
+      for (const row of card.rows || []) {
+        // Terminal Vim is the baseline the curriculum teaches; naming a host in
+        // that column would make the reference behavior sound editor-specific.
+        assert(!hosts.test(row.vim), `${card.id}: the Vim column must describe Vim, not a host`);
+        if (row.host && hosts.test(row.host)) namedHosts += 1;
+      }
+    }
+  }
+  assert(namedHosts >= 5, "the host column should name a concrete editor as an example");
+});
+
+test("the reference surface registers the Mosslight Landing board", () => {
+  const surface = presentation.reference;
+  assert.equal(surface.worldId, "moonroot-ruins");
+  assert.equal(surface.sceneId, "mosslight-landing");
+  assert.equal(surface.scene.id, surface.sceneId);
+  assert(presentation.worlds[surface.worldId], "the reference world must be registered");
+  for (const profile of ["tall", "compact", "wide"]) {
+    assert.match(
+      surface.scene.profiles[profile].base,
+      /^assets\/worlds\/moonroot-ruins\/scenes\/mosslight-landing\/[a-z]+\/base\.webp$/,
+    );
+  }
+  // The board is not a unit: it registers no phases, patch regions, or landmark
+  // states, and the standalone schema is what says so.
+  assert.deepEqual(
+    Object.keys(surface.scene).sort(),
+    ["id", "profiles", "remoteVariants"],
+  );
+  assert.equal(remoteVariantPaths(surface.scene.remoteVariants).length, 50);
+  assert.equal(
+    presentationSchema.$defs.standaloneScene.required.includes("phasePatches"),
+    false,
+  );
 });
 
 test("reaction manifest preserves the four-second idle-ramp contract", () => {

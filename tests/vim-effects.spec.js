@@ -25,6 +25,9 @@ test.describe("Semantic Vim effects", () => {
           completedUnitStoryIds: [],
         }));
       }
+      if (!window.localStorage.getItem("vim-wilds.reference.v1")) {
+        window.localStorage.setItem("vim-wilds.reference.v1", JSON.stringify({ orientationSeen: true }));
+      }
     });
   });
 

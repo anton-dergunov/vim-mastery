@@ -3965,3 +3965,362 @@ html.next-ui .toc-unit-launch button {
   html.next-ui .story-landmark-restored,
   html.next-ui .story-light-path { transition-duration: 0s; }
 }
+
+/* ---------------------------------------------------------------------------
+   Reference decks
+
+   A reference card is not a lesson. It carries no buffer, no keyboard, and no
+   seven-row ceiling, so it may scroll inside itself where a lesson may not.
+   The document still never scrolls and nothing overflows horizontally.
+   --------------------------------------------------------------------------- */
+
+html.next-ui .reference-dialog[open] {
+  position: fixed;
+  z-index: 120;
+  inset: max(10px, env(safe-area-inset-top)) auto max(10px, env(safe-area-inset-bottom)) 50%;
+  width: min(calc(100% - 20px), 460px);
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(194, 225, 209, .34);
+  border-radius: 18px;
+  color: #e5eee9;
+  background: #081411;
+  box-shadow: 0 28px 90px rgba(0,0,0,.82), 0 0 42px rgba(95, 218, 183, .12);
+  transform: translateX(-50%);
+}
+
+html.next-ui .reference-dialog::backdrop {
+  background: rgba(1, 7, 6, .9);
+  backdrop-filter: blur(10px);
+}
+
+html.next-ui .reference-surface {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+/* The board reuses the lesson world's layer classes so it inherits the scene
+   profile, ambient drift, reduced-motion and offline handling for free. It only
+   has to give up the lesson board's sizing. */
+html.next-ui .reference-dialog .reference-visual.world {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-bottom: 1px solid rgba(193, 220, 206, .18);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html.next-ui .reference-content {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 14px 16px 16px;
+}
+
+html.next-ui .reference-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+html.next-ui .reference-kicker {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #8fd7b6;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+html.next-ui .reference-progress {
+  flex: 0 0 auto;
+  color: #90a89b;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+html.next-ui .reference-title {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+html.next-ui .reference-card-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.next-ui .reference-card-body > p {
+  margin: 0 0 10px;
+  color: #cfe0d6;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+html.next-ui .reference-card-body .reference-lede {
+  color: #e5eee9;
+}
+
+html.next-ui .reference-card-body code {
+  padding: 1px 5px;
+  border: 1px solid rgba(170, 225, 197, .22);
+  border-radius: 5px;
+  background: rgba(10, 32, 26, .72);
+  color: #b9f2d3;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: .92em;
+  white-space: nowrap;
+}
+
+html.next-ui .reference-rows {
+  display: grid;
+  gap: 10px;
+  margin: 4px 0 12px;
+}
+
+/* Below 480px the two columns stack, so each cell keeps a visible label and a
+   stacked pair still reads as a pair. Above it, the labels retire into a single
+   heading row. */
+html.next-ui .reference-row-heading { display: none; }
+
+html.next-ui .reference-row {
+  display: grid;
+  gap: 4px;
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(193, 220, 206, .16);
+}
+
+html.next-ui .reference-row-command {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+html.next-ui .reference-row-command code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: #ffd79a;
+}
+
+html.next-ui .reference-row-affects {
+  color: #8fa79a;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+html.next-ui .reference-row-cell { min-width: 0; }
+
+html.next-ui .reference-row-cell p {
+  margin: 0;
+  color: #cfe0d6;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+html.next-ui .reference-row-host p { color: #b6c9be; }
+
+html.next-ui .reference-cell-label {
+  display: block;
+  margin-bottom: 2px;
+  color: #7fbf9f;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+html.next-ui .reference-host-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(193, 220, 206, .18);
+  border-radius: 10px;
+  background: rgba(255,255,255,.025);
+  color: #b6c9be;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+html.next-ui .reference-notes {
+  margin: 0;
+  padding-left: 18px;
+  color: #a9bdb2;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+html.next-ui .reference-notes li { margin-bottom: 6px; }
+html.next-ui .reference-notes li:last-child { margin-bottom: 0; }
+
+html.next-ui .reference-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+html.next-ui .reference-actions .note-action { flex: 1 1 auto; }
+
+html.next-ui .toc-reference {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(193, 220, 206, .18);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+
+html.next-ui .toc-reference h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+html.next-ui .toc-reference p {
+  margin: 6px 0 0;
+  color: #adc1b6;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+html.next-ui .toc-reference-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+html.next-ui .toc-reference-actions button {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid rgba(170, 225, 197, .24);
+  border-radius: 10px;
+  background: rgba(12, 36, 29, .6);
+  color: #e5eee9;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+html.next-ui .toc-reference-actions button strong { font-size: 14px; }
+
+html.next-ui .toc-reference-actions button small {
+  color: #a9bdb2;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+@media (min-width: 480px) {
+  html.next-ui .reference-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "command command"
+      "vim host";
+    column-gap: 14px;
+  }
+
+  html.next-ui .reference-row.single {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "command"
+      "vim";
+  }
+
+  html.next-ui .reference-row-command { grid-area: command; }
+  html.next-ui .reference-row-vim { grid-area: vim; }
+  html.next-ui .reference-row-host { grid-area: host; }
+  html.next-ui .reference-row .reference-cell-label { display: none; }
+
+  html.next-ui .reference-row-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 14px;
+    color: #7fbf9f;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  html.next-ui .reference-row-heading span:first-child { display: none; }
+}
+
+/* Short landscape leaves no room for a board above the text; the cards matter
+   more than the scenery. */
+@media (orientation: landscape) and (max-height: 560px) {
+  html.next-ui .reference-dialog[open] { width: min(calc(100% - 20px), 720px); }
+  html.next-ui .reference-dialog .reference-visual.world { display: none; }
+  html.next-ui .reference-surface { grid-template-rows: minmax(0, 1fr); }
+}
+
+html.next-ui .reference-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+html.next-ui .reference-examples .reference-cell-label {
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+html.next-ui .reference-examples button,
+html.next-ui .reference-examples a {
+  padding: 3px 8px;
+  border: 1px solid rgba(170, 225, 197, .24);
+  border-radius: 999px;
+  background: rgba(12, 36, 29, .6);
+  color: #b9f2d3;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+html.next-ui .reference-empty {
+  color: #a9bdb2;
+  font-size: 14px;
+}
+
+html.next-ui .toc-reference-subheading {
+  margin: 14px 0 0;
+  color: #8fd7b6;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+html.next-ui .toc-reference-units {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+html.next-ui .toc-reference-units button {
+  padding: 8px 12px;
+  border: 1px solid rgba(170, 225, 197, .18);
+  border-radius: 8px;
+  background: rgba(12, 36, 29, .45);
+  color: #cfe0d6;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}

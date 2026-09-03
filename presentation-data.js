@@ -152,6 +152,52 @@ function validateScene(scene, path, errors) {
   }
 }
 
+// A standalone scene backs a surface that is not a unit: it has profile bases and
+// optional ambient variants, but no learning phases, patch regions, or landmark
+// states to register. `validateScene` cannot describe it without inventing three
+// meaningless patch regions, so it gets its own contract.
+function validateStandaloneScene(scene, path, errors) {
+  if (!object(scene)) {
+    errors.push(`${path} must be a registered scene`);
+    return;
+  }
+  validateId(scene.id, `${path}.id`, errors);
+  if (scene.remoteVariants !== undefined) {
+    validateRemoteVariants(scene.remoteVariants, `${path}.remoteVariants`, errors);
+  }
+  for (const profile of sceneProfiles) {
+    const profileData = scene.profiles?.[profile];
+    const profilePath = `${path}.profiles.${profile}`;
+    if (!object(profileData)) {
+      errors.push(`${profilePath} is required`);
+      continue;
+    }
+    validateAsset(profileData.base, `${profilePath}.base`, errors);
+    if (
+      profileData.focalPosition !== undefined
+      && (typeof profileData.focalPosition !== "string" || !profileData.focalPosition.trim())
+    ) {
+      errors.push(`${profilePath}.focalPosition must be a non-empty CSS position`);
+    }
+  }
+}
+
+function validateReferenceSurface(surface, worlds, path, errors) {
+  if (!object(surface)) {
+    errors.push(`${path} must be an object`);
+    return;
+  }
+  if (!worlds[surface.worldId]) {
+    errors.push(`${path}.worldId references missing world "${surface.worldId}"`);
+  }
+  validateId(surface.sceneId, `${path}.sceneId`, errors);
+  if (surface.landmarkId !== undefined) validateId(surface.landmarkId, `${path}.landmarkId`, errors);
+  if (surface.sceneId && surface.scene?.id !== surface.sceneId) {
+    errors.push(`${path}.scene.id must match ${path}.sceneId`);
+  }
+  validateStandaloneScene(surface.scene, `${path}.scene`, errors);
+}
+
 export function validatePresentationManifest(manifest, { unitCatalog, characterIds } = {}) {
   const errors = [];
   if (!object(manifest)) return { valid: false, errors: ["presentation manifest must be an object"] };
@@ -256,7 +302,25 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
     errors.push("story.ending.copy is required");
   }
 
+  if (manifest.reference !== undefined) {
+    validateReferenceSurface(manifest.reference, worlds, "reference", errors);
+  }
+
   return { valid: errors.length === 0, errors };
+}
+
+// The reference surface reuses the unit board renderer, which expects a unit with
+// a landmark id. Mosslight Landing registers no landmark patches, so the id is a
+// label for the scene's protected anchor and nothing is drawn for it.
+export function resolveReferencePresentation(manifest) {
+  const surface = manifest?.reference;
+  const world = surface && manifest?.worlds?.[surface.worldId];
+  if (!surface?.scene || !world) return null;
+  return {
+    world,
+    unit: { id: "reference", landmark: { id: surface.landmarkId || surface.sceneId } },
+    scene: surface.scene,
+  };
 }
 
 export function resolveUnitPresentation(manifest, unitId) {

@@ -37,6 +37,7 @@ export class StoryTransitions {
     shouldShowIntro,
     onNavigate,
     onOpenContents,
+    onIntroFinished = () => {},
     onStateChange = () => {},
     assetUrl = value => value,
     durableStorage = window.localStorage,
@@ -49,6 +50,7 @@ export class StoryTransitions {
     this.shouldShowIntro = shouldShowIntro;
     this.onNavigate = onNavigate;
     this.onOpenContents = onOpenContents;
+    this.onIntroFinished = onIntroFinished;
     this.onStateChange = onStateChange;
     this.assetUrl = assetUrl;
     this.durableStorage = durableStorage;
@@ -303,6 +305,12 @@ export class StoryTransitions {
     this.persistTransition();
     if (this.root.open) this.root.close();
 
+    if (completed.kind === "intro") {
+      // Fires whether the learner read all three panels or skipped from the
+      // first, so anything that follows the opening runs exactly once either way.
+      this.onIntroFinished({ replay: completed.replay === true });
+      return;
+    }
     if (completed.kind === "ending") {
       if (!completed.replay) this.onOpenContents();
       return;

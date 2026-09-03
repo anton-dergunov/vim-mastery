@@ -2134,5 +2134,57 @@
       "speaker": "Nix",
       "copy": "The language is alive. What you restore next is up to you."
     }
+  },
+  "reference": {
+    "worldId": "moonroot-ruins",
+    "sceneId": "mosslight-landing",
+    "landmarkId": "first-trail-chime",
+    "scene": {
+      "id": "mosslight-landing",
+      "profiles": {
+        "tall": {
+          "base": "assets/worlds/moonroot-ruins/scenes/mosslight-landing/tall/base.webp",
+          "focalPosition": "50% 50%"
+        },
+        "compact": {
+          "base": "assets/worlds/moonroot-ruins/scenes/mosslight-landing/compact/base.webp",
+          "focalPosition": "50% 50%"
+        },
+        "wide": {
+          "base": "assets/worlds/moonroot-ruins/scenes/mosslight-landing/wide/base.webp",
+          "focalPosition": "50% 50%"
+        }
+      },
+      "remoteVariants": {
+        "profiles": [
+          "tall",
+          "compact",
+          "wide"
+        ],
+        "siteIds": [
+          "trail-chime-bracket",
+          "water-drop-ripple",
+          "paired-mushrooms",
+          "stepping-stone-seam",
+          "bridge-vine",
+          "travel-niche",
+          "damp-fern",
+          "moss-spore-patch",
+          "distant-path-glow",
+          "cup-channel"
+        ],
+        "variantsPerSite": 5,
+        "timing": {
+          "initialDelayMs": 2500,
+          "fadeMs": 1200,
+          "holdMs": 6500,
+          "gapMs": 4000
+        },
+        "format": "webp",
+        "registrationProfile": "compact",
+        "mode": "transparent-patch",
+        "assetRoot": "assets/worlds/moonroot-ruins/scenes/mosslight-landing/variants"
+      }
+    }
   }
 }

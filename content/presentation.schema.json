@@ -19,7 +19,8 @@
       "propertyNames": { "$ref": "#/$defs/id" },
       "additionalProperties": { "$ref": "#/$defs/unit" }
     },
-    "story": { "$ref": "#/$defs/story" }
+    "story": { "$ref": "#/$defs/story" },
+    "reference": { "$ref": "#/$defs/referenceSurface" }
   },
   "$defs": {
     "id": {
@@ -117,6 +118,45 @@
             "gapMs": { "type": "number", "minimum": 0 }
           }
         }
+      }
+    },
+    "standaloneSceneProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base"],
+      "properties": {
+        "base": { "$ref": "#/$defs/asset" },
+        "focalPosition": { "type": "string", "minLength": 1 }
+      }
+    },
+    "standaloneScene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "profiles"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "profiles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tall", "compact", "wide"],
+          "properties": {
+            "tall": { "$ref": "#/$defs/standaloneSceneProfile" },
+            "compact": { "$ref": "#/$defs/standaloneSceneProfile" },
+            "wide": { "$ref": "#/$defs/standaloneSceneProfile" }
+          }
+        },
+        "remoteVariants": { "$ref": "#/$defs/remoteVariants" }
+      }
+    },
+    "referenceSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["worldId", "sceneId", "scene"],
+      "properties": {
+        "worldId": { "$ref": "#/$defs/id" },
+        "sceneId": { "$ref": "#/$defs/id" },
+        "landmarkId": { "$ref": "#/$defs/id" },
+        "scene": { "$ref": "#/$defs/standaloneScene" }
       }
     },
     "scene": {

@@ -25,6 +25,11 @@ async function expectStoryToFitViewport(page) {
 }
 
 test.beforeEach(async ({ page }, testInfo) => {
+  // The opening reference deck follows the intro and has its own suite. Seeding
+  // it as seen keeps this suite measuring the story and nothing else.
+  await page.addInitScript(() => {
+    window.localStorage.setItem("vim-wilds.reference.v1", JSON.stringify({ orientationSeen: true }));
+  });
   if (testInfo.title === "loads every compressed story still in the browser") return;
   await page.route(/\.(?:png|webp)(?:\?.*)?$/, route => route.abort());
 });

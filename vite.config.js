@@ -72,6 +72,7 @@ function pwaBuildPlugin(base, version) {
       emit("content/unit-index.json", JSON.stringify({ schemaVersion: 2, arcs, units: catalog }, null, 2));
       emit("content/language-profiles.json", readFileSync(join(contentDirectory, "language-profiles.json")));
       emit("content/presentation.json", readFileSync(join(contentDirectory, "presentation.json")));
+      emit("content/reference.json", readFileSync(join(contentDirectory, "reference.json")));
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       [...media.core, ...media.optional].forEach(asset => emit(asset.path, readFileSync(join(rootDirectory, asset.path))));

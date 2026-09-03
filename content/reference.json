@@ -1,0 +1,424 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "decks": [
+    {
+      "id": "orientation",
+      "role": "opening",
+      "kicker": "Before you start",
+      "title": "Orientation",
+      "summary": "What Vim is, and what this course is for.",
+      "cards": [
+        {
+          "id": "what-vim-is",
+          "title": "What Vim is",
+          "body": [
+            "Vim is a *modal* editor. In Normal mode the letter keys are commands rather than characters: `d` deletes, `w` moves forward a word, `u` undoes. You type text only once a command has asked for it.",
+            "Bram Moolenaar released Vim in 1991 as **Vi IMproved**, extending Bill Joy's `vi` from 1976. It has been maintained by its community since Moolenaar died in 2023.",
+            "The keys are a grammar, not a list of shortcuts. An operator takes a range, so `d` plus `w` is `dw`. Once you know the parts, combinations you have never typed still work."
+          ],
+          "notes": [
+            "Commands are written here the way Vim's own manual writes them: `Ctrl-v` means the Control key held with `v`."
+          ]
+        },
+        {
+          "id": "why-this-app",
+          "title": "Why this course exists",
+          "body": [
+            "The goal is not typing faster. It is making a predictable edit **once** and then replaying it — with `.`, a count, a macro, or `:g` — instead of performing it by hand fifty times.",
+            "So the grammar comes first and the automation layer second: motions and operators, then text objects, registers, ranges, substitution, macros, and `:global`.",
+            "Terminal Vim is the baseline throughout, because those same keys are what an editor's Vim mode reproduces. Nothing here needs a `.vimrc` — this course does not teach configuration, plugins, or Vimscript."
+          ],
+          "notes": [
+            "A few chords are claimed by default in some editors. Every one of them works in Vim; the *Chords an editor may claim* card lists which to check."
+          ]
+        },
+        {
+          "id": "where-to-start",
+          "title": "Where to start",
+          "lede": "Two ways in.",
+          "body": [
+            "The lessons never open or close a file — every exercise begins with a buffer already on screen. So the commands that *do* open and close files, `:w`, `:q`, `ZZ`, live on cards of their own rather than in a lesson that would contradict itself.",
+            "Read those six cards now, or never. They stay one tap away under **☰ Contents → Reference**, along with the chords an editor may claim."
+          ],
+          "actions": [
+            {
+              "id": "open-survival",
+              "kind": "secondary",
+              "label": "Read the survival cards"
+            },
+            {
+              "id": "start-lessons",
+              "kind": "primary",
+              "label": "Start Unit 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "survival",
+      "role": "deck",
+      "kicker": "Reference",
+      "title": "Standalone Vim survival",
+      "summary": "Opening, writing, leaving, and reaching the shell — the commands an exercise cannot honestly teach.",
+      "cards": [
+        {
+          "id": "leaving-safely",
+          "title": "Leaving safely",
+          "lede": "A buffer is *modified* when it holds changes you have not written. Vim refuses to abandon one unless you insist.",
+          "rows": [
+            {
+              "command": ":w",
+              "vim": "Write the buffer to its file. The file changes; Vim stays open.",
+              "host": "Works. In VS Code's Vim mode it saves exactly as `Cmd`/`Ctrl-S` would — and the editor may be saving on its own schedule as well."
+            },
+            {
+              "command": ":q",
+              "vim": "Close the window. Refused while the buffer is modified.",
+              "host": "Closes an editor tab rather than a Vim window. In VS Code that is the whole editor, not one split."
+            },
+            {
+              "command": ":wq  ·  :x",
+              "vim": "Write, then close. `:x` writes only when something changed; `:wq` touches the file either way.",
+              "host": "Both land on save-and-close-tab. The `:x` distinction — write only when something changed — usually disappears."
+            },
+            {
+              "command": "ZZ",
+              "vim": "The Normal-mode form of `:x`. No colon, no Enter.",
+              "host": "Normally available: it is a Normal-mode key, so the Vim mode handles it without the host being asked."
+            },
+            {
+              "command": ":q!  ·  ZQ",
+              "vim": "**Quit and discard.** Every unwritten change in that buffer is gone.",
+              "host": "Closes the tab without saving. VS Code will often still restore the text from its own local history, so *discarded* is less final than in a terminal."
+            },
+            {
+              "command": ":qa  ·  :wqa",
+              "vim": "Act on every open window at once. `:qa!` discards all of them.",
+              "host": "Usually acts on the whole window — more than you meant if you only wanted one file gone."
+            }
+          ],
+          "notes": [
+            "The forced forms — `:q!`, `ZQ`, `:qa!` — are the only ones that throw work away. The rest refuse rather than destroy.",
+            "`:w {file}` writes somewhere else and leaves you editing the original."
+          ]
+        },
+        {
+          "id": "files-and-buffers",
+          "title": "Files and buffers",
+          "lede": "A *buffer* is text in memory. A *window* is a viewport onto a buffer. A *tab page* is a layout of windows. Closing a window does not discard its buffer.",
+          "rows": [
+            {
+              "command": ":e {file}",
+              "vim": "Open a file into a buffer, creating it if it does not exist.",
+              "host": "VS Code's quick open (`Cmd`/`Ctrl-P`) is the usual route, and `:e` often works alongside it."
+            },
+            {
+              "command": ":e!",
+              "vim": "Reload the current file from disk, discarding unwritten changes.",
+              "host": "Maps onto revert-file where the host offers one."
+            },
+            {
+              "command": ":ls  ·  :buffers",
+              "vim": "List the buffers Vim holds, with their numbers and flags.",
+              "host": "Usually missing. VS Code tracks open editors itself, and its tab strip is the nearest equivalent."
+            },
+            {
+              "command": ":b {number|name}",
+              "vim": "Point this window at another buffer. A partial name is enough when it is unambiguous.",
+              "host": "Replaced by quick open. Buffer numbers do not exist in the host's model."
+            },
+            {
+              "command": ":bd",
+              "vim": "Unload a buffer. Refused while it is modified.",
+              "host": "Closes an editor tab. VS Code has no separate notion of a loaded but hidden buffer."
+            },
+            {
+              "command": "Ctrl-^",
+              "vim": "Jump to the alternate buffer — the fastest way back to the file you just left.",
+              "host": "Usually unbound. VS Code's go-back walks locations rather than files, so it is close but not the same."
+            }
+          ],
+          "notes": [
+            "The `:ls` flags worth reading: `%` current, `#` alternate, `+` modified, `h` loaded but hidden.",
+            "A modified buffer can be hidden rather than written. That is why `:q` complains about files you thought you had closed."
+          ]
+        },
+        {
+          "id": "windows",
+          "title": "Windows",
+          "lede": "Splits show two places at once: two files, or two parts of the same file.",
+          "rows": [
+            {
+              "command": ":sp [file]",
+              "vim": "Split horizontally. With no file name, both windows show the same buffer.",
+              "host": "Splits the editor group."
+            },
+            {
+              "command": ":vs [file]",
+              "vim": "Split vertically.",
+              "host": "Splits the editor group side by side, as VS Code's own `Cmd`/`Ctrl-\\` does."
+            },
+            {
+              "command": "Ctrl-w h j k l",
+              "vim": "Move focus left, down, up, right between windows.",
+              "host": "Check this one first: VS Code binds `Ctrl-w` to close-editor by default, so the whole window-motion prefix is the first thing you lose."
+            },
+            {
+              "command": "Ctrl-w c  ·  :clo",
+              "vim": "Close the focused window. The buffer stays loaded.",
+              "host": "Closes the editor tab, dropping the view and the file together — not the same as closing a Vim window."
+            },
+            {
+              "command": "Ctrl-w o",
+              "vim": "Close every window except this one.",
+              "host": "Usually unbound; the host has its own close-others."
+            },
+            {
+              "command": "Ctrl-w =",
+              "vim": "Even out the window sizes.",
+              "host": "Usually unbound."
+            }
+          ],
+          "notes": [
+            "Splits do not duplicate text. Two windows on one buffer edit the same lines, and both update as you type.",
+            "`:sp {file}` and `:vs {file}` open and split in one step."
+          ]
+        },
+        {
+          "id": "help",
+          "title": "Help",
+          "lede": "Vim's manual is a set of buffers, navigated with the motions this course teaches.",
+          "rows": [
+            {
+              "command": ":help",
+              "vim": "Open the manual at its front page, in a split.",
+              "host": "Missing. VS Code ships its own documentation instead."
+            },
+            {
+              "command": ":help {topic}",
+              "vim": "Jump to a topic. Prefixes select the mode: `:help i_CTRL-R` is Insert, `:help v_o` is Visual, `:help :w` is an Ex command.",
+              "host": "Missing."
+            },
+            {
+              "command": "Ctrl-]",
+              "vim": "Follow the tag under the cursor.",
+              "host": "Usually bound elsewhere. VS Code's go-to-definition covers the code case but not the manual."
+            },
+            {
+              "command": "Ctrl-t",
+              "vim": "Pop back up the tag stack, undoing the last `Ctrl-]`.",
+              "host": "Usually unbound."
+            },
+            {
+              "command": ":helpgrep {pattern}",
+              "vim": "Search the whole manual, then walk the hits with `:cn` and `:cp`.",
+              "host": "Missing."
+            }
+          ],
+          "notes": [
+            "Help opens in a split, so `:q` closes the help and leaves your file untouched.",
+            "Prefixes let one key have several entries: `:help CTRL-R` and `:help i_CTRL-R` describe different commands."
+          ]
+        },
+        {
+          "id": "starting-vim-with-work-queued",
+          "title": "Starting Vim with work queued",
+          "lede": "Vim is also a batch text processor. These forms run commands before — or instead of — showing you an editor, which is where this course's automation stops being interactive.",
+          "hostNote": "These are shell invocations, not editor commands. They run in any terminal — VS Code's integrated terminal included — and an editor's Vim mode plays no part in them.",
+          "rows": [
+            {
+              "command": "vim {file}",
+              "vim": "Open a file for editing."
+            },
+            {
+              "command": "vim -c '{cmd}' {file}",
+              "vim": "Open the file, then run an Ex command. Repeat `-c` for more: `vim -c '%s/old/new/g' -c 'wq' notes.txt` edits and exits."
+            },
+            {
+              "command": "vim -es",
+              "vim": "Ex mode, silent: no screen, no interaction. This is how you script Vim's editing from a shell."
+            },
+            {
+              "command": "ex -sc '{cmd}' -cx {file}",
+              "vim": "The same idea spelled with `ex`: run the command, then `x` writes and exits."
+            },
+            {
+              "command": "vim -R {file}  ·  view {file}",
+              "vim": "Open read-only, so a stray keystroke cannot change the file."
+            }
+          ],
+          "notes": [
+            "Quote the command, or the shell will eat `%`, `*`, and `!` before Vim sees them.",
+            "This is where `:%s`, `:g`, and `:normal` stop being something you type and start being something you schedule."
+          ]
+        },
+        {
+          "id": "filters-and-shell",
+          "title": "Filters and the shell",
+          "lede": "`!` hands lines to an external program and puts its output back. It is Vim's escape hatch to everything the shell can do.",
+          "rows": [
+            {
+              "command": ":%!sort",
+              "vim": "Replace every line with the output of `sort`.",
+              "host": "Works where a real Vim runs underneath — vscode-neovim, or VSCodeVim with its Neovim integration enabled. A pure reimplementation has no shell to hand the lines to."
+            },
+            {
+              "command": ":'<,'>!sort -u",
+              "vim": "Filter only the lines a Visual selection covers.",
+              "host": "Same split: real Vim underneath yes, a reimplementation no."
+            },
+            {
+              "command": "!{motion}{cmd}",
+              "vim": "The Normal-mode form. `!ap sort` filters the paragraph the cursor sits in.",
+              "host": "Same."
+            },
+            {
+              "command": ":r !{cmd}",
+              "vim": "Read a command's output in below the cursor: `:r !date`.",
+              "host": "Same."
+            },
+            {
+              "command": ":w !{cmd}",
+              "vim": "Send the buffer to a command's input without changing it: `:w !wc -l`.",
+              "host": "Same."
+            }
+          ],
+          "notes": [
+            "Watch where the `!` sits: `:r !cmd` reads output *in*, `:w !cmd` writes the buffer *out*. The buffer only changes in the first case.",
+            "A filter that fails can leave the range mangled. `u` puts it back."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "host-reality",
+      "role": "deck",
+      "kicker": "Reference",
+      "title": "Chords an editor may claim",
+      "summary": "Keys this course teaches that an embedding editor commonly binds to something else.",
+      "cards": [
+        {
+          "id": "reserved-chords",
+          "title": "Chords an editor may claim",
+          "lede": "**Every one of these works in terminal Vim.** The right column is what an embedding editor commonly takes for itself — the defaults below are VS Code's, and other hosts differ in the details rather than in the problem. This is why a practiced key sometimes does nothing at all.",
+          "columns": {
+            "host": "Commonly claimed as"
+          },
+          "rows": [
+            {
+              "command": "Ctrl-f",
+              "vim": "Page forward.",
+              "host": "Find.",
+              "affects": "Unit 10"
+            },
+            {
+              "command": "Ctrl-b",
+              "vim": "Page back.",
+              "host": "Toggle sidebar.",
+              "affects": "Unit 10"
+            },
+            {
+              "command": "Ctrl-e",
+              "vim": "Scroll down one row, cursor held.",
+              "host": "Quick open.",
+              "affects": "Unit 10"
+            },
+            {
+              "command": "Ctrl-y",
+              "vim": "Scroll up one row, cursor held.",
+              "host": "Redo.",
+              "affects": "Unit 10"
+            },
+            {
+              "command": "Ctrl-d",
+              "vim": "Half a page down.",
+              "host": "Add a cursor at the next match.",
+              "affects": "Unit 10"
+            },
+            {
+              "command": "Ctrl-o",
+              "vim": "Jump back through the jump list.",
+              "host": "Usually free in VS Code; occasionally taken.",
+              "affects": "Unit 9"
+            },
+            {
+              "command": "Ctrl-w",
+              "vim": "Delete the word before the cursor, in Insert mode.",
+              "host": "Close editor.",
+              "affects": "Unit 3"
+            },
+            {
+              "command": "Ctrl-r",
+              "vim": "Redo in Normal mode; insert a register in Insert mode.",
+              "host": "Recent files.",
+              "affects": "Units 3 and 8"
+            },
+            {
+              "command": "Ctrl-v",
+              "vim": "Visual Block.",
+              "host": "Paste, on Windows and Linux.",
+              "affects": "Unit 7"
+            },
+            {
+              "command": "Ctrl-a  ·  Ctrl-x",
+              "vim": "Increment or decrement the number under the cursor.",
+              "host": "Select all; cut.",
+              "affects": "Unit 3"
+            }
+          ],
+          "notes": [
+            "`gq` and `=` reformat and re-indent using `textwidth` and `equalprg`. Both need those set — in terminal Vim as much as anywhere else.",
+            "`:normal` and `:global` support in an embedded Vim emulator is usually narrower than the real thing. Where a host runs a real Vim underneath, they behave.",
+            "None of this is a reason to stop using a command. It is a reason not to be confused when one does nothing."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "orientation-only",
+      "role": "deck",
+      "kicker": "Reference",
+      "title": "Worth knowing, not drilled",
+      "summary": "Useful occasionally, easy to look up — once you know they exist.",
+      "cards": [
+        {
+          "id": "orientation-only-entries",
+          "title": "Worth knowing, not drilled",
+          "lede": "These earn a mention rather than a lesson.",
+          "rows": [
+            {
+              "command": "q:  ·  q/",
+              "vim": "Open the command-line *window*: your Ex or search history as an editable buffer. Edit a past line with ordinary motions and press Enter to run it.",
+              "host": "Missing in a reimplementation; present where a real Vim runs underneath."
+            },
+            {
+              "command": ":earlier {n}  ·  :later {n}",
+              "vim": "Move through the undo *tree* by state or by time. `:earlier 10m` is the buffer as it stood ten minutes ago; plain `u` only ever walks one branch.",
+              "host": "Missing. VS Code keeps one linear undo history, plus a separate timeline of saved versions."
+            },
+            {
+              "command": "\"*  ·  \"+",
+              "vim": "The selection registers. On X11 `\"*` is the primary selection and `\"+` the clipboard; on Windows and macOS they are the same thing. `\"+y` yanks to the system clipboard.",
+              "host": "Wired to the real system clipboard in VS Code and most hosts. **In this course `\"+` is an internal register** — Vim Wilds never touches your device clipboard."
+            },
+            {
+              "command": "\\u  \\U  \\l  \\L  \\E",
+              "vim": "Case conversion inside a `:s` replacement. `\\u` and `\\l` change one character; `\\U` and `\\L` run until `\\E`. So `:s/\\w\\+/\\u&/g` capitalises every word.",
+              "host": "Runs where a real Vim does the substitution. VSCodeVim's own `:s` does not implement them."
+            },
+            {
+              "command": "\\=",
+              "vim": "Evaluate an expression as the replacement: `:s/\\d\\+/\\=submatch(0)+1/` adds one to every number.",
+              "host": "Real Vim only."
+            }
+          ],
+          "notes": [
+            "Case conversion and `\\=` are described here rather than practised: this course's editor does not run them, so drilling them would teach a keystroke it could not check."
+          ]
+        }
+      ]
+    }
+  ]
+}

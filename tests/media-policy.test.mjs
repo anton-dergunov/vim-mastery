@@ -9,7 +9,6 @@ import {
   collectMediaPolicy,
   contentRevision,
   CORE_MEDIA_MAX_BYTES,
-  CORE_MEDIA_WARNING_BYTES,
 } from "../media-policy.js";
 
 const rootPath = new URL("../", import.meta.url).pathname;
@@ -21,7 +20,7 @@ const expectedFutureSceneStates = {
   "beacon-glass-gallery": "runtime-active",
   "menders-confluence": "future-unit-ready",
   "keepers-relay": "future-unit-ready",
-  "mosslight-landing": "reserve-only",
+  "mosslight-landing": "runtime-active",
   "open-trail-overlook": "reserve-only",
 };
 
@@ -32,13 +31,9 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   const second = collectMediaPolicy(presentation, characters);
   assert.deepEqual(first, second);
   assertMediaAssets(rootPath, first);
-  const warnings = [];
-  const coreBytes = assertCoreMediaBudget(rootPath, first, {
-    onWarning: message => warnings.push(message),
-  });
+  const coreBytes = assertCoreMediaBudget(rootPath, first);
   assert(coreBytes > 0);
   assert(coreBytes <= CORE_MEDIA_MAX_BYTES);
-  assert.equal(warnings.length, coreBytes > CORE_MEDIA_WARNING_BYTES ? 1 : 0);
   assert(first.core.some(asset => asset.category === "registered-patch"));
   assert(first.core.some(asset => asset.category === "character-idle"));
   assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 15);

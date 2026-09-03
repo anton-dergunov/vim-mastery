@@ -13,6 +13,7 @@ test.beforeEach(async ({ page }) => {
       introSeen: true,
       completedUnitStoryIds: [],
     }));
+    window.localStorage.setItem("vim-wilds.reference.v1", JSON.stringify({ orientationSeen: true }));
   });
 });
 
@@ -28,7 +29,7 @@ test("renders every unit with its registered scene", async ({ page }) => {
   await expect(moonroot).toHaveAttribute("data-world-id", "moonroot-ruins");
   await expect(moonroot).toHaveAttribute("data-scene-id", "mode-lantern-grounds");
   await expect(page.locator(".world-scene-patch")).toHaveCount(0);
-  expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+  expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
     .toContain("scenes/mode-lantern-grounds/");
   await expect(moonroot).not.toHaveClass(/scene-reveal-active/, { timeout: 1_500 });
   await expect(page.locator("#characterLayer")).toHaveCSS("opacity", "1");
@@ -53,7 +54,7 @@ test("renders every unit with its registered scene", async ({ page }) => {
     await expect(page.locator("#world")).toHaveAttribute("data-scene-id", sceneId);
     await expect(page.locator("#world")).not.toHaveClass(/scene-reveal-active/, { timeout: 1_500 });
     await expect(page.locator("#worldGrid")).toHaveCSS("opacity", "1");
-    expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+    expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
       .toContain(`scenes/${sceneId}/`);
     await page.screenshot({ path: `test-results/moonroot-${unitId}-phone.png`, fullPage: true });
   }
@@ -66,7 +67,7 @@ test("renders every unit with its registered scene", async ({ page }) => {
   });
   await expect(moonroot).toHaveAttribute("data-board-profile", "shallow");
   await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "wide");
-  expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+  expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
     .toContain("/wide/base.webp");
   await page.screenshot({ path: "test-results/moonroot-unit-1-wide.png", fullPage: true });
 
@@ -74,7 +75,7 @@ test("renders every unit with its registered scene", async ({ page }) => {
   await page.waitForFunction(() => document.querySelector("#world")?.dataset.renderer === "registered-scenes");
   await expect(page.locator("#world")).toHaveAttribute("data-world-id", "starwater-sanctuary");
   await expect(page.locator("#world")).toHaveAttribute("data-scene-id", "starneedle-observatory");
-  expect(await page.locator(".world-backdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+  expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
     .toContain("scenes/starneedle-observatory/");
   await expect(page.locator(".world-scene-patch")).toHaveCount(0);
 });

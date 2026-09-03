@@ -68,6 +68,7 @@ test.describe("Production lesson flow", () => {
         introSeen: true,
         completedUnitStoryIds,
       }));
+      window.localStorage.setItem("vim-wilds.reference.v1", JSON.stringify({ orientationSeen: true }));
     }, [
       modalUnit.id,
       cursorUnit.id,

@@ -1,7 +1,11 @@
 import { findNextSequentialUnit } from "./unit-navigation.js";
 import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
 import { appUrl, appVersion, remoteMediaUrls } from "./app-version.js";
-import { loadUnitCatalogWithPresentation, resolveUnitPresentation } from "./presentation-data.js";
+import {
+  loadUnitCatalogWithPresentation,
+  resolveReferencePresentation,
+  resolveUnitPresentation,
+} from "./presentation-data.js";
 import { StoryTransitions } from "./story-transitions.js";
 import { WorldPresentationRenderer } from "./world-presentation.js";
 import { CharacterReactions } from "./character-reactions.js";
@@ -10,6 +14,10 @@ const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const urlParams = new URLSearchParams(window.location.search);
 const sessionStateKey = "vim-wilds.session.v1";
+// The opening deck is not story state. Keeping it out of vim-wilds.story.v1
+// stops a story replay from looking like curriculum progress, and stops the
+// opening from replaying when someone rewatches the intro.
+const referenceStateKey = "vim-wilds.reference.v1";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 const vimEffectValues = new Set(["enabled", "disabled"]);
@@ -29,10 +37,24 @@ function readSavedSession() {
   }
 }
 
+function readReferenceState() {
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(referenceStateKey) || "null");
+    return { orientationSeen: saved?.orientationSeen === true };
+  } catch {
+    return { orientationSeen: false };
+  }
+}
+
 const savedSession = readSavedSession();
-const [languageProfiles, catalogData] = await Promise.all([
+const referenceState = readReferenceState();
+const [languageProfiles, referenceCatalog, catalogData] = await Promise.all([
   fetch(appUrl("content/language-profiles.json")).then(response => {
     if (!response.ok) throw new Error(`Language profiles request failed (${response.status})`);
+    return response.json();
+  }),
+  fetch(appUrl("content/reference.json")).then(response => {
+    if (!response.ok) throw new Error(`Reference deck request failed (${response.status})`);
     return response.json();
   }),
   loadUnitCatalogWithPresentation({
@@ -94,6 +116,16 @@ const elements = {
   themeOptions: $("#themeOptions"),
   replayStoryButton: $("#replayStoryButton"),
   storyDialog: $("#storyDialog"),
+  referenceDialog: $("#referenceDialog"),
+  referenceVisual: $("#referenceVisual"),
+  referenceBackdrop: $("#referenceBackdrop"),
+  referenceAmbient: $("#referenceAmbient"),
+  referenceVariantLayer: $("#referenceVariantLayer"),
+  referenceKicker: $("#referenceKicker"),
+  referenceProgress: $("#referenceProgress"),
+  referenceTitle: $("#referenceTitle"),
+  referenceCardBody: $("#referenceCardBody"),
+  referenceActions: $("#referenceActions"),
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
   restartUpdateButton: $("#restartUpdateButton"),
@@ -503,16 +535,241 @@ const worldRenderer = new WorldPresentationRenderer({
   remoteAssetUrls: remoteMediaUrls,
 });
 
+// The reference surface is a second board, not a second world: the renderer is
+// parameterised by element handles, so pointing one at the dialog's own layers
+// gives the deck the Mosslight Landing backdrop, its ambient drift, and the
+// reduced-motion and offline handling the lesson board already has.
+const referenceRenderer = new WorldPresentationRenderer({
+  world: elements.referenceVisual,
+  backdropLayer: elements.referenceBackdrop,
+  ambientLayer: elements.referenceAmbient,
+  remoteVariantLayer: elements.referenceVariantLayer,
+  assetUrl: localAssetUrl,
+  remoteAssetUrls: remoteMediaUrls,
+});
+const referencePresentation = resolveReferencePresentation(catalogData.presentation);
+const referenceDecks = new Map((referenceCatalog?.decks || []).map(deck => [deck.id, deck]));
+const openingDeck = (referenceCatalog?.decks || []).find(deck => deck.role === "opening") || null;
+let referenceRendererStarted = false;
+const referenceSession = { deckId: null, cardIndex: 0, opening: false, unitId: null };
+
+// `unit.reference` has been authored, schema-validated, and cross-checked
+// against activity ids since the curriculum began, and rendered nowhere. Until
+// it has a surface, "demote to reference" is deletion under another name.
+const unitReferenceCache = new Map([[unit.id, unit.reference || []]]);
+
+async function unitReferenceEntries(unitId) {
+  if (unitReferenceCache.has(unitId)) return unitReferenceCache.get(unitId);
+  const candidate = units.find(item => item.id === unitId);
+  if (!candidate) return [];
+  const response = await fetch(appUrl(candidate.path));
+  if (!response.ok) throw new Error(`Unit request failed (${response.status})`);
+  const entries = (await response.json()).reference || [];
+  unitReferenceCache.set(unitId, entries);
+  return entries;
+}
+
+function renderUnitReferenceEntries(unitId, entries) {
+  if (!entries.length) return '<p class="reference-empty">This unit has no reference entries.</p>';
+  return `<div class="reference-rows">${entries.map(entry => {
+    const examples = (entry.exampleActivityRefs || []).map(activityRef => {
+      const local = activities.find(item => item.id === activityRef || item.sourceActivityId === activityRef);
+      return local
+        ? `<button type="button" data-reference-activity="${escapeHtml(activityRef)}">${escapeHtml(activityRef)}</button>`
+        : `<a href="${escapeHtml(activityHref(unitId, activityRef))}">${escapeHtml(activityRef)}</a>`;
+    }).join("");
+    return `<div class="reference-row single">
+      <div class="reference-row-command"><code>${escapeHtml(entry.command)}</code></div>
+      <div class="reference-row-cell reference-row-vim"><p>${renderInline(entry.purpose)}</p></div>
+      ${(entry.notes || []).length ? `<ul class="reference-notes">${entry.notes.map(note => `<li>${renderInline(note)}</li>`).join("")}</ul>` : ""}
+      ${examples ? `<div class="reference-examples"><span class="reference-cell-label">Seen in</span>${examples}</div>` : ""}
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function activityHref(unitId, activityId) {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.searchParams.set("unit", unitId);
+  url.searchParams.set("activity", activityId);
+  return `${url.pathname}${url.search}`;
+}
+
+async function openUnitReference(unitId) {
+  const candidate = units.find(item => item.id === unitId);
+  if (!candidate) throw new RangeError(`Unknown unit "${unitId}"`);
+  referenceSession.deckId = null;
+  referenceSession.cardIndex = 0;
+  referenceSession.opening = false;
+  referenceSession.unitId = unitId;
+  elements.referenceDialog.dataset.deckId = `unit-${unitId}`;
+  elements.referenceKicker.textContent = `Unit ${candidate.unitNumber}`;
+  elements.referenceProgress.textContent = "";
+  elements.referenceTitle.innerHTML = renderInline(candidate.title);
+  elements.referenceCardBody.innerHTML = '<p class="reference-lede">Loading…</p>';
+  elements.referenceActions.innerHTML = '<button class="note-action" type="button" data-reference-action="close">Done</button>';
+  showReferenceSurface();
+  const entries = await unitReferenceEntries(unitId);
+  if (referenceSession.unitId !== unitId) return;
+  elements.referenceCardBody.innerHTML = renderUnitReferenceEntries(unitId, entries);
+  elements.referenceCardBody.scrollTop = 0;
+}
+
+function referenceCard() {
+  const deck = referenceDecks.get(referenceSession.deckId);
+  return deck?.cards[referenceSession.cardIndex] || null;
+}
+
+function persistReferenceState() {
+  try {
+    window.localStorage.setItem(referenceStateKey, JSON.stringify(referenceState));
+  } catch {
+    // A blocked or full store only costs a repeated opening, never correctness.
+  }
+}
+
+function renderReferenceRows(card) {
+  const columns = card.columns || {};
+  const vimHeading = columns.vim || "In Vim";
+  const hostHeading = columns.host || "In an editor's Vim mode";
+  const twoColumn = card.rows.some(row => row.host);
+  const rows = card.rows.map(row => `<div class="reference-row${row.host ? "" : " single"}">
+      <div class="reference-row-command"><code>${escapeHtml(row.command)}</code>${row.affects ? `<span class="reference-row-affects">${renderInline(row.affects)}</span>` : ""}</div>
+      <div class="reference-row-cell reference-row-vim"><span class="reference-cell-label">${escapeHtml(vimHeading)}</span><p>${renderInline(row.vim)}</p></div>
+      ${row.host ? `<div class="reference-row-cell reference-row-host"><span class="reference-cell-label">${escapeHtml(hostHeading)}</span><p>${renderInline(row.host)}</p></div>` : ""}
+    </div>`).join("");
+  const heading = twoColumn
+    ? `<div class="reference-row-heading" aria-hidden="true"><span></span><span>${escapeHtml(vimHeading)}</span><span>${escapeHtml(hostHeading)}</span></div>`
+    : "";
+  return `<div class="reference-rows">${heading}${rows}</div>`;
+}
+
+function renderReferenceCard() {
+  const deck = referenceDecks.get(referenceSession.deckId);
+  const card = referenceCard();
+  if (!deck || !card) return;
+  elements.referenceKicker.textContent = deck.kicker;
+  elements.referenceProgress.textContent = deck.cards.length > 1
+    ? `${referenceSession.cardIndex + 1} of ${deck.cards.length}`
+    : "";
+  elements.referenceTitle.innerHTML = renderInline(card.title);
+  elements.referenceCardBody.innerHTML = [
+    card.lede ? `<p class="reference-lede">${renderInline(card.lede)}</p>` : "",
+    (card.body || []).map(paragraph => `<p>${renderInline(paragraph)}</p>`).join(""),
+    card.rows ? renderReferenceRows(card) : "",
+    card.hostNote ? `<p class="reference-host-note">${renderInline(card.hostNote)}</p>` : "",
+    (card.notes || []).length
+      ? `<ul class="reference-notes">${card.notes.map(note => `<li>${renderInline(note)}</li>`).join("")}</ul>`
+      : "",
+  ].join("");
+  elements.referenceCardBody.scrollTop = 0;
+
+  const last = referenceSession.cardIndex === deck.cards.length - 1;
+  const authored = last ? (card.actions || []) : [];
+  const back = referenceSession.cardIndex > 0
+    ? '<button class="note-action secondary-action" type="button" data-reference-action="previous">Back</button>'
+    : "";
+  const authoredMarkup = authored.map(action => `<button class="note-action${action.kind === "secondary" ? " secondary-action" : ""}" type="button" data-reference-action="authored" data-reference-authored="${escapeHtml(action.id)}">${renderInline(action.label)}</button>`).join("");
+  const advance = last
+    ? (authored.length
+        ? ""
+        : `<button class="note-action" type="button" data-reference-action="close">${referenceSession.opening ? "Start Unit 1" : "Done"}</button>`)
+    : '<button class="note-action" type="button" data-reference-action="next">Next</button>';
+  const skip = referenceSession.opening && !last
+    ? '<button class="note-action secondary-action" type="button" data-reference-action="close">Skip</button>'
+    : "";
+  elements.referenceActions.innerHTML = `${back}${skip}${authoredMarkup}${advance}`;
+}
+
+function openReferenceDeck(deckId, { opening = false } = {}) {
+  const deck = referenceDecks.get(deckId);
+  if (!deck) throw new RangeError(`Unknown reference deck "${deckId}"`);
+  referenceSession.deckId = deckId;
+  referenceSession.cardIndex = 0;
+  referenceSession.opening = opening;
+  elements.referenceDialog.dataset.deckId = deckId;
+  elements.referenceDialog.dataset.opening = String(opening);
+  renderReferenceCard();
+  showReferenceSurface();
+  return deck;
+}
+
+// Open first: a closed <dialog> has no layout, so the renderer would measure a
+// zero-height board and pick the wrong scene profile.
+function showReferenceSurface() {
+  elements.referenceVisual.dataset.simpleBackground = String(state.generatedBackdrops === "disabled");
+  if (!elements.referenceDialog.open) elements.referenceDialog.showModal();
+  if (!referencePresentation) return;
+  if (!referenceRendererStarted) {
+    referenceRenderer.start();
+    referenceRendererStarted = true;
+  }
+  referenceRenderer.setPresentation(referencePresentation, { unitId: "reference" });
+  referenceRenderer.updateLayout(true);
+  referenceRenderer.syncRemoteVariants();
+}
+
+function closeReferenceDeck() {
+  if (referenceSession.opening && !referenceState.orientationSeen) {
+    referenceState.orientationSeen = true;
+    persistReferenceState();
+    renderTableOfContents();
+  }
+  referenceSession.opening = false;
+  referenceSession.unitId = null;
+  referenceRenderer.cancelRemoteVariants({ clearLayer: true });
+  if (elements.referenceDialog.open) elements.referenceDialog.close();
+}
+
+function stepReferenceCard(delta) {
+  const deck = referenceDecks.get(referenceSession.deckId);
+  if (!deck) return;
+  const next = referenceSession.cardIndex + delta;
+  if (next < 0 || next >= deck.cards.length) return;
+  referenceSession.cardIndex = next;
+  renderReferenceCard();
+}
+
+function handleReferenceAuthoredAction(actionId) {
+  if (actionId === "open-survival") {
+    // The opening is finished either way: the learner made a choice about it.
+    if (!referenceState.orientationSeen) {
+      referenceState.orientationSeen = true;
+      persistReferenceState();
+      renderTableOfContents();
+    }
+    referenceSession.opening = false;
+    openReferenceDeck("survival");
+    return;
+  }
+  closeReferenceDeck();
+}
+
+function showOpeningReference() {
+  if (!openingDeck || referenceState.orientationSeen || !isDefaultArrival) return false;
+  openReferenceDeck(openingDeck.id, { opening: true });
+  return true;
+}
+
+// A default arrival: no art review, no deep link into an activity, no jump into
+// a later unit. The story intro and the opening deck share it, so neither one
+// interrupts someone who asked for a specific screen.
+const isDefaultArrival = !urlParams.has("preview")
+  && !urlParams.has("reference")
+  && !urlParams.has("activity")
+  && (!urlParams.has("unit") || urlParams.get("unit") === units[0].id);
+
 const storyTransitions = new StoryTransitions({
   root: elements.storyDialog,
   presentation: catalogData.presentation,
   units,
   currentUnitId: unit.id,
-  shouldShowIntro: !urlParams.has("preview")
-    && !urlParams.has("activity")
-    && (!urlParams.has("unit") || urlParams.get("unit") === units[0].id),
+  shouldShowIntro: isDefaultArrival,
   onNavigate: navigateToUnit,
   onOpenContents: openTableOfContents,
+  onIntroFinished: ({ replay }) => {
+    if (!replay) showOpeningReference();
+  },
   onStateChange: renderTableOfContents,
   assetUrl: localAssetUrl,
 });
@@ -664,6 +921,7 @@ function applyWorldPresentation(activity, presentation) {
   // unit-specific base board; they do not revive the retired world-tile art.
   const simpleBackground = state.generatedBackdrops === "disabled";
   elements.world.dataset.simpleBackground = String(simpleBackground);
+  elements.referenceVisual.dataset.simpleBackground = String(simpleBackground);
   const layeredWorld = worldRenderer.setPresentation(unitPresentation, {
     unitId: unit.id,
     phase: activity.phase || (activity.type === "summary" ? "summary" : "explain"),
@@ -1169,7 +1427,22 @@ function renderTableOfContents() {
       ${endingReplayButton}
     </div>
   </section>`;
-  elements.tocLessons.innerHTML = storyArchive + arcMarkup + ungroupedMarkup;
+  const referenceDeckButtons = (referenceCatalog?.decks || [])
+    .map(deck => `<button type="button" data-reference-deck="${escapeHtml(deck.id)}"><strong>${renderInline(deck.title)}</strong><small>${renderInline(deck.summary)}</small></button>`)
+    .join("");
+  const unitReferenceButtons = units
+    .map(candidate => `<button type="button" data-reference-unit="${escapeHtml(candidate.id)}">${candidate.unitNumber}. ${renderInline(candidate.title)}</button>`)
+    .join("");
+  const referenceSection = referenceDeckButtons
+    ? `<section class="toc-reference" aria-labelledby="tocReferenceTitle">
+      <h3 id="tocReferenceTitle">Reference</h3>
+      <p>Cards, not lessons: nothing here is scored, unlocked, or practiced.</p>
+      <div class="toc-reference-actions">${referenceDeckButtons}</div>
+      <h4 class="toc-reference-subheading">Commands by unit</h4>
+      <div class="toc-reference-units">${unitReferenceButtons}</div>
+    </section>`
+    : "";
+  elements.tocLessons.innerHTML = referenceSection + storyArchive + arcMarkup + ungroupedMarkup;
 }
 
 function storyPreviewHref(parameters) {
@@ -1895,6 +2168,27 @@ elements.characterOptions?.addEventListener("change", event => {
   renderCharacterLayer(currentActivity(), presentationFor(currentActivity()));
   if (value === "enabled") void loadCharacterAssets();
 });
+elements.referenceDialog?.addEventListener("click", event => {
+  const action = event.target.closest("[data-reference-action]")?.dataset.referenceAction;
+  if (action === "next") stepReferenceCard(1);
+  if (action === "previous") stepReferenceCard(-1);
+  if (action === "close") closeReferenceDeck();
+  if (action === "authored") {
+    handleReferenceAuthoredAction(event.target.closest("[data-reference-authored]")?.dataset.referenceAuthored);
+  }
+  const activityRef = event.target.closest("[data-reference-activity]")?.dataset.referenceActivity;
+  if (activityRef) {
+    closeReferenceDeck();
+    goToActivityId(activityRef);
+  }
+});
+// Escape closes a <dialog> without a click, so the opening still has to record
+// that it was shown; otherwise it reappears on the next launch.
+elements.referenceDialog?.addEventListener("cancel", event => {
+  event.preventDefault();
+  closeReferenceDeck();
+});
+
 $(".landscape-controls")?.addEventListener("click", event => {
   const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
   if (action === "toc") openTableOfContents();
@@ -1908,6 +2202,18 @@ $(".landscape-controls")?.addEventListener("click", event => {
   }
 });
 elements.tocLessons?.addEventListener("click", event => {
+  const referenceDeck = event.target.closest("[data-reference-deck]")?.dataset.referenceDeck;
+  if (referenceDeck) {
+    elements.tocDialog.close();
+    openReferenceDeck(referenceDeck);
+    return;
+  }
+  const referenceUnit = event.target.closest("[data-reference-unit]")?.dataset.referenceUnit;
+  if (referenceUnit) {
+    elements.tocDialog.close();
+    void openUnitReference(referenceUnit);
+    return;
+  }
   if (event.target.closest("[data-story-replay-intro]")) {
     elements.tocDialog.close();
     storyTransitions.showIntro({ replay: true });
@@ -2037,6 +2343,28 @@ window.VimWilds = Object.freeze({
   showUnitStory(unitId) {
     return storyTransitions.showUnit(unitId, { replay: true });
   },
+  openReference(deckId) {
+    return openReferenceDeck(deckId);
+  },
+  openUnitReference(unitId) {
+    return openUnitReference(unitId);
+  },
+  closeReference() {
+    closeReferenceDeck();
+  },
+  referenceState() {
+    const deck = referenceDecks.get(referenceSession.deckId);
+    return {
+      open: elements.referenceDialog.open === true,
+      deckId: referenceSession.deckId,
+      unitId: referenceSession.unitId,
+      cardId: referenceCard()?.id || null,
+      cardIndex: referenceSession.cardIndex,
+      cardCount: deck?.cards.length || 0,
+      opening: referenceSession.opening,
+      orientationSeen: referenceState.orientationSeen,
+    };
+  },
   getState() {
     const snapshot = state.editorSnapshot || vimEngine?.getSnapshot();
     const ranges = snapshot?.ranges || [];
@@ -2102,6 +2430,15 @@ worldRenderer.start();
 renderAll();
 renderThemeOptions();
 storyTransitions.start();
+
+const requestedReferenceDeck = urlParams.get("reference");
+if (requestedReferenceDeck && referenceDecks.has(requestedReferenceDeck)) {
+  openReferenceDeck(requestedReferenceDeck);
+} else if (storyTransitions.getState().introSeen && !elements.storyDialog.open) {
+  // The story only fires once. Someone who saw it before this deck existed
+  // still gets the opening, on the same terms: once, and skippable.
+  showOpeningReference();
+}
 
 if (urlParams.get("preview") === "story-index") {
   renderStoryReviewIndex();

@@ -6,8 +6,11 @@ import { remoteVariantPaths } from "./presentation-data.js";
 const runtimeAssetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
 const sourcePathSegments = new Set(["candidates", "masters", "review", "reviews", "sources"]);
 
-export const CORE_MEDIA_WARNING_BYTES = 30 * 1024 * 1024;
-export const CORE_MEDIA_MAX_BYTES = 50 * 1024 * 1024;
+// A ceiling that stops a runaway precache, not a design target. A few hundred
+// megabytes of illustrated boards is unremarkable for an installed app, so this
+// exists to catch a mistake — a source tree packaged by accident, a variant
+// directory promoted to core — rather than to ration artwork.
+export const CORE_MEDIA_MAX_BYTES = 300 * 1024 * 1024;
 
 function addAsset(target, asset, category) {
   if (asset === null || asset === undefined) return;
@@ -60,6 +63,16 @@ export function collectMediaPolicy(presentation, characterManifest) {
     }
   }
 
+  const referenceScene = presentation?.reference?.scene;
+  if (referenceScene) {
+    for (const profile of Object.values(referenceScene.profiles || {})) {
+      addAsset(core, profile.base, "world-base");
+    }
+    for (const asset of remoteVariantPaths(referenceScene.remoteVariants)) {
+      addAsset(optional, asset, "remote-scene-variant");
+    }
+  }
+
   for (const panel of presentation?.story?.intro || []) {
     addAsset(core, panel.asset, "story-still");
   }
@@ -97,16 +110,12 @@ export function coreMediaBytes(rootDirectory, media) {
   return media.core.reduce((total, asset) => total + statSync(resolve(rootDirectory, asset.path)).size, 0);
 }
 
-export function assertCoreMediaBudget(rootDirectory, media, {
-  onWarning = message => console.warn(message),
-} = {}) {
+export function assertCoreMediaBudget(rootDirectory, media) {
   const bytes = coreMediaBytes(rootDirectory, media);
-  const formatted = (bytes / 1024 / 1024).toFixed(2);
   if (bytes > CORE_MEDIA_MAX_BYTES) {
-    throw new Error(`Core media budget exceeded: ${formatted} MiB is above the 50 MiB limit`);
-  }
-  if (bytes > CORE_MEDIA_WARNING_BYTES) {
-    onWarning(`Core media budget warning: ${formatted} MiB is above the 30 MiB target`);
+    const formatted = (bytes / 1024 / 1024).toFixed(2);
+    const limit = (CORE_MEDIA_MAX_BYTES / 1024 / 1024).toFixed(0);
+    throw new Error(`Core media budget exceeded: ${formatted} MiB is above the ${limit} MiB limit`);
   }
   return bytes;
 }

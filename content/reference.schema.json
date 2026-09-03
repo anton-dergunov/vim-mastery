@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vimwilds.local/schemas/reference.schema.json",
+  "title": "Vim Wilds reference card decks",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contentVersion", "decks"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "contentVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "decks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/deck"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "copy": {"type": "string", "minLength": 1},
+    "deck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "kicker", "title", "summary", "cards"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "role": {"enum": ["opening", "deck"]},
+        "kicker": {"$ref": "#/$defs/copy"},
+        "title": {"$ref": "#/$defs/copy"},
+        "summary": {"$ref": "#/$defs/copy"},
+        "cards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/card"}}
+      }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "anyOf": [{"required": ["body"]}, {"required": ["rows"]}],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"$ref": "#/$defs/copy"},
+        "lede": {"$ref": "#/$defs/copy"},
+        "body": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/copy"}},
+        "columns": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {"vim": {"$ref": "#/$defs/copy"}, "host": {"$ref": "#/$defs/copy"}}
+        },
+        "hostNote": {"$ref": "#/$defs/copy"},
+        "rows": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/row"}},
+        "notes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/copy"}},
+        "actions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/action"}}
+      }
+    },
+    "row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "vim"],
+      "properties": {
+        "command": {"$ref": "#/$defs/copy"},
+        "vim": {"$ref": "#/$defs/copy"},
+        "host": {"$ref": "#/$defs/copy"},
+        "affects": {"$ref": "#/$defs/copy"}
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label"],
+      "properties": {
+        "id": {"enum": ["start-lessons", "open-survival"]},
+        "kind": {"enum": ["primary", "secondary"]},
+        "label": {"$ref": "#/$defs/copy"}
+      }
+    }
+  }
+}

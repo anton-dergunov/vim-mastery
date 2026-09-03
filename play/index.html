@@ -300,6 +300,27 @@
 
   </main>
 
+  <dialog class="reference-dialog" id="referenceDialog" aria-labelledby="referenceTitle">
+    <article class="reference-surface">
+      <div class="reference-visual world theme-moonroot" id="referenceVisual" aria-hidden="true">
+        <div class="world-backdrop" id="referenceBackdrop"></div>
+        <div class="world-ambient" id="referenceAmbient"></div>
+        <div class="world-remote-variant-layer" id="referenceVariantLayer"></div>
+      </div>
+      <div class="reference-content">
+        <div class="reference-heading">
+          <span class="reference-kicker" id="referenceKicker">Reference</span>
+          <span class="reference-progress" id="referenceProgress" aria-live="polite"></span>
+          <button class="dialog-close" type="button" data-reference-action="close" aria-label="Close reference">×</button>
+        </div>
+        <h2 class="reference-title" id="referenceTitle"></h2>
+        <div class="reference-card-body" id="referenceCardBody" tabindex="0"></div>
+        <div class="reference-actions" id="referenceActions"></div>
+      </div>
+    </article>
+  </dialog>
+
+
   <script type="module" src="../app.js"></script>
 </body>
 </html>
