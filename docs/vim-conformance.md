@@ -26,7 +26,11 @@ literals to the adapter's overwrite operation; this preserves native `R`
 behavior while keeping the editor surface non-editable and preventing the phone
 keyboard from opening. The remaining Unit 3 families run through the pinned
 adapter without a dependency patch. Numeric fixtures use decimal values because
-other formats can depend on Vim's `nrformats` option.
+other formats can depend on Vim's `nrformats` option. Counted Insert commands
+are exposed for `{count}i`, `{count}a`, and `{count}o`, where the adapter applies
+the repetition when Insert mode ends, exactly as Vim does. `{count}O` is not
+exposed: the adapter interlaces the repeated opens but leaves the cursor on the
+first new line where Vim leaves it on the last.
 
 Unit 4 fixes CodeMirror's indentation unit at two spaces to match its native
 fixtures. Reflow activities also provide an explicit `editor.textWidth`, which
@@ -49,7 +53,14 @@ adapter can resolve balanced `it`/`at` objects from the syntax tree. The
 versioned patch asks CodeMirror to parse the complete buffer before resolving
 an enclosing tag, ensuring its closing tag is available beyond the cursor. Tag
 fixtures deliberately use well-formed, lowercase HTML and avoid malformed
-tags, comments, and ambiguous angle brackets. The pinned adapter also omitted
+tags, comments, and ambiguous angle brackets. Tag and paragraph objects run on
+buffers taller than their fixed window so the matching close lies off screen;
+`it` with a text-changing operator resolves that range exactly, including
+collapsing a multi-row element onto one line. Two tag behaviors remain outside
+the contract and are not authored: a tag-object yank whose range begins before
+the cursor does not move the cursor to the range start, and `at` over an element
+spanning whole lines leaves the leading indentation as a residual line instead
+of removing the emptied rows. The pinned adapter also omitted
 Vim's adjacent-whitespace rule for around-quote objects: `a"`, `a'`, and
 ``a` `` now include following horizontal whitespace when present, otherwise
 preceding whitespace. The versioned compatibility patch applies that behavior

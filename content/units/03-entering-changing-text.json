@@ -8,11 +8,11 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "3. Entering and changing text",
-    "commandsAndConcepts": "`i I a A o O`; `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
+    "commandsAndConcepts": "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
     "prerequisites": "Units 1–2",
     "learningOutcome": "Choose a precise entry/change command, undo safely, and perform common local transformations",
-    "representativeExercises": "Append an argument; open a line; replace a delimiter; join a wrapped statement; change case; increment a version number",
-    "priorityAndPortability": "Core, with `R`, `gJ`, and numeric changes introduced after the everyday commands"
+    "representativeExercises": "Append an argument; open a line; build a divider with a counted insert; replace a delimiter; join a wrapped statement; change case; increment a version number",
+    "priorityAndPortability": "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced"
   },
   "prerequisiteSkillIds": [
     "modal-model",
@@ -1095,6 +1095,516 @@
       ]
     },
     {
+      "id": "count-insert-commands",
+      "title": "Repeat what you type",
+      "objective": "Put a count before an Insert command so the whole typed run repeats.",
+      "activities": [
+        {
+          "id": "counted-insert-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A count repeats the whole insertion",
+          "body": "A count before `i`, `a`, or `o` does not repeat the keystroke — it repeats everything you type before `Esc`. `3i-` then `Esc` inserts `---`, and `5o` opens five lines that each receive the same text.",
+          "grammar": "{count}i / {count}a → repeat the typed run · {count}o → open that many filled lines",
+          "contrast": "Counts are not only for motions and operators; Insert commands take them too, which turns a divider or a block of scaffolding into one command.",
+          "demoRef": "counted-divider-demo"
+        },
+        {
+          "id": "counted-divider-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Build a divider in one command",
+          "instruction": "Use `3i-` and `Esc` to underline the heading with three dashes.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Release notes",
+                "",
+                "Details follow."
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Release notes",
+                "---",
+                "Details follow."
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "i",
+              "-",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "3i",
+                "explanation": "Enter Insert mode and ask for three repetitions."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "-",
+                "explanation": "Type the run that will be repeated."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "Esc",
+                "explanation": "Leave Insert mode; the repetitions are applied now."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "Release notes",
+                  "---",
+                  "Details follow."
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal",
+                "caption": "One dash was typed; the count produced the other two on Escape."
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The heading now has its underline.",
+            "why": "The count was applied to the finished insertion, not to the `-` keystroke, so leaving Insert mode produced all three dashes."
+          },
+          "skills": {
+            "primary": [
+              "counted-insert"
+            ],
+            "supporting": [
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "insert-repeat"
+            ]
+          },
+          "portability": "Core Vim behavior; the repetition is applied when Insert mode ends.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A Markdown heading underline is the smallest honest use of a repeated character run.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "counted-insert"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "counted-open-records",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Scaffold five empty records",
+          "instruction": "Open five rows below the header, each holding the two commas of an empty record.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "id,name,role"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "id,name,role",
+                ",,",
+                ",,",
+                ",,",
+                ",,",
+                ",,"
+              ],
+              "cursor": [
+                5,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "5",
+              "o",
+              ",",
+              ",",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "5o",
+                "explanation": "Open a line below and ask for five of them."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": ",,",
+                "explanation": "Type the run that each opened line receives."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Esc",
+                "explanation": "Leave Insert mode; the remaining four lines are opened now."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "id,name,role",
+                  ",,",
+                  ",,",
+                  ",,",
+                  ",,",
+                  ",,"
+                ],
+                "cursor": [
+                  5,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "One command should produce all five rows.",
+            "The count goes before the open command.",
+            "Press `5o,,` then `Esc`."
+          ],
+          "feedback": {
+            "success": "Five empty records are ready to fill in.",
+            "why": "`5o` opened one line, took the typed run, and repeated both four more times on Escape."
+          },
+          "skills": {
+            "primary": [
+              "counted-open"
+            ],
+            "supporting": [
+              "open-below",
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "insert-repeat",
+              "line-scaffolding"
+            ]
+          },
+          "portability": "Core Vim behavior; no automatic indentation is involved.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A CSV header makes the shape of an empty record obvious without any syntax rules.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "counted-open"
+            ]
+          }
+        },
+        {
+          "id": "counted-append-table-rule",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Widen a table rule",
+          "instruction": "Extend the first column's rule from two dashes to five.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "| id | name |",
+                "|--|--|"
+              ],
+              "cursor": [
+                1,
+                1
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "| id | name |",
+                "|-----|--|"
+              ],
+              "cursor": [
+                1,
+                4
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "a",
+              "-",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "3a",
+                "explanation": "Append after the cursor and ask for three repetitions."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "-",
+                "explanation": "Type the run that will be repeated."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "Esc",
+                "explanation": "Leave Insert mode; three dashes are added."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "| id | name |",
+                  "|-----|--|"
+                ],
+                "cursor": [
+                  1,
+                  4
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Three dashes are missing, and they belong after the cursor.",
+            "Give the append command a count.",
+            "Press `3a-` then `Esc`."
+          ],
+          "feedback": {
+            "success": "The first column's rule is five dashes wide.",
+            "why": "`a` chose the boundary after the cursor and the count repeated the single dash three times."
+          },
+          "skills": {
+            "primary": [
+              "counted-insert"
+            ],
+            "supporting": [
+              "append-after",
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "insert-repeat",
+              "boundary-choice"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A Markdown table rule is a real place where a fixed number of identical characters is needed.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "counted-insert",
+              "append-after"
+            ]
+          }
+        },
+        {
+          "id": "counted-open-table-rows",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Scaffold three table rows",
+          "instruction": "Add three empty two-column rows below the table rule.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "| id | name |",
+                "|----|------|"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "| id | name |",
+                "|----|------|",
+                "|||",
+                "|||",
+                "|||"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "G",
+              "3",
+              "o",
+              "|",
+              "|",
+              "|",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "G",
+                "explanation": "Reach the final row of the table."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "3o",
+                "explanation": "Open a line below and ask for three of them."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "|||",
+                "explanation": "Type the run that each opened line receives."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Leave Insert mode; the remaining two rows are opened now."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "| id | name |",
+                  "|----|------|",
+                  "|||",
+                  "|||",
+                  "|||"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The rows belong under the rule, so reach the last row first.",
+            "One counted open command produces all three.",
+            "Press `G`, then `3o|||` and `Esc`."
+          ],
+          "feedback": {
+            "success": "The table has three empty rows ready to fill in.",
+            "why": "The motion chose where the block starts and the count chose how tall it is, so one insertion built all three rows."
+          },
+          "skills": {
+            "primary": [
+              "counted-open"
+            ],
+            "supporting": [
+              "open-below",
+              "buffer-movement",
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "insert-repeat",
+              "movement-then-entry"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A Markdown table needs a known number of identically shaped rows, which is exactly what a counted open produces.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "counted-open",
+              "buffer-end-motion"
+            ]
+          }
+        }
+      ]
+    },
+    {
       "id": "edit-single-characters",
       "title": "Delete or replace the smallest target",
       "objective": "Use x, X, and r for local character corrections without entering a longer edit.",
@@ -1613,42 +2123,42 @@
       ]
     },
     {
-      "id": "substitute-and-replace",
-      "title": "Replace one unit or keep overwriting",
-      "objective": "Choose s, S, or R according to the replacement span.",
+      "id": "substitute-text",
+      "title": "Replace a character or a line",
+      "objective": "Choose s or S according to the replacement span, and widen s with a count.",
       "activities": [
         {
           "id": "substitute-replace-meanings",
           "type": "theory",
           "phase": "explain",
-          "title": "Replace a character, a line, or several characters",
-          "body": "Press `s` to replace one character, `S` to replace the whole line, or `R` to overwrite characters until you leave Replace mode.",
-          "grammar": "s → substitute character · S → substitute line · R → overwrite stream",
-          "contrast": "Use the smallest command whose replacement span matches the task.",
-          "demoRef": "replace-word-demo"
+          "title": "Replace one character or a whole line",
+          "body": "Press `s` to replace the character under the cursor or `S` to replace the whole logical line. Both delete their span and leave you in Insert mode, so the replacement is typed immediately. A count works here too: `4s` replaces four characters.",
+          "grammar": "s → substitute character · S → substitute line · {count}s → substitute that many characters",
+          "contrast": "Use the smallest command whose replacement span matches the task; Replace mode is the separate case where you overwrite a stream of characters instead.",
+          "demoRef": "substitute-character-demo"
         },
         {
-          "id": "replace-word-demo",
+          "id": "substitute-character-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Overwrite a fixed-width value",
-          "instruction": "Enter Replace mode on `oldxx` and overwrite it with `draft`.",
+          "title": "Correct a comparison",
+          "instruction": "Replace the single `=` with `==` using `s`.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "mode = oldxx"
+                "if (ready = true) {"
               ],
               "cursor": [
                 0,
-                7
+                10
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "mode = draft"
+                "if (ready == true) {"
               ],
               "cursor": [
                 0,
@@ -1659,42 +2169,43 @@
           },
           "script": {
             "steps": [
-              "R",
-              "d",
-              "r",
-              "a",
-              "f",
-              "t",
+              "s",
+              "=",
+              "=",
               "Escape"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 1,
-                "display": "R",
-                "explanation": "Enter Replace mode at the cursor."
+                "display": "s",
+                "explanation": "Delete the character under the cursor and enter Insert mode."
               },
               {
                 "from": 1,
-                "to": 6,
-                "display": "draft",
-                "explanation": "Type the replacement text."
+                "to": 3,
+                "display": "==",
+                "explanation": "Type the replacement, which need not be one character."
               },
               {
-                "from": 6,
-                "to": 7,
+                "from": 3,
+                "to": 4,
                 "display": "Esc",
                 "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 1
+                "afterStep": 1,
+                "lines": [
+                  "if (ready  true) {"
+                ],
+                "caption": "The single character is gone and Insert mode is open."
               },
               {
-                "afterStep": 7,
+                "afterStep": 4,
                 "lines": [
-                  "mode = draft"
+                  "if (ready == true) {"
                 ],
                 "cursor": [
                   0,
@@ -1706,28 +2217,28 @@
           },
           "hints": [],
           "feedback": {
-            "success": "The old value was overwritten in place.",
-            "why": "R replaced existing characters instead of shifting them right."
+            "success": "The assignment became a comparison.",
+            "why": "`s` removed exactly one character but let the replacement be as long as it needed to be."
           },
           "skills": {
             "primary": [
-              "replace-mode"
+              "substitute-character"
             ],
             "supporting": [
-              "mode-transitions"
+              "insert-mode"
             ]
           },
           "difficulty": {
             "level": "guided",
             "dimensions": [
-              "fixed-width-overwrite"
+              "single-character-substitution"
             ]
           },
-          "portability": "Core Vim Replace-mode behavior.",
+          "portability": "Core Vim behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "entering-changing-text-v1",
-            "languageRationale": "Equal-width state labels make overwrite semantics immediately visible.",
+            "languageRationale": "A stray assignment inside a condition is the classic one-character correction.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -1735,9 +2246,10 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "replace-mode-overwrite"
+              "substitute-character"
             ]
-          }
+          },
+          "delivery": "guided"
         },
         {
           "id": "substitute-one-letter",
@@ -1975,6 +2487,484 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "substitute-line"
+            ]
+          }
+        },
+        {
+          "id": "substitute-counted-run",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Substitute a run of characters",
+          "instruction": "Replace the four-character level “warn” with “info”.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "level = warn"
+              ],
+              "cursor": [
+                0,
+                8
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "level = info"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "4",
+              "s",
+              "i",
+              "n",
+              "f",
+              "o",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "4s",
+                "explanation": "Delete four characters from the cursor and enter Insert mode."
+              },
+              {
+                "from": 2,
+                "to": 6,
+                "display": "info",
+                "explanation": "Type the replacement."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "level = "
+                ],
+                "caption": "All four characters are gone in one change."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "level = info"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The old value is four characters long.",
+            "A count before `s` widens the span it replaces.",
+            "Press `4sinfo` then `Esc`."
+          ],
+          "feedback": {
+            "success": "The level was replaced in one change.",
+            "why": "The count widened the substitution span, so one command covered the whole value."
+          },
+          "skills": {
+            "primary": [
+              "substitute-character"
+            ],
+            "supporting": [
+              "counted-substitute",
+              "insert-mode"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "counted-substitution"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A TOML log level is a short value whose length is easy to count at a glance.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substitute-character",
+              "counted-substitute"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "replace-mode",
+      "title": "Overwrite in place",
+      "objective": "Use Replace mode to overtype a run of characters without changing the line's width.",
+      "track": "advanced",
+      "trackNote": "Advanced and less commonly used: `r` and `c` cover nearly every real replacement, and Replace mode earns its keep mainly when overtyping a fixed-width or aligned field.",
+      "activities": [
+        {
+          "id": "replace-mode-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Overwrite a stream of characters",
+          "body": "Press `R` to enter Replace mode. Every character you type overwrites the one under the cursor instead of pushing it right, and typing past the end of the line starts appending. `Esc` leaves the rest of the line untouched.",
+          "grammar": "R → overwrite until Esc · past end of line → append",
+          "contrast": "`r` overwrites exactly one character and `c` replaces a described range; Replace mode is for overtyping a run whose width you want to keep.",
+          "demoRef": "replace-word-demo"
+        },
+        {
+          "id": "replace-word-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Overwrite a fixed-width value",
+          "instruction": "Enter Replace mode on `oldxx` and overwrite it with `draft`.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "mode = oldxx"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "mode = draft"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "R",
+              "d",
+              "r",
+              "a",
+              "f",
+              "t",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "R",
+                "explanation": "Enter Replace mode at the cursor."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "draft",
+                "explanation": "Type the replacement text."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "mode = draft"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The old value was overwritten in place.",
+            "why": "R replaced existing characters instead of shifting them right."
+          },
+          "skills": {
+            "primary": [
+              "replace-mode"
+            ],
+            "supporting": [
+              "mode-transitions"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "fixed-width-overwrite"
+            ]
+          },
+          "portability": "Core Vim Replace-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "Equal-width state labels make overwrite semantics immediately visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "replace-mode-overwrite"
+            ]
+          }
+        },
+        {
+          "id": "replace-aligned-status",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Overtype an aligned column",
+          "instruction": "Overwrite the first row's “OK” with “ERR” without disturbing the column that follows.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "OK   build passed",
+                "OK   tests passed"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "ERR  build passed",
+                "OK   tests passed"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "R",
+              "E",
+              "R",
+              "R",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "R",
+                "explanation": "Enter Replace mode at the cursor."
+              },
+              {
+                "from": 1,
+                "to": 4,
+                "display": "ERR",
+                "explanation": "Overtype three characters."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "ERR  build passed",
+                  "OK   tests passed"
+                ],
+                "cursor": [
+                  0,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The message column must stay where it is.",
+            "Overtype the status instead of inserting a new one.",
+            "Press `RERR` then `Esc`."
+          ],
+          "feedback": {
+            "success": "The status changed and the column stayed aligned.",
+            "why": "Replace mode consumed one existing character per keystroke, so the row never grew."
+          },
+          "skills": {
+            "primary": [
+              "replace-mode"
+            ],
+            "supporting": [
+              "column-alignment"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "fixed-width-overwrite"
+            ]
+          },
+          "portability": "Core Vim Replace-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "An aligned status column is the case where preserving width is the whole point.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "replace-mode-overwrite"
+            ]
+          }
+        },
+        {
+          "id": "replace-partial-version",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Stop overwriting part-way",
+          "instruction": "Change the version from “1.2.3” to “2.0.3” without retyping the final component.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "version = 1.2.3"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "version = 2.0.3"
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "R",
+              "2",
+              ".",
+              "0",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "R",
+                "explanation": "Enter Replace mode at the cursor."
+              },
+              {
+                "from": 1,
+                "to": 4,
+                "display": "2.0",
+                "explanation": "Overtype only the characters you want to change."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Esc",
+                "explanation": "Leave Replace mode; the rest of the line is untouched."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "version = 2.0.3"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Only the first two components change.",
+            "Replace mode overwrites exactly as far as you type.",
+            "Press `R2.0` then `Esc`."
+          ],
+          "feedback": {
+            "success": "The first two components changed and the patch number survived.",
+            "why": "Escape ended the overwrite where you stopped typing rather than to the end of the line."
+          },
+          "skills": {
+            "primary": [
+              "replace-mode"
+            ],
+            "supporting": [
+              "mode-transitions"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "partial-overwrite"
+            ]
+          },
+          "portability": "Core Vim Replace-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A semantic version has clear components, so a partial overwrite is easy to read.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "replace-mode-overwrite"
             ]
           }
         },
@@ -4633,6 +5623,20 @@
       ]
     },
     {
+      "id": "ref-counted-insert",
+      "command": "{count}i / {count}a / {count}o",
+      "purpose": "Repeat a complete insertion instead of a single keystroke.",
+      "notes": [
+        "The repetition is applied when Insert mode ends, not while you type.",
+        "`{count}o` opens that many lines and gives each the same text."
+      ],
+      "exampleActivityRefs": [
+        "counted-divider-demo",
+        "counted-open-records",
+        "counted-open-table-rows"
+      ]
+    },
+    {
       "id": "ref-character-edits",
       "command": "x / X / r{char}",
       "purpose": "Delete under the cursor, delete before it, or replace one character.",
@@ -4646,16 +5650,30 @@
       ]
     },
     {
-      "id": "ref-substitute-replace",
-      "command": "s / S / R",
-      "purpose": "Replace a character, a line, or an overwrite stream.",
+      "id": "ref-substitute",
+      "command": "s / S / {count}s",
+      "purpose": "Delete a character, a counted run, or a whole line and type its replacement.",
       "notes": [
-        "s and S enter Insert mode.",
-        "R overwrites until end-of-line, then inserts."
+        "Both commands land in Insert mode, so the replacement follows immediately.",
+        "`S` clears the line's text; automatic indentation is host-configurable, so fixtures stay unindented."
+      ],
+      "exampleActivityRefs": [
+        "substitute-character-demo",
+        "substitute-whole-line",
+        "substitute-counted-run"
+      ]
+    },
+    {
+      "id": "ref-replace-mode",
+      "command": "R",
+      "purpose": "Overtype characters in place until Escape.",
+      "notes": [
+        "Typing past the end of the line switches to appending.",
+        "Escape stops the overwrite where you stopped typing; the rest of the line is untouched."
       ],
       "exampleActivityRefs": [
         "replace-word-demo",
-        "substitute-whole-line",
+        "replace-aligned-status",
         "replace-beyond-line-end"
       ]
     },
@@ -4749,6 +5767,24 @@
       ]
     },
     {
+      "concept": "counted insert and open",
+      "explain": [
+        "counted-insert-meanings"
+      ],
+      "demonstrate": [
+        "counted-divider-demo"
+      ],
+      "isolate": [
+        "counted-open-records"
+      ],
+      "mix": [
+        "counted-append-table-rule"
+      ],
+      "challenge": [
+        "counted-open-table-rows"
+      ]
+    },
+    {
       "concept": "x X r",
       "explain": [
         "character-edit-meanings"
@@ -4767,18 +5803,36 @@
       ]
     },
     {
-      "concept": "s S R",
+      "concept": "s S",
       "explain": [
         "substitute-replace-meanings"
       ],
       "demonstrate": [
-        "replace-word-demo"
+        "substitute-character-demo"
       ],
       "isolate": [
         "substitute-one-letter"
       ],
       "mix": [
         "substitute-whole-line"
+      ],
+      "challenge": [
+        "substitute-counted-run"
+      ]
+    },
+    {
+      "concept": "R",
+      "explain": [
+        "replace-mode-meanings"
+      ],
+      "demonstrate": [
+        "replace-word-demo"
+      ],
+      "isolate": [
+        "replace-aligned-status"
+      ],
+      "mix": [
+        "replace-partial-version"
       ],
       "challenge": [
         "replace-beyond-line-end"

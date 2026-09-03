@@ -11,7 +11,7 @@
     "prerequisites": "Units 1–4",
     "learningOutcome": "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
     "representativeExercises": "Delete until a quote; repeat a comma find; change the next search match; jump between brackets; move by paragraphs in prose or comments",
-    "priorityAndPortability": "Core. Search and pair matching remain text-based rather than IDE-semantic"
+    "priorityAndPortability": "Core. Search and pair matching remain text-based rather than IDE-semantic, and sentence motions are marked optional"
   },
   "prerequisiteSkillIds": [
     "modal-model",
@@ -3617,34 +3617,36 @@
       ]
     },
     {
-      "id": "move-by-sentences-and-paragraphs",
-      "title": "Move through prose structure",
-      "objective": "Navigate sentence starts and blank-line paragraph boundaries in prose and comments.",
+      "id": "move-by-paragraphs",
+      "title": "Move through blank-line structure",
+      "objective": "Cross blank-line paragraph boundaries in either direction, with or without a count.",
       "activities": [
         {
           "id": "text-boundary-meaning",
           "type": "theory",
           "phase": "explain",
-          "title": "Move by sentences or paragraphs",
-          "body": "Use `(` and `)` to move between sentence starts. Use `{` and `}` to move between paragraphs, which are usually separated by blank lines.",
-          "grammar": "( / ) → sentences · { / } → paragraphs",
-          "contrast": "These motions use Vim's text rules; they do not infer semantic paragraphs from code structure.",
-          "demoRef": "text-boundary-demo"
+          "title": "Move by paragraphs",
+          "body": "Use `}` to move forward to the next paragraph boundary and `{` to move back to the previous one. A boundary is a blank line, so this works the same way in prose, in Markdown, and in the blank-line-separated blocks of a source file.",
+          "grammar": "} → next boundary · { → previous boundary · {count}} → repeat",
+          "contrast": "The boundary is a blank line, not a semantic block: `}` does not know where a function or a list ends.",
+          "demoRef": "paragraph-boundary-demo"
         },
         {
-          "id": "text-boundary-demo",
+          "id": "paragraph-boundary-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Tour sentences and paragraphs",
-          "instruction": "Move to the next sentence and back, then cross paragraph boundaries in both directions.",
+          "title": "Cross boundaries in both directions",
+          "instruction": "Move forward across two paragraph boundaries, then back across one.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "First sentence. Second sentence!",
+                "Intro line.",
                 "",
-                "Third paragraph starts here. Another ends?"
+                "Body line.",
+                "",
+                "Closing line."
               ],
               "cursor": [
                 0,
@@ -3654,9 +3656,11 @@
             },
             "target": {
               "lines": [
-                "First sentence. Second sentence!",
+                "Intro line.",
                 "",
-                "Third paragraph starts here. Another ends?"
+                "Body line.",
+                "",
+                "Closing line."
               ],
               "cursor": [
                 1,
@@ -3667,11 +3671,474 @@
           },
           "script": {
             "steps": [
-              ")",
-              "(",
               "}",
               "}",
               "{"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "}",
+                "explanation": "Move forward to the next blank line."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "}",
+                "explanation": "Continue to the following boundary."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "{",
+                "explanation": "Move back to the previous boundary."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "Intro line.",
+                  "",
+                  "Body line.",
+                  "",
+                  "Closing line."
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Curly braces follow blank-line structure."
+          ],
+          "feedback": {
+            "success": "You travelled three boundaries with three keystrokes.",
+            "why": "Each motion landed on the blank line that separates two paragraphs rather than counting rows."
+          },
+          "skills": {
+            "primary": [
+              "paragraph-motion"
+            ],
+            "supporting": [
+              "text-navigation"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "blank-line-boundary",
+              "bidirectional"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Three short paragraphs make every blank-line boundary visible at once.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "paragraph-motion"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "move-next-paragraph",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Reach the next boundary",
+          "instruction": "Move forward to the blank line that ends the setup block.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Setup notes.",
+                "More setup.",
+                "",
+                "Results follow."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Setup notes.",
+                "More setup.",
+                "",
+                "Results follow."
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "}"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "}",
+                "explanation": "Move forward to the next blank line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "Setup notes.",
+                  "More setup.",
+                  "",
+                  "Results follow."
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The boundary is the blank line, not the next row of text.",
+            "Press `}`."
+          ],
+          "feedback": {
+            "success": "You landed on the boundary in one keystroke.",
+            "why": "The motion skipped every line of the paragraph and stopped at the blank line after it."
+          },
+          "skills": {
+            "primary": [
+              "paragraph-forward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "blank-line-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A two-line Markdown block makes the difference between a row and a paragraph obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "paragraph-forward"
+            ]
+          }
+        },
+        {
+          "id": "move-previous-paragraph",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Return to the earlier boundary",
+          "instruction": "Move back to the blank line that begins the body block.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Header note.",
+                "",
+                "Body note.",
+                "More body."
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Header note.",
+                "",
+                "Body note.",
+                "More body."
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "{"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "{",
+                "explanation": "Move back to the previous blank line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "lines": [
+                  "Header note.",
+                  "",
+                  "Body note.",
+                  "More body."
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The backward motion is the mirror of the forward one.",
+            "Press `{`."
+          ],
+          "feedback": {
+            "success": "You crossed the whole block backwards in one keystroke.",
+            "why": "Backward paragraph motion passed both body rows and stopped at the blank line above them."
+          },
+          "skills": {
+            "primary": [
+              "paragraph-backward"
+            ],
+            "supporting": []
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "backward-motion",
+              "blank-line-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Starting on the final row proves the motion crosses a whole block rather than one line.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "paragraph-backward"
+            ]
+          }
+        },
+        {
+          "id": "move-two-paragraph-boundaries",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Cross two paragraph boundaries",
+          "instruction": "Move forward across two paragraph boundaries to the blank line before “last line”.",
+          "languageId": "markdown",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "first line",
+                "second line",
+                "",
+                "third line",
+                "fourth line",
+                "",
+                "last line"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "first line",
+                "second line",
+                "",
+                "third line",
+                "fourth line",
+                "",
+                "last line"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "2",
+              "}"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "2}",
+                "explanation": "Move forward across two paragraph boundaries."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "first line",
+                  "second line",
+                  "",
+                  "third line",
+                  "fourth line",
+                  "",
+                  "last line"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Counts work with paragraph motions.",
+            "Use `2}`."
+          ],
+          "feedback": {
+            "success": "You crossed the paragraph and reached the buffer end.",
+            "why": "The count repeated the structural motion rather than counting lines."
+          },
+          "skills": {
+            "primary": [
+              "paragraph-forward"
+            ],
+            "supporting": [
+              "counts"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "counted-motion",
+              "blank-line-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Markdown-like paragraphs provide a natural empty-line separator.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "paragraph-forward"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "move-by-sentences",
+      "title": "Move through sentence structure",
+      "objective": "Navigate and operate on sentence boundaries in prose, Markdown, and commit messages.",
+      "track": "optional",
+      "trackNote": "Optional — depends on configuration or file type: sentence boundaries are read from `.`, `!`, and `?`, so `(` and `)` earn their keep in prose, Markdown, and commit messages rather than in code.",
+      "activities": [
+        {
+          "id": "sentence-boundary-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Move by sentences",
+          "body": "Use `)` to move to the start of the next sentence and `(` to move back to the start of the current or previous one. A sentence ends at `.`, `!`, or `?` followed by whitespace or a line end.",
+          "grammar": "( / ) → sentence starts · d) → delete to the next sentence",
+          "contrast": "These are punctuation rules, not language rules: an abbreviation ends a sentence as far as Vim is concerned, and code rarely contains sentence punctuation at all.",
+          "demoRef": "text-boundary-demo"
+        },
+        {
+          "id": "text-boundary-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Step between sentence starts",
+          "instruction": "Move forward two sentence starts, then back one.",
+          "languageId": "prose",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Alpha ends. Beta starts. Gamma follows."
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Alpha ends. Beta starts. Gamma follows."
+              ],
+              "cursor": [
+                0,
+                12
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ")",
+              ")",
+              "("
             ],
             "commandGroups": [
               {
@@ -3683,26 +4150,14 @@
               {
                 "from": 1,
                 "to": 2,
-                "display": "(",
-                "explanation": "Return to the previous sentence start."
+                "display": ")",
+                "explanation": "Continue to the following sentence."
               },
               {
                 "from": 2,
                 "to": 3,
-                "display": "}",
-                "explanation": "Move to the paragraph boundary."
-              },
-              {
-                "from": 3,
-                "to": 4,
-                "display": "}",
-                "explanation": "Continue into the next paragraph."
-              },
-              {
-                "from": 4,
-                "to": 5,
-                "display": "{",
-                "explanation": "Return to the prior boundary."
+                "display": "(",
+                "explanation": "Return to the previous sentence start."
               }
             ],
             "checkpoints": [
@@ -3710,7 +4165,7 @@
                 "afterStep": 1,
                 "cursor": [
                   0,
-                  16
+                  12
                 ],
                 "mode": "normal"
               },
@@ -3718,53 +4173,33 @@
                 "afterStep": 2,
                 "cursor": [
                   0,
-                  0
+                  25
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 3,
-                "cursor": [
-                  1,
-                  0
-                ],
-                "mode": "normal"
-              },
-            {
-              "afterStep": 4,
-              "cursor": [
-                2,
-                41
-              ],
-              "mode": "normal"
-            },
-              {
-                "afterStep": 5,
                 "lines": [
-                  "First sentence. Second sentence!",
-                  "",
-                  "Third paragraph starts here. Another ends?"
+                  "Alpha ends. Beta starts. Gamma follows."
                 ],
                 "cursor": [
-                  1,
-                  0
+                  0,
+                  12
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Round brackets follow sentence punctuation.",
-            "Curly braces follow blank-line paragraph structure."
+            "Round brackets follow sentence punctuation."
           ],
           "feedback": {
-            "success": "You navigated two levels of prose structure.",
-            "why": "Sentence and paragraph motions used landmarks larger than words or lines."
+            "success": "You stepped through three sentences on one line.",
+            "why": "The motion read the full stop plus the following space as the boundary, so line breaks were never involved."
           },
           "skills": {
             "primary": [
-              "sentence-motion",
-              "paragraph-motion"
+              "sentence-motion"
             ],
             "supporting": [
               "text-navigation"
@@ -3773,7 +4208,7 @@
           "difficulty": {
             "level": "guided",
             "dimensions": [
-              "two-structure-levels",
+              "punctuation-boundary",
               "bidirectional"
             ]
           },
@@ -3781,7 +4216,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "precision-motions-search-v1",
-            "languageRationale": "Neutral prose exposes Vim's sentence punctuation and blank-line paragraph rules.",
+            "languageRationale": "Three short sentences on one line isolate punctuation boundaries from line structure.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -3981,108 +4416,92 @@
           }
         },
         {
-          "id": "move-two-paragraph-boundaries",
+          "id": "delete-to-sentence-end",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Cross two paragraph boundaries",
-          "instruction": "Move forward across two paragraph boundaries to the blank line before “last line”.",
-          "languageId": "markdown",
+          "title": "Drop a sentence from a message",
+          "instruction": "Remove the middle sentence from the commit message, leaving the other two intact.",
+          "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "first line",
-                "second line",
-                "",
-                "third line",
-                "fourth line",
-                "",
-                "last line"
+                "Fix the parser. Drop the flag. Ship it."
               ],
               "cursor": [
                 0,
-                0
+                16
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "first line",
-                "second line",
-                "",
-                "third line",
-                "fourth line",
-                "",
-                "last line"
+                "Fix the parser. Ship it."
               ],
               "cursor": [
-                5,
-                0
+                0,
+                16
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              "2",
-              "}"
+              "d",
+              ")"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 2,
-                "display": "2}",
-                "explanation": "Move forward across two paragraph boundaries."
+                "display": "d)",
+                "explanation": "Delete from the cursor to the next sentence start."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 2,
                 "lines": [
-                  "first line",
-                  "second line",
-                  "",
-                  "third line",
-                  "fourth line",
-                  "",
-                  "last line"
+                  "Fix the parser. Ship it."
                 ],
                 "cursor": [
-                  5,
-                  0
+                  0,
+                  16
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Counts work with paragraph motions.",
-            "Use `2}`."
+            "The cursor already sits at the start of the sentence to remove.",
+            "A sentence motion can serve as an operator's range.",
+            "Press `d)`."
           ],
           "feedback": {
-            "success": "You crossed the paragraph and reached the buffer end.",
-            "why": "The count repeated the structural motion rather than counting lines."
+            "success": "The middle sentence and its trailing space are gone.",
+            "why": "As an operator range, `)` reached exactly the next sentence start, so the spacing stayed correct."
           },
           "skills": {
             "primary": [
-              "paragraph-forward"
+              "sentence-forward"
             ],
             "supporting": [
-              "counts"
+              "delete-operator",
+              "operator-motion-range"
             ]
           },
           "difficulty": {
             "level": "hard",
             "dimensions": [
-              "counted-motion",
-              "blank-line-boundary"
+              "operator-with-sentence-range",
+              "punctuation-boundary"
             ]
           },
           "portability": "Core Vim behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "precision-motions-search-v1",
-            "languageRationale": "Markdown-like paragraphs provide a natural empty-line separator.",
+            "languageRationale": "A three-sentence commit message is exactly the prose a developer edits with sentence motions.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -4090,7 +4509,8 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "paragraph-forward"
+              "sentence-forward",
+              "operator-motion-range"
             ]
           }
         }
@@ -4268,14 +4688,14 @@
           "id": "cut-vine",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Cut the draft suffix cleanly",
-          "instruction": "Remove the “-post” suffix from the quoted slug.",
+          "title": "Trim the trailing argument",
+          "instruction": "Remove the final argument from the call, leaving the first two and the parentheses intact.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "const slug = \"draft-post\";"
+                "render(alpha, beta, gamma);"
               ],
               "cursor": [
                 0,
@@ -4285,11 +4705,11 @@
             },
             "target": {
               "lines": [
-                "const slug = \"draft\";"
+                "render(alpha, beta);"
               ],
               "cursor": [
                 0,
-                19
+                18
               ],
               "mode": "normal"
             }
@@ -4297,23 +4717,30 @@
           "script": {
             "steps": [
               "f",
-              "-",
+              ",",
+              ";",
               "d",
               "t",
-              "\""
+              ")"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 2,
-                "display": "f-",
-                "explanation": "Find the suffix boundary."
+                "display": "f,",
+                "explanation": "Find the first separator."
               },
               {
                 "from": 2,
-                "to": 5,
-                "display": "dt\"",
-                "explanation": "Delete until the closing quote."
+                "to": 3,
+                "display": ";",
+                "explanation": "Repeat the find to reach the second separator."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "dt)",
+                "explanation": "Delete up to, but not including, the closing parenthesis."
               }
             ],
             "checkpoints": [
@@ -4321,30 +4748,39 @@
                 "afterStep": 2,
                 "cursor": [
                   0,
-                  19
+                  12
                 ],
                 "mode": "normal"
               },
               {
-                "afterStep": 5,
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
                 "lines": [
-                  "const slug = \"draft\";"
+                  "render(alpha, beta);"
                 ],
                 "cursor": [
                   0,
-                  19
+                  18
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Use `f-` to reach the suffix.",
-            "Use `dt\"` to preserve the quote."
+            "Two separators stand between the cursor and the argument to remove.",
+            "Reuse the same find rather than typing it twice.",
+            "Stop the deletion before the closing parenthesis."
           ],
           "feedback": {
-            "success": "The draft suffix remains and the extra suffix is gone.",
-            "why": "Find plus operator-till made a precise, delimiter-safe edit."
+            "success": "The trailing argument is gone and the call still closes correctly.",
+            "why": "Repeating the find reached the right separator, and `t` left the delimiter for the operator to stop before."
           },
           "skills": {
             "primary": [
@@ -4352,6 +4788,7 @@
             ],
             "supporting": [
               "find-forward",
+              "repeat-find",
               "till-forward",
               "delete-operator"
             ]
@@ -4359,7 +4796,7 @@
           "difficulty": {
             "level": "easy",
             "dimensions": [
-              "legacy-scenario",
+              "repeat-find",
               "operator-composition"
             ]
           },
@@ -4367,7 +4804,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "precision-motions-search-v1",
-            "languageRationale": "The established JavaScript cut-vine scenario directly represents the curriculum example.",
+            "languageRationale": "A three-argument JavaScript call gives the repeated find a second, identical separator to land on.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -4375,7 +4812,8 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "find-till-integration"
+              "find-till-integration",
+              "repeat-find"
             ]
           }
         },
@@ -4759,7 +5197,8 @@
       ],
       "exampleActivityRefs": [
         "repeat-find-demo",
-        "reverse-repeated-find"
+        "reverse-repeated-find",
+        "cut-vine"
       ]
     },
     {
@@ -4820,12 +5259,13 @@
       "command": "( )",
       "purpose": "Move to previous or next sentence starts.",
       "notes": [
-        "Sentence boundaries follow Vim punctuation and whitespace rules."
+        "A sentence ends at `.`, `!`, or `?` followed by whitespace or a line end.",
+        "As an operator range, `)` reaches the next sentence start, so `d)` takes the trailing space with it."
       ],
       "exampleActivityRefs": [
         "text-boundary-demo",
         "move-next-sentence",
-        "move-previous-sentence"
+        "delete-to-sentence-end"
       ]
     },
     {
@@ -4837,7 +5277,8 @@
         "Counts repeat the motion."
       ],
       "exampleActivityRefs": [
-        "text-boundary-demo",
+        "paragraph-boundary-demo",
+        "move-next-paragraph",
         "move-two-paragraph-boundaries"
       ]
     }
@@ -4952,9 +5393,27 @@
       ]
     },
     {
-      "concept": "( and ) sentence motions",
+      "concept": "{ and } paragraph motions",
       "explain": [
         "text-boundary-meaning"
+      ],
+      "demonstrate": [
+        "paragraph-boundary-demo"
+      ],
+      "isolate": [
+        "move-next-paragraph"
+      ],
+      "mix": [
+        "move-previous-paragraph"
+      ],
+      "challenge": [
+        "move-two-paragraph-boundaries"
+      ]
+    },
+    {
+      "concept": "( and ) sentence motions",
+      "explain": [
+        "sentence-boundary-meaning"
       ],
       "demonstrate": [
         "text-boundary-demo"
@@ -4966,25 +5425,7 @@
         "move-previous-sentence"
       ],
       "challenge": [
-        "precision-navigation-demo"
-      ]
-    },
-    {
-      "concept": "{ and } paragraph motions",
-      "explain": [
-        "text-boundary-meaning"
-      ],
-      "demonstrate": [
-        "text-boundary-demo"
-      ],
-      "isolate": [
-        "move-two-paragraph-boundaries"
-      ],
-      "mix": [
-        "text-boundary-demo"
-      ],
-      "challenge": [
-        "move-two-paragraph-boundaries"
+        "delete-to-sentence-end"
       ]
     },
     {

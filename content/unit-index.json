@@ -8,9 +8,9 @@
   "units": [
     { "id": "modal-model", "unitNumber": 1, "title": "The modal model", "lessonCount": 5, "path": "content/units/01-modal-model.json" },
     { "id": "cursor-movement", "unitNumber": 2, "title": "Cursor movement", "lessonCount": 7, "path": "content/units/02-cursor-movement.json" },
-    { "id": "entering-changing-text", "unitNumber": 3, "title": "Entering and changing text", "lessonCount": 9, "path": "content/units/03-entering-changing-text.json" },
+    { "id": "entering-changing-text", "unitNumber": 3, "title": "Entering and changing text", "lessonCount": 11, "path": "content/units/03-entering-changing-text.json" },
     { "id": "operator-grammar", "unitNumber": 4, "title": "Operator grammar", "lessonCount": 9, "path": "content/units/04-operator-grammar.json" },
-    { "id": "precision-motions-search", "unitNumber": 5, "title": "Precision motions and search", "lessonCount": 8, "path": "content/units/05-precision-motions-search.json" },
+    { "id": "precision-motions-search", "unitNumber": 5, "title": "Precision motions and search", "lessonCount": 9, "path": "content/units/05-precision-motions-search.json" },
     { "id": "text-objects", "unitNumber": 6, "title": "Text objects", "lessonCount": 9, "path": "content/units/06-text-objects.json" },
     { "id": "visual-selection", "unitNumber": 7, "title": "Visual selection", "lessonCount": 9, "path": "content/units/07-visual-selection.json" },
     { "id": "registers-putting", "unitNumber": 8, "title": "Registers and putting", "lessonCount": 11, "path": "content/units/08-registers-putting.json" },

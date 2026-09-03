@@ -112,3 +112,63 @@ npm run test:targeted -- <unit spec> --grep "text-object|operator|precision" # o
 
 Replay every changed canonical. Confirm optional-marked lessons still render and
 remain reachable from Reference and Free Practice.
+
+## Implementation notes
+
+Two acceptance lines above were met in substance rather than literally. Both
+deviations are deliberate and were agreed with the author.
+
+### De-duplication is a quality repair, not a quota
+
+"No duplicate canonicals remain in Units 5 and 6" turned out to name six exact
+key-sequence collisions, not two. Four were the same real defect — an
+**integration lesson replaying a single-family lesson verbatim**, so the coverage
+contract recorded an escalation that never happened — and one side of each was
+re-authored. Nothing was removed.
+
+| Keys | Re-authored | Now |
+| --- | --- | --- |
+| `f- dt"` | `cut-vine` (U5 integration, isolate) | `f, ; dt)` — trims a call's trailing argument, integrating the repeat-find family the original never touched |
+| `gUiw` | `integration-word-demo` → `integration-object-choice-demo` (U6, demo) | `yi( da(` — the same object read both ways, which is the lesson's stated objective |
+| `ya{` | `integration-yank-object-literal` (U6, mix) | `ca{null` — the braces must go, so only the around reading works |
+| `cit Ready` | `integration-replace-tag` (U6, challenge) | `/pending⏎ cit Docs ready` — retrieves an element below the window, then operates on it |
+
+Two collisions were left alone on purpose, because repeating a command is what
+Vim practice *is* and neither is the defect above:
+
+- Bare `%` in `match-closing-brace` (isolate, three-line block) and
+  `match-next-delimiter-on-line` (challenge, inline `if ready { run(); }`). Same
+  key, different behaviour: the challenge teaches that `%` scans forward to the
+  first delimiter on the line. A false positive of matching on keystrokes.
+- `/build⏎ f( %` in `precision-navigation-demo` and `search-then-match-pair`.
+  Demonstrate-then-practise inside one lesson is the five-phase cycle working as
+  designed, and the buffers differ.
+
+### The engine set the limits, not the brief
+
+Constraint 6 decided three authoring questions that the brief could not.
+
+- **`{count}O` is not taught.** Native Vim leaves the cursor on the last opened
+  line; the pinned adapter leaves it on the first. `{count}i`, `{count}a`, and
+  `{count}o` all conform and carry the lesson. Recorded under `pending` in
+  `supported-commands.json`.
+- **Multi-line tag work uses `it`, not `at`.** `dit` and `cit` resolve a
+  multi-row element identically in both engines, so `inside-tag-demo` collapses a
+  three-item list whose closing tag sits below the window. `at` over an element
+  spanning whole lines leaves a residual indentation line in the adapter, so the
+  `at` activities use a single-line element.
+- **Tag-object yanks keep the cursor at the range start.** The adapter does not
+  move the cursor into a yanked tag range, so `yank-around-tag` begins on the
+  opening `<`, where both engines agree.
+
+### Unit 4's rebalance
+
+Non-code fell from 68% to **40.5%** of runnable activities (15 of 37) and 39.3%
+of exercises (11 of 28), by moving `put-captured-text`,
+`repeat-one-complete-change`, and the `log` activities in
+`integrate-operator-grammar` onto real code. `character-put-demo` stays on
+neutral text: its canonical `yeep` doubles a word in place, and no honest code
+buffer wants a word doubled with no separator. The counts and reflow lessons stay
+on prose, where isolating counting from syntax and hard-wrapping actually need
+it. No ratio is asserted in a test — per constraint 5, the number is an outcome,
+not a target to author against.

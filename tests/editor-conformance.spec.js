@@ -439,7 +439,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 3 local change and continues to Unit 4", async ({ page }) => {
     await page.goto("/?unit=entering-changing-text");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 72, exerciseCount: changingExercises.length });
+    expect(runtime).toEqual({ activityCount: 88, exerciseCount: changingExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -569,7 +569,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 5 precision activity and continues to Unit 6", async ({ page }) => {
     await page.goto("/?unit=precision-motions-search");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 67, exerciseCount: precisionExercises.length });
+    expect(runtime).toEqual({ activityCount: 75, exerciseCount: precisionExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -1375,15 +1375,41 @@ test.describe("Production lesson flow", () => {
     await page.evaluate(() => window.VimWilds.solveCurrent());
     expect((await state(page))).toMatchObject({ complete: true, code: ["send(, next)"], cursor: [0, 5] });
 
+    // Tag objects run on a buffer taller than the window, so these assertions
+    // also pin the adapter's behavior where the matching close is off screen.
     await page.goto("/?unit=text-objects&activity=change-inside-tag");
     await expect.poll(async () => (await state(page)).activityId).toBe("change-inside-tag");
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    expect((await state(page))).toMatchObject({ complete: true, code: ["<p>Ready</p>"], cursor: [0, 7] });
+    expect((await state(page))).toMatchObject({
+      complete: true,
+      code: ["<section>", "  <h2>Ready</h2>", "  <p>", "    Draft copy here.", "  </p>", "  <ul>",
+        "    <li>Parser fixes</li>", "    <li>Flag handling</li>", "    <li>Docs pending</li>", "  </ul>",
+        "  <footer>v2</footer>", "</section>"],
+      cursor: [1, 10],
+    });
 
+    // `dit` reaches from the opening tag to a close three rows below the window
+    // and collapses the element onto one row, exactly as native Vim does.
+    await page.goto("/?unit=text-objects&activity=inside-tag-demo");
+    await expect.poll(async () => (await state(page)).activityId).toBe("inside-tag-demo");
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    expect((await state(page))).toMatchObject({
+      code: ["<section>", "  <h2>Release</h2>", "  <p>", "    Draft copy here.", "  </p>", "  <ul></ul>",
+        "  <footer>v2</footer>", "</section>"],
+      cursor: [5, 6],
+    });
+
+    // `dat` takes both tags but not the indentation in front of them.
     await page.goto("/?unit=text-objects&activity=delete-around-tag");
     await expect.poll(async () => (await state(page)).activityId).toBe("delete-around-tag");
     await page.evaluate(() => window.VimWilds.solveCurrent());
-    expect((await state(page))).toMatchObject({ complete: true, code: [""], cursor: [0, 0] });
+    expect((await state(page))).toMatchObject({
+      complete: true,
+      code: ["<section>", "  <h2>Release</h2>", "  <p>", "    Draft copy here.", "  </p>", "  <ul>",
+        "    ", "    <li>Flag handling</li>", "    <li>Docs pending</li>", "  </ul>",
+        "  <footer>v2</footer>", "</section>"],
+      cursor: [6, 3],
+    });
   });
 
   test("preserves a completed edit when character assets finish loading", async ({ page }) => {
@@ -1490,10 +1516,16 @@ test.describe("Production lesson flow", () => {
       expect(result.complete, id).toBe(activity.type === "exercise");
     }
 
+    const dotDemo = operatorActivities.find(item => item.id === "dot-change-demo");
     await page.goto("/?unit=operator-grammar&activity=dot-change-demo");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     await page.getByRole("button", { name: "Reset", exact: true }).click();
-    expect((await state(page))).toMatchObject({ code: ["state old", "state old"], cursor: [0, 6], history: [], playbackStep: 0 });
+    expect((await state(page))).toMatchObject({
+      code: dotDemo.scenario.initial.lines,
+      cursor: dotDemo.scenario.initial.cursor,
+      history: [],
+      playbackStep: 0,
+    });
   });
 
   test("enters Unit 4 uppercase and shifted operators through touch and physical keys", async ({ page }) => {

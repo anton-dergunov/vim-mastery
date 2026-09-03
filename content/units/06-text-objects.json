@@ -10,8 +10,8 @@
     "commandsAndConcepts": "`iw aw iW aW`; `i\" a\"`, `i' a'`, ``i` a` ``; `i( a(`, `i) a)`, `ib ab`; `i[ a[`, `i] a]`; `i{ a{`, `i} a}`, `iB aB`; `i< a<`, `i> a>`; `is as`, `ip ap`, `it at`",
     "prerequisites": "Units 1–5",
     "learningOutcome": "Choose inside versus around and apply any learned operator to a structural object",
-    "representativeExercises": "Change a quoted value; delete function arguments; yank an object literal; uppercase a word; indent a paragraph; replace tag contents",
-    "priorityAndPortability": "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous"
+    "representativeExercises": "Change a quoted value; delete function arguments; replace an object literal; nest a list block; remove a tag element with its markup; finish an item retrieved by search",
+    "priorityAndPortability": "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous, and angle-bracket objects are marked advanced"
   },
   "prerequisiteSkillIds": [
     "modal-model",
@@ -3839,6 +3839,8 @@
       "id": "angle-bracket-objects",
       "title": "Use unambiguous angle pairs",
       "objective": "Operate on balanced angle-bracket objects without confusing them with tags.",
+      "track": "advanced",
+      "trackNote": "Advanced and less commonly used: the mechanics are the same as every other delimiter pair, and angle brackets are worth the practice mainly for generic type parameters and JSX attributes.",
       "activities": [
         {
           "id": "angle-object-meaning",
@@ -4581,32 +4583,48 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Indent one paragraph",
-          "instruction": "Indent the first paragraph by one level without moving the separator.",
+          "instruction": "Nest the whole middle block of items one level deeper, without touching the blocks around it.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha line",
-                "beta line",
+                "- Prepare the release",
+                "- Draft the notes",
                 "",
-                "next block"
+                "- Ship the build",
+                "- Tag the release",
+                "- Push the artifacts",
+                "",
+                "- Close the issue",
+                "- Notify the team",
+                "- Archive the branch"
               ],
               "cursor": [
-                0,
-                2
+                3,
+                0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "  alpha line",
-                "  beta line",
+                "- Prepare the release",
+                "- Draft the notes",
                 "",
-                "next block"
+                "  - Ship the build",
+                "  - Tag the release",
+                "  - Push the artifacts",
+                "",
+                "- Close the issue",
+                "- Notify the team",
+                "- Archive the branch"
               ],
               "cursor": [
-                0,
+                3,
                 2
               ],
               "mode": "normal"
@@ -4614,41 +4632,35 @@
           },
           "script": {
             "steps": [
-              {
-                "key": ">",
-                "kind": "operator",
-                "cue": "indent"
-              },
-              {
-                "key": "i",
-                "kind": "command",
-                "cue": "inside"
-              },
-              {
-                "key": "p",
-                "kind": "text-object",
-                "cue": "paragraph"
-              }
+              ">",
+              "i",
+              "p"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
                 "display": ">ip",
-                "explanation": "Indent the current paragraph with `>ip`."
+                "explanation": "Indent every line of the block the cursor sits in."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 3,
                 "lines": [
-                  "  alpha line",
-                  "  beta line",
+                  "- Prepare the release",
+                  "- Draft the notes",
                   "",
-                  "next block"
+                  "  - Ship the build",
+                  "  - Tag the release",
+                  "  - Push the artifacts",
+                  "",
+                  "- Close the issue",
+                  "- Notify the team",
+                  "- Archive the branch"
                 ],
                 "cursor": [
-                  0,
+                  3,
                   2
                 ],
                 "mode": "normal"
@@ -4656,12 +4668,13 @@
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `>ip`."
+            "The block runs from the cursor's line to the next blank line.",
+            "Give the indent operator a paragraph object rather than a line count.",
+            "Press `>ip`."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "All three items in the block are nested, and the neighbouring blocks are untouched.",
+            "why": "`ip` measured the block from its blank-line boundaries, so the operator covered every row without you counting them."
           },
           "skills": {
             "primary": [
@@ -4674,14 +4687,15 @@
           "difficulty": {
             "level": "medium",
             "dimensions": [
-              "linewise-object"
+              "multi-line-object",
+              "blank-line-boundary"
             ]
           },
-          "portability": "Core Vim behavior.",
+          "portability": "Core Vim behavior; the app fixes the indentation unit at two spaces.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The markdown buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "A Markdown list long enough to run past the window shows the object covering rows a line operator would have to count.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -4692,36 +4706,56 @@
               "inside-paragraph"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "delete-around-paragraph",
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove a paragraph and separator",
-          "instruction": "Remove the first paragraph and its separating blank line.",
+          "instruction": "Remove the whole block of draft notes along with the blank line that follows it.",
           "languageId": "markdown",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "alpha line",
-                "beta line",
+                "## Release notes",
                 "",
-                "next block"
+                "Parser fixes are ready.",
+                "Flag handling is stable.",
+                "",
+                "Draft: revisit this later.",
+                "Draft: numbers unverified.",
+                "Draft: needs a screenshot.",
+                "",
+                "Packaging is unchanged.",
+                "The installer is the same."
               ],
               "cursor": [
-                0,
-                2
+                5,
+                0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "next block"
+                "## Release notes",
+                "",
+                "Parser fixes are ready.",
+                "Flag handling is stable.",
+                "",
+                "Packaging is unchanged.",
+                "The installer is the same."
               ],
               "cursor": [
-                0,
+                5,
                 0
               ],
               "mode": "normal"
@@ -4729,38 +4763,32 @@
           },
           "script": {
             "steps": [
-              {
-                "key": "d",
-                "kind": "operator",
-                "cue": "delete"
-              },
-              {
-                "key": "a",
-                "kind": "command",
-                "cue": "around"
-              },
-              {
-                "key": "p",
-                "kind": "text-object",
-                "cue": "paragraph"
-              }
+              "d",
+              "a",
+              "p"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
                 "display": "dap",
-                "explanation": "Delete the current paragraph with its separating blank line."
+                "explanation": "Delete the block and the blank line that separates it from the next one."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 3,
                 "lines": [
-                  "next block"
+                  "## Release notes",
+                  "",
+                  "Parser fixes are ready.",
+                  "Flag handling is stable.",
+                  "",
+                  "Packaging is unchanged.",
+                  "The installer is the same."
                 ],
                 "cursor": [
-                  0,
+                  5,
                   0
                 ],
                 "mode": "normal"
@@ -4768,12 +4796,13 @@
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `dap`."
+            "The block is three rows long and is followed by a blank line.",
+            "Around a paragraph includes that trailing blank line; inside it does not.",
+            "Press `dap`."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "The draft block is gone and the remaining blocks are still separated correctly.",
+            "why": "`ap` took the trailing blank line with the block, so no stray separator was left behind."
           },
           "skills": {
             "primary": [
@@ -4784,14 +4813,15 @@
           "difficulty": {
             "level": "hard",
             "dimensions": [
-              "blank-line-boundary"
+              "multi-line-object",
+              "inside-versus-around"
             ]
           },
           "portability": "Core Vim behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The markdown buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "Release notes long enough to run past the window make the removed block and its separator both visible.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -4802,7 +4832,10 @@
               "around-paragraph"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -4816,9 +4849,9 @@
           "type": "theory",
           "phase": "explain",
           "title": "Select the contents or whole HTML tag",
-          "body": "Use `it` to select the content between matching opening and closing tags. Use `at` to include both tags and everything between them.",
+          "body": "Use `it` to select the content between matching opening and closing tags, however many rows it covers. Use `at` to include both tags and everything between them.",
           "grammar": "it · at",
-          "contrast": "Use `it` to preserve markup; use `at` to move or remove the entire element.",
+          "contrast": "Use `it` to preserve markup; use `at` to move or remove the entire element. Neither needs a line count: the object finds the matching close for you.",
           "demoRef": "inside-tag-demo",
           "presentation": {
             "kind": "command-assembly",
@@ -4840,89 +4873,96 @@
           "id": "inside-tag-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Reveal tag contents",
-          "instruction": "Yank everything inside the enclosing paragraph tag.",
+          "title": "Empty an element that spans rows",
+          "instruction": "Clear everything inside the list element while leaving the list itself in place.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "<p>Hello <em>world</em></p>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                3
+                5,
+                2
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "<p>Hello <em>world</em></p>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul></ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                3
+                5,
+                6
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "y",
-                "kind": "operator",
-                "cue": "yank"
-              },
-              {
-                "key": "i",
-                "kind": "command",
-                "cue": "inside"
-              },
-              {
-                "key": "t",
-                "kind": "text-object",
-                "cue": "tag"
-              }
+              "d",
+              "i",
+              "t"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
-                "display": "yit",
-                "explanation": "Yank everything inside the enclosing paragraph tag."
+                "display": "dit",
+                "explanation": "Delete everything between the enclosing tag's open and close."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 3,
                 "lines": [
-                  "<p>Hello <em>world</em></p>"
+                  "<section>",
+                  "  <h2>Release</h2>",
+                  "  <p>",
+                  "    Draft copy here.",
+                  "  </p>",
+                  "  <ul></ul>",
+                  "  <footer>v2</footer>",
+                  "</section>"
                 ],
                 "cursor": [
-                  0,
-                  3
+                  5,
+                  6
                 ],
                 "mode": "normal",
-                "affectedRange": {
-                  "from": [
-                    0,
-                    3
-                  ],
-                  "to": [
-                    0,
-                    25
-                  ]
-                }
+                "caption": "Four rows collapsed into one; both tags survived."
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `yit`."
+            "The enclosing element is the list, not one of its items."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "All three items are gone and the list element is still there.",
+            "why": "The object reached from the opening tag to its matching close — past the bottom of the window — without you counting a single row."
           },
           "skills": {
             "primary": [
@@ -4933,14 +4973,15 @@
           "difficulty": {
             "level": "guided",
             "dimensions": [
-              "nested-balanced-tags"
+              "multi-line-object",
+              "reach-past-window"
             ]
           },
           "portability": "Core Vim behavior on balanced lowercase HTML tags.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "A list whose items continue below the window is the case a line count would get wrong.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -4948,8 +4989,11 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "inside-tag"
+              "tag-object"
             ]
+          },
+          "editor": {
+            "viewportRows": 7
           }
         },
         {
@@ -4957,91 +5001,81 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Replace tag contents",
-          "instruction": "Replace everything inside the outer paragraph element with “Ready”.",
+          "instruction": "Change the heading text to “Ready”, leaving its tags in place.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "<p>Hello <em>world</em></p>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                4
+                1,
+                6
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "<p>Ready</p>"
+                "<section>",
+                "  <h2>Ready</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                7
+                1,
+                10
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "c",
-                "kind": "operator",
-                "cue": "change"
-              },
-              {
-                "key": "i",
-                "kind": "command",
-                "cue": "inside"
-              },
-              {
-                "key": "t",
-                "kind": "text-object",
-                "cue": "tag"
-              },
-              {
-                "key": "R",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "e",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "a",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "d",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "y",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "Escape",
-                "kind": "control",
-                "cue": "finish change"
-              }
+              "c",
+              "i",
+              "t",
+              "R",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
                 "display": "cit",
-                "explanation": "Change only the content inside the surrounding tag."
+                "explanation": "Change everything between the enclosing tag's open and close."
               },
               {
                 "from": 3,
                 "to": 8,
                 "display": "Ready",
-                "explanation": "Type the requested text."
+                "explanation": "Type the replacement."
               },
               {
                 "from": 8,
@@ -5054,23 +5088,35 @@
               {
                 "afterStep": 9,
                 "lines": [
-                  "<p>Ready</p>"
+                  "<section>",
+                  "  <h2>Ready</h2>",
+                  "  <p>",
+                  "    Draft copy here.",
+                  "  </p>",
+                  "  <ul>",
+                  "    <li>Parser fixes</li>",
+                  "    <li>Flag handling</li>",
+                  "    <li>Docs pending</li>",
+                  "  </ul>",
+                  "  <footer>v2</footer>",
+                  "</section>"
                 ],
                 "cursor": [
-                  0,
-                  7
+                  1,
+                  10
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `citReady⎋`."
+            "Only the text between the tags changes.",
+            "Use the inside form of the tag object.",
+            "Press `citReady` then `Esc`."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "The heading reads Ready and both tags survived.",
+            "why": "Inside a tag stops at the tags themselves, so the markup was never at risk."
           },
           "skills": {
             "primary": [
@@ -5083,14 +5129,15 @@
           "difficulty": {
             "level": "easy",
             "dimensions": [
-              "preserve-tags"
+              "inside-object",
+              "markup-preservation"
             ]
           },
           "portability": "Core Vim behavior on balanced lowercase HTML tags.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "A single-line heading isolates the inside-versus-around choice before the multi-row cases.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5101,85 +5148,114 @@
               "inside-tag"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "yank-around-tag",
           "type": "exercise",
           "phase": "mix",
-          "title": "Capture a complete element",
-          "instruction": "Capture the complete paragraph element, including its tags.",
+          "title": "Capture an element with its markup",
+          "instruction": "Capture the heading element complete with its opening and closing tags.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "<p>Hello <em>world</em></p>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                0
+                1,
+                2
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "<p>Hello <em>world</em></p>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                0
+                1,
+                2
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "y",
-                "kind": "operator",
-                "cue": "yank"
-              },
-              {
-                "key": "a",
-                "kind": "command",
-                "cue": "around"
-              },
-              {
-                "key": "t",
-                "kind": "text-object",
-                "cue": "tag"
-              }
+              "y",
+              "a",
+              "t"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
                 "display": "yat",
-                "explanation": "Yank the enclosing element with both tags."
+                "explanation": "Yank the enclosing element together with its opening and closing tags."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 3,
                 "lines": [
-                  "<p>Hello <em>world</em></p>"
+                  "<section>",
+                  "  <h2>Release</h2>",
+                  "  <p>",
+                  "    Draft copy here.",
+                  "  </p>",
+                  "  <ul>",
+                  "    <li>Parser fixes</li>",
+                  "    <li>Flag handling</li>",
+                  "    <li>Docs pending</li>",
+                  "  </ul>",
+                  "  <footer>v2</footer>",
+                  "</section>"
                 ],
                 "cursor": [
-                  0,
-                  0
+                  1,
+                  2
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `yat`."
+            "The tags belong to the capture this time.",
+            "Use the around form of the tag object.",
+            "Press `yat`."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "The complete element, tags included, was captured.",
+            "why": "Around a tag reaches from the `<` of the opening tag to the `>` of the closing one, so the markup travels with the text."
           },
           "skills": {
             "primary": [
@@ -5190,14 +5266,15 @@
           "difficulty": {
             "level": "medium",
             "dimensions": [
-              "nested-balanced-tags"
+              "inside-versus-around",
+              "markup-capture"
             ]
           },
           "portability": "Core Vim behavior on balanced lowercase HTML tags.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "A single-line heading isolates the around reading from any question of how many rows are involved.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5208,85 +5285,114 @@
               "around-tag"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "delete-around-tag",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Remove a complete element",
-          "instruction": "Remove the complete paragraph element, including its tags.",
+          "title": "Remove one item outright",
+          "instruction": "Remove the first list item entirely, its markup included, leaving the other two.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "<p>Hello <em>world</em></p>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                4
+                6,
+                8
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                ""
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    ",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                0
+                6,
+                3
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "d",
-                "kind": "operator",
-                "cue": "delete"
-              },
-              {
-                "key": "a",
-                "kind": "command",
-                "cue": "around"
-              },
-              {
-                "key": "t",
-                "kind": "text-object",
-                "cue": "tag"
-              }
+              "d",
+              "a",
+              "t"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
                 "display": "dat",
-                "explanation": "Delete the enclosing paragraph element and all its contents."
+                "explanation": "Delete the enclosing element together with its tags."
               }
             ],
             "checkpoints": [
               {
                 "afterStep": 3,
                 "lines": [
-                  ""
+                  "<section>",
+                  "  <h2>Release</h2>",
+                  "  <p>",
+                  "    Draft copy here.",
+                  "  </p>",
+                  "  <ul>",
+                  "    ",
+                  "    <li>Flag handling</li>",
+                  "    <li>Docs pending</li>",
+                  "  </ul>",
+                  "  <footer>v2</footer>",
+                  "</section>"
                 ],
                 "cursor": [
-                  0,
-                  0
+                  6,
+                  3
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `dat`."
+            "The item's tags have to go as well, so inside is the wrong reading.",
+            "The cursor is already within the item; the object finds its boundaries.",
+            "Press `dat`."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "The item and both of its tags are gone.",
+            "why": "The object covered the element but not the indentation in front of it, which is why the row is left blank rather than removed."
           },
           "skills": {
             "primary": [
@@ -5297,14 +5403,15 @@
           "difficulty": {
             "level": "hard",
             "dimensions": [
-              "include-tags"
+              "inside-versus-around",
+              "whitespace-residue"
             ]
           },
           "portability": "Core Vim behavior on balanced lowercase HTML tags.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "One item among three shows the element boundary precisely, including the indentation the object leaves behind.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5315,7 +5422,10 @@
               "around-tag"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         }
       ]
     },
@@ -5332,7 +5442,7 @@
           "body": "Choose an operator such as delete, change, or copy. Then choose `i` for the contents or `a` for the surroundings, and finish with the object name.",
           "grammar": "operator + inside/around + object",
           "contrast": "Prefer the smallest object that states the intended boundary clearly.",
-          "demoRef": "integration-word-demo",
+          "demoRef": "integration-object-choice-demo",
           "presentation": {
             "kind": "command-assembly",
             "parts": [
@@ -5350,97 +5460,106 @@
           }
         },
         {
-          "id": "integration-word-demo",
+          "id": "integration-object-choice-demo",
           "type": "demo",
           "phase": "demonstrate",
-          "title": "Compose without memorizing a phrase",
-          "instruction": "Uppercase the object under the cursor by combining a known operator with `iw`.",
-          "languageId": "python",
+          "title": "Choose inside, then around",
+          "instruction": "Capture just the arguments, then remove the arguments together with their parentheses.",
+          "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "status_code = 200"
+                "notify(user, event);"
               ],
               "cursor": [
                 0,
-                3
+                8
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "STATUS_CODE = 200"
+                "notify;"
               ],
               "cursor": [
                 0,
-                0
+                6
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "g",
-                "kind": "operator",
-                "cue": "case operator"
-              },
-              {
-                "key": "U",
-                "kind": "operator",
-                "cue": "uppercase"
-              },
-              {
-                "key": "i",
-                "kind": "command",
-                "cue": "inside"
-              },
-              {
-                "key": "w",
-                "kind": "text-object",
-                "cue": "word"
-              }
+              "y",
+              "i",
+              "(",
+              "d",
+              "a",
+              "("
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 4,
-                "display": "gUiw",
-                "explanation": "Uppercase the object under the cursor by combining a known operator with `iw`."
+                "to": 3,
+                "display": "yi(",
+                "explanation": "Capture what the parentheses contain."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "da(",
+                "explanation": "Delete the same structure including its parentheses."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 4,
+                "afterStep": 3,
                 "lines": [
-                  "STATUS_CODE = 200"
+                  "notify(user, event);"
                 ],
                 "cursor": [
                   0,
-                  0
+                  7
                 ],
-                "mode": "normal"
+                "mode": "normal",
+                "caption": "Inside stops at the delimiters."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "notify;"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal",
+                "caption": "Around takes the delimiters with it."
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `gUiw`."
+            "The same object answers to two different questions."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "One structure, two ranges, two different results.",
+            "why": "Inside and around name the same object; only the delimiters decide which of the two you get."
           },
           "skills": {
             "primary": [
-              "text-object-composition"
+              "inside-versus-around"
             ],
-            "supporting": []
+            "supporting": [
+              "yank-operator",
+              "delete-operator",
+              "parenthesis-object"
+            ]
           },
           "difficulty": {
             "level": "guided",
             "dimensions": [
+              "inside-versus-around",
               "operator-transfer"
             ]
           },
@@ -5448,7 +5567,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The python buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "One call expression carries both readings of the same object without any other structure competing.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5456,7 +5575,7 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "text-object-composition"
+              "inside-versus-around"
             ]
           }
         },
@@ -5573,99 +5692,107 @@
           "id": "integration-yank-object-literal",
           "type": "exercise",
           "phase": "mix",
-          "title": "Capture an object literal",
-          "instruction": "Capture the complete “{ ready: true }” object literal.",
+          "title": "Replace a whole object literal",
+          "instruction": "Replace the options object, braces and all, with “null”.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "const config = { ready: true };"
+                "const config = { retries: 3 };"
               ],
               "cursor": [
                 0,
-                15
+                18
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "const config = { ready: true };"
+                "const config = null;"
               ],
               "cursor": [
                 0,
-                15
+                18
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "y",
-                "kind": "operator",
-                "cue": "yank"
-              },
-              {
-                "key": "a",
-                "kind": "command",
-                "cue": "around"
-              },
-              {
-                "key": "{",
-                "kind": "text-object",
-                "cue": "curly braces"
-              }
+              "c",
+              "a",
+              "{",
+              "n",
+              "u",
+              "l",
+              "l",
+              "Escape"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 3,
-                "display": "ya{",
-                "explanation": "Yank the complete object literal, including its braces."
+                "display": "ca{",
+                "explanation": "Change the brace object including its braces."
+              },
+              {
+                "from": 3,
+                "to": 7,
+                "display": "null",
+                "explanation": "Type the replacement."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 3,
+                "afterStep": 8,
                 "lines": [
-                  "const config = { ready: true };"
+                  "const config = null;"
                 ],
                 "cursor": [
                   0,
-                  15
+                  18
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `ya{`."
+            "The braces have to go as well, so inside is the wrong reading.",
+            "Compose the change operator with the around form of the brace object.",
+            "Press `ca{null` then `Esc`."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "The object literal was replaced outright.",
+            "why": "Because the braces were part of the replacement, `a{` was the only reading that covered the whole value."
           },
           "skills": {
             "primary": [
-              "text-object-composition"
+              "brace-object"
             ],
             "supporting": [
-              "yank-operator"
+              "inside-versus-around",
+              "change-operator"
             ]
           },
           "difficulty": {
             "level": "medium",
             "dimensions": [
-              "object-literal"
+              "inside-versus-around",
+              "operator-transfer"
             ]
           },
           "portability": "Core Vim behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The javascript buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "Replacing a configuration object with a single value is the case that forces the around reading.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5673,7 +5800,8 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "text-object-composition"
+              "brace-object",
+              "inside-versus-around"
             ]
           },
           "delivery": "guided-then-recall"
@@ -5682,96 +5810,118 @@
           "id": "integration-replace-tag",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Choose the structural target",
-          "instruction": "Replace the contents of the status element with “Ready”.",
+          "title": "Find the pending item and finish it",
+          "instruction": "Locate the item still marked pending, below the window, and change its text to “Docs ready”.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "<status>Draft</status>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs pending</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
                 0,
-                9
+                0
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
             },
             "target": {
               "lines": [
-                "<status>Ready</status>"
+                "<section>",
+                "  <h2>Release</h2>",
+                "  <p>",
+                "    Draft copy here.",
+                "  </p>",
+                "  <ul>",
+                "    <li>Parser fixes</li>",
+                "    <li>Flag handling</li>",
+                "    <li>Docs ready</li>",
+                "  </ul>",
+                "  <footer>v2</footer>",
+                "</section>"
               ],
               "cursor": [
-                0,
-                12
+                8,
+                17
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              {
-                "key": "c",
-                "kind": "operator",
-                "cue": "change"
-              },
-              {
-                "key": "i",
-                "kind": "command",
-                "cue": "inside"
-              },
-              {
-                "key": "t",
-                "kind": "text-object",
-                "cue": "tag"
-              },
-              {
-                "key": "R",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "e",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "a",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "d",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "y",
-                "kind": "literal",
-                "cue": "insert text"
-              },
-              {
-                "key": "Escape",
-                "kind": "control",
-                "cue": "finish change"
-              }
+              "/",
+              "p",
+              "e",
+              "n",
+              "d",
+              "i",
+              "n",
+              "g",
+              "Enter",
+              "c",
+              "i",
+              "t",
+              "D",
+              "o",
+              "c",
+              "s",
+              " ",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape"
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 3,
-                "display": "cit",
-                "explanation": "Change only the content inside the surrounding tag."
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
               },
               {
-                "from": 3,
+                "from": 1,
                 "to": 8,
-                "display": "Ready",
-                "explanation": "Type the requested text."
+                "display": "pending",
+                "explanation": "Enter the text to search for."
               },
               {
                 "from": 8,
                 "to": 9,
+                "display": "↵",
+                "explanation": "Run the search and scroll the match into view."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "cit",
+                "explanation": "Change the contents of the tag the match landed in."
+              },
+              {
+                "from": 12,
+                "to": 22,
+                "display": "Docs ready",
+                "explanation": "Type the replacement."
+              },
+              {
+                "from": 22,
+                "to": 23,
                 "display": "Esc",
                 "explanation": "Return to Normal mode."
               }
@@ -5779,46 +5929,68 @@
             "checkpoints": [
               {
                 "afterStep": 9,
+                "cursor": [
+                  8,
+                  13
+                ],
+                "mode": "normal",
+                "caption": "The search reached a row that was below the window."
+              },
+              {
+                "afterStep": 23,
                 "lines": [
-                  "<status>Ready</status>"
+                  "<section>",
+                  "  <h2>Release</h2>",
+                  "  <p>",
+                  "    Draft copy here.",
+                  "  </p>",
+                  "  <ul>",
+                  "    <li>Parser fixes</li>",
+                  "    <li>Flag handling</li>",
+                  "    <li>Docs ready</li>",
+                  "  </ul>",
+                  "  <footer>v2</footer>",
+                  "</section>"
                 ],
                 "cursor": [
-                  0,
-                  12
+                  8,
+                  17
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Choose the operator first, then name the whole object.",
-            "Use `citReady⎋`."
+            "The item is not on screen; retrieve it rather than scrolling to it.",
+            "Once the search lands inside the item, the enclosing tag is the object you want.",
+            "Search for the word, then change inside the tag."
           ],
           "feedback": {
-            "success": "The structural target was handled as one object.",
-            "why": "The text object supplied a stable range without counting characters."
+            "success": "The item off screen was found and finished in one pass.",
+            "why": "Search carried the cursor into the element, and the tag object then described the edit without any counting."
           },
           "skills": {
             "primary": [
-              "text-object-composition"
+              "tag-object"
             ],
             "supporting": [
-              "inside-tag",
-              "change-operator"
+              "search-forward",
+              "change-operator",
+              "inside-versus-around"
             ]
           },
           "difficulty": {
             "level": "hard",
             "dimensions": [
-              "independent-choice",
-              "markup"
+              "search-plus-object",
+              "reach-past-window"
             ]
           },
-          "portability": "Core Vim behavior on balanced lowercase HTML tags.",
+          "portability": "Core Vim behavior; the app parses the complete HTML buffer so the closing tag is resolved beyond the cursor.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "The html buffer exposes the target boundary without unrelated domain knowledge.",
+            "languageRationale": "A list continuing below the window makes retrieval a real requirement rather than a decoration.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -5826,10 +5998,14 @@
           "verification": {
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
-              "text-object-composition"
+              "tag-object",
+              "search-forward"
             ]
           },
-          "delivery": "guided-then-recall"
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
         },
         {
           "id": "text-objects-unit-summary",
@@ -6104,7 +6280,7 @@
         "text-object-transfer"
       ],
       "demonstrate": [
-        "integration-word-demo"
+        "integration-object-choice-demo"
       ],
       "isolate": [
         "integration-delete-arguments"

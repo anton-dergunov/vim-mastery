@@ -6,6 +6,7 @@
     "operator-pending state and counted operator-motion composition (2dw)",
     "cursor movement (h, j, k, l, counts, 0, ^, $, g_, |, w, W, e, E, b, B, ge, gE, gg, G, gj, gk)",
     "text entry and opening lines (i, I, a, A, o, O)",
+    "counted text entry (3i, 3a, 5o): the count repeats the complete insertion when Insert mode ends",
     "local character and replacement changes (x, X, r, R, s, S)",
     "change history (u, Ctrl-r)",
     "case transformations (~, g~, gu, gU)",
@@ -47,6 +48,9 @@
     "full curriculum matrix: specialized comment and preprocessor motions, replacement case conversion, and \\= replacement expressions",
     "dropped: search offsets (/pat/e, /pat/+1). The adapter reads the text after an unescaped / as flags and honors only i, so an offset is discarded and the search silently lands in the wrong place. Supporting it means changing query parsing, the search motion, and its operator-pending inclusivity together.",
     "dropped: the \"% register. It is not a valid adapter register and Vim Wilds has no file name to report.",
-    "dropped: :global dry runs (:g/pat/p, :g/pat/nu). Vim prints the matched lines; Vim Wilds has no Ex output surface and the adapter has no :print or :number command to delegate to."
+    "dropped: :global dry runs (:g/pat/p, :g/pat/nu). Vim prints the matched lines; Vim Wilds has no Ex output surface and the adapter has no :print or :number command to delegate to.",
+    "dropped: counted open above ({count}O). Native Vim leaves the cursor on the last opened line; the adapter interlaces the repeats but leaves it on the first, so the final cursor disagrees. {count}i, {count}a, and {count}o all conform and are exposed.",
+    "dropped: tag-object yanks that move the cursor (yit/yat where the object starts before the cursor). Vim places the cursor at the start of the yanked range; the adapter leaves it where it was. Tag activities therefore either operate with the cursor already at the range start or use an operator that changes text.",
+    "dropped: around-tag operators on elements spanning whole lines (dat over a multi-line element). Vim removes the emptied lines; the adapter leaves the leading indentation as a residual line. Multi-line tag work uses it/cit/dit, which conform exactly."
   ]
 }

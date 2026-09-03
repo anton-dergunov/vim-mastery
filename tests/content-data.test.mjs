@@ -125,7 +125,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 390);
+  assert.equal(exercises.length, 399);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -489,7 +489,7 @@ test("runnable activities reserve every authored editor row before execution", (
     }
   }
 
-  assert.equal(growing.length, 32);
+  assert.equal(growing.length, 34);
   for (const id of [
     "entering-changing-text/open-middle-line-demo",
     "entering-changing-text/open-beta-above",
@@ -1007,17 +1007,17 @@ test("Unit 2 covers every movement family with cursor-only runnable states", () 
 test("Unit 3 preserves the curriculum and covers every local-change family", () => {
   assert.deepEqual(changingUnit.curriculumDefinition, {
     unit: "3. Entering and changing text",
-    commandsAndConcepts: "`i I a A o O`; `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
+    commandsAndConcepts: "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
     prerequisites: "Units 1–2",
     learningOutcome: "Choose a precise entry/change command, undo safely, and perform common local transformations",
-    representativeExercises: "Append an argument; open a line; replace a delimiter; join a wrapped statement; change case; increment a version number",
-    priorityAndPortability: "Core, with `R`, `gJ`, and numeric changes introduced after the everyday commands",
+    representativeExercises: "Append an argument; open a line; build a divider with a counted insert; replace a delimiter; join a wrapped statement; change case; increment a version number",
+    priorityAndPortability: "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced",
   });
   assert.deepEqual(changingUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement"]);
   assert.equal(changingUnit.releaseStatus, "authoring");
-  assert.equal(changingUnit.lessons.length, 9);
+  assert.equal(changingUnit.lessons.length, 11);
   assert.deepEqual(changingUnit.coverage.map(item => item.concept), [
-    "i I a A", "o O", "x X r", "s S R", "u and Ctrl-r", "J and gJ",
+    "i I a A", "o O", "counted insert and open", "x X r", "s S", "R", "u and Ctrl-r", "J and gJ",
     "~ g~ gu gU", "Ctrl-a and Ctrl-x", "integrated local changes",
   ]);
   const activities = changingUnit.lessons.flatMap(lesson => lesson.activities);
@@ -1076,18 +1076,18 @@ test("Unit 5 preserves the curriculum and covers every precision-search family",
     prerequisites: "Units 1–4",
     learningOutcome: "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
     representativeExercises: "Delete until a quote; repeat a comma find; change the next search match; jump between brackets; move by paragraphs in prose or comments",
-    priorityAndPortability: "Core. Search and pair matching remain text-based rather than IDE-semantic",
+    priorityAndPortability: "Core. Search and pair matching remain text-based rather than IDE-semantic, and sentence motions are marked optional",
   });
   assert.deepEqual(precisionUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar"]);
   assert.equal(precisionUnit.releaseStatus, "authoring");
-  assert.equal(precisionUnit.lessons.length, 8);
+  assert.equal(precisionUnit.lessons.length, 9);
   assert.deepEqual(precisionUnit.coverage.map(item => item.concept), [
     "f F t T", "; and ,", "/ ? n N", "* # g* g#", "gn and gN", "% matching delimiters",
-    "( and ) sentence motions", "{ and } paragraph motions", "integrated precision motion and search",
+    "{ and } paragraph motions", "( and ) sentence motions", "integrated precision motion and search",
   ]);
   const activities = precisionUnit.lessons.flatMap(lesson => lesson.activities);
   const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
-  assert.equal(runnable.length, 33);
+  assert.equal(runnable.length, 37);
   for (const activity of runnable) {
     assert(profileById.has(activity.languageId), `${activity.id} uses unknown language ${activity.languageId}`);
     assert.equal(activity.provenance.nativeValidation, "passed");
@@ -1119,8 +1119,8 @@ test("Unit 6 preserves the curriculum and covers every text-object family", () =
     commandsAndConcepts: "`iw aw iW aW`; `i\" a\"`, `i' a'`, ``i` a` ``; `i( a(`, `i) a)`, `ib ab`; `i[ a[`, `i] a]`; `i{ a{`, `i} a}`, `iB aB`; `i< a<`, `i> a>`; `is as`, `ip ap`, `it at`",
     prerequisites: "Units 1–5",
     learningOutcome: "Choose inside versus around and apply any learned operator to a structural object",
-    representativeExercises: "Change a quoted value; delete function arguments; yank an object literal; uppercase a word; indent a paragraph; replace tag contents",
-    priorityAndPortability: "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous",
+    representativeExercises: "Change a quoted value; delete function arguments; replace an object literal; nest a list block; remove a tag element with its markup; finish an item retrieved by search",
+    priorityAndPortability: "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous, and angle-bracket objects are marked advanced",
   });
   assert.deepEqual(textObjectUnit.prerequisiteSkillIds, [
     "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search",
