@@ -1454,6 +1454,10 @@ test.describe("Production lesson flow", () => {
   });
 
   test("keeps reworked Unit 7 activities inside every target phone viewport", async ({ page }) => {
+    // Twelve activities across five viewports is 60 navigations; the ragged-edge
+    // and increment lessons doubled this list without a matching budget, so give
+    // it explicit room rather than the 30s default.
+    test.setTimeout(120000);
     const viewports = [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]];
     const activityIds = [
       "character-argument-change-challenge",
