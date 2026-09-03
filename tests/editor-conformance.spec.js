@@ -642,7 +642,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 7 Visual activity and continues to Unit 8", async ({ page }) => {
     await page.goto("/?unit=visual-selection");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 102, exerciseCount: visualExercises.length });
+    expect(runtime).toEqual({ activityCount: 126, exerciseCount: visualExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -1329,6 +1329,12 @@ test.describe("Production lesson flow", () => {
       { id: "visual-strategy-range-challenge", afterStep: 3, mode: "visual", cursor: [0, 14], kind: "linear" },
       { id: "integrated-character-edit", afterStep: 3, mode: "visual", cursor: [0, 10], kind: "linear" },
       { id: "integrated-character-edit", afterStep: 13, mode: "visual-line", cursor: [1, 17], kind: "linear" },
+      { id: "append-trailing-commas", afterStep: 4, mode: "visual-block", cursor: [2, 11], kind: "block" },
+      { id: "clear-ragged-config-values", afterStep: 4, mode: "visual-block", cursor: [2, 12], kind: "block" },
+      { id: "ragged-statement-challenge", afterStep: 2, mode: "visual-block", cursor: [3, 0], kind: "block" },
+      { id: "ragged-statement-challenge", afterStep: 4, mode: "visual-block", cursor: [2, 25], kind: "block" },
+      { id: "number-enum-values", afterStep: 3, mode: "visual-block", cursor: [3, 7], kind: "block" },
+      { id: "renumber-rows-challenge", afterStep: 2, mode: "visual-line", cursor: [3, 13], kind: "linear" },
     ];
 
     for (const testCase of cases) {
@@ -1379,6 +1385,66 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ complete: true, code: ["one!", "two!", "six!"], cursor: [0, 2] });
   });
 
+  test("enters the ragged block edge and the selection increment from touch and physical keyboards", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/?unit=visual-selection&activity=append-semicolons-to-ragged-block-recall");
+    await page.locator('[data-mod="Ctrl"]').first().click();
+    await page.locator('.key[data-key="v"]').click();
+    await page.locator('.key[data-key="3"]').click();
+    await page.locator('.key[data-key="j"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="4"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="a"]').click();
+    await page.locator('.key[data-key=";"]').click();
+    await page.locator('.key[data-key="Escape"]').click();
+    expect((await state(page))).toMatchObject({
+      complete: true,
+      code: ["int width = 4;", "int totalHeight = 96;", "int gap = 12;", "int outerMargin = 320;"],
+      cursor: [0, 0],
+      modifiers: [],
+    });
+
+    await page.goto("/?unit=visual-selection&activity=renumber-rows-challenge-recall");
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="v"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="g"]').click();
+    await page.locator('.key[data-key="g"]').click();
+    await page.locator('[data-mod="Ctrl"]').first().click();
+    await page.locator('.key[data-key="a"]').click();
+    expect((await state(page))).toMatchObject({
+      complete: true,
+      code: ["(1, 'draft'),", "(2, 'review'),", "(3, 'signed'),", "(4, 'filed'),"],
+      cursor: [0, 0],
+      modifiers: [],
+    });
+
+    await page.goto("/?unit=visual-selection&activity=number-enum-values-recall");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.press("Control+v");
+    await page.keyboard.type("3jg");
+    await page.keyboard.press("Control+a");
+    expect((await state(page))).toMatchObject({
+      complete: true,
+      code: ["NEW  = 1", "OPEN = 2", "DONE = 3", "GONE = 4"],
+      cursor: [0, 7],
+    });
+
+    await page.goto("/?unit=visual-selection&activity=append-trailing-commas-recall");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.press("Control+v");
+    await page.keyboard.type("2j$");
+    await page.keyboard.press("Shift+A");
+    await page.keyboard.type(",");
+    await page.keyboard.press("Escape");
+    expect((await state(page))).toMatchObject({
+      complete: true,
+      code: ["    \"alpha\",", "    \"beta gamma\",", "    \"delta\","],
+      cursor: [0, 4],
+    });
+  });
+
   test("holds Unit 7 Visual demo checkpoints long enough to read", async ({ page }) => {
     await page.goto("/?unit=visual-selection&activity=visual-shapes-demo");
     await page.getByRole("button", { name: "Play" }).click();
@@ -1395,6 +1461,12 @@ test.describe("Production lesson flow", () => {
       "line-indent-branch-challenge",
       "visual-strategy-demo",
       "integrated-character-edit",
+      "ragged-statement-challenge",
+      "clear-ragged-config-values",
+      "append-semicolons-to-ragged-block",
+      "renumber-reordered-list",
+      "number-enum-values",
+      "renumber-rows-challenge",
     ];
     const textSelector = [
       ".lesson-label", ".activity-intro h1", ".activity-intro p", ".command-explanation",

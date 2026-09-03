@@ -125,7 +125,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 414);
+  assert.equal(exercises.length, 422);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -532,14 +532,14 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
 test("Unit 7 curriculum definition is preserved verbatim", () => {
   assert.deepEqual(visualUnit.curriculumDefinition, {
     unit: "7. Visual selection",
-    commandsAndConcepts: "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r`",
+    commandsAndConcepts: "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r` and its ragged right edge `$`; selection increment `Ctrl-a` and `g Ctrl-a`",
     prerequisites: "Units 1–6",
-    learningOutcome: "Select character, line, and rectangular ranges; modify them; and decide when selection is clearer than operator-motion",
-    representativeExercises: "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection",
+    learningOutcome: "Select character, line, and rectangular ranges; modify them, including lines that end in different columns; and decide when selection is clearer than operator-motion",
+    representativeExercises: "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection; append past ragged line endings; renumber a reordered list",
     priorityAndPortability: "Core. `Ctrl-v` is semantically important even when a host reserves that chord; the app teaches Vim behavior",
   });
   assert.deepEqual(visualUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects"]);
-  assert.equal(visualUnit.lessons.length, 9);
+  assert.equal(visualUnit.lessons.length, 11);
 });
 
 test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
@@ -1452,7 +1452,7 @@ const visualActivities = visualUnit.lessons.flatMap(lesson => lesson.activities)
 const visualRunnable = visualActivities.filter(activity => activity.type === "demo" || activity.type === "exercise");
 
 test("Unit 7 covers the Visual curriculum with complete references and learning phases", () => {
-  assert.equal(visualRunnable.length, 46);
+  assert.equal(visualRunnable.length, 58);
   assert.deepEqual(visualUnit.coverage.map(item => item.concept), [
     "Visual Character, Visual Line, and Visual Block",
     "Visual selection d c y x r operations",
@@ -1462,15 +1462,17 @@ test("Unit 7 covers the Visual curriculum with complete references and learning 
     "selection case, shift, reindent, and gq",
     "Visual Block c d x r",
     "Visual Block I and A",
+    "Visual Block ragged right edge with $",
+    "Selection increment with Ctrl-a and g Ctrl-a",
     "Visual selection versus operator-motion",
   ]);
   const activityIds = new Set(visualActivities.map(activity => activity.id));
   const exercises = visualActivities.filter(activity => activity.type === "exercise");
   const exerciseChallenges = exercises.filter(activity => activity.phase === "challenge");
   const choiceChallenges = visualActivities.filter(activity => activity.type === "choice" && activity.phase === "challenge");
-  assert.equal(exercises.length, 37);
-  assert.equal(exerciseChallenges.length, 9);
-  assert.equal(choiceChallenges.length, 9);
+  assert.equal(exercises.length, 45);
+  assert.equal(exerciseChallenges.length, 11);
+  assert.equal(choiceChallenges.length, 11);
   for (const lesson of visualUnit.lessons) {
     const phases = new Set(lesson.activities.map(activity => activity.phase));
     for (const phase of ["explain", "demonstrate", "isolate", "mix", "challenge"]) {
@@ -1500,7 +1502,7 @@ test("Unit 7 covers the Visual curriculum with complete references and learning 
   assert.equal(exerciseChallenges.filter(activity => activity.languageId === "python").length, 3);
 
   const nonCodeProfiles = new Set(["prose", "log", "csv", "markdown"]);
-  assert.equal(exercises.filter(activity => nonCodeProfiles.has(activity.languageId)).length, 15);
+  assert.equal(exercises.filter(activity => nonCodeProfiles.has(activity.languageId)).length, 16);
 
   const activityById = new Map(visualActivities.map(activity => [activity.id, activity]));
   assert.deepEqual(keysOf(activityById.get("integrated-column-marker")), ["Ctrl-v", "2", "j", "r", "=", "0", "v", "e", "U"]);

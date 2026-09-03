@@ -179,7 +179,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [ ] 10 Foundations demotions
 - [x] 11 Insert-mode commands
 - [ ] 12 Search as operator range
-- [ ] 13 Visual Block `$` and `g Ctrl-a`
+- [x] 13 Visual Block `$` and `g Ctrl-a`
 - [ ] 14 Reference decks
 - [ ] 15 Free practice mode
 - [ ] 16 Unit 15 capstones

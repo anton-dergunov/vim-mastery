@@ -77,6 +77,24 @@ the four-column tab size, and characterwise Visual `gq` lands at column zero of
 the final formatted row. Focused native and browser fixtures cover those
 cursor and text results in addition to `o`, `O`, and `gv` selection geometry.
 
+Unit 7 also teaches the two families session 01 verified for it. Visual Block
+`$` releases the block's right edge so `A` appends after each line's own last
+character and `d` removes each line's tail; the unit contrasts it directly with
+a fixed-column `A` on the same ragged buffer, which is the result
+`visual-block-fixed-column-append-ragged` pins. `Ctrl-a` and `g Ctrl-a` over a
+selection add to the first number on every selected line, uniformly or
+cumulatively. The governing fixtures are `visual-block-dollar-append-ragged`,
+`visual-block-dollar-delete-ragged`, `visual-increment-uniform`, and
+`visual-increment-sequence`; no further patch was needed to author them.
+
+Two reporting conventions differ between the tiers wherever these lessons place
+an intermediate checkpoint, and both predate this material. A Visual Block `$`
+cursor sits one column past the last character, which is the column the authored
+checkpoints record. A Visual Line head is reported by native Vim at the logical
+cursor column and by the browser at the end of the last selected line, so the
+authored checkpoint and the browser assertion for the same step legitimately
+name different columns and the same row.
+
 Unit 8 exposes register contents and characterwise, linewise, or blockwise
 shape through the `VimEngine` snapshot so register state can be part of an
 activity target rather than inferred only from final text. The adapter's

@@ -1,6 +1,6 @@
 # Session 13 — Visual Block `$` and `g Ctrl-a`
 
-**Depends on:** 01 (conformance verdict), 09 (Unit 7 restructure) · **Blocks:** nothing
+**Status:** complete · **Depends on:** 01 (conformance verdict), 09 (Unit 7 restructure) · **Blocks:** nothing
 
 > **Session 01 verdict.** Both halves are verified. `g Ctrl-a` did not need to
 > be dropped — and note that plain `Ctrl-a` over a selection was *also* missing
@@ -90,3 +90,43 @@ Per `AGENTS.md`, Visual Block selections end at the checkpoint cursor. A `$`
 block has no fixed right edge, so confirm the checkpoint contract still holds and
 that the selection renders correctly on ragged rows at 360px. Exercise the
 latched-Ctrl touch path for `Ctrl-v` and for `g Ctrl-a`.
+
+## Outcome
+
+Both halves shipped, and neither needed engine work: session 01 had already
+patched and fixtured them, and `supported-commands.json` already listed both
+families as verified. This session was content only.
+
+Unit 7 gains two lessons, placed after `insert-across-rows` and before
+`integrate-visual-selection`, taking the unit from 9 lessons to 11 and from 46
+runnable activities to 58.
+
+- **`append-past-ragged-ends`** teaches `$` with `A` and with `d`. The
+  contrast the brief asked for is a demo pair on one ragged JavaScript buffer:
+  `fixed-column-append-demo` replays a plain block append and lands on
+  `l;et id = 1`, the result `visual-block-fixed-column-append-ragged` pins, and
+  `ragged-append-demo` then replays `$ A` on the same three statements and lands
+  correctly. Only demos ever show the wrong buffer; no exercise asks a learner to
+  produce one. The challenge is the brief's own idiom, `Ctrl-v } k $ A ;`, where
+  the paragraph motion overshoots onto the blank line and one row back fixes it.
+- **`number-a-selected-column`** teaches `Ctrl-a` and `g Ctrl-a` over a
+  selection as an adjacent demo pair on one buffer of identical ports: the same
+  `V 2j` selection, uniform then cumulative. It carries the counted uniform form
+  (`10 Ctrl-a`), the reordered-list renumber that starts the selection on the
+  second line so the growing amount lines up, and a blockwise
+  `Ctrl-v 3j g Ctrl-a` over an aligned enum column, which pairs the column
+  selection with the increment in one workflow.
+
+`edit-rectangular-columns` keeps its shape; only its theory contrast changed,
+because "irregular structure usually needs another tool" was no longer true once
+`$` existed.
+
+Nothing was dropped and no fallback was taken. The blockwise `g Ctrl-a` the
+brief flagged as risky conforms on both tiers, as does the counted uniform form.
+
+Two tier conventions surfaced while authoring the intermediate checkpoints, both
+pre-existing and now recorded in `docs/vim-conformance.md`: a Visual Block `$`
+cursor sits one column past the last character, and a Visual Line head is
+reported at the logical cursor column natively but at the end of the last
+selected line in the browser, so the same step's two assertions name different
+columns and the same row.

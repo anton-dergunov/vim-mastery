@@ -7,10 +7,10 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "7. Visual selection",
-    "commandsAndConcepts": "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r`",
+    "commandsAndConcepts": "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r` and its ragged right edge `$`; selection increment `Ctrl-a` and `g Ctrl-a`",
     "prerequisites": "Units 1–6",
-    "learningOutcome": "Select character, line, and rectangular ranges; modify them; and decide when selection is clearer than operator-motion",
-    "representativeExercises": "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection",
+    "learningOutcome": "Select character, line, and rectangular ranges; modify them, including lines that end in different columns; and decide when selection is clearer than operator-motion",
+    "representativeExercises": "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection; append past ragged line endings; renumber a reordered list",
     "priorityAndPortability": "Core. `Ctrl-v` is semantically important even when a host reserves that chord; the app teaches Vim behavior"
   },
   "prerequisiteSkillIds": [
@@ -4078,7 +4078,7 @@
           "title": "Edit a rectangular block",
           "body": "Visual Block mode selects the same columns across several lines. Use `r` to fill the cells, `c` to replace them, or `d` and `x` to remove them.",
           "grammar": "Ctrl-v + vertical/horizontal motion + c/d/x/r",
-          "contrast": "Block edits are precise when alignment carries meaning; irregular structure usually needs another tool.",
+          "contrast": "Block edits are precise when alignment carries meaning. Where only the line endings are ragged, the next lessons release the block right edge rather than reaching for another tool.",
           "demoRef": "replace-block-column-demo"
         },
         {
@@ -5335,6 +5335,854 @@
       ]
     },
     {
+      "id": "append-past-ragged-ends",
+      "title": "Append past ragged ends",
+      "objective": "Release the block's right edge with $ so an append or a delete reaches the end of every selected line, whatever length each one is.",
+      "activities": [
+        {
+          "id": "ragged-block-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A block with no right edge",
+          "body": "A block selection normally has two fixed columns, a left one and a right one. Press `$` while the block is open and the right edge is released: every selected row now runs to its own last character. `A` then appends after each line's end rather than at one shared column, and `d` deletes each line's tail.",
+          "grammar": "Ctrl-v + rows + $ + A/d",
+          "contrast": "Without `$` the right edge stays where it was, so on lines of different length the text lands inside the code on every row but one.",
+          "demoRef": "fixed-column-append-demo"
+        },
+        {
+          "id": "fixed-column-append-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Watch a fixed column miss the ends",
+          "instruction": "Watch a plain block append meet three statements of different length.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["let id = 1", "let total = 42", "id += total"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["l;et id = 1", "l;et total = 42", "i;d += total"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "2", "j", "A", ";", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "A", "explanation": "Append text at the block's right edge, which is still column one." },
+              { "from": 4, "to": 5, "display": ";", "explanation": "Type the semicolon each statement needs." },
+              { "from": 5, "to": 6, "display": "Esc", "explanation": "Replicate the semicolon down the block's fixed column." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-block", "caption": "The block is one column wide on all three rows." },
+              { "afterStep": 4, "cursor": [0, 0], "mode": "insert" },
+              { "afterStep": 6, "lines": ["l;et id = 1", "l;et total = 42", "i;d += total"], "cursor": [0, 0], "mode": "normal", "caption": "Every semicolon landed at column one, not at an end." }
+            ]
+          },
+          "hints": [
+            "The block's right edge is a column, and a column cannot follow three different endings.",
+            "Watch where the semicolons land rather than how many there are."
+          ],
+          "feedback": {
+            "success": "Three semicolons landed, and all three landed in the wrong place.",
+            "why": "The block's right edge was column one on every row, so the append followed that column instead of each line's last character.",
+            "contrast": "The next demo releases that edge and appends to the three real endings."
+          },
+          "skills": {
+            "primary": ["visual-block-append"],
+            "supporting": ["visual-block", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": ["selection-geometry"]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "JavaScript statements of unequal length make the missed line endings obvious.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-block-append"]
+          }
+        },
+        {
+          "id": "ragged-append-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reach every end with the dollar sign",
+          "instruction": "Watch the same three statements take their semicolons once the right edge is released.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["let id = 1", "let total = 42", "id += total"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["let id = 1;", "let total = 42;", "id += total;"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "2", "j", "$", "A", ";", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "$", "explanation": "Release the right edge so every row runs to its own end." },
+              { "from": 4, "to": 5, "display": "A", "explanation": "Append text after each line's last character." },
+              { "from": 5, "to": 6, "display": ";", "explanation": "Type the semicolon each statement needs." },
+              { "from": 6, "to": 7, "display": "Esc", "explanation": "Replicate the semicolon onto all three endings." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-block", "caption": "The block is still one column wide." },
+              { "afterStep": 4, "cursor": [2, 11], "mode": "visual-block", "caption": "The highlight now follows three different line endings." },
+              { "afterStep": 5, "cursor": [0, 9], "mode": "insert" },
+              { "afterStep": 7, "lines": ["let id = 1;", "let total = 42;", "id += total;"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "The release happens while the block is open, before the append begins.",
+            "A block with no right edge still has a left one."
+          ],
+          "feedback": {
+            "success": "All three statements ended where they should.",
+            "why": "The released right edge let one append follow three different line endings."
+          },
+          "skills": {
+            "primary": ["visual-block-ragged-edge"],
+            "supporting": ["visual-block-append", "visual-block", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": ["selection-geometry", "ragged-edge"]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Reusing the previous demo's buffer isolates the released right edge as the only difference.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-block-ragged-edge"]
+          }
+        },
+        {
+          "id": "append-semicolons-to-ragged-block",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Terminate four declarations",
+          "instruction": "End all four Java declarations with a semicolon in one rectangular edit.",
+          "languageId": "java",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["int width = 4", "int totalHeight = 96", "int gap = 12", "int outerMargin = 320"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["int width = 4;", "int totalHeight = 96;", "int gap = 12;", "int outerMargin = 320;"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "3", "j", "$", "A", ";", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "$", "explanation": "Release the right edge so every row runs to its own end." },
+              { "from": 4, "to": 5, "display": "A", "explanation": "Append text after each line's last character." },
+              { "from": 5, "to": 6, "display": ";", "explanation": "Type the terminator." },
+              { "from": 6, "to": 7, "display": "Esc", "explanation": "Replicate the terminator onto all four endings." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [3, 0], "mode": "visual-block" },
+              { "afterStep": 4, "cursor": [3, 21], "mode": "visual-block" },
+              { "afterStep": 5, "cursor": [0, 12], "mode": "insert" },
+              { "afterStep": 7, "lines": ["int width = 4;", "int totalHeight = 96;", "int gap = 12;", "int outerMargin = 320;"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "Four declarations of four different lengths still share one left edge.",
+            "Release the right edge before choosing where to append."
+          ],
+          "feedback": {
+            "success": "Four declarations, four endings, one edit.",
+            "why": "The released right edge made the four different line endings a single append target."
+          },
+          "skills": {
+            "primary": ["visual-block-ragged-edge"],
+            "supporting": ["visual-block-append", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": ["selection-geometry", "ragged-edge"]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Java declarations of unequal length are a routine missing-terminator repair.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-block-ragged-edge"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "clear-ragged-config-values",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Empty three settings",
+          "instruction": "Strip the value from all three settings, leaving each key and its equals sign.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["host  = \"localhost\"", "port  = 8080", "debug = true"],
+              "cursor": [0, 7],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["host  =", "port  =", "debug ="],
+              "cursor": [0, 6],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "2", "j", "$", "d"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "$", "explanation": "Release the right edge so every row runs to its own end." },
+              { "from": 4, "to": 5, "display": "d", "explanation": "Delete each row's tail." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 7], "mode": "visual-block" },
+              { "afterStep": 4, "cursor": [2, 12], "mode": "visual-block", "caption": "Three values of three different lengths are highlighted." },
+              { "afterStep": 5, "lines": ["host  =", "port  =", "debug ="], "cursor": [0, 6], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "The values start in one column but end in three different ones.",
+            "A released right edge works for a delete as well as an append."
+          ],
+          "feedback": {
+            "success": "Three values gone, three keys intact.",
+            "why": "The block's left edge stayed fixed at the shared column while its right edge followed each line's own end."
+          },
+          "skills": {
+            "primary": ["visual-block-ragged-edge"],
+            "supporting": ["visual-block-delete", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": ["selection-geometry", "ragged-edge"]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "An aligned config block gives the delete a shared left edge and three unequal values.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-block-ragged-edge"]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "visualizeWhitespace": true
+          }
+        },
+        {
+          "id": "append-trailing-commas",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Separate three list entries",
+          "instruction": "Give all three Python entries the trailing comma a list needs.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["    \"alpha\"", "    \"beta gamma\"", "    \"delta\""],
+              "cursor": [0, 4],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["    \"alpha\",", "    \"beta gamma\",", "    \"delta\","],
+              "cursor": [0, 4],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "2", "j", "$", "A", ",", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "$", "explanation": "Release the right edge so every row runs to its own end." },
+              { "from": 4, "to": 5, "display": "A", "explanation": "Append text after each line's last character." },
+              { "from": 5, "to": 6, "display": ",", "explanation": "Type the separator." },
+              { "from": 6, "to": 7, "display": "Esc", "explanation": "Replicate the separator onto all three endings." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 4], "mode": "visual-block" },
+              { "afterStep": 4, "cursor": [2, 11], "mode": "visual-block" },
+              { "afterStep": 5, "cursor": [0, 10], "mode": "insert" },
+              { "afterStep": 7, "lines": ["    \"alpha\",", "    \"beta gamma\",", "    \"delta\","], "cursor": [0, 4], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "Indentation gives the entries a shared left edge; their closing quotes do not line up.",
+            "The separator belongs after each entry, not inside it."
+          ],
+          "feedback": {
+            "success": "Each entry now ends with its own separator.",
+            "why": "The released right edge followed the closing quote on each row instead of a single column."
+          },
+          "skills": {
+            "primary": ["visual-block-ragged-edge"],
+            "supporting": ["visual-block-append", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": ["selection-geometry", "ragged-edge"]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "An indented Python list has an exact shared left edge and three unequal entries.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-block-ragged-edge"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "ragged-statement-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Terminate a paragraph of statements",
+          "instruction": "End every statement above the blank line with a semicolon, leaving the call below it untouched.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["const raw = load()", "const rows = parse(raw)", "const total = rows.length", "", "report(total)"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["const raw = load();", "const rows = parse(raw);", "const total = rows.length;", "", "report(total)"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "}", "k", "$", "A", ";", "Escape"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode." },
+              { "from": 1, "to": 2, "display": "}", "explanation": "Extend the selection to the blank line that ends the paragraph." },
+              { "from": 2, "to": 3, "display": "k", "explanation": "Pull the selection back off the blank line." },
+              { "from": 3, "to": 4, "display": "$", "explanation": "Release the right edge so every row runs to its own end." },
+              { "from": 4, "to": 5, "display": "A", "explanation": "Append text after each line's last character." },
+              { "from": 5, "to": 6, "display": ";", "explanation": "Type the terminator." },
+              { "from": 6, "to": 7, "display": "Esc", "explanation": "Replicate the terminator onto the three statement endings." }
+            ],
+            "checkpoints": [
+              { "afterStep": 2, "cursor": [3, 0], "mode": "visual-block", "caption": "The paragraph motion lands on the blank line." },
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-block" },
+              { "afterStep": 4, "cursor": [2, 25], "mode": "visual-block" },
+              { "afterStep": 5, "cursor": [0, 17], "mode": "insert" },
+              { "afterStep": 7, "lines": ["const raw = load();", "const rows = parse(raw);", "const total = rows.length;", "", "report(total)"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "A paragraph motion reaches the blank line itself, which is one row too far.",
+            "A blank line has an end too, and it would take a semicolon."
+          ],
+          "feedback": {
+            "success": "Three statements terminated, and the blank line left alone.",
+            "why": "The paragraph motion sized the block, one row back excluded the blank line, and the released right edge reached three different endings."
+          },
+          "skills": {
+            "primary": ["visual-block-ragged-edge"],
+            "supporting": ["visual-block-append", "visual-block", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": ["selection-geometry", "ragged-edge", "motion-composition"]
+          },
+          "portability": "Core Vim Visual-mode behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A JavaScript paragraph followed by a blank line is where this block idiom is normally used.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-block-ragged-edge", "visual-block"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "ragged-block-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Reach the ends",
+          "prompt": "A block spans four lines of different length and every line needs a semicolon at its own end. Which key belongs in the sequence?",
+          "options": [
+            { "id": "ragged-dollar", "label": "`$` before the append" },
+            { "id": "ragged-capital-o", "label": "`O` before the append" },
+            { "id": "ragged-nothing", "label": "Nothing; `A` already appends at each end" }
+          ],
+          "correctOptionId": "ragged-dollar",
+          "explanation": "`A` appends at the block's right edge, which is a fixed column until `$` releases it.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
+      "id": "number-a-selected-column",
+      "title": "Number a selected column",
+      "objective": "Increment every number in a selection, uniformly with Ctrl-a or as a running sequence with g Ctrl-a.",
+      "activities": [
+        {
+          "id": "selection-increment-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "One chord, every number",
+          "body": "`Ctrl-a` adds one to the number under the cursor. Over a Visual selection it adds one to the first number on every selected line at once. Prefix it with `g` and the amount added grows line by line: the first selected line gains one, the second gains two, and a column of identical numbers becomes a sequence.",
+          "grammar": "v/V/Ctrl-v + rows + Ctrl-a or g Ctrl-a",
+          "contrast": "`Ctrl-a` moves a whole column by the same amount; `g Ctrl-a` spreads it into 1, 2, 3. Renumbering a list after a reorder is the second one.",
+          "demoRef": "uniform-increment-demo"
+        },
+        {
+          "id": "uniform-increment-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Move a whole column by one",
+          "instruction": "Watch three identical ports move up together.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["port = 8000", "port = 8000", "port = 8000"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["port = 8001", "port = 8001", "port = 8001"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["V", "2", "j", "Ctrl-a"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 4, "display": "Ctrl-a", "explanation": "Add one to the first number on every selected line." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-line" },
+              { "afterStep": 4, "lines": ["port = 8001", "port = 8001", "port = 8001"], "cursor": [0, 0], "mode": "normal", "caption": "Every line gained the same one." }
+            ]
+          },
+          "hints": [
+            "The selection decides which numbers are in scope.",
+            "Each line gains the same amount."
+          ],
+          "feedback": {
+            "success": "All three ports moved by one.",
+            "why": "Over a selection the increment applies once to each selected line, with the same amount every time."
+          },
+          "skills": {
+            "primary": ["visual-increment"],
+            "supporting": ["visual-line", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": ["numeric-change"]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Repeated port settings are a familiar column of identical numbers.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-increment"]
+          }
+        },
+        {
+          "id": "sequence-increment-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Spread the same column into a sequence",
+          "instruction": "Watch the same three ports become three different ports.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["port = 8000", "port = 8000", "port = 8000"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["port = 8001", "port = 8002", "port = 8003"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["V", "2", "j", "g", "Ctrl-a"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 5, "display": "g Ctrl-a", "explanation": "Add a growing amount, so the selected lines become a sequence." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-line" },
+              { "afterStep": 5, "lines": ["port = 8001", "port = 8002", "port = 8003"], "cursor": [0, 0], "mode": "normal", "caption": "The first line gained one, the second two, the third three." }
+            ]
+          },
+          "hints": [
+            "Only one key separates this from the previous demo.",
+            "Compare how much each line gained, not whether it changed."
+          ],
+          "feedback": {
+            "success": "One column became three distinct ports.",
+            "why": "The `g` prefix makes the amount cumulative down the selection, which is what turns identical numbers into a sequence."
+          },
+          "skills": {
+            "primary": ["visual-increment-sequence"],
+            "supporting": ["visual-increment", "visual-line", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": ["numeric-change"]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Reusing the previous demo's buffer isolates the `g` prefix as the only difference.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-increment-sequence"]
+          }
+        },
+        {
+          "id": "renumber-reordered-list",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Renumber a reordered list",
+          "instruction": "The steps were reordered and every marker now reads one. Number them one through five again, working from the second step down.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["1. mount the drive", "1. verify the checksum", "1. install the image", "1. reboot the host", "1. tail the log"],
+              "cursor": [1, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["1. mount the drive", "2. verify the checksum", "3. install the image", "4. reboot the host", "5. tail the log"],
+              "cursor": [1, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["V", "3", "j", "g", "Ctrl-a"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode on the second step." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to cover the remaining steps." },
+              { "from": 3, "to": 5, "display": "g Ctrl-a", "explanation": "Add a growing amount, so the selected markers become 2, 3, 4, 5." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [4, 0], "mode": "visual-line" },
+              { "afterStep": 5, "lines": ["1. mount the drive", "2. verify the checksum", "3. install the image", "4. reboot the host", "5. tail the log"], "cursor": [1, 0], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "The first step already carries the number it should keep.",
+            "The second step needs to gain one, the third two."
+          ],
+          "feedback": {
+            "success": "Five steps, five numbers, one command.",
+            "why": "Leaving the first marker out of the selection makes the growing amount line up with the numbers the list needs."
+          },
+          "skills": {
+            "primary": ["visual-increment-sequence"],
+            "supporting": ["visual-line", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": ["numeric-change", "selection-geometry"]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "A Markdown ordered list is where duplicated markers survive a reorder.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-increment-sequence"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "bump-selected-defaults",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Raise three defaults together",
+          "instruction": "Raise all three shell defaults from five to fifteen, keeping them equal.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["RETRY=5", "DELAY=5", "LIMIT=5"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["RETRY=15", "DELAY=15", "LIMIT=15"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["V", "2", "j", "1", "0", "Ctrl-a"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 3, "display": "2j", "explanation": "Move two lines down to extend the selection." },
+              { "from": 3, "to": 5, "display": "10", "explanation": "Count how much every selected number should gain." },
+              { "from": 5, "to": 6, "display": "Ctrl-a", "explanation": "Add that amount to the first number on every selected line." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [2, 0], "mode": "visual-line" },
+              { "afterStep": 6, "lines": ["RETRY=15", "DELAY=15", "LIMIT=15"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "The three defaults must stay equal, so the amount added must not grow.",
+            "A count in front of the increment sets how much is added."
+          ],
+          "feedback": {
+            "success": "Three defaults raised by ten, still equal.",
+            "why": "A count sets the amount, and without the growing prefix every selected line gains that same amount."
+          },
+          "skills": {
+            "primary": ["visual-increment"],
+            "supporting": ["counts", "visual-line", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": ["numeric-change", "counts"]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Shell defaults are tuned together, which is the case for the uniform form.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-increment"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "number-enum-values",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Number an aligned enum",
+          "instruction": "Give the four aligned Python constants the distinct values one through four.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["NEW  = 0", "OPEN = 0", "DONE = 0", "GONE = 0"],
+              "cursor": [0, 7],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["NEW  = 1", "OPEN = 2", "DONE = 3", "GONE = 4"],
+              "cursor": [0, 7],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["Ctrl-v", "3", "j", "g", "Ctrl-a"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "Ctrl-v", "explanation": "Switch to Visual Block mode on the value column." },
+              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to cover the whole column." },
+              { "from": 3, "to": 5, "display": "g Ctrl-a", "explanation": "Add a growing amount, so the column becomes 1, 2, 3, 4." }
+            ],
+            "checkpoints": [
+              { "afterStep": 3, "cursor": [3, 7], "mode": "visual-block", "caption": "The block covers the value column and nothing else." },
+              { "afterStep": 5, "lines": ["NEW  = 1", "OPEN = 2", "DONE = 3", "GONE = 4"], "cursor": [0, 7], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "The constants are padded so their values share a column.",
+            "The same growing increment works whatever shape selected the numbers."
+          ],
+          "feedback": {
+            "success": "Four constants, four distinct values.",
+            "why": "A rectangular selection picked out the value column, and the growing increment numbered it in one command."
+          },
+          "skills": {
+            "primary": ["visual-increment-sequence"],
+            "supporting": ["visual-block", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": ["numeric-change", "selection-geometry"]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Aligned Python constants pair the column selection with the increment in one workflow.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-increment-sequence", "visual-block"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "renumber-rows-challenge",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Give four rows distinct keys",
+          "instruction": "Every inserted row carries the placeholder key zero. Turn the whole column into the distinct keys one through four.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": ["(0, 'draft'),", "(0, 'review'),", "(0, 'signed'),", "(0, 'filed'),"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["(1, 'draft'),", "(2, 'review'),", "(3, 'signed'),", "(4, 'filed'),"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": ["V", "G", "g", "Ctrl-a"],
+            "commandGroups": [
+              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
+              { "from": 1, "to": 2, "display": "G", "explanation": "Extend the selection to the last row." },
+              { "from": 2, "to": 4, "display": "g Ctrl-a", "explanation": "Add a growing amount, so the placeholders become 1, 2, 3, 4." }
+            ],
+            "checkpoints": [
+              { "afterStep": 2, "cursor": [3, 0], "mode": "visual-line" },
+              { "afterStep": 4, "lines": ["(1, 'draft'),", "(2, 'review'),", "(3, 'signed'),", "(4, 'filed'),"], "cursor": [0, 0], "mode": "normal" }
+            ]
+          },
+          "hints": [
+            "Every row starts at zero, so the first row must gain one as well.",
+            "A uniform increase would leave all four keys equal, which is what a key cannot be."
+          ],
+          "feedback": {
+            "success": "Four placeholder keys became four distinct keys.",
+            "why": "Because every row started from the same placeholder, the growing increment produced exactly the sequence the column needed."
+          },
+          "skills": {
+            "primary": ["visual-increment-sequence"],
+            "supporting": ["visual-line", "visual-selection"]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": ["numeric-change", "tool-choice"]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "visual-selection-v1",
+            "languageRationale": "Placeholder keys in a SQL insert are a routine renumbering target.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": ["visual-increment-sequence"]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "selection-increment-check",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Same amount or growing amount",
+          "prompt": "Four selected lines each read `0`. Which command leaves them reading 1, 2, 3, 4?",
+          "options": [
+            { "id": "increment-growing", "label": "`g Ctrl-a`" },
+            { "id": "increment-uniform", "label": "`Ctrl-a`" },
+            { "id": "increment-counted", "label": "`4 Ctrl-a`" }
+          ],
+          "correctOptionId": "increment-growing",
+          "explanation": "`Ctrl-a` adds the same amount to every selected line, and a count only changes what that shared amount is. The `g` prefix is what makes the amount grow line by line.",
+          "questionKind": "generic"
+        }
+      ]
+    },
+    {
       "id": "integrate-visual-selection",
       "title": "Choose when selection is clearer",
       "objective": "Combine selection shapes and operations, then choose Visual mode only when seeing the range improves confidence.",
@@ -6205,6 +7053,33 @@
         "prepend-block-demo",
         "append-block-demo"
       ]
+    },
+    {
+      "id": "block-ragged-edge-reference",
+      "command": "Ctrl-v … $",
+      "purpose": "Release the block right edge so every row runs to its own end.",
+      "notes": [
+        "The left edge stays fixed, so the rows still need a shared starting column.",
+        "It applies to the append and to the delete alike."
+      ],
+      "exampleActivityRefs": [
+        "ragged-append-demo",
+        "clear-ragged-config-values"
+      ]
+    },
+    {
+      "id": "selection-increment-reference",
+      "command": "Ctrl-a / g Ctrl-a",
+      "purpose": "Increment the first number on every selected line.",
+      "notes": [
+        "A count sets the amount; without `g` every selected line gains that same amount.",
+        "`g` makes the amount cumulative, which turns identical numbers into a sequence.",
+        "`Ctrl-x` and `g Ctrl-x` subtract in the same two ways."
+      ],
+      "exampleActivityRefs": [
+        "sequence-increment-demo",
+        "renumber-reordered-list"
+      ]
     }
   ],
   "coverage": [
@@ -6367,6 +7242,48 @@
       "challenge": [
         "block-prefix-declarations-challenge",
         "block-insert-check"
+      ]
+    },
+    {
+      "concept": "Visual Block ragged right edge with $",
+      "explain": [
+        "ragged-block-meaning"
+      ],
+      "demonstrate": [
+        "fixed-column-append-demo",
+        "ragged-append-demo"
+      ],
+      "isolate": [
+        "append-semicolons-to-ragged-block"
+      ],
+      "mix": [
+        "clear-ragged-config-values",
+        "append-trailing-commas"
+      ],
+      "challenge": [
+        "ragged-statement-challenge",
+        "ragged-block-check"
+      ]
+    },
+    {
+      "concept": "Selection increment with Ctrl-a and g Ctrl-a",
+      "explain": [
+        "selection-increment-meaning"
+      ],
+      "demonstrate": [
+        "uniform-increment-demo",
+        "sequence-increment-demo"
+      ],
+      "isolate": [
+        "renumber-reordered-list"
+      ],
+      "mix": [
+        "bump-selected-defaults",
+        "number-enum-values"
+      ],
+      "challenge": [
+        "renumber-rows-challenge",
+        "selection-increment-check"
       ]
     },
     {
