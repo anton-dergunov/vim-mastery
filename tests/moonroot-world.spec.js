@@ -415,7 +415,12 @@ test("streams transparent Beacon Gallery patches without a complete-board vignet
   }));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?unit=viewport-control&activity=window-home-demo");
-  await expect(page.locator("#world")).toHaveAttribute("data-board-profile", "compact", { timeout: 15_000 });
+  // This demo has no keyboard, so its board is genuinely taller than a phone's
+  // usual compact ratio - that is real, correct layout, not something to wait
+  // out. Beacon Gallery's remote variants are registered against the compact
+  // profile regardless of board shape, so assert on the registered scene
+  // profile the streaming feature actually depends on.
+  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "compact", { timeout: 15_000 });
 
   const variant = page.locator(".world-remote-variant");
   await expect(variant).toHaveCount(1, { timeout: 5_000 });
