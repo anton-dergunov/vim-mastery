@@ -56,9 +56,11 @@ close the loop it currently opens.
    `docs/vim-conformance.md`.
 
 ## Out of scope
-
-- Content authoring. Once verified, Unit 5's `search-as-a-range` lesson can carry
-  an offset beat; that belongs in its own pass.
+- Content authoring. Session 12 shipped `search-as-a-range` as Unit 5's
+  `lessons[4]`; the offset beat inserts between `collapse-arguments-backward`
+  and `search-range-reach`, and the latter's `contrast` sentence — which names
+  `/pattern/e` as real and practised later — is the copy to rewrite. That
+  belongs in its own pass.
 - Search offsets on Ex addresses (`:/pat/+1d`), which is a different parser.
 
 ## Acceptance criteria

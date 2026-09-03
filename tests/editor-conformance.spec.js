@@ -592,7 +592,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 5 precision activity and continues to Unit 6", async ({ page }) => {
     await page.goto("/?unit=precision-motions-search");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 75, exerciseCount: precisionExercises.length });
+    expect(runtime).toEqual({ activityCount: 87, exerciseCount: precisionExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -1551,6 +1551,18 @@ test.describe("Production lesson flow", () => {
     await page.keyboard.type("?ERROR");
     await page.keyboard.press("Enter");
     expect((await state(page))).toMatchObject({ complete: true, cursor: [3, 0] });
+
+    // A backward search completing an operator: the pattern is entered while
+    // the operator is pending, so this covers the shifted `?` chord and the
+    // operator-pending prompt in one canonical.
+    await page.goto("/?unit=precision-motions-search&activity=collapse-arguments-backward");
+    await page.locator(".cm-content").focus();
+    await page.keyboard.type("c?header");
+    await page.keyboard.press("Enter");
+    expect((await state(page))).toMatchObject({ mode: "insert", code: ["render();", "flush();"] });
+    await page.keyboard.type("page");
+    await page.keyboard.press("Escape");
+    expect((await state(page))).toMatchObject({ complete: true, code: ["render(page);", "flush();"], cursor: [0, 10] });
   });
 
   test("conforms Unit 4 operator state, formatting width, put shape, and repeat reset", async ({ page }) => {

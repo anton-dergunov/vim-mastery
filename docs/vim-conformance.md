@@ -187,6 +187,16 @@ that `Ctrl-r/` was about to insert — while touch input, which produces no
 keyup, worked. The handler now suppresses keyup for the same keys it already
 owns, gated on `VimEngine.ownsPrompt()`.
 
+A second divergence was also the app's. This bridge owns the text of an open
+prompt, so the adapter never saw Escape close one and never ran its own abort
+handler. The buffer and cursor were right, but `inputState.operator` stayed
+armed: after `d` `/pat` `Escape` the mode still read `operator-pending`, and the
+next key was silently consumed as the delete's range — `w` deleted a word and
+`x` deleted the line. `VimEngine.abortCommandLine()` now replays Escape on the
+adapter's own prompt input, which restores the previous query and highlight and
+clears the input state, the same way the confirming Enter is already replayed.
+Fixture: `escape-cancels-operator-pending-search`.
+
 The last-search register needed a sixth patch hunk once Unit 8 started asserting
 `"/`. The adapter encodes a substitution's flags into the query string it hands
 to `parseQuery`, and `parseQuery` writes that string straight into `"/`, so
@@ -200,7 +210,8 @@ pattern after installing the query. Fixture:
 Verified: `:g` with `:t`/`:m`; `:sort n`, `:sort u`, `:sort i`, and `:sort /pat/`;
 the read-only registers `".`, `":`, and `"/`; Insert-mode `Ctrl-r{register}`,
 `Ctrl-o`, `Ctrl-w`, and `Ctrl-u`; command-line `Ctrl-r{register}`; search as an
-operator range (`d/pat`, `y/pat`, `c?pat`) with Vim's exclusive match boundary;
+operator range (`d/pat`, `y/pat`, `c/pat`, `c?pat`) with Vim's exclusive match
+boundary;
 Visual Block `$` with `A`, `I`, and `d`; and `Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, and
 `g Ctrl-x` over a Visual selection. Five of these needed a versioned adapter
 patch; see `patches/README.md`.

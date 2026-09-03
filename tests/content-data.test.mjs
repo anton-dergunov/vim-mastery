@@ -125,7 +125,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 410);
+  assert.equal(exercises.length, 414);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -1074,22 +1074,22 @@ test("Unit 4 preserves the curriculum and covers every operator family", () => {
 test("Unit 5 preserves the curriculum and covers every precision-search family", () => {
   assert.deepEqual(precisionUnit.curriculumDefinition, {
     unit: "5. Precision motions and search",
-    commandsAndConcepts: "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
+    commandsAndConcepts: "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
     prerequisites: "Units 1–4",
     learningOutcome: "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
-    representativeExercises: "Delete until a quote; repeat a comma find; change the next search match; jump between brackets; move by paragraphs in prose or comments",
+    representativeExercises: "Delete until a quote; repeat a comma find; change the next search match; delete up to the next match; jump between brackets; move by paragraphs in prose or comments",
     priorityAndPortability: "Core. Search and pair matching remain text-based rather than IDE-semantic, and sentence motions are marked optional",
   });
   assert.deepEqual(precisionUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar"]);
   assert.equal(precisionUnit.releaseStatus, "authoring");
-  assert.equal(precisionUnit.lessons.length, 9);
+  assert.equal(precisionUnit.lessons.length, 10);
   assert.deepEqual(precisionUnit.coverage.map(item => item.concept), [
-    "f F t T", "; and ,", "/ ? n N", "* # g* g#", "gn and gN", "% matching delimiters",
+    "f F t T", "; and ,", "/ ? n N", "* # g* g#", "operator plus search range", "gn and gN", "% matching delimiters",
     "{ and } paragraph motions", "( and ) sentence motions", "integrated precision motion and search",
   ]);
   const activities = precisionUnit.lessons.flatMap(lesson => lesson.activities);
   const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
-  assert.equal(runnable.length, 37);
+  assert.equal(runnable.length, 42);
   for (const activity of runnable) {
     assert(profileById.has(activity.languageId), `${activity.id} uses unknown language ${activity.languageId}`);
     assert.equal(activity.provenance.nativeValidation, "passed");

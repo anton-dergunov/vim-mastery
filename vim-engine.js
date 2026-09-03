@@ -733,7 +733,7 @@ export class VimEngine {
         return finish(true);
       }
       if (vimKey === "<Esc>") {
-        this.closeCommandLine();
+        this.abortCommandLine();
       } else if (vimKey === "<BS>") {
         this.commandLine = this.commandLine.slice(0, -1);
       } else if (vimKey === "<CR>") {
@@ -1221,6 +1221,28 @@ export class VimEngine {
    */
   ownsPrompt() {
     return this.commandLine !== null || Boolean(this.confirmationInput());
+  }
+
+  /**
+   * Cancel an open prompt the way Escape does in Vim, aborting the whole
+   * command. This bridge owns the prompt text, so the adapter never sees the
+   * cancellation on its own and would keep a pending operator armed: after
+   * `d` `/pat` `Escape` the next motion silently became the operator's range.
+   * Replaying the key on the adapter's own input runs its abort handler, which
+   * restores the previous query and highlight and clears the input state.
+   */
+  abortCommandLine() {
+    const input = this.cm?.state?.dialog?.querySelector("input");
+    if (input) {
+      const escapeEvent = new KeyboardEvent("keydown", {
+        key: "Escape", code: "Escape", bubbles: true, cancelable: true,
+      });
+      // The Vim bridge checks the legacy keyCode value for dialogs.
+      Object.defineProperty(escapeEvent, "keyCode", { value: 27 });
+      Object.defineProperty(escapeEvent, "vimWildsPrompt", { value: true });
+      input.dispatchEvent(escapeEvent);
+    }
+    this.closeCommandLine();
   }
 
   closeCommandLine() {

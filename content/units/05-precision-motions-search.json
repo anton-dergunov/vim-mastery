@@ -7,10 +7,10 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "5. Precision motions and search",
-    "commandsAndConcepts": "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
+    "commandsAndConcepts": "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
     "prerequisites": "Units 1–4",
     "learningOutcome": "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
-    "representativeExercises": "Delete until a quote; repeat a comma find; change the next search match; jump between brackets; move by paragraphs in prose or comments",
+    "representativeExercises": "Delete until a quote; repeat a comma find; change the next search match; delete up to the next match; jump between brackets; move by paragraphs in prose or comments",
     "priorityAndPortability": "Core. Search and pair matching remain text-based rather than IDE-semantic, and sentence motions are marked optional"
   },
   "prerequisiteSkillIds": [
@@ -2204,6 +2204,918 @@
               "substring-search-backward"
             ]
           }
+        }
+      ]
+    },
+    {
+      "id": "search-as-a-range",
+      "title": "Let a pattern end the range",
+      "objective": "Complete an operator with a forward or backward search so a named pattern, not a count, marks where the range stops.",
+      "activities": [
+        {
+          "id": "search-range-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "End a range with a pattern",
+          "body": "An operator needs a range, and a search can supply one: `d` followed by `/pattern` and Enter deletes from the cursor to that match. `y` and `c` take the same range, and `?` runs it backward from the cursor. This is where search stops being only a way to move.",
+          "grammar": "operator + /pattern Enter → range ends at the match · operator + ?pattern Enter → range starts at the match",
+          "contrast": "A plain search range is exclusive: it stops where the match begins, so the matched text itself survives. Backward, the same rule falls the other way — the character under the cursor is the one left out.",
+          "demoRef": "search-range-demo"
+        },
+        {
+          "id": "search-range-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Cut each row back to its command",
+          "instruction": "Remove the environment prefix on each row by naming the command that follows it.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "env DEBUG=1 npm test",
+                "env CI=1 npx lint"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "npm test",
+                "npx lint"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "/",
+              "n",
+              "p",
+              "m",
+              "Enter",
+              "j",
+              "d",
+              "/",
+              "n",
+              "p",
+              "x",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "d",
+                "explanation": "Start a delete and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "npm",
+                "explanation": "Enter the pattern that ends the range."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "↵",
+                "explanation": "Run the search and complete the delete."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move to the next row."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "d",
+                "explanation": "Start the second delete."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "/",
+                "explanation": "Open another forward search."
+              },
+              {
+                "from": 9,
+                "to": 12,
+                "display": "npx",
+                "explanation": "Enter the pattern that ends this range."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "↵",
+                "explanation": "Run the search and complete the delete."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "operator-pending",
+                "caption": "Delete is waiting for a range."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "npm test",
+                  "env CI=1 npx lint"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    12
+                  ]
+                },
+                "caption": "The range ended where the match begins, so the command word survived."
+              },
+              {
+                "afterStep": 7,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "npm test",
+                  "npx lint"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    1,
+                    0
+                  ],
+                  "to": [
+                    1,
+                    9
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "A search can finish an operator the way a motion does.",
+            "The pattern names where the range stops, not what it removes."
+          ],
+          "feedback": {
+            "success": "Both rows now start at their command.",
+            "why": "Each search supplied a range that ended just before its match."
+          },
+          "skills": {
+            "primary": [
+              "search-operator-range"
+            ],
+            "supporting": [
+              "delete-operator",
+              "search-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "operator-search",
+              "exclusive-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Shell rows carry a repeated environment prefix that a command word ends naturally.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-operator-range"
+            ]
+          }
+        },
+        {
+          "id": "trim-to-level-tag",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Start the row at its level",
+          "instruction": "Trim the timestamp from the first row so it starts at its level tag, like the row below.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "2026-04-05 12:01 INFO ready",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "INFO ready",
+                "INFO done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "/",
+              "I",
+              "N",
+              "F",
+              "O",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "d",
+                "explanation": "Start a delete and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 6,
+                "display": "INFO",
+                "explanation": "Enter the pattern that ends the range."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "↵",
+                "explanation": "Run the search and complete the delete."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "operator-pending"
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "INFO ready",
+                  "INFO done"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    17
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "A delete needs a range, and a search can be that range.",
+            "The level tag is the match, so it stays."
+          ],
+          "feedback": {
+            "success": "The row starts where its level starts.",
+            "why": "The range ended at the match, so the level tag itself stayed."
+          },
+          "skills": {
+            "primary": [
+              "search-operator-range"
+            ],
+            "supporting": [
+              "delete-operator",
+              "search-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "exclusive-range",
+              "forward-search"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Log rows put a fixed timestamp in front of a level tag that reads as a pattern.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-operator-range"
+            ]
+          }
+        },
+        {
+          "id": "copy-row-prefix",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reuse a row's opening",
+          "instruction": "Give the second row the same table opening as the first, without retyping it.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "insert into jobs values (1);",
+                "values (2);"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "insert into jobs values (1);",
+                "insert into jobs values (2);"
+              ],
+              "cursor": [
+                1,
+                16
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "y",
+              "/",
+              "v",
+              "a",
+              "l",
+              "u",
+              "e",
+              "s",
+              "Enter",
+              "j",
+              "P"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "y",
+                "explanation": "Start a yank and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 8,
+                "display": "values",
+                "explanation": "Enter the pattern that ends the range."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "↵",
+                "explanation": "Run the search and capture the range."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "j",
+                "explanation": "Move to the row that needs the opening."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "P",
+                "explanation": "Put the captured text before the cursor."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "insert into jobs values (1);",
+                  "values (2);"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "The yank captured the opening and left the row untouched."
+              },
+              {
+                "afterStep": 10,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "insert into jobs values (1);",
+                  "insert into jobs values (2);"
+                ],
+                "cursor": [
+                  1,
+                  16
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Yank takes the same ranges delete takes.",
+            "The captured text stops before the match, so it ends with the separating space."
+          ],
+          "feedback": {
+            "success": "The second row opens like the first.",
+            "why": "The yanked range ended at the match, so it carried the opening and nothing more."
+          },
+          "skills": {
+            "primary": [
+              "search-operator-range"
+            ],
+            "supporting": [
+              "yank-operator",
+              "put-before"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "exclusive-range",
+              "yank-and-put"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Two SQL statements share a table opening that one keyword ends.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-operator-range"
+            ]
+          }
+        },
+        {
+          "id": "widen-field-visibility",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Open one field up",
+          "instruction": "Make the first field as visible as the field below it.",
+          "languageId": "java",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "private int count;",
+                "public int limit;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "public int count;",
+                "public int limit;"
+              ],
+              "cursor": [
+                0,
+                6
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "/",
+              "i",
+              "n",
+              "t",
+              "Enter",
+              "p",
+              "u",
+              "b",
+              "l",
+              "i",
+              "c",
+              " ",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "c",
+                "explanation": "Start a change and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "int",
+                "explanation": "Enter the pattern that ends the range."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "↵",
+                "explanation": "Run the search, remove the range, and enter Insert mode."
+              },
+              {
+                "from": 6,
+                "to": 13,
+                "display": "public ",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "operator-pending"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "int count;",
+                  "public int limit;"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "insert",
+                "caption": "Only the text before the match is gone; the type stayed."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "public int count;",
+                  "public int limit;"
+                ],
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Change takes the same ranges delete takes, and leaves you in Insert mode.",
+            "The type name is the match, so it survives the change."
+          ],
+          "feedback": {
+            "success": "Both fields now share a visibility.",
+            "why": "The change removed only the text before the match, then waited for the replacement."
+          },
+          "skills": {
+            "primary": [
+              "search-operator-range"
+            ],
+            "supporting": [
+              "change-operator",
+              "search-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "exclusive-range",
+              "insert-after-change"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Java field declarations put a visibility keyword in front of a type that ends it.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-operator-range"
+            ]
+          }
+        },
+        {
+          "id": "collapse-arguments-backward",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Replace what is behind the cursor",
+          "instruction": "Collapse the three arguments into a single “page” argument, leaving the parentheses in place.",
+          "languageId": "rust",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "render(header, body, footer);",
+                "flush();"
+              ],
+              "cursor": [
+                0,
+                27
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "render(page);",
+                "flush();"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "?",
+              "h",
+              "e",
+              "a",
+              "d",
+              "e",
+              "r",
+              "Enter",
+              "p",
+              "a",
+              "g",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "c",
+                "explanation": "Start a change and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "?",
+                "explanation": "Open a backward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 8,
+                "display": "header",
+                "explanation": "Enter the pattern that starts the range."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "↵",
+                "explanation": "Run the search, remove the range, and enter Insert mode."
+              },
+              {
+                "from": 9,
+                "to": 13,
+                "display": "page",
+                "explanation": "Enter the replacement text."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  27
+                ],
+                "mode": "operator-pending"
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "render();",
+                  "flush();"
+                ],
+                "mode": "insert",
+                "caption": "Backward, the range runs from the match up to the cursor, so the closing parenthesis stayed and Insert mode opens in its place."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "render(page);",
+                  "flush();"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The cursor is parked on what must survive.",
+            "A backward search starts the range at the match and ends it at the cursor."
+          ],
+          "feedback": {
+            "success": "One argument replaced three, and the call still closes.",
+            "why": "Backward, the match starts the range and the character under the cursor is left out of it."
+          },
+          "skills": {
+            "primary": [
+              "search-operator-range"
+            ],
+            "supporting": [
+              "change-operator",
+              "search-backward"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "backward-search",
+              "exclusive-boundary"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Rust call with three named arguments makes the surviving parenthesis visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-operator-range"
+            ]
+          }
+        },
+        {
+          "id": "predict-search-range-boundary",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Predict where the range stops",
+          "prompt": "The cursor is on the first character of the line. Which text does a delete whose range ends at the next `compute` match remove?",
+          "options": [
+            {
+              "id": "range-before-match",
+              "label": "`const value = `"
+            },
+            {
+              "id": "range-through-match",
+              "label": "`const value = compute`"
+            },
+            {
+              "id": "range-whole-call",
+              "label": "`const value = compute(input)`"
+            }
+          ],
+          "correctOptionId": "range-before-match",
+          "explanation": "A plain search range is exclusive: it ends where the match begins, so the matched text stays in the buffer. That is the boundary to expect whenever a plain pattern finishes an operator.",
+          "questionKind": "range-prediction",
+          "inspection": {
+            "initial": {
+              "lines": [
+                "const value = compute(input);"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "revealRange": {
+              "from": [
+                0,
+                0
+              ],
+              "to": [
+                0,
+                14
+              ]
+            }
+          },
+          "remediationRef": "search-range-meaning"
+        },
+        {
+          "id": "search-range-reach",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The same pattern will address lines",
+          "body": "A pattern that ends a range here is the same pattern that addresses lines on the command line in Unit 12, where `:/obsolete/delete` removes the line a search finds, and that selects every matching line in Unit 15. Naming text instead of counting it is the one idea behind all three.",
+          "contrast": "Real Vim can also move where a search lands: an offset such as `/pattern/e` finishes on the match's last character, which makes the range include the match. That form is real and gets its own practice later; every range in this lesson uses the plain pattern.",
+          "routes": [
+            {
+              "id": "review-search-range",
+              "label": "Review the search range",
+              "activityRef": "search-range-meaning",
+              "emphasis": "secondary"
+            }
+          ]
         }
       ]
     },
@@ -5159,7 +6071,8 @@
           "takeaways": [
             "`f/F/t/T` target literal characters on the current line; `;` and `,` reuse that target.",
             "`/`, `?`, `n`, `N`, and cursor-word searches retrieve text across the buffer.",
-            "`gn/gN` turn matches into ranges, `%` follows pairs, and sentence or paragraph motions follow text landmarks."
+            "`gn/gN` turn matches into ranges, `%` follows pairs, and sentence or paragraph motions follow text landmarks.",
+            "`d/pattern`, `y/pattern`, and `c?pattern` hand a search to an operator; the range stops where the match begins."
           ],
           "routes": [
             {
@@ -5225,6 +6138,21 @@
       "exampleActivityRefs": [
         "cursor-word-search-demo",
         "search-previous-substring"
+      ]
+    },
+    {
+      "id": "search-operator-range-reference",
+      "command": "d/pattern Enter · y/pattern Enter · c/pattern Enter · c?pattern Enter",
+      "purpose": "Complete an operator with a search so a pattern marks where the range stops.",
+      "notes": [
+        "A plain search range is exclusive: it ends where the match begins and leaves the match in the buffer.",
+        "Backward with ?, the range runs from the match to the cursor and leaves the character under the cursor in place.",
+        "Vim's search offsets, such as /pattern/e, move where a search lands; this unit practises the plain pattern."
+      ],
+      "exampleActivityRefs": [
+        "search-range-demo",
+        "copy-row-prefix",
+        "collapse-arguments-backward"
       ]
     },
     {
@@ -5354,6 +6282,27 @@
       ],
       "challenge": [
         "search-previous-substring"
+      ]
+    },
+    {
+      "concept": "operator plus search range",
+      "explain": [
+        "search-range-meaning",
+        "search-range-reach"
+      ],
+      "demonstrate": [
+        "search-range-demo"
+      ],
+      "isolate": [
+        "trim-to-level-tag"
+      ],
+      "mix": [
+        "copy-row-prefix",
+        "widen-field-visibility"
+      ],
+      "challenge": [
+        "collapse-arguments-backward",
+        "predict-search-range-boundary"
       ]
     },
     {

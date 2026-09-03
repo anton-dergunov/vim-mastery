@@ -40,7 +40,7 @@
     "read-only registers (\". last inserted text, \": last Ex command, \"/ last search pattern)",
     "Insert-mode command keys (Ctrl-r{register}, Ctrl-o for one Normal command, Ctrl-w, and Ctrl-u)",
     "command-line register insertion (Ctrl-r{register} on the Ex and search prompts)",
-    "search as an operator range (d/pat, y/pat, c?pat, with Vim's exclusive match boundary)",
+    "search as an operator range (d/pat, y/pat, c/pat, c?pat, with Vim's exclusive match boundary, and Escape aborting the pending operator)",
     "Visual Block ragged right edge ($ with A, I, and d)",
     "Visual increment and decrement over a selection (Ctrl-a, Ctrl-x, g Ctrl-a, g Ctrl-x)"
   ],

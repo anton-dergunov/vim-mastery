@@ -444,6 +444,32 @@ export const conformanceFixtures = Object.freeze([
     targetCursor: [0, 6],
   },
   {
+    id: "change-to-search-match-is-exclusive",
+    initialCode: ["private int count;"],
+    cursor: [0, 0],
+    keys: ["c", ..."/int", "Enter", ..."public ", "Escape"],
+    targetCode: ["public int count;"],
+    targetCursor: [0, 6],
+  },
+  {
+    id: "escape-cancels-operator-pending-search",
+    initialCode: ["const value = compute(input);"],
+    cursor: [0, 0],
+    keys: ["d", ..."/compute", "Escape"],
+    targetCode: ["const value = compute(input);"],
+    targetCursor: [0, 0],
+    targetMode: "normal",
+  },
+  {
+    id: "failed-search-range-leaves-buffer-untouched",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 6],
+    keys: ["d", ..."/zeta", "Enter"],
+    targetCode: ["alpha beta gamma"],
+    targetCursor: [0, 6],
+    targetMode: "normal",
+  },
+  {
     // DROPPED. The adapter reads everything after an unescaped `/` as search
     // flags and understands only `i`, so the offset is discarded and the search
     // silently succeeds at the wrong place. Supporting it means changing query
