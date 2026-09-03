@@ -7,11 +7,11 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "8. Registers and putting",
-    "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`",
+    "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
     "prerequisites": "Units 1–6, especially `y d c p`",
     "learningOutcome": "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
     "representativeExercises": "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
-    "priorityAndPortability": "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed"
+    "priorityAndPortability": "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed. Insert-mode `Ctrl-r` is native Vim; a host editor that embeds Vim may claim that Ctrl chord by default, so check the host you are in"
   },
   "prerequisiteSkillIds": [
     "modal-model",
@@ -8773,6 +8773,1314 @@
       ]
     },
     {
+      "id": "type-registers-while-inserting",
+      "title": "Type a register without leaving Insert",
+      "objective": "Insert stored text straight into an edit with Ctrl-r, choosing the register that still holds the value you want.",
+      "activities": [
+        {
+          "id": "insert-register-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Registers reach into Insert mode",
+          "body": "`Ctrl-r` followed by a register name types that register's contents at the cursor and leaves you in Insert mode. It reads the register without changing it, so the same value is still there for the next put. Every register works this way: `0` for the last yank, `\"` for the unnamed register, a letter for a named one, and the read-only `.`, `:`, and `/` for what you last inserted, ran, and searched for. Some editors that embed Vim claim this chord for themselves, so check the host you are in.",
+          "grammar": "Ctrl-r0 → last yank · Ctrl-r\" → unnamed · Ctrl-ra → named a · Ctrl-r/ → last search",
+          "contrast": "A put from Normal mode ends the insert and lands the text beside the cursor. Ctrl-r keeps one edit as one insert and types the text exactly where you are.",
+          "demoRef": "carry-a-yank-into-a-new-call"
+        },
+        {
+          "id": "carry-a-yank-into-a-new-call",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Carry a value into a call somewhere else",
+          "instruction": "Reuse the configured timeout as a second argument to the connect call, without typing the number again.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "default_timeout = 30",
+                "connect(host)"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "default_timeout = 30",
+                "connect(host, 30)"
+              ],
+              "cursor": [
+                1,
+                15
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "30"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "30"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "y",
+              "i",
+              "w",
+              "j",
+              "f",
+              ")",
+              "i",
+              ",",
+              " ",
+              "Ctrl-r",
+              "0",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yiw",
+                "explanation": "Yank the value into the yank register."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "jf)",
+                "explanation": "Travel to the call that needs it."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "i",
+                "explanation": "Open Insert mode before the closing parenthesis."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": ", ",
+                "explanation": "Type the separator."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "Ctrl-r0",
+                "explanation": "Type the yanked value straight into the insert."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "default_timeout = 30",
+                  "connect(host)"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "30"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "30"
+                  }
+                },
+                "caption": "The value is stored and the buffer is untouched."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "default_timeout = 30",
+                  "connect(host, 30)"
+                ],
+                "cursor": [
+                  1,
+                  15
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "30"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "30"
+                  }
+                },
+                "caption": "The register supplied the text and still holds it."
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "default_timeout = 30",
+                  "connect(host, 30)"
+                ],
+                "cursor": [
+                  1,
+                  15
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "30"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "30"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The call carries the configured value, typed from storage.",
+            "why": "Ctrl-r0 read the yank register into the insert without ending it or changing what the register holds.",
+            "contrast": "Escaping to put the value would have split one edit in two and landed the text beside the cursor rather than at it."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "yank-register-zero",
+              "character-search"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "cross-line-reuse"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A configured constant reused in a call is the everyday shape of yank here, type there.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "type-the-unnamed-register",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Repeat a value into the next line",
+          "instruction": "Give the proxy the same host value as the line above, without typing the name a second time.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "HOST=localhost",
+                "PROXY="
+              ],
+              "cursor": [
+                0,
+                5
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "HOST=localhost",
+                "PROXY=localhost"
+              ],
+              "cursor": [
+                1,
+                14
+              ],
+              "mode": "normal",
+              "registers": {
+                "\"": {
+                  "type": "characterwise",
+                  "text": "localhost"
+                },
+                "0": {
+                  "type": "characterwise",
+                  "text": "localhost"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "y",
+              "i",
+              "w",
+              "j",
+              "A",
+              "Ctrl-r",
+              "\"",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "yiw",
+                "explanation": "Yank the value, filling the unnamed register."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "j",
+                "explanation": "Move to the line that needs it."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "A",
+                "explanation": "Open Insert mode at the end of the line."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "Ctrl-r\"",
+                "explanation": "Type the unnamed register's contents."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "HOST=localhost",
+                  "PROXY="
+                ],
+                "cursor": [
+                  0,
+                  5
+                ],
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "localhost"
+                  },
+                  "0": {
+                    "type": "characterwise",
+                    "text": "localhost"
+                  }
+                },
+                "caption": "A yank fills the unnamed register as well as the yank register."
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "HOST=localhost",
+                  "PROXY=localhost"
+                ],
+                "cursor": [
+                  1,
+                  14
+                ],
+                "registers": {
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "localhost"
+                  },
+                  "0": {
+                    "type": "characterwise",
+                    "text": "localhost"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The value is already stored; the insert can read it back.",
+            "The unnamed register is named by the double-quote character.",
+            "Use `yiw`, `j`, `A`, then `Ctrl-r` and `\"`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "Both variables hold the same host value.",
+            "why": "The yank filled the unnamed register, and Ctrl-r\" typed it into the insert unchanged."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "unnamed-register"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "register-selection"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Two environment variables that must agree make an exact repeat the obvious goal.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "retype-your-last-insertion",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Repeat the suffix you just typed",
+          "instruction": "Give both table names the “_2026” suffix, typing that suffix only once.",
+          "languageId": "sql",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "users",
+                "orders"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "users_2026",
+                "orders_2026"
+              ],
+              "cursor": [
+                1,
+                10
+              ],
+              "mode": "normal",
+              "registers": {
+                ".": {
+                  "type": "characterwise",
+                  "text": "_2026"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              "_",
+              "2",
+              "0",
+              "2",
+              "6",
+              "Escape",
+              "j",
+              "A",
+              "Ctrl-r",
+              ".",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Open Insert mode at the end of the first name."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "_2026",
+                "explanation": "Type the suffix."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "Esc",
+                "explanation": "Close the insert, which fills the last-insert register."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "j",
+                "explanation": "Move to the second name."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "A",
+                "explanation": "Open Insert mode at its end."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "Ctrl-r.",
+                "explanation": "Type whatever was last inserted."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "users_2026",
+                  "orders"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": "_2026"
+                  }
+                },
+                "caption": "Ending the insert recorded exactly what was typed."
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "users_2026",
+                  "orders_2026"
+                ],
+                "cursor": [
+                  1,
+                  10
+                ],
+                "registers": {
+                  ".": {
+                    "type": "characterwise",
+                    "text": "_2026"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Vim already recorded the text of the last insertion.",
+            "The last-insert register is named by the period.",
+            "Use `A_2026`, `Esc`, `j`, `A`, then `Ctrl-r` and `.`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "Both tables carry the same suffix.",
+            "why": "Closing the first insert filled the last-insert register, and Ctrl-r. replayed its text into the second one.",
+            "contrast": "Nothing was yanked here, so the yank register was never involved."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "read-only-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "register-selection"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "Two table names needing an identical suffix is the shortest honest case for replaying an insertion.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "type-a-named-register",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Carry a stored value to the bottom of the file",
+          "instruction": "Store the server port under the letter a, then give the worker section the same port.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[server]",
+                "port = 8080",
+                "[worker]",
+                "port ="
+              ],
+              "cursor": [
+                1,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "[server]",
+                "port = 8080",
+                "[worker]",
+                "port = 8080"
+              ],
+              "cursor": [
+                3,
+                10
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "characterwise",
+                  "text": "8080"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "\"",
+              "a",
+              "y",
+              "i",
+              "w",
+              "G",
+              "A",
+              " ",
+              "Ctrl-r",
+              "a",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 5,
+                "display": "\"ayiw",
+                "explanation": "Yank the port into the named register a."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "G",
+                "explanation": "Move to the last line."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "A",
+                "explanation": "Open Insert mode at its end."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": " ",
+                "explanation": "Type the separating space."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "Ctrl-ra",
+                "explanation": "Type the contents of register a."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "[server]",
+                  "port = 8080",
+                  "[worker]",
+                  "port ="
+                ],
+                "cursor": [
+                  1,
+                  7
+                ],
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "8080"
+                  }
+                },
+                "caption": "The value is filed under a letter you chose."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "[server]",
+                  "port = 8080",
+                  "[worker]",
+                  "port = 8080"
+                ],
+                "cursor": [
+                  3,
+                  10
+                ],
+                "registers": {
+                  "a": {
+                    "type": "characterwise",
+                    "text": "8080"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "A named register survives anything that happens in between.",
+            "The insert can read that letter back without ending.",
+            "Use `\"ayiw`, `G`, `A`, a space, then `Ctrl-r` and `a`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "Both sections declare the same port.",
+            "why": "The named register held the value across the move, and Ctrl-ra typed it into the insert."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "named-registers"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "register-selection"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A configuration file with two sections gives a real reason to carry one value past unrelated lines.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "reach-past-the-newest-delete",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reuse a yank that a delete came after",
+          "instruction": "Remove the obsolete line, then give the release the same value as the version above it.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "version = 2.1",
+                "obsolete = 0",
+                "release ="
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "version = 2.1",
+                "release = 2.1"
+              ],
+              "cursor": [
+                1,
+                12
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "2.1"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "obsolete = 0\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "y",
+              "$",
+              "j",
+              "d",
+              "d",
+              "A",
+              " ",
+              "Ctrl-r",
+              "0",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "y$",
+                "explanation": "Yank the value to the end of the line."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "j",
+                "explanation": "Move to the obsolete line."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "dd",
+                "explanation": "Delete it, which overwrites the unnamed register."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "A",
+                "explanation": "Open Insert mode at the end of the remaining line."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": " ",
+                "explanation": "Type the separating space."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "Ctrl-r0",
+                "explanation": "Type the yank, which the delete did not touch."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "version = 2.1",
+                  "obsolete = 0",
+                  "release ="
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "2.1"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "2.1"
+                  }
+                },
+                "caption": "Right after the yank both registers agree."
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "version = 2.1",
+                  "release ="
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "2.1"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "obsolete = 0\n"
+                  }
+                },
+                "caption": "The delete claimed the unnamed register; the yank register kept the value."
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "version = 2.1",
+                  "release = 2.1"
+                ],
+                "cursor": [
+                  1,
+                  12
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "2.1"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "obsolete = 0\n"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "A delete overwrites the unnamed register, so that one no longer holds the value.",
+            "One register only ever holds the most recent yank.",
+            "Use `y$`, `j`, `dd`, `A`, a space, then `Ctrl-r` and `0`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The release matches the version, despite the delete in between.",
+            "why": "The delete replaced the unnamed register with a whole line, while the yank register still held the value that was yanked.",
+            "contrast": "Ctrl-r\" here would have typed the deleted line instead of the version number."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "yank-register-zero",
+              "unnamed-register"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "register-selection",
+              "delete-overwrites-unnamed"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A version file makes the wrong register's contents obviously wrong when it lands in the text.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "record-the-pattern-you-searched",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Write down the name you just searched for",
+          "instruction": "Confirm every use of the parameter name with a search, then record that name in the trailing comment without typing it again.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def parse(payload):",
+                "    return payload",
+                "# renamed:"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def parse(payload):",
+                "    return payload",
+                "# renamed: payload"
+              ],
+              "cursor": [
+                2,
+                17
+              ],
+              "mode": "normal",
+              "registers": {
+                "/": {
+                  "type": "characterwise",
+                  "text": "payload"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "p",
+              "a",
+              "y",
+              "l",
+              "o",
+              "a",
+              "d",
+              "Enter",
+              "j",
+              "j",
+              "A",
+              " ",
+              "Ctrl-r",
+              "/",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "/payload↵",
+                "explanation": "Search for the name so every use is visible first."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "jj",
+                "explanation": "Move down to the comment."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "A",
+                "explanation": "Open Insert mode at its end."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": " ",
+                "explanation": "Type the separating space."
+              },
+              {
+                "from": 13,
+                "to": 15,
+                "display": "Ctrl-r/",
+                "explanation": "Type the pattern the search stored."
+              },
+              {
+                "from": 15,
+                "to": 16,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "lines": [
+                  "def parse(payload):",
+                  "    return payload",
+                  "# renamed:"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "payload"
+                  }
+                },
+                "caption": "The confirmed pattern is now in the search register."
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "def parse(payload):",
+                  "    return payload",
+                  "# renamed: payload"
+                ],
+                "cursor": [
+                  2,
+                  17
+                ],
+                "registers": {
+                  "/": {
+                    "type": "characterwise",
+                    "text": "payload"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The search already stored the exact text it matched.",
+            "The search register is named by the slash, and the insert can read it.",
+            "Use `/payload↵`, `jj`, `A`, a space, then `Ctrl-r` and `/`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The comment records exactly the name the search confirmed.",
+            "why": "The search filled the search register, and Ctrl-r/ typed it into the insert, so the note cannot disagree with what was matched.",
+            "contrast": "Retyping the name is how a note and the code it describes drift apart."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "read-only-registers",
+              "search-pattern"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "register-selection",
+              "read-only-reuse"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A rename note beside the code it describes is only trustworthy if it comes from the search itself.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "carry-a-value-into-a-command",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Build a command around a stored value",
+          "instruction": "Turn the second line into a listing for the bucket declared above it, without retyping the bucket name.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "BUCKET=prod-assets",
+                "aws s3 ls"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "BUCKET=prod-assets",
+                "aws s3 ls s3://prod-assets"
+              ],
+              "cursor": [
+                1,
+                25
+              ],
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "prod-assets"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "=",
+              "l",
+              "y",
+              "$",
+              "j",
+              "A",
+              " ",
+              "s",
+              "3",
+              ":",
+              "/",
+              "/",
+              "Ctrl-r",
+              "0",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "f=l",
+                "explanation": "Land on the first character of the value."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "y$",
+                "explanation": "Yank the value to the end of the line."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "j",
+                "explanation": "Move to the command."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "A",
+                "explanation": "Open Insert mode at its end."
+              },
+              {
+                "from": 7,
+                "to": 13,
+                "display": " s3://",
+                "explanation": "Type the scheme the command needs."
+              },
+              {
+                "from": 13,
+                "to": 15,
+                "display": "Ctrl-r0",
+                "explanation": "Type the yanked bucket name."
+              },
+              {
+                "from": 15,
+                "to": 16,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "BUCKET=prod-assets",
+                  "aws s3 ls"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "prod-assets"
+                  }
+                },
+                "caption": "The bucket name is stored and the buffer is unchanged."
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "BUCKET=prod-assets",
+                  "aws s3 ls s3://prod-assets"
+                ],
+                "cursor": [
+                  1,
+                  25
+                ],
+                "registers": {
+                  "0": {
+                    "type": "characterwise",
+                    "text": "prod-assets"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The name is already on screen; storing it beats reading it twice.",
+            "The insert can type the yank register in the middle of the command.",
+            "Use `f=l`, `y$`, `j`, `A`, ` s3://`, then `Ctrl-r` and `0`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The command addresses the declared bucket exactly.",
+            "why": "The yank register carried the value into the middle of a command that was still being typed.",
+            "contrast": "A retyped bucket name is a command that runs against the wrong place."
+          },
+          "skills": {
+            "primary": [
+              "insert-register"
+            ],
+            "supporting": [
+              "yank-register-zero",
+              "character-search"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "cross-line-reuse",
+              "register-selection"
+            ]
+          },
+          "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A shell command built around a declared variable is where a mistyped value costs the most.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-register"
+            ]
+          }
+        }
+      ]
+    },
+    {
       "id": "integrate-register-decisions",
       "title": "Choose the right register and put",
       "objective": "Select storage and placement from the edit's actual risk and desired continuation point.",
@@ -10012,6 +11320,22 @@
       "exampleActivityRefs": [
         "inspect-plus-register"
       ]
+    },
+    {
+      "id": "insert-register-reference",
+      "command": "Ctrl-r{register} (Insert mode)",
+      "purpose": "Type a register's contents into the text you are inserting.",
+      "notes": [
+        "Reads the register without changing it, and keeps the insert open.",
+        "\"0 still holds the last yank after a delete has claimed the unnamed register.",
+        "The read-only \". \": and \"/ registers work here too.",
+        "Some editors that embed Vim claim this chord for themselves; check the host you are in."
+      ],
+      "exampleActivityRefs": [
+        "carry-a-yank-into-a-new-call",
+        "reach-past-the-newest-delete",
+        "record-the-pattern-you-searched"
+      ]
     }
   ],
   "coverage": [
@@ -10198,6 +11522,27 @@
       "challenge": [
         "substitute-without-retyping",
         "choose-pattern-source"
+      ]
+    },
+    {
+      "concept": "Insert-mode register insertion",
+      "explain": [
+        "insert-register-meanings"
+      ],
+      "demonstrate": [
+        "carry-a-yank-into-a-new-call"
+      ],
+      "isolate": [
+        "type-the-unnamed-register",
+        "retype-your-last-insertion"
+      ],
+      "mix": [
+        "type-a-named-register",
+        "reach-past-the-newest-delete"
+      ],
+      "challenge": [
+        "record-the-pattern-you-searched",
+        "carry-a-value-into-a-command"
       ]
     },
     {

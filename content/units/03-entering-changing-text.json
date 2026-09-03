@@ -8,11 +8,11 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "3. Entering and changing text",
-    "commandsAndConcepts": "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
+    "commandsAndConcepts": "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`; Insert-mode `Ctrl-w`, `Ctrl-u`, `Ctrl-o`",
     "prerequisites": "Units 1–2",
     "learningOutcome": "Choose a precise entry/change command, undo safely, and perform common local transformations",
     "representativeExercises": "Append an argument; open a line; build a divider with a counted insert; replace a delimiter; join a wrapped statement; change case; increment a version number",
-    "priorityAndPortability": "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced"
+    "priorityAndPortability": "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced. The Insert-mode command keys are native Vim; a host editor that embeds Vim may claim those Ctrl chords by default, so check the host you are in"
   },
   "prerequisiteSkillIds": [
     "modal-model",
@@ -3659,6 +3659,1123 @@
       ]
     },
     {
+      "id": "insert-mode-commands",
+      "title": "Repair and reach inside Insert mode",
+      "objective": "Delete a mistyped word, clear the text you just entered, and borrow one Normal-mode command without ending the insert.",
+      "activities": [
+        {
+          "id": "insert-command-key-meanings",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Insert mode has commands of its own",
+          "body": "Insert mode is not only for typing. `Ctrl-w` deletes the word before the cursor, `Ctrl-u` clears the text you have entered during this insert, and `Ctrl-o` runs one Normal-mode command and returns you to Insert mode. Neither `Ctrl-w` nor `Ctrl-u` reaches back past the point where the insert began, so they erase what you just typed and leave the rest of the line alone. All three keep the insert open, which keeps one long edit as one entry in the undo history. Some editors that embed Vim claim these chords for themselves, so check the host you are in.",
+          "grammar": "Ctrl-w → word back · Ctrl-u → back to the insert start · Ctrl-o → one Normal command",
+          "contrast": "`x`, `X`, and `u` all need Normal mode first. These do the same repair work without leaving the insert.",
+          "demoRef": "insert-correction-demo"
+        },
+        {
+          "id": "insert-correction-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Correct a name without leaving the insert",
+          "instruction": "Add a second import name and repair the misspelling in the same insert.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "from math import sqrt"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "from math import sqrt, floor"
+              ],
+              "cursor": [
+                0,
+                27
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ",",
+              " ",
+              "f",
+              "l",
+              "o",
+              "r",
+              "Ctrl-w",
+              "f",
+              "l",
+              "o",
+              "o",
+              "r",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Open Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": ", flor",
+                "explanation": "Type the separator and a misspelled name."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "Ctrl-w",
+                "explanation": "Delete the word just typed, leaving the separator."
+              },
+              {
+                "from": 8,
+                "to": 13,
+                "display": "floor",
+                "explanation": "Type the name correctly."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "from math import sqrt, flor"
+                ],
+                "cursor": [
+                  0,
+                  26
+                ],
+                "caption": "The name is wrong, and the insert is still open."
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "from math import sqrt, "
+                ],
+                "cursor": [
+                  0,
+                  22
+                ],
+                "caption": "Ctrl-w removed only the word, not the separator before it."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "from math import sqrt, floor"
+                ],
+                "cursor": [
+                  0,
+                  27
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The import list is correct and the whole edit was one insert.",
+            "why": "Ctrl-w deleted back to the previous word boundary, so retyping resumed where the mistake started.",
+            "contrast": "Leaving for Normal mode to fix it would have split one change into three."
+          },
+          "skills": {
+            "primary": [
+              "insert-delete-word"
+            ],
+            "supporting": [
+              "line-end-append"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "insert-mode-repair"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "An import list makes a misspelled name obvious and gives a natural word boundary to delete back to.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-delete-word"
+            ]
+          }
+        },
+        {
+          "id": "borrow-normal-mode-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Reach the far end of the line and keep typing",
+          "instruction": "Add the declaration keyword at the front and the terminator at the end during a single insert.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "  total = price * qty"
+              ],
+              "cursor": [
+                0,
+                2
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "  const total = price * qty;"
+              ],
+              "cursor": [
+                0,
+                27
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "I",
+              "c",
+              "o",
+              "n",
+              "s",
+              "t",
+              " ",
+              "Ctrl-o",
+              "$",
+              ";",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "I",
+                "explanation": "Open Insert mode at the first non-blank character."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": "const ",
+                "explanation": "Type the declaration keyword."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "Ctrl-o$",
+                "explanation": "Borrow Normal mode for one motion to the end of the line."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ";",
+                "explanation": "Keep typing, now at the other end."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "  const total = price * qty"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "caption": "The keyword is in, and the cursor is still where it was typed."
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "  const total = price * qty"
+                ],
+                "cursor": [
+                  0,
+                  26
+                ],
+                "caption": "One Normal-mode motion moved the cursor and handed Insert mode straight back."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "  const total = price * qty;"
+                ],
+                "cursor": [
+                  0,
+                  27
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Both ends of the line changed inside one insert.",
+            "why": "Ctrl-o ran exactly one command and returned to Insert mode, so the insert never ended.",
+            "contrast": "Escaping to Normal mode and reopening the insert would record two separate changes."
+          },
+          "skills": {
+            "primary": [
+              "insert-one-normal-command"
+            ],
+            "supporting": [
+              "first-non-blank-insert",
+              "line-end-motion"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "mode-bridge"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A declaration needing both a leading keyword and a trailing semicolon is the clearest case for one borrowed motion.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-one-normal-command"
+            ]
+          }
+        },
+        {
+          "id": "retype-a-mistyped-argument",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Repair an argument you mistyped",
+          "instruction": "Start a second argument named “layuot”, then correct it to “layout” without ending the insert.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "render(page)"
+              ],
+              "cursor": [
+                0,
+                11
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "render(page, layout)"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "i",
+              ",",
+              " ",
+              "l",
+              "a",
+              "y",
+              "u",
+              "o",
+              "t",
+              "Ctrl-w",
+              "l",
+              "a",
+              "y",
+              "o",
+              "u",
+              "t",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "i",
+                "explanation": "Open Insert mode before the closing parenthesis."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": ", layuot",
+                "explanation": "Type the separator and the misspelled argument."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "Ctrl-w",
+                "explanation": "Delete the misspelled word."
+              },
+              {
+                "from": 10,
+                "to": 16,
+                "display": "layout",
+                "explanation": "Type the argument correctly."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 10,
+                "lines": [
+                  "render(page, )"
+                ],
+                "cursor": [
+                  0,
+                  12
+                ],
+                "caption": "Only the word went; the separator and the parenthesis stayed."
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "render(page, layout)"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The insert does not have to end for the word to go.",
+            "One chord deletes back to the start of the word before the cursor.",
+            "Use `i, layuot` then `Ctrl-w`, `layout`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The call passes a correctly spelled second argument.",
+            "why": "Ctrl-w removed the word before the cursor and stopped at the space, so the separator survived."
+          },
+          "skills": {
+            "primary": [
+              "insert-delete-word"
+            ],
+            "supporting": [
+              "insert-before-cursor"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "insert-mode-repair"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A call with one argument gives a closing parenthesis to insert before and a clear word to repair.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-delete-word"
+            ]
+          }
+        },
+        {
+          "id": "clear-what-you-typed",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Discard a suffix you just entered",
+          "instruction": "Append “.local” to the host name, then discard that whole insertion and finish with “.test” instead.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "host = api.dev"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "host = api.dev.test"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              ".",
+              "l",
+              "o",
+              "c",
+              "a",
+              "l",
+              "Ctrl-u",
+              ".",
+              "t",
+              "e",
+              "s",
+              "t",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Open Insert mode at the end of the line."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": ".local",
+                "explanation": "Type the first suffix."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "Ctrl-u",
+                "explanation": "Clear everything entered during this insert."
+              },
+              {
+                "from": 8,
+                "to": 13,
+                "display": ".test",
+                "explanation": "Type the intended suffix."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "host = api.dev"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "caption": "The typed suffix is gone and the original value is untouched."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "host = api.dev.test"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "One chord clears the whole insertion at once.",
+            "It stops at the point where the insert began, so the existing value is safe.",
+            "Use `A.local` then `Ctrl-u`, `.test`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The host name ends in the intended suffix.",
+            "why": "Ctrl-u deleted back to the start of the insert, not to the start of the line, so “host = api.dev” survived.",
+            "contrast": "Holding Backspace would have crossed that boundary and eaten the value too."
+          },
+          "skills": {
+            "primary": [
+              "insert-clear-insertion"
+            ],
+            "supporting": [
+              "line-end-append"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "insert-mode-repair"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A configuration value proves the boundary: everything before the insert has to survive the clear.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-clear-insertion"
+            ]
+          }
+        },
+        {
+          "id": "replace-a-whole-argument-list",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Start an argument list over",
+          "instruction": "Begin a “color=red” argument inside the call, then discard everything typed and finish with “fill=blue” instead.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draw(shape)"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "draw(shape, fill=blue)"
+              ],
+              "cursor": [
+                0,
+                20
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "i",
+              ",",
+              " ",
+              "c",
+              "o",
+              "l",
+              "o",
+              "r",
+              "=",
+              "r",
+              "e",
+              "d",
+              "Ctrl-u",
+              ",",
+              " ",
+              "f",
+              "i",
+              "l",
+              "l",
+              "=",
+              "b",
+              "l",
+              "u",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "i",
+                "explanation": "Open Insert mode before the closing parenthesis."
+              },
+              {
+                "from": 1,
+                "to": 12,
+                "display": ", color=red",
+                "explanation": "Type the first argument."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "Ctrl-u",
+                "explanation": "Clear the whole insertion."
+              },
+              {
+                "from": 13,
+                "to": 24,
+                "display": ", fill=blue",
+                "explanation": "Type the intended argument."
+              },
+              {
+                "from": 24,
+                "to": 25,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "draw(shape, color=red)"
+                ],
+                "cursor": [
+                  0,
+                  20
+                ],
+                "caption": "The first attempt is complete but wrong."
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "draw(shape)"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "caption": "The call is back to its original text; nothing outside the insert moved."
+              },
+              {
+                "afterStep": 25,
+                "lines": [
+                  "draw(shape, fill=blue)"
+                ],
+                "cursor": [
+                  0,
+                  20
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The whole insertion can go in one stroke.",
+            "The clear stops where the insert started, so the call itself is safe.",
+            "Use `i, color=red` then `Ctrl-u`, `, fill=blue`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The call passes the intended argument.",
+            "why": "Ctrl-u erased every character entered during the insert while leaving the surrounding call intact."
+          },
+          "skills": {
+            "primary": [
+              "insert-clear-insertion"
+            ],
+            "supporting": [
+              "insert-before-cursor"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "insert-mode-repair"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A drawing call keeps the discarded and the intended argument the same shape, so only the clear is being tested.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-clear-insertion"
+            ]
+          }
+        },
+        {
+          "id": "truncate-while-inserting",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Drop the rest of the line while typing",
+          "instruction": "Give the label the value “final”, removing the words that used to follow, all inside one insert.",
+          "languageId": "ruby",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "label = 'draft copy'"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "label = 'final'"
+              ],
+              "cursor": [
+                0,
+                14
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "i",
+              "f",
+              "i",
+              "n",
+              "a",
+              "l",
+              "Ctrl-o",
+              "D",
+              "'",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "i",
+                "explanation": "Open Insert mode before the old value."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "final",
+                "explanation": "Type the new value."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "Ctrl-oD",
+                "explanation": "Borrow Normal mode for one command that deletes the rest of the line."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "'",
+                "explanation": "Close the string, still inserting."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 6,
+                "lines": [
+                  "label = 'finaldraft copy'"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "caption": "The new value is in place, with the old text still trailing it."
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "label = 'final"
+                ],
+                "cursor": [
+                  0,
+                  13
+                ],
+                "caption": "One borrowed command removed everything from the cursor onward."
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "label = 'final'"
+                ],
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The insert can borrow a Normal-mode command without ending.",
+            "One command deletes from the cursor to the end of the line.",
+            "Use `ifinal` then `Ctrl-o`, `D`, `'`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The label holds the new value and nothing trails it.",
+            "why": "Ctrl-o ran a single delete-to-end-of-line and handed Insert mode straight back, so the closing quote was typed in the same insert."
+          },
+          "skills": {
+            "primary": [
+              "insert-one-normal-command"
+            ],
+            "supporting": [
+              "delete-to-line-end"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "mode-bridge"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A quoted value with trailing words needs both a replacement and a truncation, which is what one borrowed command buys.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-one-normal-command"
+            ]
+          }
+        },
+        {
+          "id": "complete-the-signature",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Finish a definition from the middle",
+          "instruction": "Give the function a “dry_run=False” parameter after a mistyped first attempt, then close the definition with its colon, without ending the insert.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def save(record)"
+              ],
+              "cursor": [
+                0,
+                15
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def save(record, dry_run=False):"
+              ],
+              "cursor": [
+                0,
+                31
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "i",
+              ",",
+              " ",
+              "d",
+              "r",
+              "y",
+              "_",
+              "r",
+              "n",
+              "u",
+              "Ctrl-w",
+              "d",
+              "r",
+              "y",
+              "_",
+              "r",
+              "u",
+              "n",
+              "=",
+              "F",
+              "a",
+              "l",
+              "s",
+              "e",
+              "Ctrl-o",
+              "$",
+              ":",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "i",
+                "explanation": "Open Insert mode before the closing parenthesis."
+              },
+              {
+                "from": 1,
+                "to": 10,
+                "display": ", dry_rnu",
+                "explanation": "Type the separator and a misspelled parameter name."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "Ctrl-w",
+                "explanation": "Delete the misspelled name."
+              },
+              {
+                "from": 11,
+                "to": 24,
+                "display": "dry_run=False",
+                "explanation": "Type the parameter and its default."
+              },
+              {
+                "from": 24,
+                "to": 26,
+                "display": "Ctrl-o$",
+                "explanation": "Borrow Normal mode for one motion to the end of the line."
+              },
+              {
+                "from": 26,
+                "to": 27,
+                "display": ":",
+                "explanation": "Close the definition."
+              },
+              {
+                "from": 27,
+                "to": 28,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "def save(record, )"
+                ],
+                "cursor": [
+                  0,
+                  16
+                ],
+                "caption": "The underscore counts as part of the word, so the whole name went."
+              },
+              {
+                "afterStep": 24,
+                "lines": [
+                  "def save(record, dry_run=False)"
+                ],
+                "cursor": [
+                  0,
+                  29
+                ],
+                "caption": "The parameter is complete, but the cursor is inside the parentheses."
+              },
+              {
+                "afterStep": 26,
+                "lines": [
+                  "def save(record, dry_run=False)"
+                ],
+                "cursor": [
+                  0,
+                  30
+                ],
+                "caption": "One motion moved past the parenthesis without ending the insert."
+              },
+              {
+                "afterStep": 28,
+                "lines": [
+                  "def save(record, dry_run=False):"
+                ],
+                "cursor": [
+                  0,
+                  31
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Both repairs happen without leaving Insert mode.",
+            "One chord deletes the word before the cursor; another borrows a single motion to the line end.",
+            "Use `i, dry_rnu` then `Ctrl-w`, `dry_run=False`, `Ctrl-o`, `$`, `:`, and `Esc`."
+          ],
+          "feedback": {
+            "success": "The definition takes the new parameter and ends with its colon.",
+            "why": "Ctrl-w deleted the whole underscored name, and Ctrl-o ran one motion so the colon was typed in the same insert.",
+            "contrast": "Escaping between the two repairs would have recorded three changes instead of one."
+          },
+          "skills": {
+            "primary": [
+              "insert-delete-word",
+              "insert-one-normal-command"
+            ],
+            "supporting": [
+              "insert-before-cursor"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "insert-mode-repair",
+              "mode-bridge"
+            ]
+          },
+          "portability": "Native Vim in every mode. A host editor that embeds Vim may claim this chord by default, so check the host you are in.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "entering-changing-text-v1",
+            "languageRationale": "A Python signature needs an edit inside the parentheses and another past them, which is exactly the pair of keys being combined.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-delete-word",
+              "insert-one-normal-command"
+            ]
+          }
+        }
+      ]
+    },
+    {
       "id": "join-logical-lines",
       "title": "Join lines with deliberate spacing",
       "objective": "Use J or gJ according to whether boundary whitespace should be normalized or preserved.",
@@ -5690,6 +6807,22 @@
       ]
     },
     {
+      "id": "insert-command-keys-reference",
+      "command": "Ctrl-w / Ctrl-u / Ctrl-o",
+      "purpose": "Repair or reach without ending the insert.",
+      "notes": [
+        "Ctrl-w deletes the word before the cursor; Ctrl-u clears the text entered during this insert.",
+        "Neither reaches back past the point where the insert began.",
+        "Ctrl-o runs exactly one Normal-mode command and returns to Insert mode.",
+        "Some editors that embed Vim claim these chords for themselves; check the host you are in."
+      ],
+      "exampleActivityRefs": [
+        "insert-correction-demo",
+        "clear-what-you-typed",
+        "borrow-normal-mode-demo"
+      ]
+    },
+    {
       "id": "ref-joins",
       "command": "J / gJ",
       "purpose": "Join lines with normalized or preserved boundary whitespace.",
@@ -5854,6 +6987,27 @@
       ],
       "challenge": [
         "history-confidence-check"
+      ]
+    },
+    {
+      "concept": "Insert-mode Ctrl-w, Ctrl-u, and Ctrl-o",
+      "explain": [
+        "insert-command-key-meanings"
+      ],
+      "demonstrate": [
+        "insert-correction-demo",
+        "borrow-normal-mode-demo"
+      ],
+      "isolate": [
+        "retype-a-mistyped-argument",
+        "clear-what-you-typed"
+      ],
+      "mix": [
+        "replace-a-whole-argument-list",
+        "truncate-while-inserting"
+      ],
+      "challenge": [
+        "complete-the-signature"
       ]
     },
     {

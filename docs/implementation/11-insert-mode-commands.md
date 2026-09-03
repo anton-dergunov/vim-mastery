@@ -107,3 +107,75 @@ These are Ctrl chords on a touch keyboard: per `AGENTS.md`, Ctrl latches for
 touch chords and releases after the final key. Exercise the latched path
 explicitly, and confirm the on-screen keyboard never opens the native phone
 keyboard during an Insert-mode chord.
+
+## Implementation notes
+
+Shipped as two new lessons and nothing else: no patch, no schema change, and no
+`supported-commands.json` change. Session 01 had already verified all four keys
+and shipped the `Ctrl-u` hunk, and line 41 of `supported-commands.json` already
+listed the family as verified, so the only engine-side work left was two extra
+fixtures.
+
+### `"%` was deferred, not dropped
+
+Session 22 has not landed, so `"%` is still recorded as dropped in
+`supported-commands.json` and `docs/vim-conformance.md`. Per session 08's
+instruction, Unit 8 teaches three read-only registers through `Ctrl-r` — `".`,
+`":`, and `"/` — and **no content describes `"%` as unsupported**. Section 3 of
+this brief is otherwise satisfied: `Ctrl-r/` and `Ctrl-r.` are both taught from
+Insert mode. When session 22 lands, `Ctrl-r%` joins the same lesson.
+
+### What each lesson teaches
+
+**Unit 3 — `insert-mode-commands`**, lesson 8, after `undo-and-redo` so the
+learner already knows the Normal-mode repairs these replace. Seven activities:
+`Ctrl-w` and `Ctrl-o` demos, `Ctrl-w` and `Ctrl-u` isolates, a `Ctrl-u` mix that
+throws away a whole argument list, a `Ctrl-o D` mix that truncates a line
+mid-insert, and a challenge combining `Ctrl-w` with `Ctrl-o $`.
+
+**Unit 8 — `type-registers-while-inserting`**, lesson 11, between
+`reuse-read-only-registers` and the integration lesson. Eight activities:
+`Ctrl-r0`, `Ctrl-r"`, `Ctrl-ra`, `Ctrl-r.`, and `Ctrl-r/`. Two of them compose
+the full yank → navigate → insert → `Ctrl-r0` sentence the acceptance criteria
+ask for, and `reach-past-the-newest-delete` puts a `dd` between the yank and the
+insert so the unnamed register holds the deleted line while `"0` still holds the
+value — the register choice is the exercise.
+
+### Mid-insert checkpoints cannot assert a mode
+
+`tests/native-vim-runner.mjs` drives Vim with `feedkeys(..., "xt")`, which ends
+any open insert before reporting state. A checkpoint that stops mid-insert
+therefore comes back as `mode: "normal"` with the cursor shifted one column
+left, and Unit 3's replay loop asserts `checkpoint.mode` whenever it is
+authored. **Mid-insert checkpoints in these lessons carry `lines` and `cursor`
+but omit `mode`**, which is what the oracle can actually testify to. The cost is
+that `app.js:1590` cannot slow demo playback at those steps; the alternative was
+authoring a mode the test would reject.
+
+### Host-neutrality
+
+No new field was invented — the schema is `additionalProperties: false`
+throughout. The chord-conflict note lives in each unit's
+`curriculumDefinition.priorityAndPortability`, in every new activity's
+`portability`, in both new reference entries, and once in each theory body so a
+learner actually reads it. It names no editor, matching the phrasing Units 9 and
+10 already use. This brief names VS Code as rationale at line 72; that name does
+not appear in any content file.
+
+### Verification
+
+- `npm test` — 588 content, 7 effects, 67 native, 3 media, plus the browser smoke
+  suite. The content tier replays all 15 new runnables against real Vim,
+  asserting text, cursor, mode, and (Unit 8) full register state at the target
+  and at every checkpoint.
+- Two new `conformanceFixtures` entries, `insert-register-last-inserted` and
+  `insert-register-search-pattern`, cover the read-only registers from Insert
+  mode; both tiers agree.
+- Two new browser tests exercise the latched touch path and the physical path:
+  `enters Unit 3 Insert-mode command chords from touch and physical keyboards`
+  and `types a register into an open insert from touch and physical keyboards`.
+  Both confirm Ctrl releases after the final key, and the first asserts
+  `inputmode="none"` so no native keyboard opens over an insert.
+- 135 activity/viewport combinations (every new activity and its recall variant
+  across 360×740, 390×844, 412×915, 430×932, and 432×960) showed no document
+  scrolling and no horizontal overflow.

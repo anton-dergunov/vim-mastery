@@ -439,7 +439,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 3 local change and continues to Unit 4", async ({ page }) => {
     await page.goto("/?unit=entering-changing-text");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 88, exerciseCount: changingExercises.length });
+    expect(runtime).toEqual({ activityCount: 101, exerciseCount: changingExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -459,6 +459,29 @@ test.describe("Production lesson flow", () => {
     await page.getByRole("button", { name: "Continue to Unit 4" }).click();
     await page.waitForURL(/unit=operator-grammar/);
     expect((await state(page))).toMatchObject({ unitId: "operator-grammar", unitNumber: 4, activityId: "operator-sentence-meanings" });
+  });
+
+  test("enters Unit 3 Insert-mode command chords from touch and physical keyboards", async ({ page }) => {
+    // Ctrl-u has to reach the adapter from inside an open insert, which is a
+    // different path from a Normal-mode chord: the latched touch keyboard must
+    // release Ctrl after the letter, and neither route may open a native
+    // keyboard over the insert.
+    await page.goto("/?unit=entering-changing-text&activity=clear-what-you-typed");
+    for (const key of ["A", ...".local"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await page.locator('[data-mod="Ctrl"]').click();
+    await expect.poll(() => state(page)).toMatchObject({ modifiers: ["Ctrl"] });
+    await page.locator('.key[data-key="u"]').click();
+    await expect.poll(() => state(page)).toMatchObject({ modifiers: [], code: ["host = api.dev"] });
+    await expect(page.locator(".cm-content")).toHaveAttribute("inputmode", "none");
+    for (const key of [...".test", "Escape"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await expect.poll(() => state(page)).toMatchObject({ complete: true, code: ["host = api.dev.test"] });
+
+    await page.goto("/?unit=entering-changing-text&activity=truncate-while-inserting-recall");
+    await page.locator(".cm-content").focus();
+    for (const key of ["i", ..."final"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await page.keyboard.press("Control+o");
+    for (const key of ["D", "'", "Escape"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await expect.poll(() => state(page)).toMatchObject({ complete: true, code: ["label = 'final'"] });
   });
 
   test("reserves all three rows for the Unit 3 open-line demo before playback", async ({ page }) => {
@@ -700,6 +723,37 @@ test.describe("Production lesson flow", () => {
     });
   });
 
+  test("types a register into an open insert from touch and physical keyboards", async ({ page }) => {
+    // Ctrl-r{register} inside Insert mode is two chords in a row on touch: the
+    // Ctrl latch for the chord itself, then a Shift layer for the register name.
+    await page.goto("/?unit=registers-putting&activity=type-the-unnamed-register");
+    for (const key of ["y", "i", "w", "j", "A"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await page.locator('[data-mod="Ctrl"]').click();
+    await page.locator('.key[data-key="r"]').click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="\'"]').click();
+    await page.evaluate(() => window.VimWilds.emit("Escape"));
+    await expect.poll(() => state(page)).toMatchObject({
+      complete: true,
+      modifiers: [],
+      code: ["HOST=localhost", "PROXY=localhost"],
+      registers: { '"': { text: "localhost", type: "characterwise" } },
+    });
+
+    await page.goto("/?unit=registers-putting&activity=carry-a-value-into-a-command-recall");
+    await page.locator(".cm-content").focus();
+    for (const key of ["f", "=", "l", "y", "$", "j", "A", ..." s3://"]) {
+      await page.evaluate(token => window.VimWilds.emit(token), key);
+    }
+    await page.keyboard.press("Control+r");
+    for (const key of ["0", "Escape"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    await expect.poll(() => state(page)).toMatchObject({
+      complete: true,
+      code: ["BUCKET=prod-assets", "aws s3 ls s3://prod-assets"],
+      registers: { "0": { text: "prod-assets", type: "characterwise" } },
+    });
+  });
+
   test("runs every Unit 8 register activity with internal clipboard state", async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "clipboard", {
@@ -712,7 +766,7 @@ test.describe("Production lesson flow", () => {
     });
     await page.goto("/?unit=registers-putting");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 101, exerciseCount: registerExercises.length });
+    expect(runtime).toEqual({ activityCount: 115, exerciseCount: registerExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {

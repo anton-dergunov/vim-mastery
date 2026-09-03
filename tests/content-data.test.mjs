@@ -125,7 +125,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 399);
+  assert.equal(exercises.length, 410);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -545,15 +545,15 @@ test("Unit 7 curriculum definition is preserved verbatim", () => {
 test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   assert.deepEqual(registerUnit.curriculumDefinition, {
     unit: "8. Registers and putting",
-    commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`",
+    commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
     prerequisites: "Units 1–6, especially `y d c p`",
     learningOutcome: "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
     representativeExercises: "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
-    priorityAndPortability: "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed",
+    priorityAndPortability: "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed. Insert-mode `Ctrl-r` is native Vim; a host editor that embeds Vim may claim that Ctrl chord by default, so check the host you are in",
   });
   assert.deepEqual(registerUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects"]);
-  assert.equal(registerUnit.lessons.length, 11);
-  assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 49);
+  assert.equal(registerUnit.lessons.length, 12);
+  assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 56);
   assert.deepEqual(registerUnit.coverage.map(item => item.concept), [
     "unnamed register",
     "p P gp gP",
@@ -565,6 +565,7 @@ test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
     "uppercase register append",
     "emulated plus register and inspection",
     "read-only registers",
+    "Insert-mode register insertion",
     "integrated register choice",
   ]);
   assert(!registerUnit.curriculumDefinition.commandsAndConcepts.includes('"*'));
@@ -1007,17 +1008,18 @@ test("Unit 2 covers every movement family with cursor-only runnable states", () 
 test("Unit 3 preserves the curriculum and covers every local-change family", () => {
   assert.deepEqual(changingUnit.curriculumDefinition, {
     unit: "3. Entering and changing text",
-    commandsAndConcepts: "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`",
+    commandsAndConcepts: "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`; Insert-mode `Ctrl-w`, `Ctrl-u`, `Ctrl-o`",
     prerequisites: "Units 1–2",
     learningOutcome: "Choose a precise entry/change command, undo safely, and perform common local transformations",
     representativeExercises: "Append an argument; open a line; build a divider with a counted insert; replace a delimiter; join a wrapped statement; change case; increment a version number",
-    priorityAndPortability: "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced",
+    priorityAndPortability: "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced. The Insert-mode command keys are native Vim; a host editor that embeds Vim may claim those Ctrl chords by default, so check the host you are in",
   });
   assert.deepEqual(changingUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement"]);
   assert.equal(changingUnit.releaseStatus, "authoring");
-  assert.equal(changingUnit.lessons.length, 11);
+  assert.equal(changingUnit.lessons.length, 12);
   assert.deepEqual(changingUnit.coverage.map(item => item.concept), [
-    "i I a A", "o O", "counted insert and open", "x X r", "s S", "R", "u and Ctrl-r", "J and gJ",
+    "i I a A", "o O", "counted insert and open", "x X r", "s S", "R", "u and Ctrl-r",
+    "Insert-mode Ctrl-w, Ctrl-u, and Ctrl-o", "J and gJ",
     "~ g~ gu gU", "Ctrl-a and Ctrl-x", "integrated local changes",
   ]);
   const activities = changingUnit.lessons.flatMap(lesson => lesson.activities);
