@@ -95,8 +95,8 @@ test("loads every compressed story still in the browser", async ({ page }) => {
     })));
   });
 
-  // Fifteen unit stories plus the intro panels and the ending.
-  expect(results).toHaveLength(19);
+  // Sixteen unit stories plus the intro panels and the ending.
+  expect(results).toHaveLength(20);
   expect(results.every(result => result.asset.endsWith(".webp"))).toBe(true);
   expect(results.every(result => result.complete && result.width > 0 && result.height > 0)).toBe(true);
 });
@@ -416,7 +416,7 @@ test("intercepts the final unit boundary, restores on refresh, and archives the 
   expect((await page.evaluate(() => window.VimWilds.getState().story.completedUnitStoryIds))).toEqual(["modal-model"]);
 });
 
-test("chains Unit 15 into the restored-world finale and archives its reverse journey", async ({ page }) => {
+test("hands Unit 15 on to the capstones rather than straight to the finale", async ({ page }) => {
   await page.addInitScript(saved => {
     if (!window.localStorage.getItem("vim-wilds.story.v1")) {
       window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));
@@ -427,7 +427,28 @@ test("chains Unit 15 into the restored-world finale and archives its reverse jou
   await waitForApp(page);
 
   const dialog = page.locator("#storyDialog");
-  await page.getByRole("button", { name: "Complete Unit 15" }).click();
+  // Unit 15 is no longer the last unit, so its field note offers the next one
+  // instead of completing the course.
+  await page.getByRole("button", { name: "Continue to Unit 16" }).click();
+  await expect(dialog.locator(".story-surface")).toHaveAttribute("data-kind", "unit");
+  await expect(dialog.locator(".story-surface")).toHaveAttribute("data-unit-id", "global-normal-automation");
+  await expect(dialog.getByRole("button", { name: "Continue to next unit" })).toBeVisible();
+  await dialog.getByRole("button", { name: "Continue to next unit" }).click();
+  await page.waitForFunction(() => window.VimWilds?.getState().unitId === "real-code-workflow-capstones");
+});
+
+test("chains Unit 16 into the restored-world finale and archives its reverse journey", async ({ page }) => {
+  await page.addInitScript(saved => {
+    if (!window.localStorage.getItem("vim-wilds.story.v1")) {
+      window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));
+    }
+  }, storyState);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=real-code-workflow-capstones&activity=register-move-rationale");
+  await waitForApp(page);
+
+  const dialog = page.locator("#storyDialog");
+  await page.getByRole("button", { name: "Complete Unit 16" }).click();
   await expect(dialog.locator(".story-surface")).toHaveAttribute("data-kind", "unit");
   await expect(dialog.getByRole("button", { name: "Continue to finale" })).toBeVisible();
   await dialog.getByRole("button", { name: "Continue to finale" }).click();
@@ -454,7 +475,7 @@ test("chains Unit 15 into the restored-world finale and archives its reverse jou
   await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   expect(await page.evaluate(() => window.VimWilds.getState().story)).toMatchObject({
     endingSeen: true,
-    completedUnitStoryIds: ["global-normal-automation"],
+    completedUnitStoryIds: ["real-code-workflow-capstones"],
   });
   await page.getByRole("button", { name: "Replay finale" }).click();
   await expect(surface).toHaveAttribute("data-kind", "ending");

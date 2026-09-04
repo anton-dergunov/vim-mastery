@@ -64,16 +64,16 @@ test("production PWA precaches core media and streams optional animation and sce
     readFileSync(join(rootPath, "content", "practice-samples.json"), "utf8"),
   );
   assert.match(worker, /content\/practice-samples\.json/);
-  assert.equal(media.core.length, 142);
-  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 15);
-  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 15);
+  assert.equal(media.core.length, 146);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 16);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 16);
   assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);
   assert.equal(media.core.filter(asset => asset.category === "story-finale").length, 1);
   assert.equal(media.core.filter(asset => asset.category === "story-ui").length, 1);
   assert(media.core
     .filter(asset => ["unit-story-image", "story-still", "story-finale"].includes(asset.category))
     .every(asset => asset.path.endsWith(".webp")));
-  assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 800);
+  assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 850);
   assert(
     publishedBytes < GITHUB_PAGES_MAX_BYTES,
     `Published PWA is ${(publishedBytes / 1024 / 1024).toFixed(2)} MiB; GitHub Pages allows less than 1024 MiB`,

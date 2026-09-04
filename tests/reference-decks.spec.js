@@ -301,7 +301,7 @@ test("per-unit reference entries render and open their examples", async ({ page 
   await waitForApp(page);
 
   await page.evaluate(() => document.querySelector("#tocDialog").showModal());
-  await expect(page.locator("#tocLessons [data-reference-unit]")).toHaveCount(15);
+  await expect(page.locator("#tocLessons [data-reference-unit]")).toHaveCount(16);
 
   // The loaded unit is in memory; a later unit has to be fetched.
   await page.locator('#tocLessons [data-reference-unit="modal-model"]').click();

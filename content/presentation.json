@@ -2017,8 +2017,8 @@
         "action": "Cairn connects the restored systems; energy crosses all four worlds",
         "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
         "nextHook": {
-          "speaker": "Nix",
-          "copy": "The language is alive. What you restore next is up to you."
+          "speaker": "Brikk",
+          "copy": "The great systems run again. Bring me the jobs they were never shaped for."
         },
         "storyImage": "assets/worlds/story/units/global-normal-automation.webp"
       },
@@ -2107,6 +2107,136 @@
         }
       },
       "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp"
+    },
+    "real-code-workflow-capstones": {
+      "id": "real-code-workflow-capstones",
+      "worldId": "brass-meridian",
+      "guideCharacterId": "brikk",
+      "landmark": {
+        "id": "menders-bench",
+        "assets": {
+          "dormant": "assets/worlds/landmarks/menders-bench-dormant.webp",
+          "restored": "assets/worlds/landmarks/menders-bench-restored.webp"
+        },
+        "placements": {
+          "portrait": {
+            "x": 20,
+            "y": 74,
+            "scale": 0.6
+          },
+          "square": {
+            "x": 18,
+            "y": 68,
+            "scale": 0.72
+          },
+          "wide": {
+            "x": 14,
+            "y": 62,
+            "scale": 0.84
+          },
+          "shallow": {
+            "x": 11,
+            "y": 56,
+            "scale": 0.64
+          }
+        }
+      },
+      "completion": {
+        "actionId": "open-menders-confluence",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/menders-confluence/compact/base.webp",
+        "action": "Brikk settles four differently shaped jobs into one service kit; a single cyan current tests each assembly in turn",
+        "copy": "At Menders' Confluence, every restored skill becomes part of one dependable craft.",
+        "nextHook": {
+          "speaker": "Nix",
+          "copy": "The language is alive. What you restore next is up to you."
+        },
+        "storyImage": "assets/worlds/story/units/real-code-workflow-capstones.webp"
+      },
+      "sceneId": "menders-confluence",
+      "scenes": {
+        "menders-confluence": {
+          "id": "menders-confluence",
+          "patchRegions": {
+            "phase-a": {
+              "x": 0.06,
+              "y": 0.62,
+              "width": 0.27,
+              "height": 0.26
+            },
+            "phase-b": {
+              "x": 0.67,
+              "y": 0.6,
+              "width": 0.28,
+              "height": 0.27
+            },
+            "phase-c": {
+              "x": 0.4,
+              "y": 0.06,
+              "width": 0.22,
+              "height": 0.19
+            }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/brass-meridian/scenes/menders-confluence/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/brass-meridian/scenes/menders-confluence/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/brass-meridian/scenes/menders-confluence/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": [
+              "tall",
+              "compact",
+              "wide"
+            ],
+            "siteIds": [
+              "left-turntable",
+              "brass-bench-clamps",
+              "glass-basin-feed",
+              "root-seam",
+              "teal-drawer",
+              "ceiling-hoist",
+              "inspection-lens-row",
+              "test-conduits",
+              "recorder-and-jigs",
+              "hanging-swatches"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
+            },
+            "format": "webp",
+            "registrationProfile": "compact",
+            "assetRoot": "assets/worlds/brass-meridian/scenes/menders-confluence/variants"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/brass-meridian/scenes/menders-confluence/compact/base.webp"
     }
   },
   "story": {

@@ -3,7 +3,8 @@
   "arcs": [
     { "id": "foundations", "arcNumber": 1, "title": "Foundations", "unitNumbers": [1, 2, 3, 4, 5, 6] },
     { "id": "fluency-tracks", "arcNumber": 2, "title": "Fluency tracks", "unitNumbers": [7, 8, 9, 10, 11] },
-    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [12, 13, 14, 15] }
+    { "id": "automation", "arcNumber": 3, "title": "Automation", "unitNumbers": [12, 13, 14, 15] },
+    { "id": "integration", "arcNumber": 4, "title": "Integration and lifelong practice", "unitNumbers": [16] }
   ],
   "units": [
     { "id": "modal-model", "unitNumber": 1, "title": "The modal model", "lessonCount": 5, "path": "content/units/01-modal-model.json" },
@@ -20,6 +21,7 @@
     { "id": "command-line-ranges-line-operations", "unitNumber": 12, "title": "Command-line ranges and line operations", "lessonCount": 8, "path": "content/units/12-command-line-ranges-line-operations.json" },
     { "id": "substitution-practical-regex", "unitNumber": 13, "title": "Substitution and practical regex", "lessonCount": 8, "path": "content/units/13-substitution-practical-regex.json" },
     { "id": "macros", "unitNumber": 14, "title": "Macros", "lessonCount": 8, "path": "content/units/14-macros.json" },
-    { "id": "global-normal-automation", "unitNumber": 15, "title": "Global and Normal automation", "lessonCount": 9, "path": "content/units/15-global-normal-automation.json" }
+    { "id": "global-normal-automation", "unitNumber": 15, "title": "Global and Normal automation", "lessonCount": 9, "path": "content/units/15-global-normal-automation.json" },
+    { "id": "real-code-workflow-capstones", "unitNumber": 16, "title": "Real-code workflow capstones", "lessonCount": 4, "path": "content/units/16-real-code-workflow-capstones.json" }
   ]
 }

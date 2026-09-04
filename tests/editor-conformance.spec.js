@@ -17,6 +17,7 @@ const rangeUnit = JSON.parse(readFileSync(new URL("../content/units/12-command-l
 const substitutionUnit = JSON.parse(readFileSync(new URL("../content/units/13-substitution-practical-regex.json", import.meta.url), "utf8"));
 const macroUnit = JSON.parse(readFileSync(new URL("../content/units/14-macros.json", import.meta.url), "utf8"));
 const automationUnit = JSON.parse(readFileSync(new URL("../content/units/15-global-normal-automation.json", import.meta.url), "utf8"));
+const capstoneUnit = JSON.parse(readFileSync(new URL("../content/units/16-real-code-workflow-capstones.json", import.meta.url), "utf8"));
 const authoredActivities = unit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const authoredExercises = authoredActivities.filter(activity => activity.type === "exercise");
 const cursorActivities = cursorUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
@@ -45,6 +46,8 @@ const macroActivities = macroUnit.lessons.flatMap(lesson => lesson.activities.ma
 const macroExercises = macroActivities.filter(activity => activity.type === "exercise");
 const automationActivities = automationUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const automationExercises = automationActivities.filter(activity => activity.type === "exercise");
+const capstoneActivities = capstoneUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
+const capstoneExercises = capstoneActivities.filter(activity => activity.type === "exercise");
 const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
@@ -187,7 +190,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(15);
+    await expect(page.locator(".toc-unit")).toHaveCount(16);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(73);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -254,14 +257,16 @@ test.describe("Production lesson flow", () => {
       { id: "substitution-practical-regex", unitNumber: 13, title: "Substitution and practical regex" },
       { id: "macros", unitNumber: 14, title: "Macros" },
       { id: "global-normal-automation", unitNumber: 15, title: "Global and Normal automation" },
+      { id: "real-code-workflow-capstones", unitNumber: 16, title: "Real-code workflow capstones" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(15);
-    await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation"]);
+    await expect(page.locator(".toc-unit")).toHaveCount(16);
+    await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation", "Arc 4Integration and lifelong practice"]);
     await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
     await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(5);
     await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(4);
-    await expect(page.locator(".toc-arc-divider")).toHaveCount(2);
+    await expect(page.locator(".toc-arc").nth(3).locator(".toc-unit")).toHaveCount(1);
+    await expect(page.locator(".toc-arc-divider")).toHaveCount(3);
     const arcPresentation = await page.evaluate(() => {
       const heading = document.querySelector(".toc-arc-heading");
       const divider = document.querySelector(".toc-arc-divider");
@@ -990,6 +995,70 @@ test.describe("Production lesson flow", () => {
     expect(failures).toEqual([]);
   });
 
+  test("runs every Unit 16 capstone stage with native-equivalent text, cursor, and register state", async ({ page }) => {
+    await page.goto("/?unit=real-code-workflow-capstones");
+    const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
+    // Every guided stage gains a recall twin, so the runtime carries one extra
+    // activity per guided-then-recall stage on top of what the file authors.
+    const recallTwins = capstoneActivities.filter(activity => activity.delivery === "guided-then-recall").length;
+    const guidedStages = capstoneExercises.filter(activity => activity.delivery !== "recall").length;
+    expect(runtime).toEqual({ activityCount: capstoneActivities.length + recallTwins, exerciseCount: guidedStages });
+
+    // The capstone shape only exists if the runtime honours it: decide, work,
+    // then compare. The default flow would sort the choice and the comparison
+    // into the closing group and invert the whole point of the lesson.
+    const flow = await page.evaluate(() => window.VimWilds.activities
+      .filter(activity => activity.lessonId === "call-site-surgery")
+      .map(activity => activity.type));
+    expect(flow.at(0)).toBe("theory");
+    expect(flow.at(1)).toBe("choice");
+    expect(flow.at(-2)).toBe("demo");
+    expect(flow.at(-1)).toBe("summary");
+
+    const failures = await page.evaluate(() => {
+      const result = [];
+      for (const [index, activity] of window.VimWilds.activities.entries()) {
+        if (activity.type !== "demo" && activity.type !== "exercise") continue;
+        window.VimWilds.goToActivity(index);
+        window.VimWilds.solveCurrent();
+        const current = window.VimWilds.getState();
+        const target = activity.scenario.target;
+        const registersMatch = Object.entries(target.registers || {}).every(([name, expected]) => (
+          current.registers[name]?.text === expected.text && current.registers[name]?.type === expected.type
+        ));
+        if (JSON.stringify(current.code) !== JSON.stringify(target.lines)
+          || JSON.stringify(current.cursor) !== JSON.stringify(target.cursor)
+          || !registersMatch
+          || (activity.type === "exercise" && !current.complete)) result.push({ id: activity.id, current, target });
+      }
+      return result;
+    });
+    expect(failures).toEqual([]);
+  });
+
+  test("opens every capstone on its mechanism choice and closes it on its rationale", async ({ page }) => {
+    await page.goto("/?unit=real-code-workflow-capstones");
+
+    // The choice is the first thing a capstone asks for, before any keys, and a
+    // wrong answer has to stay recoverable rather than ending the stage.
+    const decision = capstoneActivities.find(activity => activity.type === "choice");
+    await page.evaluate(id => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === id)), decision.id);
+    const wrong = decision.options.find(option => option.id !== decision.correctOptionId);
+    await page.locator(`[data-choice="${wrong.id}"]`).click();
+    expect((await state(page)).complete).toBe(false);
+    await expect(page.locator(".choice-feedback.incorrect")).toContainText("Not quite.");
+    await page.locator(`[data-choice="${decision.correctOptionId}"]`).click();
+    expect((await state(page)).complete).toBe(true);
+    await expect(page.locator(".choice-feedback.correct")).toContainText("Correct.");
+
+    // The unit must end on a summary, or the field note never renders the
+    // continuation and progression stops dead at the last capstone.
+    const closing = capstoneUnit.lessons.at(-1).activities.at(-1);
+    expect(closing.type).toBe("summary");
+    await page.evaluate(id => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === id)), closing.id);
+    await expect(page.getByRole("button", { name: /Complete Unit 16/ })).toBeVisible();
+  });
+
   test("supports count-only and interactive confirmation through touch input", async ({ page }) => {
     const linesOf = id => substitutionActivities.find(activity => activity.id === id).scenario.initial.lines;
     const targetOf = id => substitutionActivities.find(activity => activity.id === id).scenario.target.lines;
@@ -1150,7 +1219,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ modifiers: [], history: [...beforeReplay, "@"] });
   });
 
-  test("continues from Unit 11 through published Units 12, 13, 14, and 15", async ({ page }) => {
+  test("continues from Unit 11 through published Units 12, 13, 14, 15, and 16", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=repeat-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 12" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 12" }).click();
@@ -1176,8 +1245,14 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "global-normal-automation", unitNumber: 15, activityId: "normal-range-meaning" });
 
     await page.goto("/?unit=global-normal-automation&activity=global-normal-automation-summary");
-    await expect(page.getByRole("button", { name: "Complete Unit 15" })).toBeVisible();
-    await page.getByRole("button", { name: "Complete Unit 15" }).click();
+    await expect(page.getByRole("button", { name: "Continue to Unit 16" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 16" }).click();
+    await page.waitForURL(/unit=real-code-workflow-capstones/);
+    expect((await state(page))).toMatchObject({ unitId: "real-code-workflow-capstones", unitNumber: 16, activityId: "call-site-brief" });
+
+    await page.goto("/?unit=real-code-workflow-capstones&activity=register-move-rationale");
+    await expect(page.getByRole("button", { name: "Complete Unit 16" })).toBeVisible();
+    await page.getByRole("button", { name: "Complete Unit 16" }).click();
     const storySurface = page.locator(".story-surface");
     if (await storySurface.getAttribute("data-kind") === "unit") {
       await page.getByRole("button", { name: "Continue to finale" }).click();
@@ -2613,7 +2688,7 @@ test.describe("Production lesson flow", () => {
     ].join(",");
     for (const [width, height] of viewports) {
       await page.setViewportSize({ width, height });
-      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "position-memory", "viewport-control", "repeatable-editing", "command-line-ranges-line-operations", "substitution-practical-regex", "macros", "global-normal-automation"]) {
+      for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "visual-selection", "registers-putting", "position-memory", "viewport-control", "repeatable-editing", "command-line-ranges-line-operations", "substitution-practical-regex", "macros", "global-normal-automation", "real-code-workflow-capstones"]) {
         await page.goto(`/?unit=${unitId}`);
         const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
         for (let index = 0; index < activityCount; index += 1) {

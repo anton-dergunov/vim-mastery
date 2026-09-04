@@ -56,6 +56,7 @@
       "if": {"required": ["track"]}, "then": {"required": ["trackNote"]},
       "properties": {
         "id": {"$ref": "#/$defs/id"}, "title": {"type": "string"}, "objective": {"type": "string"},
+        "flow": {"const": "authored", "description": "Present non-practice activities in their authored position around the practice block instead of introducing them all first. Absent means the default lesson flow, which leads with theory and demonstrations and closes with the choice and summary. Capstones set this because they ask for a mechanism before any keys and compare the rejected alternative only after the work is done."},
         "track": {"enum": ["core", "advanced", "optional"], "description": "Recommended-path weight. Absent means core. \"advanced\" marks material that is real but less commonly reached for; \"optional\" marks material that depends on configuration, file type, or host. Nothing is removed from the path for being rare; it is marked."},
         "trackNote": {"type": "string", "description": "One sentence saying why the lesson carries its track. Required whenever track is present, and opens with the fixed lead phrase for that track."},
         "activities": {"type": "array", "minItems": 1, "items": {"oneOf": [{"$ref": "#/$defs/theory"}, {"$ref": "#/$defs/runnable"}, {"$ref": "#/$defs/choice"}, {"$ref": "#/$defs/summary"}]}}

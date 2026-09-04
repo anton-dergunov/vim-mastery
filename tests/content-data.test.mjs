@@ -34,6 +34,7 @@ const rangeUnit = units.find(item => item.data.id === "command-line-ranges-line-
 const substitutionUnit = units.find(item => item.data.id === "substitution-practical-regex").data;
 const macroUnit = units.find(item => item.data.id === "macros").data;
 const automationUnit = units.find(item => item.data.id === "global-normal-automation").data;
+const capstoneUnit = units.find(item => item.data.id === "real-code-workflow-capstones").data;
 const unitCatalog = readJson("../content/unit-index.json");
 const registry = readJson("../content/language-profiles.json");
 const schema = readJson("../content/unit-content.schema.json");
@@ -219,7 +220,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 422);
+  assert.equal(exercises.length, 438);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -448,6 +449,12 @@ test("presentation manifest preserves the approved unit story table", () => {
       id: "global-normal-automation", guide: "cairn", world: "brass-meridian", landmark: "meridian-engine",
       action: "Cairn connects the restored systems; energy crosses all four worlds",
       copy: "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
+      nextSpeaker: "Brikk", nextHook: "The great systems run again. Bring me the jobs they were never shaped for.",
+    },
+    {
+      id: "real-code-workflow-capstones", guide: "brikk", world: "brass-meridian", landmark: "menders-bench",
+      action: "Brikk settles four differently shaped jobs into one service kit; a single cyan current tests each assembly in turn",
+      copy: "At Menders' Confluence, every restored skill becomes part of one dependable craft.",
       nextSpeaker: "Nix", nextHook: "The language is alive. What you restore next is up to you.",
     },
   ]);
@@ -493,7 +500,7 @@ test("presentation loading falls back cleanly when the optional manifest is miss
     presentationUrl: "presentation",
     fetchImpl: async url => url === "catalog" ? response(unitCatalog) : response(null, { ok: false, status: 404 }),
   });
-  assert.equal(missing.unitCatalog.units.length, 15);
+  assert.equal(missing.unitCatalog.units.length, 16);
   assert.equal(missing.presentation, null);
 
   const invalidPresentation = structuredClone(presentation);
@@ -511,7 +518,7 @@ test("presentation loading falls back cleanly when the optional manifest is miss
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -583,7 +590,7 @@ test("runnable activities reserve every authored editor row before execution", (
     }
   }
 
-  assert.equal(growing.length, 34);
+  assert.equal(growing.length, 35);
   for (const id of [
     "entering-changing-text/open-middle-line-demo",
     "entering-changing-text/open-beta-above",
@@ -608,7 +615,8 @@ test("unit continuation follows the next published catalog unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), rangeUnit), substitutionUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), substitutionUnit), macroUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), macroUnit), automationUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), automationUnit), null);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), automationUnit), capstoneUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), capstoneUnit), null);
 });
 
 test("unit catalog groups implemented units into curriculum arcs", () => {
@@ -617,8 +625,9 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
     { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10, 11] },
     { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [12, 13, 14, 15] },
+    { id: "integration", arcNumber: 4, title: "Integration and lifelong practice", unitNumbers: [16] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -1049,6 +1058,103 @@ test("Unit 15 preserves the Global-Normal curriculum and complete lesson flow", 
     assert.deepEqual(checkpoint.lines, activity.scenario.target.lines, `${activity.id} final checkpoint text`);
     assert.deepEqual(checkpoint.cursor, activity.scenario.target.cursor, `${activity.id} final checkpoint cursor`);
   }
+});
+
+test("Unit 16 preserves the capstone curriculum and its choose-then-compare shape", () => {
+  assert.deepEqual(capstoneUnit.curriculumDefinition, {
+    unit: "16. Real-code workflow capstones",
+    commandsAndConcepts: "No new command families. Choosing between a structural change, a bounded range, a protected move, a repeat, and a substitution; matching the reach of an edit to the number and ambiguity of its sites; taking a range from a boundary the file already states; protecting text across intervening deletes; comparing a chosen solution with a working alternative by clarity, setup cost, repeatability, and risk",
+    prerequisites: "Units 1\u201315",
+    learningOutcome: "Complete a staged edit on realistic code by selecting a mechanism before touching the keys, and justify the selection against an alternative that also works",
+    representativeExercises: "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore indentation, a joined chain, a reflowed paragraph, and a numbered list; relocate two snippets across deletes that would overwrite them",
+    priorityAndPortability: "Integration rather than instruction. Every command here is already taught in Units 1\u201315 and every capstone closes by comparing its solution with a mechanism that also reaches the target",
+  });
+  assert.deepEqual(capstoneUnit.lessons.map(lesson => lesson.id), [
+    "call-site-surgery", "string-and-name-repair", "shape-the-block", "move-without-losing-it",
+  ]);
+  assert.deepEqual(capstoneUnit.coverage.map(item => item.concept), [
+    "choosing between structural, range, register, and repeat edits at call sites",
+    "matching rename reach to occurrence count and ambiguity",
+    "choosing the boundary that already describes a formatting fix",
+    "protecting text in transit across intervening deletes",
+  ]);
+
+  // A capstone is not a lesson with a quiz bolted on. It states the job, asks
+  // for the mechanism before any keys are pressed, works through staged
+  // targets, and only then runs the alternative it turned down.
+  for (const lesson of capstoneUnit.lessons) {
+    // Without the opt-in the runtime sorts every choice and demonstration into
+    // the lesson's closing group, which would put the mechanism question after
+    // the work it is supposed to precede.
+    assert.equal(lesson.flow, "authored", `${lesson.id} must keep its authored order`);
+    const [brief, decision] = lesson.activities;
+    assert.equal(brief.type, "theory", `${lesson.id} must open with its job brief`);
+    assert.equal(decision.type, "choice", `${lesson.id} must ask for the mechanism before any keys`);
+    assert(decision.options.length >= 3, `${lesson.id} must offer real alternatives`);
+    assert(decision.remediationRef, `${lesson.id} choice needs a remediation route`);
+
+    const contrast = lesson.activities.filter(activity => activity.type === "demo");
+    assert.equal(contrast.length, 1, `${lesson.id} must run exactly one rejected alternative`);
+    assert.equal(brief.demoRef, contrast[0].id, `${lesson.id} brief must point at its comparison`);
+
+    const closing = lesson.activities.at(-1);
+    assert.equal(closing.type, "summary", `${lesson.id} must close on its rationale`);
+    // The rationale compares alternatives on judgement, not on key count. A
+    // capstone that argues from brevity has missed the curriculum's point.
+    assert(!/keystroke|fewer keys|shortest/i.test(closing.body), `${lesson.id} rationale argues from key count`);
+
+    const staged = lesson.activities.filter(activity => activity.type === "exercise");
+    assert(staged.length >= 3, `${lesson.id} needs several staged targets`);
+    assert.equal(staged.at(-1).phase, "challenge", `${lesson.id} must end its stages unaided`);
+    assert.deepEqual(staged.at(-1).hints, [], `${lesson.id} final stage must withhold hints`);
+  }
+
+  for (const activity of capstoneUnit.lessons.flatMap(lesson => lesson.activities)
+    .filter(activity => activity.type === "demo" || activity.type === "exercise")) {
+    assert.equal(activity.provenance.nativeValidation, "passed", `${activity.id} native validation`);
+    assert.equal(activity.provenance.browserConformance, "passed", `${activity.id} browser conformance`);
+  }
+});
+
+test("the authored lesson flow stays opt-in and is used only where order carries meaning", () => {
+  assert.deepEqual(schema.$defs.lesson.properties.flow.const, "authored");
+  const optedIn = [];
+  for (const { data } of units) {
+    for (const lesson of data.lessons) {
+      if (lesson.flow === undefined) continue;
+      optedIn.push(`${data.id}/${lesson.id}`);
+      // Anything stranded between two stages would be silently hoisted to the
+      // opening, so the flag only makes sense for lessons without one.
+      const practices = lesson.activities.map((activity, index) => (activity.type === "exercise" ? index : -1)).filter(index => index >= 0);
+      for (const [index, activity] of lesson.activities.entries()) {
+        assert(
+          activity.type === "exercise" || index < practices.at(0) || index > practices.at(-1),
+          `${lesson.id} strands ${activity.id} between its stages`,
+        );
+      }
+    }
+  }
+  assert.deepEqual(optedIn, capstoneUnit.lessons.map(lesson => `real-code-workflow-capstones/${lesson.id}`));
+});
+
+test("Unit 16 introduces no command that Units 1-15 have not already taught", () => {
+  const tokensOf = data => {
+    const tokens = new Set();
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities) {
+        if (!activity.script) continue;
+        for (const step of activity.script.steps) tokens.add(typeof step === "string" ? step : step.key);
+        for (const step of activity.scenario.initial.setup?.steps || []) tokens.add(typeof step === "string" ? step : step.key);
+      }
+    }
+    return tokens;
+  };
+  const taught = new Set();
+  for (const { data } of units.filter(item => item.data.unitNumber < 16)) {
+    for (const token of tokensOf(data)) taught.add(token);
+  }
+  const introduced = [...tokensOf(capstoneUnit)].filter(token => !taught.has(token));
+  assert.deepEqual(introduced, [], "a capstone that introduces a command has failed");
 });
 
 test("Unit 2 curriculum definition is preserved verbatim", () => {
@@ -1840,6 +1946,58 @@ for (const activity of automationRunnable) {
       assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
       assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
       assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+    }
+  });
+}
+
+const capstoneRunnable = capstoneUnit.lessons.flatMap(lesson => lesson.activities)
+  .filter(activity => activity.type === "demo" || activity.type === "exercise");
+
+for (const activity of capstoneRunnable) {
+  test(`native Vim Unit 16 content: ${activity.id}`, () => {
+    const setup = activity.scenario.initial.setup;
+    const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
+    const cursor = setup?.cursor || activity.scenario.initial.cursor;
+    const keys = keysOf(activity);
+    const registerNames = [...new Set([
+      ...Object.keys(activity.scenario.target.registers || {}),
+      ...activity.script.checkpoints.flatMap(checkpoint => Object.keys(checkpoint.registers || {})),
+    ])];
+    if (setup) {
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys, registerNames });
+      assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
+      assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
+    }
+    const options = {
+      initialCode: activity.scenario.initial.lines,
+      cursor,
+      setupKeys,
+      keys,
+      registerNames,
+      textWidth: activity.editor?.textWidth,
+      viewportRows: activity.editor?.viewportRows,
+    };
+    const result = runNativeVim(options);
+    assert.deepEqual(result.code, activity.scenario.target.lines);
+    assert.deepEqual(result.cursor, activity.scenario.target.cursor);
+    assert.equal(result.mode, activity.scenario.target.mode);
+    for (const [name, expected] of Object.entries(activity.scenario.target.registers || {})) {
+      assert.deepEqual(result.registers[name], expected, `${activity.id} target register ${name}`);
+    }
+    for (const checkpoint of activity.script.checkpoints) {
+      const checkpointResult = runNativeVim({ ...options, keys: keys.slice(0, checkpoint.afterStep) });
+      if (checkpoint.lines) assert.deepEqual(checkpointResult.code, checkpoint.lines, `${activity.id} checkpoint ${checkpoint.afterStep} text`);
+      assert.deepEqual(checkpointResult.cursor, checkpoint.cursor, `${activity.id} checkpoint ${checkpoint.afterStep} cursor`);
+      // A pending Visual selection does not survive headless replay, so those
+      // checkpoints are authored from the browser's reading and verified there;
+      // every other mode is asserted against native Vim here. Unit 7 draws the
+      // same line for the same reason.
+      if (!checkpoint.mode.startsWith("visual")) {
+        assert.equal(checkpointResult.mode, checkpoint.mode, `${activity.id} checkpoint ${checkpoint.afterStep} mode`);
+      }
+      for (const [name, expected] of Object.entries(checkpoint.registers || {})) {
+        assert.deepEqual(checkpointResult.registers[name], expected, `${activity.id} checkpoint ${checkpoint.afterStep} register ${name}`);
+      }
     }
   });
 }

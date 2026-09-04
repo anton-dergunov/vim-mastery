@@ -5,8 +5,10 @@
 > curriculum ends at Unit 15 (Global and Normal automation).
 
 **Depends on:** 03, 04, 05 (automation content settled) · **Blocks:** 17
-**Touches:** new `content/units/15-capstones.json`, `content/unit-index.json`
-**Size:** XL — consider splitting into two sessions of four capstones each
+**Touches:** new `content/units/16-real-code-workflow-capstones.json`, `content/unit-index.json`
+**Size:** XL — split as suggested below.
+**Status:** first half complete. Capstones 1, 2, 3, and 6 ship as Unit 16;
+capstones 4, 5, 7, and 8 remain for a second session.
 
 ## Context
 

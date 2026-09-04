@@ -27,7 +27,7 @@ transparent-difference WebP variants. Their lifecycle state is recorded in
 | Scene | Lifecycle state | PWA behavior |
 | --- | --- | --- |
 | Beacon Glass Gallery | `runtime-active` | Registered to Unit 10 and emitted by the manifest-driven build |
-| Menders' Confluence | `future-unit-ready` | Kept in Git; omitted until Unit 16 exists and references it |
+| Menders' Confluence | `runtime-active` | Registered to Unit 16 and emitted by the manifest-driven build |
 | Keeper's Relay | `future-unit-ready` | Kept in Git; omitted until Unit 17 exists and references it |
 | Mosslight Landing | `reserve-only` | Kept in Git; omitted unless it receives a real unit assignment |
 | Open Trail Overlook | `reserve-only` | Kept in Git; omitted unless it receives a real unit assignment |
@@ -73,7 +73,7 @@ before the split call them Units 15 and 16; their canonical numbers are now:
 | Requested shorthand | Canonical target now | Content state | Art decision |
 | --- | --- | --- | --- |
 | New art for the split Unit 9 | **Unit 10 — Viewport control** | Built and integrated | Keep Far Beacons on Unit 9; use Beacon Glass Gallery for Unit 10 |
-| Future Unit 15 | **Unit 16 — Real-code workflow capstones** | Planned in session 16 | Menders' Confluence is ready but unreferenced |
+| Future Unit 15 | **Unit 16 — Real-code workflow capstones** | Built in session 16 (capstones 1, 2, 3, 6) | Menders' Confluence is registered and live |
 | Future Unit 16 | **Unit 17 — Mastery loops** | Planned in session 17 | Keeper's Relay is ready but unreferenced |
 | Early spare | Unnumbered reserve | No content | Mosslight Landing remains reserve-only |
 | Late spare | Unnumbered reserve | No content | Open Trail Overlook remains reserve-only |

@@ -178,12 +178,24 @@ const contextualizeActivity = (activity, lesson, activityIndex, extra = {}) => (
 const activityFlowFor = lesson => {
   const authored = lesson.activities.map((activity, activityIndex) => contextualizeActivity(activity, lesson, activityIndex));
   const practices = authored.filter(activity => activity.type === "exercise");
-  const leadIn = authored.filter(activity => !["exercise", "choice", "summary"].includes(activity.type));
-  const closing = authored.filter(activity => ["choice", "summary"].includes(activity.type));
   const guided = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "recall")
     .map(activity => ({ ...activity, practiceMode: "guided", sourceActivityId: activity.id }));
   const recall = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "guided")
     .map(activity => ({ ...activity, id: `${activity.id}-recall`, practiceMode: "recall", sourceActivityId: activity.id }));
+  // A lesson that teaches a new command introduces everything first and closes
+  // with its question and summary. A capstone runs the other way round: it asks
+  // which tool fits before any keys are pressed, and only once the work is done
+  // does it run the alternative it turned down. Opting in keeps that authored
+  // position instead of sorting every non-practice activity to the front.
+  if (lesson.flow === "authored") {
+    const firstPractice = authored.findIndex(activity => activity.type === "exercise");
+    const lastPractice = authored.findLastIndex(activity => activity.type === "exercise");
+    const opening = authored.filter((activity, index) => activity.type !== "exercise" && index < lastPractice);
+    const closing = authored.filter((activity, index) => activity.type !== "exercise" && index > lastPractice);
+    return [...opening, ...guided, ...recall, ...closing];
+  }
+  const leadIn = authored.filter(activity => !["exercise", "choice", "summary"].includes(activity.type));
+  const closing = authored.filter(activity => ["choice", "summary"].includes(activity.type));
   return [...leadIn, ...guided, ...recall, ...closing];
 };
 const activities = lessons.flatMap(activityFlowFor).map((activity, activityIndex) => ({ ...activity, activityIndex }));

@@ -1,0 +1,3883 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 16,
+  "id": "real-code-workflow-capstones",
+  "title": "Real-code workflow capstones",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "16. Real-code workflow capstones",
+    "commandsAndConcepts": "No new command families. Choosing between a structural change, a bounded range, a protected move, a repeat, and a substitution; matching the reach of an edit to the number and ambiguity of its sites; taking a range from a boundary the file already states; protecting text across intervening deletes; comparing a chosen solution with a working alternative by clarity, setup cost, repeatability, and risk",
+    "prerequisites": "Units 1–15",
+    "learningOutcome": "Complete a staged edit on realistic code by selecting a mechanism before touching the keys, and justify the selection against an alternative that also works",
+    "representativeExercises": "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore indentation, a joined chain, a reflowed paragraph, and a numbered list; relocate two snippets across deletes that would overwrite them",
+    "priorityAndPortability": "Integration rather than instruction. Every command here is already taught in Units 1–15 and every capstone closes by comparing its solution with a mechanism that also reaches the target"
+  },
+  "prerequisiteSkillIds": [
+    "entering-changing-text",
+    "operator-grammar",
+    "precision-motions-search",
+    "text-objects",
+    "visual-selection",
+    "registers-putting",
+    "repeatable-editing",
+    "command-line-ranges-line-operations",
+    "substitution-practical-regex"
+  ],
+  "playback": {
+    "modes": [
+      "normal",
+      "slow",
+      "manual"
+    ],
+    "manualStep": "one-input-or-text-run",
+    "reset": "initial-state",
+    "backwardStep": "previous-manual-step"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "real-code-workflow-capstones-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "call-site-surgery",
+      "title": "Capstone: function calls and arguments",
+      "objective": "Repair four argument lists in one module by choosing between a structural edit, a register move, and a repeated change.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "call-site-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job at the call sites",
+          "body": "One module opens three connections and one audit. The environment name is wrong in three places, the audit takes an argument it no longer accepts, and its two remaining arguments are in the wrong order. Nothing here is a new command; the work is deciding which of the tools you already have fits each of the four edits.",
+          "grammar": "read the shape of the edit, then pick the tool that matches it",
+          "contrast": "A substitution rewrites matching text anywhere; a text object rewrites one structure exactly where you are standing.",
+          "demoRef": "call-site-substitution-contrast"
+        },
+        {
+          "id": "choose-call-site-mechanism",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the tool before touching the keys",
+          "prompt": "Two arguments inside one call have to swap places, and the same call also holds a quoted value that appears correctly elsewhere in the file. What handles the swap?",
+          "options": [
+            {
+              "id": "register-move",
+              "label": "Delete one argument into a named register and put it back on the other side"
+            },
+            {
+              "id": "file-substitution",
+              "label": "A file-wide substitution matching both argument names"
+            },
+            {
+              "id": "recorded-macro",
+              "label": "A recorded macro replayed over the call"
+            }
+          ],
+          "correctOptionId": "register-move",
+          "explanation": "Reordering is movement, not replacement. A substitution can only rewrite text where it matches, so it cannot carry one argument across another, and it would reach identical text elsewhere in the file that is already correct. A macro would work but pays a recording cost for a single call site. Lifting the argument into a named register keeps it intact while the surrounding punctuation is cleaned up.",
+          "questionKind": "command-classification",
+          "remediationRef": "reorder-audit-arguments"
+        },
+        {
+          "id": "retarget-one-connection",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Point the first connection at staging",
+          "instruction": "The first connection should name the staging environment instead of the production one. Leave every other line untouched.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"prod\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(config.host, \"prod\", true);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(config.host, \"prod\", true);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                36
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "i",
+              "\"",
+              "s",
+              "t",
+              "a",
+              "g",
+              "i",
+              "n",
+              "g",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ci\"",
+                "explanation": "Change the quoted argument as one structure, wherever it sits on the line."
+              },
+              {
+                "from": 3,
+                "to": 10,
+                "display": "staging",
+                "explanation": "Enter the replacement value."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(config.host, \"prod\", true);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  29
+                ],
+                "mode": "normal",
+                "caption": "The quotes stay; only their contents are gone."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(config.host, \"prod\", true);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  36
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The quotes are part of the structure you want to keep.",
+            "A text object finds its delimiters forward on the line, so the cursor does not have to be inside them yet.",
+            "Use `ci\"`."
+          ],
+          "feedback": {
+            "success": "The first connection now names staging.",
+            "why": "The quoted string is a structure, so a delimiter text object described the edit exactly without counting characters."
+          },
+          "skills": {
+            "primary": [
+              "quoted-text-object"
+            ],
+            "supporting": [
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "delimiter-text-object",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "typescript gives a realistic call site whose quoted argument sits among unquoted ones.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "quoted-text-object"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "drop-audit-flag",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Remove the trailing audit argument",
+          "instruction": "The audit call still passes a third argument that the function no longer accepts. The call should end after its second argument.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(config.host, \"prod\", true);",
+                "}"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(config.host, \"prod\");",
+                "}"
+              ],
+              "cursor": [
+                4,
+                34
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "$",
+              "F",
+              ",",
+              "d",
+              "t",
+              ")"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "$",
+                "explanation": "Jump to the end of the call so the search for its last separator runs backwards."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "F,",
+                "explanation": "Land on the separator that opens the argument being removed."
+              },
+              {
+                "from": 3,
+                "to": 6,
+                "display": "dt)",
+                "explanation": "Delete up to the closing parenthesis, taking the separator and the argument but leaving the bracket."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  4,
+                  41
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  4,
+                  34
+                ],
+                "mode": "normal",
+                "caption": "Standing on the separator makes the rest of the argument one motion away."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(config.host, \"prod\");",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  34
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Deleting the argument alone would leave a stray separator behind.",
+            "A backwards character search reaches the last separator without counting the ones before it.",
+            "Use `$F,` and then `dt)`."
+          ],
+          "feedback": {
+            "success": "The audit call now passes two arguments.",
+            "why": "A till-motion stopped short of the closing bracket, so the operator removed the argument and its separator in one range and left the call's structure intact.",
+            "contrast": "Deleting a word would have left the separator and the space behind."
+          },
+          "skills": {
+            "primary": [
+              "till-motion"
+            ],
+            "supporting": [
+              "backward-character-search",
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "argument-boundary",
+              "operator-motion",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "typescript keeps the removed flag visually distinct from the two arguments that remain.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "till-motion"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "reorder-audit-arguments",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Swap the audit arguments",
+          "instruction": "The audit call should take the environment name first and the host second, with the separator and spacing intact.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(config.host, \"prod\");",
+                "}"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(\"prod\", config.host);",
+                "}"
+              ],
+              "cursor": [
+                4,
+                33
+              ],
+              "mode": "normal",
+              "registers": {
+                "c": {
+                  "type": "characterwise",
+                  "text": "config.host"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": ", "
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "c",
+              "\"",
+              "c",
+              "d",
+              "t",
+              ",",
+              "2",
+              "x",
+              "f",
+              ")",
+              "i",
+              ",",
+              " ",
+              "Ctrl-r",
+              "c",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "fc",
+                "explanation": "Move onto the first argument."
+              },
+              {
+                "from": 2,
+                "to": 7,
+                "display": "\"cdt,",
+                "explanation": "Lift the argument into a named register instead of the unnamed one."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": "2x",
+                "explanation": "Remove the separator and space the argument left behind."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "f)",
+                "explanation": "Move to the closing bracket, where the argument now belongs."
+              },
+              {
+                "from": 11,
+                "to": 14,
+                "display": "i, ",
+                "explanation": "Open the new separator before the bracket."
+              },
+              {
+                "from": 14,
+                "to": 16,
+                "display": "Ctrl-r c",
+                "explanation": "Insert the argument straight from the named register."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(, \"prod\");",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  15
+                ],
+                "mode": "normal",
+                "registers": {
+                  "c": {
+                    "type": "characterwise",
+                    "text": "config.host"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "config.host"
+                  }
+                },
+                "caption": "The named register holds the argument; the unnamed register does too, for now."
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(\"prod\");",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  15
+                ],
+                "mode": "normal",
+                "registers": {
+                  "c": {
+                    "type": "characterwise",
+                    "text": "config.host"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": ", "
+                  }
+                },
+                "caption": "Deleting the separator overwrote the unnamed register — and the named one is untouched."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(\"prod\");",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  21
+                ],
+                "mode": "normal",
+                "registers": {
+                  "c": {
+                    "type": "characterwise",
+                    "text": "config.host"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": ", "
+                  }
+                }
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"prod\");",
+                  "  return audit(\"prod\", config.host);",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  33
+                ],
+                "mode": "normal",
+                "registers": {
+                  "c": {
+                    "type": "characterwise",
+                    "text": "config.host"
+                  },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": ", "
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The separator has to be cleaned up between lifting the argument and putting it back.",
+            "Whatever cleans up the separator will overwrite the unnamed register, so the argument needs somewhere safer to wait.",
+            "Lift it with `\"cdt,` and put it back with `Ctrl-r c` from Insert mode."
+          ],
+          "feedback": {
+            "success": "The audit call reads environment first, host second.",
+            "why": "A named register carried the argument across the edit that would otherwise have destroyed it, so the move survived the clean-up in between.",
+            "contrast": "The unnamed register held the argument at first and held only the deleted separator two keys later."
+          },
+          "skills": {
+            "primary": [
+              "named-register"
+            ],
+            "supporting": [
+              "till-motion",
+              "insert-mode-register",
+              "character-search"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "register-protection",
+              "reorder",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "typescript makes the two argument kinds — an identifier and a quoted literal — easy to tell apart after the swap.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "named-register"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "finish-remaining-environments",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Finish the remaining environment names",
+          "instruction": "Two quoted environment names still read production. Both should read staging, and the timeout constant's name must not change.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(\"prod\", config.host);",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"staging\");",
+                "  return audit(\"staging\", config.host);",
+                "}"
+              ],
+              "cursor": [
+                4,
+                22
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "\"",
+              "p",
+              "r",
+              "o",
+              "d",
+              "\"",
+              "Enter",
+              "c",
+              "i",
+              "\"",
+              "s",
+              "t",
+              "a",
+              "g",
+              "i",
+              "n",
+              "g",
+              "Escape",
+              "n",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "/\"prod\"",
+                "explanation": "Search for the quoted value, so the identifier that merely contains the same letters is never a match."
+              },
+              {
+                "from": 8,
+                "to": 19,
+                "display": "ci\"staging Esc",
+                "explanation": "Make the first change, which also becomes the change that repeats."
+              },
+              {
+                "from": 19,
+                "to": 20,
+                "display": "n",
+                "explanation": "Jump to the remaining match."
+              },
+              {
+                "from": 20,
+                "to": 21,
+                "display": ".",
+                "explanation": "Repeat the same change there."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "cursor": [
+                  3,
+                  32
+                ],
+                "mode": "normal",
+                "caption": "The search skipped the identifier on the second line."
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"staging\");",
+                  "  return audit(\"prod\", config.host);",
+                  "}"
+                ],
+                "cursor": [
+                  3,
+                  39
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"staging\");",
+                  "  return audit(\"prod\", config.host);",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  15
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 21,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const prodTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"staging\");",
+                  "  return audit(\"staging\", config.host);",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  22
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Both remaining environment names read staging, and the timeout constant is untouched.",
+            "why": "Including the quotes in the search made the pattern describe the structure, not just the letters, and repeating one change is cheaper than describing it twice.",
+            "contrast": "A pattern of the bare word would have matched the timeout constant as well."
+          },
+          "skills": {
+            "primary": [
+              "search-then-repeat"
+            ],
+            "supporting": [
+              "quoted-text-object",
+              "dot-repeat"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "precise-pattern",
+              "repeat",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "typescript places a lookalike identifier one line above the real matches, which is what makes the precise pattern matter.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-then-repeat"
+            ]
+          },
+          "delivery": "recall"
+        },
+        {
+          "id": "call-site-substitution-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the file-wide substitution would have cost",
+          "instruction": "Watch the rejected mechanism run on the same module and check every line it touched.",
+          "languageId": "typescript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "export function boot(config) {",
+                "  const prodTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"prod\");",
+                "  return audit(\"prod\", config.host);",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "export function boot(config) {",
+                "  const stagingTimeout = 30;",
+                "  connect(config.host, 5432, \"staging\");",
+                "  connect(config.replica, 5432, \"staging\");",
+                "  return audit(\"staging\", config.host);",
+                "}"
+              ],
+              "cursor": [
+                4,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "p",
+              "r",
+              "o",
+              "d",
+              "/",
+              "s",
+              "t",
+              "a",
+              "g",
+              "i",
+              "n",
+              "g",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 18,
+                "display": "%s/prod/staging/g",
+                "explanation": "Replace the word everywhere in the file, which is the whole appeal and the whole risk."
+              },
+              {
+                "from": 18,
+                "to": 19,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": [
+                  "export function boot(config) {",
+                  "  const stagingTimeout = 30;",
+                  "  connect(config.host, 5432, \"staging\");",
+                  "  connect(config.replica, 5432, \"staging\");",
+                  "  return audit(\"staging\", config.host);",
+                  "}"
+                ],
+                "cursor": [
+                  4,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Both environment names changed — and so did the timeout constant.",
+            "why": "The substitution matched letters, not structure. It reached the two intended values in one command and renamed an unrelated identifier on the way, which is the cost the repeated structural change avoided.",
+            "contrast": "Anchoring the pattern to the quotes would have made this safe; the lesson is that the mechanism only becomes safe once the pattern describes the structure."
+          },
+          "skills": {
+            "primary": [
+              "substitution-reach"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "typescript keeps the collateral rename visible on screen next to the two intended changes.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substitution-reach"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "call-site-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why each call-site edit chose its tool",
+          "body": "Four edits in one module took four different tools, and none of them was chosen for being short. The quoted value is a structure, so a delimiter text object named it exactly. The trailing argument needed its separator removed with it, so a till-motion drew the range. The swap was movement rather than replacement, so a named register carried the argument past an edit that would have destroyed it. Only the last edit repeated, and only then did a search and a repeat beat describing the change again.",
+          "takeaways": [
+            "Match the tool to the shape of the edit: structure, range, movement, or repetition.",
+            "A substitution is the cheapest way to reach every match and the easiest way to reach one you did not want.",
+            "Anchor a pattern to the punctuation around a value when a bare word appears elsewhere.",
+            "Any delete or change overwrites the unnamed register; name a register before an edit has to survive one.",
+            "Repetition earns a search-and-repeat; a single site rarely earns a macro."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "string-and-name-repair",
+      "title": "Capstone: strings and identifiers",
+      "objective": "Rename values and identifiers in one loader, then meet the same edit at a scale where the mechanism has to change.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "name-repair-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job among the names",
+          "body": "A loader holds a quoted value that is wrong, a receiver that was renamed upstream, and a local variable that reads badly in five places. Then the same kind of edit turns up in a log file with far more occurrences than the screen can hold. The commands are all familiar; what changes between the two files is only how many places the edit has to reach.",
+          "grammar": "how far the edit reaches decides the mechanism, not how clever it is",
+          "contrast": "A text object rewrites the structure under the cursor; a pattern rewrites every place the text appears, including the ones you were not thinking about.",
+          "demoRef": "unbounded-rename-contrast"
+        },
+        {
+          "id": "choose-rename-reach",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the reach before the rename",
+          "prompt": "One local variable reads badly in five places inside a seven-line function, and the same letters also appear inside a longer identifier on another line. What fits?",
+          "options": [
+            {
+              "id": "search-and-change-next",
+              "label": "Search for the whole word, change the first match, and repeat"
+            },
+            {
+              "id": "plain-substitution",
+              "label": "A file-wide substitution on the bare word"
+            },
+            {
+              "id": "five-separate-edits",
+              "label": "Five separate word changes, one at each site"
+            }
+          ],
+          "correctOptionId": "search-and-change-next",
+          "explanation": "Five places is more than is worth typing out and fewer than needs a command line. A whole-word search states which occurrences count, changing the match makes that change repeatable, and each repeat is visible as it lands — so an occurrence inside a longer identifier is never silently swept up. The bare substitution would reach it; five hand edits would work but describe the same change five times.",
+          "questionKind": "command-classification",
+          "remediationRef": "rename-local-record"
+        },
+        {
+          "id": "correct-cache-name",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Correct the quoted cache name",
+          "instruction": "The quoted cache name should read session-cache rather than user-cache. The surrounding assignment stays as it is.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"user-cache\"",
+                "    entry = cache.get(cache_key)",
+                "    if entry is None:",
+                "        entry = parse(read(path))",
+                "        cache.set(cache_key, entry)",
+                "    return entry"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"session-cache\"",
+                "    entry = cache.get(cache_key)",
+                "    if entry is None:",
+                "        entry = parse(read(path))",
+                "        cache.set(cache_key, entry)",
+                "    return entry"
+              ],
+              "cursor": [
+                1,
+                29
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "i",
+              "\"",
+              "s",
+              "e",
+              "s",
+              "s",
+              "i",
+              "o",
+              "n",
+              "-",
+              "c",
+              "a",
+              "c",
+              "h",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 3,
+                "display": "ci\"",
+                "explanation": "Change the quoted value as one structure and keep its quotes."
+              },
+              {
+                "from": 3,
+                "to": 16,
+                "display": "session-cache",
+                "explanation": "Enter the corrected name."
+              },
+              {
+                "from": 16,
+                "to": 17,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"\"",
+                  "    entry = cache.get(cache_key)",
+                  "    if entry is None:",
+                  "        entry = parse(read(path))",
+                  "        cache.set(cache_key, entry)",
+                  "    return entry"
+                ],
+                "cursor": [
+                  1,
+                  16
+                ],
+                "mode": "normal",
+                "caption": "The quotes survive; only what they hold is gone."
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"session-cache\"",
+                  "    entry = cache.get(cache_key)",
+                  "    if entry is None:",
+                  "        entry = parse(read(path))",
+                  "        cache.set(cache_key, entry)",
+                  "    return entry"
+                ],
+                "cursor": [
+                  1,
+                  29
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The value is delimited, so it can be named as a structure rather than counted out.",
+            "The cursor does not have to be inside the quotes to change what is between them.",
+            "Use `ci\"`."
+          ],
+          "feedback": {
+            "success": "The cache name reads session-cache.",
+            "why": "The quoted value is one structure, so a delimiter text object replaced its contents without disturbing the quotes or the assignment."
+          },
+          "skills": {
+            "primary": [
+              "quoted-text-object"
+            ],
+            "supporting": [
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "delimiter-text-object",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "python keeps the quoted value and the identifier that shares its letters visible on adjacent lines.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "quoted-text-object"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "rename-cache-receiver",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Rename the receiver but not its call",
+          "instruction": "On the assignment line the receiver was renamed upstream and should read store. The attribute access and the argument beside it must survive unchanged.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"session-cache\"",
+                "    entry = cache.get(cache_key)",
+                "    if entry is None:",
+                "        entry = parse(read(path))",
+                "        cache.set(cache_key, entry)",
+                "    return entry"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"session-cache\"",
+                "    entry = store.get(cache_key)",
+                "    if entry is None:",
+                "        entry = parse(read(path))",
+                "        cache.set(cache_key, entry)",
+                "    return entry"
+              ],
+              "cursor": [
+                2,
+                16
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "c",
+              "c",
+              "i",
+              "w",
+              "s",
+              "t",
+              "o",
+              "r",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "fc",
+                "explanation": "Move onto the receiver."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "ciw",
+                "explanation": "Change the word only, so the punctuation that follows it marks the boundary."
+              },
+              {
+                "from": 5,
+                "to": 10,
+                "display": "store",
+                "explanation": "Enter the new name."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  2,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"session-cache\"",
+                  "    entry = .get(cache_key)",
+                  "    if entry is None:",
+                  "        entry = parse(read(path))",
+                  "        cache.set(cache_key, entry)",
+                  "    return entry"
+                ],
+                "cursor": [
+                  2,
+                  11
+                ],
+                "mode": "normal",
+                "caption": "The change stopped at the dot without being told where the dot was."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"session-cache\"",
+                  "    entry = store.get(cache_key)",
+                  "    if entry is None:",
+                  "        entry = parse(read(path))",
+                  "        cache.set(cache_key, entry)",
+                  "    return entry"
+                ],
+                "cursor": [
+                  2,
+                  16
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The receiver ends where the punctuation begins.",
+            "One word object respects punctuation as a boundary; the wider one treats the whole run up to the next space as a single word.",
+            "Use `ciw`, not `ciW`."
+          ],
+          "feedback": {
+            "success": "The receiver reads store and its call is untouched.",
+            "why": "The narrow word object treats punctuation as a boundary, so the change ended at the dot without a count or a character search.",
+            "contrast": "The wider word object would have swallowed the attribute access and its argument as far as the next space."
+          },
+          "skills": {
+            "primary": [
+              "word-object-boundary"
+            ],
+            "supporting": [
+              "character-search",
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "punctuation-boundary",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "python attribute access puts a punctuation boundary immediately after the word being renamed.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "word-object-boundary"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "rename-local-record",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Rename the local through all five uses",
+          "instruction": "The local variable should read record at every one of its five uses in this function, and the longer identifier on the second line must keep its own name.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"session-cache\"",
+                "    entry = store.get(cache_key)",
+                "    if entry is None:",
+                "        entry = parse(read(path))",
+                "        cache.set(cache_key, entry)",
+                "    return entry"
+              ],
+              "cursor": [
+                2,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"session-cache\"",
+                "    record = store.get(cache_key)",
+                "    if record is None:",
+                "        record = parse(read(path))",
+                "        cache.set(cache_key, record)",
+                "    return record"
+              ],
+              "cursor": [
+                6,
+                16
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "*",
+              "N",
+              "c",
+              "g",
+              "n",
+              "r",
+              "e",
+              "c",
+              "o",
+              "r",
+              "d",
+              "Escape",
+              ".",
+              ".",
+              ".",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "*",
+                "explanation": "Search for the whole word under the cursor, so a longer identifier containing it never matches."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "N",
+                "explanation": "Come back to the first use, which the forward search stepped over."
+              },
+              {
+                "from": 2,
+                "to": 12,
+                "display": "cgnrecord Esc",
+                "explanation": "Change this match, which also makes the change repeatable."
+              },
+              {
+                "from": 12,
+                "to": 16,
+                "display": ". . . .",
+                "explanation": "Repeat it at each remaining use."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  3,
+                  7
+                ],
+                "mode": "normal",
+                "caption": "The whole-word search jumped over the longer identifier entirely."
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  2,
+                  4
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"session-cache\"",
+                  "    record = store.get(cache_key)",
+                  "    if entry is None:",
+                  "        entry = parse(read(path))",
+                  "        cache.set(cache_key, entry)",
+                  "    return entry"
+                ],
+                "cursor": [
+                  2,
+                  9
+                ],
+                "mode": "normal",
+                "caption": "Changing the match is what makes the next repeat find its own target."
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"session-cache\"",
+                  "    record = store.get(cache_key)",
+                  "    if record is None:",
+                  "        entry = parse(read(path))",
+                  "        cache.set(cache_key, entry)",
+                  "    return entry"
+                ],
+                "cursor": [
+                  3,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "def load(path):",
+                  "    cache_key = \"session-cache\"",
+                  "    record = store.get(cache_key)",
+                  "    if record is None:",
+                  "        record = parse(read(path))",
+                  "        cache.set(cache_key, record)",
+                  "    return record"
+                ],
+                "cursor": [
+                  6,
+                  16
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Searching for the word under the cursor already anchors the pattern to whole words.",
+            "The forward search lands past the first use, so the first change needs a step back.",
+            "Change the match with `cgn` and then repeat with `.`."
+          ],
+          "feedback": {
+            "success": "All five uses read record, and the longer identifier kept its name.",
+            "why": "Changing a match rather than a word makes the repeat carry its own search, so each repetition lands on the next real occurrence instead of wherever the cursor happened to be.",
+            "contrast": "A plain word change would have repeated only where you moved the cursor yourself."
+          },
+          "skills": {
+            "primary": [
+              "change-next-match"
+            ],
+            "supporting": [
+              "whole-word-search",
+              "dot-repeat"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "repeatable-rename",
+              "boundary-safety",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "python spreads five uses of one local across a function short enough to verify at a glance.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "change-next-match"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "retitle-debug-log-calls",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Retitle every debug call in the log module",
+          "instruction": "Every debug call in this module should be a trace call instead. The error calls scattered among them must be left alone, and the module is longer than the window shows.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "log.debug(\"connect start\")",
+                "log.debug(\"connect done\")",
+                "log.error(\"connect failed\")",
+                "log.debug(\"query start\")",
+                "log.debug(\"query done\")",
+                "log.error(\"query failed\")",
+                "log.debug(\"cache hit\")",
+                "log.debug(\"cache miss\")",
+                "log.debug(\"flush start\")",
+                "log.error(\"flush failed\")",
+                "log.debug(\"flush done\")",
+                "log.debug(\"close start\")",
+                "log.debug(\"close done\")",
+                "log.error(\"close failed\")"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "log.trace(\"connect start\")",
+                "log.trace(\"connect done\")",
+                "log.error(\"connect failed\")",
+                "log.trace(\"query start\")",
+                "log.trace(\"query done\")",
+                "log.error(\"query failed\")",
+                "log.trace(\"cache hit\")",
+                "log.trace(\"cache miss\")",
+                "log.trace(\"flush start\")",
+                "log.error(\"flush failed\")",
+                "log.trace(\"flush done\")",
+                "log.trace(\"close start\")",
+                "log.trace(\"close done\")",
+                "log.error(\"close failed\")"
+              ],
+              "cursor": [
+                12,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "d",
+              "e",
+              "b",
+              "u",
+              "g",
+              "/",
+              "t",
+              "r",
+              "a",
+              "c",
+              "e",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 17,
+                "display": "%s/debug/trace/g",
+                "explanation": "Rewrite the call name across the whole file, reaching the rows below the window as well."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "log.trace(\"connect start\")",
+                  "log.trace(\"connect done\")",
+                  "log.error(\"connect failed\")",
+                  "log.trace(\"query start\")",
+                  "log.trace(\"query done\")",
+                  "log.error(\"query failed\")",
+                  "log.trace(\"cache hit\")",
+                  "log.trace(\"cache miss\")",
+                  "log.trace(\"flush start\")",
+                  "log.error(\"flush failed\")",
+                  "log.trace(\"flush done\")",
+                  "log.trace(\"close start\")",
+                  "log.trace(\"close done\")",
+                  "log.error(\"close failed\")"
+                ],
+                "cursor": [
+                  12,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Every debug call reads trace, and all four error calls are untouched.",
+            "why": "At this many occurrences the edit is uniform and its text is unambiguous, so stating it once reaches the rows past the window at no extra cost. This is the same rename as the last stage, and the change in scale is what changed the tool.",
+            "contrast": "Repeating a change here would have meant one visible repetition per row, most of them off screen."
+          },
+          "skills": {
+            "primary": [
+              "file-wide-substitution"
+            ],
+            "supporting": [
+              "command-line-ranges",
+              "off-screen-reach"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "scale",
+              "uniform-edit",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "python log calls repeat one exact token often enough that the mechanism has to change, with untouched neighbours proving the reach was correct.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "file-wide-substitution"
+            ]
+          },
+          "delivery": "recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "unbounded-rename-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the unbounded rename would have cost",
+          "instruction": "Watch the rejected mechanism rename the receiver in the loader and check the other three lines it changed.",
+          "languageId": "python",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "def load(path):",
+                "    cache_key = \"session-cache\"",
+                "    record = store.get(cache_key)",
+                "    if record is None:",
+                "        record = parse(read(path))",
+                "        cache.set(cache_key, record)",
+                "    return record"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "def load(path):",
+                "    store_key = \"session-store\"",
+                "    record = store.get(store_key)",
+                "    if record is None:",
+                "        record = parse(read(path))",
+                "        store.set(store_key, record)",
+                "    return record"
+              ],
+              "cursor": [
+                5,
+                8
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "c",
+              "a",
+              "c",
+              "h",
+              "e",
+              "/",
+              "s",
+              "t",
+              "o",
+              "r",
+              "e",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 17,
+                "display": "%s/cache/store/g",
+                "explanation": "Rewrite the word everywhere it appears, including inside longer identifiers and inside quoted values."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "def load(path):",
+                  "    store_key = \"session-store\"",
+                  "    record = store.get(store_key)",
+                  "    if record is None:",
+                  "        record = parse(read(path))",
+                  "        store.set(store_key, record)",
+                  "    return record"
+                ],
+                "cursor": [
+                  5,
+                  8
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The receiver changed — and so did both uses of the longer identifier and the quoted value.",
+            "why": "The pattern matched letters wherever they occurred. In the log module that reach was the whole point; in a seven-line function with one intended site it is three unwanted edits, and the file is short enough that repeating a visible change costs nothing.",
+            "contrast": "Anchoring the pattern to whole words would have spared the longer identifier but still rewritten the quoted value, because the hyphen before it is a word boundary too."
+          },
+          "skills": {
+            "primary": [
+              "substitution-reach"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "python puts the intended site, a longer identifier, and a quoted value close enough that every consequence is on one screen.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "substitution-reach"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "name-repair-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why the same rename took two different tools",
+          "body": "The last stage and the demonstration ran the same command with the same shape, and only one of them was right. Nothing about the substitution changed between them — the file did. Five occurrences in view, with a lookalike identifier nearby, favour a repeat you can watch land. Ten occurrences spread past the window, with unambiguous text, favour a command that states the edit once. Scale and ambiguity pick the mechanism; neither is a property of the command.",
+          "takeaways": [
+            "Count the occurrences and check whether they fit on screen before choosing.",
+            "Prefer a repeat you can watch when a lookalike is nearby; prefer a pattern when the text is unambiguous.",
+            "A whole-word anchor still matches inside hyphenated text, so it is not a guarantee of safety.",
+            "Changing a match rather than a word makes the repeat find its own next target.",
+            "The same command is a good choice and a bad one in two files; judge the file, not the command."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shape-the-block",
+      "title": "Capstone: formatting and indentation",
+      "objective": "Restore the shape of a module and a runbook by matching each formatting fix to the boundary that already describes it.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "shape-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job with the shapes",
+          "body": "A helper has been pasted back together: its chain is split across three lines and its body lost a level of indentation. The runbook beside it has a paragraph that runs past the review width and a numbered list where every number is one. None of these edits changes what the code or the prose says — each one restores a shape that something in the file already describes.",
+          "grammar": "make the range visible or let the file state it, then apply the operator",
+          "contrast": "A range you address by number is committed before you can see it; a selection and a paragraph both show you what will move first.",
+          "demoRef": "blanket-indent-contrast"
+        },
+        {
+          "id": "choose-indent-boundary",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose how to describe the block",
+          "prompt": "The body of a function has lost a level of indentation. The signature and the closing brace are correct and must not move. What describes the block?",
+          "options": [
+            {
+              "id": "visible-selection",
+              "label": "Select the body lines, check what is highlighted, then indent the selection"
+            },
+            {
+              "id": "file-wide-normal",
+              "label": "A Normal-mode indent run over every line in the file"
+            },
+            {
+              "id": "counted-shift",
+              "label": "A counted indent guessed from the number of body lines"
+            }
+          ],
+          "correctOptionId": "visible-selection",
+          "explanation": "Two of these three edits are committed before you can see what they will touch. A selection shows the exact set of lines first, so an off-by-one is visible while it is still free to fix — and on a phone, where the closing brace may be below the window, that is the difference between a correct indent and a silent one. The file-wide run would move the signature and the closing brace too, and the counted indent is right only until a statement is added.",
+          "questionKind": "command-classification",
+          "remediationRef": "indent-the-body"
+        },
+        {
+          "id": "rejoin-the-chain",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Rejoin the split chain",
+          "instruction": "The returned chain has been broken across three lines and should sit on one, with no space introduced before either dot.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "function scale(items) {",
+                "const step = 2;",
+                "return items",
+                ".map(x => x * step)",
+                ".filter(Boolean);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "function scale(items) {",
+                "const step = 2;",
+                "return items.map(x => x * step).filter(Boolean);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                31
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "3",
+              "g",
+              "J"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "3",
+                "explanation": "Count the three lines the chain occupies."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "gJ",
+                "explanation": "Join them exactly as written, without inserting the separator a plain join would add."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 3,
+                "lines": [
+                  "function scale(items) {",
+                  "const step = 2;",
+                  "return items.map(x => x * step).filter(Boolean);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  31
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The chain is three lines, not two.",
+            "One join tidies spacing on the way; the other joins the text exactly as it stands.",
+            "Use `3gJ`, not `3J`."
+          ],
+          "feedback": {
+            "success": "The chain sits on one line with both dots tight against their calls.",
+            "why": "The join that preserves text exactly is the one that suits code, because the line breaks here sit where a separator would be wrong.",
+            "contrast": "A plain join would have produced a space before each dot and broken the chain."
+          },
+          "skills": {
+            "primary": [
+              "join-without-spacing"
+            ],
+            "supporting": [
+              "count-prefix"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "join-variant",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript method chains break across lines exactly where an inserted space would be wrong.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "join-without-spacing"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "indent-the-body",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Give the body its level back",
+          "instruction": "Both statements in the function body should sit one level in, and you should be able to see exactly which lines will move before they do. The signature and the closing brace stay where they are.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "function scale(items) {",
+                "const step = 2;",
+                "return items.map(x => x * step).filter(Boolean);",
+                "}"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "function scale(items) {",
+                "  const step = 2;",
+                "  return items.map(x => x * step).filter(Boolean);",
+                "}"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              ">"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "Vj",
+                "explanation": "Select the two body lines, so the exact range is on screen before anything moves."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ">",
+                "explanation": "Indent what is selected by one level."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "visual-line",
+                "caption": "Two lines highlighted, and neither brace among them."
+              },
+              {
+                "afterStep": 3,
+                "lines": [
+                  "function scale(items) {",
+                  "  const step = 2;",
+                  "  return items.map(x => x * step).filter(Boolean);",
+                  "}"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The signature and the closing brace must stay where they are.",
+            "Seeing the range before committing to it is the point; a selection shows it, a count does not.",
+            "Select with `Vj`, then indent with `>`."
+          ],
+          "feedback": {
+            "success": "The body is one level in and the braces did not move.",
+            "why": "The selection put the exact range on screen before the operator ran, so an off-by-one would have been visible while it was still free to fix.",
+            "contrast": "A counted indent commits to a number first and shows you the result afterwards."
+          },
+          "skills": {
+            "primary": [
+              "visual-line-scope"
+            ],
+            "supporting": [
+              "indent-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "visible-range",
+              "selection-then-operator",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript braces put an explicit, visible boundary around the lines that need the level.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "visual-line-scope"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "reflow-the-runbook-paragraph",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reflow the runbook paragraph",
+          "instruction": "The opening paragraph runs past the review width and should be wrapped to it. The numbered list below must keep its own line breaks.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Run each step in order and record the row counts before and after.",
+                "",
+                "1. Connect to the database",
+                "1. Run the migration",
+                "1. Verify the row counts"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Run each step in order and record the",
+                "row counts before and after.",
+                "",
+                "1. Connect to the database",
+                "1. Run the migration",
+                "1. Verify the row counts"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "g",
+              "q",
+              "a",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "gq",
+                "explanation": "Reflow to the configured width."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "ap",
+                "explanation": "Take the paragraph as the range, so the blank line below stops it short of the list."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "Run each step in order and record the",
+                  "row counts before and after.",
+                  "",
+                  "1. Connect to the database",
+                  "1. Run the migration",
+                  "1. Verify the row counts"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The blank line under the paragraph is already a boundary.",
+            "A range of lines would have to be counted; a paragraph object does not.",
+            "Use `gqap`."
+          ],
+          "feedback": {
+            "success": "The paragraph wraps to the review width and the list is untouched.",
+            "why": "The paragraph object took its boundary from the blank line, so the reflow stopped exactly where the prose stopped.",
+            "contrast": "A counted line range would have needed recounting the moment the paragraph grew, and reaching one line too far would have folded the list into the prose."
+          },
+          "skills": {
+            "primary": [
+              "paragraph-object"
+            ],
+            "supporting": [
+              "format-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "prose-boundary",
+              "operator-text-object",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "markdown separates prose from a list with a blank line, which is the boundary the paragraph object reads.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "paragraph-object"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "textWidth": 40
+          }
+        },
+        {
+          "id": "renumber-the-runbook-steps",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Renumber the runbook steps",
+          "instruction": "Every step in the list is numbered one. The second and third steps should read two and three, and the first step keeps its number.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "Run each step in order and record the",
+                "row counts before and after.",
+                "",
+                "1. Connect to the database",
+                "1. Run the migration",
+                "1. Verify the row counts"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "Run each step in order and record the",
+                "row counts before and after.",
+                "",
+                "1. Connect to the database",
+                "2. Run the migration",
+                "3. Verify the row counts"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "V",
+              "j",
+              "g",
+              "Ctrl-a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "Vj",
+                "explanation": "Select the two steps whose numbers are wrong."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "g Ctrl-a",
+                "explanation": "Increase each selected number by a step more than the last, turning equal numbers into a sequence."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  4,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 2,
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "visual-line",
+                "caption": "Two lines selected, and the first step deliberately left out."
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "Run each step in order and record the",
+                  "row counts before and after.",
+                  "",
+                  "1. Connect to the database",
+                  "2. Run the migration",
+                  "3. Verify the row counts"
+                ],
+                "cursor": [
+                  4,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The steps read one, two, three.",
+            "why": "The progressive increment gives each selected line a larger increase than the one before, so a column of equal numbers becomes a sequence in one command.",
+            "contrast": "The plain increment would have made every selected number two."
+          },
+          "skills": {
+            "primary": [
+              "progressive-increment"
+            ],
+            "supporting": [
+              "visual-line-selection"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "sequence-normalisation",
+              "selection-scope",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "markdown ordered lists are conventionally written with repeated ones, so the repair is a real one.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "progressive-increment"
+            ]
+          },
+          "delivery": "recall"
+        },
+        {
+          "id": "blanket-indent-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the blanket indent would have cost",
+          "instruction": "Watch the rejected mechanism indent the module and check the first and last lines.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "function scale(items) {",
+                "const step = 2;",
+                "return items.map(x => x * step).filter(Boolean);",
+                "}"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "  function scale(items) {",
+                "  const step = 2;",
+                "  return items.map(x => x * step).filter(Boolean);",
+                "  }"
+              ],
+              "cursor": [
+                3,
+                2
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              ">",
+              ">",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 11,
+                "display": "%normal >>",
+                "explanation": "Run a Normal-mode indent on every line in the file, which is the appeal and the flaw."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "  function scale(items) {",
+                  "  const step = 2;",
+                  "  return items.map(x => x * step).filter(Boolean);",
+                  "  }"
+                ],
+                "cursor": [
+                  3,
+                  2
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The body is indented — and so are the signature and the closing brace.",
+            "why": "The range was chosen by hand and said every line, while the braces were saying something narrower the whole time. The command is the right one when the line set really is known; here the file already knew a better one.",
+            "contrast": "Addressing the body's two lines by number would have worked today and been wrong as soon as a statement was added."
+          },
+          "skills": {
+            "primary": [
+              "ranged-normal"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript makes the over-indented signature and closing brace obvious at a glance.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "ranged-normal"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "shape-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why each shape fix chose its boundary",
+          "body": "Four formatting fixes, and in three of them the work was choosing the range rather than the operator. A selection and a blank line each made the range visible or let the file state it, so neither edit needed a line count and neither goes stale when a line is added. Only the join counted, because three split lines are a fact about this paste and not a structure. The operators here are the easy part; the boundary is the decision.",
+          "takeaways": [
+            "Prefer a range you can see, or one the file states, over one you count.",
+            "A counted range is correct today and wrong after the next line is added.",
+            "Choose the join that matches the material: one tidies spacing, the other preserves text exactly.",
+            "The progressive increment turns a column of equal numbers into a sequence; the plain one does not.",
+            "A file-wide range is the right tool only when the line set genuinely is every line."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "move-without-losing-it",
+      "title": "Capstone: register-preserving refactors",
+      "objective": "Move two snippets across a module while deletes happen in between, and choose what protects the text in transit.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "register-move-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job in transit",
+          "body": "A stray import sits below the function that should never have been under it, and a constant belongs inside the function rather than above it. Neither move is hard on its own. What makes them a capstone is that each one needs something deleted in between, and every delete changes what a plain put would give back. The decision is where the text waits while the rest of the edit happens.",
+          "grammar": "decide where the text waits before you make the delete that would overwrite it",
+          "contrast": "A yank or delete without a register name lands in the unnamed one, which the very next delete overwrites; a named register is overwritten only when you name it again.",
+          "demoRef": "unprotected-move-contrast"
+        },
+        {
+          "id": "choose-register-protection",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose what protects the text in transit",
+          "prompt": "A line has to be lifted out and put back three lines lower, and a blank line between the two positions has to go first. What keeps the lifted line available?",
+          "options": [
+            {
+              "id": "named-register",
+              "label": "Lift the line into a named register and delete the blank into the black hole"
+            },
+            {
+              "id": "count-numbered",
+              "label": "Lift the line normally, then count down the numbered registers to find it again"
+            },
+            {
+              "id": "plain-unnamed",
+              "label": "Lift the line normally and put it back from the unnamed register"
+            }
+          ],
+          "correctOptionId": "named-register",
+          "explanation": "The plain unnamed register holds whatever was removed most recently, which after the blank line is the blank line. Counting down the numbered registers does recover the text, but the number depends on how many deletes happened in between, so it is a fact you have to keep in your head and re-derive if the plan changes. Naming the register at the moment you lift the line, and sending the throwaway delete to the black hole, makes both facts explicit and neither of them positional.",
+          "questionKind": "command-classification",
+          "remediationRef": "protect-the-constant"
+        },
+        {
+          "id": "hold-the-stray-import",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Hold the stray import somewhere safe",
+          "instruction": "The import stranded at the bottom of the module has to survive the edits that follow. Put a copy of that whole line somewhere a later delete cannot reach, and leave the module exactly as it is.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}",
+                "import { log } from \"./log\";"
+              ],
+              "cursor": [
+                6,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}",
+                "import { log } from \"./log\";"
+              ],
+              "cursor": [
+                6,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "linewise",
+                  "text": "import { log } from \"./log\";\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "import { log } from \"./log\";\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "\"",
+              "a",
+              "y",
+              "y"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "\"a",
+                "explanation": "Name the register that will hold the line."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "yy",
+                "explanation": "Copy the whole line into it, leaving the buffer untouched."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "const RETRIES = 3;",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}",
+                  "import { log } from \"./log\";"
+                ],
+                "cursor": [
+                  6,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Nothing in the buffer should change at this stage.",
+            "A register name goes in front of the operator, not after it.",
+            "Use `\"ayy`."
+          ],
+          "feedback": {
+            "success": "The line is held in a named register and the module is unchanged.",
+            "why": "Naming the register at the moment of the copy is what makes the text independent of everything that happens next.",
+            "contrast": "Naming a register also means the yank register stays empty — it fills only when a yank does not name one."
+          },
+          "skills": {
+            "primary": [
+              "named-register"
+            ],
+            "supporting": [
+              "linewise-yank"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "register-naming",
+              "no-text-change",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript modules put imports at the top by convention, so a stranded one is visibly out of place.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "named-register"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "move-the-stray-import",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Move the stray import into the block",
+          "instruction": "With the line already held, the stray import should leave the bottom of the module and appear directly under the first import. The removal must not disturb anything that is being held.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}",
+                "import { log } from \"./log\";"
+              ],
+              "cursor": [
+                6,
+                0
+              ],
+              "mode": "normal",
+              "setup": {
+                "cursor": [
+                  6,
+                  0
+                ],
+                "steps": [
+                  "\"",
+                  "a",
+                  "y",
+                  "y"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "linewise",
+                  "text": "import { log } from \"./log\";\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "import { log } from \"./log\";\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "\"",
+              "_",
+              "d",
+              "d",
+              "g",
+              "g",
+              "\"",
+              "a",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "\"_dd",
+                "explanation": "Delete the stray line into the black hole, so no register records it."
+              },
+              {
+                "from": 4,
+                "to": 6,
+                "display": "gg",
+                "explanation": "Move to the first import."
+              },
+              {
+                "from": 6,
+                "to": 9,
+                "display": "\"ap",
+                "explanation": "Put the held line back from its named register, below the current line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "const RETRIES = 3;",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  }
+                },
+                "caption": "The line is gone from the buffer and every register is exactly as it was."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "const RETRIES = 3;",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  }
+                }
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "const RETRIES = 3;",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "import { log } from \"./log\";\n"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The line being removed is already held elsewhere, so nothing needs to record it a second time.",
+            "One register exists precisely so that a delete leaves no trace.",
+            "Delete with `\"_dd` and put with `\"ap`."
+          ],
+          "feedback": {
+            "success": "The imports sit together and the held line is still held.",
+            "why": "The black hole absorbed the delete, so neither the unnamed register nor the numbered ones shifted, and the put found exactly what was placed there two steps earlier.",
+            "contrast": "A plain delete would have overwritten the unnamed register and pushed the numbered ones down by one."
+          },
+          "skills": {
+            "primary": [
+              "black-hole-register"
+            ],
+            "supporting": [
+              "named-register",
+              "linewise-put"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "register-protection",
+              "relocation",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript import order is a real reason to relocate a line rather than retype it.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "black-hole-register"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "recover-the-constant",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Recover the constant after the deletes",
+          "instruction": "The constant above the function belongs inside it, and the blank line between them should go too. Remove them both first, then bring the constant back as the first line of the body, indented to match.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "export function boot() {",
+                "  const RETRIES = 3;",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                3,
+                2
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "type": "linewise",
+                  "text": "\n"
+                },
+                "2": {
+                  "type": "linewise",
+                  "text": "const RETRIES = 3;\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "d",
+              "d",
+              "d",
+              "\"",
+              "2",
+              "p",
+              ">",
+              ">"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "dd",
+                "explanation": "Remove the constant, which the most recent delete register now holds."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "dd",
+                "explanation": "Remove the blank line, which pushes the constant one place further down the numbered registers."
+              },
+              {
+                "from": 4,
+                "to": 7,
+                "display": "\"2p",
+                "explanation": "Put back the second most recent delete, which is the constant."
+              },
+              {
+                "from": 7,
+                "to": 9,
+                "display": ">>",
+                "explanation": "Indent the restored line to match the body."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  }
+                },
+                "caption": "The constant is the most recent delete — for exactly one more keystroke."
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "\n"
+                  },
+                  "2": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "\n"
+                  }
+                },
+                "caption": "The blank line took its place, and the constant moved one slot down."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "const RETRIES = 3;",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "\n"
+                  },
+                  "2": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "\n"
+                  }
+                }
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "  const RETRIES = 3;",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  3,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "\n"
+                  },
+                  "2": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "\n"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [
+            "Each new line delete pushes the previous ones one place further down.",
+            "Two deletes happened, so the line you want is not the most recent one.",
+            "Put it back with `\"2p`."
+          ],
+          "feedback": {
+            "success": "The constant sits inside the function, indented with the body.",
+            "why": "Line deletes fill the numbered registers in order, so text is still recoverable after later deletes — as long as you can say how many happened.",
+            "contrast": "The unnamed register held the blank line by then, so a plain put would have inserted an empty line."
+          },
+          "skills": {
+            "primary": [
+              "numbered-registers"
+            ],
+            "supporting": [
+              "linewise-put",
+              "indent-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "register-history",
+              "recovery",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript scoping makes moving a constant into the function that uses it a real refactor rather than a rearrangement.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "numbered-registers"
+            ]
+          },
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "protect-the-constant",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Make the same move without needing to count",
+          "instruction": "Reach the same result as the previous stage — the constant inside the function and indented, the blank line gone — but this time nothing about the outcome should depend on how many deletes happened along the way.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "export function boot() {",
+                "  const RETRIES = 3;",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                3,
+                2
+              ],
+              "mode": "normal",
+              "registers": {
+                "a": {
+                  "type": "linewise",
+                  "text": "const RETRIES = 3;\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "const RETRIES = 3;\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "\"",
+              "a",
+              "d",
+              "d",
+              "\"",
+              "_",
+              "d",
+              "d",
+              "\"",
+              "a",
+              "p",
+              ">",
+              ">"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 4,
+                "display": "\"add",
+                "explanation": "Remove the constant into a named register, deciding where it waits at the moment it leaves."
+              },
+              {
+                "from": 4,
+                "to": 8,
+                "display": "\"_dd",
+                "explanation": "Send the throwaway delete to the black hole so it records nothing."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "\"ap",
+                "explanation": "Put the constant back by name, whatever happened in between."
+              },
+              {
+                "from": 11,
+                "to": 13,
+                "display": ">>",
+                "explanation": "Indent the restored line to match the body."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  }
+                }
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  }
+                },
+                "caption": "The black hole recorded nothing at all, so the constant is still exactly where it was put."
+              },
+              {
+                "afterStep": 11,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "const RETRIES = 3;",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  }
+                }
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "  const RETRIES = 3;",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  3,
+                  2
+                ],
+                "mode": "normal",
+                "registers": {
+                  "a": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Same result, and the put named exactly what it wanted.",
+            "why": "Naming the register on the way out and discarding the throwaway delete turns two positional facts into two stated ones, so the sequence still reads correctly if a third delete is added tomorrow.",
+            "contrast": "The recovery in the previous stage was correct, but its register number was true only for that exact number of deletes."
+          },
+          "skills": {
+            "primary": [
+              "register-preserving-move"
+            ],
+            "supporting": [
+              "named-register",
+              "black-hole-register",
+              "indent-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "protection-over-recovery",
+              "relocation",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript repeats the previous stage's refactor exactly, so only the method differs between them.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "register-preserving-move"
+            ]
+          },
+          "delivery": "recall"
+        },
+        {
+          "id": "unprotected-move-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the unprotected move would have cost",
+          "instruction": "Watch the rejected mechanism make the same two removals and put back whatever the unnamed register happens to hold.",
+          "languageId": "javascript",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "const RETRIES = 3;",
+                "",
+                "export function boot() {",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                2,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "import { connect } from \"./db\";",
+                "import { log } from \"./log\";",
+                "export function boot() {",
+                "",
+                "  return connect(RETRIES);",
+                "}"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "1": {
+                  "type": "linewise",
+                  "text": "\n"
+                },
+                "2": {
+                  "type": "linewise",
+                  "text": "const RETRIES = 3;\n"
+                },
+                "\"": {
+                  "type": "linewise",
+                  "text": "\n"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "d",
+              "d",
+              "d",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "dd",
+                "explanation": "Remove the constant into the unnamed register."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "dd",
+                "explanation": "Remove the blank line, which overwrites the unnamed register without warning."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "p",
+                "explanation": "Put back whatever the unnamed register holds now."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  }
+                },
+                "caption": "The unnamed register holds the constant."
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "\n"
+                  },
+                  "2": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "\n"
+                  }
+                },
+                "caption": "The unnamed register holds the blank line, and nothing said so."
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "import { connect } from \"./db\";",
+                  "import { log } from \"./log\";",
+                  "export function boot() {",
+                  "",
+                  "  return connect(RETRIES);",
+                  "}"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "1": {
+                    "type": "linewise",
+                    "text": "\n"
+                  },
+                  "2": {
+                    "type": "linewise",
+                    "text": "const RETRIES = 3;\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "\n"
+                  }
+                }
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "A blank line came back instead of the constant, and the buffer looks almost right.",
+            "why": "The unnamed register is overwritten by every delete, so the put returned the most recent one. The failure is quiet: no error, no warning, and a module that still parses.",
+            "contrast": "The constant was not lost — it was one slot down the numbered registers the whole time. Recovery was possible; noticing was the hard part."
+          },
+          "skills": {
+            "primary": [
+              "unnamed-register-clobber"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "quiet-failure",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "javascript still parses after the wrong line is restored, which is what makes the failure quiet.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "unnamed-register-clobber"
+            ]
+          },
+          "delivery": "guided"
+        },
+        {
+          "id": "register-move-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why the moves named their registers",
+          "body": "Three routes reached the same constant: the unnamed register, which was wrong; a numbered register, which was right but only for that exact number of deletes; and a named register, which was right regardless. None of them differed much in length. What differed was how much of the outcome lived in your head. Naming the register on the way out costs two keys and removes the need to remember anything at all — and the black hole is the matching half, because a delete that records nothing cannot disturb what you are protecting.",
+          "takeaways": [
+            "Decide where text waits at the moment you remove it, not when you need it back.",
+            "Every delete overwrites the unnamed register, and the failure is silent.",
+            "Numbered registers make text recoverable, at the cost of counting the deletes since.",
+            "Send a throwaway delete to the black hole so it disturbs no register at all.",
+            "A yank that names a register leaves the yank register empty; a yank that does not, fills it.",
+            "Prefer the method that stays correct when a step is added tomorrow."
+          ]
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "id": "call-site-surgery-reference",
+      "command": "ci\" · dt) · \"{reg}d · /pattern then .",
+      "purpose": "Pick between a structural change, a bounded range, a protected move, and a repeat when editing argument lists.",
+      "notes": [
+        "read the shape of the edit, then pick the tool that matches it",
+        "A substitution rewrites matching text anywhere; a text object rewrites one structure exactly where you are standing."
+      ],
+      "exampleActivityRefs": [
+        "retarget-one-connection",
+        "drop-audit-flag",
+        "reorder-audit-arguments",
+        "finish-remaining-environments",
+        "call-site-substitution-contrast"
+      ]
+    },
+    {
+      "id": "string-and-name-repair-reference",
+      "command": "ciw · ci\" · * then cgn and . · :%s/old/new/g",
+      "purpose": "Choose between a structural change, a repeated match change, and a file-wide substitution when renaming values and identifiers.",
+      "notes": [
+        "how far the edit reaches decides the mechanism, not how clever it is",
+        "A text object rewrites the structure under the cursor; a pattern rewrites every place the text appears, including the ones you were not thinking about."
+      ],
+      "exampleActivityRefs": [
+        "correct-cache-name",
+        "rename-cache-receiver",
+        "rename-local-record",
+        "retitle-debug-log-calls",
+        "unbounded-rename-contrast"
+      ]
+    },
+    {
+      "id": "shape-the-block-reference",
+      "command": "3gJ · Vj> · gqap · Visual g Ctrl-a",
+      "purpose": "Match a formatting operator to a range you can see or one the file already states.",
+      "notes": [
+        "make the range visible or let the file state it, then apply the operator",
+        "A range you address by number is committed before you can see it; a selection and a paragraph both show you what will move first."
+      ],
+      "exampleActivityRefs": [
+        "rejoin-the-chain",
+        "indent-the-body",
+        "reflow-the-runbook-paragraph",
+        "renumber-the-runbook-steps",
+        "blanket-indent-contrast"
+      ]
+    },
+    {
+      "id": "move-without-losing-it-reference",
+      "command": "\"ayy · \"_dd · \"ap · \"2p",
+      "purpose": "Keep a snippet available across the deletes that a relocation needs.",
+      "notes": [
+        "decide where the text waits before you make the delete that would overwrite it",
+        "A yank or delete without a register name lands in the unnamed one, which the very next delete overwrites; a named register is overwritten only when you name it again."
+      ],
+      "exampleActivityRefs": [
+        "hold-the-stray-import",
+        "move-the-stray-import",
+        "recover-the-constant",
+        "protect-the-constant",
+        "unprotected-move-contrast"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "concept": "choosing between structural, range, register, and repeat edits at call sites",
+      "explain": [
+        "call-site-brief"
+      ],
+      "demonstrate": [
+        "call-site-substitution-contrast"
+      ],
+      "isolate": [
+        "retarget-one-connection"
+      ],
+      "mix": [
+        "drop-audit-flag",
+        "reorder-audit-arguments"
+      ],
+      "challenge": [
+        "finish-remaining-environments",
+        "choose-call-site-mechanism"
+      ]
+    },
+    {
+      "concept": "matching rename reach to occurrence count and ambiguity",
+      "explain": [
+        "name-repair-brief"
+      ],
+      "demonstrate": [
+        "unbounded-rename-contrast"
+      ],
+      "isolate": [
+        "correct-cache-name"
+      ],
+      "mix": [
+        "rename-cache-receiver",
+        "rename-local-record"
+      ],
+      "challenge": [
+        "retitle-debug-log-calls",
+        "choose-rename-reach"
+      ]
+    },
+    {
+      "concept": "choosing the boundary that already describes a formatting fix",
+      "explain": [
+        "shape-brief"
+      ],
+      "demonstrate": [
+        "blanket-indent-contrast"
+      ],
+      "isolate": [
+        "rejoin-the-chain"
+      ],
+      "mix": [
+        "indent-the-body",
+        "reflow-the-runbook-paragraph"
+      ],
+      "challenge": [
+        "renumber-the-runbook-steps",
+        "choose-indent-boundary"
+      ]
+    },
+    {
+      "concept": "protecting text in transit across intervening deletes",
+      "explain": [
+        "register-move-brief"
+      ],
+      "demonstrate": [
+        "unprotected-move-contrast"
+      ],
+      "isolate": [
+        "hold-the-stray-import"
+      ],
+      "mix": [
+        "move-the-stray-import",
+        "recover-the-constant"
+      ],
+      "challenge": [
+        "protect-the-constant",
+        "choose-register-protection"
+      ]
+    }
+  ]
+}

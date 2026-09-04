@@ -182,7 +182,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 13 Visual Block `$` and `g Ctrl-a`
 - [ ] 14 Reference decks
 - [ ] 15 Free practice mode
-- [ ] 16 Unit 15 capstones
+- [~] 16 Unit 16 capstones (first half: capstones 1, 2, 3, 6)
 - [ ] 17 Unit 16 mastery loops
 - [ ] 18 Curriculum graph and portability
 - [ ] 19 Ex output surface
