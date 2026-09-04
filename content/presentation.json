@@ -2147,8 +2147,8 @@
         "action": "Brikk settles four differently shaped jobs into one service kit; a single cyan current tests each assembly in turn",
         "copy": "At Menders' Confluence, every restored skill becomes part of one dependable craft.",
         "nextHook": {
-          "speaker": "Nix",
-          "copy": "The language is alive. What you restore next is up to you."
+          "speaker": "Brikk",
+          "copy": "Nothing here needs me now. Go and look at what you put back."
         },
         "storyImage": "assets/worlds/story/units/real-code-workflow-capstones.webp"
       },

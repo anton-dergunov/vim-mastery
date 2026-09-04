@@ -10,7 +10,7 @@
     "commandsAndConcepts": "No new command families. Choosing between a structural change, a bounded range, a protected move, a repeat, and a substitution; matching the reach of an edit to the number and ambiguity of its sites; taking a range from a boundary the file already states; protecting text across intervening deletes; comparing a chosen solution with a working alternative by clarity, setup cost, repeatability, and risk",
     "prerequisites": "Units 1–15",
     "learningOutcome": "Complete a staged edit on realistic code by selecting a mechanism before touching the keys, and justify the selection against an alternative that also works",
-    "representativeExercises": "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore indentation, a joined chain, a reflowed paragraph, and a numbered list; relocate two snippets across deletes that would overwrite them",
+    "representativeExercises": "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore a joined chain, a reflowed paragraph, and a numbered list; anchor a recording so an irregular row stops or is skipped; count and confirm a pattern before committing it; relocate two snippets across deletes that would overwrite them; edit only the lines a predicate selects; return to each correction site by position rather than by pattern",
     "priorityAndPortability": "Integration rather than instruction. Every command here is already taught in Units 1–15 and every capstone closes by comparing its solution with a mechanism that also reaches the target"
   },
   "prerequisiteSkillIds": [
@@ -2595,6 +2595,1931 @@
       ]
     },
     {
+      "id": "irregular-structure-macros",
+      "title": "Capstone: irregular repeated structures",
+      "objective": "Quote the values in a settings block whose keys are all different lengths, and handle the row that does not fit the pattern.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "irregular-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job on rows that do not match",
+          "body": "Every value in this settings block needs quotes around it. The rows look repetitive and are not: the keys are different lengths, so the separator sits at a different column on every line, and one row in the middle is a bare word with no separator at all. A recording can do all of this, but only if it describes where to go rather than how far.",
+          "grammar": "anchor to something the row contains, never to a column number",
+          "contrast": "A column is the same on every row whether or not it means anything; a separator is only ever found where it actually is.",
+          "demoRef": "column-anchor-contrast"
+        },
+        {
+          "id": "choose-macro-anchor",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose what the recording should aim at",
+          "prompt": "The same two-part edit has to run on rows whose keys are all different lengths, and one row in the block does not have the separator the edit depends on. What should the recording aim at?",
+          "options": [
+            {
+              "id": "separator-anchor",
+              "label": "The separator itself, found by a character search inside the recording"
+            },
+            {
+              "id": "column-anchor",
+              "label": "The column the separator occupies on the first row"
+            },
+            {
+              "id": "substitution",
+              "label": "A single substitution across the whole block"
+            }
+          ],
+          "correctOptionId": "separator-anchor",
+          "explanation": "A search inside the recording finds the separator wherever it sits, so rows of different widths are all handled by the same keys — and on the row that has no separator the search simply fails, which ends the run instead of damaging the line. A column is right for the row you recorded on and wrong for the rest. A substitution could add the opening quote or the closing quote, but this edit needs both ends of a value it has to locate first.",
+          "questionKind": "command-classification",
+          "remediationRef": "column-anchor-contrast"
+        },
+        {
+          "id": "quote-by-separator",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Quote the first three values",
+          "instruction": "Wrap the value on each of the first three settings rows in quotation marks, using one recording rather than three separate edits. The keys are different lengths, so the recording has to find the separator on each row.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[service]",
+                "host=db.internal",
+                "port=5432",
+                "mode=replica",
+                "poolsize=12",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "[service]",
+                "host=\"db.internal\"",
+                "port=\"5432\"",
+                "mode=\"replica\"",
+                "poolsize=12",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "f",
+              "=",
+              "a",
+              "\"",
+              "Escape",
+              "A",
+              "\"",
+              "Escape",
+              "j",
+              "0",
+              "q",
+              "@",
+              "a",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "f=",
+                "explanation": "Find the separator wherever it sits on this row."
+              },
+              {
+                "from": 4,
+                "to": 7,
+                "display": "a\" Esc",
+                "explanation": "Open the quote immediately after it."
+              },
+              {
+                "from": 7,
+                "to": 10,
+                "display": "A\" Esc",
+                "explanation": "Close the quote at the end of the line."
+              },
+              {
+                "from": 10,
+                "to": 12,
+                "display": "j0",
+                "explanation": "Step to the next row and return to its start, so a replay begins where this run ended."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "q",
+                "explanation": "Stop recording."
+              },
+              {
+                "from": 13,
+                "to": 17,
+                "display": "@a @a",
+                "explanation": "Replay it on the next two rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=5432",
+                  "mode=replica",
+                  "poolsize=12",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "One row done, and the cursor is already parked for the next run."
+              },
+              {
+                "afterStep": 15,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=\"5432\"",
+                  "mode=replica",
+                  "poolsize=12",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 17,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=\"5432\"",
+                  "mode=\"replica\"",
+                  "poolsize=12",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  4,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The keys are different lengths, so nothing about the first row's spacing will hold on the second.",
+            "A recording that ends on the next row's first column can be replayed immediately.",
+            "Record with `qa`, anchor with `f=`, and finish with `j0` before `q`."
+          ],
+          "feedback": {
+            "success": "Three values are quoted and the recording is still in the register.",
+            "why": "Because the recording searched for the separator instead of counting to it, the same keys fitted rows of three different widths."
+          },
+          "skills": {
+            "primary": [
+              "macro-structural-anchor"
+            ],
+            "supporting": [
+              "macro-record",
+              "character-search"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "anchor-choice",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "toml settings rows give keys of naturally different lengths, which is what makes the column approach fail.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-structural-anchor"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "let-the-count-stop-itself",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Ask for more runs than the block can take",
+          "instruction": "Quote the remaining values with a single generous count rather than counting the rows first. The bare word partway down has no separator, and the run should end there with the rows below it untouched.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[service]",
+                "host=\"db.internal\"",
+                "port=\"5432\"",
+                "mode=\"replica\"",
+                "poolsize=12",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                4,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "[service]",
+                "host=\"db.internal\"",
+                "port=\"5432\"",
+                "mode=\"replica\"",
+                "poolsize=\"12\"",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "f",
+              "=",
+              "a",
+              "\"",
+              "Escape",
+              "A",
+              "\"",
+              "Escape",
+              "j",
+              "0",
+              "q",
+              "9",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 12,
+                "display": "f= a\" Esc A\" Esc j0",
+                "explanation": "Anchor, quote both ends, and advance."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "q",
+                "explanation": "Stop recording."
+              },
+              {
+                "from": 13,
+                "to": 16,
+                "display": "9@a",
+                "explanation": "Ask for nine more runs without counting how many rows can accept one."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=\"5432\"",
+                  "mode=\"replica\"",
+                  "poolsize=\"12\"",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "One row quoted; nine replays now owed."
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=\"5432\"",
+                  "mode=\"replica\"",
+                  "poolsize=\"12\"",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The count says how many runs you want, not how many the block can support.",
+            "A row without the separator gives the anchor nothing to find.",
+            "Use a generous count such as `9@a` and let the block decide."
+          ],
+          "feedback": {
+            "success": "The run stopped at the bare word, and the two rows below it are untouched.",
+            "why": "The anchor failed on a row that does not fit the pattern, so Vim ended that run and cancelled every replay still owed. A generous count is safe precisely because the anchor can fail.",
+            "contrast": "A column-anchored recording would have found something at that column and quoted the wrong text nine times over."
+          },
+          "skills": {
+            "primary": [
+              "macro-failure-guard"
+            ],
+            "supporting": [
+              "macro-counted-replay",
+              "macro-structural-anchor"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "generous-count",
+              "safe-stop",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "toml makes the bare word among key-value rows an obvious break in the pattern.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-failure-guard"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "search-past-the-odd-row",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Reach the rows beyond the bare word",
+          "instruction": "Two settings rows below the bare word still need quotes. Finish them with one recording that steps over the row without a separator instead of stopping at it.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[service]",
+                "host=\"db.internal\"",
+                "port=\"5432\"",
+                "mode=\"replica\"",
+                "poolsize=\"12\"",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "[service]",
+                "host=\"db.internal\"",
+                "port=\"5432\"",
+                "mode=\"replica\"",
+                "poolsize=\"12\"",
+                "disabled",
+                "zone=\"eu-west\"",
+                "tier=\"gold\""
+              ],
+              "cursor": [
+                7,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "/",
+              "=",
+              "Enter",
+              "a",
+              "\"",
+              "Escape",
+              "A",
+              "\"",
+              "Escape",
+              "q",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "/=↵",
+                "explanation": "Search for the next separator anywhere ahead, which walks past any row that has none."
+              },
+              {
+                "from": 5,
+                "to": 11,
+                "display": "a\" Esc A\" Esc",
+                "explanation": "Quote both ends of the value the search landed on."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "q",
+                "explanation": "Stop recording. The search is the advance, so no separate step is needed."
+              },
+              {
+                "from": 12,
+                "to": 14,
+                "display": "@a",
+                "explanation": "Replay it on the last row."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=\"5432\"",
+                  "mode=\"replica\"",
+                  "poolsize=\"12\"",
+                  "disabled",
+                  "zone=\"eu-west\"",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  6,
+                  13
+                ],
+                "mode": "normal",
+                "caption": "The search jumped straight over the bare word."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal\"",
+                  "port=\"5432\"",
+                  "mode=\"replica\"",
+                  "poolsize=\"12\"",
+                  "disabled",
+                  "zone=\"eu-west\"",
+                  "tier=\"gold\""
+                ],
+                "cursor": [
+                  7,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The previous stage stopped at the bare word; this one has to get past it.",
+            "A search finds the next separator wherever it is, so the recording needs no separate step to change rows.",
+            "Anchor with `/=` and let it do the advancing."
+          ],
+          "feedback": {
+            "success": "Both remaining values are quoted and the bare word is untouched.",
+            "why": "Searching forward for the anchor makes the irregular row invisible to the recording, because a row without the separator is simply never landed on.",
+            "contrast": "The same anchor as a character search stopped the run one stage ago; as a buffer search it skips instead. Whether an odd row halts you or is stepped over is a property of the anchor, not of the row."
+          },
+          "skills": {
+            "primary": [
+              "macro-search-anchor"
+            ],
+            "supporting": [
+              "macro-record",
+              "forward-search"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "skip-vs-stop",
+              "self-advancing",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "toml keeps the skipped row adjacent to the rows that still need work, so the step over it is visible.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-search-anchor"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "repair-a-recording-in-place",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Extend a recording that forgot to move",
+          "instruction": "Quote every value in this second block. Record the edit, and when the recording turns out to have no way of reaching the next row, extend the same register rather than starting again.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[worker]",
+                "name=indexer",
+                "queue=jobs",
+                "limit=25",
+                "retry=on",
+                "# end worker"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "[worker]",
+                "name=\"indexer\"",
+                "queue=\"jobs\"",
+                "limit=\"25\"",
+                "retry=\"on\"",
+                "# end worker"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "f",
+              "=",
+              "a",
+              "\"",
+              "Escape",
+              "A",
+              "\"",
+              "Escape",
+              "q",
+              "q",
+              "A",
+              "j",
+              "0",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 11,
+                "display": "qa f= a\" Esc A\" Esc q",
+                "explanation": "Record the edit, which quotes this row and stays on it."
+              },
+              {
+                "from": 11,
+                "to": 13,
+                "display": "qA",
+                "explanation": "Reopen the same register in append mode instead of re-recording it."
+              },
+              {
+                "from": 13,
+                "to": 16,
+                "display": "j0 q",
+                "explanation": "Add the missing advance to the end of the recording."
+              },
+              {
+                "from": 16,
+                "to": 19,
+                "display": "3@a",
+                "explanation": "Replay the completed recording on the three remaining rows."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "[worker]",
+                  "name=\"indexer\"",
+                  "queue=jobs",
+                  "limit=25",
+                  "retry=on",
+                  "# end worker"
+                ],
+                "cursor": [
+                  1,
+                  13
+                ],
+                "mode": "normal",
+                "caption": "The edit is right and the recording cannot repeat: it ends where it started."
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "[worker]",
+                  "name=\"indexer\"",
+                  "queue=jobs",
+                  "limit=25",
+                  "retry=on",
+                  "# end worker"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "The advance is appended, and the cursor has moved with it."
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "[worker]",
+                  "name=\"indexer\"",
+                  "queue=\"jobs\"",
+                  "limit=\"25\"",
+                  "retry=\"on\"",
+                  "# end worker"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Every value in the block is quoted, from one recording made in two passes.",
+            "why": "An uppercase register name appends to what is already recorded, so a recording that is correct but incomplete can be finished rather than redone.",
+            "contrast": "Re-recording would have worked too, and would have retyped the part that was already right."
+          },
+          "skills": {
+            "primary": [
+              "macro-append"
+            ],
+            "supporting": [
+              "macro-structural-anchor",
+              "macro-counted-replay"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "recording-repair",
+              "self-diagnosis",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "toml repeats the first block's shape exactly, so the only new thing in this stage is the repair.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "macro-append"
+            ]
+          },
+          "delivery": "recall"
+        },
+        {
+          "id": "column-anchor-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the column-anchored recording would have cost",
+          "instruction": "Watch the rejected mechanism aim at the column the separator occupied on the first row, and check the fourth row.",
+          "languageId": "toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "[service]",
+                "host=db.internal",
+                "port=5432",
+                "mode=replica",
+                "poolsize=12",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "[service]",
+                "host=\"db.internal",
+                "port=\"5432",
+                "mode=\"replica",
+                "pools\"ize=12",
+                "disabled",
+                "zone=eu-west",
+                "tier=gold"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "q",
+              "a",
+              "0",
+              "4",
+              "l",
+              "a",
+              "\"",
+              "Escape",
+              "j",
+              "0",
+              "q",
+              "3",
+              "@",
+              "a"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "qa",
+                "explanation": "Start recording into register a."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "04l",
+                "explanation": "Go to the column the separator happens to occupy on this row."
+              },
+              {
+                "from": 5,
+                "to": 8,
+                "display": "a\" Esc",
+                "explanation": "Insert the quote there, whatever is there."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "j0 q",
+                "explanation": "Advance and stop recording."
+              },
+              {
+                "from": 11,
+                "to": 14,
+                "display": "3@a",
+                "explanation": "Replay it three times."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal",
+                  "port=5432",
+                  "mode=replica",
+                  "poolsize=12",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  2,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "[service]",
+                  "host=\"db.internal",
+                  "port=\"5432",
+                  "mode=\"replica",
+                  "pools\"ize=12",
+                  "disabled",
+                  "zone=eu-west",
+                  "tier=gold"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Three rows took the quote where the separator was, and the fourth took it inside the key.",
+            "why": "A column exists on every row and means something on only some of them. Nothing failed, nothing warned, and the longest key was quietly cut in half — which is worse than the run that stopped, because a stopped run is visible.",
+            "contrast": "The recording is also missing the closing quote everywhere, because a column can locate a position but says nothing about where a value ends."
+          },
+          "skills": {
+            "primary": [
+              "column-anchor-fragility"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "quiet-failure",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "toml keys of four and eight characters make the misplaced quote land inside a word rather than near one.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "column-anchor-fragility"
+            ]
+          },
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "irregular-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why the recordings aimed at structure",
+          "body": "The same job met one row that did not fit, and the anchor decided what happened. A character search on the row stopped the run and left the rest of the block visibly undone. A buffer search stepped over the row and finished the job. A column carried on regardless and damaged a key without reporting anything. Two of those are useful answers and the third is the only one that fails silently — which is the property worth choosing against, not the number of rows each one handled.",
+          "takeaways": [
+            "Aim a recording at something the row contains, not at a distance from its start.",
+            "A generous count is safe when the anchor can fail, because the failure ends the run.",
+            "A character search stops at a row that does not match; a buffer search steps over it.",
+            "Prefer a mechanism that fails loudly over one that cannot fail at all.",
+            "Append to a register to finish a recording that is right but incomplete."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "search-driven-cleanup",
+      "title": "Capstone: search-driven cleanup",
+      "objective": "Retire a value that appears in places it must not be changed, escalating from counting to repeating to confirming to committing.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "cleanup-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job among the matches",
+          "body": "One value has to be retired across an environment file. It also appears in a comment that explains what it meant, and in a key whose own name is that word — neither should change. The commands here are all familiar. What the file asks for is an order of operations: find out how far a pattern reaches before deciding how much of it to trust.",
+          "grammar": "count, then repeat what you can watch, then confirm what you cannot, then commit",
+          "contrast": "A count tells you how far a pattern reaches; running it tells you the same thing afterwards.",
+          "demoRef": "loose-pattern-contrast"
+        },
+        {
+          "id": "choose-cleanup-trust",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the first move against an unfamiliar file",
+          "prompt": "A value must be retired throughout a file you have not read closely, and you already suspect some occurrences are legitimate. What comes first?",
+          "options": [
+            {
+              "id": "count-first",
+              "label": "Run the pattern in a form that reports its reach and changes nothing"
+            },
+            {
+              "id": "substitute-then-undo",
+              "label": "Run the substitution, read the result, and undo it if it went too far"
+            },
+            {
+              "id": "repeat-from-the-top",
+              "label": "Change the first match and repeat, watching each one land"
+            }
+          ],
+          "correctOptionId": "count-first",
+          "explanation": "Counting costs one command and tells you the size and shape of the job while the buffer is still untouched. Substituting and undoing also works, but it commits before it informs, and on a phone the lines it reached are mostly off screen when you have to judge the result. Repeating from the top is the right tool a step later — once you know how many matches there are and which of them are real.",
+          "questionKind": "command-classification",
+          "remediationRef": "count-the-precise-pattern"
+        },
+        {
+          "id": "count-the-precise-pattern",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Measure the pattern before using it",
+          "instruction": "Report how many assignments of the retired value this file contains, without changing a single character. The comment and the key that share the word must not be part of that number.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status=stale",
+                "cache=stale",
+                "# stale means expired",
+                "queue=stale",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "status=stale",
+                "cache=stale",
+                "# stale means expired",
+                "queue=stale",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "=",
+              "s",
+              "t",
+              "a",
+              "l",
+              "e",
+              "/",
+              "=",
+              "s",
+              "t",
+              "a",
+              "l",
+              "e",
+              "/",
+              "g",
+              "n",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "%s",
+                "explanation": "Address the whole file and begin a substitution."
+              },
+              {
+                "from": 3,
+                "to": 10,
+                "display": "/=stale",
+                "explanation": "Enter a pattern that includes the separator, so a comment and a key name cannot match it."
+              },
+              {
+                "from": 10,
+                "to": 17,
+                "display": "/=stale",
+                "explanation": "Replace it with itself, so nothing can change even if the command runs."
+              },
+              {
+                "from": 17,
+                "to": 20,
+                "display": "/gn",
+                "explanation": "Report the reach instead of applying it."
+              },
+              {
+                "from": 20,
+                "to": 21,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 21,
+                "lines": [
+                  "status=stale",
+                  "cache=stale",
+                  "# stale means expired",
+                  "queue=stale",
+                  "index=stale",
+                  "stale=allowed",
+                  "report=stale",
+                  "worker=stale"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The safest command against an unfamiliar file changes nothing at all.",
+            "A substitution can report how far it would reach instead of reaching.",
+            "Make the replacement identical to the pattern and add the counting flag."
+          ],
+          "feedback": {
+            "success": "The count arrived and the file is untouched.",
+            "why": "Two decisions were made before anything changed: that the separator belongs in the pattern, and that six matches is a job worth doing in one pass rather than by hand.",
+            "contrast": "The same command without the counting flag would have answered the same question by doing the work."
+          },
+          "skills": {
+            "primary": [
+              "count-only-flag"
+            ],
+            "supporting": [
+              "precise-pattern"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "preview",
+              "pattern-precision",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "shell environment files put assignments, a comment, and a key named after its own value in the same short block.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "count-only-flag"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "retire-the-first-three",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Retire the first three assignments",
+          "instruction": "Change the first three assignments of the retired value so each reads fresh instead, watching every one of them land.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status=stale",
+                "cache=stale",
+                "# stale means expired",
+                "queue=stale",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# stale means expired",
+                "queue=fresh",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                3,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "=",
+              "s",
+              "t",
+              "a",
+              "l",
+              "e",
+              "Enter",
+              "c",
+              "g",
+              "n",
+              "=",
+              "f",
+              "r",
+              "e",
+              "s",
+              "h",
+              "Escape",
+              ".",
+              "."
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "/=stale↵",
+                "explanation": "Search with the same precise pattern the count used."
+              },
+              {
+                "from": 8,
+                "to": 18,
+                "display": "cgn=fresh Esc",
+                "explanation": "Change the match itself rather than the text under the cursor, which is what makes the change repeatable."
+              },
+              {
+                "from": 18,
+                "to": 20,
+                "display": ". .",
+                "explanation": "Repeat it on the next two matches."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "cursor": [
+                  0,
+                  6
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "lines": [
+                  "status=fresh",
+                  "cache=stale",
+                  "# stale means expired",
+                  "queue=stale",
+                  "index=stale",
+                  "stale=allowed",
+                  "report=stale",
+                  "worker=stale"
+                ],
+                "cursor": [
+                  0,
+                  11
+                ],
+                "mode": "normal",
+                "caption": "The change carried the match with it, so the repeat needs no navigation."
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "status=fresh",
+                  "cache=fresh",
+                  "# stale means expired",
+                  "queue=stale",
+                  "index=stale",
+                  "stale=allowed",
+                  "report=stale",
+                  "worker=stale"
+                ],
+                "cursor": [
+                  1,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "status=fresh",
+                  "cache=fresh",
+                  "# stale means expired",
+                  "queue=fresh",
+                  "index=stale",
+                  "stale=allowed",
+                  "report=stale",
+                  "worker=stale"
+                ],
+                "cursor": [
+                  3,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The pattern is already known to be safe; what remains is to apply it where you can see it.",
+            "A change aimed at the match rather than at the cursor repeats without any repositioning.",
+            "Use `cgn`, then repeat with `.`."
+          ],
+          "feedback": {
+            "success": "Three assignments read fresh, and every one of them was visible as it changed.",
+            "why": "Changing the match rather than a word means each repeat finds its own next target, so the result never depends on where the cursor happened to land.",
+            "contrast": "Moving with the search and repeating a word change would have worked here and would have depended on each match sitting in the same relative position."
+          },
+          "skills": {
+            "primary": [
+              "change-next-match"
+            ],
+            "supporting": [
+              "dot-repeat",
+              "precise-pattern"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "visible-repeat",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "shell assignments of differing key length keep the match in a different column on every row.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "change-next-match"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "decline-the-legitimate-match",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Decline the match that should stay",
+          "instruction": "The line where the retired word is itself a key name must survive untouched. Put that one line under review and reject the change it offers, without relying on undo afterwards.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# stale means expired",
+                "queue=fresh",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# stale means expired",
+                "queue=fresh",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                5,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "6",
+              "s",
+              "/",
+              "s",
+              "t",
+              "a",
+              "l",
+              "e",
+              "/",
+              "f",
+              "r",
+              "e",
+              "s",
+              "h",
+              "/",
+              "c",
+              "Enter",
+              "n"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "6s",
+                "explanation": "Address that one line, so nothing else in the file is at risk."
+              },
+              {
+                "from": 3,
+                "to": 17,
+                "display": "/stale/fresh/c",
+                "explanation": "Ask to be shown the match before it changes."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "↵",
+                "explanation": "Run it and wait at the prompt."
+              },
+              {
+                "from": 18,
+                "to": 19,
+                "display": "n",
+                "explanation": "Decline this match, which ends the run with the line unchanged."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 17,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "The prompt is waiting, and nothing has changed yet."
+              },
+              {
+                "afterStep": 19,
+                "lines": [
+                  "status=fresh",
+                  "cache=fresh",
+                  "# stale means expired",
+                  "queue=fresh",
+                  "index=stale",
+                  "stale=allowed",
+                  "report=stale",
+                  "worker=stale"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "This line is the one the pattern was never meant to reach.",
+            "A confirming substitution shows a match and waits, so a wrong match costs nothing.",
+            "Address the single line and add the confirm flag, then decline."
+          ],
+          "feedback": {
+            "success": "The line is untouched, and the decision was made before the change rather than after it.",
+            "why": "Confirming turns a substitution into a review: the match is shown in place, and declining is free. Undo would also have restored the line, at the cost of first making a change you did not want.",
+            "contrast": "Deciding by undo gets harder the moment the command changed several lines, because undo cannot keep the ones that were right."
+          },
+          "skills": {
+            "primary": [
+              "confirm-flag"
+            ],
+            "supporting": [
+              "single-line-address",
+              "confirm-no"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "review-before-change",
+              "narrow-address",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "shell allows a key whose name is the same word as the value being retired, which is what makes the match legitimate.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "confirm-flag"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "commit-the-proven-pattern",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Commit the pattern you have proved",
+          "instruction": "Three assignments of the retired value remain, one of them below the window. Finish them in one command, and leave both the comment and the key named after the word exactly as they are.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# stale means expired",
+                "queue=fresh",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# stale means expired",
+                "queue=fresh",
+                "index=fresh",
+                "stale=allowed",
+                "report=fresh",
+                "worker=fresh"
+              ],
+              "cursor": [
+                7,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "=",
+              "s",
+              "t",
+              "a",
+              "l",
+              "e",
+              "/",
+              "=",
+              "f",
+              "r",
+              "e",
+              "s",
+              "h",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 19,
+                "display": "%s/=stale/=fresh/g",
+                "explanation": "Apply the pattern that was counted, repeated, and reviewed across the whole file."
+              },
+              {
+                "from": 19,
+                "to": 20,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 20,
+                "lines": [
+                  "status=fresh",
+                  "cache=fresh",
+                  "# stale means expired",
+                  "queue=fresh",
+                  "index=fresh",
+                  "stale=allowed",
+                  "report=fresh",
+                  "worker=fresh"
+                ],
+                "cursor": [
+                  7,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The last three assignments read fresh, and the comment and key name are intact.",
+            "why": "Committing in bulk is the cheapest of these mechanisms and the last one to earn its place. By this point the pattern had been counted, watched three times, and reviewed once on the only line where it was wrong.",
+            "contrast": "The same command was available at the very start and would have been indistinguishable from a careless one."
+          },
+          "skills": {
+            "primary": [
+              "file-wide-substitution"
+            ],
+            "supporting": [
+              "precise-pattern",
+              "off-screen-reach"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "earned-trust",
+              "scale",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "shell keeps the last assignment below the seven-row window, so the command's reach is larger than the evidence on screen.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "file-wide-substitution"
+            ]
+          },
+          "delivery": "recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "loose-pattern-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the unproven pattern would have cost",
+          "instruction": "Watch the rejected mechanism run the obvious pattern across the file, and read the comment and the sixth line afterwards.",
+          "languageId": "shell",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# stale means expired",
+                "queue=fresh",
+                "index=stale",
+                "stale=allowed",
+                "report=stale",
+                "worker=stale"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "status=fresh",
+                "cache=fresh",
+                "# fresh means expired",
+                "queue=fresh",
+                "index=fresh",
+                "fresh=allowed",
+                "report=fresh",
+                "worker=fresh"
+              ],
+              "cursor": [
+                7,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "s",
+              "t",
+              "a",
+              "l",
+              "e",
+              "/",
+              "f",
+              "r",
+              "e",
+              "s",
+              "h",
+              "/",
+              "g",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 17,
+                "display": "%s/stale/fresh/g",
+                "explanation": "Replace the bare word everywhere, which is the command anyone reaches for first."
+              },
+              {
+                "from": 17,
+                "to": 18,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 18,
+                "lines": [
+                  "status=fresh",
+                  "cache=fresh",
+                  "# fresh means expired",
+                  "queue=fresh",
+                  "index=fresh",
+                  "fresh=allowed",
+                  "report=fresh",
+                  "worker=fresh"
+                ],
+                "cursor": [
+                  7,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The three real assignments changed — and so did the comment and the key line.",
+            "why": "The pattern was never wrong about the assignments; it was wrong about being complete. Dropping the separator widened it by three matches, and nothing in the result says which three were unintended.",
+            "contrast": "Counting first would have shown eight matches where the precise pattern showed six, and that difference is the whole warning."
+          },
+          "skills": {
+            "primary": [
+              "pattern-overreach"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "shell puts the collateral damage in a comment and a key name, both of which still read as valid text afterwards.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "pattern-overreach"
+            ]
+          },
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "cleanup-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why the cleanup escalated instead of committing",
+          "body": "The last stage and the demonstration are nearly the same command, run on the same file, a few minutes apart. What separates them is evidence. Counting established the size of the job and the shape of a pattern that excluded what it should. Repeating proved the pattern three times where every result was visible. Confirming handled the one line where the pattern was right and the intent was not. Only then was a single command over the whole file the cheap option rather than the reckless one.",
+          "takeaways": [
+            "Count a pattern before trusting it; the command that reports costs no more than the one that acts.",
+            "Include the punctuation around a value when the bare word appears in prose or in a name.",
+            "Change the match rather than the word when the change has to repeat.",
+            "Confirm on a narrow address when a match is legitimate; declining is cheaper than undoing.",
+            "A bulk command is earned by evidence, and reads identically whether or not you gathered any."
+          ]
+        }
+      ]
+    },
+    {
       "id": "move-without-losing-it",
       "title": "Capstone: register-preserving refactors",
       "objective": "Move two snippets across a module while deletes happen in between, and choose what protects the text in transit.",
@@ -3730,6 +5655,2400 @@
           ]
         }
       ]
+    },
+    {
+      "id": "predicate-batch-editing",
+      "title": "Capstone: predicate-based batch editing",
+      "objective": "Triage a build plan longer than the window by describing which lines qualify rather than where they sit.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "predicate-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job across a plan you cannot see",
+          "body": "A build plan runs past the bottom of the window. Some of its steps are deferred, and those need marking, collecting, and telling apart from the steps that still run. Every line number you could write down here stops being true the moment a line moves — and the first thing this job does is move lines. What stays true is what each line says about itself.",
+          "grammar": "select lines by what they contain, then give the selection one command to run",
+          "contrast": "A numeric range is a fact about the file as it is now; a predicate is a fact about the lines themselves.",
+          "demoRef": "stale-range-contrast"
+        },
+        {
+          "id": "choose-line-selection",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose how to name the lines",
+          "prompt": "The same short edit must run on the deferred steps of a plan that is longer than the window, and an earlier command in the same session has already moved lines around. What names them?",
+          "options": [
+            {
+              "id": "text-predicate",
+              "label": "A predicate matching what the deferred lines say"
+            },
+            {
+              "id": "numeric-range",
+              "label": "A numeric range covering the rows they occupied"
+            },
+            {
+              "id": "recorded-macro",
+              "label": "A recorded macro replayed with a generous count"
+            }
+          ],
+          "correctOptionId": "text-predicate",
+          "explanation": "Membership here depends on the text, not the position, and the positions have already changed once. A predicate re-derives the set every time it runs, so it cannot go stale and does not need the rows to be adjacent or on screen. A numeric range would have to be re-read from a file that does not fit the window. A macro could do the edit but would have to be steered to each row, which is the part the predicate does for free.",
+          "questionKind": "command-classification",
+          "remediationRef": "stale-range-contrast"
+        },
+        {
+          "id": "mark-the-deferred-steps",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Mark every deferred step",
+          "instruction": "Each deferred step should end with a note reading (later). They are scattered through the plan and some are below the window, and the steps that still run must not be touched.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "job build start",
+                "step compile core",
+                "step link modules",
+                "skip lint cache",
+                "step bundle web",
+                "step sign package",
+                "skip audit vendor",
+                "step upload dist",
+                "step notify team",
+                "skip verify hash",
+                "step tag release",
+                "step write notes",
+                "skip publish docs",
+                "step archive logs",
+                "step close ticket",
+                "job build done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "job build start",
+                "step compile core",
+                "step link modules",
+                "skip lint cache (later)",
+                "step bundle web",
+                "step sign package",
+                "skip audit vendor (later)",
+                "step upload dist",
+                "step notify team",
+                "skip verify hash (later)",
+                "step tag release",
+                "step write notes",
+                "skip publish docs (later)",
+                "step archive logs",
+                "step close ticket",
+                "job build done"
+              ],
+              "cursor": [
+                12,
+                24
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "s",
+              "k",
+              "i",
+              "p",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "A",
+              " ",
+              "(",
+              "l",
+              "a",
+              "t",
+              "e",
+              "r",
+              ")",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "g/^skip/",
+                "explanation": "Select every line that announces itself as deferred, wherever it sits."
+              },
+              {
+                "from": 9,
+                "to": 25,
+                "display": "normal A (later)",
+                "explanation": "Give that selection one Normal-mode edit to run on each of its lines."
+              },
+              {
+                "from": 25,
+                "to": 26,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 26,
+                "lines": [
+                  "job build start",
+                  "step compile core",
+                  "step link modules",
+                  "skip lint cache (later)",
+                  "step bundle web",
+                  "step sign package",
+                  "skip audit vendor (later)",
+                  "step upload dist",
+                  "step notify team",
+                  "skip verify hash (later)",
+                  "step tag release",
+                  "step write notes",
+                  "skip publish docs (later)",
+                  "step archive logs",
+                  "step close ticket",
+                  "job build done"
+                ],
+                "cursor": [
+                  12,
+                  24
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The deferred steps are not adjacent and not all visible.",
+            "Anchor the predicate to the start of the line so it cannot match the word elsewhere.",
+            "Use `:g/^skip/normal A (later)`."
+          ],
+          "feedback": {
+            "success": "All four deferred steps carry the note, including the ones below the window.",
+            "why": "The predicate found the lines by what they say, so their scattering and the window's size were both irrelevant to writing the command."
+          },
+          "skills": {
+            "primary": [
+              "global-normal"
+            ],
+            "supporting": [
+              "line-predicate",
+              "off-screen-reach"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "predicate-selection",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "log build plans naturally interleave steps that run with steps that are skipped.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-normal"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "gather-the-deferred-steps",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Collect the deferred steps at the end",
+          "instruction": "The deferred steps should sit together after the whole plan instead of interrupting it, keeping the order they already have.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "job build start",
+                "step compile core",
+                "step link modules",
+                "skip lint cache (later)",
+                "step bundle web",
+                "step sign package",
+                "skip audit vendor (later)",
+                "step upload dist",
+                "step notify team",
+                "skip verify hash (later)",
+                "step tag release",
+                "step write notes",
+                "skip publish docs (later)",
+                "step archive logs",
+                "step close ticket",
+                "job build done"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "job build start",
+                "step compile core",
+                "step link modules",
+                "step bundle web",
+                "step sign package",
+                "step upload dist",
+                "step notify team",
+                "step tag release",
+                "step write notes",
+                "step archive logs",
+                "step close ticket",
+                "job build done",
+                "skip lint cache (later)",
+                "skip audit vendor (later)",
+                "skip verify hash (later)",
+                "skip publish docs (later)"
+              ],
+              "cursor": [
+                15,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "s",
+              "k",
+              "i",
+              "p",
+              "/",
+              "m",
+              "$",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "g/^skip/",
+                "explanation": "Select the same lines again — the predicate did not need updating after the last edit."
+              },
+              {
+                "from": 9,
+                "to": 11,
+                "display": "m$",
+                "explanation": "Move each matching line to the end, one at a time in the order they are found."
+              },
+              {
+                "from": 11,
+                "to": 12,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 12,
+                "lines": [
+                  "job build start",
+                  "step compile core",
+                  "step link modules",
+                  "step bundle web",
+                  "step sign package",
+                  "step upload dist",
+                  "step notify team",
+                  "step tag release",
+                  "step write notes",
+                  "step archive logs",
+                  "step close ticket",
+                  "job build done",
+                  "skip lint cache (later)",
+                  "skip audit vendor (later)",
+                  "skip verify hash (later)",
+                  "skip publish docs (later)"
+                ],
+                "cursor": [
+                  15,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The command a predicate runs does not have to edit text; it can be an address-taking command.",
+            "Moving each match to the end, in the order they are found, preserves their relative order.",
+            "Use `:g/^skip/m$`."
+          ],
+          "feedback": {
+            "success": "The four deferred steps sit together at the end, still in their original order.",
+            "why": "Because each match is moved to the end as it is found, the last one found ends up last, so a relocation to a fixed final address preserves order rather than reversing it.",
+            "contrast": "Relocating each match to the top instead would have reversed them, for exactly the same reason."
+          },
+          "skills": {
+            "primary": [
+              "global-relocate"
+            ],
+            "supporting": [
+              "line-predicate"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "relocation",
+              "order-preservation",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "log rows carry a visible sequence, so a reversal would be obvious if the relocation caused one.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-relocate"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "comment-everything-that-is-not-a-step",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Comment out everything that is not a running step",
+          "instruction": "Only the steps that still run should remain live. Every other line — the two plan headings and the deferred block now at the end — should be commented out, in one pass.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "job build start",
+                "step compile core",
+                "step link modules",
+                "step bundle web",
+                "step sign package",
+                "step upload dist",
+                "step notify team",
+                "step tag release",
+                "step write notes",
+                "step archive logs",
+                "step close ticket",
+                "job build done",
+                "skip lint cache (later)",
+                "skip audit vendor (later)",
+                "skip verify hash (later)",
+                "skip publish docs (later)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "# job build start",
+                "step compile core",
+                "step link modules",
+                "step bundle web",
+                "step sign package",
+                "step upload dist",
+                "step notify team",
+                "step tag release",
+                "step write notes",
+                "step archive logs",
+                "step close ticket",
+                "# job build done",
+                "# skip lint cache (later)",
+                "# skip audit vendor (later)",
+                "# skip verify hash (later)",
+                "# skip publish docs (later)"
+              ],
+              "cursor": [
+                15,
+                1
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "v",
+              "/",
+              "^",
+              "s",
+              "t",
+              "e",
+              "p",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "I",
+              "#",
+              " ",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "v/^step/",
+                "explanation": "Select every line that does not match, which is far easier to state than the six lines that do."
+              },
+              {
+                "from": 9,
+                "to": 19,
+                "display": "normal I# ",
+                "explanation": "Comment each selected line at its start."
+              },
+              {
+                "from": 19,
+                "to": 20,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 20,
+                "lines": [
+                  "# job build start",
+                  "step compile core",
+                  "step link modules",
+                  "step bundle web",
+                  "step sign package",
+                  "step upload dist",
+                  "step notify team",
+                  "step tag release",
+                  "step write notes",
+                  "step archive logs",
+                  "step close ticket",
+                  "# job build done",
+                  "# skip lint cache (later)",
+                  "# skip audit vendor (later)",
+                  "# skip verify hash (later)",
+                  "# skip publish docs (later)"
+                ],
+                "cursor": [
+                  15,
+                  1
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The lines to keep share a prefix; the lines to change have nothing in common with each other.",
+            "A predicate can be inverted, so the easier half to describe is the one you write.",
+            "Use `:v/^step/` rather than trying to name the six lines."
+          ],
+          "feedback": {
+            "success": "Every heading and every deferred step is commented, and the running steps are untouched.",
+            "why": "Two headings and four deferred rows have no shared text, but their complement does. Inverting the predicate turned an impossible description into a four-character one.",
+            "contrast": "Describing the six lines positively would have needed an alternation of two patterns, and would have broken the next time a heading was reworded."
+          },
+          "skills": {
+            "primary": [
+              "inverted-predicate"
+            ],
+            "supporting": [
+              "global-normal",
+              "line-predicate"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "predicate-inversion",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "log gives the running steps one shared prefix and the remaining lines none, which is what makes inversion the cheaper description.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "inverted-predicate"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "replay-a-macro-over-matches",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Stamp every running step as checked",
+          "instruction": "The prepared recording in register a marks one line as checked. Every running step should carry that mark, and nothing else in the plan should change.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# job build start",
+                "step compile core",
+                "step link modules",
+                "step bundle web",
+                "step sign package",
+                "step upload dist",
+                "step notify team",
+                "step tag release",
+                "step write notes",
+                "step archive logs",
+                "step close ticket",
+                "# job build done",
+                "# skip lint cache (later)",
+                "# skip audit vendor (later)",
+                "# skip verify hash (later)",
+                "# skip publish docs (later)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              },
+              "setup": {
+                "cursor": [
+                  0,
+                  0
+                ],
+                "steps": [
+                  "q",
+                  "a",
+                  "A",
+                  " ",
+                  "[",
+                  "o",
+                  "k",
+                  "]",
+                  "Escape",
+                  "q",
+                  "u",
+                  "0"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "# job build start",
+                "step compile core [ok]",
+                "step link modules [ok]",
+                "step bundle web [ok]",
+                "step sign package [ok]",
+                "step upload dist [ok]",
+                "step notify team [ok]",
+                "step tag release [ok]",
+                "step write notes [ok]",
+                "step archive logs [ok]",
+                "step close ticket [ok]",
+                "# job build done",
+                "# skip lint cache (later)",
+                "# skip audit vendor (later)",
+                "# skip verify hash (later)",
+                "# skip publish docs (later)"
+              ],
+              "cursor": [
+                10,
+                21
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "^",
+              "s",
+              "t",
+              "e",
+              "p",
+              "/",
+              "n",
+              "o",
+              "r",
+              "m",
+              "a",
+              "l",
+              " ",
+              "@",
+              "a",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "g/^step/",
+                "explanation": "Select the running steps."
+              },
+              {
+                "from": 9,
+                "to": 18,
+                "display": "normal @a",
+                "explanation": "Run the recording once on each selected line, rather than steering it there by hand."
+              },
+              {
+                "from": 18,
+                "to": 19,
+                "display": "↵",
+                "explanation": "Run it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": [
+                  "# job build start",
+                  "step compile core [ok]",
+                  "step link modules [ok]",
+                  "step bundle web [ok]",
+                  "step sign package [ok]",
+                  "step upload dist [ok]",
+                  "step notify team [ok]",
+                  "step tag release [ok]",
+                  "step write notes [ok]",
+                  "step archive logs [ok]",
+                  "step close ticket [ok]",
+                  "# job build done",
+                  "# skip lint cache (later)",
+                  "# skip audit vendor (later)",
+                  "# skip verify hash (later)",
+                  "# skip publish docs (later)"
+                ],
+                "cursor": [
+                  10,
+                  21
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "All ten running steps are marked, and the commented lines are untouched.",
+            "why": "The predicate chose the lines and the recording described the edit, so neither had to know anything about the other. A macro that would otherwise need a count and a safe stopping condition needs neither once something else decides where it runs.",
+            "contrast": "Replaying the recording with a count would have walked into the commented block and marked it too."
+          },
+          "skills": {
+            "primary": [
+              "global-macro"
+            ],
+            "supporting": [
+              "line-predicate",
+              "macro-replay"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "layered-automation",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "log keeps the running steps in one contiguous block with commented lines above and below, so an over-reach would be visible immediately.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-macro"
+            ]
+          },
+          "delivery": "recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "stale-range-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What the numeric range would have cost",
+          "instruction": "Watch the rejected mechanism reuse the rows the deferred steps occupied before they were moved, then watch a single undo answer for all of it.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# job build start",
+                "step compile core",
+                "step link modules",
+                "step bundle web",
+                "step sign package",
+                "step upload dist",
+                "step notify team",
+                "step tag release",
+                "step write notes",
+                "step archive logs",
+                "step close ticket",
+                "# job build done",
+                "# skip lint cache (later)",
+                "# skip audit vendor (later)",
+                "# skip verify hash (later)",
+                "# skip publish docs (later)"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "# job build start",
+                "step compile core",
+                "step link modules",
+                "step bundle web",
+                "step sign package",
+                "step upload dist",
+                "step notify team",
+                "step tag release",
+                "step write notes",
+                "step archive logs",
+                "step close ticket",
+                "# job build done",
+                "# skip lint cache (later)",
+                "# skip audit vendor (later)",
+                "# skip verify hash (later)",
+                "# skip publish docs (later)"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "4",
+              ",",
+              "1",
+              "3",
+              "d",
+              "Enter",
+              "u"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open the command line."
+              },
+              {
+                "from": 1,
+                "to": 6,
+                "display": "4,13d",
+                "explanation": "Delete the rows the deferred steps used to span, before the gather moved them."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "↵",
+                "explanation": "Run it."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "u",
+                "explanation": "Undo the whole run with one keystroke."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 7,
+                "lines": [
+                  "# job build start",
+                  "step compile core",
+                  "step link modules",
+                  "# skip audit vendor (later)",
+                  "# skip verify hash (later)",
+                  "# skip publish docs (later)"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "Ten lines gone, seven of them steps that still had to run."
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "# job build start",
+                  "step compile core",
+                  "step link modules",
+                  "step bundle web",
+                  "step sign package",
+                  "step upload dist",
+                  "step notify team",
+                  "step tag release",
+                  "step write notes",
+                  "step archive logs",
+                  "step close ticket",
+                  "# job build done",
+                  "# skip lint cache (later)",
+                  "# skip audit vendor (later)",
+                  "# skip verify hash (later)",
+                  "# skip publish docs (later)"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Ten lines were deleted and one undo brought all of them back.",
+            "why": "The addresses were correct when they were written and wrong two commands later, because the gather moved every line below it. A predicate would have re-derived the set at the moment it ran.",
+            "contrast": "The recovery is the reassuring half: a whole command counts as one change, so one undo reverses it however many lines it touched. Ten separate hand edits would have cost ten."
+          },
+          "skills": {
+            "primary": [
+              "stale-address"
+            ],
+            "supporting": [
+              "mechanism-comparison",
+              "undo-grouping"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "undo-grouping",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "log rows moved by an earlier stage make the staleness concrete rather than hypothetical.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "stale-address"
+            ]
+          },
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "predicate-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why the plan was addressed by what it says",
+          "body": "Four commands ran over a file longer than the window, and not one of them named a line number. That was not a stylistic preference: the second command moved every line below it, which would have invalidated any address written before it. A predicate is re-evaluated each time it runs, so it survives its own side effects. The inversion is the same idea pushed one step further — when the lines you want share nothing, describe the ones you do not want.",
+          "takeaways": [
+            "Select by what a line contains when membership depends on text, or when earlier edits move rows.",
+            "Anchor a predicate to the line start so it cannot match the same word mid-line.",
+            "A predicate can drive a relocation, not only an edit; matches moved to a final address keep their order.",
+            "Invert the predicate when the complement is the easier half to describe.",
+            "Let the predicate choose the lines and a recording describe the edit; neither needs to know the other.",
+            "One command is one change, so one undo reverses the whole run however far it reached."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "review-and-correct",
+      "title": "Capstone: review and surgical correction",
+      "objective": "Correct several sites in a checklist longer than the window, returning to each one without searching for it again.",
+      "flow": "authored",
+      "activities": [
+        {
+          "id": "review-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The job you keep having to come back to",
+          "body": "A release checklist runs to twenty lines behind a seven-row window. Several entries are wrong, and each correction needs something checked elsewhere in the file first. The corrections themselves are trivial. What costs time is getting back — and searching your way back is how you end up editing a line that merely looks like the one you meant.",
+          "grammar": "leave yourself a way back before you go, or ask the editor where you have already been",
+          "contrast": "A search finds a line that matches; a mark finds the line you were standing on.",
+          "demoRef": "search-back-contrast"
+        },
+        {
+          "id": "choose-the-way-back",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose how to get back",
+          "prompt": "You are about to leave a line you will need to edit in a moment, and several other lines in the file contain the same words. What gets you back to it?",
+          "options": [
+            {
+              "id": "set-a-mark",
+              "label": "Set a mark on the line before leaving it"
+            },
+            {
+              "id": "search-back",
+              "label": "Search for the line's text when you need it again"
+            },
+            {
+              "id": "remember-the-number",
+              "label": "Note the line number and address it later"
+            }
+          ],
+          "correctOptionId": "set-a-mark",
+          "explanation": "A mark records the position itself, so it is exact even when several lines read alike, and it survives edits above it that would shift a line number. Searching back finds the first line that matches, which is a different line from the one you meant as soon as the file repeats itself. A remembered number is right until anything above it is added or removed — and the first correction you make may well do that.",
+          "questionKind": "command-classification",
+          "remediationRef": "search-back-contrast"
+        },
+        {
+          "id": "mark-before-you-leave",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Leave a mark, check the end, come back",
+          "instruction": "The status entry still reads draft and should read ready, but only once you have checked the end of the checklist. Leave yourself a way back to this line, read the last line, return, and make the correction.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status draft",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit pending",
+                "sign pending",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit pending",
+                "sign pending",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                3,
+                11
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "m",
+              "a",
+              "G",
+              "`",
+              "a",
+              "w",
+              "c",
+              "w",
+              "r",
+              "e",
+              "a",
+              "d",
+              "y",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "ma",
+                "explanation": "Record this exact position under a name before leaving it."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": "G",
+                "explanation": "Jump to the last line, far below the window."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "backtick-a",
+                "explanation": "Return to the recorded position, column and all."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "w",
+                "explanation": "Move onto the value."
+              },
+              {
+                "from": 6,
+                "to": 14,
+                "display": "cw ready Esc",
+                "explanation": "Make the correction now that you are back on the right line."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "Nothing has changed and nothing has moved; the position is simply recorded."
+              },
+              {
+                "afterStep": 3,
+                "cursor": [
+                  19,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 5,
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "Back on the same line and the same column, with no searching involved."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit pending",
+                  "sign pending",
+                  "upload pending",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  3,
+                  11
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "Record the position before you leave, not after.",
+            "The exact form of the return puts you back on the column you left, not just the line.",
+            "Set the mark with `ma` and return with the backtick form."
+          ],
+          "feedback": {
+            "success": "The status entry reads ready, corrected from exactly where you left off.",
+            "why": "A mark stores a position rather than a pattern, so returning to it cannot land on a similar line somewhere else.",
+            "contrast": "The apostrophe form of the same mark would have returned to the line but given up the column."
+          },
+          "skills": {
+            "primary": [
+              "named-marks"
+            ],
+            "supporting": [
+              "long-range-motion",
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "deliberate-return",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "prose checklist entries repeat their vocabulary, which is what makes a positional return worth more than a textual one.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "named-marks"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "return-to-the-last-change",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Come back to where you last edited",
+          "instruction": "The audit entry should read done. After correcting it, check the checklist heading, then return to the correction and give the entry below it the same treatment — without setting a mark for it.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit pending",
+                "sign pending",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                8,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 5,
+                "bottomLine": 11
+              },
+              "setup": {
+                "cursor": [
+                  8,
+                  0
+                ],
+                "steps": [
+                  "z",
+                  "z"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit done",
+                "sign done",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                9,
+                8
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "w",
+              "c",
+              "w",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape",
+              "g",
+              "g",
+              "`",
+              ".",
+              "j",
+              "0",
+              "w",
+              "c",
+              "w",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "w cw done Esc",
+                "explanation": "Correct the audit entry."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "gg",
+                "explanation": "Jump to the heading to check it."
+              },
+              {
+                "from": 10,
+                "to": 12,
+                "display": "backtick-dot",
+                "explanation": "Return to the position of the last change, which Vim recorded without being asked."
+              },
+              {
+                "from": 12,
+                "to": 15,
+                "display": "j0w",
+                "explanation": "Step down to the next entry and onto its value."
+              },
+              {
+                "from": 15,
+                "to": 22,
+                "display": "cw done Esc",
+                "explanation": "Correct that one too."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign pending",
+                  "upload pending",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  8,
+                  9
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign pending",
+                  "upload pending",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 12,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign pending",
+                  "upload pending",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  8,
+                  6
+                ],
+                "mode": "normal",
+                "caption": "Back at the edit, with no mark set and nothing searched for."
+              },
+              {
+                "afterStep": 22,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload pending",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  9,
+                  8
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The editor already remembers where you last changed something.",
+            "There is a mark you never have to set, and it updates itself with every edit.",
+            "Return with the backtick form of the last-change mark."
+          ],
+          "feedback": {
+            "success": "Both entries read done, and the return cost two keystrokes and no preparation.",
+            "why": "Vim maintains a mark at the last change automatically, so a return to the site of your own most recent edit never needs setting up in advance.",
+            "contrast": "A named mark would have worked identically here and would have had to be placed before the edit — which means predicting that you would leave."
+          },
+          "skills": {
+            "primary": [
+              "last-change-mark"
+            ],
+            "supporting": [
+              "long-range-motion",
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "automatic-mark",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "prose entries sitting next to each other make the second correction a short step from the returned position.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "last-change-mark"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "walk-back-through-the-corrections",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Walk back through what you just changed",
+          "instruction": "Correct the upload and announce entries so both read done, then step back through the two corrections you just made to review them, ending on the earlier of the two.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit done",
+                "sign done",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                10,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 7,
+                "bottomLine": 13
+              },
+              "setup": {
+                "cursor": [
+                  10,
+                  0
+                ],
+                "steps": [
+                  "z",
+                  "z"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit done",
+                "sign done",
+                "upload done",
+                "announce done",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                10,
+                7
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "w",
+              "c",
+              "w",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape",
+              "j",
+              "0",
+              "w",
+              "c",
+              "w",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape",
+              "g",
+              ";",
+              "g",
+              ";"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 8,
+                "display": "w cw done Esc",
+                "explanation": "Correct the upload entry."
+              },
+              {
+                "from": 8,
+                "to": 11,
+                "display": "j0w",
+                "explanation": "Step down to the announce entry."
+              },
+              {
+                "from": 11,
+                "to": 18,
+                "display": "cw done Esc",
+                "explanation": "Correct that one too."
+              },
+              {
+                "from": 18,
+                "to": 20,
+                "display": "g;",
+                "explanation": "Step back to the most recent change."
+              },
+              {
+                "from": 20,
+                "to": 22,
+                "display": "g;",
+                "explanation": "Step back again to the one before it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  10,
+                  10
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 18,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  11,
+                  12
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  11,
+                  9
+                ],
+                "mode": "normal",
+                "caption": "The first step back lands on the more recent of the two edits."
+              },
+              {
+                "afterStep": 22,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  10,
+                  7
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "The last-change mark only remembers one place; this needs the list behind it.",
+            "Each step walks one entry further back through the changes you made.",
+            "Step back with `g;`, twice."
+          ],
+          "feedback": {
+            "success": "Both entries read done, and you finished standing on the earlier of the two corrections.",
+            "why": "Vim keeps a list of change positions, not just the latest one, so a review pass can walk backwards through a session's edits in the order they were made.",
+            "contrast": "The last-change mark would have returned to the second correction and offered no way to reach the first."
+          },
+          "skills": {
+            "primary": [
+              "change-list"
+            ],
+            "supporting": [
+              "change-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "review-pass",
+              "edit-history",
+              "mix"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "prose entries corrected in sequence give the change list two entries whose order is unambiguous.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "change-list"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "resume-the-interrupted-note",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Finish the note you were interrupted in",
+          "instruction": "The approver entry needs a note reading review appended after it. Begin the note, break off to check the heading, then carry on typing exactly where you stopped rather than finding the spot again.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit done",
+                "sign done",
+                "upload done",
+                "announce done",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                18,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 13,
+                "bottomLine": 19
+              },
+              "setup": {
+                "cursor": [
+                  18,
+                  0
+                ],
+                "steps": [
+                  "z",
+                  "z"
+                ]
+              }
+            },
+            "target": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status ready",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit done",
+                "sign done",
+                "upload done",
+                "announce done",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD review",
+                "# end checklist"
+              ],
+              "cursor": [
+                18,
+                18
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              " ",
+              "r",
+              "e",
+              "v",
+              "Escape",
+              "g",
+              "g",
+              "g",
+              "i",
+              "i",
+              "e",
+              "w",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 6,
+                "display": "A rev Esc",
+                "explanation": "Start the note at the end of the entry and break off."
+              },
+              {
+                "from": 6,
+                "to": 8,
+                "display": "gg",
+                "explanation": "Jump to the heading."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "gi",
+                "explanation": "Re-enter Insert mode exactly where the last insertion stopped."
+              },
+              {
+                "from": 10,
+                "to": 14,
+                "display": "iew Esc",
+                "explanation": "Finish the word and leave Insert mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 6,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD rev",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  18,
+                  15
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD rev",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD rev",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  18,
+                  15
+                ],
+                "mode": "normal",
+                "caption": "Insert mode resumed mid-word, with no repositioning of any kind."
+              },
+              {
+                "afterStep": 14,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status ready",
+                  "notes pending",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit done",
+                  "sign done",
+                  "upload done",
+                  "announce done",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD review",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  18,
+                  18
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "The approver entry reads review, typed in two halves either side of a trip to the top of the file.",
+            "why": "Vim records where insertion last stopped and can put you back into Insert mode there, so an interrupted edit resumes rather than restarting.",
+            "contrast": "Returning by mark would have reached the line and still needed the cursor placed at the exact character and Insert mode re-entered."
+          },
+          "skills": {
+            "primary": [
+              "resume-insert"
+            ],
+            "supporting": [
+              "insert-position-mark",
+              "long-range-motion"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "interrupted-edit",
+              "exact-resume",
+              "challenge"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "prose lets the note be split mid-word, which is what makes resuming visibly different from returning.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "resume-insert"
+            ]
+          },
+          "delivery": "recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "search-back-contrast",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "What searching your way back would have cost",
+          "instruction": "Watch the rejected mechanism search the checklist from the top for a pending entry, then check which entry it corrected.",
+          "languageId": "prose",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status draft",
+                "notes pending",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit pending",
+                "sign pending",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "# release checklist",
+                "version 2.4.0",
+                "owner platform",
+                "status draft",
+                "notes done",
+                "build passed",
+                "tests passed",
+                "lint passed",
+                "audit pending",
+                "sign pending",
+                "upload pending",
+                "announce pending",
+                "rollback ready",
+                "monitor ready",
+                "archive ready",
+                "contact oncall",
+                "window 02:00 UTC",
+                "region eu-west",
+                "approver TBD",
+                "# end checklist"
+              ],
+              "cursor": [
+                4,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "p",
+              "e",
+              "n",
+              "d",
+              "i",
+              "n",
+              "g",
+              "Enter",
+              "c",
+              "w",
+              "d",
+              "o",
+              "n",
+              "e",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 9,
+                "display": "/pending↵",
+                "explanation": "Search for the word that identified the entry you meant."
+              },
+              {
+                "from": 9,
+                "to": 16,
+                "display": "cw done Esc",
+                "explanation": "Correct what the search landed on."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  4,
+                  6
+                ],
+                "mode": "normal",
+                "caption": "The search stopped at the first match, which is not the entry that needed changing."
+              },
+              {
+                "afterStep": 16,
+                "lines": [
+                  "# release checklist",
+                  "version 2.4.0",
+                  "owner platform",
+                  "status draft",
+                  "notes done",
+                  "build passed",
+                  "tests passed",
+                  "lint passed",
+                  "audit pending",
+                  "sign pending",
+                  "upload pending",
+                  "announce pending",
+                  "rollback ready",
+                  "monitor ready",
+                  "archive ready",
+                  "contact oncall",
+                  "window 02:00 UTC",
+                  "region eu-west",
+                  "approver TBD",
+                  "# end checklist"
+                ],
+                "cursor": [
+                  4,
+                  9
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "An entry now reads done — the notes entry, four lines above the audit entry that was meant.",
+            "why": "Five entries in this checklist say pending. A search finds the first one, and it looks exactly as correct afterwards as the right one would have. Nothing failed and nothing warned.",
+            "contrast": "A mark records the position rather than the words, so repetition in the file cannot mislead it."
+          },
+          "skills": {
+            "primary": [
+              "search-return-fragility"
+            ],
+            "supporting": [
+              "mechanism-comparison"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "alternative-mechanism",
+              "quiet-failure",
+              "demonstrate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "real-code-workflow-capstones-v1",
+            "languageRationale": "prose checklists repeat status words across many entries, which is exactly the condition that makes a textual return unsafe.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "reviewed"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-return-fragility"
+            ]
+          },
+          "delivery": "guided",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "review-rationale",
+          "type": "summary",
+          "phase": "summary",
+          "title": "Why the returns were positional",
+          "body": "Four corrections in a file with five identical status words, and not one return was made by searching. Two of the marks had to be set — one by hand before leaving, one by Vim at the moment of the edit — and two were lists Vim was already keeping. The choice between them is only ever about how far ahead you knew you would need to come back: a named mark for a place you are about to leave, the last-change mark for the edit you just made, the change list for a review pass, and the insert position for a sentence you were part-way through.",
+          "takeaways": [
+            "Record a position before leaving it when the file repeats itself; a search finds the first match, not your line.",
+            "The last-change mark needs no preparation and is exact for the edit you just made.",
+            "The change list walks back through a session's edits when one remembered place is not enough.",
+            "Resuming insertion is not the same as returning to a line: it restores the exact character too.",
+            "A line number is the one form of return that the next edit above it can invalidate."
+          ]
+        }
+      ]
     }
   ],
   "reference": [
@@ -3782,6 +8101,38 @@
       ]
     },
     {
+      "id": "irregular-structure-macros-reference",
+      "command": "qa f= … j0 q · 9@a · qa /=↵ … q · qA",
+      "purpose": "Anchor a recording to structure so rows of different shapes stop or skip predictably.",
+      "notes": [
+        "anchor to something the row contains, never to a column number",
+        "A column is the same on every row whether or not it means anything; a separator is only ever found where it actually is."
+      ],
+      "exampleActivityRefs": [
+        "quote-by-separator",
+        "let-the-count-stop-itself",
+        "search-past-the-odd-row",
+        "repair-a-recording-in-place",
+        "column-anchor-contrast"
+      ]
+    },
+    {
+      "id": "search-driven-cleanup-reference",
+      "command": ":%s/pat/pat/gn · cgn then . · :{line}s/pat/repl/c · :%s/pat/repl/g",
+      "purpose": "Establish what a pattern reaches before deciding how much of it to run at once.",
+      "notes": [
+        "count, then repeat what you can watch, then confirm what you cannot, then commit",
+        "A count tells you how far a pattern reaches; running it tells you the same thing afterwards."
+      ],
+      "exampleActivityRefs": [
+        "count-the-precise-pattern",
+        "retire-the-first-three",
+        "decline-the-legitimate-match",
+        "commit-the-proven-pattern",
+        "loose-pattern-contrast"
+      ]
+    },
+    {
       "id": "move-without-losing-it-reference",
       "command": "\"ayy · \"_dd · \"ap · \"2p",
       "purpose": "Keep a snippet available across the deletes that a relocation needs.",
@@ -3795,6 +8146,38 @@
         "recover-the-constant",
         "protect-the-constant",
         "unprotected-move-contrast"
+      ]
+    },
+    {
+      "id": "predicate-batch-editing-reference",
+      "command": ":g/pat/normal … · :g/pat/m$ · :v/pat/normal … · :g/pat/normal @a",
+      "purpose": "Select lines by what they contain and give the selection one command to run.",
+      "notes": [
+        "select lines by what they contain, then give the selection one command to run",
+        "A numeric range is a fact about the file as it is now; a predicate is a fact about the lines themselves."
+      ],
+      "exampleActivityRefs": [
+        "mark-the-deferred-steps",
+        "gather-the-deferred-steps",
+        "comment-everything-that-is-not-a-step",
+        "replay-a-macro-over-matches",
+        "stale-range-contrast"
+      ]
+    },
+    {
+      "id": "review-and-correct-reference",
+      "command": "ma then backtick-a · backtick-dot · g; · gi",
+      "purpose": "Return to a site you have to correct without searching for it again.",
+      "notes": [
+        "leave yourself a way back before you go, or ask the editor where you have already been",
+        "A search finds a line that matches; a mark finds the line you were standing on."
+      ],
+      "exampleActivityRefs": [
+        "mark-before-you-leave",
+        "return-to-the-last-change",
+        "walk-back-through-the-corrections",
+        "resume-the-interrupted-note",
+        "search-back-contrast"
       ]
     }
   ],
@@ -3860,6 +8243,46 @@
       ]
     },
     {
+      "concept": "anchoring a recording to structure so irregular rows stop or skip predictably",
+      "explain": [
+        "irregular-brief"
+      ],
+      "demonstrate": [
+        "column-anchor-contrast"
+      ],
+      "isolate": [
+        "quote-by-separator"
+      ],
+      "mix": [
+        "let-the-count-stop-itself",
+        "search-past-the-odd-row"
+      ],
+      "challenge": [
+        "repair-a-recording-in-place",
+        "choose-macro-anchor"
+      ]
+    },
+    {
+      "concept": "escalating from counting to repeating to confirming before committing a pattern",
+      "explain": [
+        "cleanup-brief"
+      ],
+      "demonstrate": [
+        "loose-pattern-contrast"
+      ],
+      "isolate": [
+        "count-the-precise-pattern"
+      ],
+      "mix": [
+        "retire-the-first-three",
+        "decline-the-legitimate-match"
+      ],
+      "challenge": [
+        "commit-the-proven-pattern",
+        "choose-cleanup-trust"
+      ]
+    },
+    {
       "concept": "protecting text in transit across intervening deletes",
       "explain": [
         "register-move-brief"
@@ -3877,6 +8300,46 @@
       "challenge": [
         "protect-the-constant",
         "choose-register-protection"
+      ]
+    },
+    {
+      "concept": "addressing lines by predicate rather than position across a windowed file",
+      "explain": [
+        "predicate-brief"
+      ],
+      "demonstrate": [
+        "stale-range-contrast"
+      ],
+      "isolate": [
+        "mark-the-deferred-steps"
+      ],
+      "mix": [
+        "gather-the-deferred-steps",
+        "comment-everything-that-is-not-a-step"
+      ],
+      "challenge": [
+        "replay-a-macro-over-matches",
+        "choose-line-selection"
+      ]
+    },
+    {
+      "concept": "returning to a correction site by position rather than by pattern",
+      "explain": [
+        "review-brief"
+      ],
+      "demonstrate": [
+        "search-back-contrast"
+      ],
+      "isolate": [
+        "mark-before-you-leave"
+      ],
+      "mix": [
+        "return-to-the-last-change",
+        "walk-back-through-the-corrections"
+      ],
+      "challenge": [
+        "resume-the-interrupted-note",
+        "choose-the-way-back"
       ]
     }
   ]

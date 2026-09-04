@@ -1250,7 +1250,7 @@ test.describe("Production lesson flow", () => {
     await page.waitForURL(/unit=real-code-workflow-capstones/);
     expect((await state(page))).toMatchObject({ unitId: "real-code-workflow-capstones", unitNumber: 16, activityId: "call-site-brief" });
 
-    await page.goto("/?unit=real-code-workflow-capstones&activity=register-move-rationale");
+    await page.goto("/?unit=real-code-workflow-capstones&activity=review-rationale");
     await expect(page.getByRole("button", { name: "Complete Unit 16" })).toBeVisible();
     await page.getByRole("button", { name: "Complete Unit 16" }).click();
     const storySurface = page.locator(".story-surface");

@@ -7,8 +7,8 @@
 **Depends on:** 03, 04, 05 (automation content settled) · **Blocks:** 17
 **Touches:** new `content/units/16-real-code-workflow-capstones.json`, `content/unit-index.json`
 **Size:** XL — split as suggested below.
-**Status:** first half complete. Capstones 1, 2, 3, and 6 ship as Unit 16;
-capstones 4, 5, 7, and 8 remain for a second session.
+**Status:** complete. All eight capstones ship as Unit 16, built in two
+passes: capstones 1, 2, 3, 6 first, then 4, 5, 7, 8.
 
 ## Context
 

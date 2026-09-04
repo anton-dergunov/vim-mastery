@@ -444,7 +444,7 @@ test("chains Unit 16 into the restored-world finale and archives its reverse jou
     }
   }, storyState);
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/play/?unit=real-code-workflow-capstones&activity=register-move-rationale");
+  await page.goto("/play/?unit=real-code-workflow-capstones&activity=review-rationale");
   await waitForApp(page);
 
   const dialog = page.locator("#storyDialog");

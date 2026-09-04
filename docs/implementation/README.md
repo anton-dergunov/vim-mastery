@@ -125,6 +125,7 @@ dated before session 07 against this table.
 | 21 | [Search offsets](21-search-offsets.md) | M | 01 | — |
 | 22 | [The file-name register `"%`](22-file-name-register.md) | M | 01 | 08, 11 |
 | 23 | [Five future unit boards and animation seeds](23-future-unit-boards-and-animation-seeds.md) | L | 07 | — |
+| 24 | [Story continuity and unit endings](24-story-continuity-and-unit-endings.md) | L | 07, 16, 23 | 17 |
 
 ## Recommended execution order
 
@@ -182,7 +183,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 13 Visual Block `$` and `g Ctrl-a`
 - [ ] 14 Reference decks
 - [ ] 15 Free practice mode
-- [~] 16 Unit 16 capstones (first half: capstones 1, 2, 3, 6)
+- [x] 16 Unit 16 capstones
 - [ ] 17 Unit 16 mastery loops
 - [ ] 18 Curriculum graph and portability
 - [ ] 19 Ex output surface
@@ -190,3 +191,4 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [ ] 21 Search offsets
 - [ ] 22 The file-name register
 - [ ] 23 Future unit boards and animation seeds
+- [ ] 24 Story continuity and unit endings

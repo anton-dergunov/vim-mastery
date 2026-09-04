@@ -220,7 +220,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 438);
+  assert.equal(exercises.length, 454);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -455,7 +455,7 @@ test("presentation manifest preserves the approved unit story table", () => {
       id: "real-code-workflow-capstones", guide: "brikk", world: "brass-meridian", landmark: "menders-bench",
       action: "Brikk settles four differently shaped jobs into one service kit; a single cyan current tests each assembly in turn",
       copy: "At Menders' Confluence, every restored skill becomes part of one dependable craft.",
-      nextSpeaker: "Nix", nextHook: "The language is alive. What you restore next is up to you.",
+      nextSpeaker: "Brikk", nextHook: "Nothing here needs me now. Go and look at what you put back.",
     },
   ]);
 });
@@ -1066,17 +1066,22 @@ test("Unit 16 preserves the capstone curriculum and its choose-then-compare shap
     commandsAndConcepts: "No new command families. Choosing between a structural change, a bounded range, a protected move, a repeat, and a substitution; matching the reach of an edit to the number and ambiguity of its sites; taking a range from a boundary the file already states; protecting text across intervening deletes; comparing a chosen solution with a working alternative by clarity, setup cost, repeatability, and risk",
     prerequisites: "Units 1\u201315",
     learningOutcome: "Complete a staged edit on realistic code by selecting a mechanism before touching the keys, and justify the selection against an alternative that also works",
-    representativeExercises: "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore indentation, a joined chain, a reflowed paragraph, and a numbered list; relocate two snippets across deletes that would overwrite them",
+    representativeExercises: "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore a joined chain, a reflowed paragraph, and a numbered list; anchor a recording so an irregular row stops or is skipped; count and confirm a pattern before committing it; relocate two snippets across deletes that would overwrite them; edit only the lines a predicate selects; return to each correction site by position rather than by pattern",
     priorityAndPortability: "Integration rather than instruction. Every command here is already taught in Units 1\u201315 and every capstone closes by comparing its solution with a mechanism that also reaches the target",
   });
   assert.deepEqual(capstoneUnit.lessons.map(lesson => lesson.id), [
-    "call-site-surgery", "string-and-name-repair", "shape-the-block", "move-without-losing-it",
+    "call-site-surgery", "string-and-name-repair", "shape-the-block", "irregular-structure-macros",
+    "search-driven-cleanup", "move-without-losing-it", "predicate-batch-editing", "review-and-correct",
   ]);
   assert.deepEqual(capstoneUnit.coverage.map(item => item.concept), [
     "choosing between structural, range, register, and repeat edits at call sites",
     "matching rename reach to occurrence count and ambiguity",
     "choosing the boundary that already describes a formatting fix",
+    "anchoring a recording to structure so irregular rows stop or skip predictably",
+    "escalating from counting to repeating to confirming before committing a pattern",
     "protecting text in transit across intervening deletes",
+    "addressing lines by predicate rather than position across a windowed file",
+    "returning to a correction site by position rather than by pattern",
   ]);
 
   // A capstone is not a lesson with a quiz bolted on. It states the job, asks

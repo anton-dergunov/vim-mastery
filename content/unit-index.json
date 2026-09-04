@@ -22,6 +22,6 @@
     { "id": "substitution-practical-regex", "unitNumber": 13, "title": "Substitution and practical regex", "lessonCount": 8, "path": "content/units/13-substitution-practical-regex.json" },
     { "id": "macros", "unitNumber": 14, "title": "Macros", "lessonCount": 8, "path": "content/units/14-macros.json" },
     { "id": "global-normal-automation", "unitNumber": 15, "title": "Global and Normal automation", "lessonCount": 9, "path": "content/units/15-global-normal-automation.json" },
-    { "id": "real-code-workflow-capstones", "unitNumber": 16, "title": "Real-code workflow capstones", "lessonCount": 4, "path": "content/units/16-real-code-workflow-capstones.json" }
+    { "id": "real-code-workflow-capstones", "unitNumber": 16, "title": "Real-code workflow capstones", "lessonCount": 8, "path": "content/units/16-real-code-workflow-capstones.json" }
   ]
 }
