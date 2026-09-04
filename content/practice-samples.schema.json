@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vimwilds.local/schemas/practice-samples.schema.json",
+  "title": "Vim Wilds free practice sample buffers",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contentVersion", "samples"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "contentVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "samples": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sample"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "copy": {"type": "string", "minLength": 1},
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "fileName", "languageId", "summary", "lines"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "fileName": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "description": "A bare file name with no path separator. This is the value `%` and `Ctrl-r%` will read once the file-name register lands."
+        },
+        "languageId": {
+          "$ref": "#/$defs/id",
+          "description": "Must resolve to a profile in language-profiles.json."
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "One line describing the buffer. Renders inside a 360px picker row."
+        },
+        "lines": {
+          "type": "array",
+          "minItems": 20,
+          "maxItems": 60,
+          "description": "Long enough that :g, macros, and bulk substitution have something to bite on, short enough to stay a scratch file.",
+          "items": {
+            "type": "string",
+            "maxLength": 34,
+            "description": "At most 34 columns. The free practice slab exposes 296px of text column at 360px wide, which is 35.2 monospace characters at 14px; the horizontal axis is unreachable by touch because .game-area pins touch-action to pan-y."
+          }
+        }
+      }
+    }
+  }
+}

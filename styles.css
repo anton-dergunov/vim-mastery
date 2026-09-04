@@ -1254,6 +1254,9 @@ html.next-ui .activity-intro {
 
 html.next-ui .activity-intro[hidden],
 html.next-ui .next-reset-button[hidden],
+/* .icon-button sets its own display, so the attribute alone does not hide one.
+   The top bar swaps its controls by attribute when free practice opens. */
+html.next-ui .icon-button[hidden],
 html.next-ui .hint-button[hidden] { display: none; }
 
 html.next-ui .activity-intro-row {
@@ -4324,3 +4327,171 @@ html.next-ui .toc-reference-units button {
   text-align: left;
   cursor: pointer;
 }
+
+/* Free practice ------------------------------------------------------------
+   The one surface where the code slab takes the whole canvas. This is the
+   short-landscape board-removal recipe above, promoted to every orientation:
+   with no instruction, console, board or character competing for the height,
+   there is nothing left to preserve behind the editor.
+
+   Every rule is gated on the surface attribute, and the block is appended last
+   on purpose. It ties on specificity (0,4,1) with the `.phone.keyboard-visible`
+   landscape rules, so source order is what lets it win without `!important` —
+   and gating on the attribute rather than `.keyboard-visible` is what keeps the
+   board removed for someone who has hidden the on-screen keyboard. */
+html.next-ui .phone[data-surface="free-practice"] .activity-intro,
+html.next-ui .phone[data-surface="free-practice"] .next-command-tray,
+html.next-ui .phone[data-surface="free-practice"] .help-card,
+html.next-ui .phone[data-surface="free-practice"] .character-layer,
+html.next-ui .phone[data-surface="free-practice"] .completion-host,
+html.next-ui .phone[data-surface="free-practice"] .world::before,
+html.next-ui .phone[data-surface="free-practice"] .world-backdrop,
+html.next-ui .phone[data-surface="free-practice"] .world-ambient,
+html.next-ui .phone[data-surface="free-practice"] .world-remote-variant-layer {
+  display: none;
+}
+
+html.next-ui .phone[data-surface="free-practice"] .game-area {
+  padding: 4px max(4px, env(safe-area-inset-right)) 4px max(4px, env(safe-area-inset-left));
+  background: #06110f;
+}
+
+html.next-ui .phone[data-surface="free-practice"] .world {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.next-ui .phone[data-surface="free-practice"] .editor-stack {
+  width: auto;
+  max-height: none;
+  grid-row: 1 / 10;
+  align-self: stretch;
+  justify-self: stretch;
+  margin: 0;
+}
+
+html.next-ui .phone[data-surface="free-practice"] .next-code-slab {
+  height: 100%;
+  max-height: none;
+}
+
+/* The lesson's fixed-window clamp is deliberately absent: this is the only
+   natively scrolling buffer in the product, which is what lets Vim keep the
+   cursor in view across a sixty-line file. */
+html.next-ui .phone[data-surface="free-practice"] .code-body .cm-scroller {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+html.next-ui .toc-practice {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(255, 200, 102, .22);
+  border-radius: 12px;
+  background: rgba(255, 200, 102, .05);
+}
+
+html.next-ui .toc-practice h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+html.next-ui .toc-practice p {
+  margin: 6px 0 0;
+  color: #adc1b6;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+html.next-ui .toc-practice-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+html.next-ui .toc-practice-actions button {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 200, 102, .3);
+  border-radius: 10px;
+  background: rgba(48, 34, 12, .6);
+  color: #f2ece0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+html.next-ui .toc-practice-actions button strong { font-size: 14px; }
+
+html.next-ui .toc-practice-actions button small {
+  color: #cbbc9e;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+html.next-ui .practice-disclaimer {
+  margin: 0 0 12px;
+  color: #adc1b6;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+html.next-ui .practice-disclaimer button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #ffc866;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+html.next-ui .practice-random { width: 100%; margin-bottom: 12px; }
+
+html.next-ui .practice-file-list {
+  display: grid;
+  gap: 8px;
+}
+
+html.next-ui .practice-file-list button {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid rgba(170, 225, 197, .24);
+  border-radius: 10px;
+  background: rgba(12, 36, 29, .6);
+  color: #e5eee9;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+html.next-ui .practice-file-list button strong {
+  font: 700 14px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.next-ui .practice-file-list button small,
+html.next-ui .practice-file-list button span {
+  color: #a9bdb2;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+html.next-ui .practice-file-list button span { color: #8ba79a; }
+
+html.next-ui .practice-loading { margin: 0; color: #adc1b6; font-size: 13px; }
+
+html.next-ui .practice-notice-dialog .dialog-body p {
+  margin: 0 0 10px;
+  color: #cfe0d6;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+html.next-ui .practice-notice-dialog .note-action { width: 100%; margin-top: 4px; }

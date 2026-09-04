@@ -11,7 +11,7 @@
     "test": "npm run test:quick",
     "test:quick": "npm run test:content && npm run test:effects && npm run test:native && npm run test:media && npm run test:browser:smoke",
     "test:full": "npm run test:content && npm run test:effects && npm run test:native && npm run test:media && npm run test:pwa && npm run test:browser",
-    "test:content": "node --test tests/content-data.test.mjs tests/action-guidance.test.mjs tests/character-reactions.test.mjs",
+    "test:content": "node --test tests/content-data.test.mjs tests/action-guidance.test.mjs tests/character-reactions.test.mjs tests/practice-samples.test.mjs",
     "test:effects": "node --test tests/vim-effects.test.mjs",
     "test:native": "node --test tests/native-vim.test.mjs",
     "test:media": "node --test tests/media-policy.test.mjs",

@@ -56,7 +56,7 @@ function pwaBuildPlugin(base, version) {
     configureServer(server) {
       server.middlewares.use((request, response, next) => {
         const url = new URL(request.url || "/", "http://vite.local");
-        if (url.pathname === "/" && ["unit", "activity", "preview"].some(key => url.searchParams.has(key))) {
+        if (url.pathname === "/" && ["unit", "activity", "preview", "practice"].some(key => url.searchParams.has(key))) {
           response.statusCode = 302;
           response.setHeader("Location", `/play/${url.search}`);
           response.end();
@@ -73,6 +73,7 @@ function pwaBuildPlugin(base, version) {
       emit("content/language-profiles.json", readFileSync(join(contentDirectory, "language-profiles.json")));
       emit("content/presentation.json", readFileSync(join(contentDirectory, "presentation.json")));
       emit("content/reference.json", readFileSync(join(contentDirectory, "reference.json")));
+      emit("content/practice-samples.json", readFileSync(join(contentDirectory, "practice-samples.json")));
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       [...media.core, ...media.optional].forEach(asset => emit(asset.path, readFileSync(join(rootDirectory, asset.path))));

@@ -18,6 +18,9 @@ const sessionStateKey = "vim-wilds.session.v1";
 // stops a story replay from looking like curriculum progress, and stops the
 // opening from replaying when someone rewatches the intro.
 const referenceStateKey = "vim-wilds.reference.v1";
+// Free practice is not progress either. Its own key keeps a scratchpad flag
+// from ever reading as curriculum state to a restore or a migration.
+const practiceStateKey = "vim-wilds.practice.v1";
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 const vimEffectValues = new Set(["enabled", "disabled"]);
@@ -26,6 +29,7 @@ const practicePolicyValues = Object.freeze({
   guided: "guided-sequence",
   recall: "recall-sequence",
   explore: "explore",
+  free: "free",
 });
 
 function readSavedSession() {
@@ -46,8 +50,18 @@ function readReferenceState() {
   }
 }
 
+function readPracticeState() {
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(practiceStateKey) || "null");
+    return { noticeSeen: saved?.noticeSeen === true };
+  } catch {
+    return { noticeSeen: false };
+  }
+}
+
 const savedSession = readSavedSession();
 const referenceState = readReferenceState();
+const practiceState = readPracticeState();
 const [languageProfiles, referenceCatalog, catalogData] = await Promise.all([
   fetch(appUrl("content/language-profiles.json")).then(response => {
     if (!response.ok) throw new Error(`Language profiles request failed (${response.status})`);
@@ -126,6 +140,11 @@ const elements = {
   referenceTitle: $("#referenceTitle"),
   referenceCardBody: $("#referenceCardBody"),
   referenceActions: $("#referenceActions"),
+  practiceLeaveButton: $("#practiceLeaveButton"),
+  practiceFilesButton: $("#practiceFilesButton"),
+  practiceFilesDialog: $("#practiceFilesDialog"),
+  practiceFileList: $("#practiceFileList"),
+  practiceNoticeDialog: $("#practiceNoticeDialog"),
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
   restartUpdateButton: $("#restartUpdateButton"),
@@ -230,6 +249,7 @@ const state = {
   characters: storedDecorativeMedia("characters"),
   practicePolicyOverride: null,
   exploreTargetReached: false,
+  freePractice: null,
   hintLevel: 0,
   consecutiveMistakes: 0,
   recallFeedback: null,
@@ -242,7 +262,10 @@ function persistSession() {
   try {
     window.localStorage.setItem(sessionStateKey, JSON.stringify({
       unitId: unit.id,
-      activityId: currentActivity()?.id,
+      // The saved id is the lesson position, never whatever surface is on
+      // screen. Free practice must not be able to write an id that no
+      // `activities` lookup can resolve on the next launch.
+      activityId: activities[state.activityIndex]?.id,
       themePreference: state.themePreference,
       keyboardVisibility: state.keyboardVisibility,
       vimEffects: state.vimEffects,
@@ -258,7 +281,7 @@ let executionMeasurementFrame = null;
 let executionMeasurementSignature = null;
 
 function currentActivity() {
-  return activities[state.activityIndex];
+  return state.freePractice?.activity || activities[state.activityIndex];
 }
 
 function shuffle(items) {
@@ -349,6 +372,7 @@ function preloadSuccessMedia(activity = currentActivity()) {
     releaseSuccessMedia();
     return;
   }
+  if (isFreePractice()) return;
   if (!activity || !(isPractice(activity) || activity.type === "choice") || activity.inspection) return;
   const assignment = characterAssignment(activity);
   const asset = characterAssets[assignment.characterId] || characterAssets.nix;
@@ -420,12 +444,44 @@ function isDemo(activity = currentActivity()) {
   return activity?.type === "demo";
 }
 
+function isFreePractice() {
+  return state.freePractice !== null;
+}
+
+function freePracticeSample() {
+  return state.freePractice?.sample || null;
+}
+
+/**
+ * A scratchpad is an exercise as far as input is concerned, and nothing else.
+ * `type: "exercise"` is load-bearing: it is what keeps the touch keyboard, the
+ * physical keydown path, the latched modifiers and Caps Lock working without a
+ * second implementation. The empty `commandGroups`, the `lessonIndex` and the
+ * Normal `mode` exist so the shared presentation, console and mount helpers
+ * cannot dereference something undefined.
+ */
+function freePracticeActivity(sample) {
+  return {
+    id: "free-practice",
+    type: "exercise",
+    practiceMode: "free",
+    lessonIndex: 0,
+    title: sample.fileName,
+    instruction: "",
+    languageId: sample.languageId,
+    hints: [],
+    script: { steps: [], commandGroups: [] },
+    scenario: { initial: { lines: sample.lines, cursor: [0, 0], mode: "normal" } },
+  };
+}
+
 function basePracticePolicy(activity = currentActivity()) {
   return activity?.practiceMode === "recall" ? practicePolicyValues.recall : practicePolicyValues.guided;
 }
 
 function practicePolicy(activity = currentActivity()) {
   if (!isPractice(activity)) return null;
+  if (isFreePractice() && activity === currentActivity()) return practicePolicyValues.free;
   if (activity === currentActivity() && state.practicePolicyOverride === practicePolicyValues.explore) {
     return practicePolicyValues.explore;
   }
@@ -745,6 +801,91 @@ function handleReferenceAuthoredAction(actionId) {
   closeReferenceDeck();
 }
 
+// Free practice ------------------------------------------------------------
+// Fetched lazily and cached the way a non-current unit's reference entries are.
+// Most sessions never open the scratchpad, and twenty buffers do not belong in
+// front of first paint. The service worker precaches the file, so the first
+// ever open still works offline.
+let practiceSamplesPromise = null;
+let practiceNoticeReturnsToPicker = false;
+const practiceSampleIndex = new Map();
+
+function practiceSampleCatalog() {
+  practiceSamplesPromise ||= fetch(appUrl("content/practice-samples.json"))
+    .then(response => {
+      if (!response.ok) throw new Error(`Practice samples request failed (${response.status})`);
+      return response.json();
+    })
+    .then(data => {
+      data.samples.forEach(sample => practiceSampleIndex.set(sample.id, sample));
+      return data.samples;
+    });
+  return practiceSamplesPromise;
+}
+
+function randomPracticeSample(samples, excludeId = null) {
+  // Excluding the open file is what makes a second "Surprise me" always change
+  // something.
+  const pool = samples.filter(sample => sample.id !== excludeId);
+  const choices = pool.length ? pool : samples;
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function persistPracticeState() {
+  try {
+    window.localStorage.setItem(practiceStateKey, JSON.stringify(practiceState));
+  } catch {
+    // A blocked or full store only costs a repeated notice, never correctness.
+  }
+}
+
+function openPracticeNotice({ fromPicker = false } = {}) {
+  practiceNoticeReturnsToPicker = fromPicker;
+  if (fromPicker && elements.practiceFilesDialog.open) elements.practiceFilesDialog.close();
+  if (!elements.practiceNoticeDialog.open) elements.practiceNoticeDialog.showModal();
+}
+
+async function startFreePractice(sampleId = null) {
+  const samples = await practiceSampleCatalog();
+  const sample = (sampleId && practiceSampleIndex.get(sampleId))
+    || randomPracticeSample(samples, state.freePractice?.sample?.id || null);
+  clearPlayback();
+  elements.tocDialog?.close();
+  if (elements.practiceFilesDialog.open) elements.practiceFilesDialog.close();
+  state.freePractice = { sample, activity: freePracticeActivity(sample) };
+  elements.phone.dataset.surface = "free-practice";
+  // The scenic layers are hidden for as long as this surface is up, so their
+  // remote variant streaming is pure wasted bandwidth. Same pair the reference
+  // surface uses.
+  worldRenderer.cancelRemoteVariants({ clearLayer: true });
+  resetActivity({ vibrateReset: false });
+  // Entering writes nothing to the session key. That is what makes "no
+  // progression state changes on entry" true by construction.
+  if (!practiceState.noticeSeen) openPracticeNotice();
+  return sample;
+}
+
+function exitFreePractice() {
+  if (!isFreePractice()) return;
+  state.freePractice = null;
+  delete elements.phone.dataset.surface;
+  resetActivity({ vibrateReset: false });
+  worldRenderer.syncRemoteVariants();
+}
+
+async function openPracticeFiles() {
+  elements.tocDialog?.close();
+  elements.practiceFileList.innerHTML = '<p class="practice-loading">Loading…</p>';
+  if (!elements.practiceFilesDialog.open) elements.practiceFilesDialog.showModal();
+  const samples = await practiceSampleCatalog();
+  elements.practiceFileList.innerHTML = samples.map(sample => `
+    <button type="button" data-practice-sample="${escapeHtml(sample.id)}">
+      <strong>${escapeHtml(sample.fileName)}</strong>
+      <small>${renderInline(sample.summary)}</small>
+      <span>${escapeHtml(languageLabel(sample))} · ${sample.lines.length} lines</span>
+    </button>`).join("");
+}
+
 function showOpeningReference() {
   if (!openingDeck || referenceState.orientationSeen || !isDefaultArrival) return false;
   openReferenceDeck(openingDeck.id, { opening: true });
@@ -756,6 +897,7 @@ function showOpeningReference() {
 // interrupts someone who asked for a specific screen.
 const isDefaultArrival = !urlParams.has("preview")
   && !urlParams.has("reference")
+  && !urlParams.has("practice")
   && !urlParams.has("activity")
   && (!urlParams.has("unit") || urlParams.get("unit") === units[0].id);
 
@@ -900,7 +1042,7 @@ function renderFieldNote(activity) {
 
 function renderActivityIntro() {
   const activity = currentActivity();
-  const show = isRunnable(activity);
+  const show = isRunnable(activity) && !isFreePractice();
   elements.activityIntro.hidden = !show;
   if (!show) return;
   const practiceLabel = isExplore(activity)
@@ -984,14 +1126,22 @@ function renderWorld() {
     resetVimEngineState();
   }
   setTheme(functionalThemeFor(activity));
-  const layeredWorld = applyWorldPresentation(activity, presentation);
+  const layeredWorld = isFreePractice() ? null : applyWorldPresentation(activity, presentation);
   const viewportRows = activity.editor?.viewportRows;
   const plannedRows = plannedEditorRows(activity);
   const editorRows = viewportRows || plannedRows;
   const expandedRowsClass = editorRows > 6 ? " has-expanded-rows" : "";
   const editorPadding = viewportRows ? 18 : 24;
   const editorStyle = `--editor-rows:${editorRows};--editor-height:${editorRows * 24 + editorPadding}px${viewportRows ? `;--viewport-rows:${viewportRows}` : ""}`;
-  const content = isRunnable(activity)
+  const content = isFreePractice()
+    // No viewport rows and no authored height: the free practice slab is sized
+    // by the surface rather than by the buffer, and its scroller is the one
+    // place in the product where CodeMirror scrolls natively so Vim can keep
+    // the cursor in view across a sixty-line file.
+    ? `<div class="editor-stack free-practice-stack">
+          <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Free practice editor"></div></div>
+        </div>`
+    : isRunnable(activity)
     ? `<div class="editor-stack${viewportRows ? " has-viewport" : ""}${expandedRowsClass}" data-planned-rows="${editorRows}" style="${editorStyle}">
           <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}</div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
@@ -1003,8 +1153,14 @@ function renderWorld() {
         </div>`
     : `<div class="field-note-wrap side-${presentation.codeSide}">${renderFieldNote(activity)}</div>`;
   elements.worldGrid.innerHTML = content;
-  renderCharacterLayer(activity, presentation);
-  renderCompletionHost();
+  if (isFreePractice()) {
+    elements.characterLayer.dataset.side = "none";
+    elements.characterLayer.innerHTML = "";
+    elements.completionHost.innerHTML = "";
+  } else {
+    renderCharacterLayer(activity, presentation);
+    renderCompletionHost();
+  }
   if (hasEditor(activity)) mountEditor();
   if (layeredWorld) worldRenderer.considerUnitReveal();
 }
@@ -1225,7 +1381,7 @@ function executionConsoleMeasurementSignature(activity = currentActivity()) {
 function measureExecutionConsole() {
   executionMeasurementFrame = null;
   const activity = currentActivity();
-  if (!isRunnable(activity)) return;
+  if (!isRunnable(activity) || isFreePractice()) return;
   const signature = executionConsoleMeasurementSignature(activity);
   const probe = elements.commandTray.cloneNode(true);
   probe.removeAttribute("id");
@@ -1250,7 +1406,7 @@ function measureExecutionConsole() {
 }
 
 function scheduleExecutionConsoleMeasurement({ force = false } = {}) {
-  if (!isRunnable()) return;
+  if (!isRunnable() || isFreePractice()) return;
   if (!force && executionMeasurementSignature === executionConsoleMeasurementSignature()) return;
   if (executionMeasurementFrame) return;
   executionMeasurementFrame = window.requestAnimationFrame(measureExecutionConsole);
@@ -1258,7 +1414,7 @@ function scheduleExecutionConsoleMeasurement({ force = false } = {}) {
 
 function renderCommand() {
   const activity = currentActivity();
-  if (!isRunnable(activity)) {
+  if (!isRunnable(activity) || isFreePractice()) {
     elements.commandExplanation.textContent = "";
     elements.commandTray.classList.add("hidden");
     return;
@@ -1271,13 +1427,21 @@ function renderCommand() {
 
 function renderHeader() {
   const activity = currentActivity();
-  elements.lessonLabel.textContent = activity.lessonTitle;
+  const free = isFreePractice();
+  elements.lessonLabel.textContent = free ? activity.title : activity.lessonTitle;
   elements.resetButton.hidden = !isRunnable(activity);
+  // Toggling the attribute, not a class, removes the inactive controls from the
+  // accessibility tree so a role lookup can only ever match one of each pair.
+  [[elements.tocButton, free], [elements.settingsButton, free],
+    [elements.practiceLeaveButton, !free], [elements.practiceFilesButton, !free],
+    [$('[data-layout-action="toc"]'), free], [$('[data-layout-action="settings"]'), free],
+    [$('[data-layout-action="practice-leave"]'), !free], [$('[data-layout-action="practice-files"]'), !free],
+  ].forEach(([button, hidden]) => button?.toggleAttribute("hidden", hidden));
   renderTableOfContents();
 }
 
 function renderHints() {
-  const hints = isPractice() ? currentActivity().hints : [];
+  const hints = isPractice() && !isFreePractice() ? currentActivity().hints : [];
   elements.hintSteps.innerHTML = hints.slice(0, state.hintLevel).map((hint, index) => `<div class="hint-step"><kbd>Hint ${index + 1}</kbd><small>${renderInline(hint)}</small></div>`).join("");
 }
 
@@ -1370,7 +1534,9 @@ function activityTypeLabel(type) {
 }
 
 function renderTableOfContents() {
-  const current = currentActivity();
+  // The lesson position, not the surface: free practice must not blank the
+  // open lesson in the contents.
+  const current = activities[state.activityIndex];
   const lessonMarkup = lessons.map((lesson, lessonIndex) => {
     const lessonActivities = activities.filter(activity => activity.lessonId === lesson.id);
     const rows = lessonActivities.map((activity, activityIndex) => {
@@ -1442,7 +1608,15 @@ function renderTableOfContents() {
       <div class="toc-reference-units">${unitReferenceButtons}</div>
     </section>`
     : "";
-  elements.tocLessons.innerHTML = referenceSection + storyArchive + arcMarkup + ungroupedMarkup;
+  const practiceSection = `<section class="toc-practice" aria-labelledby="tocPracticeTitle">
+    <h3 id="tocPracticeTitle">Free practice</h3>
+    <p>A scratchpad on a real file. Nothing here is scored or unlocked, and it is open before Unit 1.</p>
+    <div class="toc-practice-actions">
+      <button type="button" data-practice-random><strong>Open a scratch file</strong><small>A random file, no goal, no judgment.</small></button>
+      <button type="button" data-practice-browse><strong>Browse the files</strong><small>Twenty buffers across sixteen languages.</small></button>
+    </div>
+  </section>`;
+  elements.tocLessons.innerHTML = practiceSection + referenceSection + storyArchive + arcMarkup + ungroupedMarkup;
 }
 
 function storyPreviewHref(parameters) {
@@ -1517,6 +1691,8 @@ function goToActivity(index, { preserveRemediation = false } = {}) {
   elements.tocDialog?.close();
   if (!preserveRemediation) state.remediationReturnId = null;
   state.practicePolicyOverride = null;
+  state.freePractice = null;
+  delete elements.phone.dataset.surface;
   state.activityIndex = index;
   resetActivity({ vibrateReset: false });
   persistSession();
@@ -1569,7 +1745,10 @@ function returnFromRemediation() {
 }
 
 function isTargetSnapshot(snapshot) {
-  const target = currentActivity().scenario.target;
+  // Free practice has no target. Answering here keeps the predicate honest
+  // instead of making every caller check first.
+  const target = currentActivity().scenario?.target;
+  if (!target) return false;
   const registersMatch = Object.entries(target.registers || {}).every(([name, expected]) => {
     const actual = snapshot.registers?.[name];
     return actual?.text === expected.text && actual.type === expected.type;
@@ -1697,13 +1876,18 @@ function handleEngineEvent(event) {
   // Only the gate's explicit injection is evidence of learner/demo progress.
   // CodeMirror can also report keypresses from its transient search prompt;
   // those must not turn an accepted sequence into a different one.
-  if (event.kind === "key" && (event.source === "lesson" || event.source === "demo")) {
+  // Free practice keeps no history: there is nothing to compare it against,
+  // and a long session would grow the array without bound.
+  if (event.kind === "key" && !isFreePractice() && (event.source === "lesson" || event.source === "demo")) {
     state.history.push(event.key);
     if (isPractice()) state.progress = state.history.length;
   }
   renderMode();
   if (event.kind === "mode" || event.kind === "key") characterReactions.modeChanged(event.snapshot?.mode);
   renderCommand();
+  // No target, no completion, no progress. The early return sits below the
+  // renders so the mode pill still tracks the buffer.
+  if (isFreePractice()) return;
   if (isExplore() && isTargetSnapshot(event.snapshot)) {
     reachExploreTarget();
   } else if (isPractice() && !state.complete && state.progress === scriptKeys().length && isTargetSnapshot(event.snapshot)) {
@@ -1743,6 +1927,8 @@ function flashError(token, button) {
   elements.commandTray.classList.add("error");
   window.setTimeout(() => elements.commandTray.classList.remove("error"), 300);
   if (!isPractice()) return;
+  // Nothing is wrong in a scratchpad: there is no expected key to have missed.
+  if (isFreePractice()) return;
   state.consecutiveMistakes += 1;
   characterReactions.incorrectInput(state.consecutiveMistakes);
   if (currentActivity().practiceMode === "guided") {
@@ -1770,6 +1956,13 @@ function flashError(token, button) {
 
 function processToken(token, button) {
   if (!isPractice() || state.complete || !vimEngine) return false;
+  if (isFreePractice()) {
+    // Every token the keyboard can produce is sent. The disclaimer, not an
+    // allow-list, is what covers a command the adapter implements differently:
+    // being unable to try something is worse than trying it and finding it
+    // imperfect.
+    return vimEngine.sendKey(token, { source: "lesson" });
+  }
   if (isExplore()) {
     clearPracticeError();
     setHelp(false);
@@ -1869,7 +2062,7 @@ function playDemo(interval) {
 }
 
 function setHelp(open) {
-  const canHelp = isPractice();
+  const canHelp = isPractice() && !isFreePractice();
   if (open && canHelp) {
     state.hintLevel = Math.min(currentActivity().hints.length, state.hintLevel + 1);
     renderHints();
@@ -2015,6 +2208,7 @@ elements.keyboard.addEventListener("pointerdown", event => {
 document.addEventListener("keydown", event => {
   if (event.vimWildsPrompt) return;
   if (elements.storyDialog?.open) return;
+  if (elements.practiceFilesDialog?.open || elements.practiceNoticeDialog?.open) return;
   if (isPractice() && state.complete && state.keyboardVisibility === "hidden") {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -2189,8 +2383,37 @@ elements.referenceDialog?.addEventListener("cancel", event => {
   closeReferenceDeck();
 });
 
+elements.practiceLeaveButton?.addEventListener("click", () => exitFreePractice());
+elements.practiceFilesButton?.addEventListener("click", () => void openPracticeFiles());
+elements.practiceFilesDialog?.addEventListener("click", event => {
+  if (event.target.closest("[data-practice-notice]")) return openPracticeNotice({ fromPicker: true });
+  if (event.target.closest("[data-practice-random]")) return void startFreePractice();
+  const sampleId = event.target.closest("[data-practice-sample]")?.dataset.practiceSample;
+  if (sampleId) void startFreePractice(sampleId);
+});
+// `close` covers the button, Escape and the backdrop in one place. The
+// reference deck intercepts `cancel` instead only because it has renderer
+// teardown that a plain close would skip.
+elements.practiceFilesDialog?.addEventListener("close", () => {
+  if (!elements.practiceNoticeDialog.open) vimEngine?.focus();
+});
+elements.practiceNoticeDialog?.addEventListener("close", () => {
+  if (!practiceState.noticeSeen) {
+    practiceState.noticeSeen = true;
+    persistPracticeState();
+  }
+  if (practiceNoticeReturnsToPicker) {
+    practiceNoticeReturnsToPicker = false;
+    void openPracticeFiles();
+    return;
+  }
+  vimEngine?.focus();
+});
+
 $(".landscape-controls")?.addEventListener("click", event => {
   const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
+  if (action === "practice-leave") exitFreePractice();
+  if (action === "practice-files") void openPracticeFiles();
   if (action === "toc") openTableOfContents();
   if (action === "reset") resetActivity();
   if (action === "settings") {
@@ -2202,6 +2425,16 @@ $(".landscape-controls")?.addEventListener("click", event => {
   }
 });
 elements.tocLessons?.addEventListener("click", event => {
+  if (event.target.closest("[data-practice-random]")) {
+    elements.tocDialog.close();
+    void startFreePractice();
+    return;
+  }
+  if (event.target.closest("[data-practice-browse]")) {
+    elements.tocDialog.close();
+    void openPracticeFiles();
+    return;
+  }
   const referenceDeck = event.target.closest("[data-reference-deck]")?.dataset.referenceDeck;
   if (referenceDeck) {
     elements.tocDialog.close();
@@ -2365,6 +2598,33 @@ window.VimWilds = Object.freeze({
       orientationSeen: referenceState.orientationSeen,
     };
   },
+  openFreePractice(sampleId) {
+    return startFreePractice(sampleId || null);
+  },
+  closeFreePractice() {
+    exitFreePractice();
+  },
+  practiceSamples() {
+    return practiceSampleCatalog().then(samples => samples.map(sample => ({
+      id: sample.id,
+      fileName: sample.fileName,
+      languageId: sample.languageId,
+      lineCount: sample.lines.length,
+    })));
+  },
+  freePracticeState() {
+    const sample = freePracticeSample();
+    return {
+      active: isFreePractice(),
+      sampleId: sample?.id || null,
+      fileName: sample?.fileName || null,
+      languageId: sample?.languageId || null,
+      lineCount: sample?.lines.length || 0,
+      noticeSeen: practiceState.noticeSeen,
+      pickerOpen: elements.practiceFilesDialog.open === true,
+      noticeOpen: elements.practiceNoticeDialog.open === true,
+    };
+  },
   getState() {
     const snapshot = state.editorSnapshot || vimEngine?.getSnapshot();
     const ranges = snapshot?.ranges || [];
@@ -2385,8 +2645,9 @@ window.VimWilds = Object.freeze({
       activityId: currentActivity().id,
       activityType: currentActivity().type,
       lessonId: currentActivity().lessonId,
-      exerciseIndex: isPractice() ? exercises.findIndex(exercise => exercise.sourceActivityId === currentActivity().sourceActivityId) : -1,
-      exerciseId: isPractice() ? currentActivity().sourceActivityId : null,
+      surface: isFreePractice() ? "free-practice" : "lesson",
+      exerciseIndex: isPractice() && !isFreePractice() ? exercises.findIndex(exercise => exercise.sourceActivityId === currentActivity().sourceActivityId) : -1,
+      exerciseId: isPractice() && !isFreePractice() ? currentActivity().sourceActivityId : null,
       sourceActivityId: currentActivity().sourceActivityId || currentActivity().id,
       practiceMode: currentActivity().practiceMode || null,
       practicePolicy: practicePolicy(),
@@ -2463,6 +2724,7 @@ if (urlParams.get("preview") === "story-index") {
     storyTransitions.showEnding({ replay: true });
   }
 }
+if (urlParams.has("practice")) await startFreePractice(urlParams.get("practice") || null);
 void loadCharacterAssets();
 persistSession();
 registerServiceWorker();

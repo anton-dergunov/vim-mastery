@@ -57,6 +57,13 @@ test("production PWA precaches core media and streams optional animation and sce
     readFileSync(join(rootPath, "content", "reference.json"), "utf8"),
   );
   assert.match(worker, /content\/reference\.json/);
+  // Same story for the free practice buffers: individually emitted, so this is
+  // where an offline build would quietly lose the scratchpad.
+  assert.equal(
+    readFileSync(join(dist, "content", "practice-samples.json"), "utf8"),
+    readFileSync(join(rootPath, "content", "practice-samples.json"), "utf8"),
+  );
+  assert.match(worker, /content\/practice-samples\.json/);
   assert.equal(media.core.length, 142);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 15);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 15);

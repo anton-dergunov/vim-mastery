@@ -69,6 +69,9 @@
 <body>
   <main class="phone" id="phone" aria-label="The Vim Wilds bite-sized lesson">
     <header class="next-topbar">
+      <button class="icon-button" id="practiceLeaveButton" type="button" hidden aria-label="Leave free practice" title="Leave">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
       <button class="icon-button" id="tocButton" type="button" aria-label="Open table of contents" title="Contents">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="3" cy="6" r=".75"/><circle cx="3" cy="12" r=".75"/><circle cx="3" cy="18" r=".75"/></svg>
       </button>
@@ -80,9 +83,18 @@
       <button class="icon-button" id="settingsButton" type="button" aria-label="Open settings" title="Settings">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9 1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
       </button>
+      <button class="icon-button" id="practiceFilesButton" type="button" hidden aria-label="Pick another file" title="Files">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/></svg>
+      </button>
     </header>
 
     <nav class="landscape-controls" aria-label="Lesson controls">
+      <button class="icon-button" data-layout-action="practice-leave" type="button" hidden aria-label="Leave free practice" title="Leave">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="icon-button" data-layout-action="practice-files" type="button" hidden aria-label="Pick another file" title="Files">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/></svg>
+      </button>
       <button class="icon-button" data-layout-action="toc" type="button" aria-label="Open table of contents" title="Contents">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/><circle cx="3" cy="6" r=".75"/><circle cx="3" cy="12" r=".75"/><circle cx="3" cy="18" r=".75"/></svg>
       </button>
@@ -216,6 +228,35 @@
         <button class="dialog-close" type="button" data-close-dialog="tocDialog" aria-label="Close table of contents">×</button>
       </div>
       <div class="dialog-body toc-lessons" id="tocLessons"></div>
+    </dialog>
+
+    <dialog class="app-dialog" id="practiceFilesDialog" aria-labelledby="practiceFilesTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Free practice</span>
+          <h2 id="practiceFilesTitle">Pick a file</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="practiceFilesDialog" aria-label="Close file list">×</button>
+      </div>
+      <div class="dialog-body">
+        <p class="practice-disclaimer">These are the Vim Wilds commands, not all of Vim. <button type="button" data-practice-notice>Read more</button></p>
+        <button class="note-action practice-random" type="button" data-practice-random>Surprise me</button>
+        <div class="practice-file-list" id="practiceFileList"></div>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog practice-notice-dialog" id="practiceNoticeDialog" aria-labelledby="practiceNoticeTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Before you start</span>
+          <h2 id="practiceNoticeTitle">The Vim Wilds command set</h2>
+        </div>
+      </div>
+      <div class="dialog-body">
+        <p>This scratchpad runs the same engine as the lessons. That is <strong>not</strong> complete Vim or Neovim: some commands are unimplemented, and some behave differently from the real thing.</p>
+        <p>Try anything you like anyway. Nothing here is scored, and nothing you do changes your lesson progress.</p>
+        <button class="note-action" type="button" data-close-dialog="practiceNoticeDialog">Start editing</button>
+      </div>
     </dialog>
 
     <dialog class="app-dialog" id="settingsDialog" aria-labelledby="settingsTitle">

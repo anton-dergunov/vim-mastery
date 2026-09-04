@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Vim Wilds">
   <title>The Vim Wilds — Pocket Practice</title>
   <script>
-    if (["unit", "activity", "preview"].some(key => new URLSearchParams(window.location.search).has(key))) {
+    if (["unit", "activity", "preview", "practice"].some(key => new URLSearchParams(window.location.search).has(key))) {
       window.location.replace(new URL(`./play/${window.location.search}`, window.location.href));
     }
   </script>
@@ -28,8 +28,10 @@
         <li><strong>One idea at a time.</strong> Learn modes, movement, edits, and repeatable commands in small scenes.</li>
         <li><strong>Built for thumbs.</strong> A physical-style keyboard keeps the native phone keyboard out of the way.</li>
         <li><strong>Ready offline.</strong> Install once; lesson content and character art travel with you.</li>
+        <li><strong>A scratchpad too.</strong> Twenty real files to edit freely, with no lesson and no score, open from the first day.</li>
       </ul>
       <a class="landing-primary" href="./play/">Start or continue practice</a>
+      <a class="landing-secondary" href="./play/?practice">Open free practice</a>
       <section class="landing-installation" aria-labelledby="installTitle">
         <strong id="installTitle">Install Vim Wilds</strong>
         <div class="install-tabs" role="tablist" aria-label="Installation instructions by platform">
