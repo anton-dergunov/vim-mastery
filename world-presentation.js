@@ -2,6 +2,7 @@ import { remoteVariantPaths } from "./presentation-data.js";
 
 const BOARD_PROFILES = ["tall", "compact", "wide", "shallow"];
 const SCENE_PROFILES = ["tall", "compact", "wide"];
+const VARIANT_POLICIES = ["registered", "practice", "static"];
 
 export { remoteVariantPaths } from "./presentation-data.js";
 
@@ -44,6 +45,17 @@ export function registeredSceneProfileForBoard(profile, scene) {
   return defaultProfile;
 }
 
+export function sceneProfileForPolicy(profile, scene, variantPolicy = "registered") {
+  const naturalProfile = sceneProfileForBoard(profile);
+  if (
+    variantPolicy === "static"
+    || (variantPolicy === "practice" && ["wide", "shallow"].includes(profile))
+  ) {
+    return naturalProfile;
+  }
+  return registeredSceneProfileForBoard(profile, scene);
+}
+
 export class WorldPresentationRenderer {
   constructor({
     world,
@@ -63,6 +75,7 @@ export class WorldPresentationRenderer {
     this.presentationKey = null;
     this.phase = "explain";
     this.landmarkState = "dormant";
+    this.variantPolicy = "registered";
     this.profile = null;
     this.resizeObserver = null;
     this.layoutFrame = null;
@@ -108,18 +121,21 @@ export class WorldPresentationRenderer {
     unitId,
     phase = "explain",
     landmarkState = "dormant",
+    variantPolicy = "registered",
   } = {}) {
     const scene = presentation?.scene;
     const valid = Boolean(presentation?.world && presentation?.unit && scene?.profiles);
     this.presentation = valid ? presentation : null;
     this.phase = phase;
     this.landmarkState = landmarkState;
+    this.variantPolicy = VARIANT_POLICIES.includes(variantPolicy) ? variantPolicy : "registered";
     this.world.dataset.unitId = unitId || presentation?.unit?.id || "unknown";
     this.world.dataset.renderer = valid ? "registered-scenes" : "unavailable";
     this.world.dataset.worldId = valid ? presentation.world.id : "none";
     this.world.dataset.sceneId = valid ? scene.id : "none";
     this.world.dataset.landmarkId = valid ? presentation.unit.landmark.id : "none";
     this.world.dataset.learningPhase = phase;
+    this.world.dataset.variantPolicy = this.variantPolicy;
 
     if (!valid) {
       this.cancelReveal();
@@ -160,8 +176,11 @@ export class WorldPresentationRenderer {
 
   remoteVariantsAreEligible() {
     const config = this.presentation?.scene?.remoteVariants;
+    const policyAllowsVariants = this.variantPolicy === "registered"
+      || (this.variantPolicy === "practice" && !["wide", "shallow"].includes(this.profile));
     return Boolean(
       config
+      && policyAllowsVariants
       && this.remoteVariantLayer
       && config.profiles?.includes(sceneProfileForBoard(this.profile))
       && this.profile !== "shallow"
@@ -304,9 +323,10 @@ export class WorldPresentationRenderer {
     this.world.dataset.boardShape = nextProfile;
     if (!this.presentation) return;
 
-    const sceneProfile = registeredSceneProfileForBoard(
+    const sceneProfile = sceneProfileForPolicy(
       nextProfile,
       this.presentation.scene,
+      this.variantPolicy,
     );
     const profileData = this.presentation.scene.profiles[sceneProfile];
     setAsset(this.backdropLayer, profileData?.base, this.assetUrl);
@@ -404,4 +424,4 @@ export class WorldPresentationRenderer {
   }
 }
 
-export { BOARD_PROFILES };
+export { BOARD_PROFILES, VARIANT_POLICIES };

@@ -35,8 +35,11 @@ transparent-difference WebP variants. Their lifecycle state is recorded in
 Vite emits only media reachable from the presentation and character manifests.
 Open Trail Overlook therefore remains versioned and runtime-ready under
 `assets/worlds/` without entering `dist`, the service worker, or the PWA media
-policy. The four active scenes share the established compact-registration
-transparent-patch animation system. Full-resolution candidates and Nano Banana source outputs remain under
+policy. For every unit scene, portrait reading and choice surfaces use tall
+static art, demonstrations and exercises use compact-registered animation on
+tall or compact boards, and wide or shallow gameplay boards use wide static
+art. Mosslight Landing remains the Reference deck's compact-registered animated
+surface. Full-resolution candidates and Nano Banana source outputs remain under
 the ignored `artifacts/world-generation/` tree; only approved runtime bases and
 transparent patches are tracked.
 

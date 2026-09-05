@@ -14,6 +14,7 @@ import {
   registeredSceneProfileForBoard,
   remoteVariantPaths,
   sceneProfileForBoard,
+  sceneProfileForPolicy,
 } from "../world-presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
@@ -347,6 +348,12 @@ test("registered scene profiles follow the rendered board aspect ratio", () => {
   assert.equal(boardProfileForBounds({ width: 241, height: 100 }), "shallow");
   assert.equal(sceneProfileForBoard("shallow"), "wide");
   assert.equal(sceneProfileForBoard("tall"), "tall");
+  const scene = resolveUnitPresentation(presentation, "viewport-control").scene;
+  assert.equal(sceneProfileForPolicy("tall", scene, "static"), "tall");
+  assert.equal(sceneProfileForPolicy("tall", scene, "practice"), "compact");
+  assert.equal(sceneProfileForPolicy("compact", scene, "practice"), "compact");
+  assert.equal(sceneProfileForPolicy("wide", scene, "practice"), "wide");
+  assert.equal(sceneProfileForPolicy("shallow", scene, "practice"), "wide");
 });
 
 test("presentation manifest preserves the approved unit story table", () => {

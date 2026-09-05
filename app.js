@@ -1496,6 +1496,10 @@ function applyWorldPresentation(activity, presentation) {
     unitId: unit.id,
     phase: activity.phase || (activity.type === "summary" ? "summary" : "explain"),
     landmarkState: "dormant",
+    // Reading and decision cards use the naturally framed static board. During
+    // hands-on work, portrait and compact boards opt into the compact-registered
+    // animation; wide and shallow boards retain their purpose-built wide art.
+    variantPolicy: isRunnable(activity) ? "practice" : "static",
   });
   return layeredWorld;
 }

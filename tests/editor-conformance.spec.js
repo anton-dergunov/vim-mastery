@@ -2223,7 +2223,7 @@ test.describe("Production lesson flow", () => {
     for (const [width, height, profile, sceneProfile] of [
       [320, 400, "tall", "compact"],
       [480, 400, "compact", "compact"],
-      [800, 400, "wide", "compact"],
+      [800, 400, "wide", "wide"],
       [1000, 400, "shallow", "wide"],
     ]) {
       await page.locator("#world").evaluate((node, size) => {

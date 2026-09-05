@@ -13,7 +13,9 @@ Beacon Glass Gallery is fully independent from Far Beacons:
 - tall, compact, and wide approved board bases are registered under
   `assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/`;
 - 50 approved transparent WebP patches stream through the compact-registration
-  animation system on every board shape;
+  animation system during portrait and compact demonstrations and exercises;
+- portrait reading and choice cards use the tall static base, while wide and
+  shallow gameplay boards use the wide static base;
 - Unit 9 now hands off to the gallery itself rather than describing Unit 10 as
   an unfinished part of Unit 9;
 - Unit 10’s completion copy and restoration meaning are preserved;

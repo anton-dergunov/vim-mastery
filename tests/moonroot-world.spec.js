@@ -451,16 +451,9 @@ for (const scene of [
   {
     label: "Unit 16 Menders’ Confluence",
     unit: "real-code-workflow-capstones",
-    activity: "review-rationale",
+    activity: "retarget-one-connection",
     sceneId: "menders-confluence",
     candidate: "left-turntable-c01.webp",
-  },
-  {
-    label: "Unit 17 Keeper’s Relay",
-    unit: "mastery-loops",
-    activity: "mastery-loop-brief",
-    sceneId: "keepers-relay",
-    candidate: "upper-loop-trolley-c01.webp",
   },
 ]) {
   test(`streams compact-registered transparent patches for ${scene.label}`, async ({ page }) => {
@@ -499,6 +492,36 @@ for (const scene of [
   });
 }
 
+test("uses tall static boards for portrait reading and choice surfaces", async ({ page }) => {
+  await page.route("**/assets/worlds/**/scenes/menders-confluence/variants/*.webp", route => route.abort());
+  await page.setViewportSize({ width: 768, height: 1024 });
+  await page.goto("/play/?unit=real-code-workflow-capstones&activity=choose-call-site-mechanism");
+  await expect(page.locator("#world")).toHaveAttribute("data-board-profile", "tall", { timeout: 15_000 });
+  await expect(page.locator("#world")).toHaveAttribute("data-variant-policy", "static");
+  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "tall");
+  expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+    .toContain("menders-confluence/tall/base.webp");
+  await expect(page.locator(".world-remote-variant")).toHaveCount(0);
+});
+
+test("uses Keeper’s Relay tall and animated compact art for the corresponding Unit 17 surfaces", async ({ page }) => {
+  await page.route("**/assets/worlds/brass-meridian/scenes/keepers-relay/variants/*.webp", route => route.fulfill({
+    path: "assets/worlds/brass-meridian/scenes/keepers-relay/variants/upper-loop-trolley-c01.webp",
+    contentType: "image/webp",
+    headers: { "access-control-allow-origin": "*" },
+  }));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=mastery-loops&activity=mastery-loop-brief");
+  await expect(page.locator("#world")).toHaveAttribute("data-variant-policy", "static", { timeout: 15_000 });
+  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "tall");
+  await expect(page.locator(".world-remote-variant")).toHaveCount(0);
+
+  await page.evaluate(() => window.VimWilds.startMasteryDrill("record-replay-macro"));
+  await expect(page.locator("#world")).toHaveAttribute("data-variant-policy", "practice");
+  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "compact");
+  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
+});
+
 test("falls back to GitHub Pages when a local development variant is missing", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
@@ -525,7 +548,7 @@ test("falls back to GitHub Pages when a local development variant is missing", a
   expect(new URL(requests[1]).origin).toBe("https://anton-dergunov.github.io");
 });
 
-test("uses the registered compact source and variants on every wide board", async ({ page }) => {
+test("uses the static wide source on wide gameplay boards", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));
   });
@@ -543,7 +566,8 @@ test("uses the registered compact source and variants on every wide board", asyn
   await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "wide");
 
   expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
-    .toContain("mode-lantern-grounds/compact/base.webp");
-  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "compact");
-  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
+    .toContain("mode-lantern-grounds/wide/base.webp");
+  await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "wide");
+  await expect(page.locator("#world")).toHaveAttribute("data-variant-policy", "practice");
+  await expect(page.locator(".world-remote-variant")).toHaveCount(0);
 });
