@@ -265,10 +265,11 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert(resolved, `${catalogUnit.id} must resolve a presentation`);
     assert.equal(resolved.unit.id, catalogUnit.id);
     assert.equal(resolved.world.id, resolved.unit.worldId);
-    if (["viewport-control", "real-code-workflow-capstones", "mastery-loops"].includes(catalogUnit.id)) {
-      assert.equal(resolved.unit.completion.storyArtStatus, "pending-bespoke-approval");
+    if (["viewport-control", "real-code-workflow-capstones", "mastery-loops"].includes(catalogUnit.id)
+      && resolved.unit.completion.storyArtStatus === "pending-bespoke-approval") {
       assert.match(resolved.unit.completion.storyImage, /\/tall\/base\.webp$/);
     } else {
+      assert.equal(resolved.unit.completion.storyArtStatus, undefined);
       assert.equal(resolved.unit.completion.storyImage, `assets/worlds/story/units/${catalogUnit.id}.webp`);
     }
     assert(characterManifest.characters[resolved.unit.guideCharacterId], `${catalogUnit.id} guide must exist`);
@@ -498,7 +499,7 @@ test("presentation manifest preserves the approved introduction and ending", () 
   });
 });
 
-test("all 17 completion images are valid distinct sources before the approval gate", () => {
+test("all 17 completion images are valid and distinct on either side of the approval gate", () => {
   const pending = [];
   const hashes = new Map();
   for (const unitPresentation of Object.values(presentation.units)) {
@@ -509,7 +510,11 @@ test("all 17 completion images are valid distinct sources before the approval ga
     if (unitPresentation.completion.storyArtStatus) pending.push(unitPresentation.id);
   }
   assert.equal(hashes.size, 17);
-  assert.deepEqual(pending, ["viewport-control", "real-code-workflow-capstones", "mastery-loops"]);
+  assert(
+    pending.length === 0
+      || JSON.stringify(pending) === JSON.stringify(["viewport-control", "real-code-workflow-capstones", "mastery-loops"]),
+    "the three bespoke endings must be pending together or promoted together",
+  );
 });
 
 test("presentation loading falls back cleanly when the optional manifest is missing or invalid", async () => {

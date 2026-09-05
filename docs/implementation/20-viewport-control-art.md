@@ -1,7 +1,6 @@
 # Session 20 — Viewport control art and story beat
 
-**Status:** implementation complete; bespoke ending selection remains at the
-shared Unit 10/16/17 approval gate.
+**Status:** complete, including owner-approved bespoke ending promotion.
 
 ## Final decisions
 
@@ -18,24 +17,24 @@ Beacon Glass Gallery is fully independent from Far Beacons:
 - Unit 9 now hands off to the gallery itself rather than describing Unit 10 as
   an unfinished part of Unit 9;
 - Unit 10’s completion copy and restoration meaning are preserved;
-- its temporary story image is the approved Beacon Glass tall board and is
-  marked `pending-bespoke-approval`.
+- candidate 4 is the promoted bespoke ending at
+  `assets/worlds/story/units/viewport-control.webp`.
 
 The historical WP-11 name `long-range-navigation` maps to live Unit 9
 `position-memory`. It remains only in immutable artifact provenance. Runtime,
 generator, review, and documentation identities use current unit ids.
 
-## Approval gate
+## Final promotion
 
-Five 1792×2400 candidates are generated under:
+Five 1792×2400 candidates were generated under:
 
 `artifacts/world-generation/wp11/story-review-v2/unit-endings/viewport-control-restoration-3x4/`
 
-Review links are in [../story-scene-review.md](../story-scene-review.md). The
-prepared promotion command verifies the chosen source hash, converts with
-`cwebp -quiet -mt -m 6 -q 90 -metadata none`, installs
-`assets/worlds/story/units/viewport-control.webp`, clears the pending marker,
-and participates in the 17-ending uniqueness check.
+Review links are archived in [../story-scene-review.md](../story-scene-review.md).
+Candidate 4 was owner-approved. The promotion command verified its source hash, converted with
+`cwebp -quiet -mt -m 6 -q 90 -metadata none`, installed
+`assets/worlds/story/units/viewport-control.webp`, cleared the pending marker,
+and passed the 17-ending uniqueness check.
 
 ## Validation contract
 

@@ -80,7 +80,12 @@ test("production PWA precaches core media and streams optional animation and sce
     readFileSync(join(rootPath, "content", "mastery-index.json"), "utf8"),
   );
   assert.match(worker, /content\/mastery-index\.json/);
-  assert.equal(media.core.length, 147);
+  const pendingStoryArt = Object.values(presentationData.units)
+    .filter(unit => unit.completion.storyArtStatus === "pending-bespoke-approval").length;
+  // A pending story reuses its tall board path, so the media collector
+  // deduplicates one core file per pending unit. Promotion replaces those
+  // aliases with three independent semantic story images.
+  assert.equal(media.core.length, 150 - pendingStoryArt);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);

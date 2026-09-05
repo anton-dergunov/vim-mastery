@@ -175,7 +175,7 @@
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
         "storyImage": "assets/worlds/story/units/modal-model.webp",
         "action": "Nix lifts the lantern; four nested rings settle into distinct colors",
-        "copy": "The Mode Lantern wakes. One key can hold more than one meaning—and now the Wilds remember how to listen.",
+        "copy": "The Mode Lantern wakes. One key can hold more than one meaning\u2014and now the Wilds remember how to listen.",
         "nextHook": {
           "copy": "A path glimmers beyond camp."
         }
@@ -442,7 +442,7 @@
         "actionId": "repair-scribes-spring",
         "storyBackdrop": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
         "action": "Tatter repairs a split channel; luminous ink begins to flow",
-        "copy": "Tatter opens the Scribe’s Spring. The Wilds can accept new words and reshape old ones again.",
+        "copy": "Tatter opens the Scribe\u2019s Spring. The Wilds can accept new words and reshape old ones again.",
         "nextHook": {
           "copy": "A sealed gate waits for both an action and a range."
         },
@@ -1006,7 +1006,7 @@
         "actionId": "connect-far-beacons",
         "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
         "action": "Luma sends a thread of light between two distant beacons",
-        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
+        "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances\u2014and return without losing their place.",
         "nextHook": {
           "copy": "Beyond the reconnected span, a fogged gallery lens hides the far shore."
         },
@@ -1113,8 +1113,7 @@
         "nextHook": {
           "copy": "Across the causeway, a stopped clock begins to tick."
         },
-        "storyImage": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/tall/base.webp",
-        "storyArtStatus": "pending-bespoke-approval"
+        "storyImage": "assets/worlds/story/units/viewport-control.webp"
       },
       "sceneId": "beacon-glass-gallery",
       "scenes": {
@@ -1735,8 +1734,7 @@
           "speaker": "Brikk",
           "copy": "The repairs hold. Fen is waiting at the relay, where every route returns and begins again."
         },
-        "storyImage": "assets/worlds/brass-meridian/scenes/menders-confluence/tall/base.webp",
-        "storyArtStatus": "pending-bespoke-approval"
+        "storyImage": "assets/worlds/story/units/real-code-workflow-capstones.webp"
       },
       "sceneId": "menders-confluence",
       "scenes": {
@@ -1836,22 +1834,36 @@
         "actionId": "complete-keepers-circuit",
         "storyBackdrop": "assets/worlds/brass-meridian/scenes/keepers-relay/compact/base.webp",
         "action": "Fen sends one test current around every return loop; it pauses at the relay, then divides cleanly among the open routes",
-        "copy": "The Keeper’s Relay remembers through use: return, combine, maintain, and choose again.",
+        "copy": "The Keeper\u2019s Relay remembers through use: return, combine, maintain, and choose again.",
         "nextHook": {
           "speaker": "Nix",
           "copy": "The routes are open. Come and see what the Wilds remember."
         },
-        "storyImage": "assets/worlds/brass-meridian/scenes/keepers-relay/tall/base.webp",
-        "storyArtStatus": "pending-bespoke-approval"
+        "storyImage": "assets/worlds/story/units/mastery-loops.webp"
       },
       "sceneId": "keepers-relay",
       "scenes": {
         "keepers-relay": {
           "id": "keepers-relay",
           "patchRegions": {
-            "phase-a": { "x": 0.06, "y": 0.62, "width": 0.27, "height": 0.26 },
-            "phase-b": { "x": 0.67, "y": 0.6, "width": 0.28, "height": 0.27 },
-            "phase-c": { "x": 0.4, "y": 0.06, "width": 0.22, "height": 0.19 }
+            "phase-a": {
+              "x": 0.06,
+              "y": 0.62,
+              "width": 0.27,
+              "height": 0.26
+            },
+            "phase-b": {
+              "x": 0.67,
+              "y": 0.6,
+              "width": 0.28,
+              "height": 0.27
+            },
+            "phase-c": {
+              "x": 0.4,
+              "y": 0.06,
+              "width": 0.22,
+              "height": 0.19
+            }
           },
           "profiles": {
             "tall": {
@@ -1871,7 +1883,11 @@
             }
           },
           "remoteVariants": {
-            "profiles": ["tall", "compact", "wide"],
+            "profiles": [
+              "tall",
+              "compact",
+              "wide"
+            ],
             "siteIds": [
               "upper-loop-trolley",
               "route-lamps",
@@ -1930,7 +1946,7 @@
         "id": "nix-at-the-threshold",
         "asset": "assets/worlds/story/intro/nix-at-the-threshold.webp",
         "speaker": "Nix",
-        "copy": "The language was not lost—only forgotten. Learn it with us, and the Wilds will remember."
+        "copy": "The language was not lost\u2014only forgotten. Learn it with us, and the Wilds will remember."
       }
     ],
     "ending": {

@@ -10,23 +10,24 @@ The [all-scenes review hub](http://127.0.0.1:4176/play/?preview=story-index)
 renders every story panel in the production dialog. Candidate links below use
 the real completion surface; review at 360×740 before approving a painting.
 
-## Pending bespoke endings
+## Approved bespoke endings
 
-Until approval, Units 10, 16, and 17 use their approved tall gameplay boards.
-Candidates stay under `artifacts/` and are never emitted by the PWA build.
+Units 10, 16, and 17 now use owner-approved semantic story WebPs. The generated
+candidates stay under `artifacts/` as review provenance and are not emitted by
+the PWA build.
 
-| Unit | Contact sheet | Candidate review links |
-|---|---|---|
-| 10 · `viewport-control` | `artifacts/world-generation/wp11/story-review-v2/unit-endings/viewport-control-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=5) |
-| 16 · `real-code-workflow-capstones` | `artifacts/world-generation/wp11/story-review-v2/unit-endings/real-code-workflow-capstones-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=5) |
-| 17 · `mastery-loops` | `artifacts/world-generation/wp11/story-review-v2/unit-endings/mastery-loops-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=5) |
+| Unit | Approved | Contact sheet | Candidate review links |
+|---|---:|---|---|
+| 10 · `viewport-control` | 4 | `artifacts/world-generation/wp11/story-review-v2/unit-endings/viewport-control-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=5) |
+| 16 · `real-code-workflow-capstones` | 2 | `artifacts/world-generation/wp11/story-review-v2/unit-endings/real-code-workflow-capstones-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=5) |
+| 17 · `mastery-loops` | 5 | `artifacts/world-generation/wp11/story-review-v2/unit-endings/mastery-loops-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=5) |
 
-After the owner selects one number for each row, run:
+The owner selections were promoted with:
 
 ```sh
 python scripts/world-art/promote_wp11_story_endings.py \
-  --approve viewport-control=3 \
-  --approve real-code-workflow-capstones=1 \
+  --approve viewport-control=4 \
+  --approve real-code-workflow-capstones=2 \
   --approve mastery-loops=5
 ```
 

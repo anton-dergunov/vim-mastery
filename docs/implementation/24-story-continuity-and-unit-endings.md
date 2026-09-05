@@ -1,8 +1,7 @@
 # Session 24 — Story continuity and unit endings
 
-**Status:** all application, story, pipeline, documentation, and test work is
-complete through the owner-selection gate. Only candidate selection, prepared
-promotion, and final regression remain.
+**Status:** complete, including owner selection, promotion, final regression,
+and PWA validation.
 
 ## Final 17-unit narrative
 
@@ -38,32 +37,33 @@ reusable, does not change the saved lesson position, and does not replay
 progression automatically. `window.VimWilds.masteryState()` exposes the chapter
 unit and completion state for deterministic tests.
 
-## Art approval gate
+## Approved ending art
 
-Units 10, 16, and 17 temporarily use their own approved tall gameplay boards as
-valid `storyImage` values and carry `storyArtStatus:
-pending-bespoke-approval`. All other ending images remain approved. The 17
-current ending sources have distinct hashes.
+Units 10, 16, and 17 used their approved tall gameplay boards while selection
+was pending. The owner approved Unit 10 candidate 4, Unit 16 candidate 2, and
+Unit 17 candidate 5. Their semantic WebPs now live in
+`assets/worlds/story/units/`, all pending markers are cleared, and all 17 ending
+sources have distinct hashes.
 
 The Nano Banana generator contains descriptions for Beacon Glass, Menders’
 Bench, and Keeper’s Relay and builds five 1792×2400 restoration candidates per
 unit from the approved tall board and finalized completion text. Candidates are
 review-only and remain outside runtime packaging.
 
-After the owner chooses one candidate per unit, no source edit is needed:
+The completed promotion was run as:
 
 ```sh
 python scripts/world-art/promote_wp11_story_endings.py \
-  --approve viewport-control=3 \
-  --approve real-code-workflow-capstones=1 \
+  --approve viewport-control=4 \
+  --approve real-code-workflow-capstones=2 \
   --approve mastery-loops=5
 ```
 
-Promotion validates recorded hashes and dimensions, records approval and
-rejections in all three manifests, converts with
+Promotion validated recorded hashes and dimensions, recorded approval and
+rejections in all three manifests, converted with
 `cwebp -quiet -mt -m 6 -q 90 -metadata none`, writes three semantic WebPs,
-updates all three story paths, clears their pending markers, and refuses to
-finish unless all 17 runtime endings are distinct and valid.
+updated all three story paths, cleared their pending markers, and verified all
+17 runtime endings are distinct and valid.
 
 ## Validation contract
 

@@ -127,12 +127,10 @@ dated before session 07 against this table.
 | 23 | [Five future unit boards and animation seeds](23-future-unit-boards-and-animation-seeds.md) | L | 07 | — |
 | 24 | [Story continuity and unit endings](24-story-continuity-and-unit-endings.md) | L | 07, 16, 23 | — |
 
-Sessions 20 and 23 are complete. Session 24 is complete through its explicit
-owner-selection gate: Unit 17, story continuity, boards, animations, packaging,
-review tooling, and promotion automation are implemented. Its only remaining
-operations are selecting the three generated Unit 10/16/17 ending paintings,
-running the prepared promotion command, and running the final regression/PWA
-validation.
+Sessions 20, 23, and 24 are complete. Unit 17, story continuity, boards,
+animations, packaging, review tooling, and promotion automation are implemented.
+The owner-approved Unit 10/16/17 paintings (candidates 4/2/5) are promoted, and
+the final regression and PWA validation pass.
 
 ## Recommended execution order
 
