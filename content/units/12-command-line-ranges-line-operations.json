@@ -8,19 +8,13 @@
   "curriculumDefinition": {
     "unit": "12. Command-line ranges and line operations",
     "commandsAndConcepts": "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort` with the `n`, `u`, and `/pat/` flags; safe undo and preview habits",
-    "prerequisites": "Units 1–6",
+    "prerequisites": "Unit 2; Unit 9 recommended",
     "learningOutcome": "Read and construct a range, then apply a deterministic line operation to it",
     "representativeExercises": "Move a helper below another function; copy a fixture; delete matching line numbers; sort selected imports; join a range",
     "priorityAndPortability": "Core automation. Command availability and undo grouping can vary in reimplementations, so the app defines and tests its supported behavior"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects"
-  ],
+  "prerequisiteSkillIds": ["cursor-movement"],
+  "recommendedSkillIds": ["position-memory"],
   "playback": {
     "modes": [
       "normal",

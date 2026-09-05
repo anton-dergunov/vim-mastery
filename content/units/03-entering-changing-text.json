@@ -9,15 +9,13 @@
   "curriculumDefinition": {
     "unit": "3. Entering and changing text",
     "commandsAndConcepts": "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`; Insert-mode `Ctrl-w`, `Ctrl-u`, `Ctrl-o`",
-    "prerequisites": "Units 1–2",
+    "prerequisites": "Unit 2",
     "learningOutcome": "Choose a precise entry/change command, undo safely, and perform common local transformations",
     "representativeExercises": "Append an argument; open a line; build a divider with a counted insert; replace a delimiter; join a wrapped statement; change case; increment a version number",
     "priorityAndPortability": "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced. The Insert-mode command keys are native Vim; a host editor that embeds Vim may claim those Ctrl chords by default, so check the host you are in"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement"
-  ],
+  "prerequisiteSkillIds": ["cursor-movement"],
+  "recommendedSkillIds": [],
   "playback": {
     "modes": [
       "normal",

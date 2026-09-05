@@ -8,7 +8,7 @@
   "curriculumDefinition": {
     "unit": "13. Substitution and practical regex",
     "commandsAndConcepts": "`:s/pattern/replacement/flags`; line, numeric, visual, and `%` ranges; flags `g c i I n`; empty/reused pattern or replacement; alternate delimiters; `. * \\+ \\? \\{m,n}`; `^ $`; classes and negation; Vim classes such as `\\d`, `\\w`, `\\s`; groups `\\(…\\)`; alternation `\\|`; word boundaries `\\< \\>`; captures; `\\zs \\ze`; very magic `\\v`; replacement `&`, `\\0`–`\\9`, `\\r`, case conversion, and `\\=` expressions",
-    "prerequisites": "Unit 5 search; Unit 12 ranges",
+    "prerequisites": "Unit 5 search; Unit 12 ranges; Unit 11 recommended",
     "learningOutcome": "Perform safe local and buffer-wide substitutions, capture structure, preview impact, and know when regex is too brittle",
     "representativeExercises": "Rename exact tokens; swap captured fields; edit only part of a match; normalize declarations; confirm replacements; count matches without changing them",
     "priorityAndPortability": "Core through captures and confirmation. `\\zs`, `\\ze`, case conversion, and expression replacement are advanced"
@@ -17,6 +17,7 @@
     "precision-motions-search",
     "command-line-ranges-line-operations"
   ],
+  "recommendedSkillIds": ["repeatable-editing"],
   "playback": {
     "modes": [
       "normal",

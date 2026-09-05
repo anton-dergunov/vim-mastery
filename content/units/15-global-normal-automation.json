@@ -8,16 +8,16 @@
   "curriculumDefinition": {
     "unit": "15. Global and Normal automation",
     "commandsAndConcepts": "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; `:copy`/`:move` relocation by predicate; previewing a predicate before it runs; undo grouping; combined predicates and transformations",
-    "prerequisites": "Units 12–14",
+    "prerequisites": "Units 13 and 14",
     "learningOutcome": "Apply Normal-mode edits across a controlled line set, relocate matching lines, and choose the lowest-risk automation mechanism",
     "representativeExercises": "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches; gather matching lines at a chosen address",
     "priorityAndPortability": "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope"
   },
   "prerequisiteSkillIds": [
-    "command-line-ranges-line-operations",
     "substitution-practical-regex",
     "macros"
   ],
+  "recommendedSkillIds": [],
   "playback": {
     "modes": [
       "normal",

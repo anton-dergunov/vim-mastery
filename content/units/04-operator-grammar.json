@@ -9,12 +9,13 @@
   "curriculumDefinition": {
     "unit": "4. Operator grammar",
     "commandsAndConcepts": "`d c y`; `dd cc yy`; `D C Y`; `p P`; counts before operators or motions; linewise vs characterwise ranges; `> < =`; `gq gw`; `.`",
-    "prerequisites": "Units 1–3",
+    "prerequisites": "Unit 3",
     "learningOutcome": "Compose operators with motions, predict the affected range, put text, and make a change deliberately repeatable",
     "representativeExercises": "Delete two words; change to line end; duplicate a line; indent a block by motion; reflow a paragraph; repeat a prepared change",
     "priorityAndPortability": "Core. Host formatting may affect `=` and `gq`, so exercises use deterministic app behavior"
   },
-  "prerequisiteSkillIds": ["modal-model", "cursor-movement", "entering-changing-text"],
+  "prerequisiteSkillIds": ["entering-changing-text"],
+  "recommendedSkillIds": [],
   "playback": {"modes":["normal","slow","manual"],"manualStep":"one-input-or-text-run","reset":"initial-state","backwardStep":"previous-manual-step"},
   "generation": {"stage":"authoring","candidateCount":3,"promptVersion":"operator-grammar-v1","correctnessAuthority":"deterministic-editor","runtimeDependency":false},
   "lessons": [

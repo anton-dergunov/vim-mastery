@@ -8,18 +8,13 @@
   "curriculumDefinition": {
     "unit": "6. Text objects",
     "commandsAndConcepts": "`iw aw iW aW`; `i\" a\"`, `i' a'`, ``i` a` ``; `i( a(`, `i) a)`, `ib ab`; `i[ a[`, `i] a]`; `i{ a{`, `i} a}`, `iB aB`; `i< a<`, `i> a>`; `is as`, `ip ap`, `it at`",
-    "prerequisites": "Units 1–5",
+    "prerequisites": "Unit 4; Unit 5 recommended",
     "learningOutcome": "Choose inside versus around and apply any learned operator to a structural object",
     "representativeExercises": "Change a quoted value; delete function arguments; replace an object literal; nest a list block; remove a tag element with its markup; finish an item retrieved by search",
     "priorityAndPortability": "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous, and angle-bracket objects are marked advanced"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search"
-  ],
+  "prerequisiteSkillIds": ["operator-grammar"],
+  "recommendedSkillIds": ["precision-motions-search"],
   "playback": {
     "modes": [
       "normal",

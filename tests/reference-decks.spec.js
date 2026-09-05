@@ -136,12 +136,14 @@ test("every deck is reachable from the table of contents without touching progre
     { id: "host-reality", cards: 1 },
     { id: "orientation-only", cards: 1 },
   ];
-  await expect(page.locator("#tocLessons [data-reference-deck]")).toHaveCount(decks.length);
+  // Scoped to the Reference section: every unit summary also carries a link to
+  // the host-reality deck, and those are not deck listings.
+  await expect(page.locator("#tocLessons .toc-reference-actions [data-reference-deck]")).toHaveCount(decks.length);
 
   const before = await page.evaluate(() => window.VimWilds.getState().activityId);
   for (const deck of decks) {
     await page.evaluate(() => document.querySelector("#tocDialog").showModal());
-    await page.locator(`#tocLessons [data-reference-deck="${deck.id}"]`).click();
+    await page.locator(`#tocLessons .toc-reference-actions [data-reference-deck="${deck.id}"]`).click();
     await expect(page.locator("#referenceDialog")).toBeVisible();
     expect((await referenceState(page)).deckId).toBe(deck.id);
     expect((await referenceState(page)).cardCount).toBe(deck.cards);

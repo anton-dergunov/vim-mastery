@@ -8,19 +8,13 @@
   "curriculumDefinition": {
     "unit": "7. Visual selection",
     "commandsAndConcepts": "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r` and its ragged right edge `$`; selection increment `Ctrl-a` and `g Ctrl-a`",
-    "prerequisites": "Units 1–6",
+    "prerequisites": "Unit 4; Unit 6 recommended",
     "learningOutcome": "Select character, line, and rectangular ranges; modify them, including lines that end in different columns; and decide when selection is clearer than operator-motion",
     "representativeExercises": "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection; append past ragged line endings; renumber a reordered list",
     "priorityAndPortability": "Core. `Ctrl-v` is semantically important even when a host reserves that chord; the app teaches Vim behavior"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects"
-  ],
+  "prerequisiteSkillIds": ["operator-grammar"],
+  "recommendedSkillIds": ["text-objects"],
   "playback": {
     "modes": [
       "normal",

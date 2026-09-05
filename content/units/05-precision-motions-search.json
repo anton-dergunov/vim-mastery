@@ -8,17 +8,13 @@
   "curriculumDefinition": {
     "unit": "5. Precision motions and search",
     "commandsAndConcepts": "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
-    "prerequisites": "Units 1–4",
+    "prerequisites": "Unit 2; Unit 4 recommended",
     "learningOutcome": "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
     "representativeExercises": "Delete until a quote; repeat a comma find; change the next search match; delete up to the next match; jump between brackets; move by paragraphs in prose or comments",
     "priorityAndPortability": "Core. Search and pair matching remain text-based rather than IDE-semantic, and sentence motions are marked optional"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar"
-  ],
+  "prerequisiteSkillIds": ["cursor-movement"],
+  "recommendedSkillIds": ["operator-grammar"],
   "playback": {
     "modes": [
       "normal",

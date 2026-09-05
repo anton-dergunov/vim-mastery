@@ -9,27 +9,14 @@
   "curriculumDefinition": {
     "unit": "17. Mastery loops",
     "commandsAndConcepts": "No new command families. Return to completed work through focused drills, combine practised topics in mixed review, maintain them over time, and choose the mechanism before editing.",
-    "prerequisites": "Units 1–16",
+    "prerequisites": "None; Units 10 and 16 recommended",
     "learningOutcome": "Use the existing Mastery map to revisit, combine, maintain, and deliberately choose among skills without changing the saved curriculum position.",
     "representativeExercises": "Replay focused drills, complete interleaved mixed review, name a tool before touching the keys, pin topics for later practice, and consult batch and command-line field notes.",
     "priorityAndPortability": "This unit is a durable practice surface rather than a new command lesson. Its first completed mixed review closes the story once; every session remains reusable afterward."
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects",
-    "visual-selection",
-    "registers-putting",
-    "position-memory",
+  "prerequisiteSkillIds": [],
+  "recommendedSkillIds": [
     "viewport-control",
-    "repeatable-editing",
-    "command-line-ranges-line-operations",
-    "substitution-practical-regex",
-    "macros",
-    "global-normal-automation",
     "real-code-workflow-capstones"
   ],
   "playback": {

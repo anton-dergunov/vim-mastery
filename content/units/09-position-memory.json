@@ -8,19 +8,13 @@
   "curriculumDefinition": {
     "unit": "9. Position memory",
     "commandsAndConcepts": "`m{char}`; `'` and backtick jumps; special marks such as `'.`, ```.```, `'^`, ```^```, `'[`, `']`; `Ctrl-o`, `Ctrl-i`; `g;`, `g,`; `gi`, `gv`; advanced bracket/section motions",
-    "prerequisites": "Units 1–6",
+    "prerequisites": "Unit 3; Unit 4 recommended",
     "learningOutcome": "Leave a position, work somewhere else, and return to it — by mark, by jump, by change, by insertion, or by selection",
     "representativeExercises": "Mark two sites and shuttle between them; inspect a distant definition and return; revisit the last change; resume the last insertion",
     "priorityAndPortability": "Core through marks, the jump list, and the change list. Bracket marks and code-section motions are advanced, and the section motions read boundaries out of file syntax. All are native Vim; a host editor that embeds Vim may claim `Ctrl-o` and `Ctrl-i` for its own navigation, so check the host you are in"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects"
-  ],
+  "prerequisiteSkillIds": ["entering-changing-text"],
+  "recommendedSkillIds": ["operator-grammar"],
   "playback": {
     "modes": [
       "normal",

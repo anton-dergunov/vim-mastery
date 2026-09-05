@@ -8,22 +8,16 @@
   "curriculumDefinition": {
     "unit": "16. Real-code workflow capstones",
     "commandsAndConcepts": "No new command families. Choosing between a structural change, a bounded range, a protected move, a repeat, and a substitution; matching the reach of an edit to the number and ambiguity of its sites; taking a range from a boundary the file already states; protecting text across intervening deletes; comparing a chosen solution with a working alternative by clarity, setup cost, repeatability, and risk",
-    "prerequisites": "Units 1–15",
+    "prerequisites": "Units 7 and 15, which between them reach Units 1–15; Unit 9 recommended",
     "learningOutcome": "Complete a staged edit on realistic code by selecting a mechanism before touching the keys, and justify the selection against an alternative that also works",
     "representativeExercises": "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore a joined chain, a reflowed paragraph, and a numbered list; anchor a recording so an irregular row stops or is skipped; count and confirm a pattern before committing it; relocate two snippets across deletes that would overwrite them; edit only the lines a predicate selects; return to each correction site by position rather than by pattern",
     "priorityAndPortability": "Integration rather than instruction. Every command here is already taught in Units 1–15 and every capstone closes by comparing its solution with a mechanism that also reaches the target"
   },
   "prerequisiteSkillIds": [
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects",
     "visual-selection",
-    "registers-putting",
-    "repeatable-editing",
-    "command-line-ranges-line-operations",
-    "substitution-practical-regex"
+    "global-normal-automation"
   ],
+  "recommendedSkillIds": ["position-memory"],
   "playback": {
     "modes": [
       "normal",

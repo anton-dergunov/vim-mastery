@@ -8,18 +8,15 @@
   "curriculumDefinition": {
     "unit": "11. Repeatable editing",
     "commandsAndConcepts": "Deliberate `.`, `;`/`,` plus `.`, `n`/`N` plus `.`, `@:`, `&`, `:~`; count vs repeat; repeat-friendly cursor placement",
-    "prerequisites": "Units 1–6; Unit 8 recommended",
+    "prerequisites": "Unit 4; Units 5 and 8 recommended",
     "learningOutcome": "Design one change that can be replayed across nearby or searched instances, and recognize when repeat is the wrong tool",
     "representativeExercises": "Change one field and repeat on later rows; search for a token and apply the same edit; compare `3dd` with repeated `dd`; rerun a recent Ex change",
     "priorityAndPortability": "Core. `@:`, `&`, and `:~` bridge into Arc 3 and appear only after basic Command-line use"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
+  "prerequisiteSkillIds": ["operator-grammar"],
+  "recommendedSkillIds": [
     "precision-motions-search",
-    "text-objects"
+    "registers-putting"
   ],
   "playback": {
     "modes": [

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import {
   loadUnitCatalogWithPresentation,
@@ -688,7 +688,229 @@ test("catalog counts agree with the unit files they describe", () => {
     assert(source, `catalog lists ${entry.id}, which has no unit file`);
     assert.equal(entry.lessonCount, source.data.lessons.length, `${entry.id} lessonCount is stale`);
     assert.equal(entry.conceptCount, source.data.coverage.length, `${entry.id} conceptCount is stale`);
+    // The contents dialog renders every unit from this catalog alone, and the
+    // unit files are 150-350KB each, so the graph has to be mirrored here to be
+    // usable at all. Same bargain as the counts above, same guard.
+    assert.deepEqual(entry.prerequisiteSkillIds, source.data.prerequisiteSkillIds, `${entry.id} required graph is stale`);
+    assert.deepEqual(entry.recommendedSkillIds, source.data.recommendedSkillIds, `${entry.id} recommended graph is stale`);
+    assert.equal(existsSync(new URL(`../${entry.path}`, import.meta.url)), true, `${entry.id} path does not exist`);
+    assert.equal(source.data.unitNumber, entry.unitNumber, `${entry.id} unitNumber disagrees with its file`);
   }
+});
+
+test("the prerequisite graph resolves, discriminates, and cannot cycle", () => {
+  const catalogById = new Map(unitCatalog.units.map(entry => [entry.id, entry]));
+  for (const { data } of units) {
+    const required = data.prerequisiteSkillIds;
+    const recommended = data.recommendedSkillIds;
+    assert(Array.isArray(required), `${data.id} has no prerequisiteSkillIds`);
+    assert(Array.isArray(recommended), `${data.id} has no recommendedSkillIds`);
+    for (const [label, list] of [["required", required], ["recommended", recommended]]) {
+      assert.equal(new Set(list).size, list.length, `${data.id} repeats a ${label} prerequisite`);
+      for (const id of list) {
+        assert(catalogById.has(id), `${data.id} ${label} prerequisite "${id}" is not a unit`);
+        assert.notEqual(id, data.id, `${data.id} lists itself as a ${label} prerequisite`);
+        // Edges point strictly backwards, which is what makes a cycle
+        // unrepresentable rather than merely absent today.
+        assert(
+          catalogById.get(id).unitNumber < data.unitNumber,
+          `${data.id} ${label} prerequisite "${id}" is not an earlier unit`,
+        );
+      }
+    }
+    for (const id of recommended) {
+      assert(!required.includes(id), `${data.id} lists "${id}" as both required and recommended`);
+    }
+  }
+});
+
+test("the graph declares direct edges only", () => {
+  // A cumulative list cannot express an order, which is the whole reason the
+  // lists were narrowed. Naming an ancestor of an edge you already name adds no
+  // information and quietly reintroduces the flat graph.
+  const byId = new Map(units.map(item => [item.data.id, item.data]));
+  const closure = (unitId, seen = new Set()) => {
+    for (const id of byId.get(unitId)?.prerequisiteSkillIds || []) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      closure(id, seen);
+    }
+    return seen;
+  };
+  for (const { data } of units) {
+    for (const id of data.prerequisiteSkillIds) {
+      const inherited = closure(id);
+      for (const other of data.prerequisiteSkillIds) {
+        assert(
+          other === id || !inherited.has(other),
+          `${data.id} names "${other}" although "${id}" already requires it`,
+        );
+      }
+    }
+  }
+});
+
+test("no two units in one arc share a prerequisite list", () => {
+  // The acceptance criterion for the narrowing. Asserted rather than reasoned
+  // about, because "essentially the same six-unit list" is exactly how the flat
+  // graph survived four restructuring sessions.
+  const byId = new Map(unitCatalog.units.map(entry => [entry.id, entry]));
+  for (const arc of unitCatalog.arcs) {
+    const members = unitCatalog.units.filter(entry => arc.unitNumbers.includes(entry.unitNumber));
+    const seen = new Map();
+    for (const entry of members) {
+      const key = JSON.stringify([[...entry.prerequisiteSkillIds].sort(), [...entry.recommendedSkillIds].sort()]);
+      assert(
+        !seen.has(key),
+        `Arc ${arc.arcNumber}: ${entry.id} and ${seen.get(key)} declare identical prerequisites`,
+      );
+      seen.set(key, entry.id);
+    }
+    assert.equal(seen.size, members.length);
+    for (const entry of members) assert(byId.has(entry.id));
+  }
+});
+
+test("every unit surfaces a portability note that links to the host-reality card", () => {
+  // The note is authored in the catalog rather than derived from
+  // `priorityAndPortability`, which is an internal design record: it says things
+  // like "marked advanced" and several entries run to four sentences.
+  const deck = referenceCatalog.decks.find(item => item.id === "host-reality");
+  assert(deck, "the host-reality deck the notes link to has gone missing");
+  assert(deck.cards.length, "host-reality has no cards");
+  for (const entry of unitCatalog.units) {
+    const note = entry.editorNote;
+    assert(typeof note === "string" && note.trim(), `${entry.id} has no editorNote`);
+    assert(note.length <= 240, `${entry.id} editorNote is ${note.length} characters, over the 240 budget`);
+    assert(!note.includes("marked advanced"), `${entry.id} editorNote leaks authoring language`);
+  }
+});
+
+test("every activity reference inside a unit resolves", () => {
+  // `routes`, `remediationRef`, `coverage` and `exampleActivityRefs` are already
+  // covered elsewhere; `demoRef` was the one theory-to-demonstration link
+  // nothing checked, and it is the link a renumbering is most likely to break.
+  let checked = 0;
+  for (const { data } of units) {
+    const ids = new Set(data.lessons.flatMap(lesson => lesson.activities).map(activity => activity.id));
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities) {
+        if (!activity.demoRef) continue;
+        checked += 1;
+        assert(ids.has(activity.demoRef), `${data.id}/${activity.id} points at missing demo ${activity.demoRef}`);
+      }
+    }
+  }
+  assert.equal(checked, 140);
+});
+
+test("id-shaped content fields obey the schema's id pattern", () => {
+  // Nothing validates the content against the schema at runtime, so a value
+  // that breaks the schema's own `$defs/id` can sit in the tree unnoticed --
+  // which is how `G-motion` and `counted-G` survived in Unit 2.
+  assert.equal(schema.$defs.id.pattern, "^[a-z0-9]+(?:-[a-z0-9]+)*$");
+  for (const { data } of units) {
+    for (const lesson of data.lessons) {
+      assert.match(lesson.id, idPattern);
+      for (const activity of lesson.activities) {
+        assert.match(activity.id, idPattern);
+        const vocabulary = [
+          ...(activity.skills ? [...activity.skills.primary, ...activity.skills.supporting] : []),
+          ...(activity.verification ? activity.verification.requiredEvidence : []),
+        ];
+        for (const id of vocabulary) {
+          assert.match(id, idPattern, `${data.id}/${activity.id} uses non-id "${id}"`);
+        }
+      }
+    }
+    for (const entry of data.coverage) assert.match(entry.id, idPattern);
+    for (const entry of data.reference) assert.match(entry.id, idPattern);
+  }
+});
+
+test("the curriculum table and the unit files say the same thing", () => {
+  // `docs/lesson-content-design.md` requires every unit to preserve its
+  // curriculum row verbatim in `curriculumDefinition`, and four renumbering
+  // sessions left the doc behind in ways nothing detected: Units 13-15 still
+  // named pre-renumbering prerequisites and Unit 3's row predated its own
+  // Insert-mode lessons. This is the check that makes the invariant real.
+  //
+  // Pipes are normalised on both sides because a markdown table cell cannot
+  // distinguish a literal `|` from an escaped one: Unit 2 means a bare pipe and
+  // Unit 13 means a regex `\|`, and both are written `\|` here. The comparison
+  // is lossy in exactly that one character and exact in every other.
+  const table = readFileSync(new URL("../docs/curriculum-and-progression.md", import.meta.url), "utf8");
+  const fields = ["unit", "commandsAndConcepts", "prerequisites", "learningOutcome", "representativeExercises", "priorityAndPortability"];
+  const normalise = value => value.replaceAll("\\|", "|");
+  const rows = new Map();
+  for (const line of table.split("\n")) {
+    const match = /^\| (\d+)\. /.exec(line);
+    if (!match) continue;
+    const cells = line.split(/(?<!\\)\|/).slice(1, -1).map(cell => cell.trim());
+    assert.equal(cells.length, fields.length, `curriculum row ${match[1]} has ${cells.length} cells`);
+    rows.set(Number(match[1]), cells);
+  }
+  assert.deepEqual([...rows.keys()].sort((left, right) => left - right), units.map(item => item.data.unitNumber));
+  for (const { data } of units) {
+    const cells = rows.get(data.unitNumber);
+    fields.forEach((field, index) => {
+      assert.equal(
+        normalise(cells[index]),
+        normalise(data.curriculumDefinition[field]),
+        `Unit ${data.unitNumber} ${field} differs between the curriculum table and the unit file`,
+      );
+    });
+  }
+});
+
+test("the graph covers every cross-unit dependency the activities reveal", () => {
+  // `skills` is a 451-id vocabulary that resolves to no registry, so it cannot
+  // be a reference check. It can still be evidence: whichever unit first claims
+  // a skill as `primary` owns it, and a later unit leaning on that skill has a
+  // real dependency. This is a floor under the graph, not a definition of it --
+  // several units redefine the vocabulary locally and so produce no evidence at
+  // all. It is what stops a future edit quietly dropping a live edge.
+  const byId = new Map(units.map(item => [item.data.id, item.data]));
+  const ordered = [...units].map(item => item.data).sort((left, right) => left.unitNumber - right.unitNumber);
+  const owner = new Map();
+  for (const data of ordered) {
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities) {
+        for (const id of activity.skills?.primary || []) {
+          if (!owner.has(id)) owner.set(id, data.id);
+        }
+      }
+    }
+  }
+  const closure = (unitId, seen = new Set()) => {
+    for (const id of byId.get(unitId)?.prerequisiteSkillIds || []) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      closure(id, seen);
+    }
+    return seen;
+  };
+  let corroborated = 0;
+  for (const data of ordered) {
+    const roots = [...data.prerequisiteSkillIds, ...data.recommendedSkillIds];
+    const reachable = new Set(roots);
+    for (const root of roots) for (const id of closure(root)) reachable.add(id);
+    for (const lesson of data.lessons) {
+      for (const activity of lesson.activities) {
+        if (!activity.skills) continue;
+        for (const id of [...activity.skills.primary, ...activity.skills.supporting]) {
+          const source = owner.get(id);
+          if (!source || byId.get(source).unitNumber >= data.unitNumber) continue;
+          corroborated += 1;
+          assert(
+            reachable.has(source),
+            `${data.id}/${activity.id} uses "${id}" from ${source}, which its graph never reaches`,
+          );
+        }
+      }
+    }
+  }
+  assert(corroborated > 100, `only ${corroborated} cross-unit skill uses found; the evidence scan has broken`);
 });
 
 test("the mastery index is a faithful digest of the unit files", () => {
@@ -727,12 +949,13 @@ test("Unit 7 curriculum definition is preserved verbatim", () => {
   assert.deepEqual(visualUnit.curriculumDefinition, {
     unit: "7. Visual selection",
     commandsAndConcepts: "`v`, `V`, `Ctrl-v`; `o`, `O`; `gv`; selection operations `d c y x r ~ u U > < = gq`; Visual Block `I A c d x r` and its ragged right edge `$`; selection increment `Ctrl-a` and `g Ctrl-a`",
-    prerequisites: "Units 1–6",
+    prerequisites: "Unit 4; Unit 6 recommended",
     learningOutcome: "Select character, line, and rectangular ranges; modify them, including lines that end in different columns; and decide when selection is clearer than operator-motion",
     representativeExercises: "Indent lines; replace a column marker; prepend text to several rows; reselect and correct the last selection; append past ragged line endings; renumber a reordered list",
     priorityAndPortability: "Core. `Ctrl-v` is semantically important even when a host reserves that chord; the app teaches Vim behavior",
   });
-  assert.deepEqual(visualUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects"]);
+  assert.deepEqual(visualUnit.prerequisiteSkillIds, ["operator-grammar"]);
+  assert.deepEqual(visualUnit.recommendedSkillIds, ["text-objects"]);
   assert.equal(visualUnit.lessons.length, 11);
 });
 
@@ -740,12 +963,13 @@ test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   assert.deepEqual(registerUnit.curriculumDefinition, {
     unit: "8. Registers and putting",
     commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
-    prerequisites: "Units 1–6, especially `y d c p`",
+    prerequisites: "Unit 6, especially `y d c p`; Unit 7 recommended",
     learningOutcome: "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
     representativeExercises: "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
     priorityAndPortability: "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed. Insert-mode `Ctrl-r` is native Vim; a host editor that embeds Vim may claim that Ctrl chord by default, so check the host you are in",
   });
-  assert.deepEqual(registerUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects"]);
+  assert.deepEqual(registerUnit.prerequisiteSkillIds, ["text-objects"]);
+  assert.deepEqual(registerUnit.recommendedSkillIds, ["visual-selection"]);
   assert.equal(registerUnit.lessons.length, 12);
   assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 56);
   assert.deepEqual(registerUnit.coverage.map(item => item.concept), [
@@ -816,14 +1040,13 @@ test("Unit 9 preserves the position-memory curriculum and deterministic viewport
   assert.deepEqual(positionUnit.curriculumDefinition, {
     unit: "9. Position memory",
     commandsAndConcepts: "`m{char}`; `'` and backtick jumps; special marks such as `'.`, ```.```, `'^`, ```^```, `'[`, `']`; `Ctrl-o`, `Ctrl-i`; `g;`, `g,`; `gi`, `gv`; advanced bracket/section motions",
-    prerequisites: "Units 1–6",
+    prerequisites: "Unit 3; Unit 4 recommended",
     learningOutcome: "Leave a position, work somewhere else, and return to it — by mark, by jump, by change, by insertion, or by selection",
     representativeExercises: "Mark two sites and shuttle between them; inspect a distant definition and return; revisit the last change; resume the last insertion",
     priorityAndPortability: "Core through marks, the jump list, and the change list. Bracket marks and code-section motions are advanced, and the section motions read boundaries out of file syntax. All are native Vim; a host editor that embeds Vim may claim `Ctrl-o` and `Ctrl-i` for its own navigation, so check the host you are in",
   });
-  assert.deepEqual(positionUnit.prerequisiteSkillIds, [
-    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects",
-  ]);
+  assert.deepEqual(positionUnit.prerequisiteSkillIds, ["entering-changing-text"]);
+  assert.deepEqual(positionUnit.recommendedSkillIds, ["operator-grammar"]);
   assert.equal(positionUnit.lessons.length, 6);
   assert.deepEqual(positionUnit.coverage.map(item => item.concept), [
     "named marks and quote/backtick jumps",
@@ -847,14 +1070,13 @@ test("Unit 10 preserves the viewport-control curriculum and deterministic viewpo
   assert.deepEqual(viewportUnit.curriculumDefinition, {
     unit: "10. Viewport control",
     commandsAndConcepts: "`H M L`; `zt zz zb`; `Ctrl-f`, `Ctrl-b`, `Ctrl-d`, `Ctrl-u`, `Ctrl-e`, `Ctrl-y`; combining a framing command with a stored position",
-    prerequisites: "Units 1–6; Unit 9",
+    prerequisites: "Unit 9",
     learningOutcome: "Move the window rather than the cursor: reach a visible landmark, frame the line you are working on, and travel a long file without losing context",
     representativeExercises: "Center a target line; jump to the last visible row; page through a long file and return; reveal the next rows without moving the cursor",
     priorityAndPortability: "Core through `H M L`, `zt zz zb`, and `Ctrl-d`/`Ctrl-u`. One-row scrolling with `Ctrl-e`/`Ctrl-y` is advanced. All are native Vim; a host editor that embeds Vim may claim the Ctrl chords by default, so check the host you are in",
   });
-  assert.deepEqual(viewportUnit.prerequisiteSkillIds, [
-    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects", "position-memory",
-  ]);
+  assert.deepEqual(viewportUnit.prerequisiteSkillIds, ["position-memory"]);
+  assert.deepEqual(viewportUnit.recommendedSkillIds, []);
   assert.equal(viewportUnit.lessons.length, 5);
   assert.deepEqual(viewportUnit.coverage.map(item => item.concept), [
     "H M L",
@@ -883,7 +1105,7 @@ test("Unit 11 curriculum definition is preserved verbatim", () => {
   assert.deepEqual(unit.curriculumDefinition, {
     unit: "11. Repeatable editing",
     commandsAndConcepts: "Deliberate `.`, `;`/`,` plus `.`, `n`/`N` plus `.`, `@:`, `&`, `:~`; count vs repeat; repeat-friendly cursor placement",
-    prerequisites: "Units 1–6; Unit 8 recommended",
+    prerequisites: "Unit 4; Units 5 and 8 recommended",
     learningOutcome: "Design one change that can be replayed across nearby or searched instances, and recognize when repeat is the wrong tool",
     representativeExercises: "Change one field and repeat on later rows; search for a token and apply the same edit; compare `3dd` with repeated `dd`; rerun a recent Ex change",
     priorityAndPortability: "Core. `@:`, `&`, and `:~` bridge into Arc 3 and appear only after basic Command-line use",
@@ -894,14 +1116,13 @@ test("Unit 12 preserves the command-line ranges curriculum and complete lesson f
   assert.deepEqual(rangeUnit.curriculumDefinition, {
     unit: "12. Command-line ranges and line operations",
     commandsAndConcepts: "`:`; addresses `.`, `$`, numbers, marks, search addresses; `%`; ranges with `,` and `;`; offsets; visual range `'<,'>`; `:delete`, `:yank`, `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort` with the `n`, `u`, and `/pat/` flags; safe undo and preview habits",
-    prerequisites: "Units 1–6",
+    prerequisites: "Unit 2; Unit 9 recommended",
     learningOutcome: "Read and construct a range, then apply a deterministic line operation to it",
     representativeExercises: "Move a helper below another function; copy a fixture; delete matching line numbers; sort selected imports; join a range",
     priorityAndPortability: "Core automation. Command availability and undo grouping can vary in reimplementations, so the app defines and tests its supported behavior",
   });
-  assert.deepEqual(rangeUnit.prerequisiteSkillIds, [
-    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search", "text-objects",
-  ]);
+  assert.deepEqual(rangeUnit.prerequisiteSkillIds, ["cursor-movement"]);
+  assert.deepEqual(rangeUnit.recommendedSkillIds, ["position-memory"]);
   assert.equal(rangeUnit.lessons.length, 8);
   const activities = rangeUnit.lessons.flatMap(lesson => lesson.activities);
   const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
@@ -955,12 +1176,13 @@ test("Unit 13 preserves the substitution curriculum and complete lesson flow", (
   assert.deepEqual(substitutionUnit.curriculumDefinition, {
     unit: "13. Substitution and practical regex",
     commandsAndConcepts: "`:s/pattern/replacement/flags`; line, numeric, visual, and `%` ranges; flags `g c i I n`; empty/reused pattern or replacement; alternate delimiters; `. * \\+ \\? \\{m,n}`; `^ $`; classes and negation; Vim classes such as `\\d`, `\\w`, `\\s`; groups `\\(…\\)`; alternation `\\|`; word boundaries `\\< \\>`; captures; `\\zs \\ze`; very magic `\\v`; replacement `&`, `\\0`–`\\9`, `\\r`, case conversion, and `\\=` expressions",
-    prerequisites: "Unit 5 search; Unit 12 ranges",
+    prerequisites: "Unit 5 search; Unit 12 ranges; Unit 11 recommended",
     learningOutcome: "Perform safe local and buffer-wide substitutions, capture structure, preview impact, and know when regex is too brittle",
     representativeExercises: "Rename exact tokens; swap captured fields; edit only part of a match; normalize declarations; confirm replacements; count matches without changing them",
     priorityAndPortability: "Core through captures and confirmation. `\\zs`, `\\ze`, case conversion, and expression replacement are advanced",
   });
   assert.deepEqual(substitutionUnit.prerequisiteSkillIds, ["precision-motions-search", "command-line-ranges-line-operations"]);
+  assert.deepEqual(substitutionUnit.recommendedSkillIds, ["repeatable-editing"]);
   assert.equal(substitutionUnit.lessons.length, 8);
   const activities = substitutionUnit.lessons.flatMap(lesson => lesson.activities);
   const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
@@ -998,12 +1220,13 @@ test("Unit 14 preserves the macro curriculum and complete lesson flow", () => {
   assert.deepEqual(macroUnit.curriculumDefinition, {
     unit: "14. Macros",
     commandsAndConcepts: "`q{register}…q`; `@{register}`; `@@`; counts such as `10@a`; append with `qA`; inspect, put, and edit macro text; stable anchors over irregular rows; deliberate final cursor position; stopping on failed motion/search; recognizing when a macro is the wrong tool; optional recursion",
-    prerequisites: "Units 4, 5, 8, and 11",
+    prerequisites: "Units 8 and 11; Unit 5 recommended",
     learningOutcome: "Record a robust transformation, replay it safely, inspect or repair it, state the assumptions that make it valid, and recognize the uniform case where a smaller tool wins",
     representativeExercises: "Comment irregular calls; restructure repeated object entries; record on one row and apply to selected instances; repair a macro with a bad final motion; let a malformed row stop a counted replay",
     priorityAndPortability: "Core automation. Recursive macros are optional and never required for normal progression",
   });
-  assert.deepEqual(macroUnit.prerequisiteSkillIds, ["operator-grammar", "precision-motions-search", "registers-putting", "repeatable-editing"]);
+  assert.deepEqual(macroUnit.prerequisiteSkillIds, ["registers-putting", "repeatable-editing"]);
+  assert.deepEqual(macroUnit.recommendedSkillIds, ["precision-motions-search"]);
   assert.equal(macroUnit.lessons.length, 8);
   const activities = macroUnit.lessons.flatMap(lesson => lesson.activities);
   const exercises = activities.filter(activity => activity.type === "exercise");
@@ -1113,14 +1336,13 @@ test("Unit 15 preserves the Global-Normal curriculum and complete lesson flow", 
   assert.deepEqual(automationUnit.curriculumDefinition, {
     unit: "15. Global and Normal automation",
     commandsAndConcepts: "`:normal`, `:normal!`; range and visual application; `:global`/`:g`; `:vglobal`/`:v`; global delete, substitute, normal commands, and macros; `:copy`/`:move` relocation by predicate; previewing a predicate before it runs; undo grouping; combined predicates and transformations",
-    prerequisites: "Units 12–14",
+    prerequisites: "Units 13 and 14",
     learningOutcome: "Apply Normal-mode edits across a controlled line set, relocate matching lines, and choose the lowest-risk automation mechanism",
     representativeExercises: "Run a text-object edit on selected lines; delete debug lines; modify only declarations matching a predicate; execute a macro over matches; gather matching lines at a chosen address",
     priorityAndPortability: "Core advanced automation. The distinction between mapped and unmapped Normal commands is explained, while mappings themselves stay out of scope",
   });
-  assert.deepEqual(automationUnit.prerequisiteSkillIds, [
-    "command-line-ranges-line-operations", "substitution-practical-regex", "macros",
-  ]);
+  assert.deepEqual(automationUnit.prerequisiteSkillIds, ["substitution-practical-regex", "macros"]);
+  assert.deepEqual(automationUnit.recommendedSkillIds, []);
   assert.equal(automationUnit.lessons.length, 9);
   const activities = automationUnit.lessons.flatMap(lesson => lesson.activities);
   const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
@@ -1155,7 +1377,7 @@ test("Unit 16 preserves the capstone curriculum and its choose-then-compare shap
   assert.deepEqual(capstoneUnit.curriculumDefinition, {
     unit: "16. Real-code workflow capstones",
     commandsAndConcepts: "No new command families. Choosing between a structural change, a bounded range, a protected move, a repeat, and a substitution; matching the reach of an edit to the number and ambiguity of its sites; taking a range from a boundary the file already states; protecting text across intervening deletes; comparing a chosen solution with a working alternative by clarity, setup cost, repeatability, and risk",
-    prerequisites: "Units 1\u201315",
+    prerequisites: "Units 7 and 15, which between them reach Units 1–15; Unit 9 recommended",
     learningOutcome: "Complete a staged edit on realistic code by selecting a mechanism before touching the keys, and justify the selection against an alternative that also works",
     representativeExercises: "Repair an argument list with a text object, a till-motion, and a protected move; rename a local through five uses and the same token through a longer file; restore a joined chain, a reflowed paragraph, and a numbered list; anchor a recording so an irregular row stops or is skipped; count and confirm a pattern before committing it; relocate two snippets across deletes that would overwrite them; edit only the lines a predicate selects; return to each correction site by position rather than by pattern",
     priorityAndPortability: "Integration rather than instruction. Every command here is already taught in Units 1\u201315 and every capstone closes by comparing its solution with a mechanism that also reaches the target",
@@ -1276,6 +1498,7 @@ test("Unit 2 curriculum definition is preserved verbatim", () => {
     priorityAndPortability: "Core. `gj/gk` behavior depends on wrapping, but the distinction is portable",
   });
   assert.deepEqual(cursorUnit.prerequisiteSkillIds, ["modal-model"]);
+  assert.deepEqual(cursorUnit.recommendedSkillIds, []);
   assert.equal(cursorUnit.releaseStatus, "authoring");
 });
 
@@ -1318,12 +1541,13 @@ test("Unit 3 preserves the curriculum and covers every local-change family", () 
   assert.deepEqual(changingUnit.curriculumDefinition, {
     unit: "3. Entering and changing text",
     commandsAndConcepts: "`i I a A o O`; counts with Insert commands (`3i`, `5o`); `x X`; `r R`; `s S`; `J gJ`; `u`, `Ctrl-r`; `~`, `g~`, `gu`, `gU`; `Ctrl-a`, `Ctrl-x`; Insert-mode `Ctrl-w`, `Ctrl-u`, `Ctrl-o`",
-    prerequisites: "Units 1–2",
+    prerequisites: "Unit 2",
     learningOutcome: "Choose a precise entry/change command, undo safely, and perform common local transformations",
     representativeExercises: "Append an argument; open a line; build a divider with a counted insert; replace a delimiter; join a wrapped statement; change case; increment a version number",
     priorityAndPortability: "Core, with `gJ` and numeric changes introduced after the everyday commands; Replace mode is marked advanced. The Insert-mode command keys are native Vim; a host editor that embeds Vim may claim those Ctrl chords by default, so check the host you are in",
   });
-  assert.deepEqual(changingUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement"]);
+  assert.deepEqual(changingUnit.prerequisiteSkillIds, ["cursor-movement"]);
+  assert.deepEqual(changingUnit.recommendedSkillIds, []);
   assert.equal(changingUnit.releaseStatus, "authoring");
   assert.equal(changingUnit.lessons.length, 12);
   assert.deepEqual(changingUnit.coverage.map(item => item.concept), [
@@ -1351,12 +1575,13 @@ test("Unit 4 preserves the curriculum and covers every operator family", () => {
   assert.deepEqual(operatorUnit.curriculumDefinition, {
     unit: "4. Operator grammar",
     commandsAndConcepts: "`d c y`; `dd cc yy`; `D C Y`; `p P`; counts before operators or motions; linewise vs characterwise ranges; `> < =`; `gq gw`; `.`",
-    prerequisites: "Units 1–3",
+    prerequisites: "Unit 3",
     learningOutcome: "Compose operators with motions, predict the affected range, put text, and make a change deliberately repeatable",
     representativeExercises: "Delete two words; change to line end; duplicate a line; indent a block by motion; reflow a paragraph; repeat a prepared change",
     priorityAndPortability: "Core. Host formatting may affect `=` and `gq`, so exercises use deterministic app behavior",
   });
-  assert.deepEqual(operatorUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text"]);
+  assert.deepEqual(operatorUnit.prerequisiteSkillIds, ["entering-changing-text"]);
+  assert.deepEqual(operatorUnit.recommendedSkillIds, []);
   assert.equal(operatorUnit.releaseStatus, "authoring");
   assert.equal(operatorUnit.lessons.length, 9);
   assert.deepEqual(operatorUnit.coverage.map(item => item.concept), [
@@ -1384,12 +1609,13 @@ test("Unit 5 preserves the curriculum and covers every precision-search family",
   assert.deepEqual(precisionUnit.curriculumDefinition, {
     unit: "5. Precision motions and search",
     commandsAndConcepts: "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
-    prerequisites: "Units 1–4",
+    prerequisites: "Unit 2; Unit 4 recommended",
     learningOutcome: "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
     representativeExercises: "Delete until a quote; repeat a comma find; change the next search match; delete up to the next match; jump between brackets; move by paragraphs in prose or comments",
     priorityAndPortability: "Core. Search and pair matching remain text-based rather than IDE-semantic, and sentence motions are marked optional",
   });
-  assert.deepEqual(precisionUnit.prerequisiteSkillIds, ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar"]);
+  assert.deepEqual(precisionUnit.prerequisiteSkillIds, ["cursor-movement"]);
+  assert.deepEqual(precisionUnit.recommendedSkillIds, ["operator-grammar"]);
   assert.equal(precisionUnit.releaseStatus, "authoring");
   assert.equal(precisionUnit.lessons.length, 10);
   assert.deepEqual(precisionUnit.coverage.map(item => item.concept), [
@@ -1428,14 +1654,13 @@ test("Unit 6 preserves the curriculum and covers every text-object family", () =
   assert.deepEqual(textObjectUnit.curriculumDefinition, {
     unit: "6. Text objects",
     commandsAndConcepts: "`iw aw iW aW`; `i\" a\"`, `i' a'`, ``i` a` ``; `i( a(`, `i) a)`, `ib ab`; `i[ a[`, `i] a]`; `i{ a{`, `i} a}`, `iB aB`; `i< a<`, `i> a>`; `is as`, `ip ap`, `it at`",
-    prerequisites: "Units 1–5",
+    prerequisites: "Unit 4; Unit 5 recommended",
     learningOutcome: "Choose inside versus around and apply any learned operator to a structural object",
     representativeExercises: "Change a quoted value; delete function arguments; replace an object literal; nest a list block; remove a tag element with its markup; finish an item retrieved by search",
     priorityAndPortability: "Core. Tag and angle-bracket objects are exercised only where the buffer makes their boundaries unambiguous, and angle-bracket objects are marked advanced",
   });
-  assert.deepEqual(textObjectUnit.prerequisiteSkillIds, [
-    "modal-model", "cursor-movement", "entering-changing-text", "operator-grammar", "precision-motions-search",
-  ]);
+  assert.deepEqual(textObjectUnit.prerequisiteSkillIds, ["operator-grammar"]);
+  assert.deepEqual(textObjectUnit.recommendedSkillIds, ["precision-motions-search"]);
   assert.equal(textObjectUnit.releaseStatus, "authoring");
   assert.equal(textObjectUnit.lessons.length, 9);
   assert.deepEqual(textObjectUnit.coverage.map(item => item.concept), [

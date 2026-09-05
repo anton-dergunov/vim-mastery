@@ -14,6 +14,7 @@
     "priorityAndPortability": "Core. Hosts may reserve `Ctrl-[`, so `Esc` remains the primary mobile legend"
   },
   "prerequisiteSkillIds": [],
+  "recommendedSkillIds": [],
   "playback": {
     "modes": ["normal", "slow", "manual"],
     "manualStep": "one-input-or-text-run",

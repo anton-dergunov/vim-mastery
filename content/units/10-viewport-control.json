@@ -8,20 +8,13 @@
   "curriculumDefinition": {
     "unit": "10. Viewport control",
     "commandsAndConcepts": "`H M L`; `zt zz zb`; `Ctrl-f`, `Ctrl-b`, `Ctrl-d`, `Ctrl-u`, `Ctrl-e`, `Ctrl-y`; combining a framing command with a stored position",
-    "prerequisites": "Units 1–6; Unit 9",
+    "prerequisites": "Unit 9",
     "learningOutcome": "Move the window rather than the cursor: reach a visible landmark, frame the line you are working on, and travel a long file without losing context",
     "representativeExercises": "Center a target line; jump to the last visible row; page through a long file and return; reveal the next rows without moving the cursor",
     "priorityAndPortability": "Core through `H M L`, `zt zz zb`, and `Ctrl-d`/`Ctrl-u`. One-row scrolling with `Ctrl-e`/`Ctrl-y` is advanced. All are native Vim; a host editor that embeds Vim may claim the Ctrl chords by default, so check the host you are in"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects",
-    "position-memory"
-  ],
+  "prerequisiteSkillIds": ["position-memory"],
+  "recommendedSkillIds": [],
   "playback": {
     "modes": [
       "normal",

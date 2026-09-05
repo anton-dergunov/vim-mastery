@@ -8,19 +8,13 @@
   "curriculumDefinition": {
     "unit": "8. Registers and putting",
     "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
-    "prerequisites": "Units 1–6, especially `y d c p`",
+    "prerequisites": "Unit 6, especially `y d c p`; Unit 7 recommended",
     "learningOutcome": "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
     "representativeExercises": "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
     "priorityAndPortability": "Core through named, black-hole, and read-only registers. The useful but host-dependent `\"+` clipboard is emulated inside each Vim Wilds exercise and never touches the device clipboard. Numbered recovery, small-delete recovery, and `gp`/`gP` stay on the path marked advanced rather than removed. Insert-mode `Ctrl-r` is native Vim; a host editor that embeds Vim may claim that Ctrl chord by default, so check the host you are in"
   },
-  "prerequisiteSkillIds": [
-    "modal-model",
-    "cursor-movement",
-    "entering-changing-text",
-    "operator-grammar",
-    "precision-motions-search",
-    "text-objects"
-  ],
+  "prerequisiteSkillIds": ["text-objects"],
+  "recommendedSkillIds": ["visual-selection"],
   "playback": {
     "modes": [
       "normal",

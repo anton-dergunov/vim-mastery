@@ -97,6 +97,31 @@ const [languageProfiles, referenceCatalog, catalogData] = await Promise.all([
 const { unitCatalog } = catalogData;
 const units = unitCatalog.units.sort((left, right) => left.unitNumber - right.unitNumber);
 const curriculumArcs = [...(unitCatalog.arcs || [])].sort((left, right) => left.arcNumber - right.arcNumber);
+const unitsById = new Map(units.map(candidate => [candidate.id, candidate]));
+
+// The catalog declares direct edges only, so anything that wants the real
+// upstream set has to walk them. Unit 14 names Unit 11, which names Unit 4: a
+// learner who has finished none of the three should hear about all three, not
+// just the one edge Unit 14 happens to spell out.
+function requiredUnitClosure(unitId, seen = new Set()) {
+  for (const id of unitsById.get(unitId)?.prerequisiteSkillIds || []) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    requiredUnitClosure(id, seen);
+  }
+  return seen;
+}
+
+function unitNumberList(unitIds) {
+  const numbers = [...unitIds]
+    .map(id => unitsById.get(id))
+    .filter(Boolean)
+    .sort((left, right) => left.unitNumber - right.unitNumber)
+    .map(candidate => candidate.unitNumber);
+  if (!numbers.length) return "";
+  if (numbers.length === 1) return `Unit ${numbers[0]}`;
+  return `Units ${numbers.slice(0, -1).join(", ")} and ${numbers[numbers.length - 1]}`;
+}
 const requestedUnitId = urlParams.get("unit") || (urlParams.has("activity") ? null : savedSession.unitId);
 const selectedUnit = units.find(candidate => candidate.id === requestedUnitId) || units[0];
 const unit = await fetch(appUrl(selectedUnit.path)).then(response => {
@@ -1213,7 +1238,14 @@ async function renderMasteryDialog() {
     const conceptStateName = conceptState(concept, completions);
     const due = isMaintenanceDue(concept, completions, now);
     const pinned = masteryState.pinned.includes(concept.id);
+    // Replaying what you have practised and testing out of what you have not
+    // are different intents, so they get different labels. The review pool is
+    // deliberately *not* widened to match — see `isEligibleForReview`.
     const replayable = conceptStateName !== "unseen" && conceptStateName !== "learning";
+    const drillLabel = replayable ? "Drill" : "Test out";
+    const drillHint = replayable
+      ? "Replay this topic with the prompt withheld"
+      : "Try this topic now, before the lesson";
     return `<div class="mastery-concept">
       <div class="mastery-concept-head">
         <strong>${renderInline(concept.concept)}</strong>
@@ -1221,7 +1253,7 @@ async function renderMasteryDialog() {
         ${due ? '<span class="mastery-chip maintenance">Due for a refresh</span>' : ""}
       </div>
       <div class="mastery-concept-actions">
-        <button type="button" data-mastery-drill="${escapeHtml(concept.id)}" ${replayable ? "" : "disabled"}>${replayable ? "Drill" : "Not practised yet"}</button>
+        <button type="button" data-mastery-drill="${escapeHtml(concept.id)}"${replayable ? "" : ' class="mastery-test-out"'} title="${escapeHtml(drillHint)}">${drillLabel}</button>
         <button type="button" class="mastery-pin${pinned ? " pinned" : ""}" data-mastery-pin="${escapeHtml(concept.id)}" aria-pressed="${pinned}">${pinned ? "Pinned" : "Pin"}</button>
       </div>
     </div>`;
@@ -1254,7 +1286,7 @@ async function renderMasteryDialog() {
     <p class="mastery-intro">${chapterPending
       ? "Complete one mixed review to close Keeper’s circuit. That first circuit advances the story once; every Mastery session remains reusable afterward."
       : "Finishing a chapter and keeping a skill are different things. Nothing here advances the story or unlocks a unit; it replays work you have already done."}</p>
-    <p class="mastery-caveat">Drills replay an exercise you have met, with the prompt withheld. Larger buffers, distractors and varied cursor placement are authoring work that has not been done.</p>
+    <p class="mastery-caveat">A drill replays an exercise you have met, with the prompt withheld. A test out runs the same exercises for a topic you have not reached yet, and passing one counts. Larger buffers, distractors and varied cursor placement are authoring work that has not been done.</p>
     <section class="mastery-sessions" aria-labelledby="masterySessionsTitle">
       <h3 id="masterySessionsTitle">Sessions</h3>
       <div class="mastery-session-actions">
@@ -1969,6 +2001,40 @@ function activityTypeLabel(type) {
   return ({ theory: "Theory", demo: "Demo", exercise: "Exercise", choice: "Choice", summary: "Summary" })[type] || type;
 }
 
+// Skipping ahead stays possible on purpose. `docs/curriculum-and-progression.md`
+// promises that skipping "never permanently locks later material", so this
+// warns, points at the way to earn the skipped topics back, and then gets out
+// of the way. It never disables the button beside it.
+function prerequisiteNotice(candidate, completedUnitIds) {
+  // A practice surface requires nothing: Unit 17 replays whatever exists, and
+  // its own copy already says it needs two practised topics.
+  if (candidate.surface === "mastery") return "";
+  const byNumber = (left, right) => left.unitNumber - right.unitNumber;
+  const required = [...requiredUnitClosure(candidate.id)].map(id => unitsById.get(id)).filter(Boolean).sort(byNumber);
+  const unmet = required.filter(item => !completedUnitIds.has(item.id));
+  const recommended = (candidate.recommendedSkillIds || [])
+    .map(id => unitsById.get(id))
+    .filter(item => item && !completedUnitIds.has(item.id))
+    .sort(byNumber);
+  const softLine = recommended.length
+    ? `<p class="toc-unit-recommended">${unitNumberList(recommended.map(item => item.id))} would make this easier, but ${recommended.length > 1 ? "they are" : "it is"} not required.</p>`
+    : "";
+  if (!unmet.length) return softLine;
+  // Name what this unit itself asks for before anything further upstream. The
+  // closure is honest but starts at Unit 1, and "you have not finished the modal
+  // model" is not the sentence that tells a learner what to do next.
+  const direct = unmet.filter(item => candidate.prerequisiteSkillIds.includes(item.id));
+  const lead = (direct.length ? direct : unmet).slice(0, 2);
+  const others = unmet.length - lead.length;
+  const named = lead.map(item => `${renderInline(item.title)} (Unit ${item.unitNumber})`).join(" or ");
+  const rest = others ? `, and ${others} earlier ${others === 1 ? "unit" : "units"}` : "";
+  return `<div class="toc-unit-warning" role="note">
+    <p class="toc-unit-warning-head"><span aria-hidden="true">⚠</span> Reaches back to ${unitNumberList(required.map(item => item.id))}</p>
+    <p>You have not finished ${named}${rest}. Nothing is locked — open this now, or test out of what you skipped.</p>
+    <button type="button" data-mastery-open>Test out a topic</button>
+  </div>${softLine}`;
+}
+
 function renderTableOfContents() {
   // The lesson position, not the surface: free practice must not blank the
   // open lesson in the contents.
@@ -1993,6 +2059,20 @@ function renderTableOfContents() {
   // They are deliberately read from different stores and shown in different
   // places, because conflating them is how "completed" starts to mean nothing.
   const completedStoryIds = new Set(storyTransitions.getState().completedUnitStoryIds);
+  // Every unit carries the note, because the point of it is that a learner who
+  // has not opened a unit yet still finds out its commands may be claimed by
+  // the editor they are sitting in. The card is linked rather than quoted: it
+  // is one table and it would swamp seventeen summaries.
+  const editorNote = candidate => {
+    if (!candidate.editorNote) return "";
+    const card = referenceDecks.has("host-reality")
+      ? '<button type="button" data-reference-deck="host-reality">Chords an editor may claim →</button>'
+      : "";
+    return `<div class="toc-unit-editor">
+      <p><span class="toc-unit-editor-label">In your editor</span>${renderInline(candidate.editorNote)}</p>
+      ${card}
+    </div>`;
+  };
   const renderUnit = candidate => {
     const isCurrent = candidate.id === unit.id;
     const finished = completedStoryIds.has(candidate.id);
@@ -2000,8 +2080,8 @@ function renderTableOfContents() {
     const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong>${marker}<small>${candidate.lessonCount} lessons</small>`;
     const content = isCurrent
       ? lessonMarkup
-      : `<div class="toc-unit-launch"><p>Open this unit when you are ready to begin.</p><button type="button" data-unit-id="${escapeHtml(candidate.id)}">Open Unit ${candidate.unitNumber} →</button></div>`;
-    return `<details class="toc-unit" ${isCurrent ? "open" : ""}><summary>${summary}</summary><div class="toc-unit-lessons">${content}</div></details>`;
+      : `<div class="toc-unit-launch">${prerequisiteNotice(candidate, completedStoryIds)}<p>Open this unit when you are ready to begin.</p><button type="button" data-unit-id="${escapeHtml(candidate.id)}">Open Unit ${candidate.unitNumber} →</button></div>`;
+    return `<details class="toc-unit" ${isCurrent ? "open" : ""}><summary>${summary}</summary><div class="toc-unit-lessons">${editorNote(candidate)}${content}</div></details>`;
   };
   const assignedUnits = new Set();
   const arcMarkup = curriculumArcs.map((arc, arcIndex) => {

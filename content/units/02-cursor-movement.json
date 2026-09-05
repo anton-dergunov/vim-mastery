@@ -14,6 +14,7 @@
     "priorityAndPortability": "Core. `gj/gk` behavior depends on wrapping, but the distinction is portable"
   },
   "prerequisiteSkillIds": ["modal-model"],
+  "recommendedSkillIds": [],
   "playback": {
     "modes": ["normal", "slow", "manual"],
     "manualStep": "one-input-or-text-run",
@@ -491,7 +492,7 @@
           "difficulty": {"level":"guided","dimensions":["absolute-jumps","count-as-address"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Indented YAML-like rows reveal first-nonblank landing behavior.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["gg-motion","G-motion","counted-G"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["gg-motion","last-line-motion","counted-last-line-motion"]}
         },
         {
           "id": "jump-to-first-import",
@@ -527,7 +528,7 @@
           "difficulty": {"level":"medium","dimensions":["bottom-jump","line-address"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"A short region list makes one-based line addressing easy to verify.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["G-motion","counted-G"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["last-line-motion","counted-last-line-motion"]}
         },
         {
           "id": "requested-line-four",
@@ -545,7 +546,7 @@
           "difficulty": {"level":"hard","dimensions":["absolute-address"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"A neutral color list keeps attention on line numbering.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["counted-G"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["counted-last-line-motion"]}
         }
       ]
     },
