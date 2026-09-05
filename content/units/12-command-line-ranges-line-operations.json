@@ -5433,6 +5433,7 @@
   ],
   "coverage": [
     {
+      "id": "line-addresses-and-percent",
       "concept": "line addresses and percent range",
       "explain": [
         "addresses-before-actions"
@@ -5452,6 +5453,7 @@
       ]
     },
     {
+      "id": "range-separators-and-offsets",
       "concept": "comma semicolon and offsets",
       "explain": [
         "comma-semicolon-offsets"
@@ -5470,6 +5472,7 @@
       ]
     },
     {
+      "id": "mark-and-search-addresses",
       "concept": "mark and search addresses",
       "explain": [
         "marks-and-search-addresses"
@@ -5489,6 +5492,7 @@
       ]
     },
     {
+      "id": "range-delete-yank-put",
       "concept": "delete yank and put",
       "explain": [
         "delete-yank-put"
@@ -5507,6 +5511,7 @@
       ]
     },
     {
+      "id": "range-copy-and-move",
       "concept": "copy t move and m",
       "explain": [
         "copy-versus-move"
@@ -5526,6 +5531,7 @@
       ]
     },
     {
+      "id": "range-join-and-sort",
       "concept": "join and sort",
       "explain": [
         "join-and-sort"
@@ -5548,6 +5554,7 @@
       ]
     },
     {
+      "id": "visual-range-shorthand",
       "concept": "visual range",
       "explain": [
         "visual-range-prefix"
@@ -5566,6 +5573,7 @@
       ]
     },
     {
+      "id": "line-workflow-integration",
       "concept": "safe integrated line workflows",
       "explain": [
         "safe-line-automation"

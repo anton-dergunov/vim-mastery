@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "field-notes-2026-09-04",
+  "notes": [
+    {
+      "id": "argument-list-and-argdo",
+      "title": "The argument list and :argdo",
+      "kicker": "Field notes · one edit, many files",
+      "summary": "Name a set of files once, then run the same tested change over every one of them.",
+      "limitation": "Vim Wilds runs a single buffer, so :argdo cannot be practised here. This note tells you the mechanism exists and what makes it safe; the drilling happens in a real terminal.",
+      "activities": [
+        {
+          "id": "argument-list-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The list Vim already has",
+          "body": "Open Vim as `vim src/*.js` and it remembers those files as the argument list. `:args` shows it, `:argadd` and `:argdelete` change it. It is a work list you assembled with the shell, and every file in it is a target you have already agreed to.",
+          "grammar": "vim <files> · :args · :argdo <command>",
+          "contrast": "A buffer list is whatever you happened to open. An argument list is what you deliberately asked for."
+        },
+        {
+          "id": "argdo-payload-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "The command :argdo runs once per file",
+          "instruction": "Watch the per-file payload land on one buffer, then read what the driver adds around it.",
+          "languageId": "typescript",
+          "scenario": {
+            "initial": {
+              "lines": ["export const region = \"staging\";", "export const mirror = \"staging\";", "const retries = 3;", "log(\"staging\", region);"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["export const region = \"production\";", "export const mirror = \"production\";", "const retries = 3;", "log(\"production\", region);"],
+              "cursor": [3, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [":", "%", "s", "/", "s", "t", "a", "g", "i", "n", "g", "/", "p", "r", "o", "d", "u", "c", "t", "i", "o", "n", "/", "g", "e", "Enter"],
+            "commandGroups": [
+              {"from": 0, "to": 1, "display": ":", "explanation": "Open the command line."},
+              {"from": 1, "to": 25, "display": "%s/staging/production/ge", "explanation": "Rewrite every match in this one file. Written out in full, `:argdo %s/staging/production/ge | update` puts this same command in front of every file in the list."},
+              {"from": 25, "to": 26, "display": "↵", "explanation": "Run it."}
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 26,
+                "lines": ["export const region = \"production\";", "export const mirror = \"production\";", "const retries = 3;", "log(\"production\", region);"],
+                "cursor": [3, 0],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Three matches rewritten in one file.",
+            "why": "This is the whole payload. `:argdo` contributes no editing of its own — it walks the argument list and runs exactly this against each entry, which is why a payload you have not tested on one file is a payload you are about to run fifty times.",
+            "contrast": "The two additions that make it survive the trip are the `e` flag and `| update`, and neither one shows its value on a single file."
+          },
+          "provenance": {
+            "payloadOf": ":argdo %s/staging/production/ge | update",
+            "nativeValidation": "passed",
+            "browserConformance": "passed"
+          }
+        },
+        {
+          "id": "argdo-flags-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Why e and update are not optional",
+          "body": "Without `e`, the first file with no match raises an error and the run stops there — files you never reached stay untouched, and the ones behind you are already changed. Without `| update`, every edit lives in an unwritten buffer, and Vim refuses to leave the file for the next one. `e` keeps the walk going; `update` writes only the buffers that actually changed.",
+          "grammar": ":argdo %s/old/new/ge | update",
+          "contrast": "`update` writes only modified buffers; `write` writes unconditionally and touches the timestamp of every file you looked at."
+        },
+        {
+          "id": "spot-the-missing-update",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Spot what this run will leave behind",
+          "prompt": "Forty files are in the argument list. Someone runs `:argdo %s/oldName/newName/ge` and reports that only the first file changed on disk. What explains it?",
+          "options": [
+            {"id": "no-update", "label": "No `| update`, so nothing after the first buffer was written"},
+            {"id": "missing-g", "label": "The `g` flag is missing, so only one match per line was replaced"},
+            {"id": "needs-percent", "label": "The `%` range is missing, so only the current line was searched"}
+          ],
+          "correctOptionId": "no-update",
+          "explanation": "The substitution itself is correct — `%` scopes it to the whole file, `g` catches every match on a line, and `e` stops a file without matches from aborting the walk. What is missing is the write. Each file was modified in memory and abandoned unwritten as `:argdo` moved on, so the changes exist nowhere on disk. Adding `| update` writes each buffer that actually changed.",
+          "questionKind": "defect-spotting"
+        }
+      ]
+    },
+    {
+      "id": "buffers-and-bufdo",
+      "title": "Buffers and :bufdo",
+      "kicker": "Field notes · the other list",
+      "summary": "The same walk over a different set — and the difference is what you can name in advance.",
+      "limitation": "This note has no exercise. Vim Wilds holds one buffer, so a command that iterates buffers has nothing to iterate; what follows is a briefing on when to reach for it.",
+      "activities": [
+        {
+          "id": "buffer-list-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Two lists, two intentions",
+          "body": "Every file you open gets a buffer, and `:ls` lists them. `:bufdo` runs a command over all of them, exactly as `:argdo` does over the argument list. The mechanics are identical; the sets are not.",
+          "grammar": ":ls · :bufdo <command> · :argdo <command>",
+          "contrast": "The argument list is a claim about what you meant to change. The buffer list is a record of what you happened to open."
+        },
+        {
+          "id": "bufdo-scope-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Which one to reach for",
+          "body": "Prefer `:argdo`. A shell glob is reviewable before you commit to it — you can read `src/**/*.ts` and know what it covers. A buffer list accumulates: the file you opened to check something, the help window, the file a plugin loaded for you. `:bufdo` reaches all of it. Reach for it when the set genuinely is \"everything I have open\", and `:argdo` the rest of the time.",
+          "contrast": "`:windo` and `:tabdo` are the same idea again, scoped to visible windows and to tabs."
+        },
+        {
+          "id": "choose-the-iteration-list",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the list to walk",
+          "prompt": "A rename has to reach every `.ts` file under `src`, in a session where you have also opened two log files and a scratch buffer to check something. Which walk applies the change to exactly the intended set?",
+          "options": [
+            {"id": "argdo-glob", "label": "Restart with `vim src/**/*.ts`, then `:argdo`"},
+            {"id": "bufdo-now", "label": "`:bufdo` in the session you already have"},
+            {"id": "bufdo-then-clean", "label": "`:bufdo`, then undo the changes to the log files afterwards"}
+          ],
+          "correctOptionId": "argdo-glob",
+          "explanation": "`:bufdo` would reach the log files and the scratch buffer, because it walks what is open rather than what you meant. Undoing the collateral afterwards is repair work that a correct list avoids: the glob states the intended set in a form you can read before anything runs, and `:argdo` then applies to that and nothing else.",
+          "questionKind": "mechanism-selection"
+        }
+      ]
+    },
+    {
+      "id": "quickfix-as-a-work-list",
+      "title": "Quickfix as a work list",
+      "kicker": "Field notes · found, then fixed",
+      "summary": "Let a search decide which places need work, then run one command at each of them.",
+      "limitation": "Quickfix is a list of positions across files, so it cannot exist in a one-buffer app. The demo below shows the single-file shape of the same idea; the cross-file version is described, not practised.",
+      "activities": [
+        {
+          "id": "quickfix-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "A list of places, not of files",
+          "body": "`:grep`, `:vimgrep` and a compiler's output all populate the quickfix list: file, line, column, message. `:copen` shows it and `:cnext` walks it. Where the argument list is a set of files you named, the quickfix list is a set of positions something else found for you.",
+          "grammar": ":vimgrep /pattern/ src/**/*.js · :copen · :cnext"
+        },
+        {
+          "id": "quickfix-payload-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Find first, then edit what was found",
+          "instruction": "Watch a predicate pick the lines and a command edit only those, which is the shape :cdo generalises across files.",
+          "languageId": "javascript",
+          "scenario": {
+            "initial": {
+              "lines": ["renderHeader(props);", "// TODO widen the gutter", "renderBody(props);", "// TODO drop the shim", "renderFooter(props);"],
+              "cursor": [0, 0],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": ["renderHeader(props);", "// FIXME widen the gutter", "renderBody(props);", "// FIXME drop the shim", "renderFooter(props);"],
+              "cursor": [3, 0],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [":", "g", "/", "T", "O", "D", "O", "/", "s", "/", "/", "F", "I", "X", "M", "E", "/", "g", "Enter"],
+            "commandGroups": [
+              {"from": 0, "to": 1, "display": ":", "explanation": "Open the command line."},
+              {"from": 1, "to": 18, "display": "g/TODO/s//FIXME/g", "explanation": "The predicate selects the matching lines and the substitution edits only those. `:cdo` is this same split, with the finding done across every file rather than within one."},
+              {"from": 18, "to": 19, "display": "↵", "explanation": "Run it."}
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 19,
+                "lines": ["renderHeader(props);", "// FIXME widen the gutter", "renderBody(props);", "// FIXME drop the shim", "renderFooter(props);"],
+                "cursor": [3, 0],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [],
+          "feedback": {
+            "success": "Only the two matching lines changed.",
+            "why": "Finding and editing are separate steps. `:global` finds within one file and quickfix finds across many, but both hand the same thing to the command that follows: a list of places worth touching.",
+            "contrast": "`:global` cannot leave the buffer. Quickfix can, which is the only reason to build one."
+          },
+          "provenance": {
+            "payloadOf": ":cdo s/TODO/FIXME/g | update",
+            "nativeValidation": "passed",
+            "browserConformance": "passed"
+          }
+        },
+        {
+          "id": "cdo-and-cfdo-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Per entry, or per file",
+          "body": "`:cdo` runs your command once for every entry in the list, with the cursor already on that line. `:cfdo` runs it once per file that appears in the list. Choose by what your command does: a cursor-relative edit wants `:cdo`, and a whole-file command such as `%s` wants `:cfdo`, or it will run once per match on the same file.",
+          "grammar": ":cdo <command> · :cfdo <command>",
+          "contrast": "`:cdo s/old/new/` edits one line at a time. `:cfdo %s/old/new/ge | update` rewrites each file once."
+        },
+        {
+          "id": "predict-the-run-count",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Predict how often the command runs",
+          "prompt": "A search fills the quickfix list with twelve matches spread across three files. Someone runs `:cdo %s/old/new/ge | update`. What actually happens?",
+          "options": [
+            {"id": "twelve-whole-file-passes", "label": "Each of the three files is rewritten several times over — twelve whole-file passes in all"},
+            {"id": "three-passes", "label": "Three passes, one per file, because %s already covers the file"},
+            {"id": "twelve-line-edits", "label": "Twelve edits, each confined to the line the entry points at"}
+          ],
+          "correctOptionId": "twelve-whole-file-passes",
+          "explanation": "`:cdo` runs once per *entry*, and `%s` ignores where the cursor is and rewrites the whole file every time. The result is correct but wasteful — twelve full-file substitutions and twelve writes where three would do. Pairing a whole-file command with `:cfdo`, or a line-scoped `s/old/new/` with `:cdo`, matches the command to the walk.",
+          "questionKind": "outcome-prediction"
+        }
+      ]
+    },
+    {
+      "id": "non-interactive-vim",
+      "title": "Non-interactive Vim",
+      "kicker": "Field notes · Vim without a screen",
+      "summary": "The same commands you type by hand, handed to Vim from a script or a shell prompt.",
+      "limitation": "Nothing in this note can run in a browser: it is about invoking Vim as a program from a shell. Read it as a briefing on what is possible, and try it in a terminal.",
+      "activities": [
+        {
+          "id": "scripted-vim-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Commands from the outside",
+          "body": "`vim -c 'command' file` opens the file and runs the command. Stack several with `-c`, finish with `-c wq`, and Vim never waits for you. `ex -sc 'command|wq' file` does the same silently, without drawing a screen — the form to use inside a script. `vim -es` reads Ex commands from standard input for longer sequences.",
+          "grammar": "vim -c '%s/old/new/ge' -c wq file · ex -sc '%s/old/new/ge|wq' file",
+          "contrast": "`-s` here means silent, not the `-s` that replays a keystroke file. Different flag, same letter."
+        },
+        {
+          "id": "scripted-vim-judgment",
+          "type": "theory",
+          "phase": "explain",
+          "title": "When this beats a pipeline",
+          "body": "Reach for scripted Vim when the transformation is one you already worked out interactively, and when it depends on things Vim knows and a stream editor does not: the file's own syntax, matching brackets, text objects, marks, a recorded macro. `ex -sc 'g/^import/normal! =='` reindents by the rules of the language. The advantage is not speed, it is that you are running the edit you already tested.",
+          "contrast": "A pipeline reads text as lines. Vim reads it as a buffer with structure, a cursor, and undo."
+        },
+        {
+          "id": "choose-the-invocation",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Choose the invocation",
+          "prompt": "A release script has to apply one substitution to a generated file, on a build machine with no terminal attached, and fail loudly if anything goes wrong. Which invocation fits?",
+          "options": [
+            {"id": "ex-silent", "label": "`ex -sc '%s/old/new/ge|wq' file`"},
+            {"id": "vim-plain", "label": "`vim -c '%s/old/new/ge' file` and let the script move on"},
+            {"id": "vim-s-keys", "label": "`vim -s keys.txt file`, replaying a recorded keystroke file"}
+          ],
+          "correctOptionId": "ex-silent",
+          "explanation": "`ex -s` expects no terminal and draws no screen, which is what a build machine needs, and the explicit `wq` writes and exits with a status the script can check. The second leaves Vim open waiting for a human that will never arrive. The third is legitimate for replaying keystrokes but is far more fragile here: a keystroke file depends on cursor position and mode at every step, where one Ex command does not.",
+          "questionKind": "mechanism-selection"
+        }
+      ]
+    },
+    {
+      "id": "when-to-leave-vim",
+      "title": "When to leave Vim",
+      "kicker": "Field notes · the honest boundary",
+      "summary": "The tool that fits is sometimes not this one, and knowing that is part of the skill.",
+      "limitation": "This note argues rather than teaches a command, and there is nothing here to practise. It is the counterpart to the tool-choice questions in the curriculum, extended past the edge of Vim.",
+      "activities": [
+        {
+          "id": "leaving-vim-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "What the other tools are better at",
+          "body": "`sed` streams: it is the right answer for one regular substitution across files you never need to open. `awk` handles records and fields, so columnar data belongs to it. `jq` understands JSON as a structure, and no regular expression over JSON is ever really correct. A written script gets version control, tests and a name.",
+          "contrast": "Vim's advantage is that the buffer has structure and a cursor. Where the input has no structure Vim understands, that advantage is gone."
+        },
+        {
+          "id": "leaving-vim-decision",
+          "type": "theory",
+          "phase": "explain",
+          "title": "The question worth asking",
+          "body": "Ask whether the change has to be re-run. A one-off correction across files you are already reading is Vim's; it needs no artefact and you can see every result. A transformation that will run again, on input you have not seen, in a pipeline someone else maintains, wants a script — something reviewable, testable and re-runnable. Keystroke count is the wrong axis. Blast radius, repeatability and who reads it next are the right ones.",
+          "grammar": "one-off and visible → Vim · repeated and unattended → a script"
+        },
+        {
+          "id": "choose-to-stay-or-leave",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Decide where this work belongs",
+          "prompt": "A nightly job must rewrite one field in a large JSON export, every night, on files nobody opens. What should own the transformation?",
+          "options": [
+            {"id": "jq-script", "label": "A checked-in `jq` program the job invokes"},
+            {"id": "argdo-run", "label": "`vim` with `:argdo` over the export directory"},
+            {"id": "ex-silent-run", "label": "`ex -sc` with a substitution, called from the job"}
+          ],
+          "correctOptionId": "jq-script",
+          "explanation": "This is repeated, unattended work on structured input nobody reviews, which is every argument against doing it in an editor. `jq` parses the JSON rather than pattern-matching its text, so it cannot be defeated by reordered keys, escaping or whitespace, and a checked-in program can be reviewed and tested. Both Vim answers would work on the files you tested and would fail silently on the first export shaped differently.",
+          "questionKind": "mechanism-selection"
+        }
+      ]
+    }
+  ]
+}

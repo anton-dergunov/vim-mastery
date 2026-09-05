@@ -7531,6 +7531,7 @@
   ],
   "coverage": [
     {
+      "id": "normal-over-range",
       "concept": "range application with :normal",
       "explain": [
         "normal-range-meaning"
@@ -7550,6 +7551,7 @@
       ]
     },
     {
+      "id": "normal-bang-and-visual",
       "concept": ":normal! and visual application",
       "explain": [
         "normal-bang-visual-meaning"
@@ -7568,6 +7570,7 @@
       ]
     },
     {
+      "id": "global-delete",
       "concept": ":global delete",
       "explain": [
         "global-delete-meaning"
@@ -7588,6 +7591,7 @@
       ]
     },
     {
+      "id": "vglobal-inversion",
       "concept": ":vglobal inversion",
       "explain": [
         "vglobal-meaning"
@@ -7606,6 +7610,7 @@
       ]
     },
     {
+      "id": "global-substitution",
       "concept": "global substitution",
       "explain": [
         "global-substitute-meaning"
@@ -7625,6 +7630,7 @@
       ]
     },
     {
+      "id": "global-normal-commands",
       "concept": "global Normal commands",
       "explain": [
         "global-normal-meaning"
@@ -7643,6 +7649,7 @@
       ]
     },
     {
+      "id": "global-macro-execution",
       "concept": "global macro execution",
       "explain": [
         "global-macro-meaning"
@@ -7661,6 +7668,7 @@
       ]
     },
     {
+      "id": "global-collect-and-reorder",
       "concept": ":global collect and reorder",
       "explain": [
         "global-relocate-meaning"
@@ -7679,6 +7687,7 @@
       ]
     },
     {
+      "id": "automation-tool-choice",
       "concept": "combined automation and tool choice",
       "explain": [
         "automation-choice-meaning"

@@ -6,6 +6,20 @@ import {
   resolveReferencePresentation,
   resolveUnitPresentation,
 } from "./presentation-data.js";
+import {
+  buildConceptIndex,
+  buildFocusedPlan,
+  buildMixedPlan,
+  buildToolChoicePlan,
+  conceptState,
+  eligibleConcepts,
+  isMaintenanceDue,
+  readMasteryState,
+  recordCompletion,
+  summarizeUnit,
+  togglePinnedConcept,
+  writeMasteryState,
+} from "./mastery-progress.js";
 import { StoryTransitions } from "./story-transitions.js";
 import { WorldPresentationRenderer } from "./world-presentation.js";
 import { CharacterReactions } from "./character-reactions.js";
@@ -21,6 +35,10 @@ const referenceStateKey = "vim-wilds.reference.v1";
 // Free practice is not progress either. Its own key keeps a scratchpad flag
 // from ever reading as curriculum state to a restore or a migration.
 const practiceStateKey = "vim-wilds.practice.v1";
+// Mastery owns the only record of what a learner has finished. It is kept out
+// of the session key because the two mean opposite things: the session key is a
+// position and moves in both directions, while these records only accumulate.
+let masteryState = readMasteryState(window.localStorage);
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 const vimEffectValues = new Set(["enabled", "disabled"]);
@@ -145,6 +163,8 @@ const elements = {
   practiceFilesDialog: $("#practiceFilesDialog"),
   practiceFileList: $("#practiceFileList"),
   practiceNoticeDialog: $("#practiceNoticeDialog"),
+  masteryDialog: $("#masteryDialog"),
+  masteryBody: $("#masteryBody"),
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
   restartUpdateButton: $("#restartUpdateButton"),
@@ -262,6 +282,7 @@ const state = {
   practicePolicyOverride: null,
   exploreTargetReached: false,
   freePractice: null,
+  masterySession: null,
   hintLevel: 0,
   consecutiveMistakes: 0,
   recallFeedback: null,
@@ -293,7 +314,14 @@ let executionMeasurementFrame = null;
 let executionMeasurementSignature = null;
 
 function currentActivity() {
-  return state.freePractice?.activity || activities[state.activityIndex];
+  // Mastery wins over free practice so the two surfaces can never overlap, and
+  // both win over the lesson position, which stays exactly where it was.
+  return masteryActivity() || state.freePractice?.activity || activities[state.activityIndex];
+}
+
+function masteryActivity() {
+  const session = state.masterySession;
+  return session ? session.queue[session.index] || null : null;
 }
 
 function shuffle(items) {
@@ -464,6 +492,21 @@ function freePracticeSample() {
   return state.freePractice?.sample || null;
 }
 
+function isMasterySession() {
+  return state.masterySession !== null;
+}
+
+/**
+ * One name for "which surface is on screen". The header, the leave controls and
+ * the exported state all used to branch on a single free-practice boolean; a
+ * second boolean beside it would make each of those unreadable.
+ */
+function surfaceKind() {
+  if (isMasterySession()) return "mastery";
+  if (isFreePractice()) return "free-practice";
+  return "lesson";
+}
+
 /**
  * A scratchpad is an exercise as far as input is concerned, and nothing else.
  * `type: "exercise"` is load-bearing: it is what keeps the touch keyboard, the
@@ -624,17 +667,24 @@ const referenceSession = { deckId: null, cardIndex: 0, opening: false, unitId: n
 // `unit.reference` has been authored, schema-validated, and cross-checked
 // against activity ids since the curriculum began, and rendered nowhere. Until
 // it has a surface, "demote to reference" is deletion under another name.
-const unitReferenceCache = new Map([[unit.id, unit.reference || []]]);
+// One cache for whole unit files. The reference surface wanted their
+// `reference` arrays and a mastery drill wants their activities, and fetching
+// the same file twice for the two of them would be the only difference.
+const unitDataCache = new Map([[unit.id, unit]]);
 
-async function unitReferenceEntries(unitId) {
-  if (unitReferenceCache.has(unitId)) return unitReferenceCache.get(unitId);
+async function unitData(unitId) {
+  if (unitDataCache.has(unitId)) return unitDataCache.get(unitId);
   const candidate = units.find(item => item.id === unitId);
-  if (!candidate) return [];
+  if (!candidate) return null;
   const response = await fetch(appUrl(candidate.path));
   if (!response.ok) throw new Error(`Unit request failed (${response.status})`);
-  const entries = (await response.json()).reference || [];
-  unitReferenceCache.set(unitId, entries);
-  return entries;
+  const data = await response.json();
+  unitDataCache.set(unitId, data);
+  return data;
+}
+
+async function unitReferenceEntries(unitId) {
+  return (await unitData(unitId))?.reference || [];
 }
 
 function renderUnitReferenceEntries(unitId, entries) {
@@ -898,6 +948,337 @@ async function openPracticeFiles() {
     </button>`).join("");
 }
 
+// The retention layer. Two content files feed it and neither is fetched at
+// launch: most sessions are a lesson, and the mastery map and the field notes
+// are both a deliberate detour. The service worker precaches both, so the first
+// open still works offline.
+let masteryIndexPromise = null;
+let fieldNotesPromise = null;
+const fieldNoteIndex = new Map();
+
+function masteryConceptIndex() {
+  masteryIndexPromise ||= fetch(appUrl("content/mastery-index.json"))
+    .then(response => {
+      if (!response.ok) throw new Error(`Mastery index request failed (${response.status})`);
+      return response.json();
+    })
+    .then(data => buildConceptIndex(data.units));
+  return masteryIndexPromise;
+}
+
+function fieldNoteCatalog() {
+  fieldNotesPromise ||= fetch(appUrl("content/field-notes.json"))
+    .then(response => {
+      if (!response.ok) throw new Error(`Field notes request failed (${response.status})`);
+      return response.json();
+    })
+    .then(data => {
+      data.notes.forEach(note => fieldNoteIndex.set(note.id, note));
+      return data.notes;
+    });
+  return fieldNotesPromise;
+}
+
+function persistMasteryState() {
+  writeMasteryState(window.localStorage, masteryState);
+  // The contents dialog shows no mastery state, so completing an exercise has
+  // nothing to redraw there. Only the map itself, and only while it is open.
+  if (elements.masteryDialog?.open) void renderMasteryDialog();
+}
+
+/**
+ * The one writer of curriculum progress.
+ *
+ * Recording is keyed by the *authored* activity id, never by the id a drill or
+ * a recall clone runs under, so replaying an exercise from the mastery surface
+ * credits the same concept the lesson did. Free practice records nothing at
+ * all: it has no target, so there is nothing it could have completed.
+ */
+function recordActivityCompletion(activity = currentActivity()) {
+  if (!activity || isFreePractice() || activity.fieldNote || activity.masterySummary) return;
+  const activityId = activity.masteryOrigin?.activityId || activity.sourceActivityId || activity.id;
+  if (!activityId) return;
+  masteryState = recordCompletion(masteryState, { activityId, at: Math.floor(Date.now() / 1000) });
+  persistMasteryState();
+}
+
+const masterySurfaceLabels = {
+  focused: "Focused drill",
+  mixed: "Mixed review",
+  "tool-choice": "Tool choice",
+  "field-note": "Field notes",
+};
+
+function masteryLabel() {
+  const session = state.masterySession;
+  if (!session) return "";
+  return session.title || masterySurfaceLabels[session.kind] || "Mastery";
+}
+
+/**
+ * Strips every field that could navigate back into the curriculum.
+ *
+ * `routes`, `remediationRef` and `demoRef` all resolve through `goToActivity`,
+ * which moves the saved lesson position. Leaving one on a queued activity is
+ * the one way a mastery session could lower the learner's progress, so they
+ * come off here rather than being guarded at each render site.
+ */
+function contextualizeMasteryActivity(activity, lesson, source, step) {
+  const { routes, remediationRef, demoRef, ...safe } = activity;
+  const recall = step.practiceMode === "recall";
+  return {
+    ...safe,
+    // Namespaced so a queued activity can never collide with one of the 818
+    // authored ids, which keeps the console measurement cache honest.
+    id: `mastery:${source.id}:${activity.id}${recall ? ":recall" : ""}`,
+    sourceActivityId: activity.id,
+    practiceMode: step.practiceMode || undefined,
+    lessonId: lesson.id,
+    lessonTitle: lesson.title,
+    lessonTrack: undefined,
+    lessonTrackNote: undefined,
+    // Pinned for the whole session. `presentationFor` indexes by this, and a
+    // mixed queue that changed it every step would restyle the board on each
+    // advance for no reason the learner could read.
+    lessonIndex: 0,
+    masteryOrigin: {
+      unitId: source.id,
+      unitNumber: source.unitNumber,
+      unitTitle: source.title,
+      activityId: activity.id,
+    },
+  };
+}
+
+async function resolveMasteryQueue(plan) {
+  const sources = new Map();
+  for (const unitId of new Set(plan.steps.map(step => step.unitId))) {
+    const data = await unitData(unitId);
+    if (data) sources.set(unitId, data);
+  }
+  return plan.steps.map(step => {
+    const source = sources.get(step.unitId);
+    if (!source) return null;
+    for (const lesson of source.lessons) {
+      const activity = lesson.activities.find(item => item.id === step.activityId);
+      if (activity) return contextualizeMasteryActivity(activity, lesson, source, step);
+    }
+    return null;
+  }).filter(Boolean);
+}
+
+/**
+ * The queue's own last card. Reaching it is how a session ends: its Next button
+ * runs the same `nextActivity` path every other activity uses, which then walks
+ * off the end of the queue and leaves the surface.
+ */
+function masterySessionSummary(kind, count) {
+  const bodies = {
+    focused: "That is every drill this topic has. Its progress state has not moved backwards, and it never will.",
+    mixed: "Retrieving one command is easier than choosing between several. That is what this mode is for.",
+    "tool-choice": "Naming the mechanism before touching the keys is the habit these questions build.",
+    "field-note": "Reading is not practice. What these notes buy you is knowing the mechanism exists when you next need it.",
+  };
+  return {
+    id: `mastery-summary-${kind}`,
+    type: "summary",
+    phase: "summary",
+    lessonIndex: 0,
+    masterySummary: true,
+    title: "Session complete",
+    body: bodies[kind] || "Session complete.",
+    takeaways: [`${count} ${count === 1 ? "item" : "items"} in this session.`],
+  };
+}
+
+async function startMasterySession(kind, plan, { title = null } = {}) {
+  const queue = plan.kind === "field-note" ? plan.steps : await resolveMasteryQueue(plan);
+  if (!queue.length) return null;
+  clearPlayback();
+  elements.masteryDialog?.close();
+  elements.tocDialog?.close();
+  state.freePractice = null;
+  state.practicePolicyOverride = null;
+  state.remediationReturnId = null;
+  state.masterySession = {
+    kind,
+    title,
+    index: 0,
+    queue: [...queue, masterySessionSummary(kind, queue.length)],
+    conceptIds: plan.conceptIds || [],
+  };
+  elements.phone.dataset.surface = "mastery";
+  // Entering writes nothing to the session key. That is what keeps "mastery
+  // never lowers progression" true by construction rather than by care.
+  resetActivity({ vibrateReset: false });
+  return state.masterySession;
+}
+
+function advanceMasteryQueue() {
+  const session = state.masterySession;
+  if (!session) return;
+  if (session.index + 1 >= session.queue.length) {
+    exitMasterySession();
+    openMastery();
+    return;
+  }
+  session.index += 1;
+  resetActivity({ vibrateReset: false });
+}
+
+function exitMasterySession() {
+  if (!isMasterySession()) return;
+  state.masterySession = null;
+  delete elements.phone.dataset.surface;
+  resetActivity({ vibrateReset: false });
+}
+
+async function startFocusedDrill(conceptId) {
+  const index = await masteryConceptIndex();
+  const concept = index.byId.get(conceptId);
+  if (!concept) throw new RangeError(`Unknown concept "${conceptId}"`);
+  const plan = buildFocusedPlan(concept);
+  return plan ? startMasterySession("focused", plan, { title: concept.concept }) : null;
+}
+
+async function startMixedReview(conceptIds = null) {
+  const index = await masteryConceptIndex();
+  const pool = conceptIds
+    ? conceptIds.map(id => index.byId.get(id)).filter(Boolean)
+    : reviewPool(index);
+  const plan = buildMixedPlan(pool);
+  return plan ? startMasterySession("mixed", plan) : null;
+}
+
+async function startToolChoice() {
+  const index = await masteryConceptIndex();
+  const plan = buildToolChoicePlan(reviewPool(index));
+  return plan ? startMasterySession("tool-choice", plan) : null;
+}
+
+/**
+ * Mixed and tool-choice sessions draw only from what the learner has actually
+ * applied. A pinned focus list narrows that further without widening it: a
+ * learner may say which of their learned topics to work on, not skip ahead to
+ * one they have not met.
+ */
+function reviewPool(index) {
+  const eligible = eligibleConcepts(index, masteryState.completions);
+  const pinned = eligible.filter(concept => masteryState.pinned.includes(concept.id));
+  return pinned.length >= 2 ? pinned : eligible;
+}
+
+async function startFieldNote(noteId) {
+  const notes = await fieldNoteCatalog();
+  const note = fieldNoteIndex.get(noteId) || notes[0];
+  if (!note) return null;
+  const steps = note.activities.map((activity, activityIndex) => ({
+    ...activity,
+    lessonIndex: 0,
+    lessonTitle: note.title,
+    fieldNote: { id: note.id, title: note.title },
+    // The limitation is stated once, on the note's opening card. Repeating it
+    // on every screen is how a disclaimer becomes something nobody reads.
+    noteLimitation: activityIndex === 0 ? note.limitation : null,
+  }));
+  return startMasterySession("field-note", { kind: "field-note", steps }, { title: note.title });
+}
+
+async function toggleMasteryPin(conceptId) {
+  masteryState = togglePinnedConcept(masteryState, conceptId);
+  persistMasteryState();
+  await renderMasteryDialog();
+}
+
+function conceptStateLabel(conceptState_) {
+  return { unseen: "Unseen", learning: "Learning", practiced: "Practiced", integrated: "Integrated" }[conceptState_];
+}
+
+async function renderMasteryDialog() {
+  const index = await masteryConceptIndex();
+  const notes = await fieldNoteCatalog();
+  const now = Math.floor(Date.now() / 1000);
+  const completions = masteryState.completions;
+  const eligible = eligibleConcepts(index, completions);
+  const pool = reviewPool(index);
+
+  const conceptRow = concept => {
+    const conceptStateName = conceptState(concept, completions);
+    const due = isMaintenanceDue(concept, completions, now);
+    const pinned = masteryState.pinned.includes(concept.id);
+    const replayable = conceptStateName !== "unseen" && conceptStateName !== "learning";
+    return `<div class="mastery-concept">
+      <div class="mastery-concept-head">
+        <strong>${renderInline(concept.concept)}</strong>
+        <span class="mastery-chip state-${conceptStateName}">${conceptStateLabel(conceptStateName)}</span>
+        ${due ? '<span class="mastery-chip maintenance">Due for a refresh</span>' : ""}
+      </div>
+      <div class="mastery-concept-actions">
+        <button type="button" data-mastery-drill="${escapeHtml(concept.id)}" ${replayable ? "" : "disabled"}>${replayable ? "Drill" : "Not practised yet"}</button>
+        <button type="button" class="mastery-pin${pinned ? " pinned" : ""}" data-mastery-pin="${escapeHtml(concept.id)}" aria-pressed="${pinned}">${pinned ? "Pinned" : "Pin"}</button>
+      </div>
+    </div>`;
+  };
+
+  const unitSections = units.map(candidate => {
+    const summary = summarizeUnit(index, candidate.id, completions, now);
+    if (!summary.total) return "";
+    const applied = summary.counts.practiced + summary.counts.integrated;
+    const concepts = index.concepts.filter(concept => concept.unitId === candidate.id);
+    return `<details class="mastery-unit">
+      <summary>
+        <span>Unit ${candidate.unitNumber}</span>
+        <strong>${renderInline(candidate.title)}</strong>
+        <small>${applied} of ${summary.total} practised${summary.maintenanceDue ? ` · ${summary.maintenanceDue} due` : ""}</small>
+      </summary>
+      <div class="mastery-unit-concepts">${concepts.map(conceptRow).join("")}</div>
+    </details>`;
+  }).join("");
+
+  const pinnedCount = eligible.filter(concept => masteryState.pinned.includes(concept.id)).length;
+  const mixedReady = pool.length >= 2;
+  const noteButtons = notes.map(note => `<button type="button" data-mastery-note="${escapeHtml(note.id)}">
+      <strong>${renderInline(note.title)}</strong>
+      <small>${renderInline(note.summary)}</small>
+    </button>`).join("");
+
+  elements.masteryBody.innerHTML = `
+    <p class="mastery-intro">Finishing a chapter and keeping a skill are different things. Nothing here advances the story or unlocks a unit; it replays work you have already done.</p>
+    <p class="mastery-caveat">Drills replay an exercise you have met, with the prompt withheld. Larger buffers, distractors and varied cursor placement are authoring work that has not been done.</p>
+    <section class="mastery-sessions" aria-labelledby="masterySessionsTitle">
+      <h3 id="masterySessionsTitle">Sessions</h3>
+      <div class="mastery-session-actions">
+        <button type="button" data-mastery-mixed ${mixedReady ? "" : "disabled"}>
+          <strong>Mixed review</strong>
+          <small>${mixedReady
+            ? `Interleaves ${Math.min(pool.length, 5)} of your ${pinnedCount >= 2 ? "pinned" : "practised"} topics.`
+            : "Needs two practised topics. Finish an isolated exercise in two of them."}</small>
+        </button>
+        <button type="button" data-mastery-tool-choice ${pool.length ? "" : "disabled"}>
+          <strong>Tool choice</strong>
+          <small>${pool.length ? "Name the mechanism before touching the keys." : "Opens once you have practised a topic."}</small>
+        </button>
+      </div>
+    </section>
+    <section class="mastery-notes" aria-labelledby="masteryNotesTitle">
+      <h3 id="masteryNotesTitle">Field notes</h3>
+      <p>Batch and command-line Vim. These are briefings, not drills — the app runs one buffer, so the multi-file commands they describe cannot be practised here.</p>
+      <div class="mastery-note-actions">${noteButtons}</div>
+    </section>
+    <section class="mastery-topics" aria-labelledby="masteryTopicsTitle">
+      <h3 id="masteryTopicsTitle">Topics</h3>
+      <p>Every topic you have applied stays directly replayable. Pin the ones you want mixed review to draw from.</p>
+      <div class="mastery-units">${unitSections}</div>
+    </section>`;
+}
+
+async function openMastery() {
+  elements.tocDialog?.close();
+  elements.masteryBody.innerHTML = '<p class="practice-loading">Loading…</p>';
+  if (!elements.masteryDialog.open) elements.masteryDialog.showModal();
+  await renderMasteryDialog();
+}
+
 function showOpeningReference() {
   if (!openingDeck || referenceState.orientationSeen || !isDefaultArrival) return false;
   openReferenceDeck(openingDeck.id, { opening: true });
@@ -1004,9 +1385,26 @@ function renderTrackNote(activity) {
   return `<p class="track-note track-${escapeHtml(activity.lessonTrack)}">${renderInline(activity.lessonTrackNote)}</p>`;
 }
 
+/**
+ * A field note says once, on its opening card, what it cannot do. Repeating it
+ * on every screen of the note is how a disclaimer stops being read, and it
+ * costs board height the 360px layout does not have.
+ */
+function renderNoteLimitation(activity) {
+  return activity.noteLimitation
+    ? `<p class="field-note-limitation"><strong>A briefing, not a drill.</strong> ${renderInline(activity.noteLimitation)}</p>`
+    : "";
+}
+
 function renderFieldNote(activity) {
   if (activity.type === "theory") {
-    const lessonTheories = lessons[activity.lessonIndex].activities.filter(item => item.type === "theory");
+    // A queued or synthesized activity belongs to no lesson in this unit, so
+    // there is no "last theory before the demo" for it to be. Field notes carry
+    // no demoRef anyway; this keeps the lookup from dereferencing a lesson that
+    // does not describe the card on screen.
+    const lessonTheories = activity.masteryOrigin || activity.fieldNote
+      ? []
+      : lessons[activity.lessonIndex].activities.filter(item => item.type === "theory");
     const isFinalTheory = lessonTheories.at(-1)?.id === activity.id;
     const action = state.remediationReturnId
       ? '<button class="note-action" type="button" data-action="return-remediation">Back to quick check →</button>'
@@ -1022,6 +1420,7 @@ function renderFieldNote(activity) {
       ${renderTheoryPresentation(activity.presentation)}
       ${activity.grammar ? `<div class="theory-reference"><strong>Command pattern</strong><pre class="grammar">${escapeHtml(activity.grammar.replaceAll(" · ", "\n"))}</pre></div>` : ""}
       ${activity.contrast ? `<p class="contrast"><strong>Key difference:</strong> ${renderInline(activity.contrast)}</p>` : ""}
+      ${renderNoteLimitation(activity)}
       ${action}
     </article>`;
   }
@@ -1040,7 +1439,7 @@ function renderFieldNote(activity) {
     const next = state.complete ? '<button class="note-action" type="button" data-action="next">Next →</button>' : "";
     return `<article class="field-note choice-note" aria-label="Tool choice challenge">
       <span class="field-note-kicker">Challenge · choose</span><h2>${renderInline(activity.title)}</h2>
-      <p>${renderInline(activity.prompt)}</p><div class="choice-options">${choices}</div>${result}${remediation}${next}
+      <p>${renderInline(activity.prompt)}</p>${renderNoteLimitation(activity)}<div class="choice-options">${choices}</div>${result}${remediation}${next}
     </article>`;
   }
   return `<article class="field-note summary-note" aria-label="Lesson summary">
@@ -1059,8 +1458,13 @@ function renderActivityIntro() {
   if (!show) return;
   const practiceLabel = isExplore(activity)
     ? "Explore"
+    : activity.masteryOrigin
+      ? activity.practiceMode === "recall" ? "Drill · recall" : "Drill"
     : activity.practiceMode === "guided" ? "Guided practice" : activity.practiceMode === "recall" ? "Recall practice" : "Demo";
-  elements.activityKicker.innerHTML = `<span class="activity-kind">${escapeHtml(practiceLabel)}</span><span class="activity-language">${escapeHtml(languageLabel(activity))}</span>`;
+  const origin = activity.masteryOrigin
+    ? `<span class="activity-origin">Unit ${activity.masteryOrigin.unitNumber}</span>`
+    : "";
+  elements.activityKicker.innerHTML = `<span class="activity-kind">${escapeHtml(practiceLabel)}</span>${origin}<span class="activity-language">${escapeHtml(languageLabel(activity))}</span>`;
   elements.activityTitle.innerHTML = renderInline(activity.title);
   elements.activityInstruction.innerHTML = renderInline(activity.instruction);
   elements.hintButton.hidden = !isPractice(activity);
@@ -1439,15 +1843,19 @@ function renderCommand() {
 
 function renderHeader() {
   const activity = currentActivity();
-  const free = isFreePractice();
-  elements.lessonLabel.textContent = free ? activity.title : activity.lessonTitle;
+  const surface = surfaceKind();
+  const lesson = surface === "lesson";
+  const free = surface === "free-practice";
+  elements.lessonLabel.textContent = lesson ? activity.lessonTitle : surface === "mastery" ? masteryLabel() : activity.title;
   elements.resetButton.hidden = !isRunnable(activity);
   // Toggling the attribute, not a class, removes the inactive controls from the
   // accessibility tree so a role lookup can only ever match one of each pair.
-  [[elements.tocButton, free], [elements.settingsButton, free],
-    [elements.practiceLeaveButton, !free], [elements.practiceFilesButton, !free],
-    [$('[data-layout-action="toc"]'), free], [$('[data-layout-action="settings"]'), free],
-    [$('[data-layout-action="practice-leave"]'), !free], [$('[data-layout-action="practice-files"]'), !free],
+  // The leave control is shared by both detours; only the file picker is free
+  // practice's alone.
+  [[elements.tocButton, !lesson], [elements.settingsButton, !lesson],
+    [elements.practiceLeaveButton, lesson], [elements.practiceFilesButton, !free],
+    [$('[data-layout-action="toc"]'), !lesson], [$('[data-layout-action="settings"]'), !lesson],
+    [$('[data-layout-action="practice-leave"]'), lesson], [$('[data-layout-action="practice-files"]'), !free],
   ].forEach(([button, hidden]) => button?.toggleAttribute("hidden", hidden));
   renderTableOfContents();
 }
@@ -1565,9 +1973,15 @@ function renderTableOfContents() {
       <div class="toc-activities">${rows}</div>
     </details>`;
   }).join("");
+  // Finishing a chapter is a story event; keeping a skill is a mastery state.
+  // They are deliberately read from different stores and shown in different
+  // places, because conflating them is how "completed" starts to mean nothing.
+  const completedStoryIds = new Set(storyTransitions.getState().completedUnitStoryIds);
   const renderUnit = candidate => {
     const isCurrent = candidate.id === unit.id;
-    const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong><small>${candidate.lessonCount} lessons</small>`;
+    const finished = completedStoryIds.has(candidate.id);
+    const marker = finished ? '<span class="toc-unit-complete" title="Chapter finished">✓</span>' : "";
+    const summary = `<span>Unit ${candidate.unitNumber}</span><strong>${renderInline(candidate.title)}</strong>${marker}<small>${candidate.lessonCount} lessons</small>`;
     const content = isCurrent
       ? lessonMarkup
       : `<div class="toc-unit-launch"><p>Open this unit when you are ready to begin.</p><button type="button" data-unit-id="${escapeHtml(candidate.id)}">Open Unit ${candidate.unitNumber} →</button></div>`;
@@ -1589,7 +2003,6 @@ function renderTableOfContents() {
   const ungroupedMarkup = ungroupedUnits.length
     ? `<section class="toc-arc" aria-labelledby="toc-arc-other"><h3 class="toc-arc-heading" id="toc-arc-other"><span>Course</span><strong>More units</strong></h3><div class="toc-arc-units">${ungroupedUnits.map(renderUnit).join("")}</div></section>`
     : "";
-  const completedStoryIds = new Set(storyTransitions.getState().completedUnitStoryIds);
   const endingReplayButton = storyTransitions.getState().endingSeen
     ? '<button type="button" data-story-replay-ending>Replay finale</button>'
     : "";
@@ -1628,7 +2041,17 @@ function renderTableOfContents() {
       <button type="button" data-practice-browse><strong>Browse the files</strong><small>Twenty buffers across sixteen languages.</small></button>
     </div>
   </section>`;
-  elements.tocLessons.innerHTML = practiceSection + referenceSection + storyArchive + arcMarkup + ungroupedMarkup;
+  const masterySection = `<section class="toc-mastery" aria-labelledby="tocMasteryTitle">
+    <h3 id="tocMasteryTitle">Mastery</h3>
+    <p>Replay a topic, mix several together, or read the field notes on batch and command-line Vim. Nothing here advances a chapter.</p>
+    <div class="toc-mastery-actions">
+      <button type="button" data-mastery-open><strong>Open the mastery map</strong><small>Every topic, its state, and a drill for each.</small></button>
+    </div>
+  </section>`;
+  // Free practice stays first: it is the one entry that asks nothing of the
+  // learner and is open before Unit 1. Mastery follows it, because it only
+  // means anything once something has been completed.
+  elements.tocLessons.innerHTML = practiceSection + masterySection + referenceSection + storyArchive + arcMarkup + ungroupedMarkup;
 }
 
 function storyPreviewHref(parameters) {
@@ -1704,6 +2127,7 @@ function goToActivity(index, { preserveRemediation = false } = {}) {
   if (!preserveRemediation) state.remediationReturnId = null;
   state.practicePolicyOverride = null;
   state.freePractice = null;
+  state.masterySession = null;
   delete elements.phone.dataset.surface;
   state.activityIndex = index;
   resetActivity({ vibrateReset: false });
@@ -1725,6 +2149,16 @@ function openTableOfContents() {
 function nextActivity() {
   if (isPractice() && !state.complete) return;
   if (currentActivity().type === "choice" && !state.complete) return;
+  // Theory, demos and summaries have no success event of their own, so leaving
+  // one is the only evidence it was read. Exercises and choices record on
+  // completion instead; see completeActivity.
+  if (["theory", "demo", "summary"].includes(currentActivity().type)) recordActivityCompletion();
+  // A drill must never reach the unit boundary below it: finishing the last
+  // activity of a unit inside a drill would fire that unit's ending story.
+  if (isMasterySession()) {
+    advanceMasteryQueue();
+    return;
+  }
   if (state.activityIndex === activities.length - 1) {
     const nextUnit = nextSequentialUnit();
     if (storyTransitions.showUnitAtBoundary(unit.id, nextUnit?.id || null)) return;
@@ -1855,6 +2289,7 @@ function shouldReportImpact(snapshot = state.editorSnapshot) {
 
 function completeActivity() {
   state.complete = true;
+  recordActivityCompletion();
   clearPlayback();
   vimEngine?.setLocked(true);
   setTheme(functionalThemeFor());
@@ -2221,6 +2656,7 @@ document.addEventListener("keydown", event => {
   if (event.vimWildsPrompt) return;
   if (elements.storyDialog?.open) return;
   if (elements.practiceFilesDialog?.open || elements.practiceNoticeDialog?.open) return;
+  if (elements.masteryDialog?.open) return;
   if (isPractice() && state.complete && state.keyboardVisibility === "hidden") {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -2395,7 +2831,22 @@ elements.referenceDialog?.addEventListener("cancel", event => {
   closeReferenceDeck();
 });
 
-elements.practiceLeaveButton?.addEventListener("click", () => exitFreePractice());
+elements.practiceLeaveButton?.addEventListener("click", () => leaveCurrentSurface());
+elements.masteryDialog?.addEventListener("click", event => {
+  const drill = event.target.closest("[data-mastery-drill]")?.dataset.masteryDrill;
+  if (drill) return void startFocusedDrill(drill);
+  const pin = event.target.closest("[data-mastery-pin]")?.dataset.masteryPin;
+  if (pin) return void toggleMasteryPin(pin);
+  const note = event.target.closest("[data-mastery-note]")?.dataset.masteryNote;
+  if (note) return void startFieldNote(note);
+  if (event.target.closest("[data-mastery-mixed]")) return void startMixedReview();
+  if (event.target.closest("[data-mastery-tool-choice]")) return void startToolChoice();
+});
+
+function leaveCurrentSurface() {
+  if (isMasterySession()) exitMasterySession();
+  else exitFreePractice();
+}
 elements.practiceFilesButton?.addEventListener("click", () => void openPracticeFiles());
 elements.practiceFilesDialog?.addEventListener("click", event => {
   if (event.target.closest("[data-practice-notice]")) return openPracticeNotice({ fromPicker: true });
@@ -2424,7 +2875,7 @@ elements.practiceNoticeDialog?.addEventListener("close", () => {
 
 $(".landscape-controls")?.addEventListener("click", event => {
   const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
-  if (action === "practice-leave") exitFreePractice();
+  if (action === "practice-leave") leaveCurrentSurface();
   if (action === "practice-files") void openPracticeFiles();
   if (action === "toc") openTableOfContents();
   if (action === "reset") resetActivity();
@@ -2445,6 +2896,11 @@ elements.tocLessons?.addEventListener("click", event => {
   if (event.target.closest("[data-practice-browse]")) {
     elements.tocDialog.close();
     void openPracticeFiles();
+    return;
+  }
+  if (event.target.closest("[data-mastery-open]")) {
+    elements.tocDialog.close();
+    void openMastery();
     return;
   }
   const referenceDeck = event.target.closest("[data-reference-deck]")?.dataset.referenceDeck;
@@ -2556,7 +3012,46 @@ function applyUpdate() {
   serviceWorkerRegistration?.waiting?.postMessage({ type: "SKIP_WAITING" });
 }
 
+async function masteryStateSnapshot() {
+  const index = await masteryConceptIndex();
+  const now = Math.floor(Date.now() / 1000);
+  const session = state.masterySession;
+  return {
+    active: isMasterySession(),
+    kind: session?.kind || null,
+    title: session ? masteryLabel() : null,
+    index: session?.index ?? null,
+    length: session ? session.queue.length : 0,
+    // The queued activity's authored id, not the namespaced one it runs under.
+    queue: session ? session.queue.map(activity => activity.masteryOrigin?.activityId || activity.id) : [],
+    conceptIds: session?.conceptIds || [],
+    dialogOpen: Boolean(elements.masteryDialog?.open),
+    pinned: [...masteryState.pinned],
+    completions: Object.keys(masteryState.completions),
+    concepts: index.concepts.map(concept => ({
+      id: concept.id,
+      unitId: concept.unitId,
+      concept: concept.concept,
+      // The achieved state and the refresh marker are two separate facts. A
+      // state that could fall back down would show a learner their own
+      // progress decaying through no action of theirs.
+      state: conceptState(concept, masteryState.completions),
+      maintenanceDue: isMaintenanceDue(concept, masteryState.completions, now),
+    })),
+    units: units.map(candidate => summarizeUnit(index, candidate.id, masteryState.completions, now)),
+  };
+}
+
 window.VimWilds = Object.freeze({
+  openMastery,
+  closeMastery: () => elements.masteryDialog?.close(),
+  startMasteryDrill: startFocusedDrill,
+  startMixedReview,
+  startToolChoice,
+  startFieldNote,
+  exitMastery: exitMasterySession,
+  masteryState: masteryStateSnapshot,
+  fieldNotes: () => fieldNoteCatalog().then(notes => notes.map(note => ({ id: note.id, title: note.title, limitation: note.limitation }))),
   units: units.map(candidate => ({ id: candidate.id, unitNumber: candidate.unitNumber, title: candidate.title })),
   unit: { id: unit.id, unitNumber: unit.unitNumber, title: unit.title },
   activities,
@@ -2657,9 +3152,13 @@ window.VimWilds = Object.freeze({
       activityId: currentActivity().id,
       activityType: currentActivity().type,
       lessonId: currentActivity().lessonId,
-      surface: isFreePractice() ? "free-practice" : "lesson",
-      exerciseIndex: isPractice() && !isFreePractice() ? exercises.findIndex(exercise => exercise.sourceActivityId === currentActivity().sourceActivityId) : -1,
-      exerciseId: isPractice() && !isFreePractice() ? currentActivity().sourceActivityId : null,
+      surface: surfaceKind(),
+      // Both indexes address this unit's lesson flow. A drill can queue an
+      // activity from any unit, so reporting a position in that flow would be
+      // reporting a number that means nothing; gate them rather than let a
+      // test read -1 as a location.
+      exerciseIndex: isPractice() && surfaceKind() === "lesson" ? exercises.findIndex(exercise => exercise.sourceActivityId === currentActivity().sourceActivityId) : -1,
+      exerciseId: isPractice() && surfaceKind() === "lesson" ? currentActivity().sourceActivityId : null,
       sourceActivityId: currentActivity().sourceActivityId || currentActivity().id,
       practiceMode: currentActivity().practiceMode || null,
       practicePolicy: practicePolicy(),

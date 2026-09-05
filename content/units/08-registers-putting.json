@@ -11340,6 +11340,7 @@
   ],
   "coverage": [
     {
+      "id": "unnamed-register",
       "concept": "unnamed register",
       "explain": [
         "unnamed-register-meaning"
@@ -11358,6 +11359,7 @@
       ]
     },
     {
+      "id": "put-variants",
       "concept": "p P gp gP",
       "explain": [
         "put-landing-meaning"
@@ -11376,6 +11378,7 @@
       ]
     },
     {
+      "id": "yank-register",
       "concept": "yank register zero",
       "explain": [
         "yank-zero-meaning"
@@ -11394,6 +11397,7 @@
       ]
     },
     {
+      "id": "numbered-registers",
       "concept": "numbered registers",
       "explain": [
         "numbered-register-meaning"
@@ -11412,6 +11416,7 @@
       ]
     },
     {
+      "id": "small-delete-register",
       "concept": "small-delete register",
       "explain": [
         "small-black-hole-meaning"
@@ -11431,6 +11436,7 @@
       ]
     },
     {
+      "id": "black-hole-register",
       "concept": "black-hole register",
       "explain": [
         "black-hole-meaning"
@@ -11451,6 +11457,7 @@
       ]
     },
     {
+      "id": "named-registers",
       "concept": "named registers",
       "explain": [
         "named-register-meaning"
@@ -11469,6 +11476,7 @@
       ]
     },
     {
+      "id": "register-append",
       "concept": "uppercase register append",
       "explain": [
         "append-register-meaning"
@@ -11487,6 +11495,7 @@
       ]
     },
     {
+      "id": "clipboard-register",
       "concept": "emulated plus register and inspection",
       "explain": [
         "plus-register-meaning"
@@ -11505,6 +11514,7 @@
       ]
     },
     {
+      "id": "read-only-registers",
       "concept": "read-only registers",
       "explain": [
         "read-only-register-meaning"
@@ -11525,6 +11535,7 @@
       ]
     },
     {
+      "id": "insert-mode-register-put",
       "concept": "Insert-mode register insertion",
       "explain": [
         "insert-register-meanings"
@@ -11546,6 +11557,7 @@
       ]
     },
     {
+      "id": "register-choice-integration",
       "concept": "integrated register choice",
       "explain": [
         "register-choice-meaning"

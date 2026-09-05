@@ -143,14 +143,14 @@
     {"id":"ref-dot-intro","command":".","purpose":"Replay the last complete change.","notes":["Move to a comparable target first.","Advanced repeat design returns in Unit 10."],"exampleActivityRefs":["dot-change-demo","dot-append-lines"]}
   ],
   "coverage": [
-    {"concept":"d c y with motions","explain":["operator-sentence-meanings"],"demonstrate":["delete-motion-demo"],"isolate":["change-status-word"],"mix":["yank-ready-field"],"challenge":["delete-path-word"]},
-    {"concept":"dd cc yy D C Y","explain":["line-command-meanings"],"demonstrate":["tail-shorthands-demo"],"isolate":["change-whole-line"],"mix":["yank-line-shorthand"],"challenge":["delete-whole-line","change-tail-value"]},
-    {"concept":"p P and register shape","explain":["put-meanings"],"demonstrate":["character-put-demo"],"isolate":["line-put-after"],"mix":["line-put-before"],"challenge":["delete-then-put","choose-range-shape"]},
-    {"concept":"operator and motion counts","explain":["operator-count-meanings"],"demonstrate":["operator-count-demo"],"isolate":["motion-count-delete"],"mix":["multiply-operator-counts"],"challenge":["counted-change-range"]},
-    {"concept":"> and <","explain":["shift-operator-meanings"],"demonstrate":["shift-motion-demo"],"isolate":["shift-current-line"],"mix":["unshift-motion-range"],"challenge":["counted-line-shift"]},
-    {"concept":"= reindent","explain":["reindent-meanings"],"demonstrate":["reindent-demo"],"isolate":["reindent-current-line"],"mix":["reindent-counted-range"],"challenge":["reindent-whole-buffer"]},
-    {"concept":"gq and gw","explain":["reflow-meanings"],"demonstrate":["format-with-gq"],"isolate":["format-with-gw"],"mix":["format-current-line"],"challenge":["format-counted-lines"]},
-    {"concept":"introductory dot repeat","explain":["dot-introduction"],"demonstrate":["dot-change-demo"],"isolate":["dot-delete-lines"],"mix":["dot-append-lines"],"challenge":["dot-replace-characters"]},
-    {"concept":"integrated operator grammar","explain":["operator-decision-rule"],"demonstrate":["integrated-yank-demo"],"isolate":["integrated-indent-repeat"],"mix":["integrated-change-repeat"],"challenge":["integrated-count-put","choose-range-shape"]}
+    {"id": "operator-motion-composition","concept":"d c y with motions","explain":["operator-sentence-meanings"],"demonstrate":["delete-motion-demo"],"isolate":["change-status-word"],"mix":["yank-ready-field"],"challenge":["delete-path-word"]},
+    {"id": "linewise-shorthand-operators","concept":"dd cc yy D C Y","explain":["line-command-meanings"],"demonstrate":["tail-shorthands-demo"],"isolate":["change-whole-line"],"mix":["yank-line-shorthand"],"challenge":["delete-whole-line","change-tail-value"]},
+    {"id": "put-register-shape","concept":"p P and register shape","explain":["put-meanings"],"demonstrate":["character-put-demo"],"isolate":["line-put-after"],"mix":["line-put-before"],"challenge":["delete-then-put","choose-range-shape"]},
+    {"id": "operator-motion-counts","concept":"operator and motion counts","explain":["operator-count-meanings"],"demonstrate":["operator-count-demo"],"isolate":["motion-count-delete"],"mix":["multiply-operator-counts"],"challenge":["counted-change-range"]},
+    {"id": "shift-operators","concept":"> and <","explain":["shift-operator-meanings"],"demonstrate":["shift-motion-demo"],"isolate":["shift-current-line"],"mix":["unshift-motion-range"],"challenge":["counted-line-shift"]},
+    {"id": "reindent-operator","concept":"= reindent","explain":["reindent-meanings"],"demonstrate":["reindent-demo"],"isolate":["reindent-current-line"],"mix":["reindent-counted-range"],"challenge":["reindent-whole-buffer"]},
+    {"id": "format-operators","concept":"gq and gw","explain":["reflow-meanings"],"demonstrate":["format-with-gq"],"isolate":["format-with-gw"],"mix":["format-current-line"],"challenge":["format-counted-lines"]},
+    {"id": "dot-repeat-introduction","concept":"introductory dot repeat","explain":["dot-introduction"],"demonstrate":["dot-change-demo"],"isolate":["dot-delete-lines"],"mix":["dot-append-lines"],"challenge":["dot-replace-characters"]},
+    {"id": "operator-grammar-integration","concept":"integrated operator grammar","explain":["operator-decision-rule"],"demonstrate":["integrated-yank-demo"],"isolate":["integrated-indent-repeat"],"mix":["integrated-change-repeat"],"challenge":["integrated-count-put","choose-range-shape"]}
   ]
 }

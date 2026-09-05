@@ -4495,3 +4495,212 @@ html.next-ui .practice-notice-dialog .dialog-body p {
 }
 
 html.next-ui .practice-notice-dialog .note-action { width: 100%; margin-top: 4px; }
+
+/* ---------------------------------------------------------------------------
+   Mastery.
+
+   Appended after the free practice block for the same reason that block is
+   appended last: these rules are specificity 0,4,1 like the ones they override,
+   so source order is the tie-break.
+
+   The mastery surface keeps the board and the character layer. A drill is a
+   lesson activity being replayed, and stripping it back to a bare editor the
+   way free practice does would make replaying a topic feel like a downgrade
+   from meeting it. Only the contents and settings controls change, and the
+   header does that by swapping which buttons carry `hidden`. */
+html.next-ui .toc-mastery {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(168, 140, 255, .26);
+  border-radius: 12px;
+  background: rgba(168, 140, 255, .06);
+}
+
+html.next-ui .toc-mastery h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #cbb8ff;
+}
+
+html.next-ui .toc-mastery p {
+  margin: 6px 0 10px;
+  color: #b6c6bd;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+html.next-ui .toc-mastery-actions button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(168, 140, 255, .3);
+  border-radius: 10px;
+  background: rgba(12, 26, 22, .7);
+  color: #e6f0ea;
+  text-align: left;
+  cursor: pointer;
+}
+
+html.next-ui .toc-mastery-actions button strong { display: block; font-size: 14px; }
+html.next-ui .toc-mastery-actions button small { display: block; margin-top: 2px; color: #a9bdb2; font-size: 12px; }
+
+/* A chapter is finished; a skill is kept. The two are read from different
+   stores and must not look like the same badge. */
+html.next-ui .toc-unit-complete {
+  margin-left: 6px;
+  color: #77e0a3;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+html.next-ui #masteryBody .mastery-intro,
+html.next-ui #masteryBody .mastery-caveat {
+  margin: 0 0 8px;
+  color: #cfe0d6;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+html.next-ui #masteryBody .mastery-caveat { color: #9fb3a8; font-size: 12px; }
+
+html.next-ui #masteryBody h3 {
+  margin: 16px 0 6px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #cbb8ff;
+}
+
+html.next-ui #masteryBody section > p {
+  margin: 0 0 8px;
+  color: #a9bdb2;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+html.next-ui .mastery-session-actions,
+html.next-ui .mastery-note-actions {
+  display: grid;
+  gap: 8px;
+}
+
+html.next-ui .mastery-session-actions button,
+html.next-ui .mastery-note-actions button {
+  padding: 10px 12px;
+  border: 1px solid rgba(120, 219, 234, .24);
+  border-radius: 10px;
+  background: rgba(12, 26, 22, .7);
+  color: #e6f0ea;
+  text-align: left;
+  cursor: pointer;
+}
+
+html.next-ui .mastery-session-actions button strong,
+html.next-ui .mastery-note-actions button strong { display: block; font-size: 14px; }
+
+html.next-ui .mastery-session-actions button small,
+html.next-ui .mastery-note-actions button small { display: block; margin-top: 2px; color: #a9bdb2; font-size: 12px; line-height: 1.35; }
+
+html.next-ui .mastery-session-actions button[disabled] { opacity: .55; cursor: default; }
+
+html.next-ui .mastery-unit {
+  margin-bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 10px;
+  background: rgba(8, 20, 17, .5);
+}
+
+html.next-ui .mastery-unit > summary {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 9px 11px;
+  cursor: pointer;
+  list-style: none;
+}
+
+html.next-ui .mastery-unit > summary::-webkit-details-marker { display: none; }
+html.next-ui .mastery-unit > summary span { color: #8ba79a; font-size: 11px; }
+html.next-ui .mastery-unit > summary strong { flex: 1; color: #e6f0ea; font-size: 13px; font-weight: 600; }
+html.next-ui .mastery-unit > summary small { color: #9fb3a8; font-size: 11px; white-space: nowrap; }
+
+html.next-ui .mastery-unit-concepts { padding: 0 11px 10px; }
+
+html.next-ui .mastery-concept {
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+html.next-ui .mastery-concept-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+html.next-ui .mastery-concept-head strong {
+  flex: 1 1 100%;
+  color: #dbe8e1;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* The achieved state and the refresh marker are separate chips on purpose.
+   Replacing "Integrated" with "Maintenance due" would render a learner's own
+   progress as having fallen, which is exactly the scheduling claim the
+   curriculum defers. */
+html.next-ui .mastery-chip {
+  padding: 2px 7px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 999px;
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #a9bdb2;
+  white-space: nowrap;
+}
+
+html.next-ui .mastery-chip.state-learning { border-color: rgba(255, 208, 108, .4); color: #ffd06c; }
+html.next-ui .mastery-chip.state-practiced { border-color: rgba(120, 219, 234, .4); color: #78dbea; }
+html.next-ui .mastery-chip.state-integrated { border-color: rgba(119, 224, 163, .45); color: #77e0a3; }
+html.next-ui .mastery-chip.maintenance { border-color: rgba(255, 116, 104, .45); color: #ff9d94; }
+
+html.next-ui .mastery-concept-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+html.next-ui .mastery-concept-actions button {
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 8px;
+  background: rgba(12, 26, 22, .8);
+  color: #dbe8e1;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+html.next-ui .mastery-concept-actions button[disabled] { opacity: .45; cursor: default; }
+html.next-ui .mastery-concept-actions .mastery-pin.pinned { border-color: rgba(168, 140, 255, .5); color: #cbb8ff; }
+
+html.next-ui .field-note-limitation {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-left: 2px solid rgba(255, 208, 108, .5);
+  border-radius: 0 8px 8px 0;
+  background: rgba(255, 208, 108, .07);
+  color: #cbbb96;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+html.next-ui .field-note-limitation strong { color: #ffd06c; }
+
+html.next-ui .activity-kicker .activity-origin {
+  color: #cbb8ff;
+  font-size: 11px;
+}

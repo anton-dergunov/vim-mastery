@@ -7084,6 +7084,7 @@
   ],
   "coverage": [
     {
+      "id": "visual-selection-kinds",
       "concept": "Visual Character, Visual Line, and Visual Block",
       "explain": [
         "visual-shapes-meaning"
@@ -7104,6 +7105,7 @@
       ]
     },
     {
+      "id": "visual-character-operations",
       "concept": "Visual selection d c y x r operations",
       "explain": [
         "character-selection-operations"
@@ -7124,6 +7126,7 @@
       ]
     },
     {
+      "id": "visual-line-operations",
       "concept": "Visual Line operations",
       "explain": [
         "line-selection-meaning"
@@ -7144,6 +7147,7 @@
       ]
     },
     {
+      "id": "selection-endpoint-swap",
       "concept": "o and O selection endpoints",
       "explain": [
         "selection-end-meaning"
@@ -7164,6 +7168,7 @@
       ]
     },
     {
+      "id": "selection-reselect",
       "concept": "gv reselection",
       "explain": [
         "reselection-meaning"
@@ -7184,6 +7189,7 @@
       ]
     },
     {
+      "id": "selection-transform-operators",
       "concept": "selection case, shift, reindent, and gq",
       "explain": [
         "selection-transform-meaning"
@@ -7205,6 +7211,7 @@
       ]
     },
     {
+      "id": "visual-block-change-delete",
       "concept": "Visual Block c d x r",
       "explain": [
         "block-edit-meaning"
@@ -7225,6 +7232,7 @@
       ]
     },
     {
+      "id": "visual-block-insert-append",
       "concept": "Visual Block I and A",
       "explain": [
         "block-insert-meaning"
@@ -7245,6 +7253,7 @@
       ]
     },
     {
+      "id": "visual-block-ragged-edge",
       "concept": "Visual Block ragged right edge with $",
       "explain": [
         "ragged-block-meaning"
@@ -7266,6 +7275,7 @@
       ]
     },
     {
+      "id": "visual-block-increment",
       "concept": "Selection increment with Ctrl-a and g Ctrl-a",
       "explain": [
         "selection-increment-meaning"
@@ -7287,6 +7297,7 @@
       ]
     },
     {
+      "id": "visual-versus-operator-motion",
       "concept": "Visual selection versus operator-motion",
       "explain": [
         "visual-strategy-meaning"

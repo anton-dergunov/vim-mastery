@@ -4,6 +4,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { assertCoreMediaBudget, assertMediaAssets, collectMediaPolicy, contentRevision } from "./media-policy.js";
+import { unitDigest } from "./mastery-progress.js";
 
 const rootDirectory = dirname(fileURLToPath(import.meta.url));
 const contentDirectory = join(rootDirectory, "content");
@@ -33,13 +34,20 @@ function offlineAssets() {
   const media = collectMediaPolicy(presentation, characterManifest);
   assertMediaAssets(rootDirectory, media);
   const catalogMetadata = JSON.parse(readFileSync(join(contentDirectory, "unit-index.json"), "utf8"));
+  // The mastery digests are built from the same parse as the catalog. They hold
+  // the coverage arrays and the type of every activity those arrays cite, which
+  // is all the mastery map needs to render a concept's state without loading
+  // the unit file that concept lives in.
+  const masteryDigests = [];
   const catalog = units.map(path => {
     const unit = JSON.parse(readFileSync(path, "utf8"));
+    masteryDigests.push(unitDigest(unit));
     return {
       id: unit.id,
       unitNumber: unit.unitNumber,
       title: unit.title,
       lessonCount: unit.lessons.length,
+      conceptCount: unit.coverage.length,
       path: `content/units/${relative(join(contentDirectory, "units"), path).replaceAll("\\", "/")}`,
     };
   }).sort((left, right) => left.unitNumber - right.unitNumber);
@@ -47,6 +55,7 @@ function offlineAssets() {
   console.info(`Core media: ${media.core.length} files, ${(worldMediaBytes / 1024 / 1024).toFixed(2)} MiB`);
   return {
     units, media, catalog, arcs: catalogMetadata.arcs || [],
+    masteryIndex: { schemaVersion: 1, units: masteryDigests.sort((left, right) => left.unitNumber - right.unitNumber) },
   };
 }
 
@@ -66,7 +75,7 @@ function pwaBuildPlugin(base, version) {
       });
     },
     generateBundle() {
-      const { units, media, catalog, arcs } = offlineAssets();
+      const { units, media, catalog, arcs, masteryIndex } = offlineAssets();
       const emit = (fileName, source) => this.emitFile({ type: "asset", fileName, source });
       units.forEach(path => emit(`content/units/${relative(join(contentDirectory, "units"), path)}`, readFileSync(path)));
       emit("content/unit-index.json", JSON.stringify({ schemaVersion: 2, arcs, units: catalog }, null, 2));
@@ -74,6 +83,8 @@ function pwaBuildPlugin(base, version) {
       emit("content/presentation.json", readFileSync(join(contentDirectory, "presentation.json")));
       emit("content/reference.json", readFileSync(join(contentDirectory, "reference.json")));
       emit("content/practice-samples.json", readFileSync(join(contentDirectory, "practice-samples.json")));
+      emit("content/field-notes.json", readFileSync(join(contentDirectory, "field-notes.json")));
+      emit("content/mastery-index.json", JSON.stringify(masteryIndex, null, 2));
       emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       [...media.core, ...media.optional].forEach(asset => emit(asset.path, readFileSync(join(rootDirectory, asset.path))));

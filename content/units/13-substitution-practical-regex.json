@@ -5420,6 +5420,7 @@
   ],
   "coverage": [
     {
+      "id": "substitution-sentence",
       "concept": "substitution sentence",
       "explain": [
         "substitution-parts"
@@ -5439,6 +5440,7 @@
       ]
     },
     {
+      "id": "substitution-scope",
       "concept": "scope the lines",
       "explain": [
         "substitution-ranges"
@@ -5458,6 +5460,7 @@
       ]
     },
     {
+      "id": "substitution-match-flags",
       "concept": "control match flags",
       "explain": [
         "substitution-flags"
@@ -5476,6 +5479,7 @@
       ]
     },
     {
+      "id": "substitution-confirm",
       "concept": "preview and confirm",
       "explain": [
         "safe-substitution-flags"
@@ -5495,6 +5499,7 @@
       ]
     },
     {
+      "id": "substitution-reuse-and-delimiters",
       "concept": "reuse and delimiters",
       "explain": [
         "history-and-delimiters"
@@ -5513,6 +5518,7 @@
       ]
     },
     {
+      "id": "practical-patterns",
       "concept": "practical patterns",
       "explain": [
         "practical-regex-atoms"
@@ -5532,6 +5538,7 @@
       ]
     },
     {
+      "id": "capture-structure",
       "concept": "capture structure",
       "explain": [
         "capture-and-replacement"
@@ -5550,6 +5557,7 @@
       ]
     },
     {
+      "id": "substitution-judgment",
       "concept": "precision and judgment",
       "explain": [
         "advanced-regex-boundary"

@@ -762,12 +762,12 @@
     {"id":"ref-display-lines","command":"gj / gk","purpose":"Move down or up by wrapped display rows.","notes":["j and k continue to move by newline-separated logical lines.","The visible destination depends on wrapping and display width."],"exampleActivityRefs":["display-lines-demo","counted-display-line-challenge"]}
   ],
   "coverage": [
-    {"concept":"h j k l and counts","explain":["home-row-directions"],"demonstrate":["home-row-grid-demo"],"isolate":["home-row-identifier"],"mix":["home-row-shorter-lines"],"challenge":["home-row-corner-challenge","movement-integration-demo"]},
-    {"concept":"0 ^ $ g_ and count|","explain":["line-landmark-meanings"],"demonstrate":["line-landmarks-demo"],"isolate":["last-nonblank-result"],"mix":["indented-yaml-edges"],"challenge":["counted-last-nonblank-column","choose-last-nonblank-motion"]},
-    {"concept":"w and W","explain":["word-versus-word"],"demonstrate":["word-starts-demo"],"isolate":["counted-dotted-word"],"mix":["mixed-word-boundaries"],"challenge":["path-word-challenge","top-line-next-word"]},
-    {"concept":"e E b B ge gE","explain":["word-edge-directions"],"demonstrate":["word-edges-demo"],"isolate":["forward-word-ends"],"mix":["backward-word-starts"],"challenge":["backward-word-ends","final-buffer-word-edge"]},
-    {"concept":"gg G and counted G","explain":["buffer-boundary-meanings"],"demonstrate":["buffer-boundaries-demo"],"isolate":["jump-to-first-import"],"mix":["bottom-then-line-two"],"challenge":["requested-line-four","movement-integration-demo"]},
-    {"concept":"j k versus gj gk","explain":["logical-versus-display-lines"],"demonstrate":["display-lines-demo"],"isolate":["one-display-row-down"],"mix":["display-up-then-logical-down"],"challenge":["counted-display-line-challenge"]},
-    {"concept":"integrated cursor movement","explain":["movement-intent-first"],"demonstrate":["movement-integration-demo"],"isolate":["property-and-row-navigation"],"mix":["top-line-next-word"],"challenge":["final-buffer-word-edge","choose-last-nonblank-motion"]}
+    {"id": "hjkl-counts","concept":"h j k l and counts","explain":["home-row-directions"],"demonstrate":["home-row-grid-demo"],"isolate":["home-row-identifier"],"mix":["home-row-shorter-lines"],"challenge":["home-row-corner-challenge","movement-integration-demo"]},
+    {"id": "line-anchor-motions","concept":"0 ^ $ g_ and count|","explain":["line-landmark-meanings"],"demonstrate":["line-landmarks-demo"],"isolate":["last-nonblank-result"],"mix":["indented-yaml-edges"],"challenge":["counted-last-nonblank-column","choose-last-nonblank-motion"]},
+    {"id": "word-forward-motions","concept":"w and W","explain":["word-versus-word"],"demonstrate":["word-starts-demo"],"isolate":["counted-dotted-word"],"mix":["mixed-word-boundaries"],"challenge":["path-word-challenge","top-line-next-word"]},
+    {"id": "word-edge-motions","concept":"e E b B ge gE","explain":["word-edge-directions"],"demonstrate":["word-edges-demo"],"isolate":["forward-word-ends"],"mix":["backward-word-starts"],"challenge":["backward-word-ends","final-buffer-word-edge"]},
+    {"id": "file-line-jumps","concept":"gg G and counted G","explain":["buffer-boundary-meanings"],"demonstrate":["buffer-boundaries-demo"],"isolate":["jump-to-first-import"],"mix":["bottom-then-line-two"],"challenge":["requested-line-four","movement-integration-demo"]},
+    {"id": "display-line-motions","concept":"j k versus gj gk","explain":["logical-versus-display-lines"],"demonstrate":["display-lines-demo"],"isolate":["one-display-row-down"],"mix":["display-up-then-logical-down"],"challenge":["counted-display-line-challenge"]},
+    {"id": "cursor-movement-integration","concept":"integrated cursor movement","explain":["movement-intent-first"],"demonstrate":["movement-integration-demo"],"isolate":["property-and-row-navigation"],"mix":["top-line-next-word"],"challenge":["final-buffer-word-edge","choose-last-nonblank-motion"]}
   ]
 }

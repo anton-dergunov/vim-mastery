@@ -6181,6 +6181,7 @@
   ],
   "coverage": [
     {
+      "id": "deliberate-dot-repeat",
       "concept": "deliberate .",
       "explain": [
         "dot-is-a-change",
@@ -6200,6 +6201,7 @@
       ]
     },
     {
+      "id": "repeat-friendly-cursor",
       "concept": "repeat-friendly cursor placement",
       "explain": [
         "repeat-self-contained"
@@ -6218,6 +6220,7 @@
       ]
     },
     {
+      "id": "character-search-with-dot",
       "concept": "; and , plus .",
       "explain": [
         "find-repeat-direction"
@@ -6237,6 +6240,7 @@
       ]
     },
     {
+      "id": "buffer-search-with-dot",
       "concept": "n and N plus .",
       "explain": [
         "search-repeat-direction",
@@ -6258,6 +6262,7 @@
       ]
     },
     {
+      "id": "count-versus-repeat",
       "concept": "count vs repeat and dot counts",
       "explain": [
         "count-repeat-tradeoff",
@@ -6278,6 +6283,7 @@
       ]
     },
     {
+      "id": "repeat-last-ex-command",
       "concept": "@:",
       "explain": [
         "at-colon-meaning"
@@ -6297,6 +6303,7 @@
       ]
     },
     {
+      "id": "repeat-substitution-same-line",
       "concept": "&",
       "explain": [
         "ampersand-meaning"
@@ -6315,6 +6322,7 @@
       ]
     },
     {
+      "id": "repeat-substitution-last-pattern",
       "concept": ":~",
       "explain": [
         "tilde-meaning"
@@ -6333,6 +6341,7 @@
       ]
     },
     {
+      "id": "repeat-misuse-recognition",
       "concept": "recognize when repeat is wrong",
       "explain": [
         "repeat-decision-rule"

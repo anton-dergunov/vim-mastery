@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vimwilds.local/schemas/field-notes.schema.json",
+  "title": "Vim Wilds batch and command-line field notes",
+  "description": "Briefings on multi-file and non-interactive Vim. These are not lessons: the app runs one buffer, so the driver commands they describe cannot be practised here and every note says so in its own limitation. Activities are restricted to the types that need no multi-file editor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contentVersion", "notes"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "contentVersion": {"type": "string"},
+    "notes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/note"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "position": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}], "items": false},
+    "mode": {"enum": ["normal", "insert", "replace", "operator-pending", "visual", "visual-line", "visual-block", "command-line"]},
+    "editorState": {
+      "type": "object", "additionalProperties": false, "required": ["lines", "cursor", "mode"],
+      "properties": {
+        "lines": {"type": "array", "minItems": 1, "maxItems": 7, "items": {"type": "string"}},
+        "cursor": {"$ref": "#/$defs/position"},
+        "mode": {"$ref": "#/$defs/mode"}
+      }
+    },
+    "note": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "kicker", "summary", "limitation", "activities"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"type": "string"},
+        "kicker": {"type": "string"},
+        "summary": {"type": "string", "maxLength": 120},
+        "limitation": {"type": "string", "maxLength": 320},
+        "activities": {"type": "array", "minItems": 2, "items": {"oneOf": [{"$ref": "#/$defs/theory"}, {"$ref": "#/$defs/demo"}, {"$ref": "#/$defs/choice"}]}}
+      }
+    },
+    "theory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "phase", "title", "body"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"const": "theory"},
+        "phase": {"const": "explain"},
+        "title": {"type": "string"},
+        "body": {"type": "string", "maxLength": 560},
+        "grammar": {"type": "string"},
+        "contrast": {"type": "string"}
+      }
+    },
+    "demo": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "phase", "title", "instruction", "languageId", "scenario", "script", "hints", "feedback", "provenance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"const": "demo"},
+        "phase": {"const": "demonstrate"},
+        "title": {"type": "string"},
+        "instruction": {"type": "string"},
+        "languageId": {"$ref": "#/$defs/id"},
+        "scenario": {
+          "type": "object", "additionalProperties": false, "required": ["initial", "target"],
+          "properties": {"initial": {"$ref": "#/$defs/editorState"}, "target": {"$ref": "#/$defs/editorState"}}
+        },
+        "script": {
+          "type": "object", "additionalProperties": false, "required": ["steps", "commandGroups", "checkpoints"],
+          "properties": {
+            "steps": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "commandGroups": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["from", "to", "display", "explanation"], "properties": {"from": {"type": "integer", "minimum": 0}, "to": {"type": "integer", "minimum": 1}, "display": {"type": "string"}, "explanation": {"type": "string"}}}},
+            "checkpoints": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["afterStep", "lines", "cursor", "mode"], "properties": {"afterStep": {"type": "integer", "minimum": 1}, "lines": {"type": "array", "items": {"type": "string"}}, "cursor": {"$ref": "#/$defs/position"}, "mode": {"$ref": "#/$defs/mode"}}}}
+          }
+        },
+        "hints": {"type": "array", "items": {"type": "string"}},
+        "feedback": {"type": "object", "additionalProperties": false, "required": ["success", "why"], "properties": {"success": {"type": "string"}, "why": {"type": "string"}, "contrast": {"type": "string"}}},
+        "provenance": {
+          "type": "object", "additionalProperties": false, "required": ["payloadOf", "nativeValidation", "browserConformance"],
+          "properties": {
+            "payloadOf": {"type": "string", "description": "The multi-file driver whose per-file payload this demo runs. The driver itself is not executable here."},
+            "nativeValidation": {"enum": ["passed"]},
+            "browserConformance": {"enum": ["passed"]}
+          }
+        }
+      }
+    },
+    "choice": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "phase", "title", "prompt", "options", "correctOptionId", "explanation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"const": "choice"},
+        "phase": {"const": "challenge"},
+        "title": {"type": "string"},
+        "prompt": {"type": "string"},
+        "options": {"type": "array", "minItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["id", "label"], "properties": {"id": {"$ref": "#/$defs/id"}, "label": {"type": "string"}}}},
+        "correctOptionId": {"$ref": "#/$defs/id"},
+        "explanation": {"type": "string"},
+        "questionKind": {"enum": ["generic", "mechanism-selection", "outcome-prediction", "defect-spotting"]}
+      }
+    }
+  }
+}

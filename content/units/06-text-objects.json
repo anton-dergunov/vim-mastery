@@ -6120,6 +6120,7 @@
   ],
   "coverage": [
     {
+      "id": "inside-around-words",
       "concept": "inside versus around and iw aw",
       "explain": [
         "inside-around-meaning"
@@ -6138,6 +6139,7 @@
       ]
     },
     {
+      "id": "whitespace-word-objects",
       "concept": "iW and aW",
       "explain": [
         "big-word-meaning"
@@ -6156,6 +6158,7 @@
       ]
     },
     {
+      "id": "quote-objects",
       "concept": "quote text objects",
       "explain": [
         "quote-object-meaning"
@@ -6177,6 +6180,7 @@
       ]
     },
     {
+      "id": "parenthesis-objects",
       "concept": "parenthesis objects and ib ab",
       "explain": [
         "parenthesis-object-meaning"
@@ -6197,6 +6201,7 @@
       ]
     },
     {
+      "id": "brace-bracket-objects",
       "concept": "bracket and brace objects and iB aB",
       "explain": [
         "bracket-brace-meaning"
@@ -6221,6 +6226,7 @@
       ]
     },
     {
+      "id": "angle-bracket-objects",
       "concept": "angle-bracket objects",
       "explain": [
         "angle-object-meaning"
@@ -6239,6 +6245,7 @@
       ]
     },
     {
+      "id": "sentence-paragraph-objects",
       "concept": "sentence and paragraph objects",
       "explain": [
         "prose-object-meaning"
@@ -6257,6 +6264,7 @@
       ]
     },
     {
+      "id": "tag-objects",
       "concept": "tag objects",
       "explain": [
         "tag-object-meaning"
@@ -6275,6 +6283,7 @@
       ]
     },
     {
+      "id": "text-object-integration",
       "concept": "integrated text objects",
       "explain": [
         "text-object-transfer"

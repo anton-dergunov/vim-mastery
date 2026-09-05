@@ -6935,6 +6935,7 @@
   ],
   "coverage": [
     {
+      "id": "named-marks",
       "concept": "named marks and quote/backtick jumps",
       "explain": [
         "local-mark-meaning"
@@ -6953,6 +6954,7 @@
       ]
     },
     {
+      "id": "jump-list",
       "concept": "previous context and jump list",
       "explain": [
         "jump-history-meaning"
@@ -6971,6 +6973,7 @@
       ]
     },
     {
+      "id": "last-change-marks",
       "concept": "last change insertion and selection",
       "explain": [
         "recent-work-meaning"
@@ -6990,6 +6993,7 @@
       ]
     },
     {
+      "id": "operated-range-marks",
       "concept": "previous operated range marks",
       "explain": [
         "operated-range-meaning"
@@ -7008,6 +7012,7 @@
       ]
     },
     {
+      "id": "change-list",
       "concept": "g; and g, change list",
       "explain": [
         "change-list-meaning"
@@ -7026,6 +7031,7 @@
       ]
     },
     {
+      "id": "bracket-section-motions",
       "concept": "advanced bracket and section motions",
       "explain": [
         "structural-motion-meaning"

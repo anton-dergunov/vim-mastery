@@ -8183,6 +8183,7 @@
   ],
   "coverage": [
     {
+      "id": "capstone-call-site-mechanism",
       "concept": "choosing between structural, range, register, and repeat edits at call sites",
       "explain": [
         "call-site-brief"
@@ -8203,6 +8204,7 @@
       ]
     },
     {
+      "id": "capstone-rename-reach",
       "concept": "matching rename reach to occurrence count and ambiguity",
       "explain": [
         "name-repair-brief"
@@ -8223,6 +8225,7 @@
       ]
     },
     {
+      "id": "capstone-formatting-boundary",
       "concept": "choosing the boundary that already describes a formatting fix",
       "explain": [
         "shape-brief"
@@ -8243,6 +8246,7 @@
       ]
     },
     {
+      "id": "capstone-irregular-recording",
       "concept": "anchoring a recording to structure so irregular rows stop or skip predictably",
       "explain": [
         "irregular-brief"
@@ -8263,6 +8267,7 @@
       ]
     },
     {
+      "id": "capstone-pattern-escalation",
       "concept": "escalating from counting to repeating to confirming before committing a pattern",
       "explain": [
         "cleanup-brief"
@@ -8283,6 +8288,7 @@
       ]
     },
     {
+      "id": "capstone-text-in-transit",
       "concept": "protecting text in transit across intervening deletes",
       "explain": [
         "register-move-brief"
@@ -8303,6 +8309,7 @@
       ]
     },
     {
+      "id": "capstone-predicate-addressing",
       "concept": "addressing lines by predicate rather than position across a windowed file",
       "explain": [
         "predicate-brief"
@@ -8323,6 +8330,7 @@
       ]
     },
     {
+      "id": "capstone-positional-return",
       "concept": "returning to a correction site by position rather than by pattern",
       "explain": [
         "review-brief"
