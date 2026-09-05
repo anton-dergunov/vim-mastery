@@ -1,6 +1,6 @@
 # Session 23 — Five future unit boards and animation seeds
 
-**Status:** generated, approved, and extracted · Unit 10 integrated · four scenes held inactive
+**Status:** generated, approved, extracted, and integrated · four scenes active · Open Trail Overlook reserve-only
 · **Depends on:** 07 · **Related:** 16, 17, 20
 **Implemented in:** `content/presentation.json`, `assets/worlds/`,
 `scripts/world-art/`, and media-policy/PWA tests
@@ -28,14 +28,15 @@ transparent-difference WebP variants. Their lifecycle state is recorded in
 | --- | --- | --- |
 | Beacon Glass Gallery | `runtime-active` | Registered to Unit 10 and emitted by the manifest-driven build |
 | Menders' Confluence | `runtime-active` | Registered to Unit 16 and emitted by the manifest-driven build |
-| Keeper's Relay | `future-unit-ready` | Kept in Git; omitted until Unit 17 exists and references it |
-| Mosslight Landing | `reserve-only` | Kept in Git; omitted unless it receives a real unit assignment |
+| Keeper's Relay | `runtime-active` | Registered to Unit 17 and emitted by the manifest-driven build |
+| Mosslight Landing | `runtime-active` | Registered to the standalone Reference surface and emitted by the manifest-driven build |
 | Open Trail Overlook | `reserve-only` | Kept in Git; omitted unless it receives a real unit assignment |
 
 Vite emits only media reachable from the presentation and character manifests.
-Inactive scenes therefore remain versioned and runtime-ready under
+Open Trail Overlook therefore remains versioned and runtime-ready under
 `assets/worlds/` without entering `dist`, the service worker, or the PWA media
-policy. Full-resolution candidates and Nano Banana source outputs remain under
+policy. The four active scenes share the established compact-registration
+transparent-patch animation system. Full-resolution candidates and Nano Banana source outputs remain under
 the ignored `artifacts/world-generation/` tree; only approved runtime bases and
 transparent patches are tracked.
 
@@ -57,15 +58,14 @@ video files.
 
 ## Audit result and numbering correction
 
-The Unit 9 split is complete. The live catalog contains fifteen units:
+The Unit 9 split and both later additions are complete. The live catalog contains
+seventeen units:
 
 - Unit 9 is `position-memory` and correctly owns the existing Far Beacons board.
 - Unit 10 is `viewport-control` and now owns Beacon Glass Gallery, its three
   responsive bases, and fifty transparent-difference variants.
-- `assets/worlds/story/units/viewport-control.*` is a renamed copy required by
-  the story manifest, not an independently illustrated scene.
-- Session 20 already records this debt and says to leave Unit 9 intact while
-  giving Unit 10 its own scene.
+- Unit 10 temporarily uses its own tall board for completion art while its
+  bespoke ending awaits selection; it no longer duplicates Unit 9.
 
 The split also shifted the two unbuilt curriculum units. Documents written
 before the split call them Units 15 and 16; their canonical numbers are now:
@@ -74,8 +74,8 @@ before the split call them Units 15 and 16; their canonical numbers are now:
 | --- | --- | --- | --- |
 | New art for the split Unit 9 | **Unit 10 — Viewport control** | Built and integrated | Keep Far Beacons on Unit 9; use Beacon Glass Gallery for Unit 10 |
 | Future Unit 15 | **Unit 16 — Real-code workflow capstones** | Built in session 16 (capstones 1, 2, 3, 6) | Menders' Confluence is registered and live |
-| Future Unit 16 | **Unit 17 — Mastery loops** | Planned in session 17 | Keeper's Relay is ready but unreferenced |
-| Early spare | Unnumbered reserve | No content | Mosslight Landing remains reserve-only |
+| Future Unit 16 | **Unit 17 — Mastery loops** | Built as the reusable Mastery chapter | Keeper's Relay is registered and live |
+| Early spare | Standalone Reference surface | Reference decks | Mosslight Landing is registered and live |
 | Late spare | Unnumbered reserve | No content | Open Trail Overlook remains reserve-only |
 
 Do not name a new asset `unit-09`, `unit-15`, or `unit-16` based only on the old
@@ -87,7 +87,7 @@ The story remains four-part. No fifth realm is added.
 
 | Story part | Existing locations | Addition from this pack |
 | --- | --- | --- |
-| I — Moonroot Ruins: the language begins to answer | Mode Lantern, Wayfinder, Scribe's Spring, Grammar Gate | Mosslight Landing as a reserve prologue before the Mode Lantern |
+| I — Moonroot Ruins: the language begins to answer | Mode Lantern, Wayfinder, Scribe's Spring, Grammar Gate | Mosslight Landing as the standalone Reference board |
 | II — Starwater Sanctuary: precision reveals structure | Starneedle, Nested Garden, Prism Crossing | None |
 | III — Archive of Echoes: memory, distance, framing, repetition | Memory Archive, Far Beacons, Echo Clock | Beacon Glass Gallery between Far Beacons and Echo Clock |
 | IV — Brass Meridian: commands coordinate the restored systems | Meridian Table, Mirror Loom, Echo Foundry, Meridian Engine | Menders' Confluence and Keeper's Relay after the Engine; Open Trail Overlook as a late reserve |
@@ -97,12 +97,11 @@ systems; Units 16–17 use and maintain them. Their scenes must therefore look
 alive, safe, and operational. Do not introduce a new catastrophe, corruption,
 villain, or world-ending machine.
 
-When Units 16 and 17 are implemented, the ordinary terminal-unit logic will
-move the existing Restored Wilds finale after the new last numbered unit. The
+With Units 16 and 17 implemented, the first completed Unit 17 mixed review
+moves into Keeper’s Relay and then the existing Restored Wilds finale. The
 current ending copy still fits: “The language is alive. What you restore next
-is up to you.” Unit 15's completion should gain a hook into Unit 16, Unit 16
-should point toward Unit 17, and Unit 17 should hand off to that unchanged
-finale.
+is up to you.” Unit 15 points into Unit 16, Unit 16 points toward Fen and Unit
+17, and Unit 17 hands off to that unchanged finale.
 
 ## Existing-board audit: topic and story
 
@@ -733,14 +732,15 @@ A base board is acceptable only if all answers are yes:
   non-shared variant root.
 - Units 16 and 17 use their canonical post-split numbers wherever they become
   real catalog entries.
-- The two reserve boards remain semantic, approved art assets until content
-  needs them; they do not create empty units.
+- Open Trail Overlook remains a semantic, approved reserve asset until content
+  needs it; it does not create an empty unit.
 - Every integrated unit owns distinct base profiles, a distinct variant root,
-  and eventually a distinct story image.
+  and a distinct completion image source. Units 10, 16, and 17 temporarily use
+  their tall boards until bespoke-ending approval.
 - Each prepared scene exposes ten approved sites and fifty approved
   transparent-difference variants without touching its protected landmark.
-- Future-unit-ready and reserve-only scenes remain absent from the PWA media
-  policy, `dist`, and service worker until intentionally activated.
+- Reserve-only scenes remain absent from the PWA media policy, `dist`, and
+  service worker until intentionally activated.
 - No generated board or variant contains a character, readable text, UI,
   unsupported object, editor-shaped void, or geometry drift.
 - Story progression remains one continuous chain and the Restored Wilds finale

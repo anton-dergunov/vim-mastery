@@ -62,19 +62,19 @@ SCENES = (
         "unitId": "real-code-workflow-capstones",
         "worldId": "brass-meridian",
         "sceneId": "menders-confluence",
-        "integrationState": "future-unit-ready",
+        "integrationState": "runtime-active",
     },
     {
         "unitId": "mastery-loops",
         "worldId": "brass-meridian",
         "sceneId": "keepers-relay",
-        "integrationState": "future-unit-ready",
+        "integrationState": "runtime-active",
     },
     {
         "unitId": "mosslight-landing",
         "worldId": "moonroot-ruins",
         "sceneId": "mosslight-landing",
-        "integrationState": "reserve-only",
+        "integrationState": "runtime-active",
     },
     {
         "unitId": "open-trail-overlook",

@@ -95,8 +95,8 @@ test("loads every compressed story still in the browser", async ({ page }) => {
     })));
   });
 
-  // Sixteen unit stories plus the intro panels and the ending.
-  expect(results).toHaveLength(20);
+  // Seventeen unit stories plus the intro panels and the ending.
+  expect(results).toHaveLength(21);
   expect(results.every(result => result.asset.endsWith(".webp"))).toBe(true);
   expect(results.every(result => result.complete && result.width > 0 && result.height > 0)).toBe(true);
 });
@@ -209,7 +209,7 @@ test("opens direct review URLs for intro, unit-ending candidates, and the finale
   await waitForApp(page);
   await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Story scene review" })).toBeVisible();
-  const finalUnitReview = page.locator(".story-review-unit").filter({ hasText: "Unit 15" });
+  const finalUnitReview = page.locator(".story-review-unit").filter({ hasText: "Unit 17" });
   await expect(finalUnitReview.getByRole("link", { name: /Candidate/ })).toHaveCount(5);
 });
 
@@ -297,12 +297,16 @@ test("writes every illustrated story slowly with the approved flying pen", async
   await expect(page.locator(".story-copy")).toHaveClass(/is-typing/);
 });
 
-test("fits the complete narrative for every approved unit ending without a character overlay", async ({ page }) => {
+test("fits the complete narrative for every current unit ending without a character overlay", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
   await waitForApp(page);
 
+  const storyImages = await page.evaluate(async () => {
+    const manifest = await fetch("../content/presentation.json").then(response => response.json());
+    return Object.fromEntries(Object.entries(manifest.units).map(([id, value]) => [id, value.completion.storyImage]));
+  });
   for (const unit of await page.evaluate(() => window.VimWilds.units)) {
     expect(await page.evaluate(unitId => window.VimWilds.showUnitStory(unitId), unit.id)).toBe(true);
     const dialog = page.locator("#storyDialog");
@@ -312,7 +316,7 @@ test("fits the complete narrative for every approved unit ending without a chara
     await expect(dialog.locator(".story-guide-action")).toHaveCount(0);
     await expect(dialog.locator(".story-visual")).toHaveAttribute(
       "data-story-asset",
-      `assets/worlds/story/units/${unit.id}.webp`,
+      storyImages[unit.id],
     );
     const copyBounds = await copy.boundingBox();
     const actionBounds = await actions.boundingBox();
@@ -437,19 +441,75 @@ test("hands Unit 15 on to the capstones rather than straight to the finale", asy
   await page.waitForFunction(() => window.VimWilds?.getState().unitId === "real-code-workflow-capstones");
 });
 
-test("chains Unit 16 into the restored-world finale and archives its reverse journey", async ({ page }) => {
+test("hands Unit 16 on to Fen at Keeper’s Relay", async ({ page }) => {
   await page.addInitScript(saved => {
-    if (!window.localStorage.getItem("vim-wilds.story.v1")) {
-      window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));
-    }
+    window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));
   }, storyState);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?unit=real-code-workflow-capstones&activity=review-rationale");
   await waitForApp(page);
 
   const dialog = page.locator("#storyDialog");
-  await page.getByRole("button", { name: "Complete Unit 16" }).click();
+  await page.getByRole("button", { name: "Continue to Unit 17" }).click();
+  await expect(dialog.locator(".story-surface")).toHaveAttribute("data-unit-id", "real-code-workflow-capstones");
+  await expect(dialog.locator(".story-next-hook")).toContainText("Fen is waiting at the relay");
+  await dialog.getByRole("button", { name: "Continue to next unit" }).click();
+  await page.waitForFunction(() => window.VimWilds?.getState().unitId === "mastery-loops");
+  await expect(page.locator("#world")).toHaveAttribute("data-scene-id", "keepers-relay");
+});
+
+test("closes Unit 17 on the first mixed review, then keeps Mastery reusable", async ({ page }) => {
+  await page.addInitScript(saved => {
+    if (!window.localStorage.getItem("vim-wilds.story.v1")) {
+      window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));
+    }
+    window.localStorage.setItem("vim-wilds.mastery.v1", JSON.stringify({
+      schemaVersion: 1,
+      completions: {
+        "uppercase-inside-word": { count: 1, lastAt: 1 },
+        "unnamed-word-copy": { count: 1, lastAt: 1 },
+      },
+      pinned: [],
+    }));
+  }, storyState);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/play/?unit=mastery-loops");
+  await waitForApp(page);
+
+  const dialog = page.locator("#storyDialog");
+  await page.getByRole("button", { name: "Open Mastery" }).click();
+  await expect(page.locator("#masteryDialog")).toBeVisible();
+  expect(await page.evaluate(() => window.VimWilds.masteryState())).toMatchObject({
+    chapterUnitId: "mastery-loops",
+    chapterComplete: false,
+  });
+  await page.locator("[data-mastery-mixed]").click();
+  await page.waitForFunction(() => window.VimWilds.getState().surface === "mastery");
+  await page.evaluate(async () => {
+    for (let step = 0; step < 40; step += 1) {
+      const before = window.VimWilds.getState();
+      if (before.surface !== "mastery" || before.activityType === "summary") break;
+      window.VimWilds.solveCurrent();
+      await new Promise(resolve => setTimeout(resolve, 30));
+      const after = window.VimWilds.getState();
+      if (!after.complete) {
+        throw new Error(`Mastery exercise did not complete: ${after.activityId}`);
+      }
+      const sessionBefore = await window.VimWilds.masteryState();
+      const next = document.querySelector('#completionHost [data-action="next"], #activityControls [data-action="next"]');
+      if (!next) throw new Error(`Mastery exercise has no Next action: ${after.activityId}`);
+      next.click();
+      await new Promise(resolve => setTimeout(resolve, 60));
+      const sessionAfter = await window.VimWilds.masteryState();
+      if (sessionAfter.active && sessionAfter.index === sessionBefore.index) {
+        throw new Error(`Mastery queue did not advance from ${sessionBefore.index}: ${after.activityId}`);
+      }
+    }
+  });
+  await expect(page.locator(".summary-note")).toBeVisible();
+  await page.getByRole("button", { name: "Next" }).click();
   await expect(dialog.locator(".story-surface")).toHaveAttribute("data-kind", "unit");
+  await expect(dialog.locator(".story-surface")).toHaveAttribute("data-unit-id", "mastery-loops");
   await expect(dialog.getByRole("button", { name: "Continue to finale" })).toBeVisible();
   await dialog.getByRole("button", { name: "Continue to finale" }).click();
 
@@ -475,12 +535,17 @@ test("chains Unit 16 into the restored-world finale and archives its reverse jou
   await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
   expect(await page.evaluate(() => window.VimWilds.getState().story)).toMatchObject({
     endingSeen: true,
-    completedUnitStoryIds: ["real-code-workflow-capstones"],
+    completedUnitStoryIds: ["mastery-loops"],
   });
+  expect(await page.evaluate(() => window.VimWilds.masteryState())).toMatchObject({ chapterComplete: true });
   await page.getByRole("button", { name: "Replay finale" }).click();
   await expect(surface).toHaveAttribute("data-kind", "ending");
   await expect(dialog.locator(".story-kicker")).toHaveText("Finale replay");
   await dialog.getByRole("button", { name: "Close", exact: true }).click();
+
+  await page.evaluate(() => window.VimWilds.startMixedReview());
+  expect((await page.evaluate(() => window.VimWilds.getState())).surface).toBe("mastery");
+  expect((await page.evaluate(() => window.VimWilds.getState().story.active))).toBeNull();
 });
 
 test("exposes a non-mutating transition helper for WP-11 choreography checks", async ({ page }) => {

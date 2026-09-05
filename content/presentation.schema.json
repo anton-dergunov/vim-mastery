@@ -211,11 +211,12 @@
         },
         "landmark": {
           "type": "object",
+          "additionalProperties": false,
           "required": ["id"],
           "properties": {
             "id": { "$ref": "#/$defs/id" }
           },
-          "description": "Story identity. Historical asset and placement fields may remain until that unit receives registered landmark patches."
+          "description": "Story identity only. Runtime art is registered on the unit scene."
         },
         "completion": {
           "type": "object",
@@ -225,6 +226,7 @@
             "actionId": { "$ref": "#/$defs/id" },
             "storyBackdrop": { "$ref": "#/$defs/asset" },
             "storyImage": { "$ref": "#/$defs/asset" },
+            "storyArtStatus": { "const": "pending-bespoke-approval" },
             "action": { "type": "string", "minLength": 1 },
             "copy": { "type": "string", "minLength": 1 },
             "nextHook": {
@@ -272,8 +274,12 @@
         "ending": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["asset", "speaker", "copy"],
+          "required": ["id", "title", "progressLabel", "ariaLabel", "asset", "speaker", "copy"],
           "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "title": { "type": "string", "minLength": 1 },
+            "progressLabel": { "type": "string", "minLength": 1 },
+            "ariaLabel": { "type": "string", "minLength": 1 },
             "asset": { "$ref": "#/$defs/asset" },
             "speaker": { "type": "string", "minLength": 1 },
             "copy": { "type": "string", "minLength": 1 }

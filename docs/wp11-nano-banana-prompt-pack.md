@@ -488,7 +488,8 @@ read without turning the archive into office furniture.
 
 ## Unit 9 — Far Beacons
 
-Runtime hook: `long-range-navigation` / `far-beacons` / `far-beacons`.
+Runtime hook: `position-memory` / `far-beacons` / `far-beacons`. Historical
+artifacts under `long-range-navigation` are provenance for this unit.
 
 Approved backdrop anchor: edit the two matching domed teal-glass beacon towers
 already standing on separate mid-right ravine platforms. Preserve both towers,
@@ -522,7 +523,23 @@ must not become a laser, lightning bolt, bridge replacement, or glowing arrow.
 Candidate emphasis: the distance should feel substantial and returnable while
 the connector remains quiet enough for code-first presentation.
 
-## Unit 10 — Echo Clock
+## Unit 10 — Beacon Glass
+
+Runtime hook: `viewport-control` / `beacon-glass-gallery` / `beacon-glass`.
+
+Completion action: Luma wipes the lens of the beacon glass; the fog lifts and
+the far shore resolves.
+
+Landmark description: a rail-mounted brass observation lens whose large round
+glass clears to reveal a sharp far view, with its vertical lift and side
+aperture aligned.
+
+The approved tall Beacon Glass Gallery board is the primary reference. Generate
+five 1792×2400 restoration candidates with the current completion action and
+copy through `generate_wp11_story_review_v2.py --restoration-3x4 --group
+viewport-control`.
+
+## Unit 11 — Echo Clock
 
 Runtime hook: `repeatable-editing` / `echo-clock` / `echo-clock`.
 
@@ -559,7 +576,7 @@ archive unchanged.
 Candidate emphasis: it must communicate one operation propagating, not merely
 “many gears are glowing.”
 
-## Unit 11 — Meridian Table
+## Unit 12 — Meridian Table
 
 Runtime hook: `command-line-ranges-line-operations` / `meridian-table` /
 `meridian-table`.
@@ -597,7 +614,7 @@ supports, route geometry, chamber rails, and ambient exposure.
 Candidate emphasis: exact endpoints and one selected range must be instantly
 legible; reject busy transit-map imagery.
 
-## Unit 12 — Mirror Loom
+## Unit 13 — Mirror Loom
 
 Runtime hook: `substitution-practical-regex` / `mirror-loom` / `mirror-loom`.
 
@@ -635,7 +652,7 @@ supports, hall architecture, and shadows.
 Candidate emphasis: manual review must be able to identify unchanged
 nonmatches; reject results where “restored” means the entire loom changes.
 
-## Unit 13 — Echo Foundry
+## Unit 14 — Echo Foundry
 
 Runtime hook: `macros` / `echo-foundry` / `echo-foundry`.
 
@@ -675,7 +692,7 @@ through the room, or illuminate unrelated equipment.
 Candidate emphasis: the recorded sequence must be recognizable across all
 three stages without resembling musical or computer playback controls.
 
-## Unit 14 — Meridian Engine
+## Unit 15 — Meridian Engine
 
 Runtime hook: `global-normal-automation` / `meridian-engine` /
 `meridian-engine`.
@@ -724,6 +741,33 @@ Candidate emphasis: select for coordinated wholeness and material continuity,
 not spectacle. Reject any output that turns the chosen vertical tower into four
 quadrants or changes its registered silhouette. The final engine must feel
 welcoming, precise, and earned.
+
+## Unit 16 — Menders’ Confluence
+
+Runtime hook: `real-code-workflow-capstones` / `menders-confluence` /
+`menders-bench`.
+
+Landmark description: a connected confluence workshop where distinct glass,
+brass, stone and living-root repair benches feed one dependable cyan test
+circuit.
+
+The approved tall Menders’ Confluence board is the primary reference. Generate
+five 1792×2400 restoration candidates from the finalized Unit 16 completion
+action and copy.
+
+## Unit 17 — Keeper’s Relay
+
+Runtime hook: `mastery-loops` / `keepers-relay` / `keepers-relay`.
+
+Completion meaning: return, combine, maintain, and choose again.
+
+Landmark description: a circular brass-and-glass route relay whose loop tracks
+return to one central distributor, then divide cleanly among several supported
+outward routes.
+
+The approved tall Keeper’s Relay board is the primary reference. Generate five
+1792×2400 restoration candidates from the finalized Unit 17 completion action
+and copy. The existing finale follows this unit; it is not regenerated.
 
 ## Intro Panel 1 — The connected Wilds
 

@@ -19,7 +19,7 @@ const futureSceneInventory = JSON.parse(
 const expectedFutureSceneStates = {
   "beacon-glass-gallery": "runtime-active",
   "menders-confluence": "runtime-active",
-  "keepers-relay": "future-unit-ready",
+  "keepers-relay": "runtime-active",
   "mosslight-landing": "runtime-active",
   "open-trail-overlook": "reserve-only",
 };
@@ -36,8 +36,8 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   assert(coreBytes <= CORE_MEDIA_MAX_BYTES);
   assert(first.core.some(asset => asset.category === "registered-patch"));
   assert(first.core.some(asset => asset.category === "character-idle"));
-  assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 16);
-  assert.equal(first.core.filter(asset => asset.category === "unit-story-image").length, 16);
+  assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 17);
+  assert.equal(first.core.filter(asset => asset.category === "unit-story-image").length, 17);
   assert.equal(first.core.filter(asset => asset.category === "story-ui").length, 1);
   assert(first.optional.every(asset => [
     "character-animation",
@@ -57,6 +57,7 @@ test("media policy is deterministic and fails declared missing runtime assets", 
     );
   }
   assert(packagedPaths.some(path => path.includes("/scenes/beacon-glass-gallery/")));
+  assert(packagedPaths.some(path => path.includes("/scenes/keepers-relay/")));
 
   const variedCharacters = structuredClone(characters);
   for (const character of Object.values(variedCharacters.characters)) {

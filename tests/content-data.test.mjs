@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import {
@@ -36,6 +37,7 @@ const substitutionUnit = units.find(item => item.data.id === "substitution-pract
 const macroUnit = units.find(item => item.data.id === "macros").data;
 const automationUnit = units.find(item => item.data.id === "global-normal-automation").data;
 const capstoneUnit = units.find(item => item.data.id === "real-code-workflow-capstones").data;
+const masteryUnit = units.find(item => item.data.id === "mastery-loops").data;
 const unitCatalog = readJson("../content/unit-index.json");
 const masteryIndex = readJson("../content/mastery-index.json");
 const registry = readJson("../content/language-profiles.json");
@@ -263,21 +265,16 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert(resolved, `${catalogUnit.id} must resolve a presentation`);
     assert.equal(resolved.unit.id, catalogUnit.id);
     assert.equal(resolved.world.id, resolved.unit.worldId);
-    assert.equal(
-      resolved.unit.completion.storyImage,
-      `assets/worlds/story/units/${catalogUnit.id}.webp`,
-    );
+    if (["viewport-control", "real-code-workflow-capstones", "mastery-loops"].includes(catalogUnit.id)) {
+      assert.equal(resolved.unit.completion.storyArtStatus, "pending-bespoke-approval");
+      assert.match(resolved.unit.completion.storyImage, /\/tall\/base\.webp$/);
+    } else {
+      assert.equal(resolved.unit.completion.storyImage, `assets/worlds/story/units/${catalogUnit.id}.webp`);
+    }
     assert(characterManifest.characters[resolved.unit.guideCharacterId], `${catalogUnit.id} guide must exist`);
     assert(!landmarkIds.has(resolved.unit.landmark.id), `${resolved.unit.landmark.id} must belong to one unit`);
     landmarkIds.add(resolved.unit.landmark.id);
-    assert.equal(
-      resolved.unit.landmark.assets.dormant,
-      `assets/worlds/landmarks/${resolved.unit.landmark.id}-dormant.webp`,
-    );
-    assert.equal(
-      resolved.unit.landmark.assets.restored,
-      `assets/worlds/landmarks/${resolved.unit.landmark.id}-restored.webp`,
-    );
+    assert.deepEqual(Object.keys(resolved.unit.landmark), ["id"]);
   }
 
   for (const unitId of ["modal-model", "cursor-movement", "entering-changing-text", "operator-grammar"]) {
@@ -415,7 +412,7 @@ test("presentation manifest preserves the approved unit story table", () => {
       id: "position-memory", guide: "luma", world: "archive-of-echoes", landmark: "far-beacons",
       action: "Luma sends a thread of light between two distant beacons",
       copy: "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
-      nextSpeaker: null, nextHook: "One beacon is lit, but the window onto the Wilds is still fogged.",
+      nextSpeaker: null, nextHook: "Beyond the reconnected span, a fogged gallery lens hides the far shore.",
     },
     {
       id: "viewport-control", guide: "luma", world: "archive-of-echoes", landmark: "beacon-glass",
@@ -449,15 +446,21 @@ test("presentation manifest preserves the approved unit story table", () => {
     },
     {
       id: "global-normal-automation", guide: "cairn", world: "brass-meridian", landmark: "meridian-engine",
-      action: "Cairn connects the restored systems; energy crosses all four worlds",
-      copy: "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
+      action: "Cairn connects the restored systems; a steady current reaches all four worlds",
+      copy: "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together through every restored road.",
       nextSpeaker: "Brikk", nextHook: "The great systems run again. Bring me the jobs they were never shaped for.",
     },
     {
       id: "real-code-workflow-capstones", guide: "brikk", world: "brass-meridian", landmark: "menders-bench",
       action: "Brikk settles four differently shaped jobs into one service kit; a single cyan current tests each assembly in turn",
       copy: "At Menders' Confluence, every restored skill becomes part of one dependable craft.",
-      nextSpeaker: "Brikk", nextHook: "Nothing here needs me now. Go and look at what you put back.",
+      nextSpeaker: "Brikk", nextHook: "The repairs hold. Fen is waiting at the relay, where every route returns and begins again.",
+    },
+    {
+      id: "mastery-loops", guide: "fen", world: "brass-meridian", landmark: "keepers-relay",
+      action: "Fen sends one test current around every return loop; it pauses at the relay, then divides cleanly among the open routes",
+      copy: "The Keeper’s Relay remembers through use: return, combine, maintain, and choose again.",
+      nextSpeaker: "Nix", nextHook: "The routes are open. Come and see what the Wilds remember.",
     },
   ]);
 });
@@ -484,11 +487,29 @@ test("presentation manifest preserves the approved introduction and ending", () 
       },
     ],
     ending: {
+      id: "restored-wilds",
+      title: "The Wilds are alive",
+      progressLabel: "All four worlds restored",
+      ariaLabel: "The four restored Vim Wilds celebrating together",
       asset: "assets/worlds/story/ending/restored-wilds.webp",
       speaker: "Nix",
       copy: "The language is alive. What you restore next is up to you.",
     },
   });
+});
+
+test("all 17 completion images are valid distinct sources before the approval gate", () => {
+  const pending = [];
+  const hashes = new Map();
+  for (const unitPresentation of Object.values(presentation.units)) {
+    const source = new URL(`../${unitPresentation.completion.storyImage}`, import.meta.url);
+    const digest = createHash("sha256").update(readFileSync(source)).digest("hex");
+    assert(!hashes.has(digest), `${unitPresentation.id} duplicates ${hashes.get(digest)}`);
+    hashes.set(digest, unitPresentation.id);
+    if (unitPresentation.completion.storyArtStatus) pending.push(unitPresentation.id);
+  }
+  assert.equal(hashes.size, 17);
+  assert.deepEqual(pending, ["viewport-control", "real-code-workflow-capstones", "mastery-loops"]);
 });
 
 test("presentation loading falls back cleanly when the optional manifest is missing or invalid", async () => {
@@ -502,7 +523,7 @@ test("presentation loading falls back cleanly when the optional manifest is miss
     presentationUrl: "presentation",
     fetchImpl: async url => url === "catalog" ? response(unitCatalog) : response(null, { ok: false, status: 404 }),
   });
-  assert.equal(missing.unitCatalog.units.length, 16);
+  assert.equal(missing.unitCatalog.units.length, 17);
   assert.equal(missing.presentation, null);
 
   const invalidPresentation = structuredClone(presentation);
@@ -520,7 +541,7 @@ test("presentation loading falls back cleanly when the optional manifest is miss
 });
 
 test("numbered unit catalog is ordered and internally linked", () => {
-  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+  assert.deepEqual(units.map(item => item.data.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
   for (const { file, data } of units) {
     assert.equal(Number(file.slice(0, 2)), data.unitNumber, `${file} disagrees with unitNumber`);
     const allActivities = data.lessons.flatMap(lesson => lesson.activities);
@@ -618,7 +639,8 @@ test("unit continuation follows the next published catalog unit", () => {
   assert.equal(findNextSequentialUnit(units.map(item => item.data), substitutionUnit), macroUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), macroUnit), automationUnit);
   assert.equal(findNextSequentialUnit(units.map(item => item.data), automationUnit), capstoneUnit);
-  assert.equal(findNextSequentialUnit(units.map(item => item.data), capstoneUnit), null);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), capstoneUnit), masteryUnit);
+  assert.equal(findNextSequentialUnit(units.map(item => item.data), masteryUnit), null);
 });
 
 test("every concept carries a globally unique id", () => {
@@ -682,9 +704,9 @@ test("unit catalog groups implemented units into curriculum arcs", () => {
     { id: "foundations", arcNumber: 1, title: "Foundations", unitNumbers: [1, 2, 3, 4, 5, 6] },
     { id: "fluency-tracks", arcNumber: 2, title: "Fluency tracks", unitNumbers: [7, 8, 9, 10, 11] },
     { id: "automation", arcNumber: 3, title: "Automation", unitNumbers: [12, 13, 14, 15] },
-    { id: "integration", arcNumber: 4, title: "Integration and lifelong practice", unitNumbers: [16] },
+    { id: "integration", arcNumber: 4, title: "Integration and lifelong practice", unitNumbers: [16, 17] },
   ]);
-  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+  assert.deepEqual(unitCatalog.units.map(item => item.unitNumber), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
   const assigned = unitCatalog.units.map(item => unitCatalog.arcs.filter(arc => arc.unitNumbers.includes(item.unitNumber)).length);
   assert(assigned.every(count => count === 1), "each implemented unit must belong to exactly one arc");
 });
@@ -1217,6 +1239,19 @@ test("Unit 16 introduces no command that Units 1-15 have not already taught", ()
   }
   const introduced = [...tokensOf(capstoneUnit)].filter(token => !taught.has(token));
   assert.deepEqual(introduced, [], "a capstone that introduces a command has failed");
+});
+
+test("Unit 17 is a reusable Mastery wrapper rather than a padded command lesson", () => {
+  assert.equal(masteryUnit.surface, "mastery");
+  assert.equal(masteryUnit.unitNumber, 17);
+  assert.deepEqual(masteryUnit.coverage, []);
+  assert.deepEqual(masteryUnit.reference, []);
+  assert.deepEqual(
+    masteryUnit.lessons.flatMap(lesson => lesson.activities).map(activity => activity.id),
+    ["mastery-loop-brief"],
+  );
+  assert.match(masteryUnit.lessons[0].activities[0].body, /first circuit closes this chapter/i);
+  assert.deepEqual(schema.properties.surface.enum, ["lesson", "mastery"]);
 });
 
 test("Unit 2 curriculum definition is preserved verbatim", () => {

@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import os
+import subprocess
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -289,6 +290,9 @@ LANDMARK_DESCRIPTIONS = {
     "mirror-loom": "a supported lens-and-loom mechanism where only the matching threads transform colour",
     "echo-foundry": "a recorder cylinder connected by real conduits to three mechanisms replaying one coordinated movement",
     "meridian-engine": "a monumental welcoming brass-and-glass junction carrying coordinated currents that echo all four worlds",
+    "beacon-glass": "a rail-mounted brass observation lens whose large round glass clears to reveal a sharp far view, with its vertical lift and side aperture aligned",
+    "menders-bench": "a connected confluence workshop where distinct glass, brass, stone and living-root repair benches feed one dependable cyan test circuit",
+    "keepers-relay": "a circular brass-and-glass route relay whose loop tracks return to one central distributor, then divide cleanly among several supported outward routes",
 }
 
 
@@ -796,7 +800,7 @@ def write_restoration_3x4_overview(presentation: dict[str, Any]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--group", help="one group id (panel id or unit id); defaults to all 16 groups")
+    parser.add_argument("--group", help="one group id (panel id or unit id); defaults to every current story group")
     parser.add_argument(
         "--phone-review",
         action="store_true",
@@ -805,12 +809,17 @@ def main() -> int:
     parser.add_argument(
         "--restoration-3x4",
         action="store_true",
-        help="Generate one clear 3:4 restoration ending for Units 2–14.",
+        help="Generate five clear 3:4 restoration endings for the selected unit group.",
     )
     parser.add_argument("--candidate", type=int, choices=range(1, 6))
     parser.add_argument("--execute", action="store_true", help="submit paid Vertex requests")
     parser.add_argument("--project", default=os.environ.get("GOOGLE_CLOUD_PROJECT", ""))
     parser.add_argument("--location", default=os.environ.get("GOOGLE_CLOUD_LOCATION", "global"))
+    parser.add_argument(
+        "--gcloud-auth",
+        action="store_true",
+        help="use a short-lived token from the active gcloud account instead of Application Default Credentials",
+    )
     parser.add_argument("--min-request-interval", type=float, default=15.0)
     parser.add_argument("--quota-backoff-seconds", type=float, default=75.0)
     parser.add_argument("--max-quota-retries", type=int, default=3)
@@ -877,8 +886,25 @@ def main() -> int:
 
     from google import genai
     from google.genai import errors, types
+    from google.oauth2.credentials import Credentials
 
-    client = genai.Client(vertexai=True, project=args.project, location=args.location)
+    credentials = None
+    if args.gcloud_auth:
+        access_token = subprocess.run(
+            ["gcloud", "auth", "print-access-token"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+        if not access_token:
+            raise SystemExit("The active gcloud account returned an empty access token")
+        credentials = Credentials(access_token)
+    client = genai.Client(
+        vertexai=True,
+        project=args.project,
+        location=args.location,
+        credentials=credentials,
+    )
     last_submission = 0.0
     for directory, manifest_path, manifest, candidate, references in jobs:
         delay = args.min_request_interval - (time.monotonic() - last_submission)

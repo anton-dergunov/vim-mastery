@@ -1,78 +1,45 @@
 # Session 20 — Viewport control art and story beat
 
-**Depends on:** 07 · **Blocks:** nothing
-**Touches:** `content/presentation.json`, `assets/worlds/`, `scripts/world-art/`,
-`docs/story-scene-review.md`, `docs/wp11-nano-banana-prompt-pack.md`, `tests/`
-**Size:** M
+**Status:** implementation complete; bespoke ending selection remains at the
+shared Unit 10/16/17 approval gate.
 
-## Context
+## Final decisions
 
-Session 07 split the old Unit 9 into Unit 9 Position memory and Unit 10 Viewport
-control. Every other unit has its own world art, guide, landmark, and story beat;
-these two share one set, deliberately and temporarily, because splitting the
-content should not have waited on drawing a new landmark.
+Unit 10 is `viewport-control`, following Unit 9 `position-memory`. Luma remains
+the guide across both units because the second scene changes how the same guide
+looks across distance rather than beginning a new journey.
 
-What Unit 10 borrows today:
+Beacon Glass Gallery is fully independent from Far Beacons:
 
-- world `archive-of-echoes` and guide `luma`, both shared with Unit 9;
-- the `far-beacons` scene, including all fifty remote board variants;
-- Unit 9's story image, **copied** to `assets/worlds/story/units/viewport-control.webp`
-  (and `.png`) because the presentation test requires the file name to match the
-  unit id;
-- a landmark id of its own, `beacon-glass`, pointing at Unit 9's `far-beacons`
-  landmark assets — the id had to differ because a landmark belongs to exactly
-  one unit, but the artwork behind it is the same.
+- tall, compact, and wide approved board bases are registered under
+  `assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/`;
+- 50 approved transparent WebP patches stream through the compact-registration
+  animation system on every board shape;
+- Unit 9 now hands off to the gallery itself rather than describing Unit 10 as
+  an unfinished part of Unit 9;
+- Unit 10’s completion copy and restoration meaning are preserved;
+- its temporary story image is the approved Beacon Glass tall board and is
+  marked `pending-bespoke-approval`.
 
-Its story beat is authored and coherent — Luma clears the beacon glass, and the
-chain into the Echo Clock still reads — but the picture does not match the words.
+The historical WP-11 name `long-range-navigation` maps to live Unit 9
+`position-memory`. It remains only in immutable artifact provenance. Runtime,
+generator, review, and documentation identities use current unit ids.
 
-## Goal
+## Approval gate
 
-Give Unit 10 art that belongs to it, and remove every trace of the temporary
-sharing.
+Five 1792×2400 candidates are generated under:
 
-## Scope
+`artifacts/world-generation/wp11/story-review-v2/unit-endings/viewport-control-restoration-3x4/`
 
-1. **A landmark for `beacon-glass`** — dormant and restored, at
-   `assets/worlds/landmarks/beacon-glass-{dormant,restored}.webp`. Note that the
-   landmark assets declared in the manifest are not currently on disk for any
-   unit; match whatever convention the pipeline settles on rather than inventing
-   one here.
-2. **A scene** — its own `sceneId` with `tall`, `compact`, and `wide` profiles,
-   three patch regions, and the fifty approved complete-board variants every
-   other unit ships. The scene should read as *the same world seen clearly*,
-   which is the unit's subject: framing, not travel.
-3. **A story image** at `assets/worlds/story/units/viewport-control.webp`,
-   replacing the copy of Unit 9's. Check the core media budget after: the copy
-   currently costs roughly 590 KB of precache that a distinct image will also
-   cost, so the budget does not change, but confirm rather than assume.
-4. **Consider whether the guide should differ.** Luma suits both halves, but two
-   consecutive units with the same guide is a first for the curriculum.
-5. **Refresh the art pipeline references.** `scripts/world-art/*.py`,
-   `docs/story-scene-review.md`, and `docs/wp11-nano-banana-prompt-pack.md` still
-   name `long-range-navigation`, which no longer exists as a unit id.
-6. **Update the approved story table** in `tests/content-data.test.mjs` and the
-   `unit-story-base` count in `tests/media-policy.test.mjs`, which is currently
-   fourteen for fifteen units precisely because the two share a backdrop.
+Review links are in [../story-scene-review.md](../story-scene-review.md). The
+prepared promotion command verifies the chosen source hash, converts with
+`cwebp -quiet -mt -m 6 -q 90 -metadata none`, installs
+`assets/worlds/story/units/viewport-control.webp`, clears the pending marker,
+and participates in the 17-ending uniqueness check.
 
-## Out of scope
+## Validation contract
 
-- Any content, lesson, or exercise change in Units 9 or 10.
-- Re-drawing Unit 9's art, which is fine as it is.
-
-## Acceptance criteria
-
-- Unit 10 has its own landmark, scene, variants, and story image.
-- No asset is shared between Units 9 and 10.
-- `scripts/world-art/` and the art docs name the current unit ids.
-- The core media budget still passes with room to spare.
-
-## Validation
-
-```bash
-npm test
-npm run test:targeted -- tests/story-transitions.spec.js --workers=1
-```
-
-Walk Unit 9's completion into Unit 10's and confirm both reward scenes render
-distinctly, on the full viewport matrix.
+Content/schema, media policy, PWA emission, story transition, streamed patch,
+reduced-motion, offline, simple-background, and 360×740 through 432×960 layout
+tests cover the completed implementation. The gameplay boards and patches are
+final and are not regenerated by this session.

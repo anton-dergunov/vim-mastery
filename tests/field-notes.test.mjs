@@ -67,7 +67,7 @@ test("field note ids never collide with the curriculum", () => {
   // The mastery runtime queues these objects through the same renderers as
   // real activities, and progress is keyed by activity id. A collision would
   // silently credit a curriculum concept for reading a briefing.
-  assert.equal(unitActivityIds.size, 818);
+  assert.equal(unitActivityIds.size, 819);
   const ids = [...catalog.notes.map(note => note.id), ...activities.map(activity => activity.id)];
   assert.equal(new Set(ids).size, ids.length, "field note ids collide with each other");
   for (const id of ids) {

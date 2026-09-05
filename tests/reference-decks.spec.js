@@ -233,6 +233,22 @@ test("the reference board renders the Mosslight Landing scene", async ({ page })
   expect(asset).toContain("mosslight-landing");
 });
 
+test("the Reference board streams a compact-registered transparent Mosslight patch", async ({ page }) => {
+  await seedStorySeen(page);
+  await seedOrientationSeen(page);
+  await page.route("**/assets/worlds/moonroot-ruins/scenes/mosslight-landing/variants/*.webp", route => route.fulfill({
+    path: "assets/worlds/moonroot-ruins/scenes/mosslight-landing/variants/trail-chime-bracket-c01.webp",
+    contentType: "image/webp",
+    headers: { "access-control-allow-origin": "*" },
+  }));
+  await page.goto("/play/?reference=orientation");
+  await waitForApp(page);
+  await expect(page.locator("#referenceBackdrop")).toHaveAttribute("data-scene-profile", "compact");
+  const variant = page.locator("#referenceVariantLayer .world-remote-variant");
+  await expect(variant).toHaveCount(1, { timeout: 5_000 });
+  await expect(variant).toHaveAttribute("data-media-mode", "transparent-patch");
+});
+
 test("reduced motion keeps the cards readable and retires the variant layer", async ({ page, browser }) => {
   const context = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 360, height: 740 } });
   const reduced = await context.newPage();
@@ -301,7 +317,7 @@ test("per-unit reference entries render and open their examples", async ({ page 
   await waitForApp(page);
 
   await page.evaluate(() => document.querySelector("#tocDialog").showModal());
-  await expect(page.locator("#tocLessons [data-reference-unit]")).toHaveCount(16);
+  await expect(page.locator("#tocLessons [data-reference-unit]")).toHaveCount(17);
 
   // The loaded unit is in memory; a later unit has to be fetched.
   await page.locator('#tocLessons [data-reference-unit="modal-model"]').click();

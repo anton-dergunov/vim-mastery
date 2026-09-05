@@ -168,33 +168,7 @@
         }
       },
       "landmark": {
-        "id": "mode-lantern",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/mode-lantern-dormant.webp",
-          "restored": "assets/worlds/landmarks/mode-lantern-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "mode-lantern"
       },
       "completion": {
         "actionId": "lift-mode-lantern",
@@ -328,33 +302,7 @@
         }
       },
       "landmark": {
-        "id": "wayfinder",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/wayfinder-dormant.webp",
-          "restored": "assets/worlds/landmarks/wayfinder-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "wayfinder"
       },
       "completion": {
         "actionId": "align-wayfinder",
@@ -488,33 +436,7 @@
         }
       },
       "landmark": {
-        "id": "scribes-spring",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/scribes-spring-dormant.webp",
-          "restored": "assets/worlds/landmarks/scribes-spring-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 76,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 69,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 63,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 57,
-            "scale": 0.66
-          }
-        }
+        "id": "scribes-spring"
       },
       "completion": {
         "actionId": "repair-scribes-spring",
@@ -648,33 +570,7 @@
         }
       },
       "landmark": {
-        "id": "grammar-gate",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/grammar-gate-dormant.webp",
-          "restored": "assets/worlds/landmarks/grammar-gate-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 76,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 69,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 63,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 57,
-            "scale": 0.66
-          }
-        }
+        "id": "grammar-gate"
       },
       "completion": {
         "actionId": "join-grammar-gate",
@@ -692,33 +588,7 @@
       "worldId": "starwater-sanctuary",
       "guideCharacterId": "orin",
       "landmark": {
-        "id": "starneedle",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/starneedle-dormant.webp",
-          "restored": "assets/worlds/landmarks/starneedle-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "starneedle"
       },
       "completion": {
         "actionId": "focus-starneedle",
@@ -821,33 +691,7 @@
       "worldId": "starwater-sanctuary",
       "guideCharacterId": "bramble",
       "landmark": {
-        "id": "nested-garden",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/nested-garden-dormant.webp",
-          "restored": "assets/worlds/landmarks/nested-garden-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "nested-garden"
       },
       "completion": {
         "actionId": "wake-nested-garden",
@@ -950,33 +794,7 @@
       "worldId": "starwater-sanctuary",
       "guideCharacterId": "prism",
       "landmark": {
-        "id": "prism-crossing",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/prism-crossing-dormant.webp",
-          "restored": "assets/worlds/landmarks/prism-crossing-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 76,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 69,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 63,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 57,
-            "scale": 0.66
-          }
-        }
+        "id": "prism-crossing"
       },
       "completion": {
         "actionId": "align-prism-crossing",
@@ -1079,33 +897,7 @@
       "worldId": "archive-of-echoes",
       "guideCharacterId": "mica",
       "landmark": {
-        "id": "memory-archive",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/memory-archive-dormant.webp",
-          "restored": "assets/worlds/landmarks/memory-archive-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "memory-archive"
       },
       "completion": {
         "actionId": "restore-memory-archive",
@@ -1208,33 +1000,7 @@
       "worldId": "archive-of-echoes",
       "guideCharacterId": "luma",
       "landmark": {
-        "id": "far-beacons",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/far-beacons-dormant.webp",
-          "restored": "assets/worlds/landmarks/far-beacons-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "far-beacons"
       },
       "completion": {
         "actionId": "connect-far-beacons",
@@ -1242,7 +1008,7 @@
         "action": "Luma sends a thread of light between two distant beacons",
         "copy": "Luma reconnects the Far Beacons. The Wilds can cross great distances—and return without losing their place.",
         "nextHook": {
-          "copy": "One beacon is lit, but the window onto the Wilds is still fogged."
+          "copy": "Beyond the reconnected span, a fogged gallery lens hides the far shore."
         },
         "storyImage": "assets/worlds/story/units/position-memory.webp"
       },
@@ -1337,33 +1103,7 @@
       "worldId": "archive-of-echoes",
       "guideCharacterId": "luma",
       "landmark": {
-        "id": "beacon-glass",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/beacon-glass-dormant.webp",
-          "restored": "assets/worlds/landmarks/beacon-glass-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "beacon-glass"
       },
       "completion": {
         "actionId": "clear-the-beacon-window",
@@ -1373,7 +1113,8 @@
         "nextHook": {
           "copy": "Across the causeway, a stopped clock begins to tick."
         },
-        "storyImage": "assets/worlds/story/units/viewport-control.webp"
+        "storyImage": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/tall/base.webp",
+        "storyArtStatus": "pending-bespoke-approval"
       },
       "sceneId": "beacon-glass-gallery",
       "scenes": {
@@ -1467,33 +1208,7 @@
       "worldId": "archive-of-echoes",
       "guideCharacterId": "tock",
       "landmark": {
-        "id": "echo-clock",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/echo-clock-dormant.webp",
-          "restored": "assets/worlds/landmarks/echo-clock-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 76,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 69,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 63,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 57,
-            "scale": 0.66
-          }
-        }
+        "id": "echo-clock"
       },
       "completion": {
         "actionId": "restart-echo-clock",
@@ -1596,33 +1311,7 @@
       "worldId": "brass-meridian",
       "guideCharacterId": "cinder",
       "landmark": {
-        "id": "meridian-table",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/meridian-table-dormant.webp",
-          "restored": "assets/worlds/landmarks/meridian-table-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "meridian-table"
       },
       "completion": {
         "actionId": "set-meridian-table",
@@ -1725,33 +1414,7 @@
       "worldId": "brass-meridian",
       "guideCharacterId": "puddle",
       "landmark": {
-        "id": "mirror-loom",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/mirror-loom-dormant.webp",
-          "restored": "assets/worlds/landmarks/mirror-loom-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 78,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 70,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 64,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 58,
-            "scale": 0.66
-          }
-        }
+        "id": "mirror-loom"
       },
       "completion": {
         "actionId": "retune-mirror-loom",
@@ -1854,33 +1517,7 @@
       "worldId": "brass-meridian",
       "guideCharacterId": "tock",
       "landmark": {
-        "id": "echo-foundry",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/echo-foundry-dormant.webp",
-          "restored": "assets/worlds/landmarks/echo-foundry-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 82,
-            "y": 76,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 84,
-            "y": 69,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 88,
-            "y": 63,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 91,
-            "y": 57,
-            "scale": 0.66
-          }
-        }
+        "id": "echo-foundry"
       },
       "completion": {
         "actionId": "record-echo-foundry",
@@ -1983,39 +1620,13 @@
       "worldId": "brass-meridian",
       "guideCharacterId": "cairn",
       "landmark": {
-        "id": "meridian-engine",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/meridian-engine-dormant.webp",
-          "restored": "assets/worlds/landmarks/meridian-engine-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 18,
-            "y": 76,
-            "scale": 0.62
-          },
-          "square": {
-            "x": 16,
-            "y": 69,
-            "scale": 0.74
-          },
-          "wide": {
-            "x": 12,
-            "y": 63,
-            "scale": 0.86
-          },
-          "shallow": {
-            "x": 9,
-            "y": 57,
-            "scale": 0.66
-          }
-        }
+        "id": "meridian-engine"
       },
       "completion": {
         "actionId": "open-meridian-engine",
         "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp",
-        "action": "Cairn connects the restored systems; energy crosses all four worlds",
-        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together—and the Wilds answer again.",
+        "action": "Cairn connects the restored systems; a steady current reaches all four worlds",
+        "copy": "Cairn opens the Meridian Engine. Range, pattern, repetition, and judgment move together through every restored road.",
         "nextHook": {
           "speaker": "Brikk",
           "copy": "The great systems run again. Bring me the jobs they were never shaped for."
@@ -2113,33 +1724,7 @@
       "worldId": "brass-meridian",
       "guideCharacterId": "brikk",
       "landmark": {
-        "id": "menders-bench",
-        "assets": {
-          "dormant": "assets/worlds/landmarks/menders-bench-dormant.webp",
-          "restored": "assets/worlds/landmarks/menders-bench-restored.webp"
-        },
-        "placements": {
-          "portrait": {
-            "x": 20,
-            "y": 74,
-            "scale": 0.6
-          },
-          "square": {
-            "x": 18,
-            "y": 68,
-            "scale": 0.72
-          },
-          "wide": {
-            "x": 14,
-            "y": 62,
-            "scale": 0.84
-          },
-          "shallow": {
-            "x": 11,
-            "y": 56,
-            "scale": 0.64
-          }
-        }
+        "id": "menders-bench"
       },
       "completion": {
         "actionId": "open-menders-confluence",
@@ -2148,9 +1733,10 @@
         "copy": "At Menders' Confluence, every restored skill becomes part of one dependable craft.",
         "nextHook": {
           "speaker": "Brikk",
-          "copy": "Nothing here needs me now. Go and look at what you put back."
+          "copy": "The repairs hold. Fen is waiting at the relay, where every route returns and begins again."
         },
-        "storyImage": "assets/worlds/story/units/real-code-workflow-capstones.webp"
+        "storyImage": "assets/worlds/brass-meridian/scenes/menders-confluence/tall/base.webp",
+        "storyArtStatus": "pending-bespoke-approval"
       },
       "sceneId": "menders-confluence",
       "scenes": {
@@ -2220,6 +1806,7 @@
             },
             "format": "webp",
             "registrationProfile": "compact",
+            "mode": "transparent-patch",
             "assetRoot": "assets/worlds/brass-meridian/scenes/menders-confluence/variants"
           },
           "phasePatches": {
@@ -2237,6 +1824,93 @@
         }
       },
       "storyBackdrop": "assets/worlds/brass-meridian/scenes/menders-confluence/compact/base.webp"
+    },
+    "mastery-loops": {
+      "id": "mastery-loops",
+      "worldId": "brass-meridian",
+      "guideCharacterId": "fen",
+      "landmark": {
+        "id": "keepers-relay"
+      },
+      "completion": {
+        "actionId": "complete-keepers-circuit",
+        "storyBackdrop": "assets/worlds/brass-meridian/scenes/keepers-relay/compact/base.webp",
+        "action": "Fen sends one test current around every return loop; it pauses at the relay, then divides cleanly among the open routes",
+        "copy": "The Keeper’s Relay remembers through use: return, combine, maintain, and choose again.",
+        "nextHook": {
+          "speaker": "Nix",
+          "copy": "The routes are open. Come and see what the Wilds remember."
+        },
+        "storyImage": "assets/worlds/brass-meridian/scenes/keepers-relay/tall/base.webp",
+        "storyArtStatus": "pending-bespoke-approval"
+      },
+      "sceneId": "keepers-relay",
+      "scenes": {
+        "keepers-relay": {
+          "id": "keepers-relay",
+          "patchRegions": {
+            "phase-a": { "x": 0.06, "y": 0.62, "width": 0.27, "height": 0.26 },
+            "phase-b": { "x": 0.67, "y": 0.6, "width": 0.28, "height": 0.27 },
+            "phase-c": { "x": 0.4, "y": 0.06, "width": 0.22, "height": 0.19 }
+          },
+          "profiles": {
+            "tall": {
+              "base": "assets/worlds/brass-meridian/scenes/keepers-relay/tall/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "compact": {
+              "base": "assets/worlds/brass-meridian/scenes/keepers-relay/compact/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            },
+            "wide": {
+              "base": "assets/worlds/brass-meridian/scenes/keepers-relay/wide/base.webp",
+              "focalPosition": "50% 50%",
+              "patches": {}
+            }
+          },
+          "remoteVariants": {
+            "profiles": ["tall", "compact", "wide"],
+            "siteIds": [
+              "upper-loop-trolley",
+              "route-lamps",
+              "central-distributor",
+              "lower-switch-bridge",
+              "field-note-case",
+              "material-chime",
+              "starwater-reflection",
+              "capsule-carousel",
+              "moonroot-support",
+              "outward-signal"
+            ],
+            "variantsPerSite": 5,
+            "timing": {
+              "initialDelayMs": 2500,
+              "fadeMs": 1200,
+              "holdMs": 6500,
+              "gapMs": 4000
+            },
+            "format": "webp",
+            "registrationProfile": "compact",
+            "mode": "transparent-patch",
+            "assetRoot": "assets/worlds/brass-meridian/scenes/keepers-relay/variants"
+          },
+          "phasePatches": {
+            "explain": [],
+            "demonstrate": [],
+            "isolate": [],
+            "mix": [],
+            "challenge": [],
+            "summary": []
+          },
+          "landmarkPatches": {
+            "dormant": null,
+            "restored": null
+          }
+        }
+      },
+      "storyBackdrop": "assets/worlds/brass-meridian/scenes/keepers-relay/compact/base.webp"
     }
   },
   "story": {
@@ -2260,6 +1934,10 @@
       }
     ],
     "ending": {
+      "id": "restored-wilds",
+      "title": "The Wilds are alive",
+      "progressLabel": "All four worlds restored",
+      "ariaLabel": "The four restored Vim Wilds celebrating together",
       "asset": "assets/worlds/story/ending/restored-wilds.webp",
       "speaker": "Nix",
       "copy": "The language is alive. What you restore next is up to you."

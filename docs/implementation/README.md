@@ -117,15 +117,22 @@ dated before session 07 against this table.
 | --- | --- | --- | --- | --- |
 | 14 | [Reference card decks](14-reference-decks.md) | M | — | — |
 | 15 | [Free practice mode](15-free-practice-mode.md) | L | — | — |
-| 16 | [Unit 15: capstones](16-unit-15-capstones.md) | XL | 03, 04, 05 | 17 |
-| 17 | [Unit 16: mastery loops and CLI field notes](17-unit-16-mastery-and-cli.md) | L | 16 | — |
+| 16 | [Unit 16: capstones](16-unit-15-capstones.md) | XL | 03, 04, 05 | 17 |
+| 17 | [Mastery loops and CLI field notes](17-unit-16-mastery-and-cli.md) | L | 16 | — |
 | 18 | [Curriculum graph and portability surfacing](18-curriculum-graph-and-portability.md) | M | 07, 08, 09, 10 | — |
 | 19 | [An Ex output surface for `:global` dry runs](19-ex-output-surface.md) | M | 01, 02 | — |
 | 20 | [Viewport control art and story beat](20-viewport-control-art.md) | M | 07 | — |
 | 21 | [Search offsets](21-search-offsets.md) | M | 01 | — |
 | 22 | [The file-name register `"%`](22-file-name-register.md) | M | 01 | 08, 11 |
 | 23 | [Five future unit boards and animation seeds](23-future-unit-boards-and-animation-seeds.md) | L | 07 | — |
-| 24 | [Story continuity and unit endings](24-story-continuity-and-unit-endings.md) | L | 07, 16, 23 | 17 |
+| 24 | [Story continuity and unit endings](24-story-continuity-and-unit-endings.md) | L | 07, 16, 23 | — |
+
+Sessions 20 and 23 are complete. Session 24 is complete through its explicit
+owner-selection gate: Unit 17, story continuity, boards, animations, packaging,
+review tooling, and promotion automation are implemented. Its only remaining
+operations are selecting the three generated Unit 10/16/17 ending paintings,
+running the prepared promotion command, and running the final regression/PWA
+validation.
 
 ## Recommended execution order
 

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "1.0.0",
+  "unitNumber": 17,
+  "id": "mastery-loops",
+  "title": "Mastery loops",
+  "surface": "mastery",
+  "releaseStatus": "authoring",
+  "curriculumDefinition": {
+    "unit": "17. Mastery loops",
+    "commandsAndConcepts": "No new command families. Return to completed work through focused drills, combine practised topics in mixed review, maintain them over time, and choose the mechanism before editing.",
+    "prerequisites": "Units 1–16",
+    "learningOutcome": "Use the existing Mastery map to revisit, combine, maintain, and deliberately choose among skills without changing the saved curriculum position.",
+    "representativeExercises": "Replay focused drills, complete interleaved mixed review, name a tool before touching the keys, pin topics for later practice, and consult batch and command-line field notes.",
+    "priorityAndPortability": "This unit is a durable practice surface rather than a new command lesson. Its first completed mixed review closes the story once; every session remains reusable afterward."
+  },
+  "prerequisiteSkillIds": [
+    "modal-model",
+    "cursor-movement",
+    "entering-changing-text",
+    "operator-grammar",
+    "precision-motions-search",
+    "text-objects",
+    "visual-selection",
+    "registers-putting",
+    "position-memory",
+    "viewport-control",
+    "repeatable-editing",
+    "command-line-ranges-line-operations",
+    "substitution-practical-regex",
+    "macros",
+    "global-normal-automation",
+    "real-code-workflow-capstones"
+  ],
+  "playback": {
+    "modes": ["normal", "slow", "manual"],
+    "manualStep": "one-input-or-text-run",
+    "reset": "initial-state",
+    "backwardStep": "previous-manual-step"
+  },
+  "generation": {
+    "stage": "authoring",
+    "candidateCount": 3,
+    "promptVersion": "mastery-loops-v1",
+    "correctnessAuthority": "deterministic-editor",
+    "runtimeDependency": false
+  },
+  "lessons": [
+    {
+      "id": "keepers-circuit",
+      "title": "Keeper’s circuit",
+      "objective": "Enter the reusable Mastery surface and complete one mixed review to establish the final chapter boundary.",
+      "activities": [
+        {
+          "id": "mastery-loop-brief",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Return, combine, maintain",
+          "body": "Keeper’s Relay is not a finish line. Open Mastery, choose work you have already practised, and complete one mixed review. That first circuit closes this chapter; focused drills, tool-choice sessions, pins, progress states, and field notes remain available whenever you return."
+        }
+      ]
+    }
+  ],
+  "reference": [],
+  "coverage": []
+}

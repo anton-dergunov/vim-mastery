@@ -1118,7 +1118,14 @@ function advanceMasteryQueue() {
   const session = state.masterySession;
   if (!session) return;
   if (session.index + 1 >= session.queue.length) {
+    const completesMasteryChapter = unit.surface === "mastery"
+      && session.kind === "mixed"
+      && !storyTransitions.hasCompletedUnitStory(unit.id);
     exitMasterySession();
+    if (completesMasteryChapter) {
+      storyTransitions.showUnitAtBoundary(unit.id, null);
+      return;
+    }
     openMastery();
     return;
   }
@@ -1242,8 +1249,11 @@ async function renderMasteryDialog() {
       <small>${renderInline(note.summary)}</small>
     </button>`).join("");
 
+  const chapterPending = unit.surface === "mastery" && !storyTransitions.hasCompletedUnitStory(unit.id);
   elements.masteryBody.innerHTML = `
-    <p class="mastery-intro">Finishing a chapter and keeping a skill are different things. Nothing here advances the story or unlocks a unit; it replays work you have already done.</p>
+    <p class="mastery-intro">${chapterPending
+      ? "Complete one mixed review to close Keeper’s circuit. That first circuit advances the story once; every Mastery session remains reusable afterward."
+      : "Finishing a chapter and keeping a skill are different things. Nothing here advances the story or unlocks a unit; it replays work you have already done."}</p>
     <p class="mastery-caveat">Drills replay an exercise you have met, with the prompt withheld. Larger buffers, distractors and varied cursor placement are authoring work that has not been done.</p>
     <section class="mastery-sessions" aria-labelledby="masterySessionsTitle">
       <h3 id="masterySessionsTitle">Sessions</h3>
@@ -1410,7 +1420,9 @@ function renderFieldNote(activity) {
       ? '<button class="note-action" type="button" data-action="return-remediation">Back to quick check →</button>'
       : activity.routes?.length ? renderRoutes(activity.routes) : isFinalTheory && activity.demoRef
       ? `<button class="note-action" type="button" data-action="show-demo" data-demo="${activity.demoRef}">Show example →</button>`
-      : '<button class="note-action" type="button" data-action="next">Next →</button>';
+      : unit.surface === "mastery"
+        ? '<button class="note-action" type="button" data-action="next">Open Mastery →</button>'
+        : '<button class="note-action" type="button" data-action="next">Next →</button>';
     const isFirstTheory = lessonTheories[0]?.id === activity.id;
     return `<article class="field-note" aria-label="Theory">
       <span class="field-note-kicker">Field note · explain</span>
@@ -2160,6 +2172,10 @@ function nextActivity() {
     return;
   }
   if (state.activityIndex === activities.length - 1) {
+    if (unit.surface === "mastery") {
+      void openMastery();
+      return;
+    }
     const nextUnit = nextSequentialUnit();
     if (storyTransitions.showUnitAtBoundary(unit.id, nextUnit?.id || null)) return;
     if (nextUnit) navigateToUnit(nextUnit.id);
@@ -3026,6 +3042,8 @@ async function masteryStateSnapshot() {
     queue: session ? session.queue.map(activity => activity.masteryOrigin?.activityId || activity.id) : [],
     conceptIds: session?.conceptIds || [],
     dialogOpen: Boolean(elements.masteryDialog?.open),
+    chapterUnitId: unit.surface === "mastery" ? unit.id : null,
+    chapterComplete: unit.surface === "mastery" && storyTransitions.hasCompletedUnitStory(unit.id),
     pinned: [...masteryState.pinned],
     completions: Object.keys(masteryState.completions),
     concepts: index.concepts.map(concept => ({

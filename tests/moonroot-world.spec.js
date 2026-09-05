@@ -447,6 +447,58 @@ test("streams transparent Beacon Gallery patches without a complete-board vignet
   }
 });
 
+for (const scene of [
+  {
+    label: "Unit 16 Menders’ Confluence",
+    unit: "real-code-workflow-capstones",
+    activity: "review-rationale",
+    sceneId: "menders-confluence",
+    candidate: "left-turntable-c01.webp",
+  },
+  {
+    label: "Unit 17 Keeper’s Relay",
+    unit: "mastery-loops",
+    activity: "mastery-loop-brief",
+    sceneId: "keepers-relay",
+    candidate: "upper-loop-trolley-c01.webp",
+  },
+]) {
+  test(`streams compact-registered transparent patches for ${scene.label}`, async ({ page }) => {
+    test.slow();
+    await page.route(`**/assets/worlds/**/scenes/${scene.sceneId}/variants/*.webp`, route => route.fulfill({
+      path: `assets/worlds/brass-meridian/scenes/${scene.sceneId}/variants/${scene.candidate}`,
+      contentType: "image/webp",
+      headers: { "access-control-allow-origin": "*" },
+    }));
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`/play/?unit=${scene.unit}&activity=${scene.activity}`);
+    await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "compact", { timeout: 15_000 });
+    const variant = page.locator(".world-remote-variant");
+    await expect(variant).toHaveCount(1, { timeout: 5_000 });
+    await expect(variant).toHaveAttribute("data-media-mode", "transparent-patch");
+    expect(await variant.evaluate(element => getComputedStyle(element, "::after").content)).toBe("none");
+    expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+      .toContain(`${scene.sceneId}/compact/base.webp`);
+    for (const viewport of [
+      { width: 360, height: 740 },
+      { width: 390, height: 844 },
+      { width: 412, height: 915 },
+      { width: 430, height: 932 },
+      { width: 432, height: 960 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await expect.poll(() => page.evaluate(() => (
+        document.documentElement.scrollWidth <= window.innerWidth
+        && document.documentElement.scrollHeight <= window.innerHeight
+      )), { message: `${scene.label} at ${viewport.width}×${viewport.height}` }).toBe(true);
+      await page.screenshot({
+        path: `test-results/${scene.sceneId}-transparent-${viewport.width}x${viewport.height}.png`,
+        fullPage: true,
+      });
+    }
+  });
+}
+
 test("falls back to GitHub Pages when a local development variant is missing", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));

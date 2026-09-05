@@ -252,6 +252,10 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
     if (unit.completion?.storyImage !== undefined) {
       validateAsset(unit.completion.storyImage, `units.${unitId}.completion.storyImage`, errors);
     }
+    if (unit.completion?.storyArtStatus !== undefined
+      && unit.completion.storyArtStatus !== "pending-bespoke-approval") {
+      errors.push(`units.${unitId}.completion.storyArtStatus must be "pending-bespoke-approval"`);
+    }
     for (const field of ["action", "copy"]) {
       if (typeof unit.completion?.[field] !== "string" || !unit.completion[field].trim()) {
         errors.push(`units.${unitId}.completion.${field} is required`);
@@ -295,6 +299,12 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
   }
   validateAsset(manifest.story?.writingPenAsset, "story.writingPenAsset", errors);
   validateAsset(manifest.story?.ending?.asset, "story.ending.asset", errors);
+  validateId(manifest.story?.ending?.id, "story.ending.id", errors);
+  for (const field of ["title", "progressLabel", "ariaLabel"]) {
+    if (typeof manifest.story?.ending?.[field] !== "string" || !manifest.story.ending[field].trim()) {
+      errors.push(`story.ending.${field} is required`);
+    }
+  }
   if (typeof manifest.story?.ending?.speaker !== "string" || !manifest.story.ending.speaker.trim()) {
     errors.push("story.ending.speaker is required");
   }

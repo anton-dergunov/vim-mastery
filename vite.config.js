@@ -46,6 +46,7 @@ function offlineAssets() {
       id: unit.id,
       unitNumber: unit.unitNumber,
       title: unit.title,
+      ...(unit.surface ? { surface: unit.surface } : {}),
       lessonCount: unit.lessons.length,
       conceptCount: unit.coverage.length,
       path: `content/units/${relative(join(contentDirectory, "units"), path).replaceAll("\\", "/")}`,

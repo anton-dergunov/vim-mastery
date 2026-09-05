@@ -43,14 +43,15 @@ const seededRandom = seed => () => {
   return seed / 2147483648;
 };
 
-test("the concept catalog covers every shipped unit", () => {
+test("the concept catalog covers every teaching unit and leaves the Mastery wrapper empty", () => {
   assert.equal(index.concepts.length, 138);
   // Only the activities coverage actually cites; the digest drops the rest.
   assert.equal(index.activityIndex.size, 786);
   assert.deepEqual(
     [...new Set(index.concepts.map(concept => concept.unitId))].sort(),
-    units.map(unit => unit.id).sort(),
+    units.filter(unit => unit.coverage.length).map(unit => unit.id).sort(),
   );
+  assert.deepEqual(units.find(unit => unit.surface === "mastery").coverage, []);
 });
 
 test("concept ids are globally unique and match the schema id pattern", () => {

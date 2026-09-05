@@ -65,7 +65,7 @@ test("the mastery map is reachable from the contents before any progress", async
   await expect(page.locator("#masteryDialog")).toBeVisible();
   const state = await masteryState(page);
   expect(state.concepts).toHaveLength(138);
-  expect(state.units).toHaveLength(16);
+  expect(state.units).toHaveLength(17);
   // Nothing completed, so nothing is drillable and mixed review is closed.
   expect(state.concepts.every(concept => concept.state === "unseen")).toBe(true);
   await expect(page.locator("[data-mastery-mixed]")).toBeDisabled();

@@ -1,25 +1,38 @@
 # Story scene review links
 
-Start the local app with:
+Start the local app on the review port:
 
 ```sh
 npm run dev -- --port 4176
 ```
 
-Open the [all-scenes review hub](http://127.0.0.1:4176/play/?preview=story-index)
-to review every scene without completing lesson activities.
+The [all-scenes review hub](http://127.0.0.1:4176/play/?preview=story-index)
+renders every story panel in the production dialog. Candidate links below use
+the real completion surface; review at 360×740 before approving a painting.
 
-## Approved production endings
+## Pending bespoke endings
 
-| Units | Selected candidates |
-|---|---|
-| 1–4 | 1→5 · 2→2 · 3→3 · 4→1 |
-| 5–8 | 5→1 · 6→1 · 7→5 · 8→3 |
-| 9–12 | 9→3 · 10→2 · 11→4 · 12→2 |
-| 13–14 | 13→4 · 14→4 |
+Until approval, Units 10, 16, and 17 use their approved tall gameplay boards.
+Candidates stay under `artifacts/` and are never emitted by the PWA build.
 
-The candidate URLs below remain available for provenance and comparison. The
-ordinary unit-ending flow uses the approved production images directly.
+| Unit | Contact sheet | Candidate review links |
+|---|---|---|
+| 10 · `viewport-control` | `artifacts/world-generation/wp11/story-review-v2/unit-endings/viewport-control-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=viewport-control&candidate=5) |
+| 16 · `real-code-workflow-capstones` | `artifacts/world-generation/wp11/story-review-v2/unit-endings/real-code-workflow-capstones-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=real-code-workflow-capstones&candidate=5) |
+| 17 · `mastery-loops` | `artifacts/world-generation/wp11/story-review-v2/unit-endings/mastery-loops-restoration-3x4/contact-sheet.jpg` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=mastery-loops&candidate=5) |
+
+After the owner selects one number for each row, run:
+
+```sh
+python scripts/world-art/promote_wp11_story_endings.py \
+  --approve viewport-control=3 \
+  --approve real-code-workflow-capstones=1 \
+  --approve mastery-loops=5
+```
+
+The command verifies source hashes and 1792×2400 dimensions, records approval
+and rejection states, runs the recorded `cwebp` settings, installs semantic
+WebPs, clears all three pending markers, and verifies 17 distinct endings.
 
 ## Intro and finale
 
@@ -28,21 +41,8 @@ ordinary unit-ending flow uses the approved production images directly.
 - [Intro 3 · Nix at the threshold](http://127.0.0.1:4176/play/?preview=story&story=intro&panel=nix-at-the-threshold)
 - [Final restored Wilds](http://127.0.0.1:4176/play/?preview=story&story=finale)
 
-## Unit-ending candidates
+## Historical mapping
 
-| Unit | Candidate links |
-|---|---|
-| 1 · `modal-model` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=modal-model&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=modal-model&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=modal-model&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=modal-model&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=modal-model&candidate=5) |
-| 2 · `cursor-movement` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=5) |
-| 3 · `entering-changing-text` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=entering-changing-text&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=entering-changing-text&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=entering-changing-text&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=entering-changing-text&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=entering-changing-text&candidate=5) |
-| 4 · `operator-grammar` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=operator-grammar&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=operator-grammar&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=operator-grammar&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=operator-grammar&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=operator-grammar&candidate=5) |
-| 5 · `precision-motions-search` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=precision-motions-search&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=precision-motions-search&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=precision-motions-search&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=precision-motions-search&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=precision-motions-search&candidate=5) |
-| 6 · `text-objects` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=text-objects&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=text-objects&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=text-objects&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=text-objects&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=text-objects&candidate=5) |
-| 7 · `visual-selection` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=visual-selection&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=visual-selection&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=visual-selection&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=visual-selection&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=visual-selection&candidate=5) |
-| 8 · `registers-putting` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=registers-putting&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=registers-putting&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=registers-putting&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=registers-putting&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=registers-putting&candidate=5) |
-| 9 · `long-range-navigation` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=long-range-navigation&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=long-range-navigation&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=long-range-navigation&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=long-range-navigation&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=long-range-navigation&candidate=5) |
-| 10 · `repeatable-editing` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=repeatable-editing&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=repeatable-editing&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=repeatable-editing&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=repeatable-editing&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=repeatable-editing&candidate=5) |
-| 11 · `command-line-ranges-line-operations` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=command-line-ranges-line-operations&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=command-line-ranges-line-operations&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=command-line-ranges-line-operations&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=command-line-ranges-line-operations&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=command-line-ranges-line-operations&candidate=5) |
-| 12 · `substitution-practical-regex` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=substitution-practical-regex&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=substitution-practical-regex&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=substitution-practical-regex&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=substitution-practical-regex&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=substitution-practical-regex&candidate=5) |
-| 13 · `macros` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=macros&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=macros&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=macros&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=macros&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=macros&candidate=5) |
-| 14 · `global-normal-automation` | [1](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=global-normal-automation&candidate=1) · [2](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=global-normal-automation&candidate=2) · [3](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=global-normal-automation&candidate=3) · [4](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=global-normal-automation&candidate=4) · [5](http://127.0.0.1:4176/play/?preview=story&story=unit-ending&unit=global-normal-automation&candidate=5) |
+The pre-split WP-11 artifact directory `long-range-navigation` belongs to the
+live Unit 9 `position-memory`. Runtime and new review links always use
+`position-memory`; the old directory remains only as immutable provenance.

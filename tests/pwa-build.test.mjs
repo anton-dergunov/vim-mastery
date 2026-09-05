@@ -80,16 +80,16 @@ test("production PWA precaches core media and streams optional animation and sce
     readFileSync(join(rootPath, "content", "mastery-index.json"), "utf8"),
   );
   assert.match(worker, /content\/mastery-index\.json/);
-  assert.equal(media.core.length, 146);
-  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 16);
-  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 16);
+  assert.equal(media.core.length, 147);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 17);
+  assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);
   assert.equal(media.core.filter(asset => asset.category === "story-finale").length, 1);
   assert.equal(media.core.filter(asset => asset.category === "story-ui").length, 1);
   assert(media.core
     .filter(asset => ["unit-story-image", "story-still", "story-finale"].includes(asset.category))
     .every(asset => asset.path.endsWith(".webp")));
-  assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 850);
+  assert.equal(media.optional.filter(asset => asset.category === "remote-scene-variant").length, 900);
   assert(
     publishedBytes < GITHUB_PAGES_MAX_BYTES,
     `Published PWA is ${(publishedBytes / 1024 / 1024).toFixed(2)} MiB; GitHub Pages allows less than 1024 MiB`,
@@ -116,6 +116,13 @@ test("production PWA precaches core media and streams optional animation and sce
   assert.equal(beaconFiles.filter(path => path.includes("/variants/") && path.endsWith(".webp")).length, 50);
   for (const profile of ["tall", "compact", "wide"]) {
     assert(beaconFiles.includes(`assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/${profile}/base.webp`));
+  }
+  const keeperFiles = emittedPaths.filter(path => (
+    path.startsWith("assets/worlds/brass-meridian/scenes/keepers-relay/")
+  ));
+  assert.equal(keeperFiles.filter(path => path.includes("/variants/") && path.endsWith(".webp")).length, 50);
+  for (const profile of ["tall", "compact", "wide"]) {
+    assert(keeperFiles.includes(`assets/worlds/brass-meridian/scenes/keepers-relay/${profile}/base.webp`));
   }
   const mosslightFiles = emittedPaths.filter(path => (
     path.startsWith("assets/worlds/moonroot-ruins/scenes/mosslight-landing/")

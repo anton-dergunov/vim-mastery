@@ -190,7 +190,7 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(16);
+    await expect(page.locator(".toc-unit")).toHaveCount(17);
     await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
     await expect(page.locator(".toc-activity")).toHaveCount(73);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
@@ -258,14 +258,15 @@ test.describe("Production lesson flow", () => {
       { id: "macros", unitNumber: 14, title: "Macros" },
       { id: "global-normal-automation", unitNumber: 15, title: "Global and Normal automation" },
       { id: "real-code-workflow-capstones", unitNumber: 16, title: "Real-code workflow capstones" },
+      { id: "mastery-loops", unitNumber: 17, title: "Mastery loops" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(16);
+    await expect(page.locator(".toc-unit")).toHaveCount(17);
     await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation", "Arc 4Integration and lifelong practice"]);
     await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
     await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(5);
     await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(4);
-    await expect(page.locator(".toc-arc").nth(3).locator(".toc-unit")).toHaveCount(1);
+    await expect(page.locator(".toc-arc").nth(3).locator(".toc-unit")).toHaveCount(2);
     await expect(page.locator(".toc-arc-divider")).toHaveCount(3);
     const arcPresentation = await page.evaluate(() => {
       const heading = document.querySelector(".toc-arc-heading");
@@ -1056,7 +1057,7 @@ test.describe("Production lesson flow", () => {
     const closing = capstoneUnit.lessons.at(-1).activities.at(-1);
     expect(closing.type).toBe("summary");
     await page.evaluate(id => window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === id)), closing.id);
-    await expect(page.getByRole("button", { name: /Complete Unit 16/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Continue to Unit 17/ })).toBeVisible();
   });
 
   test("supports count-only and interactive confirmation through touch input", async ({ page }) => {
@@ -1219,7 +1220,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ modifiers: [], history: [...beforeReplay, "@"] });
   });
 
-  test("continues from Unit 11 through published Units 12, 13, 14, 15, and 16", async ({ page }) => {
+  test("continues from Unit 11 through published Units 12–17", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=repeat-unit-summary");
     await expect(page.getByRole("button", { name: "Continue to Unit 12" })).toBeVisible();
     await page.getByRole("button", { name: "Continue to Unit 12" }).click();
@@ -1251,15 +1252,15 @@ test.describe("Production lesson flow", () => {
     expect((await state(page))).toMatchObject({ unitId: "real-code-workflow-capstones", unitNumber: 16, activityId: "call-site-brief" });
 
     await page.goto("/?unit=real-code-workflow-capstones&activity=review-rationale");
-    await expect(page.getByRole("button", { name: "Complete Unit 16" })).toBeVisible();
-    await page.getByRole("button", { name: "Complete Unit 16" }).click();
+    await expect(page.getByRole("button", { name: "Continue to Unit 17" })).toBeVisible();
+    await page.getByRole("button", { name: "Continue to Unit 17" }).click();
     const storySurface = page.locator(".story-surface");
     if (await storySurface.getAttribute("data-kind") === "unit") {
-      await page.getByRole("button", { name: "Continue to finale" }).click();
+      await page.getByRole("button", { name: "Continue to next unit" }).click();
     }
-    await expect(storySurface).toHaveAttribute("data-kind", "ending");
-    await page.getByRole("button", { name: "View the restored Wilds" }).click();
-    await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
+    await page.waitForURL(/unit=mastery-loops/);
+    expect((await state(page))).toMatchObject({ unitId: "mastery-loops", unitNumber: 17, activityId: "mastery-loop-brief" });
+    await expect(page.getByRole("button", { name: "Open Mastery" })).toBeVisible();
   });
 
   test("locks direct scrolling while Vim updates the Unit 10 position rail", async ({ page }) => {
