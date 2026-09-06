@@ -105,6 +105,49 @@ function normalizeMode(mode, subMode, cm, commandLineOpen) {
   return "normal";
 }
 
+const FILE_NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+/**
+ * Vim's `"%` holds the name of the file in the buffer. The adapter has no
+ * concept of a file, so the register is supplied here from the name an activity
+ * authors. It is read-only exactly as in Vim: writes are accepted and dropped
+ * rather than refused, so `"%yy` is a no-op instead of an error.
+ *
+ * One object serves the whole session. `Vim.defineRegister` throws when the
+ * name is already taken and appends to a `validRegisters` list that no reset
+ * clears, so it can be called only once; `resetVimGlobalState_` meanwhile
+ * discards the register map itself, which is why the object is re-seated after
+ * every reset instead.
+ */
+const fileNameRegister = {
+  keyBuffer: [""],
+  insertModeChanges: [],
+  searchQueries: [],
+  linewise: false,
+  blockwise: false,
+  setText() {},
+  pushText() {},
+  pushInsertModeChanges() {},
+  pushSearchQuery() {},
+  clear() {},
+  toString() {
+    return this.keyBuffer[0];
+  },
+};
+let fileNameRegisterDefined = false;
+
+function setFileNameRegister(fileName) {
+  fileNameRegister.keyBuffer = [fileName || ""];
+  const registers = Vim.getRegisterController?.()?.registers;
+  if (!registers) return;
+  if (!fileNameRegisterDefined && !registers["%"]) {
+    Vim.defineRegister?.("%", fileNameRegister);
+    fileNameRegisterDefined = true;
+    return;
+  }
+  registers["%"] = fileNameRegister;
+}
+
 function snapshotRegisters() {
   const registers = Vim.getRegisterController?.()?.registers || {};
   return Object.fromEntries(Object.entries(registers).map(([name, register]) => [name, {
@@ -496,6 +539,7 @@ export class VimEngine {
     text,
     cursor,
     language = "plain-text",
+    fileName,
     wrapColumns,
     textWidth,
     viewportRows,
@@ -514,7 +558,13 @@ export class VimEngine {
       throw new RangeError("viewportRows must be an integer from 5 to 12");
     }
     if (typeof visualizeWhitespace !== "boolean") throw new TypeError("visualizeWhitespace must be a boolean");
+    if (fileName !== undefined && (typeof fileName !== "string" || !FILE_NAME_PATTERN.test(fileName))) {
+      throw new TypeError("fileName must be a bare file name with no directory part");
+    }
     this.onEvent = onEvent;
+    // An unnamed buffer reports an empty `"%`, which is what real Vim does too.
+    this.fileName = fileName || "";
+    setFileNameRegister(this.fileName);
     this.mode = "normal";
     this.subMode = "";
     this.locked = false;
@@ -1363,4 +1413,7 @@ export function resetVimEngineState() {
   // This package exposes global registers and macro state through this reset
   // hook. Keeping it here prevents that implementation detail leaking into UI.
   Vim.resetVimGlobalState_?.();
+  // The reset drops the whole register map, so `"%` is re-seated empty. An
+  // activity that authors no file name must never read the previous one.
+  setFileNameRegister("");
 }

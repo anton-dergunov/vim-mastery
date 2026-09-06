@@ -226,7 +226,7 @@ pattern after installing the query. Fixture:
 `substitute-leaves-bare-pattern-in-search-register`.
 
 Verified: `:g` with `:t`/`:m`; `:sort n`, `:sort u`, `:sort i`, and `:sort /pat/`;
-the read-only registers `".`, `":`, and `"/`; Insert-mode `Ctrl-r{register}`,
+the read-only registers `".`, `":`, `"/`, and `"%`; Insert-mode `Ctrl-r{register}`,
 `Ctrl-o`, `Ctrl-w`, and `Ctrl-u`; command-line `Ctrl-r{register}`; search as an
 operator range (`d/pat`, `y/pat`, `c/pat`, `c?pat`) with Vim's exclusive match
 boundary;
@@ -235,7 +235,7 @@ Visual Block `$` with `A`, `I`, and `d`; and `Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, and
 patch; see `patches/README.md`.
 
 Four candidates were deliberately dropped, each with a fixture recording the
-divergence. Two have since been lifted:
+divergence. Three have since been lifted:
 
 - **Search offsets** (`/pat/e`, `/pat/+1`). The adapter read everything after
   an unescaped `/` as search flags and understood only `i`, so an offset was
@@ -243,8 +243,20 @@ divergence. Two have since been lifted:
   offsets meant changing query parsing, the search motion, and its
   operator-pending inclusivity together — **session 21 made those changes, and
   this family is now verified.**
-- **The `"%` register.** It is not one of the adapter's valid registers, and Vim
-  Wilds has no file name to report. Real Vim returns an empty string here too.
+- **The `"%` register.** It is not one of the adapter's valid registers, and the
+  lesson buffer had no name to report. Both halves were fixable. The adapter
+  exports `Vim.defineRegister`, which is the single hook that makes `%` legal
+  for `"%p`, Insert-mode `Ctrl-r%`, and the Ex-line `Ctrl-r` path; and an
+  activity that already declares a `languageId` can declare a `fileName`
+  beside it, which is finishing a description that was half-written rather than
+  inventing a fiction. On the native side the runner had been starting Vim on an
+  unnamed buffer, which is exactly why `%` came back empty when it was first
+  probed; `:file` names the buffer without touching disk — **session 22 made
+  those changes, and this register is now verified.** Writes to it are dropped
+  rather than refused, matching Vim, and an activity that authors no name
+  reports an empty string, as an unnamed buffer does in Vim. Fixtures:
+  `file-name-register-put`, `file-name-register-insert-mode`,
+  `file-name-register-on-command-line`, `file-name-register-is-read-only`.
 - **`:global` dry runs** (`:g/pat/p`, `:g/pat/nu`). Vim leaves the buffer alone,
   prints the matched lines, and moves the cursor to the last match. Vim Wilds
   had no Ex output surface and the adapter has no `:print` or `:number` command
@@ -369,3 +381,44 @@ and `/pat/-n` line offsets including a bare count and clamping at the buffer
 edge, `d`/`y`/`c` over each form, `?pat?e`, and offset-preserving `n` and `N`.
 Search offsets on Ex addresses (`:/pat/+1d`) are a different parser and remain
 out of scope.
+
+## Session 22 — the file-name register
+
+`"%` holds the name of the file in the buffer. It is how you write `:e <C-r>%`
+or drop a path into a comment, and session 01 dropped it for two reasons that
+looked like one: `%` is not an adapter register, and the lesson buffer had no
+name. Only the first was a conformance problem.
+
+An activity already declares a `languageId`. Declaring an optional `fileName`
+beside it finishes a description that was half-written — a buffer with a name is
+more realistic than one without — and `content/practice-samples.json` had
+carried one since session 15. Absent, the buffer is unnamed and `"%` is empty,
+which is what Vim reports for an unnamed buffer too.
+
+Two properties of the adapter shape the implementation. `Vim.defineRegister`
+throws when the name is already taken, and it appends to a `validRegisters` list
+that no reset clears; `Vim.resetVimGlobalState_` meanwhile discards the register
+map itself. So the register object is defined exactly once and re-seated after
+every reset, and `resetVimEngineState` seats it *empty* — an activity that
+authors no name must never read the previous activity's. Writes are accepted and
+dropped rather than refused, which is what Vim does: `"%yy` is a no-op, not an
+error.
+
+Surfacing decided whether this taught anything: `"%p` that pastes `report.py`
+out of nowhere is a magic trick. A named buffer now wears its name along the
+bottom of the code slab, where Vim keeps it. The label is absolutely positioned
+like `.buffer-position`, so it can never take a code row; the 14px strip it
+needs is bought from `--editor-height`, and for the small buffers these
+activities use it vanishes inside the slab's own minimum height and costs
+nothing at all. Free Practice needs no label — the sample's file name is already
+the header.
+
+On the native side `tests/native-vim-runner.mjs` had been starting Vim on an
+unnamed buffer via `setline()`, which is exactly why `%` came back empty when
+session 01 probed it. It now runs `:file` first when a fixture names one, which
+labels the buffer without reading or writing anything.
+
+Verified: `"%p`, Insert-mode `Ctrl-r%`, Ex-line `Ctrl-r%`, and writes to `"%`
+being ignored. Filename modifiers (`%:h`, `%:t`) are a different parser and are
+out of scope, as is anything implying the file exists — `:w` and `:e`. The name
+is a label, not a filesystem.

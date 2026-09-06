@@ -1642,6 +1642,26 @@ html.next-ui .buffer-cue {
 html.next-ui .buffer-position.has-above .buffer-cue-top,
 html.next-ui .buffer-position.has-below .buffer-cue-bottom { opacity: .85; }
 
+/* The buffer's file name, where Vim keeps it: along the bottom of the window,
+   read left to right. Absolutely positioned like `.buffer-position`, so it
+   spends no code row; the slab buys it a 14px strip through `--editor-height`
+   instead. It clears the decorative corner bracket at `right: 4px` and stops
+   short of the position rail's 11px right gutter. */
+html.next-ui .buffer-name {
+  position: absolute;
+  z-index: 10;
+  left: 8px;
+  right: 18px;
+  bottom: 2px;
+  overflow: hidden;
+  color: color-mix(in srgb, var(--theme-warm) 62%, #8fa197);
+  font: 600 10px/12px ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 html.next-ui .next-code-slab .code-body { padding: 8px 5px; }
 html.next-ui .code-body .cm-scroller { font-size: var(--text-editor); }
 html.next-ui .code-body .cm-content,

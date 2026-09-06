@@ -48,7 +48,7 @@ function aliasRegisterKeys(keys, aliases) {
   });
 }
 
-export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth, viewportRows, viewportTop, registerNames = [], registerAliases = {}, targetExOutput }) {
+export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, fileName, textWidth, viewportRows, viewportTop, registerNames = [], registerAliases = {}, targetExOutput }) {
   // Only fixtures that assert printed output pay for the capture, so the
   // authored-content replays that share this runner are untouched.
   const captureOutput = Boolean(targetExOutput);
@@ -61,6 +61,10 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     "set expandtab shiftwidth=2 tabstop=2",
     ...(viewportRows === undefined ? [] : [`execute "resize ${viewportRows}"`]),
     ...(textWidth === undefined ? [] : [`set textwidth=${textWidth}`]),
+    // Naming the buffer is what gives `%` something to report. `:file` only
+    // labels the buffer, so nothing is read from or written to disk and the
+    // fixture stays as hermetic as an unnamed one.
+    ...(fileName === undefined ? [] : [`execute "file " . fnameescape(${JSON.stringify(fileName)})`]),
     `call setline(1, ${JSON.stringify(initialCode)})`,
     `call cursor(${cursor[0] + 1}, ${cursor[1] + 1})`,
     ...(viewportTop === undefined ? [] : [`call winrestview({"topline": ${viewportTop + 1}})`]),

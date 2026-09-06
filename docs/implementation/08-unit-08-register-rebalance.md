@@ -11,8 +11,8 @@
 >
 > **`"%` is deferred, not dropped.** Session 01 dropped it because the buffer had
 > no name; [session 22](22-file-name-register.md) gives each activity an authored
-> `fileName` so it reports something true. Teach four read-only registers if 22
-> has landed, three if it has not — and do not describe `"%` as unsupported.
+> `fileName` so it reports something true. **Session 22 has since landed**, so
+> the read-only lesson teaches four registers, not three.
 >
 > **Nothing here is removed.** Constraint 7 in [README.md](README.md) applies:
 > the demotions below are now `lesson.track` markers, not merges or deletions.

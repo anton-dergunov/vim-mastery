@@ -37,7 +37,7 @@
     "yank and put",
     "line-predicate relocation (:g/pat/t{addr}, :g/pat/m{addr}, and their :copy/:move spellings, with Vim's mark-then-execute ordering)",
     ":sort flags (n numeric, u unique, i case-insensitive, and /pat/ sorting on the text that follows the match)",
-    "read-only registers (\". last inserted text, \": last Ex command, \"/ last search pattern)",
+    "read-only registers (\". last inserted text, \": last Ex command, \"/ last search pattern, \"% the buffer's file name)",
     "Insert-mode command keys (Ctrl-r{register}, Ctrl-o for one Normal command, Ctrl-w, and Ctrl-u)",
     "command-line register insertion (Ctrl-r{register} on the Ex and search prompts)",
     "search as an operator range (d/pat, y/pat, c/pat, c?pat, with Vim's exclusive match boundary, and Escape aborting the pending operator)",
@@ -48,7 +48,6 @@
   ],
   "pending": [
     "full curriculum matrix: specialized comment and preprocessor motions, replacement case conversion, and \\= replacement expressions",
-    "dropped: the \"% register. It is not a valid adapter register and Vim Wilds has no file name to report.",
     "dropped: counted open above ({count}O). Native Vim leaves the cursor on the last opened line; the adapter interlaces the repeats but leaves it on the first, so the final cursor disagrees. {count}i, {count}a, and {count}o all conform and are exposed.",
     "dropped: tag-object yanks that move the cursor (yit/yat where the object starts before the cursor). Vim places the cursor at the start of the yanked range; the adapter leaves it where it was. Tag activities therefore either operate with the cursor already at the range start or use an operator that changes text.",
     "dropped: around-tag operators on elements spanning whole lines (dat over a multi-line element). Vim removes the emptied lines; the adapter leaves the leading indentation as a residual line. Multi-line tag work uses it/cit/dit, which conform exactly."

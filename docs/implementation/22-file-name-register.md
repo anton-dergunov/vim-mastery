@@ -111,3 +111,57 @@ npm run test:targeted -- tests/editor-conformance.spec.js --workers=1 --grep "re
 `defineRegister` mutates adapter-global state, so confirm that `resetVimEngineState`
 leaves no stale register between activities, and that an activity without a
 `fileName` reports an empty `%` rather than the previous activity's name.
+
+## Implementation notes
+
+### Surfacing: the label went in, and it costs no row
+
+Section 3's fallback was not needed. A named buffer wears its file name along
+the bottom of the code slab, where Vim keeps it — `.buffer-name`, absolutely
+positioned inside `.code-slab` exactly as `.buffer-position` is, at 10px, dim,
+`pointer-events: none`, clearing both the decorative corner bracket at
+`right: 4px` and the position rail's right gutter.
+
+Because it is absolutely positioned it can never take a code row. The 14px strip
+it occupies is bought from `--editor-height` instead, and the slab's
+`max(132px, …)` floor absorbs that entirely for the small buffers these
+activities use — so at 360×740 the label costs literally nothing. Measured at
+360×740, 390×844, 412×915, 430×932 and 432×960: no document scroll, no
+horizontal overflow, no clipping, no truncation, and no overlap with the last
+rendered line.
+
+Free Practice needs no label. `freePracticeActivity()` already puts the sample's
+file name in the header, so the surface names the buffer once and `"%` agrees
+with it.
+
+### The register is a singleton that is re-seated, not redefined
+
+`Vim.defineRegister` throws when the name is already taken and appends to a
+`validRegisters` list that no reset clears, so calling it per `VimEngine`
+construction would either throw or grow that list without bound.
+`Vim.resetVimGlobalState_` meanwhile discards the register map itself. So one
+object is defined once and assigned back into the map afterwards, and
+`resetVimEngineState` seats it **empty** — which is what makes an activity with
+no `fileName` report an empty `"%` rather than the previous activity's name,
+whether or not an engine is constructed next. Writes are accepted and dropped:
+`"%yy` is a no-op in real Vim, not an error, and `file-name-register-is-read-only`
+pins that.
+
+### What landed
+
+Schema: an optional `fileName` on the runnable activity, and `%` admitted to
+`registerExpectations`. The extension/language agreement is enforced by
+`tests/content-data.test.mjs`, which walks every named activity against its
+language profile's `extensions`.
+
+Conformance: `tests/native-vim-runner.mjs` names the buffer with `:file` when a
+fixture asks; `getreg("%")`/`getregtype("%")` needed no special case. Four native
+fixtures and two browser tests cover Normal `"%p`, Insert-mode `Ctrl-r%`, Ex-line
+`Ctrl-r%`, ignored writes, and cross-activity isolation.
+
+Content: Unit 8 teaches four read-only registers. `put-the-file-name` (isolate),
+`reuse-the-file-name-in-a-substitution` (mix) and
+`title-a-note-from-its-file-name` (challenge) join `reuse-read-only-registers`;
+`stamp-the-file-name-while-inserting` joins `type-registers-while-inserting`,
+closing the loop session 11 left open. The brief's `:!node ‹Ctrl-r›%` framing
+stays prose only — the product runs no shell, and `:!` is out of scope.

@@ -7,7 +7,7 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "8. Registers and putting",
-    "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
+    "commandsAndConcepts": "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/` `\"%`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
     "prerequisites": "Unit 6, especially `y d c p`; Unit 7 recommended",
     "learningOutcome": "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
     "representativeExercises": "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
@@ -7723,15 +7723,15 @@
     {
       "id": "reuse-read-only-registers",
       "title": "Reuse what Vim recorded",
-      "objective": "Read back the last insertion, the last Ex command, and the last search pattern instead of typing them again.",
+      "objective": "Read back the last insertion, the last Ex command, the last search pattern, and the buffer's own file name instead of typing them again.",
       "activities": [
         {
           "id": "read-only-register-meaning",
           "type": "theory",
           "phase": "explain",
-          "title": "Vim fills three registers for you",
-          "body": "Register `.` holds the text you last inserted, `:` the last Ex command, and `/` the last search pattern. You cannot write them, but you can put them with `\"{register}p` or drop them into the command line with `Ctrl-r{register}`.",
-          "grammar": "\". last insert · \": last Ex command · \"/ last search",
+          "title": "Vim fills four registers for you",
+          "body": "Register `.` holds the text you last inserted, `:` the last Ex command, `/` the last search pattern, and `%` the name of the file in the buffer. You cannot write them, but you can put them with `\"{register}p` or drop them into the command line with `Ctrl-r{register}`.",
+          "grammar": "\". last insert · \": last Ex command · \"/ last search · \"% file name",
           "contrast": "Named registers hold what you decided to keep; these hold what you just did.",
           "demoRef": "search-reuse-demo"
         },
@@ -8088,6 +8088,148 @@
             "method": "llm-authored",
             "promptVersion": "registers-putting-v1",
             "languageRationale": "Two bare flags make the repeated value the only difference between the rows.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers"
+            ]
+          }
+        },
+        {
+          "id": "put-the-file-name",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Record where the code came from",
+          "instruction": "The buffer is `report.py`. Put its name inside the empty `SOURCE` string without typing the name.",
+          "languageId": "python",
+          "fileName": "report.py",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "SOURCE = \"\"",
+                "total = 0"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "SOURCE = \"report.py\"",
+                "total = 0"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal",
+              "registers": {
+                "%": {
+                  "type": "characterwise",
+                  "text": "report.py"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "f",
+              "\"",
+              "\"",
+              "%",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 2,
+                "display": "f\"",
+                "explanation": "Reach the opening quote."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "\"%p",
+                "explanation": "Put the file name after it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 2,
+                "lines": [
+                  "SOURCE = \"\"",
+                  "total = 0"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal",
+                "registers": {
+                  "%": {
+                    "type": "characterwise",
+                    "text": "report.py"
+                  }
+                },
+                "caption": "The name is already in `\"%`; nothing had to be yanked."
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "SOURCE = \"report.py\"",
+                  "total = 0"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal",
+                "registers": {
+                  "%": {
+                    "type": "characterwise",
+                    "text": "report.py"
+                  }
+                },
+                "caption": "Put it between the quotes."
+              }
+            ]
+          },
+          "hints": [
+            "Vim keeps the buffer's own file name in a register you never filled.",
+            "Use `f\"` then `\"%p`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "`\"%` holds the name of the file in the buffer, so the name is already stored before you start."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "find-character",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "read-only-registers",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim. In a host that embeds Vim, `\"%` reports whatever that host calls the buffer.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A Python module recording its own source is the plainest reason a file name belongs in the text.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -8511,6 +8653,161 @@
           }
         },
         {
+          "id": "reuse-the-file-name-in-a-substitution",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Fill both blanks with the file name",
+          "instruction": "The buffer is `config.toml`. Give both empty values the file's own name in a single substitution, without typing it.",
+          "languageId": "toml",
+          "fileName": "config.toml",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "source = \"\"",
+                "backup = \"\""
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "source = \"config.toml\"",
+                "backup = \"config.toml\""
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal",
+              "registers": {
+                "%": {
+                  "type": "characterwise",
+                  "text": "config.toml"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "%",
+              "s",
+              "/",
+              "\"",
+              "\"",
+              "/",
+              "\"",
+              "Ctrl-r",
+              "%",
+              "\"",
+              "/",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 7,
+                "display": "%s/\"\"/",
+                "explanation": "Match the empty value on every line."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "\"",
+                "explanation": "Open the replacement string."
+              },
+              {
+                "from": 8,
+                "to": 10,
+                "display": "Ctrl-r%",
+                "explanation": "Insert the file name instead of typing it."
+              },
+              {
+                "from": 10,
+                "to": 12,
+                "display": "\"/",
+                "explanation": "Close the string and end the replacement."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 13,
+                "lines": [
+                  "source = \"config.toml\"",
+                  "backup = \"config.toml\""
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "%": {
+                    "type": "characterwise",
+                    "text": "config.toml"
+                  }
+                },
+                "caption": "One substitution, and the name was never typed."
+              }
+            ]
+          },
+          "hints": [
+            "`Ctrl-r` works on the command line for `\"%` exactly as it does for `\"/`.",
+            "Use `:%s/\"\"/\"Ctrl-r%\"/` then `↵`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "`Ctrl-r%` drops the file name onto the command line, so a rename of the file cannot leave a stale string behind."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "substitution",
+              "command-line-editing"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "read-only-registers",
+              "command-line-editing"
+            ]
+          },
+          "portability": "Core Vim. A host that embeds Vim may claim `Ctrl-r` for itself on the command line.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A TOML config naming its own file is the case where retyping the name is exactly the mistake.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers"
+            ]
+          }
+        },
+        {
           "id": "substitute-without-retyping",
           "type": "exercise",
           "phase": "challenge",
@@ -8733,6 +9030,165 @@
             "requiredEvidence": [
               "read-only-registers",
               "command-line-register"
+            ]
+          }
+        },
+        {
+          "id": "title-a-note-from-its-file-name",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Give the notes a heading",
+          "instruction": "The buffer is `notes.md`. Open a heading line above the list and title it with the file's own name.",
+          "languageId": "markdown",
+          "fileName": "notes.md",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "- first note",
+                "- second note"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# notes.md",
+                "- first note",
+                "- second note"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal",
+              "registers": {
+                "%": {
+                  "type": "characterwise",
+                  "text": "notes.md"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "O",
+              "#",
+              " ",
+              "Escape",
+              "\"",
+              "%",
+              "p"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "O",
+                "explanation": "Open a line above the list."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "# ",
+                "explanation": "Type the heading marker."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              },
+              {
+                "from": 4,
+                "to": 7,
+                "display": "\"%p",
+                "explanation": "Put the file name after it."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 4,
+                "lines": [
+                  "# ",
+                  "- first note",
+                  "- second note"
+                ],
+                "cursor": [
+                  0,
+                  1
+                ],
+                "mode": "normal",
+                "registers": {
+                  "%": {
+                    "type": "characterwise",
+                    "text": "notes.md"
+                  }
+                },
+                "caption": "The marker is typed; the title itself is already stored."
+              },
+              {
+                "afterStep": 7,
+                "lines": [
+                  "# notes.md",
+                  "- first note",
+                  "- second note"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal",
+                "registers": {
+                  "%": {
+                    "type": "characterwise",
+                    "text": "notes.md"
+                  }
+                },
+                "caption": "Put the name to finish the heading."
+              }
+            ]
+          },
+          "hints": [
+            "Type only the part of the heading that is not already in a register.",
+            "Use `O# ` then `Esc`, then `\"%p`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "Opening a line does not disturb `\"%`: it is filled by the buffer having a name, not by anything you do."
+          },
+          "skills": {
+            "primary": [
+              "read-only-registers"
+            ],
+            "supporting": [
+              "insert-mode-entry",
+              "put-placement"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "read-only-registers",
+              "register-state"
+            ]
+          },
+          "portability": "Core Vim register and put behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A Markdown note titled after its own file is the edit people actually make by hand.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "read-only-registers"
             ]
           }
         },
@@ -9709,6 +10165,141 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "insert-register"
+            ]
+          }
+        },
+        {
+          "id": "stamp-the-file-name-while-inserting",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Sign the script with its own name",
+          "instruction": "The buffer is `release.sh`. Finish the comment with the file's name without leaving Insert mode to fetch it.",
+          "languageId": "shell",
+          "fileName": "release.sh",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "# ran by",
+                "make release"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "# ran by release.sh",
+                "make release"
+              ],
+              "cursor": [
+                0,
+                18
+              ],
+              "mode": "normal",
+              "registers": {
+                "%": {
+                  "type": "characterwise",
+                  "text": "release.sh"
+                }
+              }
+            }
+          },
+          "script": {
+            "steps": [
+              "A",
+              " ",
+              "Ctrl-r",
+              "%",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "A",
+                "explanation": "Open Insert mode at the end of the comment."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": " ",
+                "explanation": "Type the separating space."
+              },
+              {
+                "from": 2,
+                "to": 4,
+                "display": "Ctrl-r%",
+                "explanation": "Type the file name from the register."
+              },
+              {
+                "from": 4,
+                "to": 5,
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 5,
+                "lines": [
+                  "# ran by release.sh",
+                  "make release"
+                ],
+                "cursor": [
+                  0,
+                  18
+                ],
+                "mode": "normal",
+                "registers": {
+                  "%": {
+                    "type": "characterwise",
+                    "text": "release.sh"
+                  }
+                },
+                "caption": "The name arrived without a trip back to Normal mode."
+              }
+            ]
+          },
+          "hints": [
+            "`Ctrl-r` takes any register, including the ones Vim fills for you.",
+            "Use `A ` then `Ctrl-r%` and `Esc`."
+          ],
+          "feedback": {
+            "success": "The intended text and register state are exact.",
+            "why": "`Ctrl-r%` types the buffer's file name straight into the insertion, so the comment cannot disagree with the file it lives in."
+          },
+          "skills": {
+            "primary": [
+              "insert-mode-registers"
+            ],
+            "supporting": [
+              "read-only-registers",
+              "insert-mode-entry"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "insert-mode-registers",
+              "register-state"
+            ]
+          },
+          "portability": "Insert-mode `Ctrl-r` is native Vim; a host that embeds Vim may claim that chord by default.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "registers-putting-v1",
+            "languageRationale": "A shell script whose header names the script is the comment that rots first when it is typed by hand.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "insert-mode-registers"
             ]
           }
         },
@@ -11278,14 +11869,16 @@
     },
     {
       "id": "read-only-reference",
-      "command": "\". \": \"/",
-      "purpose": "Read back the last inserted text, the last Ex command, and the last search pattern.",
+      "command": "\". \": \"/ \"%",
+      "purpose": "Read back the last inserted text, the last Ex command, the last search pattern, and the name of the file in the buffer.",
       "notes": [
         "Vim fills these; no command writes them directly.",
-        "`\":` is what Unit 11's `@:` replays."
+        "`\":` is what Unit 11's `@:` replays.",
+        "`\"%` is empty when the buffer has no file name, which is what Vim reports too."
       ],
       "exampleActivityRefs": [
         "put-last-inserted-text",
+        "put-the-file-name",
         "rerun-last-ex-command",
         "inspect-read-only-registers"
       ]
@@ -11296,12 +11889,13 @@
       "purpose": "Insert a register's text into the command line instead of retyping it.",
       "notes": [
         "`Ctrl-r/` reuses the pattern a search just confirmed.",
+        "`Ctrl-r%` drops the buffer's file name onto the command line.",
         "Any readable register works, including named ones."
       ],
       "exampleActivityRefs": [
         "search-reuse-demo",
         "substitute-without-retyping",
-        "integrated-pattern-reuse"
+        "reuse-the-file-name-in-a-substitution"
       ]
     },
     {
@@ -11322,13 +11916,13 @@
       "notes": [
         "Reads the register without changing it, and keeps the insert open.",
         "\"0 still holds the last yank after a delete has claimed the unnamed register.",
-        "The read-only \". \": and \"/ registers work here too.",
+        "The read-only \". \": \"/ and \"% registers work here too.",
         "Some editors that embed Vim claim this chord for themselves; check the host you are in."
       ],
       "exampleActivityRefs": [
         "carry-a-yank-into-a-new-call",
         "reach-past-the-newest-delete",
-        "record-the-pattern-you-searched"
+        "stamp-the-file-name-while-inserting"
       ]
     }
   ],
@@ -11517,15 +12111,18 @@
         "search-reuse-demo"
       ],
       "isolate": [
-        "put-last-inserted-text"
+        "put-last-inserted-text",
+        "put-the-file-name"
       ],
       "mix": [
         "rerun-last-ex-command",
-        "inspect-read-only-registers"
+        "inspect-read-only-registers",
+        "reuse-the-file-name-in-a-substitution"
       ],
       "challenge": [
         "substitute-without-retyping",
-        "choose-pattern-source"
+        "choose-pattern-source",
+        "title-a-note-from-its-file-name"
       ]
     },
     {
@@ -11543,7 +12140,8 @@
       ],
       "mix": [
         "type-a-named-register",
-        "reach-past-the-newest-delete"
+        "reach-past-the-newest-delete",
+        "stamp-the-file-name-while-inserting"
       ],
       "challenge": [
         "record-the-pattern-you-searched",

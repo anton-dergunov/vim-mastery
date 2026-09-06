@@ -81,6 +81,21 @@ test("a random file is the default entry path, with no picker in the way", async
   await expect(page.locator("#lessonLabel")).toHaveText(current.fileName);
 });
 
+test("a practice buffer reports its own name in the file-name register", async ({ page }) => {
+  await page.goto("/play/?practice=routes-typescript");
+  await waitForApp(page);
+
+  // The header already names the sample, so the surface needs no second label —
+  // but `"%` has to agree with it, or `Ctrl-r%` teaches the wrong thing here.
+  const current = await practiceState(page);
+  expect(current.fileName).toBe("routes.ts");
+  await expect(page.locator(".buffer-name")).toHaveCount(0);
+  expect((await appState(page)).registers["%"]).toEqual({ text: "routes.ts", type: "characterwise" });
+
+  await page.evaluate(() => ["O", "Escape", "\"", "%", "p"].forEach(key => window.VimWilds.emit(key)));
+  expect((await appState(page)).code[0]).toBe("routes.ts");
+});
+
 test("the surface shows only the editor and the keyboard", async ({ page }) => {
   await page.goto("/play/?practice");
   await waitForApp(page);

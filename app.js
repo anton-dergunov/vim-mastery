@@ -551,6 +551,9 @@ function freePracticeActivity(sample) {
     title: sample.fileName,
     instruction: "",
     languageId: sample.languageId,
+    // The picker and the header already show this name; passing it on is what
+    // makes `"%` and `Ctrl-r%` report it inside a practice buffer.
+    fileName: sample.fileName,
     hints: [],
     script: { steps: [], commandGroups: [] },
     scenario: { initial: { lines: sample.lines, cursor: [0, 0], mode: "normal" } },
@@ -1597,7 +1600,13 @@ function renderWorld() {
   const plannedRows = plannedEditorRows(activity);
   const editorRows = viewportRows || plannedRows;
   const expandedRowsClass = editorRows > 6 ? " has-expanded-rows" : "";
-  const editorPadding = viewportRows ? 18 : 24;
+  // A named buffer wears its file name where Vim puts it, along the bottom of
+  // the slab. The label is absolutely positioned so it can never take a code
+  // row; the strip it needs is bought with slab height instead, and for the
+  // small buffers these activities use it disappears inside the slab's own
+  // minimum height and costs nothing at all.
+  const fileNameLabel = isRunnable(activity) ? activity.fileName : "";
+  const editorPadding = (viewportRows ? 18 : 24) + (fileNameLabel ? 14 : 0);
   const editorStyle = `--editor-rows:${editorRows};--editor-height:${editorRows * 24 + editorPadding}px${viewportRows ? `;--viewport-rows:${viewportRows}` : ""}`;
   const content = isFreePractice()
     // No viewport rows and no authored height: the free practice slab is sized
@@ -1609,7 +1618,7 @@ function renderWorld() {
         </div>`
     : isRunnable(activity)
     ? `<div class="editor-stack${viewportRows ? " has-viewport" : ""}${expandedRowsClass}" data-planned-rows="${editorRows}" style="${editorStyle}">
-          <div class="code-slab next-code-slab"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}</div>
+          <div class="code-slab next-code-slab${fileNameLabel ? " has-file-name" : ""}"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}${fileNameLabel ? `<div class="buffer-name">${escapeHtml(fileNameLabel)}</div>` : ""}</div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
         </div>`
     : activity.inspection
@@ -1642,6 +1651,7 @@ function mountEditor() {
     text: initial.lines.join("\n"),
     cursor: startCursor,
     language: activity.languageId,
+    fileName: activity.fileName,
     wrapColumns: activity.editor?.wrapColumns,
     textWidth: activity.editor?.textWidth,
     viewportRows: activity.editor?.viewportRows,
@@ -3324,6 +3334,7 @@ window.VimWilds = Object.freeze({
       code: snapshot?.text.split("\n") || [],
       cursor: snapshot?.cursorPosition || [0, 0],
       registers: snapshot?.registers || {},
+      fileName: currentActivity().fileName || "",
       viewport: snapshot?.viewport || null,
       viewportDependent: Boolean(currentActivity().editor?.viewportDependent),
       matchLines: snapshot?.matchLines || [],

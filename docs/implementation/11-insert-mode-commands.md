@@ -118,12 +118,14 @@ fixtures.
 
 ### `"%` was deferred, not dropped
 
-Session 22 has not landed, so `"%` is still recorded as dropped in
-`supported-commands.json` and `docs/vim-conformance.md`. Per session 08's
-instruction, Unit 8 teaches three read-only registers through `Ctrl-r` — `".`,
-`":`, and `"/` — and **no content describes `"%` as unsupported**. Section 3 of
-this brief is otherwise satisfied: `Ctrl-r/` and `Ctrl-r.` are both taught from
-Insert mode. When session 22 lands, `Ctrl-r%` joins the same lesson.
+This session shipped with `"%` still recorded as dropped, so Unit 8 taught three
+read-only registers through `Ctrl-r` — `".`, `":`, and `"/` — and no content
+described `"%` as unsupported. Section 3 of this brief was otherwise satisfied:
+`Ctrl-r/` and `Ctrl-r.` were both taught from Insert mode.
+
+[Session 22](22-file-name-register.md) has since landed and closed the loop.
+`"%` is verified in `supported-commands.json`, and `Ctrl-r%` joins the same
+lesson in `stamp-the-file-name-while-inserting`.
 
 ### What each lesson teaches
 

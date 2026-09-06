@@ -761,6 +761,67 @@ test.describe("Production lesson flow", () => {
     });
   });
 
+  test("names the file-name register from touch and physical keyboards", async ({ page }) => {
+    // `"` and `%` are both Shift chords, so `"%p` is two latches and a plain key
+    // — the sequence most likely to break on the touch keyboard.
+    await page.goto("/?unit=registers-putting&activity=put-the-file-name");
+    await page.evaluate(() => ["f", "\""].forEach(key => window.VimWilds.emit(key)));
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator(`.key[data-key="'"]`).click();
+    await page.locator('[data-mod="Shift"]').first().click();
+    await page.locator('.key[data-key="5"]').click();
+    await page.locator('.key[data-key="p"]').click();
+    await expect.poll(() => state(page)).toMatchObject({
+      complete: true,
+      modifiers: [],
+      code: ["SOURCE = \"report.py\"", "total = 0"],
+    });
+
+    await page.goto("/?unit=registers-putting&activity=put-the-file-name-recall");
+    await page.locator(".cm-content").focus();
+    await page.evaluate(() => ["f", "\""].forEach(key => window.VimWilds.emit(key)));
+    await page.keyboard.press("Shift+Quote");
+    await page.keyboard.press("Shift+Digit5");
+    await page.keyboard.press("p");
+    await expect.poll(() => state(page)).toMatchObject({
+      complete: true,
+      registers: { "%": { text: "report.py", type: "characterwise" } },
+    });
+  });
+
+  // `"%p` that pastes a name from nowhere teaches a magic trick. A named buffer
+  // has to show its name, and it has to show it without spending a code row.
+  test("shows a named buffer's file name without spending a code row", async ({ page }) => {
+    await page.goto("/?unit=registers-putting&activity=put-the-file-name");
+    const label = page.locator(".buffer-name");
+    await expect(label).toHaveText("report.py");
+    expect((await state(page)).fileName).toBe("report.py");
+
+    const named = await page.evaluate(() => {
+      const slab = document.querySelector(".next-code-slab");
+      const box = slab.getBoundingClientRect();
+      const labelBox = document.querySelector(".buffer-name").getBoundingClientRect();
+      const lines = [...document.querySelectorAll(".cm-line")].map(line => line.getBoundingClientRect());
+      return {
+        rows: lines.length,
+        // The label sits below the last rendered line, not on top of it.
+        clearsCode: labelBox.top >= Math.max(...lines.map(line => line.bottom)),
+        insideSlab: labelBox.bottom <= box.bottom + 1 && labelBox.right <= box.right,
+        legible: Number.parseFloat(getComputedStyle(document.querySelector(".buffer-name")).fontSize),
+      };
+    });
+    expect(named.rows).toBe(2);
+    expect(named.clearsCode).toBe(true);
+    expect(named.insideSlab).toBe(true);
+    expect(named.legible).toBeGreaterThanOrEqual(10);
+
+    // An activity that authors no name has no label and no empty strip.
+    await page.goto("/?unit=registers-putting&activity=put-last-inserted-text");
+    await expect(page.locator(".buffer-name")).toHaveCount(0);
+    expect((await state(page)).fileName).toBe("");
+    expect((await state(page)).registers["%"]).toEqual({ text: "", type: "characterwise" });
+  });
+
   test("runs every Unit 8 register activity with internal clipboard state", async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "clipboard", {
@@ -773,7 +834,7 @@ test.describe("Production lesson flow", () => {
     });
     await page.goto("/?unit=registers-putting");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 115, exerciseCount: registerExercises.length });
+    expect(runtime).toEqual({ activityCount: 123, exerciseCount: registerExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -1162,6 +1223,7 @@ test.describe("Production lesson flow", () => {
           parent: host,
           text: fixture.initialCode.join("\n"),
           cursor: fixture.cursor,
+          fileName: fixture.fileName,
           onEvent() {},
         });
         let error = null;
@@ -1203,6 +1265,49 @@ test.describe("Production lesson flow", () => {
         expect.soft(result.exOutput, fixture.id).toEqual(expected.targetExOutput || fixture.targetExOutput);
       }
     }
+  });
+
+  // `"%` is the one register the adapter does not own: it is defined from the
+  // file name an activity authors. Defining it mutates adapter-global state, so
+  // what matters is that the name never outlives the activity that set it.
+  test("scopes the file-name register to the activity that named the buffer", async ({ page }) => {
+    await page.goto("/?unit=global-normal-automation");
+    const results = await page.evaluate(async () => {
+      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const run = (fileName, keys) => {
+        resetVimEngineState();
+        const host = document.createElement("div");
+        document.body.append(host);
+        const engine = new VimEngine({ parent: host, text: "x", cursor: [0, 0], fileName, onEvent() {} });
+        keys.forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+        const snapshot = engine.getSnapshot();
+        engine.destroy();
+        host.remove();
+        return { text: snapshot.text, register: snapshot.registers["%"] };
+      };
+      let rejected = null;
+      try {
+        run("../secrets.py", []);
+      } catch (thrown) {
+        rejected = String(thrown);
+      }
+      return {
+        named: run("main.py", ["\"", "%", "p"]),
+        // No `fileName` at all, immediately after a named one: Vim reports an
+        // empty `"%` for an unnamed buffer, and so must this.
+        unnamed: run(undefined, ["\"", "%", "p"]),
+        renamed: run("other.py", ["\"", "%", "p"]),
+        rejected,
+      };
+    });
+
+    expect(results.named.register).toEqual({ text: "main.py", type: "characterwise" });
+    expect(results.named.text).toBe("xmain.py");
+    expect(results.unnamed.register).toEqual({ text: "", type: "characterwise" });
+    expect(results.unnamed.text).toBe("x");
+    expect(results.renamed.register).toEqual({ text: "other.py", type: "characterwise" });
+    expect(results.renamed.text).toBe("xother.py");
+    expect(results.rejected).toMatch(/bare file name/);
   });
 
   // Native Vim drops an offset its grammar cannot parse and runs the search

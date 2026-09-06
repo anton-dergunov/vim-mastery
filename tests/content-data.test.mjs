@@ -225,7 +225,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 454);
+  assert.equal(exercises.length, 458);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -616,6 +616,36 @@ test("numbered unit catalog is ordered and internally linked", () => {
   }
 });
 
+// `"%` reads the file name an activity authors, so the name has to be one a
+// real file could carry and one this language would actually use. The schema
+// stops a path or a traversal; only a test can see that `report.py` and
+// `languageId: "python"` agree.
+test("a named buffer carries a bare file name its language would use", () => {
+  assert.deepEqual(schema.$defs.runnable.allOf[1].properties.fileName, {
+    type: "string",
+    pattern: "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+    description: "A bare file name with no path separator, read by `\"%` and `Ctrl-r%`. Its extension must belong to the declared languageId. Omit it for an unnamed buffer, which reports an empty `\"%` exactly as Vim does.",
+  });
+  assert.equal(schema.$defs.registerExpectations.propertyNames.pattern, "^[\"0-9a-z+_./:%-]$");
+  assert(!schema.$defs.runnable.allOf[1].required.includes("fileName"), "an unnamed buffer stays the default");
+
+  let named = 0;
+  for (const { file, data } of units) {
+    for (const activity of data.lessons.flatMap(lesson => lesson.activities)) {
+      if (activity.fileName === undefined) continue;
+      named += 1;
+      const where = `${file} ${activity.id}`;
+      assert.match(activity.fileName, /^[A-Za-z0-9][A-Za-z0-9._-]*$/, `${where} must be a bare file name`);
+      const extension = activity.fileName.includes(".") ? activity.fileName.split(".").pop() : "";
+      const profile = profileById.get(activity.languageId);
+      assert(profile, `${where} declares an unknown languageId`);
+      assert(profile.extensions.includes(extension),
+        `${where} names a .${extension} file but declares ${activity.languageId}`);
+    }
+  }
+  assert(named > 0, "at least one activity should teach the file-name register");
+});
+
 test("runnable activities reserve every authored editor row before execution", () => {
   assert.deepEqual(schema.$defs.editorConfig.properties.requiredRows, {
     type: "integer",
@@ -653,7 +683,7 @@ test("runnable activities reserve every authored editor row before execution", (
     }
   }
 
-  assert.equal(growing.length, 35);
+  assert.equal(growing.length, 36);
   for (const id of [
     "entering-changing-text/open-middle-line-demo",
     "entering-changing-text/open-beta-above",
@@ -990,7 +1020,7 @@ test("Unit 7 curriculum definition is preserved verbatim", () => {
 test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   assert.deepEqual(registerUnit.curriculumDefinition, {
     unit: "8. Registers and putting",
-    commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
+    commandsAndConcepts: "Unnamed `\"\"`; yank `\"0`; numbered `\"1`–`\"9`; named `\"a`–`\"z`; append with `\"A`–`\"Z`; black-hole `\"_`; small delete `\"-`; clipboard `\"+`; read-only `\".` `\":` `\"/` `\"%`; `p P gp gP`; `:registers` as inspection; command-line `Ctrl-r{register}`; Insert-mode `Ctrl-r{register}`",
     prerequisites: "Unit 6, especially `y d c p`; Unit 7 recommended",
     learningOutcome: "Preserve yanks, select storage deliberately, reuse multiple snippets, understand why delete/change affects later puts, and read back what Vim already recorded instead of retyping it",
     representativeExercises: "Delete without overwriting a yank; paste the previous yank after another edit; collect lines into a named register; reuse a confirmed search pattern in a substitution; choose where to put text and where the cursor should land",
@@ -999,7 +1029,7 @@ test("Unit 8 preserves the focused registers-and-putting curriculum", () => {
   assert.deepEqual(registerUnit.prerequisiteSkillIds, ["text-objects"]);
   assert.deepEqual(registerUnit.recommendedSkillIds, ["visual-selection"]);
   assert.equal(registerUnit.lessons.length, 12);
-  assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 56);
+  assert.equal(registerUnit.lessons.flatMap(lesson => lesson.activities).filter(activity => activity.type === "demo" || activity.type === "exercise").length, 60);
   assert.deepEqual(registerUnit.coverage.map(item => item.concept), [
     "unnamed register",
     "p P gp gP",
@@ -1820,6 +1850,7 @@ for (const activity of runnable) {
     const keys = keysOf(activity);
     const result = runNativeVim({
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
     });
@@ -1829,6 +1860,7 @@ for (const activity of runnable) {
     for (const checkpoint of activity.script.checkpoints) {
       const checkpointResult = runNativeVim({
         initialCode: activity.scenario.initial.lines,
+        fileName: activity.fileName,
         cursor: activity.scenario.initial.cursor,
         keys: keys.slice(0, checkpoint.afterStep),
       });
@@ -1846,16 +1878,17 @@ for (const activity of modalRunnable) {
     const setupKeys = (activity.scenario.initial.setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
     const cursor = activity.scenario.initial.setup?.cursor || activity.scenario.initial.cursor;
     const keys = keysOf(activity);
-    const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+    const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, keys: setupKeys });
     assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup must not change text`);
 
-    const result = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys });
+    const result = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, setupKeys, keys });
     assert.deepEqual(result.code, activity.scenario.target.lines);
     assert.deepEqual(result.cursor, activity.scenario.target.cursor);
 
     for (const checkpoint of activity.script.checkpoints) {
       const checkpointResult = runNativeVim({
         initialCode: activity.scenario.initial.lines,
+        fileName: activity.fileName,
         cursor,
         setupKeys,
         keys: keys.slice(0, checkpoint.afterStep),
@@ -1874,6 +1907,7 @@ for (const activity of cursorRunnable) {
     const keys = keysOf(activity);
     const result = runNativeVim({
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
     });
@@ -1886,6 +1920,7 @@ for (const activity of cursorRunnable) {
     for (const checkpoint of activity.script.checkpoints) {
       const checkpointResult = runNativeVim({
         initialCode: activity.scenario.initial.lines,
+        fileName: activity.fileName,
         cursor: activity.scenario.initial.cursor,
         keys: keys.slice(0, checkpoint.afterStep),
       });
@@ -1903,6 +1938,7 @@ for (const activity of changingRunnable) {
     const keys = keysOf(activity);
     const result = runNativeVim({
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
     });
@@ -1913,6 +1949,7 @@ for (const activity of changingRunnable) {
     for (const checkpoint of activity.script.checkpoints) {
       const checkpointResult = runNativeVim({
         initialCode: activity.scenario.initial.lines,
+        fileName: activity.fileName,
         cursor: activity.scenario.initial.cursor,
         keys: keys.slice(0, checkpoint.afterStep),
       });
@@ -1931,6 +1968,7 @@ for (const activity of operatorRunnable) {
     const keys = keysOf(activity);
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
       textWidth: activity.editor?.textWidth,
@@ -1962,6 +2000,7 @@ for (const activity of precisionRunnable) {
     const keys = keysOf(activity);
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
     };
@@ -1991,6 +2030,7 @@ for (const activity of textObjectRunnable) {
     const keys = keysOf(activity);
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
     };
@@ -2079,6 +2119,7 @@ for (const activity of visualRunnable) {
     const keys = keysOf(activity);
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
       textWidth: activity.editor?.textWidth,
@@ -2122,6 +2163,7 @@ for (const activity of registerRunnable) {
     const registerNames = Object.keys(activity.scenario.target.registers || {});
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
       registerNames,
@@ -2165,11 +2207,11 @@ for (const { unitNumber, activity } of navigationRunnable) {
     const setupKeys = (setup?.steps || []).map(step => typeof step === "string" ? step : step.key);
     const cursor = setup?.cursor || activity.scenario.initial.cursor;
     const keys = keysOf(activity);
-    const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+    const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, keys: setupKeys });
     assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup must restore learner-visible text`);
     assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
 
-    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys };
+    const options = { initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, setupKeys, keys };
     const result = runNativeVim(options);
     assert.deepEqual(result.code, activity.scenario.target.lines);
     // H/M/L, paging, and viewport scrolling require a rendered window. Their
@@ -2200,11 +2242,11 @@ for (const activity of rangeRunnable) {
     const keys = keysOf(activity);
     const registerNames = Object.keys(activity.scenario.target.registers || {});
     if (setup) {
-      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, keys: setupKeys });
       assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
       assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
     }
-    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys, registerNames };
+    const options = { initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, setupKeys, keys, registerNames };
     const result = runNativeVim(options);
     assert.deepEqual(result.code, activity.scenario.target.lines);
     assert.deepEqual(result.cursor, activity.scenario.target.cursor);
@@ -2233,6 +2275,7 @@ for (const activity of substitutionRunnable) {
     const keys = keysOf(activity);
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor: activity.scenario.initial.cursor,
       keys,
     };
@@ -2259,11 +2302,11 @@ for (const activity of macroRunnable) {
     const keys = keysOf(activity);
     const registerNames = Object.keys(activity.scenario.target.registers || {});
     if (setup) {
-      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, keys: setupKeys });
       assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
       assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
     }
-    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys, registerNames };
+    const options = { initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, setupKeys, keys, registerNames };
     const result = runNativeVim(options);
     assert.deepEqual(result.code, activity.scenario.target.lines);
     assert.deepEqual(result.cursor, activity.scenario.target.cursor);
@@ -2294,11 +2337,11 @@ for (const activity of automationRunnable) {
     const cursor = setup?.cursor || activity.scenario.initial.cursor;
     const keys = keysOf(activity);
     if (setup) {
-      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys });
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, keys: setupKeys });
       assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
       assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
     }
-    const options = { initialCode: activity.scenario.initial.lines, cursor, setupKeys, keys };
+    const options = { initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, setupKeys, keys };
     const result = runNativeVim(options);
     assert.deepEqual(result.code, activity.scenario.target.lines);
     assert.deepEqual(result.cursor, activity.scenario.target.cursor);
@@ -2326,12 +2369,13 @@ for (const activity of capstoneRunnable) {
       ...activity.script.checkpoints.flatMap(checkpoint => Object.keys(checkpoint.registers || {})),
     ])];
     if (setup) {
-      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, cursor, keys: setupKeys, registerNames });
+      const setupState = runNativeVim({ initialCode: activity.scenario.initial.lines, fileName: activity.fileName, cursor, keys: setupKeys, registerNames });
       assert.deepEqual(setupState.code, activity.scenario.initial.lines, `${activity.id} setup text`);
       assert.deepEqual(setupState.cursor, activity.scenario.initial.cursor, `${activity.id} setup cursor`);
     }
     const options = {
       initialCode: activity.scenario.initial.lines,
+      fileName: activity.fileName,
       cursor,
       setupKeys,
       keys,

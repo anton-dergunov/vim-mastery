@@ -3688,6 +3688,12 @@
           "delivery": "guided-then-recall"
         },
         {
+          "id": "put-the-file-name",
+          "lessonId": "reuse-read-only-registers",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
           "id": "rerun-last-ex-command",
           "lessonId": "reuse-read-only-registers",
           "type": "exercise",
@@ -3700,7 +3706,19 @@
           "delivery": "guided-then-recall"
         },
         {
+          "id": "reuse-the-file-name-in-a-substitution",
+          "lessonId": "reuse-read-only-registers",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
           "id": "substitute-without-retyping",
+          "lessonId": "reuse-read-only-registers",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "title-a-note-from-its-file-name",
           "lessonId": "reuse-read-only-registers",
           "type": "exercise",
           "delivery": "guided-then-recall"
@@ -3740,6 +3758,12 @@
         },
         {
           "id": "reach-past-the-newest-delete",
+          "lessonId": "type-registers-while-inserting",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "stamp-the-file-name-while-inserting",
           "lessonId": "type-registers-while-inserting",
           "type": "exercise",
           "delivery": "guided-then-recall"
@@ -3976,15 +4000,18 @@
             "search-reuse-demo"
           ],
           "isolate": [
-            "put-last-inserted-text"
+            "put-last-inserted-text",
+            "put-the-file-name"
           ],
           "mix": [
             "rerun-last-ex-command",
-            "inspect-read-only-registers"
+            "inspect-read-only-registers",
+            "reuse-the-file-name-in-a-substitution"
           ],
           "challenge": [
             "substitute-without-retyping",
-            "choose-pattern-source"
+            "choose-pattern-source",
+            "title-a-note-from-its-file-name"
           ]
         },
         {
@@ -4002,7 +4029,8 @@
           ],
           "mix": [
             "type-a-named-register",
-            "reach-past-the-newest-delete"
+            "reach-past-the-newest-delete",
+            "stamp-the-file-name-while-inserting"
           ],
           "challenge": [
             "record-the-pattern-you-searched",
