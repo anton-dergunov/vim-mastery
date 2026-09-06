@@ -524,6 +524,34 @@ test("all 17 completion images are valid and distinct on either side of the appr
   );
 });
 
+test("every unit ending keeps a distinct lossless master beside its runtime image", () => {
+  // The review tree these masters are copied from is gitignored, so the file
+  // under assets/ is the only backed-up original. A promotion that installs the
+  // WebP alone leaves the master behind - which is how Unit 10 spent three
+  // commits holding a byte-identical copy of Unit 9's placeholder art.
+  const hashes = new Map();
+  for (const unitPresentation of Object.values(presentation.units)) {
+    const master = new URL(`../assets/worlds/story/units/${unitPresentation.id}.png`, import.meta.url);
+    assert(existsSync(master), `${unitPresentation.id} has no lossless master`);
+    const bytes = readFileSync(master);
+    assert.equal(
+      bytes.subarray(0, 8).toString("hex"),
+      "89504e470d0a1a0a",
+      `${unitPresentation.id} master is not a PNG`,
+    );
+    assert.equal(bytes.toString("ascii", 12, 16), "IHDR", `${unitPresentation.id} master has no image header`);
+    assert.deepEqual(
+      [bytes.readUInt32BE(16), bytes.readUInt32BE(20)],
+      [1792, 2400],
+      `${unitPresentation.id} master is not a 1792x2400 portrait source`,
+    );
+    const digest = createHash("sha256").update(bytes).digest("hex");
+    assert(!hashes.has(digest), `${unitPresentation.id} master duplicates ${hashes.get(digest)}`);
+    hashes.set(digest, unitPresentation.id);
+  }
+  assert.equal(hashes.size, 17);
+});
+
 test("presentation loading falls back cleanly when the optional manifest is missing or invalid", async () => {
   const response = (data, { ok = true, status = 200 } = {}) => ({
     ok,

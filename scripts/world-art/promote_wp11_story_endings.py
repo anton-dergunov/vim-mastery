@@ -5,6 +5,10 @@ Only the three endings currently behind the bespoke-art approval gate may be
 promoted. Candidate manifests and runtime presentation data are not changed
 until every selection, source hash, image dimension, WebP conversion and
 17-ending uniqueness check has passed.
+
+Promotion installs two files per unit: the streamed WebP the runtime reads, and
+the lossless PNG master beside it. The master is the approved candidate source
+byte for byte, because the review tree it comes from is not tracked in git.
 """
 
 from __future__ import annotations
@@ -12,6 +16,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 import subprocess
 import tempfile
 from datetime import UTC, datetime
@@ -128,11 +133,14 @@ def main() -> int:
             )
             validate_image(staged)
             output_hash = sha256(staged)
+            staged_master = temporary_root / f"{unit_id}.png"
+            shutil.copyfile(source, staged_master)
             selected[unit_id] = {
                 "candidateId": candidate_id,
                 "sourceSha256": source_hash,
                 "sourceDimensions": list(dimensions),
                 "staged": staged,
+                "stagedMaster": staged_master,
                 "outputSha256": output_hash,
             }
 
@@ -145,6 +153,7 @@ def main() -> int:
                 "sourceSha256": source_hash,
                 "runtimeSha256": output_hash,
                 "runtimePath": f"assets/worlds/story/units/{unit_id}.webp",
+                "masterPath": f"assets/worlds/story/units/{unit_id}.png",
                 "conversion": {"tool": "cwebp", "arguments": CWEBP_SETTINGS},
             }
             staged_manifests[manifest_path] = manifest
@@ -177,13 +186,20 @@ def main() -> int:
             item["staged"].replace(destination)
             if sha256(destination) != item["outputSha256"]:
                 raise RuntimeError(f"Runtime verification failed: {destination}")
+            master = RUNTIME_ROOT / f"{unit_id}.png"
+            item["stagedMaster"].replace(master)
+            if sha256(master) != item["sourceSha256"]:
+                raise RuntimeError(f"Master verification failed: {master}")
         for path, temporary in manifest_temps.items():
             temporary.replace(path)
         presentation_temp.replace(PRESENTATION_PATH)
 
     for unit_id in APPROVAL_UNITS:
         item = selected[unit_id]
-        print(f"Promoted {unit_id}/{item['candidateId']} -> assets/worlds/story/units/{unit_id}.webp")
+        print(
+            f"Promoted {unit_id}/{item['candidateId']} -> "
+            f"assets/worlds/story/units/{unit_id}.webp and {unit_id}.png"
+        )
     print("Verified 17 distinct, valid story endings and cleared all pending-art gates.")
     return 0
 

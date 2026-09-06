@@ -447,6 +447,61 @@ test("streams transparent Beacon Gallery patches without a complete-board vignet
   }
 });
 
+// A patch layer that never appears is also what a failed fetch looks like, so
+// both suppression tests assert that no variant was ever requested. That is the
+// difference between the eligibility gate holding and the stream falling over.
+for (const suppression of [
+  {
+    label: "under reduced motion",
+    attribute: "data-reduced-motion",
+    prepare: async page => page.emulateMedia({ reducedMotion: "reduce" }),
+  },
+  {
+    label: "when simple backgrounds are enabled",
+    attribute: "data-simple-background",
+    prepare: async page => page.addInitScript(() => {
+      const key = "vim-wilds.session.v1";
+      const existing = JSON.parse(window.localStorage.getItem(key) || "{}");
+      window.localStorage.setItem(key, JSON.stringify({ ...existing, generatedBackdrops: "disabled" }));
+    }),
+  },
+]) {
+  test(`suppresses Beacon Gallery patches ${suppression.label}`, async ({ page }) => {
+    test.slow();
+    await page.addInitScript(() => {
+      window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
+    });
+    await suppression.prepare(page);
+    const variantRequests = [];
+    page.on("request", request => {
+      if (request.url().includes("beacon-glass-gallery/variants/")) variantRequests.push(request.url());
+    });
+    await page.route("**/assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants/*.webp", route => route.fulfill({
+      path: "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants/upper-side-lens-c01.webp",
+      contentType: "image/webp",
+      headers: { "access-control-allow-origin": "*" },
+    }));
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/play/?unit=viewport-control&activity=window-home-demo");
+    await expect(page.locator("#world")).toHaveAttribute(suppression.attribute, "true", { timeout: 15_000 });
+
+    // The board itself still resolves its registered art - only the stream stops.
+    await expect(page.locator("#worldBackdrop")).toHaveAttribute("data-scene-profile", "compact");
+    expect(await page.locator("#worldBackdrop").evaluate(element => getComputedStyle(element, "::before").backgroundImage))
+      .toContain("beacon-glass-gallery/compact/base.webp");
+
+    // Wait past the scene's 2500ms initialDelayMs so a late patch cannot pass.
+    await page.waitForTimeout(4_000);
+    await expect(page.locator(".world-remote-variant")).toHaveCount(0);
+    expect(variantRequests).toEqual([]);
+
+    await expect.poll(() => page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+      && document.documentElement.scrollHeight <= window.innerHeight
+    )), { message: "360x740" }).toBe(true);
+  });
+}
+
 for (const scene of [
   {
     label: "Unit 16 Menders’ Confluence",

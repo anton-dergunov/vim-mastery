@@ -35,6 +35,18 @@ The command verifies source hashes and 1792×2400 dimensions, records approval
 and rejection states, runs the recorded `cwebp` settings, installs semantic
 WebPs, clears all three pending markers, and verifies 17 distinct endings.
 
+Each ending also keeps its approved candidate as a lossless PNG master beside
+the runtime WebP, because the review tree above is not tracked in git. That run
+predated master installation and left three units behind, so the masters were
+reconciled afterwards with:
+
+```sh
+python scripts/world-art/sync_story_ending_masters.py
+```
+
+Pass `--check` to report drift without writing. Promotion now installs the
+master itself, so the two can no longer diverge.
+
 ## Intro and finale
 
 - [Intro 1 · Connected Wilds](http://127.0.0.1:4176/play/?preview=story&story=intro&panel=connected-wilds)
