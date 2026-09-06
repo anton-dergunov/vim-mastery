@@ -1182,6 +1182,7 @@ test.describe("Production lesson flow", () => {
           cursor: snapshot.cursorPosition,
           mode: snapshot.mode,
           registers,
+          exOutput: snapshot.exOutput,
         };
       });
     }, conformanceFixtures.map(fixture => ({ ...fixture })));
@@ -1197,6 +1198,9 @@ test.describe("Production lesson flow", () => {
       expect.soft(result.mode, fixture.id).toBe(expected.targetMode || fixture.targetMode || "normal");
       if (fixture.targetRegisters) {
         expect.soft(result.registers, fixture.id).toEqual(expected.targetRegisters || fixture.targetRegisters);
+      }
+      if (fixture.targetExOutput) {
+        expect.soft(result.exOutput, fixture.id).toEqual(expected.targetExOutput || fixture.targetExOutput);
       }
     }
   });
@@ -2781,6 +2785,124 @@ test.describe("Production lesson flow", () => {
       overflow: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight,
     }));
     expect(layout).toEqual({ readoutVisible: true, clipped: false, ellipsis: false, overflow: false });
+  });
+
+  // Session 19. `:g/pat/p` is Vim's own dry run, and the reason session 01
+  // dropped it was that there was nowhere to print. These cover the surface
+  // that replaced that gap: it must show the right lines, cost no code rows,
+  // and behave like Vim's message screen, which any key dismisses.
+  const typeEx = (page, command) => page.evaluate(
+    keys => keys.forEach(key => window.VimWilds.emit(key)),
+    [...command, "Enter"],
+  );
+
+  test("lists :global matches on an Ex message screen", async ({ page }) => {
+    await page.goto("/play/?practice=gateway-log");
+    await page.waitForFunction(() => window.VimWilds?.freePracticeState);
+    await expect(page.locator("#exOutput")).toHaveAttribute("aria-hidden", "true");
+
+    // `WARN\|ERR` is nine matches over twenty-four lines — the longest listing
+    // the curriculum's own buffers can produce.
+    await typeEx(page, ":g/WARN\\|ERR/p");
+    const listed = await state(page);
+    expect(listed.exOutput.numbered).toBe(false);
+    expect(listed.exOutput.lines.map(line => line.number)).toEqual([4, 7, 8, 11, 14, 15, 18, 22, 23]);
+    expect(listed.exOutput.lines[0].text).toBe("02:19 WARN GET /users/91 404 12ms");
+    // Vim leaves the buffer alone and lands on the last line it printed.
+    expect(listed.code).toHaveLength(24);
+    expect(listed.cursor).toEqual([22, 0]);
+    await expect(page.locator("#exOutput")).toHaveClass(/open/);
+    await expect(page.locator("#exOutput")).toHaveAttribute("aria-hidden", "false");
+    expect(await page.locator(".ex-output-line").count()).toBe(9);
+
+    // Any key dismisses it, exactly as it dismisses Vim's own message screen.
+    await page.evaluate(() => window.VimWilds.emit("j"));
+    expect((await state(page)).exOutput).toBeNull();
+    await expect(page.locator("#exOutput")).not.toHaveClass(/open/);
+  });
+
+  test("numbers the listing for :number and defaults a bare :global to print", async ({ page }) => {
+    await page.goto("/play/?practice=gateway-log");
+    await page.waitForFunction(() => window.VimWilds?.freePracticeState);
+
+    await typeEx(page, ":g/upstream/nu");
+    const numbered = await state(page);
+    expect(numbered.exOutput).toEqual({ numbered: true, lines: [{ number: 15, text: "02:52 ERR  upstream unavailable" }] });
+    await expect(page.locator(".ex-output-line b")).toHaveText("15");
+
+    // `:print` is Vim's default Ex command, so a bare `:g/pat` previews too.
+    await typeEx(page, ":g/upstream");
+    expect((await state(page)).exOutput).toMatchObject({ numbered: false, lines: [{ number: 15 }] });
+    await expect(page.locator(".ex-output-line b")).toHaveCount(0);
+
+    // `:p` conforms outside `:global` as well, defaulting to the current line.
+    await typeEx(page, ":1,3p");
+    expect((await state(page)).exOutput.lines.map(line => line.number)).toEqual([1, 2, 3]);
+  });
+
+  test("keeps the Ex message screen separate from the impact readout", async ({ page }) => {
+    await page.goto("/play/?practice=gateway-log");
+    await page.waitForFunction(() => window.VimWilds?.freePracticeState);
+
+    // A predicate that matches nothing prints nothing, so no screen appears.
+    await typeEx(page, ":g/nosuchpattern/p");
+    expect((await state(page)).exOutput).toBeNull();
+    await expect(page.locator("#exOutput")).not.toHaveClass(/open/);
+
+    // The dry run reports no buffer effect, because it has none.
+    await typeEx(page, ":g/WARN/p");
+    const preview = await state(page);
+    expect(preview.exOutput.lines).toHaveLength(3);
+    expect(preview.impact).toBeNull();
+    expect(preview.code).toHaveLength(24);
+
+    // The destructive run reports the opposite way round: an impact, no screen.
+    await typeEx(page, ":g/WARN/d");
+    const applied = await state(page);
+    expect(applied.exOutput).toBeNull();
+    expect(applied.impact).toMatchObject({ lineDelta: -3 });
+    expect(applied.code).toHaveLength(21);
+
+    // Mounting another buffer retires a screen the previous one left open.
+    await typeEx(page, ":g/ERR/p");
+    expect((await state(page)).exOutput).not.toBeNull();
+    await page.evaluate(() => window.VimWilds.openFreePractice("migrate-log"));
+    await expect(page.locator("#exOutput")).not.toHaveClass(/open/);
+    expect((await state(page)).exOutput).toBeNull();
+  });
+
+  test("spends no code rows on the Ex message screen at 360x740", async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto("/play/?practice=gateway-log");
+    await page.waitForFunction(() => window.VimWilds?.freePracticeState);
+    const geometry = () => page.evaluate(() => {
+      const phone = document.querySelector("#phone");
+      const editor = document.querySelector(".cm-editor").getBoundingClientRect();
+      return {
+        console: getComputedStyle(phone).getPropertyValue("--execution-console-height").trim(),
+        editorHeight: Math.round(editor.height),
+        rows: document.querySelectorAll(".cm-line").length,
+      };
+    });
+    const before = await geometry();
+
+    await typeEx(page, ":g/WARN\\|ERR/p");
+    await expect(page.locator("#exOutput")).toHaveClass(/open/);
+    // The overlay is out of flow, so the layout underneath is the layout it had.
+    expect(await geometry()).toEqual(before);
+
+    const layout = await page.evaluate(() => {
+      const card = document.querySelector("#exOutput");
+      const lines = document.querySelector("#exOutputLines");
+      return {
+        visible: card.getClientRects().length > 0,
+        insideWorld: document.querySelector(".world").contains(card),
+        listClipped: lines.scrollHeight > lines.clientHeight && getComputedStyle(lines).overflowY !== "auto",
+        overflow: document.documentElement.scrollWidth > innerWidth
+          || document.documentElement.scrollHeight > innerHeight,
+      };
+    });
+    expect(layout).toEqual({ visible: true, insideWorld: true, listClipped: false, overflow: false });
   });
 
   test("maps the buffer window onto the rail with line-proportional geometry", async ({ page }) => {

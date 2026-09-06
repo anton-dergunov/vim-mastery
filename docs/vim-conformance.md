@@ -234,7 +234,7 @@ Visual Block `$` with `A`, `I`, and `d`; and `Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, and
 `g Ctrl-x` over a Visual selection. Five of these needed a versioned adapter
 patch; see `patches/README.md`.
 
-Three candidates are deliberately dropped, each with a fixture recording the
+Four candidates are deliberately dropped, each with a fixture recording the
 divergence:
 
 - **Search offsets** (`/pat/e`, `/pat/+1`). The adapter reads everything after
@@ -247,9 +247,10 @@ divergence:
   Wilds has no file name to report. Real Vim returns an empty string here too.
 - **`:global` dry runs** (`:g/pat/p`, `:g/pat/nu`). Vim leaves the buffer alone,
   prints the matched lines, and moves the cursor to the last match. Vim Wilds
-  has no Ex output surface and the adapter has no `:print` or `:number` command
-  to delegate to, so the command is inert. Giving `:global` a preview is a
-  product change, not a conformance fix.
+  had no Ex output surface and the adapter has no `:print` or `:number` command
+  to delegate to, so the command was inert. Giving `:global` a preview is a
+  product change, not a conformance fix — **session 19 made that change, and
+  this family is now verified.**
 - **The cursor after a confirmed substitution.** Vim leaves the cursor at the
   start of the last line a `c`-flag run changed; the adapter leaves it wherever
   the first prompt appeared. The two agree only when the run changes one line
@@ -266,3 +267,62 @@ itself. The cleaner arrangement is to register those as adapter Ex commands with
 `Vim.defineEx` and let the adapter's own `:global`, which already tracks line
 handles, compose them. That re-routes code every verified Unit 11 fixture
 depends on, so it was left alone here.
+
+## Session 19 — an Ex output surface
+
+Session 01 dropped `:g/pat/p` and `:g/pat/nu` for a product reason rather than a
+conformance one: Vim prints the matched lines, and there was nowhere to print.
+Session 19 built that surface and lifted the drop.
+
+The surface is Vim's own message screen, not a listing pane. A pane beside or
+below the code slab would cost one row per matched line, and the longest listing
+the curriculum can produce is nine — which is more rows than a 360×740 phone has
+in total. Real Vim does not reserve space for `:p` output either: it paints over
+the buffer and waits for a key. The overlay is absolutely positioned inside the
+world, hidden by `visibility` rather than `display`, and dismissed by any key,
+so the layout with it closed is the layout without it. It is announced through
+the same `role="status"` live region the impact readout uses.
+
+`executeGlobalOperation` now dispatches a nested `print`/`number` branch beside
+`delete`, `normal`, `substitute` and the session 01 `copy`/`move` relocation. It
+edits nothing and moves the cursor to the last line it printed, which is what
+makes the native cursor result reachable and why the fixture's `browserVerdict`
+is gone. `:print` is Vim's default Ex command, so an empty or absent nested
+command prints: `parseGlobalOperation` no longer requires a closing delimiter,
+and `:g/pat`, `:g/pat/` and `:g/pat/p` are one behaviour. Fixtures:
+`global-print-previews-matches`, `global-number-previews-matches-with-line-numbers`,
+`global-bare-pattern-defaults-to-print`, and
+`global-invert-previews-unmatched-lines`.
+
+`:p` and `:nu` are exposed outside `:global` too, through `parseLineOperation`
+and the existing Ex address parser — supporting them only inside `:g` would be a
+divergence a learner can trip on. Vim's trailing print flags (`l`, `#`, `p`) are
+not modelled, so an argument declines and delegates rather than printing on a
+guess. Fixtures: `print-range-lists-addressed-lines` and
+`print-without-a-range-lists-the-current-line`.
+
+The output is held on the snapshot as `lastExOutput`, with the same lifecycle as
+`lastImpact`: set on execution, retired at the top of `sendKey` before the next
+key runs. It is stored semantically, as buffer line number plus text, so the app
+owns presentation and no test depends on Vim's column padding.
+
+Verifying the printed text needed a new channel out of headless Vim. The native
+runner exports state by writing a JSON blob from inside Vim, and `-es` discards
+the message area entirely, so `global-print-previews-matches` had only ever
+proved "buffer unchanged, cursor on last match". The runner now wraps the fixture
+keys in `redir`, in a `try`/`finally` so the redirect closes even when a
+fixture's own keys raise, and exports the captured messages. The capture is
+opt-in — only a fixture declaring `targetExOutput` pays for it — so the authored
+content replays that share the runner are untouched. Two formatting details are
+measured rather than assumed, and `formatNativeExOutput` in
+`tests/vim-fixtures.mjs` is the single place both tiers agree on them: `:number`
+right-aligns in a minimum-width-three field followed by a space, and an empty
+buffer line prints as a single space rather than as nothing. `redir` emits each
+message as a leading newline plus its text, so the interior empties the split
+leaves behind are dropped — lossless, precisely because Vim never prints an
+empty message.
+
+Known gap, unchanged by this session: `@:` calls `Vim.handleEx` directly instead
+of going through `executeEx`, so replaying a print through it produces no
+output. The same is already true of `:t`, `:m`, `:put` and `:sort`, and the fix
+is the `Vim.defineEx` re-routing recorded as debt above.

@@ -191,7 +191,7 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [x] 16 Unit 16 capstones
 - [ ] 17 Unit 16 mastery loops
 - [ ] 18 Curriculum graph and portability
-- [ ] 19 Ex output surface
+- [x] 19 Ex output surface
 - [ ] 20 Viewport control art and story beat
 - [ ] 21 Search offsets
 - [ ] 22 The file-name register

@@ -173,6 +173,20 @@ export const inputFixtures = Object.freeze([
   },
 ]);
 
+/**
+ * Render a fixture's expected Ex output the way native Vim writes it, so the
+ * fixtures can hold semantic `{number, text}` pairs while the native tier still
+ * asserts real printed text. Two details are measured, not guessed: `:number`
+ * right-aligns in a minimum-width-3 field followed by a space, and an empty
+ * buffer line prints as a single space rather than as nothing.
+ */
+export function formatNativeExOutput({ numbered, lines }) {
+  return lines.map(({ number, text }) => {
+    const body = text === "" ? " " : text;
+    return numbered ? `${String(number).padStart(3)} ${body}` : body;
+  });
+}
+
 // Session 01 conformance spike. Each entry is the recorded native-Vim verdict
 // for one candidate command family. `tests/native-vim.test.mjs` asserts these
 // against real Vim and `tests/editor-conformance.spec.js` replays the same
@@ -206,20 +220,80 @@ export const conformanceFixtures = Object.freeze([
     targetCode: ["beta", "delta", "alpha TODO", "gamma TODO", "epsilon TODO"],
     targetCursor: [4, 0],
   },
+  // Session 19 gave Vim Wilds an Ex output surface, so the `:global` dry runs
+  // session 01 dropped are verified here. Vim leaves the buffer alone, lists the
+  // matches, and lands on the last line it printed.
   {
-    // DROPPED. Session 03 wants `:g/pat/p` and `:g/pat/nu` as a dry run before
-    // a destructive `:global`. Vim leaves the buffer alone and moves the cursor
-    // to the last match while printing the matches; Vim Wilds has no Ex output
-    // surface, and the adapter has no `:print`/`:number` command to delegate
-    // to, so the command is inert. Building that surface is a product change,
-    // not a conformance fix.
     id: "global-print-previews-matches",
     initialCode: ["alpha TODO", "beta", "gamma TODO"],
     cursor: [0, 0],
     keys: [...":g/TODO/p", "Enter"],
     targetCode: ["alpha TODO", "beta", "gamma TODO"],
     targetCursor: [2, 0],
-    browserVerdict: { targetCursor: [0, 0] },
+    targetExOutput: {
+      numbered: false,
+      lines: [{ number: 1, text: "alpha TODO" }, { number: 3, text: "gamma TODO" }],
+    },
+  },
+  {
+    id: "global-number-previews-matches-with-line-numbers",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO/nu", "Enter"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [2, 0],
+    targetExOutput: {
+      numbered: true,
+      lines: [{ number: 1, text: "alpha TODO" }, { number: 3, text: "gamma TODO" }],
+    },
+  },
+  {
+    // `:print` is Vim's default Ex command, so the form people actually type
+    // for a dry run carries no command at all.
+    id: "global-bare-pattern-defaults-to-print",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO", "Enter"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [2, 0],
+    targetExOutput: {
+      numbered: false,
+      lines: [{ number: 1, text: "alpha TODO" }, { number: 3, text: "gamma TODO" }],
+    },
+  },
+  {
+    // `:v/pat` previews the complement, which is the half of the predicate a
+    // learner is most likely to get wrong.
+    id: "global-invert-previews-unmatched-lines",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: [...":v/TODO/p", "Enter"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [1, 0],
+    targetExOutput: { numbered: false, lines: [{ number: 2, text: "beta" }] },
+  },
+  {
+    // `:p` and `:nu` conform outside `:global` too; supporting them only inside
+    // it would be a divergence a learner can trip on.
+    id: "print-range-lists-addressed-lines",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: [...":2,3p", "Enter"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [2, 0],
+    targetExOutput: {
+      numbered: false,
+      lines: [{ number: 2, text: "beta" }, { number: 3, text: "gamma TODO" }],
+    },
+  },
+  {
+    id: "print-without-a-range-lists-the-current-line",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: ["j", ...":p", "Enter"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [1, 0],
+    targetExOutput: { numbered: false, lines: [{ number: 2, text: "beta" }] },
   },
   {
     id: "sort-numeric-flag",

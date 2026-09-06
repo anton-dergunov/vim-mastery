@@ -151,8 +151,8 @@ than being silently corrected.
 
 ## Reporting a command's reach
 
-Two affordances make an edit legible when most of the lines it touches sit
-outside the window, and neither costs a code row.
+Three affordances make an edit legible when most of the lines it touches sit
+outside the window, and none of them costs a code row.
 
 - The **impact readout** restates a command's buffer-level effect the way Vim
   does—`7 fewer lines`, `9 substitutions on 6 lines`, `3 more lines`. It shares
@@ -168,6 +168,15 @@ outside the window, and neither costs a code row.
   map disappears on its own once nothing matches. Rail ticks and the window
   thumb share one line-proportional mapping: a tick inside the thumb is a match
   that is currently on screen.
+- The **Ex output overlay** is where `:print` and `:number` list lines, whether
+  addressed directly (`:2,8p`) or through a predicate (`:g/pat/p`, `:g/pat/nu`,
+  or a bare `:g/pat`, since `:print` is Vim's default Ex command). It is Vim's
+  message screen rather than a listing pane: it paints over the world and the
+  code slab, is dismissed by any key, scrolls inside itself when the list is
+  long, and is announced to screen readers. A listing pane would have cost one
+  row per matched line, which is why session 01 dropped these commands instead
+  of guessing at a layout for them. Because the command edits nothing, it
+  produces no impact readout — the listing is the whole result.
 
 ## Scripts, playback, and reset
 

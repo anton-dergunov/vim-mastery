@@ -151,6 +151,8 @@ const elements = {
   characterLayer: $("#characterLayer"),
   completionHost: $("#completionHost"),
   helpCard: $("#helpCard"),
+  exOutput: $("#exOutput"),
+  exOutputLines: $("#exOutputLines"),
   helpClose: $("#helpClose"),
   hintSteps: $("#hintSteps"),
   activityControls: $("#activityControls"),
@@ -1654,6 +1656,9 @@ function mountEditor() {
   }
   state.editorSnapshot = vimEngine.getSnapshot();
   renderBufferPosition();
+  // A fresh editor retires any message screen the previous activity left open,
+  // the same way a reset retires the impact readout.
+  renderExOutput();
   const setupMatches = state.editorSnapshot.text === initial.lines.join("\n")
     && state.editorSnapshot.mode === initial.mode
     && state.editorSnapshot.cursorPosition[0] === initial.cursor[0]
@@ -2319,6 +2324,43 @@ function renderEditorMarks(range = null) {
   else vimEngine.showMatchLines();
 }
 
+/**
+ * Vim answers `:g/pat/p` by painting the matched lines over the buffer and
+ * waiting for a key. This is that screen. It is transient by construction: the
+ * engine retires `exOutput` on the next keystroke, exactly as it retires the
+ * impact readout, so rendering straight from the snapshot is the whole
+ * lifecycle.
+ */
+function renderExOutput() {
+  const output = state.editorSnapshot?.exOutput;
+  const open = Boolean(output?.lines?.length);
+  if (open) {
+    const width = String(output.lines.at(-1).number).length;
+    elements.exOutputLines.innerHTML = output.lines.map(({ number, text }) => {
+      const gutter = output.numbered ? `<b style="min-width:${width}ch">${number}</b>` : "";
+      // An empty line still has to occupy a row, exactly as Vim prints a space.
+      return `<span class="ex-output-line">${gutter}<span>${escapeHtml(text) || " "}</span></span>`;
+    }).join("");
+    elements.exOutputLines.scrollTop = 0;
+  } else {
+    elements.exOutputLines.innerHTML = "";
+  }
+  elements.exOutput.classList.toggle("open", open);
+  elements.exOutput.setAttribute("aria-hidden", String(!open));
+}
+
+/**
+ * Vim's message screen is dismissed by any key. Keys that reach the engine
+ * retire the output on their own; this covers the ones that never get there —
+ * a wrong key in a guided lesson, and a reset.
+ */
+function dismissExOutput() {
+  if (!elements.exOutput.classList.contains("open")) return;
+  vimEngine?.clearExOutput();
+  if (state.editorSnapshot) state.editorSnapshot = { ...state.editorSnapshot, exOutput: null };
+  renderExOutput();
+}
+
 function renderBufferPosition() {
   const rail = $(".buffer-position", elements.worldGrid);
   const viewport = state.editorSnapshot?.viewport;
@@ -2420,6 +2462,7 @@ function handleEngineEvent(event) {
   state.editorSnapshot = event.snapshot;
   renderBufferPosition();
   renderEditorMarks();
+  renderExOutput();
   // Only the gate's explicit injection is evidence of learner/demo progress.
   // CodeMirror can also report keypresses from its transient search prompt;
   // those must not turn an accepted sequence into a different one.
@@ -2503,6 +2546,10 @@ function flashError(token, button) {
 
 function processToken(token, button) {
   if (!isPractice() || state.complete || !vimEngine) return false;
+  // Any key dismisses Vim's message screen, including one this lesson is about
+  // to refuse. It never swallows the key: the token still does whatever it
+  // would have done.
+  dismissExOutput();
   if (isFreePractice()) {
     // Every token the keyboard can produce is sent. The disclaimer, not an
     // allow-list, is what covers a command the adapter implements differently:
@@ -2858,6 +2905,11 @@ editorPointerEvents.forEach(type => elements.worldGrid.addEventListener(type, ev
   event.stopPropagation();
 }, true));
 elements.helpClose.addEventListener("click", () => setHelp(false));
+// A tap is the touch equivalent of the any-key dismissal.
+elements.exOutput.addEventListener("click", () => {
+  dismissExOutput();
+  vimEngine?.focus();
+});
 elements.resetButton.addEventListener("click", () => resetActivity());
 elements.hintButton?.addEventListener("click", () => setHelp(!elements.helpCard.classList.contains("open")));
 elements.tocButton?.addEventListener("click", () => {
@@ -3276,6 +3328,7 @@ window.VimWilds = Object.freeze({
       viewportDependent: Boolean(currentActivity().editor?.viewportDependent),
       matchLines: snapshot?.matchLines || [],
       impact: snapshot?.impact || null,
+      exOutput: snapshot?.exOutput || null,
       impactMessage: shouldReportImpact(snapshot) ? impactMessage(snapshot) : "",
       setupDrift: state.setupDrift || null,
       selection,

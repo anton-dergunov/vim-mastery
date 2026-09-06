@@ -150,6 +150,14 @@
           <div class="hint-steps" id="hintSteps"></div>
         </aside>
 
+        <!-- Vim paints `:print` output over the buffer and waits for a key
+             rather than reserving room for it. This overlay does the same, so
+             an Ex dry run costs no code rows. -->
+        <aside class="ex-output" id="exOutput" role="status" aria-live="polite" aria-hidden="true">
+          <div class="ex-output-lines" id="exOutputLines"></div>
+          <p class="ex-output-dismiss">press any key to continue</p>
+        </aside>
+
       </div>
     </section>
     </div>

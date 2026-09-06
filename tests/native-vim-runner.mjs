@@ -48,7 +48,10 @@ function aliasRegisterKeys(keys, aliases) {
   });
 }
 
-export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth, viewportRows, viewportTop, registerNames = [], registerAliases = {} }) {
+export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWidth, viewportRows, viewportTop, registerNames = [], registerAliases = {}, targetExOutput }) {
+  // Only fixtures that assert printed output pay for the capture, so the
+  // authored-content replays that share this runner are untouched.
+  const captureOutput = Boolean(targetExOutput);
   const directory = mkdtempSync(join(tmpdir(), "vim-wilds-native-"));
   const output = join(directory, "result.json");
   const script = join(directory, "fixture.vim");
@@ -61,7 +64,13 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     `call setline(1, ${JSON.stringify(initialCode)})`,
     `call cursor(${cursor[0] + 1}, ${cursor[1] + 1})`,
     ...(viewportTop === undefined ? [] : [`call winrestview({"topline": ${viewportTop + 1}})`]),
+    // `:print` writes to the message area, which `redir` is the only way to
+    // observe: `-es` discards it and the JSON blob below is the sole channel
+    // out of Vim. `try`/`finally` guarantees the redirect closes even when a
+    // fixture's own keys raise.
+    ...(captureOutput ? [`let g:vim_wilds_output = ""`, `redir => g:vim_wilds_output`, `try`] : []),
     `call feedkeys("${toVimInput(aliasRegisterKeys([...setupKeys, ...keys], registerAliases))}", "xt")`,
+    ...(captureOutput ? [`finally`, `redir END`, `endtry`] : []),
     `let register_state = {}`,
     `for register_pair in ${JSON.stringify(registerNames.map(name => [name, registerAliases[name] || name]))}`,
     `  let register_name = register_pair[0]`,
@@ -73,7 +82,7 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, textWi
     `  let register_text = substitute(getreg(native_register_name), '[\\x80][\\xfd].', "", "g")`,
     `  let register_state[register_name] = {"text": register_text, "type": register_type ==# 'V' ? 'linewise' : register_type[0] ==# "\\<C-v>" ? 'blockwise' : 'characterwise'}`,
     `endfor`,
-    `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state, "viewport": {"topLine": line('w0') - 1, "bottomLine": line('w$') - 1, "totalLines": line('$')}})], ${JSON.stringify(output)})`,
+    `call writefile([json_encode({"code": getline(1, '$'), "cursor": [line('.') - 1, col('.') - 1], "mode": mode(1), "registers": register_state, "output": ${captureOutput ? "filter(split(g:vim_wilds_output, nr2char(10)), '!empty(v:val)')" : "[]"}, "viewport": {"topLine": line('w0') - 1, "bottomLine": line('w$') - 1, "totalLines": line('$')}})], ${JSON.stringify(output)})`,
     "qa!",
   ].join("\n");
 

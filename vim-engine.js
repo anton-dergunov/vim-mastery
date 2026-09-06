@@ -236,6 +236,17 @@ function parseAddress(input, start, { cm, lines, currentLine }) {
   return { line, index };
 }
 
+/**
+ * `:print`, `:number` and `:#` list lines without touching the buffer. Vim's
+ * default Ex command is `:print`, which is why a bare `:g/pat` previews rather
+ * than doing nothing. The bang form is accepted and ignored, as Vim does.
+ */
+const printCommandPattern = /^(?:print|p|number|nu|#)!?$/;
+
+function isNumberedPrint(command) {
+  return command.startsWith("nu") || command.startsWith("#");
+}
+
 function parseLineOperation(cm, input) {
   const lines = cm.getValue().split("\n");
   const originalCurrent = cm.getCursor().line;
@@ -272,11 +283,16 @@ function parseLineOperation(cm, input) {
   }
 
   const commandText = input.slice(index).trimStart();
-  const match = commandText.match(/^(delete|d|yank|y|put|pu|copy|co|t|move|m|join|j|sort)(!?)(.*)$/);
+  // The alternation is ordered: `put`/`pu` and `print`/`number`/`nu` all have
+  // to precede a bare `p`, or the longer spellings never match.
+  const match = commandText.match(/^(delete|d|yank|y|put|pu|copy|co|t|move|m|join|j|sort|print|number|nu|p|#)(!?)(.*)$/);
   if (!match) return null;
   const argument = match[3]?.trim() || "";
   const command = match[1];
   if (["delete", "d", "yank", "y", "put", "pu"].includes(command) && argument.length > 1) return null;
+  // Vim's `:p` accepts trailing flags (`l`, `#`, `p`). None are modelled, so an
+  // argument declines here and delegates rather than printing on a guess.
+  if (printCommandPattern.test(command) && argument) return null;
   if (["join", "j"].includes(command) && argument) return null;
   if (command === "sort" && argument && !parseSortArgument(argument)) return null;
   return { lines, start, end, explicitRange, command, bang: match[2] === "!", argument };
@@ -338,10 +354,13 @@ function parseGlobalOperation(cm, input) {
   let index = match[0].length;
   const delimiter = commandText[index];
   if (!delimiter || /[A-Za-z0-9\s]/.test(delimiter)) return null;
+  // `:g/pat` needs no closing delimiter in Vim; the rest of the line is the
+  // pattern and the command defaults to `:print`. That is the form people
+  // actually type for a dry run.
   const patternEnd = findUnescapedDelimiter(commandText, index + 1, delimiter);
-  if (patternEnd < 0) return null;
-  const pattern = commandText.slice(index + 1, patternEnd);
-  const nestedCommand = commandText.slice(patternEnd + 1).trimStart();
+  const terminated = patternEnd >= 0;
+  const pattern = commandText.slice(index + 1, terminated ? patternEnd : undefined);
+  const nestedCommand = terminated ? commandText.slice(patternEnd + 1).trimStart() : "";
   const inverted = match[1].startsWith("v") || match[2] === "!";
   return { ...range, pattern, nestedCommand, inverted };
 }
@@ -509,6 +528,11 @@ export class VimEngine {
     // the live pattern and matching lines are rescanned from the current
     // document, so the marks can never point at stale line numbers.
     this.lastImpact = null;
+    // `:print` and `:number` have no buffer effect to report, so their output
+    // is the whole result of the command. It is held here in semantic form —
+    // buffer line number plus text — and rendered by the app, so nothing
+    // depends on Vim's own column padding.
+    this.lastExOutput = null;
     this.matchPattern = null;
     this.pendingDecorations = null;
     this.decorationFlush = false;
@@ -631,6 +655,7 @@ export class VimEngine {
       },
       viewport: this.getViewport(),
       impact: this.lastImpact,
+      exOutput: this.lastExOutput,
       matchLines: this.getMatchLines(),
     };
   }
@@ -670,8 +695,11 @@ export class VimEngine {
     const vimKey = toVimKey(key);
     const canonicalKey = canonicalKeyToken(vimKey);
     // Vim's report lives until the next keystroke, so retire it before this
-    // key runs. Commands that produce a new report set it again below.
+    // key runs. Commands that produce a new report set it again below. Ex
+    // output is the message screen Vim paints over the buffer, and it is
+    // dismissed by the same key, so it retires here too.
     this.lastImpact = null;
+    this.lastExOutput = null;
     this.effects.beginKey({ key: canonicalKey, source, before: this.getSnapshot() });
     const finish = handled => {
       // CodeMirror defers scroll measurement, so flush it before snapshotting
@@ -976,6 +1004,33 @@ export class VimEngine {
   }
 
   /**
+   * Dismiss the Ex message screen for a key the lesson gate refused, which
+   * never reaches `sendKey` to retire it the usual way.
+   */
+  clearExOutput() {
+    this.lastExOutput = null;
+  }
+
+  /**
+   * Collect the lines a `:print`/`:number` listed and land the cursor where Vim
+   * does — on the last line printed, at its first non-blank. The buffer is
+   * deliberately untouched: this is a preview, and the whole point is that it
+   * can be run before something destructive.
+   */
+  reportExOutput(lines, printedLines, numbered) {
+    if (!printedLines.length) return;
+    this.lastExOutput = {
+      numbered: Boolean(numbered),
+      lines: printedLines.map(line => ({ number: line + 1, text: lines[line] })),
+    };
+    const cursorLine = printedLines.at(-1);
+    const cursorColumn = Math.max(0, lines[cursorLine].search(/\S/));
+    this.view.dispatch({
+      selection: EditorSelection.cursor(offsetForLineStart(lines, cursorLine) + cursorColumn),
+    });
+  }
+
+  /**
    * A `:global` that rewrites lines in place changes no line count and reports
    * no substitutions, yet it is exactly the command whose reach a learner
    * cannot see through a small window. Counting the lines whose text actually
@@ -1033,10 +1088,13 @@ export class VimEngine {
     // `:g` and `:v` both make the searched pattern the live one, matching how
     // Vim leaves it in the search register.
     this.setMatchPattern(pattern);
-    if (!matchingLines.length || !nestedCommand) return true;
+    if (!matchingLines.length) return true;
+    // `:print` is Vim's default Ex command, so `:g/pat` and `:g/pat/` preview
+    // the matches rather than doing nothing.
+    const nested = nestedCommand || "p";
 
-    if (/^(delete|d)(?:\s+["0-9a-z+_-])?$/.test(nestedCommand)) {
-      const register = nestedCommand.trim().split(/\s+/)[1]?.[0] || null;
+    if (/^(delete|d)(?:\s+["0-9a-z+_-])?$/.test(nested)) {
+      const register = nested.trim().split(/\s+/)[1]?.[0] || null;
       const controller = Vim.getRegisterController?.();
       for (const line of matchingLines) controller?.pushText(register, "delete", `${lines[line]}\n`, true);
       const removed = new Set(matchingLines);
@@ -1054,36 +1112,42 @@ export class VimEngine {
       return true;
     }
 
-    if (/^(normal|norm)!?[ \t]+/.test(nestedCommand)) {
-      const normal = nestedCommand.match(/^(?:normal|norm)!?[ \t]+([\s\S]+)$/);
+    if (/^(normal|norm)!?[ \t]+/.test(nested)) {
+      const normal = nested.match(/^(?:normal|norm)!?[ \t]+([\s\S]+)$/);
       if (!normal) return true;
       for (const line of matchingLines) this.executeNormalKeys(normal[1], line);
       return true;
     }
 
-    if (/^(substitute|s)(?=[^A-Za-z0-9\s])/.test(nestedCommand)) {
-      const nested = parseSubstitution(nestedCommand);
-      const nestedExpression = nested && compileGlobalPattern(nested.pattern || this.lastSearchQuery || "");
+    if (/^(substitute|s)(?=[^A-Za-z0-9\s])/.test(nested)) {
+      const substitution = parseSubstitution(nested);
+      const nestedExpression = substitution && compileGlobalPattern(substitution.pattern || this.lastSearchQuery || "");
       let substitutions = 0;
       const substituted = [];
       for (const line of matchingLines) {
         if (nestedExpression) {
-          const count = countLineMatches(nestedExpression, lines[line], nested.flags.includes("g"));
+          const count = countLineMatches(nestedExpression, lines[line], substitution.flags.includes("g"));
           if (count) {
             substitutions += count;
             substituted.push(line);
           }
         }
-        Vim.handleEx(this.cm, `${line + 1}${nestedCommand}`);
+        Vim.handleEx(this.cm, `${line + 1}${nested}`);
       }
       this.moveCursorToFirstNonBlank();
       // The nested pattern is the one the learner sees replaced, so it wins the
       // match map over the `:g` selector.
-      if (substitutions) this.reportSubstitutions({ substitutions, lines: substituted, pattern: nested.pattern || this.lastSearchQuery });
+      if (substitutions) this.reportSubstitutions({ substitutions, lines: substituted, pattern: substitution.pattern || this.lastSearchQuery });
       return true;
     }
 
-    const relocation = nestedCommand.match(/^(copy|co|t|move|m)(.*)$/);
+    if (printCommandPattern.test(nested)) {
+      // Vim leaves the buffer alone and lands on the last line it printed.
+      this.reportExOutput(lines, matchingLines, isNumberedPrint(nested));
+      return true;
+    }
+
+    const relocation = nested.match(/^(copy|co|t|move|m)(.*)$/);
     if (relocation) {
       const result = relocateGlobalMatches(this.cm, {
         lines,
@@ -1193,6 +1257,12 @@ export class VimEngine {
       const next = [...lines];
       next.splice(start, end - start + 1, joined);
       setDocument(next, start);
+      return true;
+    }
+
+    if (printCommandPattern.test(command)) {
+      const printed = selected.map((_, offset) => start + offset);
+      this.reportExOutput(lines, printed, isNumberedPrint(command));
       return true;
     }
 

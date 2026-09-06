@@ -898,6 +898,56 @@ button { font: inherit; }
   font-size: 20px;
 }
 .hint-steps { display: flex; flex-direction: column; gap: 7px; }
+
+/* Vim's message screen: `:print` paints over the buffer and waits for a key.
+   Reproducing that, rather than reserving a listing pane beside the code slab,
+   is what keeps an Ex dry run at zero code rows — the element is out of flow
+   and hidden by visibility, so the closed layout is the layout without it.
+   Deliberately not the help card's parchment: this is Vim's own voice, not the
+   course's. */
+.ex-output {
+  position: absolute;
+  z-index: 19;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  color: #d6f0e0;
+  background: rgba(4, 12, 10, .94);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .16s, visibility .16s;
+}
+.ex-output.open { opacity: 1; visibility: visible; }
+.ex-output-lines {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ex-output-line {
+  display: flex;
+  gap: 8px;
+  font: 500 14px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* A long buffer line scrolls inside its own row rather than widening the
+     document. */
+  overflow-x: auto;
+  white-space: pre;
+}
+.ex-output-line b {
+  flex: none;
+  color: color-mix(in srgb, var(--theme-bright) 60%, #7d9389);
+  font-weight: 500;
+  text-align: right;
+}
+.ex-output-dismiss {
+  flex: none;
+  margin: 0;
+  color: color-mix(in srgb, var(--theme-bright) 78%, #cfe3d6);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em;
+}
 .hint-step {
   flex: 0 0 auto;
   min-width: 0;
