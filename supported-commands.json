@@ -41,13 +41,13 @@
     "Insert-mode command keys (Ctrl-r{register}, Ctrl-o for one Normal command, Ctrl-w, and Ctrl-u)",
     "command-line register insertion (Ctrl-r{register} on the Ex and search prompts)",
     "search as an operator range (d/pat, y/pat, c/pat, c?pat, with Vim's exclusive match boundary, and Escape aborting the pending operator)",
+    "search offsets (/pat/e, /pat/s, /pat/b with signed character counts, and /pat/+n line offsets, remembered by n and N, with e making an operator inclusive and a line offset making it linewise)",
     "Visual Block ragged right edge ($ with A, I, and d)",
     "Visual increment and decrement over a selection (Ctrl-a, Ctrl-x, g Ctrl-a, g Ctrl-x)",
     "line listing without editing (:print/:p, :number/:nu/:#, the same commands nested in :global and :vglobal, and bare :g/pat taking Vim's default :print), printed to a transient Ex output overlay"
   ],
   "pending": [
     "full curriculum matrix: specialized comment and preprocessor motions, replacement case conversion, and \\= replacement expressions",
-    "dropped: search offsets (/pat/e, /pat/+1). The adapter reads the text after an unescaped / as flags and honors only i, so an offset is discarded and the search silently lands in the wrong place. Supporting it means changing query parsing, the search motion, and its operator-pending inclusivity together.",
     "dropped: the \"% register. It is not a valid adapter register and Vim Wilds has no file name to report.",
     "dropped: counted open above ({count}O). Native Vim leaves the cursor on the last opened line; the adapter interlaces the repeats but leaves it on the first, so the final cursor disagrees. {count}i, {count}a, and {count}o all conform and are exposed.",
     "dropped: tag-object yanks that move the cursor (yit/yat where the object starts before the cursor). Vim places the cursor at the start of the yanked range; the adapter leaves it where it was. Tag activities therefore either operate with the cursor already at the range start or use an operator that changes text.",

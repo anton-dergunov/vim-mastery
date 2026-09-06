@@ -234,15 +234,15 @@ Visual Block `$` with `A`, `I`, and `d`; and `Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, and
 `g Ctrl-x` over a Visual selection. Five of these needed a versioned adapter
 patch; see `patches/README.md`.
 
-Four candidates are deliberately dropped, each with a fixture recording the
-divergence:
+Four candidates were deliberately dropped, each with a fixture recording the
+divergence. Two have since been lifted:
 
-- **Search offsets** (`/pat/e`, `/pat/+1`). The adapter reads everything after
-  an unescaped `/` as search flags and understands only `i`, so an offset is
-  discarded and the search silently succeeds at the wrong position. Honoring
-  offsets means changing query parsing, the search motion, and its
-  operator-pending inclusivity together. Search as an operator range is verified
-  without them.
+- **Search offsets** (`/pat/e`, `/pat/+1`). The adapter read everything after
+  an unescaped `/` as search flags and understood only `i`, so an offset was
+  discarded and the search silently succeeded at the wrong position. Honoring
+  offsets meant changing query parsing, the search motion, and its
+  operator-pending inclusivity together — **session 21 made those changes, and
+  this family is now verified.**
 - **The `"%` register.** It is not one of the adapter's valid registers, and Vim
   Wilds has no file name to report. Real Vim returns an empty string here too.
 - **`:global` dry runs** (`:g/pat/p`, `:g/pat/nu`). Vim leaves the buffer alone,
@@ -326,3 +326,46 @@ Known gap, unchanged by this session: `@:` calls `Vim.handleEx` directly instead
 of going through `executeEx`, so replaying a print through it produces no
 output. The same is already true of `:t`, `:m`, `:put` and `:sort`, and the fix
 is the `Vim.defineEx` re-routing recorded as debt above.
+
+## Session 21 — search offsets
+
+Session 12 teaches that an operator plus a search is *exclusive*: `d/compute`
+stops in front of the match. That is a sharp edge with no tool until offsets
+exist, because `d/compute/e` is how you delete *through* a match. Session 21
+closes that gap.
+
+`/{pattern}/{offset}` is now parsed as Vim parses it. The tail after the first
+unescaped delimiter is split into this adapter's own `i`/`I` case flags — not
+Vim's, but they predate offsets here — and then Vim's offset grammar: `e`, `s`,
+or `b` for a character offset from the match's end or start, or a bare sign or
+digit for a line offset, each optionally followed by `+`, `-`, or a signed
+number. The delimiter is the one that opened the search, so `?pat?e` works as
+`/pat/e` does. `Vim.parseSearchQuery` exposes the same split to `vim-engine.js`,
+which owns the command-line text: the highlight, `"/`, and a later `:s//` all
+take the bare pattern, exactly as Vim leaves it.
+
+Three things had to move together, which is why session 01 could not take this
+in isolation. The motion needs the whole match, not its start, so `findNext`
+can now report a range; `e` lands on the match's last character and `s`/`b` on
+its first, walking any signed count with Vim's own `incl`/`decl` rule, which
+steps over the end-of-line position instead of resting on it — the reason
+`/three/e+2` lands two real characters into the next line rather than one.
+Inclusivity moves with it: `e` sets `motionArgs.inclusive`, and a line offset
+sets `motionArgs.linewise` and moves to the first non-blank, which is what makes
+`d/three/+1` delete whole lines. The offset is remembered with the pattern in
+the search state, so `n` and `N` repeat it and a plain `/pat` afterwards clears
+it, while `*` and `#` never set one.
+
+Vim's own grammar takes what it can and silently ignores the rest: `/three/x`
+searches for `three` with no offset at all, and `/three/ee` uses the first `e`
+and drops the second. Matching that is not optional — the fixtures assert real
+Vim — but a discarded offset is precisely the failure this session existed to
+remove, so the engine names the leftover text in a message while landing where
+Vim lands. Fixture: `search-offset-trailing-characters-are-ignored`, with the
+message asserted by its own browser case.
+
+Verified: `/pat/e`, `/pat/s`, `/pat/b` with signed character counts, `/pat/+n`
+and `/pat/-n` line offsets including a bare count and clamping at the buffer
+edge, `d`/`y`/`c` over each form, `?pat?e`, and offset-preserving `n` and `N`.
+Search offsets on Ex addresses (`:/pat/+1d`) are a different parser and remain
+out of scope.

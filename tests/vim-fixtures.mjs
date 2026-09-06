@@ -543,30 +543,184 @@ export const conformanceFixtures = Object.freeze([
     targetCursor: [0, 6],
     targetMode: "normal",
   },
+  // Session 21 lifted the search-offset drop. `d/pat` is exclusive, which is a
+  // sharp edge with no tool until `/pat/e` exists, so the motion, the offset
+  // grammar, and operator-pending inclusivity are verified together here.
   {
-    // DROPPED. The adapter reads everything after an unescaped `/` as search
-    // flags and understands only `i`, so the offset is discarded and the search
-    // silently succeeds at the wrong place. Supporting it means changing query
-    // parsing, the search motion, and its operator-pending inclusivity at once.
-    // `browserVerdict` records what the engine actually does, so this test
-    // fails loudly if a future adapter version starts honoring offsets.
+    // The whole point of the family: `e` makes the operator inclusive, so the
+    // delete reaches through the match instead of stopping in front of it.
     id: "search-offset-end-is-inclusive",
     initialCode: ["const value = compute(input);"],
     cursor: [0, 0],
     keys: ["d", ..."/compute/e", "Enter"],
     targetCode: ["(input);"],
     targetCursor: [0, 0],
-    browserVerdict: { targetCode: ["compute(input);"], targetCursor: [0, 0] },
   },
   {
-    // DROPPED with `search-offset-end-is-inclusive`; same cause.
+    id: "search-offset-end-lands-on-the-last-matched-character",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 0],
+    keys: [..."/beta/e", "Enter"],
+    targetCode: ["alpha beta gamma"],
+    targetCursor: [0, 9],
+  },
+  {
+    id: "search-offset-end-plus-count-crosses-the-line-end",
+    initialCode: ["one", "two", "three", "four"],
+    cursor: [0, 0],
+    keys: [..."/three/e+2", "Enter"],
+    targetCode: ["one", "two", "three", "four"],
+    targetCursor: [3, 1],
+  },
+  {
+    // `s` and its `b` spelling stay on the match start, and stay exclusive.
+    id: "search-offset-start-plus-count",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 0],
+    keys: [..."/beta/s+1", "Enter"],
+    targetCode: ["alpha beta gamma"],
+    targetCursor: [0, 7],
+  },
+  {
+    id: "search-offset-start-alias-minus-count",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 0],
+    keys: [..."/beta/b-2", "Enter"],
+    targetCode: ["alpha beta gamma"],
+    targetCursor: [0, 4],
+  },
+  {
+    id: "delete-to-search-offset-start-stays-exclusive",
+    initialCode: ["const value = compute(input);"],
+    cursor: [0, 0],
+    keys: ["d", ..."/compute/s+2", "Enter"],
+    targetCode: ["mpute(input);"],
+    targetCursor: [0, 0],
+  },
+  {
     id: "search-offset-line-forward",
     initialCode: ["one", "two", "three", "four"],
     cursor: [0, 0],
     keys: [..."/three/+1", "Enter"],
     targetCode: ["one", "two", "three", "four"],
     targetCursor: [3, 0],
-    browserVerdict: { targetCode: ["one", "two", "three", "four"], targetCursor: [2, 0] },
+  },
+  {
+    id: "search-offset-line-backward",
+    initialCode: ["one", "two", "three", "four"],
+    cursor: [0, 0],
+    keys: [..."/three/-1", "Enter"],
+    targetCode: ["one", "two", "three", "four"],
+    targetCursor: [1, 0],
+  },
+  {
+    // A bare sign is one line, and a bare number is that many lines forward.
+    id: "search-offset-bare-line-count",
+    initialCode: ["one", "two", "three", "four"],
+    cursor: [0, 0],
+    keys: [..."/three/1", "Enter"],
+    targetCode: ["one", "two", "three", "four"],
+    targetCursor: [3, 0],
+  },
+  {
+    id: "search-offset-line-clamps-at-the-last-line",
+    initialCode: ["one", "two", "three", "four"],
+    cursor: [0, 0],
+    keys: [..."/three/+99", "Enter"],
+    targetCode: ["one", "two", "three", "four"],
+    targetCursor: [3, 0],
+  },
+  {
+    // A line offset promotes the motion to linewise, which an approximation
+    // that only moved the cursor would get wrong.
+    id: "delete-to-search-line-offset-is-linewise",
+    initialCode: ["one", "two", "three", "four", "five"],
+    cursor: [0, 0],
+    keys: ["d", ..."/three/+1", "Enter"],
+    targetCode: ["five"],
+    targetCursor: [0, 0],
+  },
+  {
+    id: "yank-to-search-offset-end-includes-the-match",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 0],
+    keys: ["y", ..."/beta/e", "Enter", "$", "p"],
+    targetCode: ["alpha beta gammaalpha beta"],
+    targetCursor: [0, 25],
+  },
+  {
+    id: "change-to-search-offset-end-replaces-through-the-match",
+    initialCode: ["private int count;"],
+    cursor: [0, 0],
+    keys: ["c", ..."/int/e", "Enter", ..."public bool", "Escape"],
+    targetCode: ["public bool count;"],
+    targetCursor: [0, 10],
+  },
+  {
+    id: "backward-search-offset-end",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 15],
+    keys: [..."?beta?e", "Enter"],
+    targetCode: ["alpha beta gamma"],
+    targetCursor: [0, 9],
+  },
+  {
+    // Vim remembers the offset with the pattern.
+    id: "search-offset-repeats-with-n",
+    initialCode: ["aa xx aa xx aa"],
+    cursor: [0, 0],
+    keys: [..."/xx/e", "Enter", "n"],
+    targetCode: ["aa xx aa xx aa"],
+    targetCursor: [0, 10],
+  },
+  {
+    id: "search-line-offset-repeats-with-n",
+    initialCode: ["a TODO", "b", "c TODO", "d", "e TODO", "f"],
+    cursor: [0, 0],
+    keys: [..."/TODO/+1", "Enter", "n"],
+    targetCode: ["a TODO", "b", "c TODO", "d", "e TODO", "f"],
+    targetCursor: [3, 0],
+  },
+  {
+    id: "search-offset-repeats-backward-with-N",
+    initialCode: ["aa xx aa xx aa"],
+    cursor: [0, 13],
+    keys: [..."/xx/e", "Enter", "N"],
+    targetCode: ["aa xx aa xx aa"],
+    targetCursor: [0, 10],
+  },
+  {
+    // The offset belongs to the search that carried it: the next plain search
+    // must not inherit it.
+    id: "plain-search-clears-a-previous-offset",
+    initialCode: ["aa xx aa xx aa"],
+    cursor: [0, 0],
+    keys: [..."/xx/e", "Enter", ..."/aa", "Enter"],
+    targetCode: ["aa xx aa xx aa"],
+    targetCursor: [0, 6],
+  },
+  {
+    // The offset is not part of the pattern, so `"/` keeps the bare pattern
+    // and `:s//` can reuse it.
+    id: "search-offset-leaves-bare-pattern-in-search-register",
+    initialCode: ["alpha beta", "beta gamma"],
+    cursor: [0, 0],
+    keys: [..."/beta/e", "Enter"],
+    registerNames: ["/"],
+    targetCode: ["alpha beta", "beta gamma"],
+    targetCursor: [0, 9],
+    targetRegisters: { "/": { text: "beta", type: "characterwise" } },
+  },
+  {
+    // Vim's offset grammar takes what it can and ignores the rest, so the
+    // search still runs at the plain match. The engine says so out loud
+    // instead of leaving a typo looking like a working command.
+    id: "search-offset-trailing-characters-are-ignored",
+    initialCode: ["one", "two", "three", "four"],
+    cursor: [0, 0],
+    keys: [..."/three/x", "Enter"],
+    targetCode: ["one", "two", "three", "four"],
+    targetCursor: [2, 0],
   },
   {
     id: "visual-block-dollar-append-ragged",

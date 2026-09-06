@@ -1205,6 +1205,27 @@ test.describe("Production lesson flow", () => {
     }
   });
 
+  // Native Vim drops an offset its grammar cannot parse and runs the search
+  // anyway, which is indistinguishable from the engine ignoring offsets
+  // altogether — the exact confusion that kept this family unshipped. The
+  // position stays native; the message is what makes the typo visible.
+  test("names the trailing characters when a search offset is malformed", async ({ page }) => {
+    await page.goto("/?unit=global-normal-automation");
+    const message = await page.evaluate(async () => {
+      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      resetVimEngineState();
+      const host = document.createElement("div");
+      document.body.append(host);
+      const engine = new VimEngine({ parent: host, text: "one\ntwo\nthree", cursor: [0, 0], onEvent() {} });
+      [..."/three/x", "Enter"].forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+      const text = host.querySelector(".cm-vim-message")?.textContent || "";
+      engine.destroy();
+      host.remove();
+      return text;
+    });
+    expect(message).toContain("Trailing characters: x");
+  });
+
   test("shows recording state and enters @ from physical and touch keyboards", async ({ page }) => {
     await page.goto("/?unit=macros&activity=comment-python-jobs");
     await page.evaluate(() => { window.VimWilds.emit("q"); window.VimWilds.emit("a"); });

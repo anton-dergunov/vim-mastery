@@ -788,9 +788,13 @@ export class VimEngine {
             Object.defineProperty(enterEvent, "vimWildsPrompt", { value: true });
             input.dispatchEvent(enterEvent);
           }
-          this.lastSearchQuery = this.commandLine;
+          // `/pat/e` carries a search offset, which the adapter honors but
+          // which is not part of the pattern: Vim leaves the bare pattern in
+          // `"/`, and that is what the highlight and a later `:s//` reuse.
+          const searchPattern = Vim.parseSearchQuery(this.commandLine, this.commandPrefix).pattern;
+          this.lastSearchQuery = searchPattern;
           // A confirmed search is the live pattern, exactly like `hlsearch`.
-          this.setMatchPattern(this.commandLine);
+          this.setMatchPattern(searchPattern);
           this.commandLine = null;
           this.commandPrefix = null;
         }

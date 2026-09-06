@@ -71,3 +71,32 @@ so `:%s/draft/entry/g` reported `draft/g` where Vim reports `draft`. The flag
 suffix is an encoding `parseQuery` needs, not part of the pattern, so
 `substitute` now remembers the bare pattern and restores it to `"/` once the
 query is installed. Fixture: `substitute-leaves-bare-pattern-in-search-register`.
+
+Session 21 extends the same versioned patch to honor search offsets, which
+session 01 had dropped. Six hunks, each motivated by a fixture in
+`conformanceFixtures`:
+
+- The search state now carries an offset beside the query, and
+  `resetVimGlobalState` clears it, so `n` and `N` repeat the offset the pattern
+  was searched with and an activity reset does not inherit one. Fixtures:
+  `search-offset-repeats-with-n`, `search-line-offset-repeats-with-n`, and
+  `search-offset-repeats-backward-with-N`.
+- `processSearch` splits a typed query into pattern, this adapter's `i`/`I`
+  case flags, and Vim's offset grammar before compiling the pattern, using the
+  delimiter that opened the search so `?pat?e` works too. A word-under-cursor
+  search clears the offset instead of inheriting it. Fixtures:
+  `search-offset-leaves-bare-pattern-in-search-register` and
+  `plain-search-clears-a-previous-offset`.
+- `findNext` can report the whole match rather than only its start, which an
+  `e` offset needs. Fixture: `search-offset-end-lands-on-the-last-matched-character`.
+- The `findNext` motion applies the offset and sets `motionArgs.inclusive` for
+  `e` and `motionArgs.linewise` for a line offset, which `evalInput` reads after
+  the motion runs. This is the hunk that makes `d/pat/e` delete through the
+  match and `d/pat/+1` delete whole lines. Fixtures:
+  `search-offset-end-is-inclusive` and `delete-to-search-line-offset-is-linewise`.
+- Character counts walk with Vim's own `incl`/`decl` rule, which steps over the
+  end-of-line position instead of resting on it. Fixture:
+  `search-offset-end-plus-count-crosses-the-line-end`.
+- `Vim.parseSearchQuery` exposes the same split to `vim-engine.js`, which owns
+  the command-line text and needs the bare pattern for the highlight, `"/`, and
+  a later `:s//`.
