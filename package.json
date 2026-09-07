@@ -11,7 +11,7 @@
     "test": "npm run test:quick",
     "test:quick": "npm run test:content && npm run test:effects && npm run test:native && npm run test:media && npm run test:browser:smoke",
     "test:full": "npm run test:content && npm run test:effects && npm run test:native && npm run test:media && npm run test:pwa && npm run test:browser",
-    "test:content": "node --test tests/content-data.test.mjs tests/action-guidance.test.mjs tests/character-reactions.test.mjs tests/practice-samples.test.mjs tests/mastery-progress.test.mjs tests/field-notes.test.mjs",
+    "test:content": "node --test tests/content-data.test.mjs tests/action-guidance.test.mjs tests/character-reactions.test.mjs tests/practice-samples.test.mjs tests/mastery-progress.test.mjs tests/field-notes.test.mjs tests/feedback-report.test.mjs",
     "test:effects": "node --test tests/vim-effects.test.mjs",
     "test:native": "node --test tests/native-vim.test.mjs",
     "test:media": "node --test tests/media-policy.test.mjs",
@@ -19,7 +19,8 @@
     "test:browser": "playwright test",
     "test:browser:smoke": "playwright test tests/smoke.spec.js --workers=1",
     "test:targeted": "playwright test --workers=1 --max-failures=1",
-    "test:exhaustive": "playwright test --grep @exhaustive"
+    "test:exhaustive": "playwright test --grep @exhaustive",
+    "feedback:pull": "python3 scripts/pull_feedback.py"
   },
   "dependencies": {
     "@codemirror/commands": "6.10.4",
@@ -29,7 +30,8 @@
     "@codemirror/state": "6.7.1",
     "@codemirror/view": "6.43.6",
     "@lezer/highlight": "1.2.3",
-    "@replit/codemirror-vim": "6.3.0"
+    "@replit/codemirror-vim": "6.3.0",
+    "modern-screenshot": "4.7.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

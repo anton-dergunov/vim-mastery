@@ -126,6 +126,7 @@ dated before session 07 against this table.
 | 22 | [The file-name register `"%`](22-file-name-register.md) | M | 01 | 08, 11 |
 | 23 | [Five future unit boards and animation seeds](23-future-unit-boards-and-animation-seeds.md) | L | 07 | — |
 | 24 | [Story continuity and unit endings](24-story-continuity-and-unit-endings.md) | L | 07, 16, 23 | — |
+| 25 | [In-app feedback capture](25-in-app-feedback-capture.md) | M | — | — |
 
 Sessions 20, 23, and 24 are complete. Unit 17, story continuity, boards,
 animations, packaging, review tooling, and promotion automation are implemented.
@@ -197,3 +198,4 @@ review, content work needs canonical-solution replay and the viewport matrix.
 - [ ] 22 The file-name register
 - [ ] 23 Future unit boards and animation seeds
 - [ ] 24 Story continuity and unit endings
+- [x] 25 In-app feedback capture

@@ -158,6 +158,17 @@
           <p class="ex-output-dismiss">press any key to continue</p>
         </aside>
 
+        <!-- A sibling of the board layers rather than a child of #worldGrid,
+             whose innerHTML is replaced on every render. It mirrors the
+             character's empty grid corner, and it is excluded from its own
+             screenshot so the picture shows the lesson, not the button. -->
+        <button class="feedback-button" id="feedbackButton" type="button"
+                data-feedback-exclude aria-label="Report a problem" title="Report a problem">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 21V4h9l.5 2H20v9h-7l-.5-2H6v8Z"/>
+          </svg>
+        </button>
+
       </div>
     </section>
     </div>
@@ -320,12 +331,72 @@
           <p>Replay the three-part introduction without changing lesson progress.</p>
           <button class="note-action secondary-action" id="replayStoryButton" type="button">Replay Story</button>
         </section>
+        <section class="story-settings" aria-labelledby="feedbackSettingsTitle">
+          <strong id="feedbackSettingsTitle">Feedback</strong>
+          <p>Report a problem with this lesson, or anything else you noticed.</p>
+          <button class="note-action secondary-action" id="feedbackSettingsButton" type="button">Report a problem</button>
+        </section>
         <section class="app-version-panel" aria-label="Application version">
           <strong>Application</strong>
           <span id="currentVersion"></span>
           <p id="updateStatus">Checking for updates when Vim Wilds opens.</p>
           <button class="note-action" id="restartUpdateButton" type="button" hidden>Restart with update</button>
         </section>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog feedback-dialog" id="feedbackDialog" data-feedback-exclude aria-labelledby="feedbackTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Report a problem</span>
+          <h2 id="feedbackTitle">Send feedback</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="feedbackDialog" aria-label="Close feedback">×</button>
+      </div>
+      <div class="dialog-body">
+        <p class="feedback-place" id="feedbackPlace"></p>
+        <p class="feedback-pending" id="feedbackPending" hidden></p>
+
+        <label class="feedback-field" for="feedbackNote">
+          <strong>What happened?</strong>
+          <!-- Deliberately a native textarea: this is the one place in the app
+               where the phone's own keyboard, its dictation and its language
+               are what you want, not the lesson's Vim keyboard. -->
+          <textarea id="feedbackNote" rows="4" placeholder="Describe what you expected and what you saw."></textarea>
+        </label>
+
+        <fieldset class="keyboard-options feedback-categories" id="feedbackCategories">
+          <legend>Kind</legend>
+        </fieldset>
+
+        <section class="feedback-shot" aria-labelledby="feedbackShotTitle">
+          <strong id="feedbackShotTitle">Screenshot</strong>
+          <p class="feedback-shot-status" id="feedbackShotStatus">Optional.</p>
+          <img class="feedback-shot-preview" id="feedbackShotPreview" alt="The screenshot attached to this report" hidden>
+          <div class="feedback-shot-actions">
+            <button class="note-action secondary-action" type="button" id="feedbackShotAttach">Attach a screenshot</button>
+            <button class="note-action secondary-action" type="button" id="feedbackShotRemove" hidden>Remove</button>
+          </div>
+          <input class="feedback-shot-input" type="file" accept="image/*" id="feedbackShotInput">
+        </section>
+
+        <details class="feedback-details" id="feedbackDetails">
+          <summary>What will be sent</summary>
+          <label class="feedback-field" for="feedbackBuffer">
+            <strong>Editor contents</strong>
+            <small class="feedback-buffer-note" id="feedbackBufferNote"></small>
+            <textarea id="feedbackBuffer" rows="5" spellcheck="false"></textarea>
+          </label>
+          <button class="note-action secondary-action" type="button" id="feedbackBufferClear">Clear editor contents</button>
+          <pre class="feedback-preview" id="feedbackPreview"></pre>
+        </details>
+
+        <p class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></p>
+        <div class="feedback-actions">
+          <button class="note-action" type="button" id="feedbackSend">Send</button>
+          <button class="note-action secondary-action" type="button" id="feedbackSave">Save</button>
+          <button class="note-action secondary-action" type="button" id="feedbackCopy">Copy</button>
+        </div>
       </div>
     </dialog>
 

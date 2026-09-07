@@ -65,6 +65,22 @@ content digest in the cache name changes whenever any precached asset changes
 at a stable path. See `docs/media-and-story-infrastructure.md` for normalization
 commands and the WP-11 integration contract.
 
+## Feedback reporting
+
+The flag button on the board and the **Report a problem** row in Settings open a
+sheet that captures the unit, lesson, activity, editor state, device, viewport
+and an optional screenshot, alongside a typed note.
+
+Reports post to a Cloudflare Worker, deployed separately from these Pages; see
+`worker/README.md` for its setup and `scripts/pull_feedback.py` for reading them
+back. Set the repository variable `FEEDBACK_ENDPOINT` to connect the two — the
+deploy workflow passes it to the build as `VITE_FEEDBACK_ENDPOINT`.
+
+**Leaving it unset is a supported configuration.** The sheet then offers Save and
+Copy instead of Send, which is what local development uses and what the app falls
+back to whenever the endpoint cannot be reached. A report composed offline is
+queued and sends itself later.
+
 ## Updates and saved state
 
 The app checks for a new service worker on launch and whenever it returns to

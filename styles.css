@@ -4853,3 +4853,216 @@ html.next-ui .activity-kicker .activity-origin {
   color: #cbb8ff;
   font-size: 11px;
 }
+
+/* Feedback capture.
+   The button lives in the board's empty bottom-right corner — the mirror of
+   the character's grid slot, which `.nix.right` reserves but nothing uses. It
+   sits above the grid, character and completion layers and below the help card
+   and the Ex output overlay, so the oracle and a `:print` dry run still cover
+   it, which is the right precedence. */
+html.next-ui .feedback-button {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #9fb6aa;
+  border: 1px solid rgba(150, 189, 171, .2);
+  border-radius: 10px;
+  background: rgba(7, 21, 18, .66);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+html.next-ui .feedback-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html.next-ui .feedback-button:hover,
+html.next-ui .feedback-button:focus-visible {
+  color: var(--theme-bright);
+  border-color: color-mix(in srgb, var(--theme-bright) 45%, transparent);
+}
+
+/* Above the contents sheet (80), the story (100) and the reference deck (120),
+   so a problem noticed inside one of those can still be reported over it. */
+html.next-ui .feedback-dialog[open] { z-index: 140; }
+
+html.next-ui .feedback-place {
+  margin: 0 0 10px;
+  color: var(--theme-bright);
+  font: 700 11px/1.3 "SFMono-Regular", ui-monospace, monospace;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+html.next-ui .feedback-pending {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  color: #ffd9a0;
+  font-size: 12px;
+  border: 1px solid rgba(255, 200, 102, .28);
+  border-radius: 9px;
+  background: rgba(255, 200, 102, .08);
+}
+
+html.next-ui .feedback-field {
+  display: block;
+  margin: 0 0 14px;
+}
+
+html.next-ui .feedback-field strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #e7f1ea;
+  font-size: 13px;
+}
+
+html.next-ui .feedback-field textarea {
+  width: 100%;
+  padding: 9px 10px;
+  color: #eef5f0;
+  /* 16px keeps iOS from zooming the page when the field takes focus, which
+     would otherwise break the no-horizontal-overflow rule on a phone. */
+  font: 400 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  border: 1px solid rgba(150, 189, 171, .26);
+  border-radius: 10px;
+  background: rgba(4, 14, 12, .72);
+  resize: vertical;
+}
+
+html.next-ui #feedbackBuffer {
+  font-family: "SFMono-Regular", ui-monospace, monospace;
+  font-size: 13px;
+  white-space: pre;
+}
+
+html.next-ui .feedback-field textarea:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--theme-bright) 60%, transparent);
+  outline-offset: 1px;
+}
+
+html.next-ui .feedback-buffer-note {
+  display: block;
+  margin-bottom: 6px;
+  color: #9db1a6;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+html.next-ui .feedback-buffer-note[data-flagged="true"] { color: #ffc866; }
+
+html.next-ui .feedback-categories { margin-bottom: 14px; }
+html.next-ui .feedback-categories label { min-height: 42px; }
+
+html.next-ui .feedback-shot {
+  margin-bottom: 14px;
+  padding: 11px;
+  border: 1px solid rgba(150, 189, 171, .16);
+  border-radius: 11px;
+}
+
+html.next-ui .feedback-shot strong { color: #e7f1ea; font-size: 13px; }
+
+html.next-ui .feedback-shot-status {
+  margin: 4px 0 0;
+  color: #9db1a6;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+html.next-ui .feedback-shot-preview {
+  display: block;
+  width: 100%;
+  max-height: 210px;
+  margin-top: 9px;
+  object-fit: contain;
+  border: 1px solid rgba(150, 189, 171, .18);
+  border-radius: 8px;
+  background: #050f0d;
+}
+
+html.next-ui .feedback-shot-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+html.next-ui .feedback-shot-actions .note-action { margin: 9px 0 0; }
+html.next-ui .feedback-shot-input { display: none; }
+
+html.next-ui .feedback-details {
+  margin-bottom: 12px;
+  padding: 9px 11px;
+  border: 1px solid rgba(150, 189, 171, .16);
+  border-radius: 11px;
+}
+
+html.next-ui .feedback-details summary {
+  color: #cfe0d6;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+html.next-ui .feedback-details[open] summary { margin-bottom: 11px; }
+html.next-ui .feedback-details .note-action { margin: 0 0 12px; }
+
+html.next-ui .feedback-preview {
+  max-height: 220px;
+  margin: 0;
+  padding: 9px;
+  color: #b9cbc0;
+  font: 400 11px/1.45 "SFMono-Regular", ui-monospace, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+  border-radius: 8px;
+  background: rgba(3, 11, 10, .7);
+}
+
+html.next-ui .feedback-status {
+  margin: 0 0 4px;
+  min-height: 17px;
+  font-size: 12px;
+}
+
+html.next-ui .feedback-status[data-tone="ok"] { color: var(--theme-bright); }
+html.next-ui .feedback-status[data-tone="error"] { color: #ff9b8f; }
+
+html.next-ui .feedback-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+html.next-ui .feedback-actions .note-action { flex: 1 1 auto; margin: 0; }
+html.next-ui .feedback-actions .note-action[hidden] { display: none; }
+
+/* Free practice is the one surface where the buffer fills the whole board, so
+   the button necessarily sits over text the learner is editing. It is still the
+   only way in there — the top bar swaps Settings out for the file picker — so it
+   stays, but recedes until it is touched. */
+html.next-ui .phone[data-surface="free-practice"] .feedback-button {
+  width: 30px;
+  height: 30px;
+  opacity: .5;
+  background: rgba(7, 21, 18, .42);
+}
+
+html.next-ui .phone[data-surface="free-practice"] .feedback-button:hover,
+html.next-ui .phone[data-surface="free-practice"] .feedback-button:focus-visible,
+html.next-ui .phone[data-surface="free-practice"] .feedback-button:active {
+  opacity: 1;
+  background: rgba(7, 21, 18, .82);
+}

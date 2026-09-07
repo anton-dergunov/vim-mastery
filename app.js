@@ -23,6 +23,7 @@ import {
 import { StoryTransitions } from "./story-transitions.js";
 import { WorldPresentationRenderer } from "./world-presentation.js";
 import { CharacterReactions } from "./character-reactions.js";
+import { createFeedbackSurface } from "./feedback-ui.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -39,6 +40,7 @@ const practiceStateKey = "vim-wilds.practice.v1";
 // of the session key because the two mean opposite things: the session key is a
 // position and moves in both directions, while these records only accumulate.
 let masteryState = readMasteryState(window.localStorage);
+let feedback = null;
 const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"]);
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 const vimEffectValues = new Set(["enabled", "disabled"]);
@@ -195,6 +197,27 @@ const elements = {
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
   restartUpdateButton: $("#restartUpdateButton"),
+  feedbackButton: $("#feedbackButton"),
+  feedbackSettingsButton: $("#feedbackSettingsButton"),
+  feedbackDialog: $("#feedbackDialog"),
+  feedbackPlace: $("#feedbackPlace"),
+  feedbackPending: $("#feedbackPending"),
+  feedbackNote: $("#feedbackNote"),
+  feedbackCategories: $("#feedbackCategories"),
+  feedbackShotStatus: $("#feedbackShotStatus"),
+  feedbackShotPreview: $("#feedbackShotPreview"),
+  feedbackShotAttach: $("#feedbackShotAttach"),
+  feedbackShotRemove: $("#feedbackShotRemove"),
+  feedbackShotInput: $("#feedbackShotInput"),
+  feedbackBuffer: $("#feedbackBuffer"),
+  feedbackDetails: $("#feedbackDetails"),
+  feedbackBufferNote: $("#feedbackBufferNote"),
+  feedbackBufferClear: $("#feedbackBufferClear"),
+  feedbackPreview: $("#feedbackPreview"),
+  feedbackStatus: $("#feedbackStatus"),
+  feedbackSend: $("#feedbackSend"),
+  feedbackSave: $("#feedbackSave"),
+  feedbackCopy: $("#feedbackCopy"),
 };
 
 const presentations = [
@@ -316,6 +339,7 @@ const state = {
   errorTimer: null,
   remediationReturnId: null,
   semanticEffects: [],
+  rejectedKeys: [],
 };
 
 function persistSession() {
@@ -2216,6 +2240,7 @@ function resetActivity({ vibrateReset = true } = {}) {
   clearPlayback();
   state.progress = 0;
   state.history = [];
+  state.rejectedKeys = [];
   state.modifiers.clear();
   state.physicalShift = false;
   state.complete = false;
@@ -2529,6 +2554,11 @@ function flashError(token, button) {
   if (!isPractice()) return;
   // Nothing is wrong in a scratchpad: there is no expected key to have missed.
   if (isFreePractice()) return;
+  // The refused key is the whole content of a "this command was not accepted"
+  // report, and it is the one thing the app otherwise throws away: state.history
+  // records accepted keys only, because processToken returns before sendKey.
+  state.rejectedKeys.push({ key: token, expected: scriptKeys()[state.progress] ?? null });
+  if (state.rejectedKeys.length > 40) state.rejectedKeys.shift();
   state.consecutiveMistakes += 1;
   characterReactions.incorrectInput(state.consecutiveMistakes);
   if (currentActivity().practiceMode === "guided") {
@@ -2814,6 +2844,11 @@ document.addEventListener("keydown", event => {
   if (elements.storyDialog?.open) return;
   if (elements.practiceFilesDialog?.open || elements.practiceNoticeDialog?.open) return;
   if (elements.masteryDialog?.open) return;
+  // The feedback form holds the only free-text fields in the product. Without
+  // this bail-out the capture handler below eats every character: swallowed
+  // outright in a theory activity, and typed into the Vim buffer in an
+  // exercise. The escape hatch further down only covers select and button.
+  if (elements.feedbackDialog?.open) return;
   if (isPractice() && state.complete && state.keyboardVisibility === "hidden") {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -2866,6 +2901,7 @@ document.addEventListener("keydown", event => {
 }, true);
 
 document.addEventListener("keyup", event => {
+  if (elements.feedbackDialog?.open) return;
   if (event.key === "Shift") {
     state.physicalShift = false;
     renderModifiers();
@@ -3108,7 +3144,9 @@ elements.themeOptions?.addEventListener("change", event => {
 $$('[data-close-dialog]').forEach(button => button.addEventListener("click", () => {
   $("#" + button.dataset.closeDialog)?.close();
 }));
-$$('.app-dialog').forEach(dialog => dialog.addEventListener("click", event => {
+// The feedback sheet is excluded: it is the only dialog holding text someone
+// has typed, and a stray tap outside it must not discard a half-written report.
+$$('.app-dialog:not(.feedback-dialog)').forEach(dialog => dialog.addEventListener("click", event => {
   if (event.target === dialog) dialog.close();
 }));
 elements.activityControls.addEventListener("click", event => {
@@ -3357,6 +3395,49 @@ window.VimWilds = Object.freeze({
   getEffects() {
     return structuredClone(state.semanticEffects);
   },
+  // AGENTS.md requires this interface to survive refactors. The hooks read
+  // `feedback` at call time because the surface is built below, once the
+  // snapshot these reports are made from exists.
+  feedback: Object.freeze({
+    open: () => feedback?.open(),
+    close: () => elements.feedbackDialog?.close(),
+    report: () => feedback?.currentReport(),
+    isOpen: () => Boolean(feedback?.isOpen()),
+  }),
+});
+
+/* Feedback is wired after the testing interface exists, so the report reads the
+ * same snapshot the browser suite asserts against rather than a second, subtly
+ * different one. */
+feedback = createFeedbackSurface({
+  elements,
+  getContext: () => ({
+    state: window.VimWilds.getState(),
+    effects: state.semanticEffects,
+    appVersion,
+    href: window.location.href,
+    // The URL never changes as activities advance, so a bare href would point
+    // at wherever the session started. This names the activity being reported.
+    deepLink: new URL(activityHref(unit.id, currentActivity().sourceActivityId || currentActivity().id), window.location.href).href,
+    commandLine: vimEngine?.commandLine ?? null,
+    rejectedKeys: [...state.rejectedKeys],
+    attempt: {
+      hintLevel: state.hintLevel,
+      consecutiveMistakes: state.consecutiveMistakes,
+      recallFeedback: state.recallFeedback,
+    },
+  }),
+  // A dialog button that keeps focus silently kills physical input, so the
+  // editor has to be given it back on every close.
+  onClose: () => vimEngine?.focus(),
+});
+
+elements.feedbackButton?.addEventListener("click", () => void feedback?.open());
+elements.feedbackSettingsButton?.addEventListener("click", () => {
+  // Capture happens against the board, so the settings sheet has to be out of
+  // the way before the screenshot is taken.
+  elements.settingsDialog.close();
+  void feedback?.open();
 });
 
 const requestedActivity = urlParams.get("activity") || (urlParams.has("unit") ? null : savedSession.activityId);

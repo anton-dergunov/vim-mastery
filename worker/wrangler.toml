@@ -1,0 +1,19 @@
+name = "vim-wilds-feedback"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Comma-separated. The production origin plus the local dev and Playwright
+# servers, so a report can be exercised end to end before deploying.
+[vars]
+ALLOWED_ORIGINS = "https://anton-dergunov.github.io,http://127.0.0.1:5173,http://127.0.0.1:4176,http://localhost:5173"
+
+# ADMIN_TOKEN is a secret, not a var: `wrangler secret put ADMIN_TOKEN`.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vim-wilds-feedback"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "SCREENSHOTS"
+bucket_name = "vim-wilds-feedback"

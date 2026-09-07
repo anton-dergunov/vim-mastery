@@ -45,6 +45,9 @@ jobs:
       - name: Build the versioned PWA
         env:
           VITE_MEDIA_REVISION: ${{ github.sha }}
+          # Unset is a supported configuration: the feedback sheet falls back to
+          # saving and copying a report instead of posting one.
+          VITE_FEEDBACK_ENDPOINT: ${{ vars.FEEDBACK_ENDPOINT }}
         run: |
           VERSION="$(node -p 'require("./package.json").version')"
           echo "VITE_APP_VERSION=${VERSION}+${GITHUB_SHA::8}" >> "$GITHUB_ENV"
