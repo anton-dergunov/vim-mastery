@@ -11,8 +11,9 @@ Exercise-level claims below are derived from the authored `script.commandGroups`
 and `scenario` data, not from spot reading.
 
 This document records observations and recommendations only. It changes no unit
-file. The execution plan derived from it lives in
-[implementation/README.md](./implementation/README.md).
+file. The 25-session plan derived from it was executed and closed; the audit
+that closed it, the design invariants it established, and the work that remains
+live in [implementation-followup/README.md](./implementation-followup/README.md).
 
 ---
 
@@ -313,7 +314,8 @@ reference value is real — but to stop spending full five-phase cycles on them.
 >    judged rare is marked with `lesson.track` (`advanced` or `optional`) plus a
 >    one-sentence note, and keeps its lessons and activities. The author has not
 >    yet walked the course end to end, so a reviewer's judgement of rarity is a
->    label, not a verdict. See constraint 7 in `docs/implementation/README.md`.
+>    label, not a verdict. See constraint 7 in
+>    `docs/implementation-followup/README.md`.
 > 2. **"Bound away by VS Code defaults" is not a reason.** The product teaches
 >    Vim, including terminal Vim, where the scroll chords are native and
 >    unclaimed; no unit content names a host. A claimed chord is a portability
