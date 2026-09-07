@@ -299,11 +299,21 @@ test("a stray tap outside the sheet does not discard a half-written report", asy
   await expect(page.locator("#feedbackNote")).toHaveValue("half written");
 });
 
+/* Board art streams a scene variant into the board 2.5s after a lesson mounts
+ * and holds it for another nine, so a node count taken before a capture and
+ * compared after it measures live art rather than the capture's scaffolding.
+ * Aborting the variant requests leaves the base scene, and the pseudo-element
+ * backgrounds these captures exist to exercise, exactly as authored. */
+async function withoutStreamedArt(page) {
+  await page.route("**/variants/**", route => route.abort());
+}
+
 /* The capture restates pseudo-element backgrounds as real elements, because a
  * DOM rasterizer drops them and the board's scene art is painted that way. If
  * that scaffolding ever survived the capture, the live page would be left with
  * duplicated backdrops. */
 test("capturing leaves the page exactly as it found it", async ({ page }) => {
+  await withoutStreamedArt(page);
   await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
   await page.waitForFunction(() => window.VimWilds?.getState);
 
@@ -323,6 +333,7 @@ test("capturing leaves the page exactly as it found it", async ({ page }) => {
  * never see it. Capturing the dialog itself is what makes its report carry a
  * picture of the card rather than of the lesson behind it. */
 test("capturing a dialog leaves the page exactly as it found it", async ({ page }) => {
+  await withoutStreamedArt(page);
   await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
   await page.waitForFunction(() => window.VimWilds?.getState);
   await page.evaluate(() => window.VimWilds.openReference("survival"));
@@ -344,6 +355,7 @@ test("capturing a dialog leaves the page exactly as it found it", async ({ page 
 });
 
 test("a capture that fails still restores the page", async ({ page }) => {
+  await withoutStreamedArt(page);
   await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
   await page.waitForFunction(() => window.VimWilds?.getState);
 

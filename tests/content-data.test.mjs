@@ -1431,6 +1431,75 @@ test("Unit 15 preserves the Global-Normal curriculum and complete lesson flow", 
   }
 });
 
+// Only `/` delimits a pattern in this unit. Admitting `#` as a delimiter reads
+// `:g/^#/d` as the pattern `^`, which matches every line and reports a
+// violation the content does not have. The closing delimiter is optional
+// because a bare `:g/pattern` defaults to printing the matches.
+const globalCanonical = /^:(?<range>[0-9,%$.;+-]*)(?<command>global!|global|g!|g|vglobal|v)\/(?<pattern>(?:\\.|[^/])*)(?:\/|$)/;
+// A `:g`/`:v` canonical written any other way — an alternate delimiter, say —
+// would be skipped by the reader above rather than checked, which is how a
+// guard goes quietly blind. This spots the family without parsing it.
+const looksGlobal = /^:[0-9,%$.;+-]*(?:global!?|vglobal|g!?|v)[^A-Za-z0-9]/;
+
+// The lines a `:g`/`:v` run touches: matches for `:g`, everything else for the
+// inverted forms, clipped to an explicit numeric range when the canonical
+// carries one.
+const globalTargetLines = (canonical, lines) => {
+  const parsed = globalCanonical.exec(canonical);
+  if (!parsed) return null;
+  const inverted = ["v", "vglobal", "g!", "global!"].includes(parsed.groups.command);
+  const bounds = /^(\d+),(\d+)$/.exec(parsed.groups.range);
+  const first = bounds ? Number(bounds[1]) : 1;
+  const last = bounds ? Number(bounds[2]) : lines.length;
+  // `\|` is the only magic form Unit 15 authors; everything else in its
+  // patterns means the same thing to Vim and to JavaScript.
+  const pattern = new RegExp(parsed.groups.pattern.replaceAll("\\|", "|"));
+  return lines
+    .map((line, index) => ({ number: index + 1, matched: pattern.test(line) }))
+    .filter(({ number, matched }) => number >= first && number <= last && matched !== inverted)
+    .map(({ number }) => number);
+};
+
+test("Unit 15 predicates select lines a plain range could not", () => {
+  // A `:g`/`:v` exercise teaches the predicate only when the lines it selects
+  // are scattered. Contiguous matches make `:start,endcmd` an equally good
+  // answer and reduce the predicate to decoration, which is the whole reason
+  // this unit runs long buffers. Derived from the canonicals rather than a list
+  // of activity ids, because a hand-list rots the moment one is retargeted.
+  let predicates = 0;
+  for (const lesson of automationUnit.lessons) {
+    for (const activity of lesson.activities) {
+      if (activity.type !== "demo" && activity.type !== "exercise") continue;
+      const canonical = keysOf(activity).join("");
+      const selected = globalTargetLines(canonical, activity.scenario.initial.lines);
+      if (!selected) {
+        assert(!looksGlobal.test(canonical), `${activity.id} runs a predicate this guard cannot read: ${canonical}`);
+        continue;
+      }
+      predicates += 1;
+      assert(selected.length > 1, `${activity.id} runs a predicate over ${selected.length} line(s)`);
+      assert(
+        selected.at(-1) - selected[0] + 1 !== selected.length,
+        `${activity.id} selects the contiguous run ${selected[0]}-${selected.at(-1)}, which a range could address`,
+      );
+    }
+  }
+  assert(predicates > 0, "the predicate guard exists to be used");
+});
+
+test("Arc 3 units keep asking which tool fits", () => {
+  // Taking each Arc 3 unit from one tool-choice question to five was the
+  // review's highest-return change: without them a learner is only ever asked
+  // how to drive a command, never which one the situation calls for. Four
+  // rather than five, so a deliberate re-authoring can still move one while
+  // removing the layer wholesale cannot pass.
+  for (const data of [rangeUnit, substitutionUnit, macroUnit, automationUnit]) {
+    const choices = data.lessons.flatMap(lesson => lesson.activities)
+      .filter(activity => activity.type === "choice");
+    assert(choices.length >= 4, `${data.id} asks only ${choices.length} tool-choice question(s)`);
+  }
+});
+
 test("Unit 16 preserves the capstone curriculum and its choose-then-compare shape", () => {
   assert.deepEqual(capstoneUnit.curriculumDefinition, {
     unit: "16. Real-code workflow capstones",

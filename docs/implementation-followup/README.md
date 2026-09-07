@@ -165,7 +165,7 @@ already close to its hosting limit. Everything else is independent.
 
 - [x] 01 Feedback reachability
 - [x] 02 Teach the verified commands
-- [ ] 03 Guard the unguarded criteria
+- [x] 03 Guard the unguarded criteria
 - [ ] 04 Asset and hosting budget
 - [ ] 05 Engine debt and Ex ownership
 - [ ] 06 Entry confidence levels

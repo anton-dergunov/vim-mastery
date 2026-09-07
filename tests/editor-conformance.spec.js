@@ -3157,14 +3157,30 @@ test.describe("Production lesson flow", () => {
   });
 
   test("reconstructs the authored window with no drift across every viewport activity", async ({ page }) => {
+    // Units 9, 10 and 15 contribute 191 activities once every exercise is
+    // expanded into its guided and recall runs, and every one of those mounts
+    // rebuilds the editor and replays the activity's setup steps to reconstruct
+    // its window. That is seconds on a developer machine and past the 30s
+    // default on a loaded CI runner, so the budget is stated rather than
+    // inherited: the loop grows with the curriculum and must not start failing
+    // for being long.
+    test.setTimeout(120000);
+    // Only three fields of the snapshot matter here, and reading the whole one
+    // would serialize the buffer, registers, history, board art and story state
+    // on all 191 mounts.
+    const windowState = () => page.evaluate(() => {
+      const current = window.VimWilds.getState();
+      return { viewport: current.viewport, viewportDependent: current.viewportDependent, setupDrift: current.setupDrift };
+    });
     const drifted = [];
     let windowed = 0;
     for (const unitId of ["position-memory", "viewport-control"]) {
       await page.goto(`/?unit=${unitId}`);
+      await page.waitForFunction(() => window.VimWilds?.getState);
       const activityCount = await page.evaluate(() => window.VimWilds.activities.length);
       for (let index = 0; index < activityCount; index += 1) {
         await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
-        const current = await state(page);
+        const current = await windowState();
         if (current.setupDrift) drifted.push(current.setupDrift);
         if (!current.viewport || current.viewport.totalLines === current.viewport.bottomLine - current.viewport.topLine + 1) continue;
         // Units 9 and 10 both depend on the visible row count, so every one of
@@ -3181,12 +3197,13 @@ test.describe("Production lesson flow", () => {
     // reconstruct the authored window just as exactly while declaring no
     // dependence on the row count.
     await page.goto("/?unit=global-normal-automation");
+    await page.waitForFunction(() => window.VimWilds?.getState);
     const automationCount = await page.evaluate(() => window.VimWilds.activities.length);
     const automationDrift = [];
     let presentationWindows = 0;
     for (let index = 0; index < automationCount; index += 1) {
       await page.evaluate(activityIndex => window.VimWilds.goToActivity(activityIndex), index);
-      const current = await state(page);
+      const current = await windowState();
       if (current.setupDrift) automationDrift.push(current.setupDrift);
       if (!current.viewport || current.viewport.totalLines === current.viewport.bottomLine - current.viewport.topLine + 1) continue;
       presentationWindows += 1;
