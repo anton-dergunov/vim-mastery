@@ -225,7 +225,7 @@ test("every practice prompt describes outcomes without revealing its canonical r
     .flatMap(lesson => lesson.activities)
     .filter(activity => activity.type === "exercise");
 
-  assert.equal(exercises.length, 458);
+  assert.equal(exercises.length, 464);
   for (const activity of exercises) {
     assert(activity.title.trim(), `${activity.id} needs an outcome title`);
     assert(activity.instruction.trim(), `${activity.id} needs an outcome instruction`);
@@ -730,7 +730,7 @@ test("every concept carries a globally unique id", () => {
       seen.set(entry.id, data.id);
     }
   }
-  assert.equal(seen.size, 138);
+  assert.equal(seen.size, 139);
   assert.deepEqual(schema.$defs.coverageEntry.required, ["id", "concept", "explain", "demonstrate", "isolate", "mix", "challenge"]);
   assert.deepEqual(schema.$defs.coverageEntry.properties.id, { $ref: "#/$defs/id" });
 });
@@ -859,7 +859,7 @@ test("every activity reference inside a unit resolves", () => {
       }
     }
   }
-  assert.equal(checked, 140);
+  assert.equal(checked, 141);
 });
 
 test("id-shaped content fields obey the schema's id pattern", () => {
@@ -1404,8 +1404,8 @@ test("Unit 15 preserves the Global-Normal curriculum and complete lesson flow", 
   assert.equal(automationUnit.lessons.length, 9);
   const activities = automationUnit.lessons.flatMap(lesson => lesson.activities);
   const runnableActivities = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
-  assert.equal(runnableActivities.length, 38);
-  assert.equal(runnableActivities.filter(activity => activity.type === "exercise").length, 29);
+  assert.equal(runnableActivities.length, 40);
+  assert.equal(runnableActivities.filter(activity => activity.type === "exercise").length, 31);
   assert.deepEqual(automationUnit.coverage.map(item => item.concept), [
     "range application with :normal", ":normal! and visual application", ":global delete", ":vglobal inversion",
     "global substitution", "global Normal commands", "global macro execution", ":global collect and reorder",
@@ -1666,7 +1666,7 @@ test("Unit 4 preserves the curriculum and covers every operator family", () => {
 test("Unit 5 preserves the curriculum and covers every precision-search family", () => {
   assert.deepEqual(precisionUnit.curriculumDefinition, {
     unit: "5. Precision motions and search",
-    commandsAndConcepts: "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
+    commandsAndConcepts: "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `/pat/e` `/pat/+n`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
     prerequisites: "Unit 2; Unit 4 recommended",
     learningOutcome: "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
     representativeExercises: "Delete until a quote; repeat a comma find; change the next search match; delete up to the next match; jump between brackets; move by paragraphs in prose or comments",
@@ -1675,14 +1675,15 @@ test("Unit 5 preserves the curriculum and covers every precision-search family",
   assert.deepEqual(precisionUnit.prerequisiteSkillIds, ["cursor-movement"]);
   assert.deepEqual(precisionUnit.recommendedSkillIds, ["operator-grammar"]);
   assert.equal(precisionUnit.releaseStatus, "authoring");
-  assert.equal(precisionUnit.lessons.length, 10);
+  assert.equal(precisionUnit.lessons.length, 11);
   assert.deepEqual(precisionUnit.coverage.map(item => item.concept), [
-    "f F t T", "; and ,", "/ ? n N", "* # g* g#", "operator plus search range", "gn and gN", "% matching delimiters",
-    "{ and } paragraph motions", "( and ) sentence motions", "integrated precision motion and search",
+    "f F t T", "; and ,", "/ ? n N", "* # g* g#", "operator plus search range", "search offsets", "gn and gN",
+    "% matching delimiters", "{ and } paragraph motions", "( and ) sentence motions",
+    "integrated precision motion and search",
   ]);
   const activities = precisionUnit.lessons.flatMap(lesson => lesson.activities);
   const runnable = activities.filter(activity => activity.type === "demo" || activity.type === "exercise");
-  assert.equal(runnable.length, 42);
+  assert.equal(runnable.length, 47);
   for (const activity of runnable) {
     assert(profileById.has(activity.languageId), `${activity.id} uses unknown language ${activity.languageId}`);
     assert.equal(activity.provenance.nativeValidation, "passed");

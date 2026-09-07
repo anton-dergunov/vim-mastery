@@ -1857,6 +1857,45 @@
           "type": "theory"
         },
         {
+          "id": "search-offset-meaning",
+          "lessonId": "move-where-a-search-lands",
+          "type": "theory"
+        },
+        {
+          "id": "search-offset-demo",
+          "lessonId": "move-where-a-search-lands",
+          "type": "demo"
+        },
+        {
+          "id": "land-on-the-match-end",
+          "lessonId": "move-where-a-search-lands",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "change-through-the-type",
+          "lessonId": "move-where-a-search-lands",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "delete-through-the-marker",
+          "lessonId": "move-where-a-search-lands",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "repeat-the-line-offset",
+          "lessonId": "move-where-a-search-lands",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "predict-offset-inclusion",
+          "lessonId": "move-where-a-search-lands",
+          "type": "choice"
+        },
+        {
           "id": "search-match-range-meaning",
           "lessonId": "operate-on-search-matches",
           "type": "theory"
@@ -2099,6 +2138,27 @@
           "challenge": [
             "collapse-arguments-backward",
             "predict-search-range-boundary"
+          ]
+        },
+        {
+          "id": "search-offsets",
+          "concept": "search offsets",
+          "explain": [
+            "search-offset-meaning"
+          ],
+          "demonstrate": [
+            "search-offset-demo"
+          ],
+          "isolate": [
+            "land-on-the-match-end"
+          ],
+          "mix": [
+            "change-through-the-type",
+            "delete-through-the-marker"
+          ],
+          "challenge": [
+            "repeat-the-line-offset",
+            "predict-offset-inclusion"
           ]
         },
         {
@@ -6432,6 +6492,18 @@
           "delivery": "guided-then-recall"
         },
         {
+          "id": "list-global-matches",
+          "lessonId": "global-delete",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
+          "id": "list-unmatched-rows",
+          "lessonId": "global-delete",
+          "type": "exercise",
+          "delivery": "guided-then-recall"
+        },
+        {
           "id": "global-delete-comments",
           "lessonId": "global-delete",
           "type": "exercise",
@@ -6685,9 +6757,11 @@
           ],
           "isolate": [
             "preview-global-scope",
+            "list-global-matches",
             "global-delete-comments"
           ],
           "mix": [
+            "list-unmatched-rows",
             "range-global-delete"
           ],
           "challenge": [

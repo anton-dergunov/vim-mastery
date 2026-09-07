@@ -914,7 +914,11 @@ button { font: inherit; }
   gap: 6px;
   padding: 10px 12px;
   color: #d6f0e0;
-  background: rgba(4, 12, 10, .94);
+  /* Opaque, because Vim's message screen replaces what is under it rather than
+     tinting it. An exercise whose own last keystroke prints completes while the
+     listing is up, and at 94% the completion panel ghosted through the rows it
+     was covering. */
+  background: rgb(4, 12, 10);
   opacity: 0;
   visibility: hidden;
   transition: opacity .16s, visibility .16s;

@@ -7,7 +7,7 @@
   "releaseStatus": "authoring",
   "curriculumDefinition": {
     "unit": "5. Precision motions and search",
-    "commandsAndConcepts": "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
+    "commandsAndConcepts": "`f F t T ; ,`; `/ ? n N`; `* # g* g#`; `d/pat` `y/pat` `c?pat`; `/pat/e` `/pat/+n`; `gn gN`; `%`; `(`, `)`, `{`, `}`",
     "prerequisites": "Unit 2; Unit 4 recommended",
     "learningOutcome": "Select the smallest reliable motion for nearby punctuation, repeated text, matching delimiters, sentences, and paragraphs",
     "representativeExercises": "Delete until a quote; repeat a comma find; change the next search match; delete up to the next match; jump between brackets; move by paragraphs in prose or comments",
@@ -3103,7 +3103,7 @@
           "phase": "explain",
           "title": "The same pattern will address lines",
           "body": "A pattern that ends a range here is the same pattern that addresses lines on the command line in Unit 12, where `:/obsolete/delete` removes the line a search finds, and that selects every matching line in Unit 15. Naming text instead of counting it is the one idea behind all three.",
-          "contrast": "Real Vim can also move where a search lands: an offset such as `/pattern/e` finishes on the match's last character, which makes the range include the match. That form is real and gets its own practice later; every range in this lesson uses the plain pattern.",
+          "contrast": "Real Vim can also move where a search lands: an offset such as `/pattern/e` finishes on the match's last character, which makes the range include the match. Every range in this lesson uses the plain pattern; the next lesson practises the offsets.",
           "routes": [
             {
               "id": "review-search-range",
@@ -3112,6 +3112,890 @@
               "emphasis": "secondary"
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "move-where-a-search-lands",
+      "title": "Move where a search lands",
+      "objective": "Add an offset to a search so the range ends past the match, or on a whole line, instead of in front of it.",
+      "track": "advanced",
+      "trackNote": "Advanced and less commonly used: a plain search range covers most work, and an offset is the tool for the case where the match itself has to be inside the range.",
+      "activities": [
+        {
+          "id": "search-offset-meaning",
+          "type": "theory",
+          "phase": "explain",
+          "title": "Move where a search lands",
+          "body": "A search can carry an offset: a second `/` after the pattern, then a short instruction about where to stop. `/pattern/e` lands on the match's **last** character instead of its first, and a signed number such as `/pattern/+1` lands a whole line away. The offset changes the landing point, not the pattern.",
+          "grammar": "/pattern/e → land on the match's last character · /pattern/+1 → land one line past the match",
+          "contrast": "The previous lesson's range was exclusive, so the match survived. `e` makes the range inclusive and the match goes too — the same operator, one character of difference.",
+          "demoRef": "search-offset-demo"
+        },
+        {
+          "id": "search-offset-demo",
+          "type": "demo",
+          "phase": "demonstrate",
+          "title": "Drop a column and its separator",
+          "instruction": "Remove the first field on each row, taking the comma that follows it.",
+          "languageId": "csv",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "id,name,score",
+                "7,ada,91"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "name,score",
+                "ada,91"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "/",
+              ",",
+              "/",
+              "e",
+              "Enter",
+              "j",
+              "d",
+              "/",
+              ",",
+              "/",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "d",
+                "explanation": "Start a delete and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 3,
+                "display": ",",
+                "explanation": "Enter the pattern that ends the range."
+              },
+              {
+                "from": 3,
+                "to": 5,
+                "display": "/e",
+                "explanation": "Add the end offset so the range reaches through the match."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": "↵",
+                "explanation": "Run the search and complete the delete."
+              },
+              {
+                "from": 6,
+                "to": 7,
+                "display": "j",
+                "explanation": "Move to the next row."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "d",
+                "explanation": "Start the second delete."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "/",
+                "explanation": "Open another forward search."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": ",",
+                "explanation": "Enter the same pattern."
+              },
+              {
+                "from": 10,
+                "to": 12,
+                "display": "/e",
+                "explanation": "Offset to the match's end again."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "↵",
+                "explanation": "Run the search and complete the delete."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "operator-pending",
+                "caption": "Delete is waiting for a range."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "name,score",
+                  "7,ada,91"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    0,
+                    0
+                  ],
+                  "to": [
+                    0,
+                    3
+                  ]
+                },
+                "caption": "The comma went with the field. A plain range would have left it behind."
+              },
+              {
+                "afterStep": 7,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 13,
+                "lines": [
+                  "name,score",
+                  "ada,91"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "affectedRange": {
+                  "from": [
+                    1,
+                    0
+                  ],
+                  "to": [
+                    1,
+                    2
+                  ]
+                }
+              }
+            ]
+          },
+          "hints": [
+            "The separator has to be inside the range, not just at its edge.",
+            "An offset is typed after a second slash."
+          ],
+          "feedback": {
+            "success": "Each row now begins at its second field.",
+            "why": "`e` made the range inclusive, so the comma the pattern found was deleted along with the field in front of it."
+          },
+          "skills": {
+            "primary": [
+              "search-offset"
+            ],
+            "supporting": [
+              "search-operator-range",
+              "delete-operator"
+            ]
+          },
+          "difficulty": {
+            "level": "guided",
+            "dimensions": [
+              "search-offset",
+              "inclusive-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "csv makes the field separator the obvious thing a range must either keep or take.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-offset"
+            ]
+          }
+        },
+        {
+          "id": "land-on-the-match-end",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "Land on the last character",
+          "instruction": "Search for the level tag and finish on its final letter rather than its first.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "03:14 WARN queue backlog"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "03:14 WARN queue backlog"
+              ],
+              "cursor": [
+                0,
+                9
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "W",
+              "A",
+              "R",
+              "N",
+              "/",
+              "e",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 5,
+                "display": "WARN",
+                "explanation": "Enter the pattern to look for."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "/e",
+                "explanation": "Ask to land on the match's last character."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "↵",
+                "explanation": "Run the search."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 8,
+                "lines": [
+                  "03:14 WARN queue backlog"
+                ],
+                "cursor": [
+                  0,
+                  9
+                ],
+                "mode": "normal",
+                "caption": "Without the offset the cursor would have stopped on the W."
+              }
+            ]
+          },
+          "hints": [
+            "A plain search stops at the start of what it finds.",
+            "The offset is typed after a second slash."
+          ],
+          "feedback": {
+            "success": "The cursor is on the last letter of the tag.",
+            "why": "`e` moves the landing point to the end of the match, which is where an inclusive range has to stop."
+          },
+          "skills": {
+            "primary": [
+              "search-offset"
+            ],
+            "supporting": [
+              "search-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "search-offset",
+              "forward-search"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A log row puts a fixed level tag where its two ends are easy to tell apart.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-offset"
+            ]
+          }
+        },
+        {
+          "id": "change-through-the-type",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Replace a declaration through its type",
+          "instruction": "Give the first field the same visibility and type as the field below it.",
+          "languageId": "java",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "static int limit;",
+                "public long count;"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "public long limit;",
+                "public long count;"
+              ],
+              "cursor": [
+                0,
+                10
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "c",
+              "/",
+              "i",
+              "n",
+              "t",
+              "/",
+              "e",
+              "Enter",
+              "p",
+              "u",
+              "b",
+              "l",
+              "i",
+              "c",
+              " ",
+              "l",
+              "o",
+              "n",
+              "g",
+              "Escape"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "c",
+                "explanation": "Start a change and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "int",
+                "explanation": "Enter the pattern that ends the range."
+              },
+              {
+                "from": 5,
+                "to": 7,
+                "display": "/e",
+                "explanation": "Offset to the match's end so the type is replaced too."
+              },
+              {
+                "from": 7,
+                "to": 8,
+                "display": "↵",
+                "explanation": "Run the search and open Insert mode."
+              },
+              {
+                "from": 8,
+                "to": 19,
+                "display": "public long",
+                "explanation": "Type the replacement."
+              },
+              {
+                "from": 19,
+                "to": 20,
+                "display": "⎋",
+                "explanation": "Return to Normal mode."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "operator-pending"
+              },
+              {
+                "afterStep": 8,
+                "lines": [
+                  " limit;",
+                  "public long count;"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "insert",
+                "caption": "The type is gone, not just the words in front of it."
+              },
+              {
+                "afterStep": 20,
+                "lines": [
+                  "public long limit;",
+                  "public long count;"
+                ],
+                "cursor": [
+                  0,
+                  10
+                ],
+                "mode": "normal"
+              }
+            ]
+          },
+          "hints": [
+            "A plain range would stop in front of the type and leave it behind.",
+            "The type is the match, and this time it has to go too."
+          ],
+          "feedback": {
+            "success": "The declaration carries its new type.",
+            "why": "The offset put the match inside the range, so the change replaced the type instead of stopping in front of it.",
+            "contrast": "`c/int` is the previous lesson's exercise: it stops in front of `int` and keeps it. The offset is the whole difference."
+          },
+          "skills": {
+            "primary": [
+              "search-offset"
+            ],
+            "supporting": [
+              "change-operator",
+              "search-operator-range"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "search-offset",
+              "inclusive-range",
+              "operator-search"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Java field declaration puts a modifier and a type in front of the name that has to survive.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-offset"
+            ]
+          }
+        },
+        {
+          "id": "delete-through-the-marker",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "Cut the draft and its marker",
+          "instruction": "Delete the draft rows, the marker, and the blank row under it, leaving only the final text.",
+          "languageId": "markdown",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "draft one",
+                "draft two",
+                "--- END ---",
+                "",
+                "final text"
+              ],
+              "cursor": [
+                0,
+                4
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "final text"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "d",
+              "/",
+              "E",
+              "N",
+              "D",
+              "/",
+              "+",
+              "1",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "d",
+                "explanation": "Start a delete and wait for its range."
+              },
+              {
+                "from": 1,
+                "to": 2,
+                "display": "/",
+                "explanation": "Open a forward search to supply that range."
+              },
+              {
+                "from": 2,
+                "to": 5,
+                "display": "END",
+                "explanation": "Enter the pattern that finds the marker."
+              },
+              {
+                "from": 5,
+                "to": 8,
+                "display": "/+1",
+                "explanation": "Offset one line past the match, which makes the delete linewise."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "↵",
+                "explanation": "Run the search and complete the delete."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 1,
+                "cursor": [
+                  0,
+                  4
+                ],
+                "mode": "operator-pending",
+                "caption": "The cursor sits mid-row, and whole rows still go."
+              },
+              {
+                "afterStep": 9,
+                "lines": [
+                  "final text"
+                ],
+                "cursor": [
+                  0,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "A line offset makes the operator linewise, so no half row is left behind."
+              }
+            ]
+          },
+          "hints": [
+            "The blank row under the marker has to go as well.",
+            "A signed number after the pattern counts lines, not characters.",
+            "Use `d/END/+1`."
+          ],
+          "feedback": {
+            "success": "Only the final text is left.",
+            "why": "A line offset changes the kind of the range: the delete became linewise, so it removed whole rows even though the cursor started in the middle of one."
+          },
+          "skills": {
+            "primary": [
+              "search-offset"
+            ],
+            "supporting": [
+              "delete-operator",
+              "search-operator-range"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "search-offset",
+              "linewise-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "A Markdown draft separated from its final copy by a marker row is a document people really keep.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-offset"
+            ]
+          }
+        },
+        {
+          "id": "repeat-the-line-offset",
+          "type": "exercise",
+          "phase": "challenge",
+          "title": "Repeat a search that carries an offset",
+          "instruction": "Land on the row under the first marker, then repeat the search to reach the row under the second.",
+          "languageId": "log",
+          "sourceKind": "neutral",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "fix login TODO",
+                "retry twice",
+                "cache TODO",
+                "drop stale keys",
+                "auth TODO",
+                "refresh tokens"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "fix login TODO",
+                "retry twice",
+                "cache TODO",
+                "drop stale keys",
+                "auth TODO",
+                "refresh tokens"
+              ],
+              "cursor": [
+                3,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              "/",
+              "T",
+              "O",
+              "D",
+              "O",
+              "/",
+              "+",
+              "1",
+              "Enter",
+              "n"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": "/",
+                "explanation": "Open a forward search."
+              },
+              {
+                "from": 1,
+                "to": 5,
+                "display": "TODO",
+                "explanation": "Enter the pattern that marks each note."
+              },
+              {
+                "from": 5,
+                "to": 8,
+                "display": "/+1",
+                "explanation": "Offset to the row below the match."
+              },
+              {
+                "from": 8,
+                "to": 9,
+                "display": "↵",
+                "explanation": "Run the search."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "n",
+                "explanation": "Repeat the search — the offset is remembered with the pattern."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 9,
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "One row below the first marker."
+              },
+              {
+                "afterStep": 10,
+                "lines": [
+                  "fix login TODO",
+                  "retry twice",
+                  "cache TODO",
+                  "drop stale keys",
+                  "auth TODO",
+                  "refresh tokens"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "`n` repeated the offset too, so it landed below the marker rather than on it."
+              }
+            ]
+          },
+          "hints": [
+            "You should not have to retype the offset.",
+            "Vim stores the offset with the pattern, so a repeat carries it."
+          ],
+          "feedback": {
+            "success": "The cursor is under the second marker.",
+            "why": "An offset belongs to the search that carried it, so `n` and `N` repeat the landing rule as well as the pattern.",
+            "contrast": "A plain `/TODO` afterwards would clear the offset and land on the marker itself."
+          },
+          "skills": {
+            "primary": [
+              "search-offset"
+            ],
+            "supporting": [
+              "search-repeat",
+              "search-forward"
+            ]
+          },
+          "difficulty": {
+            "level": "hard",
+            "dimensions": [
+              "search-offset",
+              "search-repeat",
+              "linewise-range"
+            ]
+          },
+          "portability": "Core Vim behavior.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "precision-motions-search-v1",
+            "languageRationale": "Marker rows followed by the note they annotate give the repeat something to land on each time.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "search-offset"
+            ]
+          }
+        },
+        {
+          "id": "predict-offset-inclusion",
+          "type": "choice",
+          "phase": "challenge",
+          "title": "Predict what the offset takes",
+          "prompt": "The cursor is on the first character of the line. Which text does `d/compute/e` remove?",
+          "options": [
+            {
+              "id": "offset-through-match",
+              "label": "`const value = compute`"
+            },
+            {
+              "id": "offset-before-match",
+              "label": "`const value = `"
+            },
+            {
+              "id": "offset-whole-call",
+              "label": "`const value = compute(input)`"
+            }
+          ],
+          "correctOptionId": "offset-through-match",
+          "explanation": "`e` lands on the match's last character and makes the range inclusive, so the range runs through `compute` and stops there. The arguments after it are untouched — the offset moves the boundary by one match, not to the end of the statement.",
+          "questionKind": "range-prediction",
+          "inspection": {
+            "initial": {
+              "lines": [
+                "const value = compute(input);"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal"
+            },
+            "revealRange": {
+              "from": [
+                0,
+                0
+              ],
+              "to": [
+                0,
+                21
+              ]
+            }
+          },
+          "remediationRef": "search-offset-meaning"
         }
       ]
     },
@@ -6143,12 +7027,28 @@
       "notes": [
         "A plain search range is exclusive: it ends where the match begins and leaves the match in the buffer.",
         "Backward with ?, the range runs from the match to the cursor and leaves the character under the cursor in place.",
-        "Vim's search offsets, such as /pattern/e, move where a search lands; this unit practises the plain pattern."
+        "Vim's search offsets, such as /pattern/e, move where a search lands; this lesson practises the plain pattern and the next one adds the offsets."
       ],
       "exampleActivityRefs": [
         "search-range-demo",
         "copy-row-prefix",
         "collapse-arguments-backward"
+      ]
+    },
+    {
+      "id": "search-offset-reference",
+      "command": "/pattern/e · /pattern/s · /pattern/+n · /pattern/-n",
+      "purpose": "Move where a search lands, so a range can end past the match or on a whole line.",
+      "notes": [
+        "e lands on the match's last character and makes an operator inclusive.",
+        "s and b land on the match's first character and stay exclusive.",
+        "A signed number counts lines and makes an operator linewise.",
+        "n and N repeat the offset along with the pattern; a plain search clears it."
+      ],
+      "exampleActivityRefs": [
+        "search-offset-demo",
+        "delete-through-the-marker",
+        "repeat-the-line-offset"
       ]
     },
     {
@@ -6304,6 +7204,27 @@
       "challenge": [
         "collapse-arguments-backward",
         "predict-search-range-boundary"
+      ]
+    },
+    {
+      "id": "search-offsets",
+      "concept": "search offsets",
+      "explain": [
+        "search-offset-meaning"
+      ],
+      "demonstrate": [
+        "search-offset-demo"
+      ],
+      "isolate": [
+        "land-on-the-match-end"
+      ],
+      "mix": [
+        "change-through-the-type",
+        "delete-through-the-marker"
+      ],
+      "challenge": [
+        "repeat-the-line-offset",
+        "predict-offset-inclusion"
       ]
     },
     {

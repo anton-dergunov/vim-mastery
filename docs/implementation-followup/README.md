@@ -164,7 +164,7 @@ already close to its hosting limit. Everything else is independent.
 ## Progress
 
 - [x] 01 Feedback reachability
-- [ ] 02 Teach the verified commands
+- [x] 02 Teach the verified commands
 - [ ] 03 Guard the unguarded criteria
 - [ ] 04 Asset and hosting budget
 - [ ] 05 Engine debt and Ex ownership

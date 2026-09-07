@@ -599,7 +599,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 5 precision activity and continues to Unit 6", async ({ page }) => {
     await page.goto("/?unit=precision-motions-search");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 87, exerciseCount: precisionExercises.length });
+    expect(runtime).toEqual({ activityCount: 98, exerciseCount: precisionExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -975,7 +975,7 @@ test.describe("Production lesson flow", () => {
   test("runs every Unit 14 Global-Normal activity with native-equivalent state", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
-    expect(runtime).toEqual({ activityCount: 82, exerciseCount: automationExercises.length });
+    expect(runtime).toEqual({ activityCount: 86, exerciseCount: automationExercises.length });
     const failures = await page.evaluate(() => {
       const result = [];
       for (const [index, activity] of window.VimWilds.activities.entries()) {
@@ -3195,6 +3195,6 @@ test.describe("Production lesson flow", () => {
         .toMatchObject({ topLine: 0, bottomLine: 6 });
     }
     expect(automationDrift).toEqual([]);
-    expect(presentationWindows).toBe(67);
+    expect(presentationWindows).toBe(71);
   });
 });

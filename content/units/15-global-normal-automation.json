@@ -1542,9 +1542,9 @@
           "type": "theory",
           "phase": "explain",
           "title": "Run an Ex command on matching lines",
-          "body": "`:global` (or `:g`) finds lines that match a pattern, then runs an Ex command on each one. Without a range, it checks the whole file. Confirm the pattern with a search or a counting substitution first: the marks show which lines it selects, including the ones outside the window.",
+          "body": "`:global` (or `:g`) finds lines that match a pattern, then runs an Ex command on each one. Without a range, it checks the whole file. Confirm the pattern before you act on it: `:g/pattern/p` prints the lines it selects, and a counting substitution says how many there are. The list matters more than the count, because it shows you the lines outside the window.",
           "grammar": "[range]g/pattern/delete",
-          "contrast": "The `g` in `:global` selects lines; it is unrelated to the `g` substitution flag. Preview before deleting, because the matches you cannot see are deleted too.",
+          "contrast": "The `g` in `:global` selects lines; it is unrelated to the `g` substitution flag. `:print` is Vim's default Ex command, so `:g/pattern` on its own already prints. Preview before deleting, because the matches you cannot see are deleted too.",
           "demoRef": "global-delete-demo"
         },
         {
@@ -1944,6 +1944,400 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "count-only-flag"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "list-global-matches",
+          "type": "exercise",
+          "phase": "isolate",
+          "title": "See which rows the predicate picks",
+          "instruction": "List the rows a DEBUG predicate would select, including the ones below the window, without changing the buffer.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "boot loader ok",
+                "DEBUG probe cache",
+                "mount volumes",
+                "start scheduler",
+                "DEBUG probe disk",
+                "open sockets",
+                "load profiles",
+                "DEBUG probe net",
+                "warm indexes",
+                "accept traffic",
+                "session store ready",
+                "DEBUG probe tls",
+                "rotate logs",
+                "publish metrics",
+                "DEBUG probe dns",
+                "sync replicas",
+                "flush buffers",
+                "verify checksums",
+                "DEBUG probe clock",
+                "startup complete"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "boot loader ok",
+                "DEBUG probe cache",
+                "mount volumes",
+                "start scheduler",
+                "DEBUG probe disk",
+                "open sockets",
+                "load profiles",
+                "DEBUG probe net",
+                "warm indexes",
+                "accept traffic",
+                "session store ready",
+                "DEBUG probe tls",
+                "rotate logs",
+                "publish metrics",
+                "DEBUG probe dns",
+                "sync replicas",
+                "flush buffers",
+                "verify checksums",
+                "DEBUG probe clock",
+                "startup complete"
+              ],
+              "cursor": [
+                18,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "g",
+              "/",
+              "D",
+              "E",
+              "B",
+              "U",
+              "G",
+              "/",
+              "p",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 9,
+                "display": "g/DEBUG/",
+                "explanation": "Select every row that mentions the marker."
+              },
+              {
+                "from": 9,
+                "to": 10,
+                "display": "p",
+                "explanation": "Print those rows instead of editing them."
+              },
+              {
+                "from": 10,
+                "to": 11,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 11,
+                "lines": [
+                  "boot loader ok",
+                  "DEBUG probe cache",
+                  "mount volumes",
+                  "start scheduler",
+                  "DEBUG probe disk",
+                  "open sockets",
+                  "load profiles",
+                  "DEBUG probe net",
+                  "warm indexes",
+                  "accept traffic",
+                  "session store ready",
+                  "DEBUG probe tls",
+                  "rotate logs",
+                  "publish metrics",
+                  "DEBUG probe dns",
+                  "sync replicas",
+                  "flush buffers",
+                  "verify checksums",
+                  "DEBUG probe clock",
+                  "startup complete"
+                ],
+                "cursor": [
+                  18,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "Six rows listed, four of them below the window. The buffer is untouched."
+              }
+            ]
+          },
+          "hints": [
+            "A count tells you how many rows match; this question is which ones.",
+            "`:global` can run a listing command as easily as a destructive one.",
+            "Use `:g/DEBUG/p`."
+          ],
+          "feedback": {
+            "success": "The matching rows are listed and nothing changed.",
+            "why": "`:print` writes the selected rows to the message screen and edits nothing, so a predicate can be read before it is trusted.",
+            "contrast": "The counting substitution says six. This says which six — and four of them were never on screen."
+          },
+          "skills": {
+            "primary": [
+              "global-print"
+            ],
+            "supporting": [
+              "global-delete",
+              "count-only-flag"
+            ]
+          },
+          "difficulty": {
+            "level": "easy",
+            "dimensions": [
+              "line-scope",
+              "preview",
+              "isolate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log scatters the marked rows through a startup trace that is longer than the window.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-print"
+            ]
+          },
+          "delivery": "guided-then-recall",
+          "editor": {
+            "viewportRows": 7
+          }
+        },
+        {
+          "id": "list-unmatched-rows",
+          "type": "exercise",
+          "phase": "mix",
+          "title": "See what the predicate misses",
+          "instruction": "Across the first seven rows only, list the ones a DEBUG predicate would leave alone.",
+          "languageId": "log",
+          "sourceKind": "fragment",
+          "scenario": {
+            "initial": {
+              "lines": [
+                "boot loader ok",
+                "DEBUG probe cache",
+                "mount volumes",
+                "start scheduler",
+                "DEBUG probe disk",
+                "open sockets",
+                "load profiles",
+                "DEBUG probe net",
+                "warm indexes",
+                "accept traffic",
+                "session store ready",
+                "DEBUG probe tls",
+                "rotate logs",
+                "publish metrics",
+                "DEBUG probe dns",
+                "sync replicas",
+                "flush buffers",
+                "verify checksums",
+                "DEBUG probe clock",
+                "startup complete"
+              ],
+              "cursor": [
+                0,
+                0
+              ],
+              "mode": "normal",
+              "viewport": {
+                "topLine": 0,
+                "bottomLine": 6
+              }
+            },
+            "target": {
+              "lines": [
+                "boot loader ok",
+                "DEBUG probe cache",
+                "mount volumes",
+                "start scheduler",
+                "DEBUG probe disk",
+                "open sockets",
+                "load profiles",
+                "DEBUG probe net",
+                "warm indexes",
+                "accept traffic",
+                "session store ready",
+                "DEBUG probe tls",
+                "rotate logs",
+                "publish metrics",
+                "DEBUG probe dns",
+                "sync replicas",
+                "flush buffers",
+                "verify checksums",
+                "DEBUG probe clock",
+                "startup complete"
+              ],
+              "cursor": [
+                6,
+                0
+              ],
+              "mode": "normal"
+            }
+          },
+          "script": {
+            "steps": [
+              ":",
+              "1",
+              ",",
+              "7",
+              "v",
+              "/",
+              "D",
+              "E",
+              "B",
+              "U",
+              "G",
+              "/",
+              "p",
+              "Enter"
+            ],
+            "commandGroups": [
+              {
+                "from": 0,
+                "to": 1,
+                "display": ":",
+                "explanation": "Open Vim’s command line."
+              },
+              {
+                "from": 1,
+                "to": 4,
+                "display": "1,7",
+                "explanation": "Limit the question to the rows on screen."
+              },
+              {
+                "from": 4,
+                "to": 12,
+                "display": "v/DEBUG/",
+                "explanation": "Select the rows that do not match instead of the ones that do."
+              },
+              {
+                "from": 12,
+                "to": 13,
+                "display": "p",
+                "explanation": "Print them."
+              },
+              {
+                "from": 13,
+                "to": 14,
+                "display": "↵",
+                "explanation": "Run the command."
+              }
+            ],
+            "checkpoints": [
+              {
+                "afterStep": 14,
+                "lines": [
+                  "boot loader ok",
+                  "DEBUG probe cache",
+                  "mount volumes",
+                  "start scheduler",
+                  "DEBUG probe disk",
+                  "open sockets",
+                  "load profiles",
+                  "DEBUG probe net",
+                  "warm indexes",
+                  "accept traffic",
+                  "session store ready",
+                  "DEBUG probe tls",
+                  "rotate logs",
+                  "publish metrics",
+                  "DEBUG probe dns",
+                  "sync replicas",
+                  "flush buffers",
+                  "verify checksums",
+                  "DEBUG probe clock",
+                  "startup complete"
+                ],
+                "cursor": [
+                  6,
+                  0
+                ],
+                "mode": "normal",
+                "caption": "The five rows a DEBUG delete would spare, listed before anything is deleted."
+              }
+            ]
+          },
+          "hints": [
+            "Checking what a predicate keeps is as useful as checking what it takes.",
+            "The inverted form of `:global` answers the opposite question.",
+            "Use `:1,7v/DEBUG/p`."
+          ],
+          "feedback": {
+            "success": "The rows the predicate would spare are listed.",
+            "why": "A predicate that is too narrow looks correct in its own match list; the complement is where the row it should have caught shows up."
+          },
+          "skills": {
+            "primary": [
+              "global-print"
+            ],
+            "supporting": [
+              "inverted-predicate",
+              "command-line-ranges"
+            ]
+          },
+          "difficulty": {
+            "level": "medium",
+            "dimensions": [
+              "line-scope",
+              "preview",
+              "inverted-predicate"
+            ]
+          },
+          "portability": "Defined and conformance-tested Vim Wilds behavior, matching native Vim for this fixture.",
+          "provenance": {
+            "method": "llm-authored",
+            "promptVersion": "global-normal-automation-v1",
+            "languageRationale": "log gives the complement of the marked rows a plain meaning: the work the trace actually did.",
+            "nativeValidation": "passed",
+            "browserConformance": "passed",
+            "reviewStatus": "draft"
+          },
+          "verification": {
+            "inputPolicy": "exact-sequence",
+            "requiredEvidence": [
+              "global-print"
             ]
           },
           "delivery": "guided-then-recall",
@@ -7435,7 +7829,8 @@
         "global-delete-demo",
         "global-delete-comments",
         "range-global-delete",
-        "global-delete-alternation"
+        "global-delete-alternation",
+        "list-global-matches"
       ]
     },
     {
@@ -7580,9 +7975,11 @@
       ],
       "isolate": [
         "preview-global-scope",
+        "list-global-matches",
         "global-delete-comments"
       ],
       "mix": [
+        "list-unmatched-rows",
         "range-global-delete"
       ],
       "challenge": [

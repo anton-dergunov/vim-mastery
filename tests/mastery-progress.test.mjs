@@ -44,9 +44,9 @@ const seededRandom = seed => () => {
 };
 
 test("the concept catalog covers every teaching unit and leaves the Mastery wrapper empty", () => {
-  assert.equal(index.concepts.length, 138);
+  assert.equal(index.concepts.length, 139);
   // Only the activities coverage actually cites; the digest drops the rest.
-  assert.equal(index.activityIndex.size, 790);
+  assert.equal(index.activityIndex.size, 799);
   assert.deepEqual(
     [...new Set(index.concepts.map(concept => concept.unitId))].sort(),
     units.filter(unit => unit.coverage.length).map(unit => unit.id).sort(),

@@ -78,7 +78,5 @@ and nothing clips.
 
 Not defects to file — they are scheduled:
 
-- **Unit 5, `search-as-a-range`.** The closing theory promises that search
-  offsets "get their own practice later." They do not. Brief 02.
 - **Units 5–17 boards do not progress and their landmarks never light.** Only
   the four Arc 1 scenes have a patch layer. Brief 07.
