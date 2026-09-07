@@ -44,17 +44,43 @@ Turnstile becomes worth its cost.
 
 ## Setup
 
+Every command below runs **from this `worker/` directory**, not the repository
+root — wrangler resolves `wrangler.toml` and `./schema.sql` relative to the
+working directory.
+
 ```bash
 npm install -g wrangler
 wrangler login
+cd worker
 
-wrangler d1 create vim-wilds-feedback          # copy the id into wrangler.toml
+# Paste the printed database_id into wrangler.toml, replacing the placeholder.
+# Keep the binding names DB and SCREENSHOTS: the Worker reads env.DB and
+# env.SCREENSHOTS, so wrangler's suggested snippet is not what you want here.
+wrangler d1 create vim-wilds-feedback
+
+# R2 has to be switched on once in the dashboard before this succeeds.
 wrangler r2 bucket create vim-wilds-feedback
-wrangler d1 execute vim-wilds-feedback --remote --file=./schema.sql
 
+wrangler d1 execute vim-wilds-feedback --remote --file=./schema.sql
 wrangler secret put ADMIN_TOKEN                # any long random string
 wrangler deploy
 ```
+
+If `d1 execute` reports `Invalid property: databaseId => Invalid uuid`, the
+placeholder is still in `wrangler.toml`.
+
+On the first deploy wrangler asks for a `workers.dev` subdomain. **That is an
+account-wide namespace, not this Worker's name** — every Worker on the account
+becomes `<worker-name>.<subdomain>.workers.dev`. Give it an identity (a handle or
+a brand), not a project name, or unrelated Workers end up living under this
+project's URL. It is editable later at
+`https://dash.cloudflare.com/<account-id>/workers/subdomain`, at the cost of
+changing the hostname of every Worker on the account.
+
+The durable alternative, once the app has real users, is a custom domain: add a
+route on a zone Cloudflare already serves DNS for and the endpoint stops
+depending on `workers.dev` at all. Remember to add the new origin to
+`ALLOWED_ORIGINS` and redeploy.
 
 Then add a rate-limiting rule on the deployed route in the Cloudflare dashboard
 (Security → WAF → Rate limiting rules); something like 20 requests per minute per
@@ -80,11 +106,52 @@ to whenever the endpoint is unreachable.
 
 ## Reading reports
 
+Three routes, deliberately. The first is for triage; the others exist so a
+broken Worker, a lost token or a bad deploy can never put reports out of reach.
+
+### 1. Sync to local Markdown — the triage route
+
 ```bash
-export FEEDBACK_ENDPOINT=https://vim-wilds-feedback.example.workers.dev
+export FEEDBACK_ENDPOINT=https://vim-wilds-feedback.<subdomain>.workers.dev
 export FEEDBACK_ADMIN_TOKEN=…
 npm run feedback:pull
 ```
 
-See `scripts/pull_feedback.py`. Reports land in `feedback/`, which is
-gitignored.
+Writes `feedback/<date>-<activity>/report.md` plus the screenshot, so reports
+can be read directly by an agent working in the repository. `feedback/` is
+gitignored. See `scripts/pull_feedback.py`.
+
+### 2. Query D1 directly — the route that depends on nothing
+
+This talks to D1 through the Cloudflare API using your `wrangler login` session.
+No `ADMIN_TOKEN`, no Worker, no HTTP route: it works even if the Worker is
+broken or deleted.
+
+```bash
+cd worker
+wrangler d1 execute vim-wilds-feedback --remote \
+  --command "SELECT created_at, unit_id, activity_id, note FROM reports ORDER BY created_at DESC LIMIT 20;"
+
+# The full rendered report, exactly as it was reviewed before sending:
+wrangler d1 execute vim-wilds-feedback --remote \
+  --command "SELECT markdown FROM reports ORDER BY created_at DESC LIMIT 1;"
+```
+
+### 3. The Cloudflare dashboard — the phone-friendly route
+
+- **Notes and context**: Workers & Pages → D1 → `vim-wilds-feedback` → Console.
+  The same `SELECT` statements, in a browser.
+- **Screenshots**: R2 → `vim-wilds-feedback` → the `screenshots/` prefix. Each
+  object is `<report-id>.webp`, viewable and downloadable in place.
+
+## If a read fails
+
+A **401** is the Worker rejecting the token: `FEEDBACK_ADMIN_TOKEN` does not
+match the `ADMIN_TOKEN` secret. Reset it with `wrangler secret put ADMIN_TOKEN`.
+
+A **403** is *not* an auth failure — this route never answers 403. It is
+Cloudflare's browser integrity check rejecting the request at the edge, before
+the Worker runs, and it comes with `error code: 1010`. The usual cause is a user
+agent that looks like a scripting library: `urllib` defaults to
+`Python-urllib/x.y`, which is banned, which is why the sync script sets its own.
+Reports are unaffected — read them with route 2 while sorting it out.

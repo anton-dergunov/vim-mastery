@@ -31,15 +31,25 @@ DEFAULT_OUTPUT = Path("feedback")
 WATERMARK_FILE = ".last-sync"
 SCREENSHOT_NAME = "screenshot.webp"
 
+# urllib identifies itself as "Python-urllib/x.y", which Cloudflare's browser
+# integrity check bans at the edge with a 403 and error code 1010 — before the
+# request reaches the Worker, so it looks like an auth failure and is not one.
+# Any honest, non-library user agent passes.
+USER_AGENT = "vim-wilds-feedback-sync/1.0"
+
+
+def _headers(token: str) -> dict[str, str]:
+    return {"Authorization": f"Bearer {token}", "User-Agent": USER_AGENT}
+
 
 def request_json(url: str, token: str) -> dict:
-    request = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+    request = urllib.request.Request(url, headers=_headers(token))
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
 def request_bytes(url: str, token: str) -> bytes:
-    request = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+    request = urllib.request.Request(url, headers=_headers(token))
     with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 
@@ -132,6 +142,20 @@ def main(argv: list[str] | None = None) -> int:
         payload = request_json(f"{endpoint}/reports?since={since}&limit=500", arguments.token)
     except urllib.error.HTTPError as error:
         print(f"endpoint returned {error.code}: {error.reason}", file=sys.stderr)
+        if error.code == 401:
+            print("  FEEDBACK_ADMIN_TOKEN does not match the Worker's ADMIN_TOKEN secret.",
+                  file=sys.stderr)
+            print("  Reset it with: wrangler secret put ADMIN_TOKEN", file=sys.stderr)
+        if error.code == 403:
+            # A 403 here is Cloudflare's edge, not the Worker: the Worker only
+            # ever answers 401 on this route. Say so, because the two read alike.
+            print("  Blocked by Cloudflare before reaching the Worker, not an auth failure.",
+                  file=sys.stderr)
+            print("  Reports are still safe. Read them directly with:", file=sys.stderr)
+            print("    cd worker && wrangler d1 execute vim-wilds-feedback --remote \\",
+                  file=sys.stderr)
+            print('      --command "SELECT created_at, activity_id, note FROM reports;"',
+                  file=sys.stderr)
         return 1
     except urllib.error.URLError as error:
         print(f"could not reach {endpoint}: {error.reason}", file=sys.stderr)

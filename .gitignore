@@ -7,3 +7,5 @@ __pycache__/
 artifacts/character-generation/
 artifacts/world-generation/
 feedback/
+# Holds the feedback admin token in plaintext; this repository is public.
+fetch-feedback.sh

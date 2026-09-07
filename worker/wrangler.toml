@@ -2,6 +2,9 @@ name = "vim-wilds-feedback"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 
+# workers.dev is how the app reaches this endpoint, so it stays on.
+workers_dev = true
+
 # Comma-separated. The production origin plus the local dev and Playwright
 # servers, so a report can be exercised end to end before deploying.
 [vars]
@@ -12,7 +15,7 @@ ALLOWED_ORIGINS = "https://anton-dergunov.github.io,http://127.0.0.1:5173,http:/
 [[d1_databases]]
 binding = "DB"
 database_name = "vim-wilds-feedback"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "615023df-67ee-4387-bf74-dcd083fbb192"
 
 [[r2_buckets]]
 binding = "SCREENSHOTS"

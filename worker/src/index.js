@@ -51,9 +51,16 @@ async function handleReport(request, env, origin) {
     return json({ error: "expected multipart form data" }, { status: 400, headers: corsHeaders(origin) });
   }
 
+  // A multipart field arrives as a string from the app's FormData and as a File
+  // from anything that uploads it as a part, curl included. Reading either keeps
+  // the live endpoint debuggable from a shell.
+  const fieldText = async field => (
+    typeof field?.text === "function" ? field.text() : (field == null ? "" : String(field))
+  );
+
   let report;
   try {
-    report = JSON.parse(form.get("report"));
+    report = JSON.parse(await fieldText(form.get("report")));
   } catch {
     return json({ error: "report must be JSON" }, { status: 400, headers: corsHeaders(origin) });
   }
@@ -91,7 +98,7 @@ async function handleReport(request, env, origin) {
     place.activityId || null,
     report.category || null,
     report.note || "",
-    String(form.get("markdown") || ""),
+    await fieldText(form.get("markdown")),
     JSON.stringify(report),
     screenshotKey,
   ).run();
