@@ -9,9 +9,54 @@ async function report(page) {
   return page.evaluate(() => window.VimWilds.feedback.report());
 }
 
-async function openFeedback(page) {
-  await page.locator("#feedbackButton").click();
+async function openFeedback(page, selector = "#feedbackButton") {
+  await page.locator(selector).click();
   await expect(page.locator("#feedbackDialog")).toHaveAttribute("open", "");
+}
+
+/* The five dialogs that had no way in. Each opens its surface, then reports it.
+ * The sheet stacks over the dialog rather than replacing it, so the picture is
+ * of the thing being reported and the reporter keeps their place. */
+const DIALOG_ENTRIES = [
+  {
+    name: "the table of contents",
+    dialog: "#tocDialog",
+    reportedFrom: "contents",
+    open: page => page.locator("#tocButton").click(),
+  },
+  {
+    name: "the mastery panel",
+    dialog: "#masteryDialog",
+    reportedFrom: "mastery",
+    open: page => page.evaluate(() => window.VimWilds.openMastery()),
+  },
+  {
+    name: "the practice file picker",
+    dialog: "#practiceFilesDialog",
+    reportedFrom: "practice-files",
+    open: async page => {
+      await page.locator("#tocButton").click();
+      await page.locator("[data-practice-browse]").click();
+    },
+  },
+  {
+    name: "the story card",
+    dialog: "#storyDialog",
+    reportedFrom: "story",
+    open: page => page.evaluate(() => window.VimWilds.replayIntroStory()),
+  },
+  {
+    name: "a reference deck",
+    dialog: "#referenceDialog",
+    reportedFrom: "reference",
+    open: page => page.evaluate(() => window.VimWilds.openReference("survival")),
+  },
+];
+
+async function openDialog(page, entry) {
+  await page.waitForFunction(() => window.VimWilds?.getState);
+  await entry.open(page);
+  await expect(page.locator(entry.dialog)).toHaveAttribute("open", "");
 }
 
 test.beforeEach(async ({ page }) => {
@@ -106,7 +151,7 @@ test("a report is complete with no screenshot at all", async ({ page }) => {
 test("the scratchpad buffer is flagged and can be cleared in one tap", async ({ page }) => {
   await page.goto("/play/?practice=field-notes-prose");
   await page.waitForFunction(() => window.VimWilds?.getState().surface === "free-practice");
-  await openFeedback(page);
+  await openFeedback(page, "#practiceFeedbackButton");
 
   await expect(page.locator("#feedbackBufferNote")).toHaveAttribute("data-flagged", "true");
   expect(await report(page)).toMatchObject({
@@ -118,6 +163,96 @@ test("the scratchpad buffer is flagged and can be cleared in one tap", async ({ 
   expect(cleared.editor.code).toBeNull();
   expect(cleared.editor.registers).toBeNull();
   expect(cleared.redactions.join(" ")).toContain("withheld");
+});
+
+/* Item 1 of the brief. A modal <dialog> paints in the top layer, above both the
+ * board flag and the top bar that holds Settings, so before these controls
+ * existed there was no way to report the sheet you were looking at. */
+for (const entry of DIALOG_ENTRIES) {
+  test(`a problem with ${entry.name} can be reported without leaving it`, async ({ page }) => {
+    await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+    const before = await state(page);
+    await openDialog(page, entry);
+
+    await openFeedback(page, `${entry.dialog} [data-feedback-open]`);
+    // Stacked, not swapped: the reporter keeps their place, and the picture is
+    // taken of this sheet rather than of the lesson behind it.
+    await expect(page.locator(entry.dialog)).toHaveAttribute("open", "");
+
+    // .click() then keyboard.type, never .fill() — the failure being pinned is
+    // the capture-phase keydown handler, which .fill() would bypass.
+    await page.locator("#feedbackNote").click();
+    await page.keyboard.type("this reads wrong");
+    await expect(page.locator("#feedbackNote")).toHaveValue("this reads wrong");
+
+    const envelope = await report(page);
+    expect(envelope.location.reportedFrom).toBe(entry.reportedFrom);
+    expect(envelope.note).toBe("this reads wrong");
+
+    const after = await state(page);
+    expect(after.code).toEqual(before.code);
+    expect(after.history).toEqual(before.history);
+    expect(after.complete).toBe(false);
+  });
+}
+
+test("closing the sheet returns to the dialog it was opened from", async ({ page }) => {
+  await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+  await page.waitForFunction(() => window.VimWilds?.openReference);
+  await page.evaluate(() => window.VimWilds.openReference("survival"));
+  await expect(page.locator("#referenceDialog")).toHaveAttribute("open", "");
+  await page.locator('#referenceDialog [data-reference-action="next"]').click();
+  const card = await page.evaluate(() => window.VimWilds.referenceState().cardIndex);
+
+  await openFeedback(page, "#referenceDialog [data-feedback-open]");
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#feedbackDialog")).not.toHaveAttribute("open", "");
+
+  // The deck is still open on the same card, focus is back on the control that
+  // opened the sheet rather than stranded on the inert editor, and Escape now
+  // reaches the deck rather than the lesson underneath.
+  await expect(page.locator("#referenceDialog")).toHaveAttribute("open", "");
+  await expect(page.locator("#referenceDialog [data-feedback-open]")).toBeFocused();
+  expect(await page.evaluate(() => window.VimWilds.referenceState().cardIndex)).toBe(card);
+
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#referenceDialog")).not.toHaveAttribute("open", "");
+  await page.keyboard.press("Escape");
+  expect(await state(page)).toMatchObject({ complete: true, mode: "Complete" });
+});
+
+test("a report from a reference card names the deck and the card", async ({ page }) => {
+  await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+  await page.waitForFunction(() => window.VimWilds?.openReference);
+  await page.evaluate(() => window.VimWilds.openReference("survival"));
+  await openFeedback(page, "#referenceDialog [data-feedback-open]");
+
+  const envelope = await report(page);
+  const expected = await page.evaluate(() => window.VimWilds.referenceState());
+  expect(envelope.location.reportedFrom).toBe("reference");
+  expect(envelope.location.reportedFromDetail).toContain("survival");
+  expect(envelope.location.reportedFromDetail).toContain(expected.cardId);
+  // The board underneath is still the surface, which is what keeps the
+  // free-practice keystroke redaction keyed to the right thing.
+  expect(envelope.location.surface).toBe("lesson");
+  await expect(page.locator("#feedbackPlace")).toContainText("Reference");
+});
+
+test("the report sheet still opens from the board with no dialog attached", async ({ page }) => {
+  await page.goto("/play/?unit=modal-model&activity=quick-exit-insert");
+  await openFeedback(page);
+  expect((await report(page)).location).toMatchObject({ reportedFrom: null, reportedFromDetail: null });
+});
+
+/* Item 4 of the brief. Free practice is the one surface whose buffer fills the
+ * whole board, so the floating flag sat over text being edited. */
+test("free practice reports from the top bar, not from over the scratchpad", async ({ page }) => {
+  await page.goto("/play/?practice=field-notes-prose");
+  await page.waitForFunction(() => window.VimWilds?.getState().surface === "free-practice");
+
+  await expect(page.locator("#feedbackButton")).toBeHidden();
+  await openFeedback(page, "#practiceFeedbackButton");
+  expect((await report(page)).location).toMatchObject({ surface: "free-practice", reportedFrom: null });
 });
 
 test("a failed send is queued rather than lost", async ({ page }) => {
@@ -146,7 +281,10 @@ test("closing hands focus back to the editor and leaves no overflow", async ({ p
   await page.keyboard.press("Escape");
   await expect(page.locator("#feedbackDialog")).not.toHaveAttribute("open", "");
 
-  // A dialog button that keeps focus silently kills physical input.
+  // A dialog button that keeps focus silently kills physical input. The handoff
+  // runs in the queued `close` task, which can land behind a screenshot capture
+  // still in flight, so wait for it rather than for the attribute alone.
+  await expect(page.locator(".cm-editor")).toBeFocused();
   await page.keyboard.press("Escape");
   expect(await state(page)).toMatchObject({ complete: true, mode: "Complete" });
 });
@@ -177,6 +315,30 @@ test("capturing leaves the page exactly as it found it", async ({ page }) => {
 
   expect(await page.evaluate(() => ({
     nodes: document.querySelectorAll("#phone *").length,
+    markers: document.querySelectorAll("[data-feedback-pseudo]").length,
+  }))).toEqual({ nodes: before, markers: 0 });
+});
+
+/* The reference deck lives outside #phone, so the board capture root could
+ * never see it. Capturing the dialog itself is what makes its report carry a
+ * picture of the card rather than of the lesson behind it. */
+test("capturing a dialog leaves the page exactly as it found it", async ({ page }) => {
+  await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
+  await page.waitForFunction(() => window.VimWilds?.getState);
+  await page.evaluate(() => window.VimWilds.openReference("survival"));
+
+  const before = await page.evaluate(() => document.querySelectorAll("body *").length);
+  const result = await page.evaluate(async () => {
+    const { captureScreenshot } = await import("/feedback-capture.js");
+    const shot = await captureScreenshot(document.querySelector("#referenceDialog"));
+    return { bytes: shot?.bytes ?? null, error: shot?.error ?? null };
+  });
+
+  // A report with no screenshot is complete, not degraded, so a capture failure
+  // is not a test failure — leaving scaffolding behind is.
+  if (!result.error) expect(result.bytes).toBeGreaterThan(0);
+  expect(await page.evaluate(() => ({
+    nodes: document.querySelectorAll("body *").length,
     markers: document.querySelectorAll("[data-feedback-pseudo]").length,
   }))).toEqual({ nodes: before, markers: 0 });
 });

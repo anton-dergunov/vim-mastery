@@ -57,6 +57,8 @@ test("a lesson report carries the location that a screenshot alone cannot", () =
   assert.equal(envelope.schemaVersion, FEEDBACK_SCHEMA_VERSION);
   assert.deepEqual(envelope.location, {
     surface: "lesson",
+    reportedFrom: null,
+    reportedFromDetail: null,
     unitId: "text-objects",
     unitNumber: 3,
     lessonId: "inside-word",
@@ -68,6 +70,24 @@ test("a lesson report carries the location that a screenshot alone cannot", () =
     practicePolicy: "guided-sequence",
   });
   assert.equal(envelope.app.version, "0.1.0+02aa1f4c");
+});
+
+/* Five dialogs can file a report about themselves. Without this the reviewer
+ * cannot tell a complaint about a reference card from one about the lesson
+ * behind it, because both carry the same surface. */
+test("a report filed from a dialog names the dialog, not just the board behind it", () => {
+  const envelope = report({
+    state: { ...lessonState, reportedFrom: "reference", reportedFromDetail: "registers · yank-into-a-named-register · card 2 of 7" },
+  });
+  assert.equal(envelope.location.surface, "lesson");
+  assert.equal(envelope.location.reportedFrom, "reference");
+  assert.equal(envelope.location.reportedFromDetail, "registers · yank-into-a-named-register · card 2 of 7");
+  assert.match(renderReportMarkdown(envelope), /\*\*Reported from\*\* — reference — registers · yank-into-a-named-register · card 2 of 7/);
+});
+
+test("a report filed from the board says so by omission", () => {
+  const markdown = renderReportMarkdown(report());
+  assert.equal(markdown.includes("Reported from"), false);
 });
 
 test("refused keys are reported, since nothing else in the app records them", () => {

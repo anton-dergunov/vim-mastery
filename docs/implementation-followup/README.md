@@ -163,7 +163,7 @@ already close to its hosting limit. Everything else is independent.
 
 ## Progress
 
-- [ ] 01 Feedback reachability
+- [x] 01 Feedback reachability
 - [ ] 02 Teach the verified commands
 - [ ] 03 Guard the unguarded criteria
 - [ ] 04 Asset and hosting budget

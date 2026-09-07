@@ -114,6 +114,11 @@ export function buildReport({
     app: { version: appVersion, href, deepLink },
     location: {
       surface,
+      // Which dialog the report was filed from, when it was one. `surface`
+      // stays the board underneath: the free-practice keystroke redaction below
+      // keys off it, so overwriting it would un-redact scratchpad typing.
+      reportedFrom: state.reportedFrom || null,
+      reportedFromDetail: state.reportedFromDetail || null,
       unitId: state.unitId || null,
       unitNumber: state.unitNumber ?? null,
       lessonId: state.lessonId || null,
@@ -172,6 +177,8 @@ export function renderReportMarkdown(report, { screenshotPath = "screenshot.webp
   out.push("## Where", "");
   out.push(...[
     bullet("Surface", place.surface),
+    bullet("Reported from", place.reportedFrom
+      && (place.reportedFromDetail ? `${place.reportedFrom} — ${place.reportedFromDetail}` : place.reportedFrom)),
     bullet("Unit", place.unitNumber ? `${place.unitNumber} \`${place.unitId}\`` : place.unitId),
     bullet("Lesson", place.lessonId && `\`${place.lessonId}\``),
     bullet("Activity", place.activityId && `\`${place.activityId}\` (${place.activityType || "?"}${place.practiceMode ? `, ${place.practiceMode}` : ""})`),

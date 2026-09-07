@@ -1285,6 +1285,16 @@ html.next-ui .icon-button svg {
   stroke-linejoin: round;
 }
 
+/* The in-dialog report control. It sits in each sheet's heading row rather than
+   in its body, because every one of those bodies is replaced wholesale on
+   render, and because a row of its own would cost the contents and reference
+   sheets a line of content they do not have to spare on a 360px phone. */
+html.next-ui .dialog-report:hover,
+html.next-ui .dialog-report:focus-visible {
+  color: var(--theme-bright);
+  border-color: color-mix(in srgb, var(--theme-bright) 45%, transparent);
+}
+
 html.next-ui .next-topbar .mode-pill {
   min-width: 60px;
   height: 36px;
@@ -2366,8 +2376,17 @@ html.next-ui .story-actions {
   margin-top: auto;
   padding-top: 20px;
   display: grid;
-  grid-template-columns: minmax(100px, auto) minmax(0, 1fr);
+  /* The leading column is the report control; the other two are Skip and
+     Continue, whose relative sizing is unchanged. */
+  grid-template-columns: auto minmax(100px, auto) minmax(0, 1fr);
   gap: 10px;
+}
+
+html.next-ui .story-actions .dialog-report {
+  width: 46px;
+  height: auto;
+  flex: none;
+  border-radius: 9px;
 }
 
 html.next-ui .story-actions button {
@@ -2479,6 +2498,11 @@ html.next-ui .dialog-head h2 {
   font: 700 25px/1.12 Georgia, serif;
   overflow-wrap: anywhere;
 }
+
+/* The only dialog title long enough to wrap once the report control joined the
+   head, and wrapping it would cost the contents list — the tightest of these
+   sheets — a line of lessons at 360px. It shrinks instead. */
+html.next-ui #tocTitle { font-size: clamp(21px, 5.9vw, 25px); }
 
 html.next-ui .dialog-close {
   color: #b8cbc0;
@@ -5049,20 +5073,9 @@ html.next-ui .feedback-actions {
 html.next-ui .feedback-actions .note-action { flex: 1 1 auto; margin: 0; }
 html.next-ui .feedback-actions .note-action[hidden] { display: none; }
 
-/* Free practice is the one surface where the buffer fills the whole board, so
-   the button necessarily sits over text the learner is editing. It is still the
-   only way in there — the top bar swaps Settings out for the file picker — so it
-   stays, but recedes until it is touched. */
-html.next-ui .phone[data-surface="free-practice"] .feedback-button {
-  width: 30px;
-  height: 30px;
-  opacity: .5;
-  background: rgba(7, 21, 18, .42);
-}
-
-html.next-ui .phone[data-surface="free-practice"] .feedback-button:hover,
-html.next-ui .phone[data-surface="free-practice"] .feedback-button:focus-visible,
-html.next-ui .phone[data-surface="free-practice"] .feedback-button:active {
-  opacity: 1;
-  background: rgba(7, 21, 18, .82);
-}
+/* Free practice is the one surface where the buffer fills the whole board, so a
+   floating button necessarily sits over text the learner is editing. It used to
+   stay and recede to half opacity, because it was the only way in. It no longer
+   is: the top bar swaps Settings out on this surface, and the freed slot holds
+   #practiceFeedbackButton, which covers nothing. */
+html.next-ui .phone[data-surface="free-practice"] .feedback-button { display: none; }

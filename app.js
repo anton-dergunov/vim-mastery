@@ -189,6 +189,7 @@ const elements = {
   referenceActions: $("#referenceActions"),
   practiceLeaveButton: $("#practiceLeaveButton"),
   practiceFilesButton: $("#practiceFilesButton"),
+  practiceFeedbackButton: $("#practiceFeedbackButton"),
   practiceFilesDialog: $("#practiceFilesDialog"),
   practiceFileList: $("#practiceFileList"),
   practiceNoticeDialog: $("#practiceNoticeDialog"),
@@ -1937,12 +1938,15 @@ function renderHeader() {
   elements.resetButton.hidden = !isRunnable(activity);
   // Toggling the attribute, not a class, removes the inactive controls from the
   // accessibility tree so a role lookup can only ever match one of each pair.
-  // The leave control is shared by both detours; only the file picker is free
-  // practice's alone.
+  // The leave control is shared by both detours; the file picker and the report
+  // flag are free practice's alone. The flag is here rather than floating over
+  // the board because on this one surface the buffer fills the board.
   [[elements.tocButton, !lesson], [elements.settingsButton, !lesson],
     [elements.practiceLeaveButton, lesson], [elements.practiceFilesButton, !free],
+    [elements.practiceFeedbackButton, !free],
     [$('[data-layout-action="toc"]'), !lesson], [$('[data-layout-action="settings"]'), !lesson],
     [$('[data-layout-action="practice-leave"]'), lesson], [$('[data-layout-action="practice-files"]'), !free],
+    [$('[data-layout-action="practice-feedback"]'), !free],
   ].forEach(([button, hidden]) => button?.toggleAttribute("hidden", hidden));
   renderTableOfContents();
 }
@@ -3075,6 +3079,7 @@ $(".landscape-controls")?.addEventListener("click", event => {
   const action = event.target.closest("[data-layout-action]")?.dataset.layoutAction;
   if (action === "practice-leave") leaveCurrentSurface();
   if (action === "practice-files") void openPracticeFiles();
+  if (action === "practice-feedback") void feedback?.open();
   if (action === "toc") openTableOfContents();
   if (action === "reset") resetActivity();
   if (action === "settings") {
@@ -3428,14 +3433,64 @@ feedback = createFeedbackSurface({
     },
   }),
   // A dialog button that keeps focus silently kills physical input, so the
-  // editor has to be given it back on every close.
-  onClose: () => vimEngine?.focus(),
+  // editor has to be given it back on every close — but only when the sheet was
+  // the last thing open. Stacked over another dialog, the editor is inert
+  // beneath a modal, and reaching for it would strand focus instead of letting
+  // the browser return it to the control that opened the sheet.
+  onClose: () => {
+    if (document.querySelector("dialog[open]")) return;
+    vimEngine?.focus();
+  },
 });
 
+/* Names the sheet a report was filed from, so the reviewer can tell a complaint
+ * about a reference card from one about the lesson behind it. Every detail here
+ * is read from state that already exists — none of it is recorded for feedback.
+ */
+function feedbackOrigin(kind) {
+  switch (kind) {
+    case "contents":
+      return { id: "contents", label: "Contents", detail: null, node: elements.tocDialog };
+    case "mastery":
+      return { id: "mastery", label: "Mastery", detail: masteryLabel() || null, node: elements.masteryDialog };
+    case "practice-files":
+      return { id: "practice-files", label: "File list", detail: null, node: elements.practiceFilesDialog };
+    case "story": {
+      const active = storyTransitions.getState().active;
+      const detail = active && [
+        active.kind,
+        active.unitId,
+        active.panelIndex === undefined ? null : `panel ${active.panelIndex + 1}`,
+      ].filter(Boolean).join(" · ");
+      return { id: "story", label: "Story", detail: detail || null, node: elements.storyDialog };
+    }
+    case "reference": {
+      const deck = referenceDecks.get(referenceSession.deckId);
+      const detail = [
+        referenceSession.deckId,
+        referenceCard()?.id,
+        deck && `card ${referenceSession.cardIndex + 1} of ${deck.cards.length}`,
+      ].filter(Boolean).join(" · ");
+      return { id: "reference", label: "Reference", detail: detail || null, node: elements.referenceDialog };
+    }
+    default:
+      return null;
+  }
+}
+
+// Delegated the same way [data-close-dialog] is, because these controls are
+// static markup and the map above is built once at module load.
+$$("[data-feedback-open]").forEach(button => button.addEventListener("click", () => {
+  void feedback?.open(feedbackOrigin(button.dataset.feedbackOpen));
+}));
+
 elements.feedbackButton?.addEventListener("click", () => void feedback?.open());
+// No origin: this reports the free practice board, which the ordinary context
+// already describes, and the board is what the picture should show.
+elements.practiceFeedbackButton?.addEventListener("click", () => void feedback?.open());
 elements.feedbackSettingsButton?.addEventListener("click", () => {
-  // Capture happens against the board, so the settings sheet has to be out of
-  // the way before the screenshot is taken.
+  // Settings is the one sheet that reports the lesson behind it rather than
+  // itself, so it closes first and the capture happens against the board.
   elements.settingsDialog.close();
   void feedback?.open();
 });

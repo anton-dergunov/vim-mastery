@@ -81,11 +81,21 @@ export function createFeedbackSurface({ elements, getContext, onClose }) {
     return count;
   }
 
-  async function open() {
+  /* `origin` names the dialog a report was filed from: `{ id, label, detail, node }`.
+   * It is null for the board flag and the Settings row, which report the lesson
+   * behind them rather than a sheet of their own. `node` is what gets
+   * photographed and scanned for overflow — a modal dialog is painted in the
+   * top layer and the reference deck lives outside #phone, so capturing the
+   * board would produce a picture of something the reporter was not looking at.
+   */
+  async function open(origin = null) {
+    const base = getContext();
     context = {
-      ...getContext(),
+      ...base,
+      // Only context.state reaches buildReport; a bare context key is dropped.
+      state: origin ? { ...base.state, reportedFrom: origin.id, reportedFromDetail: origin.detail || null } : base.state,
       environment: captureEnvironment(),
-      layout: captureLayout(elements.phone),
+      layout: captureLayout(origin?.node || elements.phone),
       createdAt: new Date().toISOString(),
     };
 
@@ -99,6 +109,7 @@ export function createFeedbackSurface({ elements, getContext, onClose }) {
 
     const place = context.state;
     elements.feedbackPlace.textContent = [
+      origin?.label,
       place.surface === "lesson" ? null : place.surface.replace("-", " "),
       place.unitId && `unit ${place.unitNumber ?? "?"}`,
       place.activityId,
@@ -122,7 +133,7 @@ export function createFeedbackSurface({ elements, getContext, onClose }) {
     elements.feedbackNote.focus();
 
     elements.feedbackShotStatus.textContent = "Capturing the screen…";
-    const shot = await captureScreenshot(elements.phone);
+    const shot = await captureScreenshot(origin?.node || elements.phone);
     if (!dialog.open) return;
     if (shot?.blob) {
       attachment = shot;
