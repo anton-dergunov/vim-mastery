@@ -34,6 +34,14 @@ objects; `scripts/pull_feedback.py` syncs them into a gitignored `feedback/`
 directory as Markdown. Nothing writes to GitHub: the repository is public and
 the review backlog is not.
 
+Triage state (`new` / `done` / `wontfix` plus a resolution note) lives in D1
+rather than in the local directory, because "pulled to a laptop" and "dealt
+with" are different facts and only the second is worth keeping. A pull re-reads
+it for every report, so marking from a phone shows up on the next sync, and
+`scripts/mark_feedback.py` addresses a report by its directory name or any
+unambiguous id prefix — nobody should have to retype a uuid while reading a
+report.
+
 ## Three things that were not obvious
 
 **The global keydown handler eats typing.** `app.js` registers a capture-phase

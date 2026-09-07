@@ -20,7 +20,8 @@
     "test:browser:smoke": "playwright test tests/smoke.spec.js --workers=1",
     "test:targeted": "playwright test --workers=1 --max-failures=1",
     "test:exhaustive": "playwright test --grep @exhaustive",
-    "feedback:pull": "python3 scripts/pull_feedback.py"
+    "feedback:pull": "python3 scripts/pull_feedback.py",
+    "feedback:mark": "python3 scripts/mark_feedback.py"
   },
   "dependencies": {
     "@codemirror/commands": "6.10.4",

@@ -112,15 +112,57 @@ async function handleList(request, env) {
   const url = new URL(request.url);
   const since = url.searchParams.get("since") || "";
   const limit = Math.min(Number(url.searchParams.get("limit") || 100), 500);
+  // `fields=summary` omits the two large columns so triage state can be
+  // refreshed for every report without re-downloading every report body.
+  const summaryOnly = url.searchParams.get("fields") === "summary";
+  const columns = summaryOnly
+    ? "id, created_at, app_version, surface, unit_id, lesson_id, activity_id, category, note, screenshot_key, status, resolution, resolved_at"
+    : "id, created_at, app_version, surface, unit_id, lesson_id, activity_id, category, note, markdown, payload_json, screenshot_key, status, resolution, resolved_at";
   const { results } = await env.DB.prepare(`
-    SELECT id, created_at, app_version, surface, unit_id, lesson_id, activity_id,
-           category, note, markdown, payload_json, screenshot_key
+    SELECT ${columns}
     FROM reports
     WHERE created_at > ?1
     ORDER BY created_at ASC
     LIMIT ?2
   `).bind(since, limit).all();
   return json({ reports: results });
+}
+
+const STATUSES = new Set(["new", "done", "wontfix"]);
+
+/* Marking takes an id prefix rather than a full uuid, because the whole point
+ * is to be usable while reading a report — nobody should have to retype 36
+ * characters. An ambiguous prefix is refused rather than resolved arbitrarily. */
+async function handleMark(request, env, prefix) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "expected a JSON body" }, { status: 400 });
+  }
+  if (!STATUSES.has(body?.status)) {
+    return json({ error: `status must be one of ${[...STATUSES].join(", ")}` }, { status: 400 });
+  }
+
+  const { results } = await env.DB.prepare(
+    "SELECT id FROM reports WHERE id LIKE ?1 || '%' LIMIT 2",
+  ).bind(prefix).all();
+  if (!results.length) return json({ error: `no report matches "${prefix}"` }, { status: 404 });
+  if (results.length > 1) {
+    return json({ error: `"${prefix}" matches more than one report` }, { status: 409 });
+  }
+
+  const id = results[0].id;
+  // Returning to `new` reopens a report, so the resolution has to go with it.
+  const resolved = body.status !== "new";
+  const resolution = resolved ? (body.resolution || null) : null;
+  const resolvedAt = resolved ? new Date().toISOString() : null;
+
+  await env.DB.prepare(
+    "UPDATE reports SET status = ?1, resolution = ?2, resolved_at = ?3 WHERE id = ?4",
+  ).bind(body.status, resolution, resolvedAt, id).run();
+
+  return json({ id, status: body.status, resolution, resolved_at: resolvedAt });
 }
 
 async function handleScreenshot(env, id) {
@@ -159,6 +201,12 @@ export default {
     if (screenshotMatch && request.method === "GET") {
       if (!authorized(request, env)) return new Response("unauthorized", { status: 401 });
       return handleScreenshot(env, screenshotMatch[1]);
+    }
+
+    const markMatch = url.pathname.match(/^\/reports\/([0-9a-f-]{4,36})\/status$/);
+    if (markMatch && request.method === "POST") {
+      if (!authorized(request, env)) return new Response("unauthorized", { status: 401 });
+      return handleMark(request, env, markMatch[1]);
     }
 
     return new Response("not found", { status: 404 });

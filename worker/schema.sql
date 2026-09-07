@@ -15,9 +15,15 @@ CREATE TABLE IF NOT EXISTS reports (
   -- The structured envelope, for querying across reports later.
   payload_json  TEXT NOT NULL,
   -- Null is the ordinary case for a report sent without a picture.
-  screenshot_key TEXT
+  screenshot_key TEXT,
+  -- Triage state. Separate from the sync watermark: "pulled to a laptop" and
+  -- "dealt with" are different facts, and only this one is worth keeping.
+  status        TEXT NOT NULL DEFAULT 'new',
+  resolution    TEXT,
+  resolved_at   TEXT
 );
 
 -- The sync script pages through by timestamp.
 CREATE INDEX IF NOT EXISTS reports_created_at ON reports (created_at);
 CREATE INDEX IF NOT EXISTS reports_activity ON reports (activity_id);
+CREATE INDEX IF NOT EXISTS reports_status ON reports (status);

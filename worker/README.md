@@ -137,6 +137,35 @@ wrangler d1 execute vim-wilds-feedback --remote \
   --command "SELECT markdown FROM reports ORDER BY created_at DESC LIMIT 1;"
 ```
 
+### Marking a report processed
+
+Triage state lives on the server, not in the local directory, so it survives a
+re-clone and can be read from a phone. `status` is one of `new`, `done` or
+`wontfix`, with an optional resolution note.
+
+```bash
+npm run feedback:mark -- --list                       # what is still open
+npm run feedback:mark -- 2026-09-07-yank-ready-field done "fixed in a1b2c3"
+npm run feedback:mark -- 94dd7fb1 wontfix "works as intended"
+npm run feedback:mark -- 94dd7fb1 new                 # reopen, clearing the note
+```
+
+A report is addressed by the directory name the pull created or by any
+unambiguous prefix of its id; an ambiguous prefix is refused rather than
+resolved arbitrarily. The id prefix works even with no local copy, so a report
+can be closed after `feedback/` has been deleted.
+
+The local mirror is updated immediately, and a later pull re-reads triage state
+for every report, so marking something from the dashboard shows up on the next
+sync. `feedback/index.md` lists open reports first.
+
+From the D1 console or the CLI, the same thing in SQL:
+
+```sql
+UPDATE reports SET status = 'done', resolution = 'fixed in a1b2c3',
+       resolved_at = datetime('now') WHERE id LIKE '94dd7fb1%';
+```
+
 ### 3. The Cloudflare dashboard — the phone-friendly route
 
 - **Notes and context**: Workers & Pages → D1 → `vim-wilds-feedback` → Console.

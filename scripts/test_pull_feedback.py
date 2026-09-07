@@ -98,5 +98,65 @@ class WriteTests(unittest.TestCase):
         self.assertIn("iw is not suggested", entries[1])
 
 
+
+class MetaAndIndexTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name)
+        self.addCleanup(self.temporary.cleanup)
+
+    def test_meta_records_the_id_triage_needs_to_address_a_report(self):
+        directory = puller.write_report(self.root, report(), "token", "https://example.test")
+        meta = puller.read_meta(directory)
+        self.assertEqual(meta["id"], "3f2b1c4d-0000-4000-8000-000000000001")
+        self.assertEqual(meta["status"], "new")
+        self.assertIsNone(meta["resolution"])
+
+    def test_a_report_with_no_status_column_reads_as_open(self):
+        directory = puller.write_report(self.root, report(), "token", "https://example.test")
+        self.assertTrue(puller.is_open(directory))
+
+    def test_server_triage_state_is_applied_to_reports_already_on_disk(self):
+        directory = puller.write_report(self.root, report(), "token", "https://example.test")
+        puller.refresh_meta(self.root, [report(
+            status="done", resolution="fixed in a1b2c3", resolved_at="2026-09-08T09:00:00.000Z",
+        )])
+
+        meta = puller.read_meta(directory)
+        self.assertEqual(meta["status"], "done")
+        self.assertEqual(meta["resolution"], "fixed in a1b2c3")
+        self.assertFalse(puller.is_open(directory))
+
+    def test_refresh_ignores_reports_it_has_no_local_copy_of(self):
+        puller.write_report(self.root, report(), "token", "https://example.test")
+        puller.refresh_meta(self.root, [report(id="unrelated-id", status="done")])
+        self.assertTrue(puller.is_open(self.root / "2026-09-06-promote-one-identifier"))
+
+    def test_the_index_separates_what_still_needs_work(self):
+        puller.write_report(self.root, report(), "token", "https://example.test")
+        puller.write_report(self.root, report(
+            id="99999999-0000-4000-8000-000000000002",
+            created_at="2026-09-07T10:00:00.000Z",
+            activity_id="frame-an-assignment",
+            markdown="# Stepping const at once\n\nBody.\n",
+            status="wontfix",
+            resolution="works as intended",
+        ), "token", "https://example.test")
+        puller.write_index(self.root)
+
+        text = (self.root / "index.md").read_text()
+        self.assertIn("## Open (1)", text)
+        self.assertIn("## Resolved (1)", text)
+        self.assertIn("iw is not suggested", text.split("## Resolved")[0])
+        self.assertIn("`wontfix` — works as intended", text.split("## Resolved")[1])
+
+    def test_the_index_says_so_when_nothing_is_outstanding(self):
+        puller.write_report(self.root, report(status="done"), "token", "https://example.test")
+        puller.write_index(self.root)
+        text = (self.root / "index.md").read_text()
+        self.assertIn("## Open (0)", text)
+        self.assertIn("_Nothing outstanding._", text)
+
+
 if __name__ == "__main__":
     unittest.main()
