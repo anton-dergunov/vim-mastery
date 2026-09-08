@@ -52,6 +52,14 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, fileNa
   // Only fixtures that assert printed output pay for the capture, so the
   // authored-content replays that share this runner are untouched.
   const captureOutput = Boolean(targetExOutput);
+  // Aliases are resolved across the whole run so a `"` or `Ctrl-r` at the end of
+  // the prelude still names the register that follows it, then the two halves
+  // are fed separately: `setupKeys` prime state the assertions need and their
+  // own messages are not what the fixture measures, so they run before the
+  // redirect opens.
+  const aliased = aliasRegisterKeys([...setupKeys, ...keys], registerAliases);
+  const setupInput = toVimInput(aliased.slice(0, setupKeys.length));
+  const keyInput = toVimInput(aliased.slice(setupKeys.length));
   const directory = mkdtempSync(join(tmpdir(), "vim-wilds-native-"));
   const output = join(directory, "result.json");
   const script = join(directory, "fixture.vim");
@@ -68,12 +76,13 @@ export function runNativeVim({ initialCode, cursor, setupKeys = [], keys, fileNa
     `call setline(1, ${JSON.stringify(initialCode)})`,
     `call cursor(${cursor[0] + 1}, ${cursor[1] + 1})`,
     ...(viewportTop === undefined ? [] : [`call winrestview({"topline": ${viewportTop + 1}})`]),
+    ...(setupInput ? [`call feedkeys("${setupInput}", "xt")`] : []),
     // `:print` writes to the message area, which `redir` is the only way to
     // observe: `-es` discards it and the JSON blob below is the sole channel
     // out of Vim. `try`/`finally` guarantees the redirect closes even when a
     // fixture's own keys raise.
     ...(captureOutput ? [`let g:vim_wilds_output = ""`, `redir => g:vim_wilds_output`, `try`] : []),
-    `call feedkeys("${toVimInput(aliasRegisterKeys([...setupKeys, ...keys], registerAliases))}", "xt")`,
+    `call feedkeys("${keyInput}", "xt")`,
     ...(captureOutput ? [`finally`, `redir END`, `endtry`] : []),
     `let register_state = {}`,
     `for register_pair in ${JSON.stringify(registerNames.map(name => [name, registerAliases[name] || name]))}`,

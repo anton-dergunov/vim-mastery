@@ -1228,7 +1228,8 @@ test.describe("Production lesson flow", () => {
         });
         let error = null;
         try {
-          fixture.keys.forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+          [...(fixture.setupKeys || []), ...fixture.keys]
+            .forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
         } catch (thrown) {
           error = String(thrown);
         }
@@ -2995,6 +2996,41 @@ test.describe("Production lesson flow", () => {
     await page.evaluate(() => window.VimWilds.openFreePractice("migrate-log"));
     await expect(page.locator("#exOutput")).not.toHaveClass(/open/);
     expect((await state(page)).exOutput).toBeNull();
+  });
+
+  test("replays the last Ex command through everything the app interprets", async ({ page }) => {
+    await page.goto("/play/?practice=gateway-log");
+    await page.waitForFunction(() => window.VimWilds?.freePracticeState);
+    const replay = () => page.evaluate(() => ["@", ":"].forEach(key => window.VimWilds.emit(key)));
+
+    // `@:` used to reach the adapter directly, which owns none of the commands
+    // the app interprets itself, so replaying a dry run printed nothing at all.
+    await typeEx(page, ":g/WARN/p");
+    const direct = (await state(page)).exOutput;
+    expect(direct.lines).toHaveLength(3);
+    await replay();
+    expect((await state(page)).exOutput).toEqual(direct);
+
+    // `:nohlsearch` retires the live pattern in the app, not in the adapter, so
+    // a replayed one now clears the match map exactly as a typed one does.
+    await typeEx(page, "/WARN");
+    expect((await state(page)).matchLines).not.toEqual([]);
+    await typeEx(page, ":noh");
+    expect((await state(page)).matchLines).toEqual([]);
+    await typeEx(page, "/WARN");
+    expect((await state(page)).matchLines).not.toEqual([]);
+    await replay();
+    expect((await state(page)).matchLines).toEqual([]);
+
+    // The replay reports its own change, once: a second `reportBufferChange`
+    // over the same keystroke would double the count a learner reads.
+    await typeEx(page, ":1t$");
+    const copied = await state(page);
+    expect(copied.impact).toMatchObject({ lineDelta: 1 });
+    await replay();
+    const replayed = await state(page);
+    expect(replayed.impact).toMatchObject({ lineDelta: 1 });
+    expect(replayed.code).toHaveLength(copied.code.length + 1);
   });
 
   test("spends no code rows on the Ex message screen at 360x740", async ({ page }) => {

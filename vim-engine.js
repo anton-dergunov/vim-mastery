@@ -653,6 +653,9 @@ export class VimEngine {
     // The adapter defaults to JavaScript regular expressions. Lessons teach
     // native Vim regex syntax, so every isolated exercise starts in Vim mode.
     Vim.handleEx(this.cm, "set nopcre");
+    // The adapter files every command it processes in `":`, and that one was
+    // the app's own. Vim starts a buffer with no Ex history at all.
+    this.rememberExCommand(null);
     if (textWidth !== undefined) this.cm?.setOption("textwidth", textWidth);
     this.onModeChange = event => {
       this.mode = event.mode || "normal";
@@ -817,15 +820,10 @@ export class VimEngine {
       } else if (vimKey === "<CR>") {
         if (this.commandPrefix === ":") {
           const command = this.commandLine;
-          this.lastExCommand = command;
           this.closeCommandLine();
-          if (command === "~" && this.lastSubstitution && this.lastSearchQuery !== null) {
-            const delimiter = this.lastSubstitution.delimiter || "/";
-            this.executeEx(`s${delimiter}${this.lastSearchQuery}${delimiter}${this.lastSubstitution.replacement}${delimiter}`);
-          } else {
-            this.rememberSubstitution(command);
-            this.executeEx(command);
-          }
+          this.rememberSubstitution(command);
+          this.executeEx(command);
+          this.rememberExCommand(command);
         } else {
           const input = this.cm?.state?.dialog?.querySelector("input");
           if (input) {
@@ -862,9 +860,17 @@ export class VimEngine {
     let pendingAtPrefix = false;
     if (this.awaitingColonRegister) {
       this.awaitingColonRegister = false;
-      if (vimKey === ":" && this.lastExCommand !== null) {
-        Vim.handleEx(this.cm, this.lastExCommand);
-        this.moveCursorToFirstNonBlank();
+      if (vimKey === ":") {
+        // A replay is the same command running again, so it runs the same way:
+        // through `executeEx`, which owns `:global`, the line operations, the
+        // Ex message screen, the impact readout and the `:nohlsearch` retire.
+        // With no history there is nothing to run, and Vim does nothing at all
+        // rather than leaving a command line open.
+        if (this.lastExCommand !== null) {
+          const command = this.lastExCommand;
+          this.executeEx(command);
+          this.rememberExCommand(command);
+        }
         return finish(true);
       }
       pendingAtPrefix = true;
@@ -1019,7 +1025,27 @@ export class VimEngine {
     this.effects?.clear();
   }
 
+  /**
+   * `":` holds the last command line a person typed and `@:` replays it, so the
+   * two are recorded together. It happens *after* the command runs, not before:
+   * the adapter writes `":` on every command it processes, and a `:global`
+   * hands it one rewritten command per matching line, so an earlier write would
+   * leave `5s/old/new/` where the learner's own `g/pat/s/old/new/` belongs.
+   */
+  rememberExCommand(command) {
+    this.lastExCommand = command;
+    Vim.getRegisterController?.()?.getRegister(":")?.setText(command || "");
+  }
+
   executeEx(command) {
+    // `:~` reruns the last substitution against the *last search pattern*, not
+    // the pattern it was given. Expanding it here rather than at the command
+    // line is what lets `@:` replay it.
+    if (command === "~" && this.lastSubstitution && this.lastSearchQuery !== null) {
+      const delimiter = this.lastSubstitution.delimiter || "/";
+      this.executeEx(`s${delimiter}${this.lastSearchQuery}${delimiter}${this.lastSubstitution.replacement}${delimiter}`);
+      return;
+    }
     const before = this.view.state.doc.toString().split("\n");
     // `:nohlsearch` retires the live pattern, so the match map goes with it.
     if (/^noh(?:l(?:search)?)?!?$/.test(command.trim())) this.setMatchPattern(null);

@@ -295,6 +295,128 @@ export const conformanceFixtures = Object.freeze([
     targetCursor: [1, 0],
     targetExOutput: { numbered: false, lines: [{ number: 2, text: "beta" }] },
   },
+  // Followup session 05. `@:` replays the last Ex command, and until this
+  // session it reached the adapter directly and so skipped everything the app
+  // itself interprets. Each fixture below pins one half of what that cost.
+  {
+    // The priming `:g/TODO/p` runs in `setupKeys`, outside the native runner's
+    // `redir`, so what both tiers assert is the replay's own listing rather
+    // than two runs stacked on top of each other.
+    id: "at-colon-replays-a-global-print",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    setupKeys: [...":g/TODO/p", "Enter"],
+    keys: [..."@:"],
+    targetCode: ["alpha TODO", "beta", "gamma TODO"],
+    targetCursor: [2, 0],
+    targetExOutput: {
+      numbered: false,
+      lines: [{ number: 1, text: "alpha TODO" }, { number: 3, text: "gamma TODO" }],
+    },
+  },
+  {
+    // The replay matches the lines the first run appended as well as the
+    // originals, which is the sort of compounding a learner has to see to
+    // believe. It also makes an inert replay impossible to miss.
+    id: "at-colon-replays-a-global-copy",
+    initialCode: ["alpha TODO", "beta", "gamma TODO"],
+    cursor: [0, 0],
+    keys: [...":g/TODO/t$", "Enter", ..."@:"],
+    targetCode: [
+      "alpha TODO", "beta", "gamma TODO",
+      "alpha TODO", "gamma TODO",
+      "alpha TODO", "gamma TODO", "alpha TODO", "gamma TODO",
+    ],
+    targetCursor: [8, 0],
+  },
+  {
+    // Twice in a row, with no command line in between: the replay must not
+    // overwrite the history it is reading from.
+    id: "at-colon-replays-a-line-operation-twice",
+    initialCode: ["alpha", "beta"],
+    cursor: [0, 0],
+    keys: [...":t.", "Enter", ..."@:@:"],
+    targetCode: ["alpha", "alpha", "alpha", "alpha", "beta"],
+    targetCursor: [3, 0],
+  },
+  {
+    // The shape Unit 11 teaches. It goes through to the adapter and always did
+    // work, so this is the regression guard on the path that must not change.
+    id: "at-colon-replays-a-substitution",
+    initialCode: ["const cache = false;", "const queue = false;", "const audit = false;"],
+    cursor: [0, 0],
+    keys: [...":s/false/true/", "Enter", ..."j@:j@:"],
+    targetCode: ["const cache = true;", "const queue = true;", "const audit = true;"],
+    targetCursor: [2, 0],
+  },
+  {
+    // Unit 8 teaches `":` as the register `@:` replays, so the two have to hold
+    // the same thing. `:sort` never reaches the adapter, which is the only
+    // reason `":` used to miss it.
+    id: "colon-register-holds-an-app-owned-command",
+    initialCode: ["gamma", "delta", "beta", "alpha"],
+    cursor: [0, 0],
+    keys: [...":2,3sort", "Enter"],
+    registerNames: [":"],
+    targetCode: ["gamma", "beta", "delta", "alpha"],
+    targetCursor: [1, 0],
+    targetRegisters: { ":": { type: "characterwise", text: "2,3sort" } },
+  },
+  {
+    // A `:global` runs one command per matching line, and those are the app's
+    // own rewriting, not anything a learner typed. `":` holds the command line.
+    id: "colon-register-holds-the-global-a-learner-typed",
+    initialCode: ["x a", "y a", "x a"],
+    cursor: [0, 0],
+    keys: [...":g/x/s/a/b/", "Enter"],
+    registerNames: [":"],
+    targetCode: ["x b", "y a", "x b"],
+    targetCursor: [2, 0],
+    targetRegisters: { ":": { type: "characterwise", text: "g/x/s/a/b/" } },
+  },
+  {
+    // Nothing has been typed, so there is nothing to replay: Vim does nothing
+    // at all. The app used to hand `@` and `:` to the adapter and leave a
+    // command line hanging open, with its own `set nopcre` setup sitting in
+    // `":` as if a learner had run it.
+    id: "at-colon-with-no-history-does-nothing",
+    initialCode: ["alpha", "beta"],
+    cursor: [0, 0],
+    keys: [..."@:"],
+    registerNames: [":"],
+    targetCode: ["alpha", "beta"],
+    targetCursor: [0, 0],
+    targetRegisters: { ":": { type: "characterwise", text: "" } },
+  },
+  {
+    // `:~` reruns the last substitution against the last *search* pattern, so
+    // it is only meaningful after a search — which is how Unit 11 teaches it.
+    // The app expands it, so replaying it has to expand it too.
+    id: "at-colon-replays-a-tilde-repeat",
+    initialCode: ["one old", "two old", "three old", "four old"],
+    cursor: [0, 0],
+    keys: [..."/old", "Enter", ...":s/old/new/", "Enter", "j", ...":~", "Enter", "j", ..."@:"],
+    registerNames: [":"],
+    targetCode: ["one new", "two new", "three new", "four old"],
+    targetCursor: [2, 0],
+    targetRegisters: { ":": { type: "characterwise", text: "~" } },
+  },
+  {
+    // An accepted divergence, measured rather than assumed: Vim implements `&`
+    // as a bare `:s` and files those two characters in `":`, while the app
+    // expands the substitution it is repeating and files that. Both replay the
+    // same edit; only the recorded text differs, and `&` is a Normal-mode key
+    // rather than a command line a learner typed.
+    id: "ampersand-files-a-substitution-in-the-colon-register",
+    initialCode: ["one old", "two old", "three old"],
+    cursor: [0, 0],
+    keys: [...":s/old/new/", "Enter", ..."j&j&"],
+    registerNames: [":"],
+    targetCode: ["one new", "two new", "three new"],
+    targetCursor: [2, 0],
+    targetRegisters: { ":": { type: "characterwise", text: "s" } },
+    browserVerdict: { targetRegisters: { ":": { type: "characterwise", text: "s/old/new/" } } },
+  },
   {
     id: "sort-numeric-flag",
     initialCode: ["item 10", "item 9", "item 100", "item 1"],

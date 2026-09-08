@@ -278,7 +278,8 @@ yet `vim-engine.js` implements `:t`, `:m`, `:put`, `:sort`, and `:global`
 itself. The cleaner arrangement is to register those as adapter Ex commands with
 `Vim.defineEx` and let the adapter's own `:global`, which already tracks line
 handles, compose them. That re-routes code every verified Unit 11 fixture
-depends on, so it was left alone here.
+depends on, so it was left alone here. Followup session 05 settled it the other
+way round: the app keeps those commands, and `AGENTS.md` now says so.
 
 ## Session 19 — an Ex output surface
 
@@ -334,10 +335,10 @@ message as a leading newline plus its text, so the interior empties the split
 leaves behind are dropped — lossless, precisely because Vim never prints an
 empty message.
 
-Known gap, unchanged by this session: `@:` calls `Vim.handleEx` directly instead
-of going through `executeEx`, so replaying a print through it produces no
-output. The same is already true of `:t`, `:m`, `:put` and `:sort`, and the fix
-is the `Vim.defineEx` re-routing recorded as debt above.
+Known gap at the time: `@:` called `Vim.handleEx` directly instead of going
+through `executeEx`, so replaying a print through it produced no output. The
+same was true of `:t`, `:m`, `:put` and `:sort`. Followup session 05 closed it
+without the `Vim.defineEx` re-routing.
 
 ## Session 21 — search offsets
 
@@ -422,3 +423,108 @@ Verified: `"%p`, Insert-mode `Ctrl-r%`, Ex-line `Ctrl-r%`, and writes to `"%`
 being ignored. Filename modifiers (`%:h`, `%:t`) are a different parser and are
 out of scope, as is anything implying the file exists — `:w` and `:e`. The name
 is a label, not a filesystem.
+
+## Followup session 05 — Ex ownership and `@:`
+
+The numbering restarts here. This is the followup series in
+`docs/implementation-followup/`, not a later entry in the 25-session plan above.
+
+Two things were wrong at once, and they were the same thing. `AGENTS.md` said
+the adapter owns Vim command interpretation while `vim-engine.js` interprets
+`:global`, `:normal` and the line operations itself, and `@:` — whose entire job
+is to run the last Ex command again — called `Vim.handleEx` directly and so
+skipped every one of them. Replaying `:t`, `:m`, `:put`, `:sort` or `:global`
+did nothing useful, replaying `:g/pat/p` printed nothing, replaying
+`:nohlsearch` left the match map lit, and no replay reported an impact. `&` had
+gone through `executeEx` all along; `@:` was the one outlier.
+
+Option B, registering the five commands with `Vim.defineEx` and letting the
+adapter's `:global` compose them, was declined a second time and this time in
+writing. Every verified command-line-range fixture runs through the current
+path, and the native tier is what makes this product's correctness claim true. A
+re-route that ends in adjusting fixtures so they agree with the adapter instead
+of with Vim is a loss whatever the diff looks like. So the rule moved to meet
+the code: the adapter owns Normal-mode, Visual-mode and motion semantics, and
+the app owns the command-line text plus one named, closed set of Ex commands.
+Naming the set is the point — a boundary that is a list can be checked, and
+adding to it now costs both conformance tiers.
+
+`@:` calls `executeEx`. The unconditional `moveCursorToFirstNonBlank()` went
+with the old call: `executeEx` makes that move on the fallthrough branch, and
+the app-owned branches place the cursor themselves, which is why a replayed
+`:g/pat/p` now lands on the last line it printed. Nothing had to be added for
+re-entrancy. `lastImpact` and `lastExOutput` are retired at the top of `sendKey`,
+which runs for the `:` that completes `@:`, so the replay starts from a clean
+report and `reportBufferChange` runs once over its own `before`. Replaying
+`:nohlsearch` now clears the match map, which is a behaviour change and the
+correct one.
+
+`":` moved with it, because Unit 8 teaches that register as the thing `@:`
+replays and the two were not the same. `":` is written by the adapter's own
+command processing, so the app populated it only by accident — only for commands
+that fell through. After `:2,3sort` it held a stale earlier command, and after
+`:g/x/s/a/b/` it held `5s/a/b/`, one of the per-line commands
+`executeGlobalOperation` synthesises, rather than the `g/x/s/a/b/` a learner
+typed. `rememberExCommand` now records the command line and the register
+together, and it runs *after* the command rather than before, which is the only
+ordering that survives a `:global` overwriting the register once per match. It
+also fixes `:~`, whose expansion used to land in `":` in place of the `~`.
+
+Running every Ex command the app owns through `@:` against real Vim found three
+more divergences, none of them about the replay itself and all of them in the
+same handful of lines.
+
+`":` did not start empty. The engine runs `:set nopcre` on construction so
+lessons get Vim regex rather than JavaScript regex, the adapter files every
+command it processes in `":`, and so the app's own setup command was sitting in
+the register before a learner had typed anything — `Ctrl-r:` on a fresh buffer
+inserted `set nopcre`. Vim starts a buffer with no Ex history, and now so does
+this.
+
+`@:` with no history opened a command line. `sendKey` decides whether `:` should
+claim the command line from the adapter's idle state, which is read before the
+buffered `@` is delivered, so the app claimed a prompt that then had nothing to
+run in it. Vim does nothing at all in that case. The `@:` branch now returns
+whether or not there is something to replay, rather than falling through to the
+adapter.
+
+`:~` could not be replayed, because the app expanded it at the command line
+rather than in `executeEx` — the same shape of mistake as `@:` itself. The
+expansion moved into `executeEx`, which is now the single place a command is
+interpreted no matter which key ran it. One `:~` divergence is left and is not
+this session's: `:~` reuses the *last search pattern*, and the app tracks that
+only from `/` and `?`, not from a `:s`, so `:~` straight after a substitution
+with no search in between does nothing where Vim substitutes. Every `:~` the
+curriculum teaches searches first, which is what the command is for.
+
+Fixtures: `at-colon-replays-a-global-print` pins the Ex output against a direct
+run, `at-colon-replays-a-global-copy` pins a replay that matches the lines the
+first run appended, `at-colon-replays-a-line-operation-twice` pins that a replay
+does not overwrite the history it reads from,
+`at-colon-replays-a-substitution` guards the fallthrough shape Unit 11 teaches,
+`at-colon-replays-a-tilde-repeat` pins the expansion,
+`at-colon-with-no-history-does-nothing` pins the empty register and the absent
+command line, and `colon-register-holds-an-app-owned-command` and
+`colon-register-holds-the-global-a-learner-typed` pin `":`. The match map is not
+observable in headless Vim, so the `:nohlsearch` retire and the single impact
+report are pinned in the browser tier instead, beside the Ex message screen
+tests.
+
+One accepted divergence, measured rather than assumed and recorded with a
+`browserVerdict` on `ampersand-files-a-substitution-in-the-colon-register`: Vim
+implements `&` as a bare `:s` and files those two characters in `":`, while the
+app expands the substitution it is repeating and files that. Both replay the
+same edit, and `&` is a Normal-mode key rather than a command line anyone typed,
+so the register text is the whole of the difference. Closing it would mean
+teaching the app which internal command each Normal-mode key stands for, which
+buys nothing a learner can see.
+
+An Ex-output fixture that replays needs two Ex commands, and the native runner
+wrapped the whole run in one `redir`, so both listings arrived stacked and only
+the second is what the browser's message screen holds. `setupKeys` now runs in
+its own `feedkeys` call before the redirect opens, which makes it the fixture's
+prelude in the honest sense: state the assertions depend on, whose own messages
+are not being measured. Register aliases are still resolved across the whole run
+so a `"` at the boundary still names the register after it, and the browser tier
+replays `setupKeys` too. The authored-content replays that share the runner pass
+`setupKeys` without ever setting `targetExOutput`, so nothing changed for them.
