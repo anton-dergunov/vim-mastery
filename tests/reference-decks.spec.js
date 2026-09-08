@@ -61,6 +61,14 @@ test("the opening deck follows the story introduction and hands off to Unit 1", 
 
   await expect(reference).toBeHidden();
   expect((await referenceState(page)).orientationSeen).toBe(true);
+
+  // The deck hands off to the entry question, which decides where to land.
+  // Nothing navigates until a level is committed.
+  const question = page.locator("#entryLevelDialog");
+  await expect(question).toBeVisible();
+  await question.locator("#entryStartButton").click();
+  await expect(question).toBeHidden();
+
   expect(await page.evaluate(() => window.VimWilds.getState().unitId)).toBe("modal-model");
   expect(await page.evaluate(() => window.VimWilds.getState().activityIndex)).toBe(0);
 });
@@ -76,6 +84,11 @@ test("skipping the story still reaches the opening, and skipping that reaches th
   await reference.getByRole("button", { name: "Skip" }).click();
   await expect(reference).toBeHidden();
   expect((await referenceState(page)).orientationSeen).toBe(true);
+
+  const question = page.locator("#entryLevelDialog");
+  await expect(question).toBeVisible();
+  await question.locator("#entryStartButton").click();
+  await expect(question).toBeHidden();
 });
 
 test("the opening runs once and never blocks a later launch", async ({ page }) => {

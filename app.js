@@ -45,6 +45,10 @@ const allowedThemes = new Set(["auto", "moonroot", "ember", "glass", "deepwater"
 const keyboardVisibilityValues = new Set(["visible", "hidden"]);
 const vimEffectValues = new Set(["enabled", "disabled"]);
 const decorativeMediaValues = new Set(["enabled", "disabled"]);
+const entryLevelValues = new Set(["new", "basics", "experienced"]);
+// The three levels name arcs, not unit ids. The landing point is read back out
+// of the catalog so a renumbering moves it and this table does not.
+const entryLevelArcNumbers = Object.freeze({ new: 1, basics: 2, experienced: 3 });
 const practicePolicyValues = Object.freeze({
   guided: "guided-sequence",
   recall: "recall-sequence",
@@ -114,6 +118,16 @@ function requiredUnitClosure(unitId, seen = new Set()) {
   return seen;
 }
 
+// A confidence level is a suggestion about where to open, and nothing else. It
+// resolves to the first unit of its arc; it never marks anything complete and
+// never makes anything unavailable.
+function entryLandingUnit(level) {
+  const arcNumber = entryLevelArcNumbers[level] || entryLevelArcNumbers.new;
+  const arc = curriculumArcs.find(candidate => candidate.arcNumber === arcNumber);
+  const first = Math.min(...(arc?.unitNumbers || []));
+  return units.find(candidate => candidate.unitNumber === first) || units[0];
+}
+
 function unitNumberList(unitIds) {
   const numbers = [...unitIds]
     .map(id => unitsById.get(id))
@@ -176,6 +190,11 @@ const elements = {
   characterOptions: $("#characterOptions"),
   themeOptions: $("#themeOptions"),
   replayStoryButton: $("#replayStoryButton"),
+  entryLevelDialog: $("#entryLevelDialog"),
+  entryQuestionOptions: $("#entryQuestionOptions"),
+  entryStartButton: $("#entryStartButton"),
+  entryLevelOptions: $("#entryLevelOptions"),
+  entryLandingButton: $("#entryLandingButton"),
   storyDialog: $("#storyDialog"),
   referenceDialog: $("#referenceDialog"),
   referenceVisual: $("#referenceVisual"),
@@ -310,6 +329,13 @@ function storedDecorativeMedia(name) {
   return savedSession[name] === "disabled" ? "disabled" : "enabled";
 }
 
+function storedEntryLevel() {
+  // null is "never asked", the way `orientationSeen: false` is. It behaves as
+  // "new to Vim", which is both today's behavior and the level the curriculum
+  // document names as the default.
+  return entryLevelValues.has(savedSession.entryLevel) ? savedSession.entryLevel : null;
+}
+
 const state = {
   activityIndex: 0,
   progress: 0,
@@ -330,6 +356,7 @@ const state = {
   vimEffects: storedVimEffects(),
   generatedBackdrops: storedDecorativeMedia("generatedBackdrops"),
   characters: storedDecorativeMedia("characters"),
+  entryLevel: storedEntryLevel(),
   practicePolicyOverride: null,
   exploreTargetReached: false,
   freePractice: null,
@@ -356,6 +383,7 @@ function persistSession() {
       vimEffects: state.vimEffects,
       generatedBackdrops: state.generatedBackdrops,
       characters: state.characters,
+      entryLevel: state.entryLevel,
       savedAt: new Date().toISOString(),
     }));
   } catch {}
@@ -718,6 +746,7 @@ const referenceDecks = new Map((referenceCatalog?.decks || []).map(deck => [deck
 const openingDeck = (referenceCatalog?.decks || []).find(deck => deck.role === "opening") || null;
 let referenceRendererStarted = false;
 const referenceSession = { deckId: null, cardIndex: 0, opening: false, unitId: null };
+let entryQuestionPending = false;
 
 // `unit.reference` has been authored, schema-validated, and cross-checked
 // against activity ids since the curriculum began, and rendered nowhere. Until
@@ -892,6 +921,7 @@ function closeReferenceDeck() {
   referenceSession.unitId = null;
   referenceRenderer.cancelRemoteVariants({ clearLayer: true });
   if (elements.referenceDialog.open) elements.referenceDialog.close();
+  showEntryLevelQuestion();
 }
 
 function stepReferenceCard(delta) {
@@ -1353,8 +1383,23 @@ async function openMastery() {
 
 function showOpeningReference() {
   if (!openingDeck || referenceState.orientationSeen || !isDefaultArrival) return false;
+  // The entry question rides on the opening deck rather than on
+  // `isDefaultArrival` alone. A learner who is already past the first run has
+  // answered it by default and changes it in Settings; interrupting them here
+  // would also open a modal over every returning-learner session.
+  entryQuestionPending = !entryLevelValues.has(state.entryLevel);
   openReferenceDeck(openingDeck.id, { opening: true });
   return true;
+}
+
+// Every exit from the deck funnels through `closeReferenceDeck`: its own
+// buttons, Escape, and the survival detour, which returns there on Done.
+function showEntryLevelQuestion() {
+  if (!entryQuestionPending || elements.referenceDialog.open) return;
+  entryQuestionPending = false;
+  if (!elements.entryLevelDialog || elements.entryLevelDialog.open) return;
+  renderEntryLevelOptions();
+  elements.entryLevelDialog.showModal();
 }
 
 // A default arrival: no art review, no deep link into an activity, no jump into
@@ -2234,6 +2279,22 @@ function renderThemeOptions() {
   if (input) input.checked = true;
 }
 
+// One helper for both surfaces: the first-run question and the Settings row
+// hold the same three options and must never drift apart. Destinations are
+// written from the catalog, so no unit number is spelled out in the markup.
+function renderEntryLevelOptions() {
+  const level = entryLevelValues.has(state.entryLevel) ? state.entryLevel : "new";
+  $$("[data-entry-destination]").forEach(node => {
+    const target = entryLandingUnit(node.dataset.entryDestination);
+    node.textContent = `Starts at Unit ${target.unitNumber}, ${target.title}.`;
+  });
+  $$('input[name="entry-level"], input[name="entry-level-question"]')
+    .forEach(input => { input.checked = input.value === level; });
+  const landing = entryLandingUnit(level);
+  if (elements.entryStartButton) elements.entryStartButton.textContent = `Start Unit ${landing.unitNumber}`;
+  if (elements.entryLandingButton) elements.entryLandingButton.textContent = `Open Unit ${landing.unitNumber}`;
+}
+
 function clearPlayback() {
   if (state.playbackTimer) window.clearTimeout(state.playbackTimer);
   state.playbackTimer = null;
@@ -2848,6 +2909,10 @@ document.addEventListener("keydown", event => {
   if (elements.storyDialog?.open) return;
   if (elements.practiceFilesDialog?.open || elements.practiceNoticeDialog?.open) return;
   if (elements.masteryDialog?.open) return;
+  // Radios, not text: the escape hatch below covers select and button only, so
+  // without this the handler swallows Escape — leaving the question
+  // undismissable by keyboard — and eats the arrows that move between options.
+  if (elements.entryLevelDialog?.open) return;
   // The feedback form holds the only free-text fields in the product. Without
   // this bail-out the capture handler below eats every character: swallowed
   // outright in a theory activity, and typed into the Vim buffer in an
@@ -2970,6 +3035,7 @@ elements.settingsButton?.addEventListener("click", () => {
   renderVimEffectOptions();
   renderDecorativeMediaOptions();
   renderThemeOptions();
+  renderEntryLevelOptions();
   elements.settingsDialog.showModal();
 });
 elements.restartUpdateButton?.addEventListener("click", applyUpdate);
@@ -3011,6 +3077,43 @@ elements.characterOptions?.addEventListener("change", event => {
   }
   renderCharacterLayer(currentActivity(), presentationFor(currentActivity()));
   if (value === "enabled") void loadCharacterAssets();
+});
+function handleEntryLevelChange(event) {
+  const value = event.target.closest('input[name="entry-level"], input[name="entry-level-question"]')?.value;
+  if (!entryLevelValues.has(value)) return;
+  state.entryLevel = value;
+  persistSession();
+  renderEntryLevelOptions();
+}
+elements.entryQuestionOptions?.addEventListener("change", handleEntryLevelChange);
+elements.entryLevelOptions?.addEventListener("change", handleEntryLevelChange);
+// `close` is the single hook for the button, Escape and the backdrop, the way
+// the free practice notice records that it was shown.
+elements.entryLevelDialog?.addEventListener("close", () => {
+  if (!entryLevelValues.has(state.entryLevel)) {
+    // Dismissing the question is "new to Vim" — today's behavior exactly, and
+    // the level the curriculum document names as the default.
+    state.entryLevel = "new";
+    persistSession();
+    renderEntryLevelOptions();
+  }
+  const landing = entryLandingUnit(state.entryLevel);
+  // A suggestion about where to open, applied once. The reload is what makes
+  // `?unit=` drop the stale activity id and start at the unit's first activity.
+  if (landing.id !== unit.id) {
+    navigateToUnit(landing.id);
+    return;
+  }
+  if (document.querySelector("dialog[open]")) return;
+  vimEngine?.focus();
+});
+elements.entryLandingButton?.addEventListener("click", () => {
+  const landing = entryLandingUnit(state.entryLevel);
+  if (landing.id === unit.id) {
+    elements.settingsDialog.close();
+    return;
+  }
+  navigateToUnit(landing.id);
 });
 elements.referenceDialog?.addEventListener("click", event => {
   const action = event.target.closest("[data-reference-action]")?.dataset.referenceAction;
@@ -3087,6 +3190,7 @@ $(".landscape-controls")?.addEventListener("click", event => {
     renderVimEffectOptions();
     renderDecorativeMediaOptions();
     renderThemeOptions();
+    renderEntryLevelOptions();
     elements.settingsDialog.showModal();
   }
 });
@@ -3392,6 +3496,8 @@ window.VimWilds = Object.freeze({
       vimEffects: state.vimEffects,
       generatedBackdrops: state.generatedBackdrops,
       characters: state.characters,
+      entryLevel: state.entryLevel,
+      entryUnitId: entryLandingUnit(state.entryLevel).id,
       characterReaction: characterReactions.state,
       guidance: elements.guidance.textContent,
       story: storyTransitions.getState(),
@@ -3503,6 +3609,7 @@ assignCharacters();
 worldRenderer.start();
 renderAll();
 renderThemeOptions();
+renderEntryLevelOptions();
 storyTransitions.start();
 
 const requestedReferenceDeck = urlParams.get("reference");

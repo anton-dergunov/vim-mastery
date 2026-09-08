@@ -318,6 +318,26 @@
       </div>
     </dialog>
 
+    <dialog class="app-dialog entry-dialog" id="entryLevelDialog" aria-labelledby="entryLevelTitle">
+      <div class="dialog-head">
+        <div>
+          <span class="dialog-kicker">Your starting point</span>
+          <h2 id="entryLevelTitle">How much Vim do you know?</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="entryLevelDialog" aria-label="Close">×</button>
+      </div>
+      <div class="dialog-body">
+        <p class="entry-lede">This only chooses where you land. Every unit stays open at every level, and nothing is marked finished that you have not done.</p>
+        <fieldset class="keyboard-options" id="entryQuestionOptions">
+          <legend>Confidence level</legend>
+          <label><input type="radio" name="entry-level-question" value="new"> <span><strong>New to Vim</strong><small>You have not used Vim, or only briefly. <span data-entry-destination="new"></span></small></span></label>
+          <label><input type="radio" name="entry-level-question" value="basics"> <span><strong>Familiar with the basics</strong><small>You move and edit, but not with registers or macros. <span data-entry-destination="basics"></span></small></span></label>
+          <label><input type="radio" name="entry-level-question" value="experienced"> <span><strong>Experienced</strong><small>You want the automation arc: ranges, substitution, macros. <span data-entry-destination="experienced"></span></small></span></label>
+        </fieldset>
+        <button class="note-action" id="entryStartButton" type="button" data-close-dialog="entryLevelDialog">Start Unit 1</button>
+      </div>
+    </dialog>
+
     <dialog class="app-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
       <div class="dialog-head">
         <div>
@@ -354,6 +374,13 @@
           <label><input type="radio" name="theme" value="ember"> <span><strong>Ember Vault</strong><small>Warm stone and beacon light.</small></span></label>
           <label><input type="radio" name="theme" value="glass"> <span><strong>Hall of Mirrors</strong><small>Cool glass and reflected light.</small></span></label>
           <label><input type="radio" name="theme" value="deepwater"> <span><strong>Deepwater Archive</strong><small>Dark water and archive blue.</small></span></label>
+        </fieldset>
+        <fieldset class="keyboard-options" id="entryLevelOptions">
+          <legend>Starting point</legend>
+          <label><input type="radio" name="entry-level" value="new"> <span><strong>New to Vim</strong><small>You have not used Vim, or only briefly. <span data-entry-destination="new"></span></small></span></label>
+          <label><input type="radio" name="entry-level" value="basics"> <span><strong>Familiar with the basics</strong><small>You move and edit, but not with registers or macros. <span data-entry-destination="basics"></span></small></span></label>
+          <label><input type="radio" name="entry-level" value="experienced"> <span><strong>Experienced</strong><small>You want the automation arc: ranges, substitution, macros. <span data-entry-destination="experienced"></span></small></span></label>
+          <button class="note-action secondary-action" id="entryLandingButton" type="button">Open Unit 1</button>
         </fieldset>
         <section class="story-settings" aria-labelledby="storySettingsTitle">
           <strong id="storySettingsTitle">Story</strong>

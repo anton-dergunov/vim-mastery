@@ -115,7 +115,7 @@ The curriculum supports six top-level destinations:
 - **Free Practice:** edit an unrestricted generated buffer using the app's supported command set.
 - **Reference:** search commands by key, intent, mode, or object and open examples.
 
-Users choose an initial confidence level: new to Vim, familiar with basics, or experienced. This choice changes the suggested entry point, not content availability. A user may preview any topic, manually request its test-out challenge, or skip it with a visible prerequisite warning. Skipping never permanently locks later material. Exact placement scoring and automatic promotion are future adaptation work.
+On first open, and afterward from Settings, users choose an initial confidence level: new to Vim, familiar with the basics, or experienced. The three levels land a learner at the start of Arc 1, Arc 2, or Arc 3. This choice changes the suggested entry point and nothing else: it makes no unit unavailable and marks nothing complete, so a learner who lands in a later arc still meets the ordinary prerequisite warning for anything that reaches back. Dismissing the question is "new to Vim". Any topic can be opened directly — from the contents dialog, or by a `?unit=` or `?activity=` link — without finishing what precedes it and without recording progress; a learner may also request its test-out challenge, or skip it with a visible prerequisite warning. Skipping never permanently locks later material. Exact placement scoring and automatic promotion are future adaptation work.
 
 Completion records first mastery and unlocks appropriate dependents. It never removes the chapter, focused drills, theory, or challenge variants.
 

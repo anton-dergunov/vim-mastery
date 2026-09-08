@@ -127,6 +127,17 @@ inside a brief that no longer exists.
   and Copy take over. No Turnstile while the app has no users; the origin
   allowlist, rate limit and size cap are the trade. A report with no screenshot
   is complete, not degraded. The client IP is deliberately not recorded.
+- **The entry question rides on the opening reference deck.** It is asked once,
+  after the story intro and the orientation deck, and never on a plain
+  `isDefaultArrival` check — that fires for every returning learner. A learner
+  already past the first run changes their level in Settings. `entryLevel: null`
+  means "never asked" and behaves as `new`; every exit path from the question
+  writes a value, so dismissing it is "new to Vim". The level lives in
+  `vim-wilds.session.v1` beside the saved position, never in a progress store,
+  and resolves to the first unit of its arc through `content/unit-index.json`.
+- **"Preview any topic" is the contents dialog and the deep links**, not a named
+  affordance. `docs/curriculum-and-progression.md` was reworded to describe what
+  ships, and a test asserts that opening an unreached unit records no progress.
 - **Two different things in this repo are called "restoration."** Do not
   confuse them:
   - A unit-ending restoration **painting** —
@@ -168,5 +179,5 @@ already close to its hosting limit. Everything else is independent.
 - [x] 03 Guard the unguarded criteria
 - [ ] 04 Asset and hosting budget
 - [x] 05 Engine debt and Ex ownership
-- [ ] 06 Entry confidence levels
+- [x] 06 Entry confidence levels
 - [ ] 07 In-board landmark plates

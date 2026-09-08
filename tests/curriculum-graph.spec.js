@@ -22,6 +22,29 @@ const seedFinishedUnits = (page, ids) => page.addInitScript(completed => {
 
 const waitForApp = page => page.waitForFunction(() => window.VimWilds?.getState);
 
+const sessionState = page => page.evaluate(() => (
+  JSON.parse(window.localStorage.getItem("vim-wilds.session.v1") || "{}")
+));
+
+// A true first run: nothing seeded. The entry question rides on the opening
+// deck, so reaching it means passing the story and the deck first — which is
+// also the assertion that it cannot appear anywhere else.
+async function firstRunToEntryQuestion(page) {
+  await page.goto("/play/");
+  await waitForApp(page);
+  await page.locator("#storyDialog").getByRole("button", { name: "Skip story" }).click();
+  await page.locator("#referenceDialog").getByRole("button", { name: "Skip" }).click();
+  const question = page.locator("#entryLevelDialog");
+  await expect(question).toBeVisible();
+  return question;
+}
+
+const ENTRY_LEVELS = [
+  { label: "New to Vim", level: "new", unitId: "modal-model", unitNumber: 1 },
+  { label: "Familiar with the basics", level: "basics", unitId: "visual-selection", unitNumber: 7 },
+  { label: "Experienced", level: "experienced", unitId: "command-line-ranges-line-operations", unitNumber: 12 },
+];
+
 async function openContents(page) {
   await page.goto("/play/");
   await waitForApp(page);
@@ -187,6 +210,156 @@ for (const [width, height] of [[360, 740], [390, 844], [412, 915], [430, 932], [
     await macros.locator("summary").click();
     await expect(macros.locator(".toc-unit-warning")).toBeVisible();
     await expect(macros.locator(".toc-unit-editor")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+  });
+}
+
+// Session 18 wrote "walk the three entry confidence levels end to end" as a
+// validation step and had nothing to walk. This is that step.
+for (const { label, level, unitId, unitNumber } of ENTRY_LEVELS) {
+  test(`entering as "${label}" lands on Unit ${unitNumber} and saves it as the position`, async ({ page }) => {
+    const question = await firstRunToEntryQuestion(page);
+
+    // Scoped to the dialog: the Settings row carries the same three labels.
+    await question.getByLabel(label).check();
+    await expect(question.locator("#entryStartButton")).toHaveText(`Start Unit ${unitNumber}`);
+    await question.locator("#entryStartButton").click();
+
+    if (unitNumber !== 1) await page.waitForURL(new RegExp(`unit=${unitId}`));
+    await waitForApp(page);
+    await expect(page.locator("#entryLevelDialog")).toBeHidden();
+    // A dialog's `close` event is queued, so the level is committed a task
+    // after the sheet stops being visible.
+    await page.waitForFunction(() => window.VimWilds.getState().entryLevel !== null);
+
+    const state = await page.evaluate(() => window.VimWilds.getState());
+    expect(state.unitId).toBe(unitId);
+    expect(state.activityIndex).toBe(0);
+    expect(state.entryLevel).toBe(level);
+    expect(state.entryUnitId).toBe(unitId);
+
+    const saved = await sessionState(page);
+    expect(saved.unitId).toBe(unitId);
+    expect(saved.entryLevel).toBe(level);
+
+    // The landing is a real saved position, so a plain relaunch resumes it.
+    await page.goto("/play/");
+    await waitForApp(page);
+    await expect(page.locator("#entryLevelDialog")).toBeHidden();
+    expect(await page.evaluate(() => window.VimWilds.getState().unitId)).toBe(unitId);
+  });
+}
+
+test("entering as experienced completes nothing it did not earn", async ({ page }) => {
+  const question = await firstRunToEntryQuestion(page);
+  await question.getByLabel("Experienced").check();
+  await question.locator("#entryStartButton").click();
+  await page.waitForURL(/unit=command-line-ranges-line-operations/);
+  await waitForApp(page);
+
+  // The level is a suggestion about where to open. It is not a completion.
+  expect(await page.evaluate(() => window.VimWilds.getState().story.completedUnitStoryIds)).toEqual([]);
+  const completions = await page.evaluate(async () => Object.keys((await window.VimWilds.masteryState()).completions));
+  expect(completions).toEqual([]);
+  expect((await sessionState(page)).unitId).toBe("command-line-ranges-line-operations");
+
+  // The prerequisite warning is the feature working, not a bug to suppress.
+  await page.click("#tocButton");
+  const macros = unitBlock(page, 14);
+  await macros.locator("summary").click();
+  const warning = macros.locator(".toc-unit-warning");
+  await expect(warning).toBeVisible();
+  const head = warning.locator(".toc-unit-warning-head");
+  for (const number of [3, 4, 6, 8, 11]) {
+    await expect(head).toContainText(String(number));
+  }
+  await expect(warning).toContainText("Nothing is locked");
+});
+
+test("dismissing the entry question leaves today's behavior exactly as it is", async ({ page }) => {
+  const question = await firstRunToEntryQuestion(page);
+  await expect(question.getByLabel("New to Vim")).toBeChecked();
+
+  // Escape is the regression guard for the keydown bail-out: without it the
+  // capture handler swallows the key and the question cannot be dismissed.
+  await page.keyboard.press("Escape");
+  await expect(question).toBeHidden();
+  await page.waitForFunction(() => window.VimWilds.getState().entryLevel !== null);
+
+  expect(new URL(page.url()).searchParams.has("unit")).toBe(false);
+  const state = await page.evaluate(() => window.VimWilds.getState());
+  expect(state.unitId).toBe("modal-model");
+  expect(state.activityIndex).toBe(0);
+  expect(state.entryLevel).toBe("new");
+  expect((await sessionState(page)).entryLevel).toBe("new");
+
+  await page.reload();
+  await waitForApp(page);
+  await expect(page.locator("#storyDialog")).toBeHidden();
+  await expect(page.locator("#referenceDialog")).toBeHidden();
+  await expect(page.locator("#entryLevelDialog")).toBeHidden();
+});
+
+test("the starting point can be changed later from Settings without losing the saved place", async ({ page }) => {
+  await seedReturningLearner(page);
+  await page.goto("/play/");
+  await waitForApp(page);
+  // A learner already past the first run is never interrupted by the question.
+  await expect(page.locator("#entryLevelDialog")).toBeHidden();
+
+  const settings = page.locator("#settingsDialog");
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await settings.getByLabel("Experienced").check();
+
+  expect(await page.evaluate(() => window.VimWilds.getState().entryLevel)).toBe("experienced");
+  // Recording a level must not teleport anyone away from where they are.
+  expect(await page.evaluate(() => window.VimWilds.getState().unitId)).toBe("modal-model");
+  await expect(settings.locator("#entryLandingButton")).toHaveText("Open Unit 12");
+
+  await page.reload();
+  await waitForApp(page);
+  await page.getByRole("button", { name: "Open settings" }).click();
+  await expect(settings.getByLabel("Experienced")).toBeChecked();
+
+  await settings.locator("#entryLandingButton").click();
+  await page.waitForURL(/unit=command-line-ranges-line-operations/);
+  await waitForApp(page);
+  expect(await page.evaluate(() => window.VimWilds.getState().unitId)).toBe("command-line-ranges-line-operations");
+});
+
+// The curriculum promises any topic can be opened without finishing what comes
+// before it. The contents dialog is that affordance; this is the half that was
+// never asserted.
+test("opening an unreached topic records no progress", async ({ page }) => {
+  await seedReturningLearner(page);
+  await openContents(page);
+  const macros = unitBlock(page, 14);
+  await macros.locator("summary").click();
+  await macros.locator('button[data-unit-id="macros"]').click();
+  await page.waitForURL(/unit=macros/);
+  await waitForApp(page);
+
+  expect(await page.evaluate(() => window.VimWilds.getState().unitId)).toBe("macros");
+  expect(await page.evaluate(() => window.VimWilds.getState().story.completedUnitStoryIds)).toEqual([]);
+  const completions = await page.evaluate(async () => Object.keys((await window.VimWilds.masteryState()).completions));
+  expect(completions).toEqual([]);
+});
+
+for (const [width, height] of [[360, 740], [430, 932]]) {
+  test(`the entry question and its settings row fit ${width}x${height} @exhaustive`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    const question = await firstRunToEntryQuestion(page);
+    for (const { label } of ENTRY_LEVELS) {
+      await expect(question.getByText(label, { exact: true })).toBeVisible();
+    }
+    await expect(question.locator("#entryStartButton")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
+
+    await page.keyboard.press("Escape");
+    await page.getByRole("button", { name: "Open settings" }).click();
+    const row = page.locator("#entryLevelOptions");
+    await row.scrollIntoViewIfNeeded();
+    await expect(row.locator("#entryLandingButton")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
 }
