@@ -940,7 +940,7 @@ test.describe("Production lesson flow", () => {
     expect(await state(page)).toMatchObject({ complete: true, cursor: [20, 2], viewport: { topLine: 14, bottomLine: 20, totalLines: 30 } });
   });
 
-  test("runs every Unit 13 macro activity and preserves macro isolation", async ({ page }) => {
+  test("runs every Unit 14 macro activity and preserves macro isolation", async ({ page }) => {
     test.setTimeout(120000);
     await page.goto("/?unit=macros");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
@@ -972,7 +972,7 @@ test.describe("Production lesson flow", () => {
     expect((await state(page)).registers.a?.text || "").toBe("");
   });
 
-  test("runs every Unit 14 Global-Normal activity with native-equivalent state", async ({ page }) => {
+  test("runs every Unit 15 Global-Normal activity with native-equivalent state", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 86, exerciseCount: automationExercises.length });
@@ -993,7 +993,7 @@ test.describe("Production lesson flow", () => {
     expect(failures).toEqual([]);
   });
 
-  test("keeps Ex command text visible while Unit 14 range commands are entered", async ({ page }) => {
+  test("keeps Ex command text visible while Unit 15 range commands are entered", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/?unit=global-normal-automation&activity=normal-range-demo");
     await page.locator('.demo-controls [data-action="step"]').click();
@@ -1011,7 +1011,7 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".cm-vim-panel input, .cm-vim-panel textarea")).toHaveValue("2");
   });
 
-  test("runs every Unit 11 Ex range activity with native-equivalent line and register state", async ({ page }) => {
+  test("runs every Unit 12 Ex range activity with native-equivalent line and register state", async ({ page }) => {
     await page.goto("/?unit=command-line-ranges-line-operations");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 76, exerciseCount: rangeExercises.length });
@@ -1036,7 +1036,7 @@ test.describe("Production lesson flow", () => {
     expect(failures).toEqual([]);
   });
 
-  test("runs every Unit 12 substitution activity with native-equivalent text and cursor state", async ({ page }) => {
+  test("runs every Unit 13 substitution activity with native-equivalent text and cursor state", async ({ page }) => {
     await page.goto("/?unit=substitution-practical-regex");
     const runtime = await page.evaluate(() => ({ activityCount: window.VimWilds.activities.length, exerciseCount: window.VimWilds.exercises.length }));
     expect(runtime).toEqual({ activityCount: 70, exerciseCount: substitutionExercises.length });
