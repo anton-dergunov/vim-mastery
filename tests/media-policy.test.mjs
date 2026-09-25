@@ -34,7 +34,9 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   const coreBytes = assertCoreMediaBudget(rootPath, first);
   assert(coreBytes > 0);
   assert(coreBytes <= CORE_MEDIA_MAX_BYTES);
-  assert(first.core.some(asset => asset.category === "registered-patch"));
+  assert(first.core.some(asset => asset.category === "world-base"));
+  // Boards are a base image and nothing else: no overlay plate is registered.
+  assert(!first.core.some(asset => asset.category === "registered-patch"));
   assert(first.core.some(asset => asset.category === "character-idle"));
   assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 17);
   assert.equal(first.core.filter(asset => asset.category === "unit-story-image").length, 17);

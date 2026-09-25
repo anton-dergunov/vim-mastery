@@ -71,13 +71,3 @@ Confirm a tick inside the window thumb is always an on-screen match; that the
 map disappears once nothing matches and after `:nohlsearch`; and that no rail or
 tick appears for a fully visible buffer. At 360px confirm the rail adds no width
 and nothing clips.
-
----
-
-## Two things the walkthrough will expose that are already known
-
-Not defects to file — they are scheduled:
-
-- **Units 5–17 boards do not progress and their landmarks never light.** Only
-  the four Arc 1 scenes have a patch layer. See
-  [in-board-landmark-plates.md](in-board-landmark-plates.md).

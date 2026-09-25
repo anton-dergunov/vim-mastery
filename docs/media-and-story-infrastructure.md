@@ -12,7 +12,7 @@ generated, is in [art-direction.md](art-direction.md) and
 walking the art directories:
 
 - **Core media** — precached by the service worker, available offline:
-  registered scene bases and patches, unit-ending backdrops and story images,
+  scene bases, unit-ending backdrops and story images,
   intro stills, the finale, and character idle images.
 - **Optional media** — emitted to the build but never precached, fetched only
   when shown: character reaction and action animations, and the complete-board
@@ -102,10 +102,8 @@ in markup or JavaScript. Images are data too:
 Once a file is declared, the media policy emits, inventories, validates,
 revisions, and precaches it with no further wiring.
 
-Without a painting, the unit transition composes itself from layer slots —
-`.story-board-base`, `.story-landmark-dormant`, `.story-landmark-restored`, and
-`.story-light-path` — filled from the scene profile and its landmark plates.
-`.story-surface` exposes `data-unit-id`, `data-world-id`, `data-scene-id`,
+Without a painting, the unit transition shows the unit's board base in
+`.story-board-base`, over the world's plain colour. `.story-surface` exposes `data-unit-id`, `data-world-id`, `data-scene-id`,
 `data-landmark-id`, `data-guide-id`, and `data-action-id` for styling and tests.
 
 For checks without faking progress, `window.VimWilds.showUnitStory(unitId)`

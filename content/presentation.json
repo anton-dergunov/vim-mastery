@@ -58,27 +58,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -109,10 +97,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants"
-          },
-          "landmarkPatches": {
-            "dormant": "landmark-dormant",
-            "restored": "landmark-restored"
           }
         }
       },
@@ -141,27 +125,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -192,10 +164,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants"
-          },
-          "landmarkPatches": {
-            "dormant": "landmark-dormant",
-            "restored": "landmark-restored"
           }
         }
       },
@@ -224,27 +192,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -275,10 +231,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants"
-          },
-          "landmarkPatches": {
-            "dormant": "landmark-dormant",
-            "restored": "landmark-restored"
           }
         }
       },
@@ -307,27 +259,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {
-                "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/landmark-dormant.webp",
-                "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/landmark-restored.webp"
-              }
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -358,10 +298,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants"
-          },
-          "landmarkPatches": {
-            "dormant": "landmark-dormant",
-            "restored": "landmark-restored"
           }
         }
       },
@@ -403,18 +339,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -445,10 +378,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -478,18 +407,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -520,10 +446,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -553,18 +475,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -595,10 +514,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -628,18 +543,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -670,10 +582,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -703,18 +611,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -745,10 +650,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -778,18 +679,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -821,10 +719,6 @@
             "registrationProfile": "compact",
             "mode": "transparent-patch",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -854,18 +748,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -896,10 +787,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -929,18 +816,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-table/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-table/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -971,10 +855,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-table/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -1004,18 +884,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/mirror-loom/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/brass-meridian/scenes/mirror-loom/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -1046,10 +923,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/mirror-loom/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -1079,18 +952,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/echo-foundry/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/brass-meridian/scenes/echo-foundry/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -1121,10 +991,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/echo-foundry/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -1155,18 +1021,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-engine/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-engine/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -1197,10 +1060,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-engine/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -1231,18 +1090,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/menders-confluence/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/brass-meridian/scenes/menders-confluence/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/brass-meridian/scenes/menders-confluence/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -1274,10 +1130,6 @@
             "registrationProfile": "compact",
             "mode": "transparent-patch",
             "assetRoot": "assets/worlds/brass-meridian/scenes/menders-confluence/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },
@@ -1308,18 +1160,15 @@
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/keepers-relay/tall/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "compact": {
               "base": "assets/worlds/brass-meridian/scenes/keepers-relay/compact/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             },
             "wide": {
               "base": "assets/worlds/brass-meridian/scenes/keepers-relay/wide/base.webp",
-              "focalPosition": "50% 50%",
-              "patches": {}
+              "focalPosition": "50% 50%"
             }
           },
           "remoteVariants": {
@@ -1351,10 +1200,6 @@
             "registrationProfile": "compact",
             "mode": "transparent-patch",
             "assetRoot": "assets/worlds/brass-meridian/scenes/keepers-relay/variants"
-          },
-          "landmarkPatches": {
-            "dormant": null,
-            "restored": null
           }
         }
       },

@@ -381,9 +381,9 @@ button { font: inherit; }
 }
 .world-backdrop {
   z-index: 0;
-  background:
-    var(--world-placeholder, radial-gradient(circle at 50% 42%, rgba(89, 155, 127, .2), transparent 58%)),
-    var(--world-fallback, linear-gradient(150deg, var(--theme-dark), #06100e 75%));
+  /* Until the board image loads, or if it never does, the board is the world's
+     plain colour: no drawn pattern stands in for the art. */
+  background: var(--world-fallback, linear-gradient(150deg, var(--theme-dark), #06100e 75%));
 }
 .world-backdrop::before,
 .world-backdrop::after {
@@ -404,34 +404,6 @@ button { font: inherit; }
     linear-gradient(90deg, rgba(2, 8, 8, .32), transparent 24%, transparent 76%, rgba(2, 8, 8, .32)),
     linear-gradient(0deg, rgba(2, 8, 8, .34), transparent 30%);
 }
-.world[data-world-id="moonroot-ruins"] {
-  --world-placeholder:
-    radial-gradient(ellipse at 14% 88%, rgba(66, 121, 77, .5) 0 8%, transparent 9%),
-    radial-gradient(ellipse at 88% 12%, rgba(167, 123, 255, .18) 0 3%, transparent 16%),
-    radial-gradient(ellipse at 73% 88%, rgba(42, 116, 91, .5) 0 12%, transparent 13%),
-    linear-gradient(118deg, transparent 0 10%, rgba(52, 97, 65, .25) 11% 15%, transparent 16% 82%, rgba(52, 97, 65, .22) 83% 89%, transparent 90%);
-}
-.world[data-world-id="starwater-sanctuary"] {
-  --world-placeholder:
-    radial-gradient(circle at 14% 18%, rgba(120, 219, 234, .65) 0 1px, transparent 2px),
-    radial-gradient(circle at 87% 28%, rgba(184, 156, 255, .55) 0 1px, transparent 2px),
-    radial-gradient(ellipse at 50% 100%, rgba(52, 130, 152, .48) 0 20%, transparent 58%),
-    linear-gradient(160deg, rgba(26, 74, 91, .18), transparent 54%);
-}
-.world[data-world-id="archive-of-echoes"] {
-  --world-placeholder:
-    repeating-linear-gradient(90deg, transparent 0 9%, rgba(120, 219, 234, .055) 9.5% 10%, transparent 10.5% 18%),
-    linear-gradient(132deg, transparent 0 16%, rgba(184, 156, 255, .1) 17% 18%, transparent 19% 78%, rgba(120, 219, 234, .08) 79% 81%, transparent 82%),
-    radial-gradient(ellipse at 50% 94%, rgba(43, 93, 119, .4), transparent 58%);
-}
-.world[data-world-id="brass-meridian"] {
-  --world-placeholder:
-    radial-gradient(circle at 12% 72%, rgba(255, 208, 108, .55) 0 2px, transparent 3px),
-    radial-gradient(circle at 89% 22%, rgba(255, 116, 104, .45) 0 2px, transparent 3px),
-    repeating-linear-gradient(118deg, transparent 0 15%, rgba(245, 154, 97, .07) 15.5% 16.5%, transparent 17% 28%),
-    radial-gradient(ellipse at 50% 100%, rgba(122, 59, 31, .38), transparent 62%);
-}
-
 .world-ambient { z-index: 1; }
 .world-ambient-effect {
   position: absolute;
@@ -1168,10 +1140,6 @@ button { font: inherit; }
 @keyframes worldAmbientDrift {
   from { transform: translate3d(0, 0, 0); opacity: .18; }
   to { transform: translate3d(3px, -4px, 0); opacity: .4; }
-}
-@keyframes dormantLandmarkPulse {
-  from { opacity: .5; filter: brightness(.82); }
-  to { opacity: .78; filter: brightness(1.05); }
 }
 
 @media (max-height: 720px) {
@@ -2094,51 +2062,17 @@ html.next-ui .story-visual.has-story-art .story-placeholder-landscape {
   display: none;
 }
 
-html.next-ui .story-board-base,
-html.next-ui .story-landmark,
-html.next-ui .story-light-path {
+html.next-ui .story-board-base {
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-}
-
-html.next-ui .story-board-base,
-html.next-ui .story-landmark {
   background-image: var(--story-layer-asset, none);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-
-html.next-ui .story-board-base { z-index: 1; }
-html.next-ui .story-landmark { z-index: 2; }
-html.next-ui .story-landmark-restored {
-  opacity: 0;
-  transition: opacity 780ms ease-in-out;
-}
-html.next-ui .story-landmark-dormant {
-  opacity: 1;
-  transition: opacity 640ms ease-in-out;
-}
-html.next-ui .story-surface[data-restoration="restored"] .story-landmark-restored { opacity: 1; }
-html.next-ui .story-surface[data-restoration="restored"] .story-landmark-dormant { opacity: 0; }
 html.next-ui .story-surface[data-registered-scene="true"] .story-placeholder-landscape { display: none; }
-
-html.next-ui .story-light-path {
-  z-index: 3;
-  opacity: 0;
-  mix-blend-mode: screen;
-  transition: opacity 560ms ease 180ms;
-  background:
-    radial-gradient(ellipse at 48% 62%, var(--story-light, rgba(109, 231, 204, .33)), transparent 23%),
-    linear-gradient(155deg, transparent 39%, var(--story-light, rgba(109, 231, 204, .24)) 49%, transparent 59%);
-  mask-image: linear-gradient(90deg, transparent 2%, #000 18% 82%, transparent 98%);
-}
-html.next-ui .story-surface[data-restoration="restored"] .story-light-path.has-light-path { opacity: 1; }
-html.next-ui .story-surface[data-world-id="moonroot-ruins"] { --story-light: rgba(117, 230, 179, .36); }
-html.next-ui .story-surface[data-world-id="starwater-sanctuary"] { --story-light: rgba(117, 220, 239, .36); }
-html.next-ui .story-surface[data-world-id="archive-of-echoes"] { --story-light: rgba(146, 199, 249, .34); }
-html.next-ui .story-surface[data-world-id="brass-meridian"] { --story-light: rgba(255, 185, 99, .34); }
 
 html.next-ui .story-placeholder-landscape {
   position: absolute;
@@ -4165,10 +4099,6 @@ html.next-ui .toc-unit-launch button {
     opacity: .42;
     clip-path: none;
   }
-
-  html.next-ui .story-landmark-dormant,
-  html.next-ui .story-landmark-restored,
-  html.next-ui .story-light-path { transition-duration: 0s; }
 }
 
 /* ---------------------------------------------------------------------------

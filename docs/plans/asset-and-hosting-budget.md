@@ -1,6 +1,6 @@
 # Asset and hosting budget
 
-**Size:** M. **Depends on:** nothing. **Blocks:** [in-board landmark plates](in-board-landmark-plates.md).
+**Size:** M. **Depends on:** nothing.
 
 ## Why
 
@@ -34,8 +34,8 @@ service worker never precaches it. It breaks down as:
 - **216 `character-reaction`** frames.
 - **150 `character-animation`** frames.
 
-The hard deadline is the Pages 1 GB artifact limit, ~112 MB away. The
-[in-board landmark plates](in-board-landmark-plates.md) plan wants to add 78 more plates, so this decision comes first.
+The hard deadline is the Pages 1 GB artifact limit, ~112 MB away, and any new
+art has to fit under it.
 
 ## Scope
 
@@ -104,8 +104,6 @@ is not acceptable is leaving it undiscussed for a third session.
 ## Out of scope
 
 - Regenerating, re-approving, or re-cropping any board. The art is final.
-- The 78 in-board landmark plates. That is the
-  [in-board landmark plates](in-board-landmark-plates.md) plan, and it waits for this.
 - Veo video loops. Optional and unstarted; if this session concludes that video
   is affordable, record that and stop.
 - Lowering `CORE_MEDIA_MAX_BYTES`. At 47.8 MiB of 300 the ceiling is doing its

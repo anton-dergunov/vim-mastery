@@ -42,7 +42,7 @@ refer to the same revision.
 The service worker precaches the complete offline application in one install:
 
 - Both HTML pages, JavaScript, CSS, PWA manifest, and icons.
-- Every selected scene base and registered patch, the intro, unit-ending, and
+- Every selected scene base, the intro, unit-ending, and
   finale story art, all idle character PNGs, and the character manifest.
 - All content: the unit catalog and every unit file, `presentation.json`,
   `reference.json`, `practice-samples.json`, `field-notes.json`,

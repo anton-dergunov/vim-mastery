@@ -52,9 +52,8 @@ def main() -> int:
         unit_data["scenes"] = {
             scene: {
                 "id": scene,
-                "profiles": {profile: {"base": f"assets/worlds/{world}/scenes/{scene}/{profile}/base.webp", "focalPosition": "50% 50%", "patches": {}} for profile in ("tall", "compact", "wide")},
+                "profiles": {profile: {"base": f"assets/worlds/{world}/scenes/{scene}/{profile}/base.webp", "focalPosition": "50% 50%"} for profile in ("tall", "compact", "wide")},
                 "remoteVariants": {"profiles": ["compact"], "assetRoot": f"assets/worlds/{world}/scenes/{scene}/variants", "format": "webp", "siteIds": [site["id"] for site in config["sites"]], "variantsPerSite": 5, "timing": {"initialDelayMs": 15000, "fadeMs": 2600, "holdMs": 7000, "gapMs": 15000}},
-                "landmarkPatches": {"dormant": None, "restored": None},
             }
         }
     PRESENTATION.write_text(json.dumps(presentation, indent=2) + "\n")

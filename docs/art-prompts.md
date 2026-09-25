@@ -123,8 +123,10 @@ from a per-scene site inventory; the method is in [art-direction.md](art-directi
 
 ## Landmarks and unit endings
 
-Dormant and restored landmark states, and the unit-ending restoration
-paintings, are both edits of the unit's approved scene.
+Unit-ending restoration paintings are edits of the unit's approved scene. The
+dormant and restored state prompts below were written for in-board landmark
+plates, which were retired; they remain the reference for what each landmark
+is and what "restored" means for it, which is what an ending painting shows.
 
 ## Model and reference discipline
 
@@ -1081,13 +1083,6 @@ The approved intro runtime paths are:
 assets/worlds/story/intro/connected-wilds.webp
 assets/worlds/story/intro/interrupted-wilds.webp
 assets/worlds/story/intro/nix-at-the-threshold.webp
-```
-
-The approved landmark runtime paths are profile-local:
-
-```text
-assets/worlds/<world-id>/scenes/<scene-id>/<profile>/landmark-dormant.webp
-assets/worlds/<world-id>/scenes/<scene-id>/<profile>/landmark-restored.webp
 ```
 
 After promotion, point the intro entries in `content/presentation.json` at

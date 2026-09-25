@@ -150,16 +150,14 @@ renderer measures the board and picks a profile:
 ```text
 assets/worlds/<world-id>/scenes/<scene-id>/
   tall/base.webp  compact/base.webp  wide/base.webp
-  <profile>/landmark-dormant.webp  <profile>/landmark-restored.webp
   variants/<site-id>-c01…c05.webp        # optional remote tier
 assets/worlds/story/intro/  story/units/<unit-id>.webp  story/ending/
 assets/characters/<character-id>/idle.png  animations/<action-id>.webp
 ```
 
-- **Base scenes** — three profiles per unit, local and precached.
-- **Landmark plates** — dormant/restored overlays registered to the same canvas,
-  crossfaded by the unit-completion transition. Only the four Moonroot scenes
-  have them; see [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
+- **Base scenes** — three profiles per unit, local and precached. A board is
+  its base image and nothing else; until it loads, or if it never does, the
+  board shows the world's plain colour, never a drawn pattern.
 - **Remote scene variants** — owner-approved complete-board edits, ten named
   sites × five variants per scene, compact profile only. They stream one at a
   time from the production media origin as an opaque layer beneath the editor,
@@ -169,9 +167,10 @@ assets/characters/<character-id>/idle.png  animations/<action-id>.webp
   finale. Lossless masters sit beside the runtime WebP.
 - **Characters** — an idle still and approved reaction/action animations.
 
-An earlier layer of lesson-phase plates (`phase-a/b/c`), made as local
-brightness and tint proofs, was retired and removed; the board does not change
-as a lesson progresses.
+Earlier overlay plates — lesson-phase plates (`phase-a/b/c`) and dormant and
+restored landmark plates — were local brightness-and-tint proofs. They were
+retired and removed: the board does not change during a lesson, and the payoff
+at the end of a unit is its painting.
 
 Prompt experiments, rejected candidates, and 2K/4K masters never enter
 `assets/`. Scripts and approval metadata live under `scripts/world-art/`;

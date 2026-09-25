@@ -47,20 +47,6 @@
       },
       "description": "World identity and ambient language only. All board imagery is registered on each unit scene."
     },
-    "sceneProfile": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["base", "patches"],
-      "properties": {
-        "base": { "$ref": "#/$defs/asset" },
-        "focalPosition": { "type": "string", "minLength": 1 },
-        "patches": {
-          "type": "object",
-          "propertyNames": { "$ref": "#/$defs/id" },
-          "additionalProperties": { "$ref": "#/$defs/asset" }
-        }
-      }
-    },
     "remoteVariants": {
       "type": "object",
       "additionalProperties": false,
@@ -96,7 +82,7 @@
         }
       }
     },
-    "standaloneSceneProfile": {
+    "sceneProfile": {
       "type": "object",
       "additionalProperties": false,
       "required": ["base"],
@@ -105,7 +91,7 @@
         "focalPosition": { "type": "string", "minLength": 1 }
       }
     },
-    "standaloneScene": {
+    "scene": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "profiles"],
@@ -116,9 +102,9 @@
           "additionalProperties": false,
           "required": ["tall", "compact", "wide"],
           "properties": {
-            "tall": { "$ref": "#/$defs/standaloneSceneProfile" },
-            "compact": { "$ref": "#/$defs/standaloneSceneProfile" },
-            "wide": { "$ref": "#/$defs/standaloneSceneProfile" }
+            "tall": { "$ref": "#/$defs/sceneProfile" },
+            "compact": { "$ref": "#/$defs/sceneProfile" },
+            "wide": { "$ref": "#/$defs/sceneProfile" }
           }
         },
         "remoteVariants": { "$ref": "#/$defs/remoteVariants" }
@@ -132,35 +118,7 @@
         "worldId": { "$ref": "#/$defs/id" },
         "sceneId": { "$ref": "#/$defs/id" },
         "landmarkId": { "$ref": "#/$defs/id" },
-        "scene": { "$ref": "#/$defs/standaloneScene" }
-      }
-    },
-    "scene": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "profiles", "landmarkPatches"],
-      "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "profiles": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["tall", "compact", "wide"],
-          "properties": {
-            "tall": { "$ref": "#/$defs/sceneProfile" },
-            "compact": { "$ref": "#/$defs/sceneProfile" },
-            "wide": { "$ref": "#/$defs/sceneProfile" }
-          }
-        },
-        "remoteVariants": { "$ref": "#/$defs/remoteVariants" },
-        "landmarkPatches": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["dormant", "restored"],
-          "properties": {
-            "dormant": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
-            "restored": { "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] }
-          }
-        }
+        "scene": { "$ref": "#/$defs/scene" }
       }
     },
     "unit": {

@@ -84,23 +84,19 @@ exercises never reach past what they already show.**
   knowledge tracing — progress states are state, not a scheduling algorithm.
 - **"Preview any topic" is the contents dialog and the deep links**, not a named
   affordance. A test asserts that opening an unreached unit records no progress.
-- **Two different things in this repo are called "restoration."** Do not
-  confuse them:
-  - A unit-ending restoration **painting** —
-    `assets/worlds/story/units/<unit>.webp`, generated from a
-    `*-restoration-3x4` candidate set. The full-frame image shown when a unit
-    completes. **All 17 exist and are promoted.**
-  - An in-board **landmark plate** — `landmark-dormant.webp` and
-    `landmark-restored.webp` *inside a scene directory*. Overlays registered to
-    the board that crossfade when a unit completes. **Only the four Arc 1
-    (Moonroot) scenes have them**; the other 13 ship `patches: {}`. See
-    [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
-- **The phase layer is retired and removed.** Moonroot's `phase-a/b/c.webp`
-  were local brightness-and-tint proofs meant to add detail to the board as a
-  lesson progressed. Commit `06471e9` stopped rendering them, and the files,
-  their `patchRegions`/`phasePatches` data, schema, and validation were later
-  deleted. The board does not change as a lesson progresses; ambience comes
-  from remote scene variants. Reviving the idea would need real generated art.
+- **A unit ends with its painting.** Each unit's restoration painting,
+  `assets/worlds/story/units/<unit>.webp` (from a `*-restoration-3x4` candidate
+  set), is the full-frame image shown when it completes; all 17 exist. The
+  finale, `story/ending/restored-wilds.webp`, follows the last unit.
+- **Boards carry no overlay plates.** A board is three base images plus
+  optional remote variants. Two overlay layers were tried and removed, both
+  local brightness-and-tint proofs rather than generated art: lesson-phase
+  plates (`phase-a/b/c`, meant to add detail as a lesson progressed; unrendered
+  since `06471e9`) and dormant/restored landmark plates (meant to crossfade at
+  a unit's end; never shown once every unit had a painting, from `967b951`).
+  Reviving either idea would need real generated art.
+- **The fallback is plain colour.** A board or story surface whose image is
+  missing shows the world's plain `fallbackGradient`, never a drawn pattern.
 
 ### Smaller accepted trade-offs
 

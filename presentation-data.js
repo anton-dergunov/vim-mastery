@@ -74,51 +74,9 @@ export function remoteVariantPaths(config) {
   ));
 }
 
+// A scene is three profile bases plus optional ambient variants. Unit boards and
+// the reference board share this contract.
 function validateScene(scene, path, errors) {
-  if (!object(scene)) {
-    errors.push(`${path} must be a registered scene`);
-    return;
-  }
-  validateId(scene.id, `${path}.id`, errors);
-  if (scene.remoteVariants !== undefined) validateRemoteVariants(scene.remoteVariants, `${path}.remoteVariants`, errors);
-  const profilePatchSets = [];
-  for (const profile of sceneProfiles) {
-    const profileData = scene.profiles?.[profile];
-    const profilePath = `${path}.profiles.${profile}`;
-    if (!object(profileData)) {
-      errors.push(`${profilePath} is required`);
-      continue;
-    }
-    validateAsset(profileData.base, `${profilePath}.base`, errors);
-    if (profileData.focalPosition !== undefined && (typeof profileData.focalPosition !== "string" || !profileData.focalPosition.trim())) {
-      errors.push(`${profilePath}.focalPosition must be a non-empty CSS position`);
-    }
-    if (!object(profileData.patches)) {
-      errors.push(`${profilePath}.patches must be an object`);
-      continue;
-    }
-    const ids = new Set(Object.keys(profileData.patches));
-    profilePatchSets.push(ids);
-    for (const [patchId, asset] of Object.entries(profileData.patches)) {
-      validateId(patchId, `${profilePath}.patches.${patchId}`, errors);
-      validateAsset(asset, `${profilePath}.patches.${patchId}`, errors);
-    }
-  }
-
-  if (scene.landmarkPatches !== undefined) {
-    for (const state of ["dormant", "restored"]) {
-      const patchId = scene.landmarkPatches?.[state];
-      if (patchId !== null && patchId !== undefined && profilePatchSets.some(ids => !ids.has(patchId))) {
-        errors.push(`${path}.landmarkPatches.${state} patch "${patchId}" must exist in every profile`);
-      }
-    }
-  }
-}
-
-// A standalone scene backs a surface that is not a unit: it has profile bases and
-// optional ambient variants, but no registered patches or landmark states, so it
-// gets its own contract rather than an empty copy of a unit scene's.
-function validateStandaloneScene(scene, path, errors) {
   if (!object(scene)) {
     errors.push(`${path} must be a registered scene`);
     return;
@@ -157,7 +115,7 @@ function validateReferenceSurface(surface, worlds, path, errors) {
   if (surface.sceneId && surface.scene?.id !== surface.sceneId) {
     errors.push(`${path}.scene.id must match ${path}.sceneId`);
   }
-  validateStandaloneScene(surface.scene, `${path}.scene`, errors);
+  validateScene(surface.scene, `${path}.scene`, errors);
 }
 
 export function validatePresentationManifest(manifest, { unitCatalog, characterIds } = {}) {
@@ -282,8 +240,8 @@ export function validatePresentationManifest(manifest, { unitCatalog, characterI
 }
 
 // The reference surface reuses the unit board renderer, which expects a unit with
-// a landmark id. Mosslight Landing registers no landmark patches, so the id is a
-// label for the scene's protected anchor and nothing is drawn for it.
+// a landmark id. For Mosslight Landing the id is only a label for the scene's
+// protected anchor; nothing is drawn for it.
 export function resolveReferencePresentation(manifest) {
   const surface = manifest?.reference;
   const world = surface && manifest?.worlds?.[surface.worldId];

@@ -2,13 +2,13 @@
 """Convert a Veo character clip into an aligned transparent animated WebP.
 
 Veo currently returns an opaque MP4.  This tool is deliberately designed for
-the locked, plain background used by ``generate_nix_veo_lite.py``: it learns
+the locked, plain background the character video prompts request: it learns
 that background from every video border, creates a soft foreground matte, and
 places the moving character on the same square canvas as an existing in-game
 sprite.  It never crops a foreground pixel to make the animation fit.
 
 Example:
-    python scripts/convert_veo_animation.py scripts/nix_happy_veo_lite.mp4 \
+    python scripts/convert_veo_animation.py clip.mp4 \
       --anchor assets/nix.png --output assets/nix-success.webp
 
 The normal path is entirely local and uses ffmpeg plus img2webp.  BiRefNet is

@@ -189,17 +189,12 @@ test("the reference surface registers the Mosslight Landing board", () => {
       /^assets\/worlds\/moonroot-ruins\/scenes\/mosslight-landing\/[a-z]+\/base\.webp$/,
     );
   }
-  // The board is not a unit: it registers no landmark states, and the
-  // standalone schema is what says so.
+  // The reference board is a scene like any unit's: bases and ambient variants.
   assert.deepEqual(
     Object.keys(surface.scene).sort(),
     ["id", "profiles", "remoteVariants"],
   );
   assert.equal(remoteVariantPaths(surface.scene.remoteVariants).length, 50);
-  assert.equal(
-    presentationSchema.$defs.standaloneScene.required.includes("landmarkPatches"),
-    false,
-  );
 });
 
 test("reaction manifest preserves the four-second idle-ramp contract", () => {
@@ -290,13 +285,8 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
         resolved.scene.profiles[profile].base,
         new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${baseProfile}/base\\.webp$`),
       );
-      assert.deepEqual(Object.keys(resolved.scene.profiles[profile].patches), ["landmark-dormant", "landmark-restored"]);
-      for (const patchId of ["landmark-dormant", "landmark-restored"]) {
-        assert.match(
-          resolved.scene.profiles[profile].patches[patchId],
-          new RegExp(`/${profile}/${patchId}\\.webp$`),
-        );
-      }
+      // A board is its base image and nothing more; no overlay plates.
+      assert.deepEqual(Object.keys(resolved.scene.profiles[profile]).filter(key => key !== "focalPosition"), ["base"]);
     }
   }
   assert.equal(presentation.worlds["moonroot-ruins"].props, undefined);

@@ -68,9 +68,6 @@ export class StoryTransitions {
       action: root.querySelector(".story-action-copy"),
       hook: root.querySelector(".story-next-hook"),
       boardBase: root.querySelector(".story-board-base"),
-      dormantLandmark: root.querySelector(".story-landmark-dormant"),
-      restoredLandmark: root.querySelector(".story-landmark-restored"),
-      lightPath: root.querySelector(".story-light-path"),
       skip: root.querySelector('[data-story-action="skip"]'),
       continue: root.querySelector('[data-story-action="continue"]'),
     };
@@ -83,7 +80,6 @@ export class StoryTransitions {
       event.preventDefault();
       this.finish();
     };
-    this.choreographyTimer = null;
     this.typingTimer = null;
     this.writingFinishTimer = null;
     this.panoramaCrossfadeTimer = null;
@@ -357,26 +353,15 @@ export class StoryTransitions {
     this.elements.visual.style.removeProperty("--story-asset");
     this.elements.visual.style.removeProperty("--story-panorama-delay");
     this.elements.visual.style.removeProperty("--story-panorama-duration");
-    this.elements.surface.dataset.restoration = "idle";
-    this.elements.lightPath?.classList.remove("has-light-path");
-    for (const element of [
-      this.elements.boardBase,
-      this.elements.dormantLandmark,
-      this.elements.restoredLandmark,
-      this.elements.lightPath,
-    ]) {
-      element?.style.removeProperty("--story-layer-asset");
-      element?.removeAttribute("data-asset");
-    }
+    this.elements.boardBase?.style.removeProperty("--story-layer-asset");
+    this.elements.boardBase?.removeAttribute("data-asset");
     this.elements.visual.querySelectorAll(".story-panorama-crossfade").forEach(element => element.remove());
   }
 
   clearChoreography() {
-    if (this.choreographyTimer) window.clearTimeout(this.choreographyTimer);
     if (this.typingTimer) window.clearTimeout(this.typingTimer);
     if (this.writingFinishTimer) window.clearTimeout(this.writingFinishTimer);
     if (this.panoramaCrossfadeTimer) window.clearTimeout(this.panoramaCrossfadeTimer);
-    this.choreographyTimer = null;
     this.typingTimer = null;
     this.writingFinishTimer = null;
     this.panoramaCrossfadeTimer = null;
@@ -443,26 +428,11 @@ export class StoryTransitions {
     const boardProfile = boardProfileForBounds(this.elements.visual.getBoundingClientRect());
     const profile = sceneProfileForBoard(boardProfile);
     const profileData = scene?.profiles?.[profile];
-    const patches = profileData?.patches || {};
-    const dormant = scene?.landmarkPatches?.dormant ? patches[scene.landmarkPatches.dormant] : null;
-    const restored = scene?.landmarkPatches?.restored ? patches[scene.landmarkPatches.restored] : null;
 
     this.elements.surface.dataset.storyProfile = profile;
     this.elements.visual.dataset.storyProfile = profile;
     this.elements.surface.dataset.registeredScene = String(Boolean(profileData?.base));
     this.setLayerAsset(this.elements.boardBase, profileData?.base || unitPresentation?.completion?.storyBackdrop || null);
-    this.setLayerAsset(this.elements.dormantLandmark, dormant);
-    this.setLayerAsset(this.elements.restoredLandmark, restored);
-    this.elements.lightPath?.classList.toggle("has-light-path", Boolean(restored));
-    this.elements.surface.dataset.restoration = "dormant";
-    this.clearChoreography();
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      this.choreographyTimer = window.setTimeout(() => {
-        if (this.active?.kind === "unit") this.elements.surface.dataset.restoration = "restored";
-      }, 420);
-    } else {
-      this.elements.surface.dataset.restoration = "restored";
-    }
   }
 
   renderIntro() {
@@ -527,7 +497,6 @@ export class StoryTransitions {
       if (this.active.reviewAsset) this.elements.visual.dataset.reviewStoryAsset = storyAsset;
       this.elements.visual.style.setProperty("--story-asset", `url("${this.assetUrl(storyAsset)}")`);
       this.elements.visual.classList.add("has-story-art", "story-unit-ending");
-      this.elements.surface.dataset.restoration = "restored";
     } else {
       this.renderUnitArt();
     }

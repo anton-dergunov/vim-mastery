@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare reviewed Moonroot scene profiles and exact-registration proof patches."""
+"""Prepare the three Moonroot board profiles from each approved scene source."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -25,14 +25,6 @@ UNIT_SCENES = {
     "entering-changing-text": "scribes-spring",
     "operator-grammar": "grammar-gate-court",
 }
-LANDMARK_REGIONS = {
-    "mode-lantern-grounds": (0.06, 0.38, 0.38, 0.98),
-    "wayfinder-crossroads": (0.28, 0.48, 0.72, 1.0),
-    "scribes-spring": (0.18, 0.5, 0.82, 1.0),
-    "grammar-gate-court": (0.27, 0.28, 0.73, 0.9),
-}
-
-
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as source:
@@ -83,59 +75,6 @@ def cover_resize(source: Image.Image, size: tuple[int, int]) -> Image.Image:
     return resized.crop((left, top, left + target_width, top + target_height)).convert("RGB")
 
 
-def pixel_box(bounds: dict[str, float] | tuple[float, float, float, float], size: tuple[int, int]) -> tuple[int, int, int, int]:
-    if isinstance(bounds, dict):
-        left, top = bounds["x"], bounds["y"]
-        right, bottom = left + bounds["width"], top + bounds["height"]
-    else:
-        left, top, right, bottom = bounds
-    width, height = size
-    return (
-        round(left * width),
-        round(top * height),
-        round(right * width),
-        round(bottom * height),
-    )
-
-
-def feathered_patch(base: Image.Image, box: tuple[int, int, int, int], variant: str) -> Image.Image:
-    crop = base.crop(box)
-    if variant == "landmark-dormant":
-        changed = ImageEnhance.Color(ImageEnhance.Brightness(crop).enhance(0.72)).enhance(0.72)
-        opacity = 174
-    elif variant == "landmark-restored":
-        changed = ImageEnhance.Color(ImageEnhance.Brightness(crop).enhance(1.22)).enhance(1.2)
-        tint = Image.new("RGB", crop.size, "#ffd47d")
-        changed = Image.blend(changed, tint, 0.065)
-        opacity = 196
-    else:
-        raise ValueError(variant)
-
-    margin = max(5, round(min(crop.size) * 0.055))
-    alpha = Image.new("L", crop.size, 0)
-    core = Image.new("L", (max(1, crop.width - margin * 2), max(1, crop.height - margin * 2)), opacity)
-    alpha.paste(core, (margin, margin))
-    alpha = alpha.filter(ImageFilter.GaussianBlur(radius=max(3, margin // 2)))
-    canvas = Image.new("RGBA", base.size, (0, 0, 0, 0))
-    canvas.paste(changed.convert("RGBA"), box[:2], alpha)
-    return canvas
-
-
-def assert_registered(patch: Image.Image, base: Image.Image, allowed_box: tuple[int, int, int, int], label: str) -> None:
-    if patch.size != base.size:
-        raise RuntimeError(f"{label}: patch and base dimensions differ")
-    alpha_box = patch.getchannel("A").getbbox()
-    if not alpha_box:
-        raise RuntimeError(f"{label}: patch contains no changed pixels")
-    if (
-        alpha_box[0] < allowed_box[0]
-        or alpha_box[1] < allowed_box[1]
-        or alpha_box[2] > allowed_box[2]
-        or alpha_box[3] > allowed_box[3]
-    ):
-        raise RuntimeError(f"{label}: changed pixels escape the declared patch region")
-
-
 def main() -> int:
     approval_data = json.loads(APPROVALS.read_text())
     approvals = {item["unitId"]: item for item in approval_data["approvals"]}
@@ -158,12 +97,6 @@ def main() -> int:
                 "sha256": sha256(base_path),
                 "dimensions": list(base.size),
             })
-
-            landmark_box = pixel_box(LANDMARK_REGIONS[scene_id], base.size)
-            for state in ("landmark-dormant", "landmark-restored"):
-                patch = feathered_patch(base, landmark_box, state)
-                assert_registered(patch, base, landmark_box, f"{unit_id}/{profile}/{state}")
-                patch.save(output / f"{state}.webp", "WEBP", lossless=True, method=6)
 
     ledger_path = OUTPUT_ROOT / "source-ledger.json"
     ledger_path.write_text(json.dumps(ledger, indent=2) + "\n")

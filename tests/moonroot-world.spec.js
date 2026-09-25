@@ -42,7 +42,8 @@ test("renders every unit with its registered scene", async ({ page }) => {
   ]) {
     await page.setViewportSize(viewport);
     await expect(moonroot).toHaveAttribute("data-board-profile", /^(tall|compact|wide|shallow)$/);
-    expect(await page.evaluate(() => (
+    // The app sizes itself on the animation frame after a resize, so poll.
+    await expect.poll(() => page.evaluate(() => (
       document.documentElement.scrollWidth <= window.innerWidth
       && document.documentElement.scrollHeight <= window.innerHeight
     ))).toBe(true);

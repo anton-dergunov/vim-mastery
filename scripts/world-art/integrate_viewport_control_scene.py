@@ -71,7 +71,7 @@ def scene_definition() -> dict:
     return {
         "id": SCENE_ID,
         "profiles": {
-            profile: {"base": f"{root}/{profile}/base.webp", "focalPosition": "50% 50%", "patches": {}}
+            profile: {"base": f"{root}/{profile}/base.webp", "focalPosition": "50% 50%"}
             for profile in ("tall", "compact", "wide")
         },
         "remoteVariants": {
@@ -89,7 +89,6 @@ def scene_definition() -> dict:
             "mode": "transparent-patch",
             "assetRoot": f"{root}/variants",
         },
-        "landmarkPatches": {"dormant": None, "restored": None},
     }
 
 

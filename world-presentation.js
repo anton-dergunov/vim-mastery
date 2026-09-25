@@ -19,11 +19,6 @@ export function sceneProfileForBoard(profile) {
   return SCENE_PROFILES.includes(profile) ? profile : "compact";
 }
 
-// Temporary aliases keep external experiments readable while the repository
-// moves from the old shape vocabulary to registered scene profiles.
-export const boardShapeForBounds = boardProfileForBounds;
-export const backdropShapeForBoard = sceneProfileForBoard;
-
 function setAsset(element, asset, assetUrl) {
   if (!asset) {
     element.style.removeProperty("--world-asset");

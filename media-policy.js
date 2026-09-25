@@ -50,9 +50,6 @@ export function collectMediaPolicy(presentation, characterManifest) {
     const scene = unit.sceneId ? unit.scenes?.[unit.sceneId] : null;
     for (const profile of Object.values(scene?.profiles || {})) {
       addAsset(core, profile.base, "world-base");
-      for (const asset of Object.values(profile.patches || {})) {
-        addAsset(core, asset, "registered-patch");
-      }
     }
 
     const variants = scene?.remoteVariants;
