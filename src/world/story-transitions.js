@@ -1,7 +1,7 @@
 import { boardProfileForBounds, sceneProfileForBoard } from "./presentation.js";
 
-export const STORY_STORAGE_KEY = "vim-wilds.story.v1";
-export const STORY_TRANSITION_KEY = "vim-wilds.story-transition.v1";
+const STORY_STORAGE_KEY = "vim-wilds.story.v1";
+const STORY_TRANSITION_KEY = "vim-wilds.story-transition.v1";
 
 const INTRO_PANORAMA_DURATION_MS = 60_000;
 const FINALE_PANORAMA_DURATION_MS = 24_000;
@@ -111,15 +111,6 @@ export class StoryTransitions {
     const transition = readJson(this.transitionStorage, STORY_TRANSITION_KEY, null);
     if (this.restore(transition)) return;
     if (!this.state.introSeen && this.shouldShowIntro) this.showIntro();
-  }
-
-  stop() {
-    this.root.removeEventListener("click", this.handleClick);
-    this.root.removeEventListener("cancel", this.handleCancel);
-    window.removeEventListener("resize", this.handleResize);
-    window.removeEventListener("orientationchange", this.handleResize);
-    cancelAnimationFrame(this.layoutFrame);
-    this.clearChoreography();
   }
 
   restore(transition) {

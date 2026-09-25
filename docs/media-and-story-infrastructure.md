@@ -39,8 +39,8 @@ Vite development tries the local asset first. The service-worker cache name
 contains a digest of every precached file, so changing an image at a stable
 path creates a new cache even when the app version is unchanged.
 
-Character reactions can be declared as a path or as `{ "still": path }` under a
-character's `reactions` in the manifest. Motion lives under `animations`, and
+Each character's `reactions` in the manifest maps a state to one variant or a
+list of variants, each `{ "src": path, … }`. Motion lives under `animations`, and
 both stay optional.
 
 ## Repeatable normalization

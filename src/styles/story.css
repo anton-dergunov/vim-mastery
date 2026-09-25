@@ -1,0 +1,578 @@
+/* The story surface: intro panels, unit endings, the finale, and the writing pen. */
+
+.story-settings,
+.app-version-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid rgba(193, 220, 206, .18);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+
+.story-settings p {
+  margin: 6px 0 0;
+  color: #adc1b6;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.story-settings .note-action {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.story-dialog[open] {
+  position: fixed;
+  z-index: 100;
+  inset: max(10px, env(safe-area-inset-top)) auto max(10px, env(safe-area-inset-bottom)) 50%;
+  width: min(calc(100% - 20px), 430px);
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(194, 225, 209, .34);
+  border-radius: 18px;
+  color: #e5eee9;
+  background: #081411;
+  box-shadow: 0 28px 90px rgba(0,0,0,.82), 0 0 42px rgba(95, 218, 183, .12);
+  transform: translateX(-50%);
+}
+
+.story-dialog::backdrop {
+  background: rgba(1, 7, 6, .9);
+  backdrop-filter: blur(10px);
+}
+
+.story-surface {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.story-visual {
+  position: relative;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(193, 220, 206, .18);
+  background:
+    radial-gradient(circle at 76% 32%, rgba(255, 201, 102, .55) 0 2px, transparent 3px),
+    radial-gradient(circle at 21% 28%, rgba(104, 222, 218, .42) 0 2px, transparent 3px),
+    linear-gradient(155deg, #142d2a, #0b1b23 55%, #15152b);
+  isolation: isolate;
+}
+
+.story-visual.has-story-art {
+  background-image:
+    linear-gradient(to bottom, transparent 60%, rgba(4, 10, 12, .28)),
+    var(--story-asset),
+    linear-gradient(155deg, #142d2a, #0b1b23 55%, #15152b);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* The wide story worlds are viewed as camera journeys, not decorative
+   backgrounds. The enlarged source lets a narrow screen visit the whole route
+   instead of permanently cropping the centre. */
+
+.story-visual.has-story-art.story-panorama {
+  background-size: 100% 100%, auto 94%, 100% 100%;
+  background-position: center, 0% center, center;
+  animation: story-panorama-camera-track var(--story-panorama-duration, 60s) linear 1 forwards;
+  animation-delay: var(--story-panorama-delay, 0ms);
+  animation-fill-mode: both;
+}
+
+.story-visual.has-story-art.story-panorama.story-panorama-reverse {
+  background-position: center, 100% center, center;
+  animation-name: story-panorama-camera-track-reverse;
+}
+
+.story-panorama-crossfade {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  opacity: 1;
+  background-image: var(--story-crossfade-asset);
+  background-position: 0% center;
+  background-size: auto 94%;
+  background-repeat: no-repeat;
+  animation: story-panorama-crossfade-track var(--story-panorama-duration, 60s) linear 1 both;
+  animation-delay: var(--story-panorama-delay, 0ms);
+  transition: opacity 1400ms ease-in-out;
+}
+
+.story-panorama-crossfade.is-leaving { opacity: 0; }
+
+.story-visual.has-story-art .story-placeholder-landscape {
+  display: none;
+}
+
+.story-board-base {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: var(--story-layer-asset, none);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.story-surface[data-registered-scene="true"] .story-placeholder-landscape { display: none; }
+
+.story-placeholder-landscape {
+  position: absolute;
+  inset: 0;
+  opacity: .8;
+  background:
+    linear-gradient(165deg, transparent 0 57%, rgba(5, 13, 14, .75) 57%),
+    radial-gradient(ellipse at 50% 82%, rgba(46, 119, 99, .35), transparent 58%);
+}
+
+.story-placeholder-landscape::before {
+  content: "";
+  position: absolute;
+  inset: 25% 10% 20%;
+  border: 1px solid rgba(116, 225, 204, .2);
+  border-width: 1px 0;
+  transform: skewY(-5deg);
+  box-shadow: 0 0 24px rgba(92, 213, 190, .12);
+}
+
+.story-placeholder-landscape i {
+  position: absolute;
+  bottom: 20%;
+  width: clamp(20px, 7vw, 34px);
+  height: clamp(28px, 10vw, 48px);
+  border: 1px solid rgba(255, 208, 114, .46);
+  border-radius: 50% 50% 24% 24%;
+  background: linear-gradient(rgba(255, 203, 104, .17), rgba(20, 55, 49, .6));
+  box-shadow: 0 0 14px rgba(255, 197, 87, .13);
+}
+
+.story-placeholder-landscape i:nth-child(1) { left: 12%; }
+.story-placeholder-landscape i:nth-child(2) { left: 35%; bottom: 30%; }
+.story-placeholder-landscape i:nth-child(3) { right: 34%; bottom: 27%; }
+.story-placeholder-landscape i:nth-child(4) { right: 11%; }
+
+.story-surface[data-kind="unit"] .story-visual:not(.has-story-art) {
+  background:
+    radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--theme-warm) 34%, transparent), transparent 24%),
+    var(--world-fallback, linear-gradient(155deg, #102a24, #11192a));
+}
+
+.story-surface[data-world-id="starwater-sanctuary"] .story-visual {
+  --world-fallback: linear-gradient(155deg, #07151d, #123f4e 58%, #1d5262);
+}
+
+.story-surface[data-world-id="archive-of-echoes"] .story-visual {
+  --world-fallback: linear-gradient(155deg, #0b1722, #17394c 56%, #234f68);
+}
+
+.story-surface[data-world-id="brass-meridian"] .story-visual {
+  --world-fallback: linear-gradient(155deg, #20120e, #4b281c 56%, #683420);
+}
+
+.story-content {
+  min-height: 0;
+  padding: clamp(18px, 4.8vw, 25px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Final story art always occupies the whole portrait game frame. Narrative
+   copy begins around the first quarter and is written directly over the art. */
+.story-dialog:has(.story-visual.has-story-art)[open] {
+  width: min(calc(100% - 20px), 560px);
+  height: calc(100dvh - max(20px, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+}
+
+.story-surface:has(.story-visual.has-story-art) {
+  position: relative;
+  display: block;
+}
+
+.story-surface .story-visual.has-story-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+}
+
+.story-surface .story-visual.has-story-art:not(.story-panorama) {
+  background-position: center;
+  background-size: 100% 100%, auto 94%, 100% 100%;
+}
+
+.story-surface:has(.story-visual.has-story-art) .story-content {
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  height: 100%;
+  padding: clamp(18px, 5vw, 30px);
+  padding-top: clamp(96px, 14dvh, 145px);
+  overflow: hidden;
+  background:
+    linear-gradient(to bottom, rgba(3, 10, 12, .35) 0%, rgba(3, 10, 12, .82) 17%, rgba(3, 10, 12, .7) 43%, transparent 64%),
+    linear-gradient(to top, rgba(3, 9, 10, .86) 0%, transparent 25%);
+  text-shadow: 0 2px 5px rgba(0, 0, 0, .92);
+}
+
+.story-surface:has(.story-visual.has-story-art) .story-heading {
+  display: none;
+}
+
+.story-surface:has(.story-visual.has-story-art) .story-title {
+  max-width: 28ch;
+  margin-top: 0;
+  font-size: clamp(25px, 6.8vw, 32px);
+  line-height: 1.14;
+  color: #f6daa0;
+}
+
+.story-surface[data-kind="intro"]:has(.story-visual.has-story-art) .story-title,
+.story-surface[data-kind="ending"]:has(.story-visual.has-story-art) .story-title {
+  font-size: clamp(30px, 8.4vw, 38px);
+}
+
+.story-surface:has(.story-visual.has-story-art) .story-speaker {
+  margin: 12px 0 0;
+}
+
+.story-surface:has(.story-visual.has-story-art) .story-copy {
+  max-width: 30ch;
+  margin-top: clamp(18px, 2.4dvh, 26px);
+  color: #fff8e7;
+  font-size: clamp(23px, 6.2vw, 31px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.story-surface[data-kind="unit"]:has(.story-unit-ending) .story-action-copy,
+.story-surface[data-kind="unit"]:has(.story-unit-ending) .story-next-hook {
+  display: none;
+}
+
+.story-pen-anchor {
+  position: relative;
+  display: inline;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.story-pen-anchor::after {
+  content: "";
+  position: absolute;
+  left: -.08em;
+  bottom: -.45em;
+  display: block;
+  width: clamp(38px, 10vw, 54px);
+  aspect-ratio: 546 / 534;
+  background-image: var(--story-pen-asset);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .72));
+  transform-origin: 12% 86%;
+}
+
+.story-pen-anchor.is-writing::after {
+  animation: story-pen-writing 760ms ease-in-out infinite;
+}
+
+.story-pen-anchor.is-writing-finished::after {
+  animation: story-pen-finish 900ms ease-out forwards;
+}
+
+.story-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.story-kicker,
+.story-progress {
+  color: #d7b969;
+  font: 800 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.story-progress {
+  color: #87aaa0;
+  letter-spacing: .04em;
+  text-align: right;
+}
+
+.story-title {
+  margin: 10px 0 0;
+  color: #fff7df;
+  font: 700 clamp(23px, 6.5vw, 30px)/1.12 Georgia, serif;
+}
+
+.story-speaker {
+  margin: 13px 0 0;
+  color: #79d9c3;
+  font: 850 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.story-copy {
+  margin: clamp(18px, 2.4dvh, 26px) 0 0;
+  color: #e0ebe5;
+  font: 500 clamp(16px, 4.4vw, 19px)/1.52 Georgia, serif;
+}
+
+.story-action-copy {
+  margin: 13px 0 0;
+  color: #93aaa0;
+  font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.story-next-hook {
+  margin: 14px 0 0;
+  color: #f1ce79;
+  font: italic 600 14px/1.4 Georgia, serif;
+}
+
+.story-actions {
+  margin-top: auto;
+  padding-top: 20px;
+  display: grid;
+  /* The leading column is the report control; the other two are Skip and
+     Continue, whose relative sizing is unchanged. */
+  grid-template-columns: auto minmax(100px, auto) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.story-actions .dialog-report {
+  width: 46px;
+  height: auto;
+  flex: none;
+  border-radius: 9px;
+}
+
+.story-actions button {
+  min-height: 46px;
+  padding: 10px 13px;
+  border-radius: 9px;
+  font: 800 13px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.story-skip {
+  border: 1px solid rgba(193, 220, 206, .25);
+  color: #c5d3cb;
+  background: rgba(255,255,255,.035);
+}
+
+.story-continue {
+  border: 1px solid rgba(255, 230, 163, .58);
+  color: #362817;
+  background: linear-gradient(#ffe59a, #d5a955);
+  box-shadow: 0 2px 0 #715222;
+}
+
+.toc-story-archive {
+  margin-bottom: 16px;
+  padding: 13px;
+  border: 1px solid rgba(193, 220, 206, .2);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+
+.toc-story-archive h3 {
+  margin: 0;
+  color: #f2d17d;
+  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.toc-story-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toc-story-actions button {
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 1px solid rgba(193, 220, 206, .25);
+  border-radius: 8px;
+  color: #dce9e2;
+  background: rgba(255,255,255,.04);
+  font: 750 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.story-review-index p {
+  margin: 8px 0 0;
+  color: #a9beb3;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.story-review-unit {
+  margin-bottom: 10px;
+}
+
+.story-review-links {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.story-review-links a {
+  min-height: 38px;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(193, 220, 206, .25);
+  border-radius: 8px;
+  color: #e4eee8;
+  background: rgba(255,255,255,.045);
+  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-decoration: none;
+}
+
+.story-review-links a:hover,
+.story-review-links a:focus-visible {
+  border-color: rgba(255, 225, 145, .62);
+  color: #fff1bd;
+  background: rgba(255, 213, 112, .1);
+}
+@media (min-width: 600px) {
+  .story-dialog[open],
+  .story-dialog:has(.story-visual.has-story-art)[open] {
+    width: min(calc(100% - 48px), 920px);
+  }
+}
+
+@media (min-width: 600px) and (min-aspect-ratio: 5 / 4) {
+  .story-dialog[open] {
+    width: min(calc(100% - 48px), 920px);
+  }
+
+  .story-surface {
+    grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .story-visual {
+    height: 100%;
+    aspect-ratio: auto;
+    border-right: 1px solid rgba(193, 220, 206, .18);
+    border-bottom: 0;
+  }
+
+  .story-copy {
+    font-size: clamp(17px, 2.1vw, 21px);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .story-dialog[open] {
+    inset: max(6px, env(safe-area-inset-top)) auto max(6px, env(safe-area-inset-bottom)) 50%;
+    width: min(calc(100% - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)), 920px);
+  }
+
+  .story-content {
+    padding: 14px 16px;
+  }
+
+  .story-surface:has(.story-visual.has-story-art) .story-content {
+    padding: 14px 18px;
+    padding-top: clamp(74px, 21dvh, 105px);
+  }
+
+  .story-title {
+    margin-top: 6px;
+    font-size: clamp(19px, 3.8vw, 25px);
+  }
+
+  .story-copy {
+    margin-top: 9px;
+    font-size: clamp(14px, 2.25vw, 17px);
+    line-height: 1.38;
+  }
+
+  .story-surface:has(.story-visual.has-story-art) .story-copy {
+    max-width: 34ch;
+    margin-top: 9px;
+    font-size: clamp(18px, 3.2vw, 23px);
+    line-height: 1.3;
+  }
+
+  .story-surface:has(.story-visual.has-story-art) .story-title {
+    font-size: clamp(16px, 2.7vw, 20px);
+  }
+
+  .story-action-copy {
+    display: none;
+  }
+
+  .story-next-hook {
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  .story-actions {
+    padding-top: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-dialog,
+  .story-dialog::backdrop,
+  .story-visual,
+  .story-visual *,
+  .story-content * {
+    scroll-behavior: auto;
+    animation: none !important;
+    transition-duration: 0s !important;
+  }
+}
+
+@keyframes story-panorama-camera-track {
+  0% { background-position: center, 0% center, center; }
+  100% { background-position: center, 100% center, center; }
+}
+
+@keyframes story-panorama-camera-track-reverse {
+  0% { background-position: center, 100% center, center; }
+  100% { background-position: center, 0% center, center; }
+}
+
+@keyframes story-panorama-crossfade-track {
+  0% { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
+
+@keyframes story-pen-writing {
+  0%, 100% { transform: translate3d(-.09em, .01em, 0) rotate(-7deg); }
+  30% { transform: translate3d(.15em, -.12em, 0) rotate(7deg); }
+  58% { transform: translate3d(-.05em, .04em, 0) rotate(-4deg); }
+  82% { transform: translate3d(.12em, -.06em, 0) rotate(5deg); }
+}
+
+@keyframes story-pen-finish {
+  0% { opacity: 1; transform: translate3d(0, 0, 0) rotate(-2deg); }
+  42% { opacity: 1; transform: translate3d(.42em, -.35em, 0) rotate(8deg); }
+  100% { opacity: 0; transform: translate3d(.85em, -.85em, 0) rotate(13deg); }
+}

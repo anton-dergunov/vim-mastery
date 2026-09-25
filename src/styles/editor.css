@@ -1,0 +1,576 @@
+/* The code slab: CodeMirror, cursor and selection, Vim effects, Ex output, and the position rail. */
+
+.code-slab {
+  position: relative;
+  z-index: 7;
+  align-self: center;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(185, 225, 204, .27);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.045), transparent 32%),
+    rgba(4, 13, 12, .92);
+  box-shadow: 0 8px 16px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.025), 0 0 18px color-mix(in srgb, var(--theme-magic) 11%, transparent);
+  backdrop-filter: blur(5px);
+}
+.code-slab.side-left,
+.code-slab.side-right {
+  grid-column: 1 / 13;
+  grid-row: 2 / 8;
+  align-self: stretch;
+  margin: 5px 17px 1px;
+}
+.code-slab::before,
+.code-slab::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(255, 210, 119, .35);
+}
+.code-slab::before { left: 4px; top: 4px; border-right: 0; border-bottom: 0; }
+.code-slab::after { right: 4px; bottom: 4px; border-left: 0; border-top: 0; }
+.code-body {
+  min-height: 0;
+  flex: 1;
+  padding: 5px 4px 7px;
+  overflow: hidden;
+}
+.code-body > div,
+.code-body .cm-editor {
+  height: 100%;
+  min-height: 0;
+}
+.code-body .cm-editor {
+  color: #d8e4dc;
+  background: transparent;
+  outline: 0;
+}
+.code-body .cm-scroller {
+  overflow: auto;
+  font: 650 clamp(15px, 4vw, 17px)/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.code-body .cm-content {
+  min-height: 100%;
+  padding: 5px 8px 9px 3px;
+  caret-color: transparent;
+}
+.code-body .cm-line {
+  padding: 0 0 0 7px;
+}
+.code-body .cm-gutters {
+  min-height: 100%;
+  border: 0;
+  color: #435e52;
+  background: transparent;
+}
+.code-body .cm-lineNumbers .cm-gutterElement {
+  min-width: 20px;
+  padding: 0 5px 0 4px;
+}
+.code-body .cm-vimMode .cm-cursor,
+.code-body .cm-cursorLayer .cm-cursor {
+  border-left: 2px solid #f7d878;
+  filter: drop-shadow(0 0 3px rgba(255, 205, 99, .72));
+}
+.code-body .cm-fat-cursor {
+  color: #192019;
+  background: #f7d878;
+  outline: 1px solid rgba(255, 232, 159, .75);
+  box-shadow: 0 0 7px rgba(255, 205, 99, .7);
+  animation: cursorBlink .9s steps(1) infinite;
+}
+.code-body .cm-selectionBackground,
+.code-body .cm-focused .cm-selectionBackground {
+  background: rgba(150, 102, 225, .55) !important;
+  box-shadow: 0 0 7px rgba(177, 132, 255, .25);
+}
+
+/* Vim's message screen: `:print` paints over the buffer and waits for a key.
+   Reproducing that, rather than reserving a listing pane beside the code slab,
+   is what keeps an Ex dry run at zero code rows — the element is out of flow
+   and hidden by visibility, so the closed layout is the layout without it.
+   Deliberately not the help card's parchment: this is Vim's own voice, not the
+   course's. */
+
+.ex-output {
+  position: absolute;
+  z-index: 19;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  color: #d6f0e0;
+  /* Opaque, because Vim's message screen replaces what is under it rather than
+     tinting it. An exercise whose own last keystroke prints completes while the
+     listing is up, and at 94% the completion panel ghosted through the rows it
+     was covering. */
+  background: rgb(4, 12, 10);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .16s, visibility .16s;
+}
+.ex-output.open { opacity: 1; visibility: visible; }
+.ex-output-lines {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ex-output-line {
+  display: flex;
+  gap: 8px;
+  font: 500 14px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* A long buffer line scrolls inside its own row rather than widening the
+     document. */
+  overflow-x: auto;
+  white-space: pre;
+}
+.ex-output-line b {
+  flex: none;
+  color: color-mix(in srgb, var(--theme-bright) 60%, #7d9389);
+  font-weight: 500;
+  text-align: right;
+}
+.ex-output-dismiss {
+  flex: none;
+  margin: 0;
+  color: color-mix(in srgb, var(--theme-bright) 78%, #cfe3d6);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em;
+}
+
+@media (max-height: 720px) {
+  .code-slab.side-left,
+  .code-slab.side-right { grid-row: 1 / 8; margin-top: 10px; }
+  .code-body { padding-top: 5px; padding-bottom: 6px; }
+}
+
+/* Vim's own buffer report. The label yields the row so the message never has
+   to ellipsize at 360px. */
+.impact-readout {
+  color: color-mix(in srgb, var(--theme-bright) 78%, #cfe3d6);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.editor-stack {
+  position: relative;
+  z-index: 7;
+  grid-column: 1 / 13;
+  grid-row: 1 / 9;
+  align-self: start;
+  min-width: 0;
+  margin: 10px 13px 0;
+  display: grid;
+  gap: 8px;
+}
+
+.next-code-slab {
+  width: 100%;
+  height: max(132px, var(--editor-height));
+  align-self: start;
+}
+
+.editor-stack.has-viewport .next-code-slab { position: relative; }
+.editor-stack.has-viewport .code-body .cm-scroller {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  touch-action: none;
+  scrollbar-width: none;
+}
+.editor-stack.has-viewport .code-body .cm-scroller::-webkit-scrollbar { display: none; }
+.editor-stack.has-viewport .code-body .cm-content { padding-top: 0; padding-bottom: 0; }
+.buffer-position {
+  position: absolute;
+  z-index: 10;
+  top: 7px;
+  right: 3px;
+  bottom: 7px;
+  width: 8px;
+  display: grid;
+  grid-template-rows: 10px minmax(0, 1fr) 10px;
+  justify-items: center;
+  pointer-events: none;
+  opacity: .82;
+}
+.buffer-track {
+  position: relative;
+  width: 3px;
+  height: 100%;
+  border-radius: 3px;
+  background: rgba(137, 174, 156, .13);
+}
+/* The thumb is the window itself: a lit band the match ticks are read
+   against, so a tick sitting on the band is a match that is on screen. */
+.buffer-track i {
+  position: absolute;
+  left: -2px;
+  width: 7px;
+  min-height: 14px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--theme-bright) 26%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--theme-bright) 52%, transparent);
+}
+/* The match map. Ticks share the thumb's line-proportional mapping, so a tick
+   inside the thumb is a match that is currently on screen. */
+.match-tick {
+  position: absolute;
+  left: -1px;
+  z-index: 1;
+  width: 5px;
+  min-height: 2px;
+  max-height: 4px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--theme-warm) 82%, #ffd98a);
+  box-shadow: 0 0 3px color-mix(in srgb, var(--theme-warm) 45%, transparent);
+}
+
+.buffer-cue {
+  color: color-mix(in srgb, var(--theme-warm) 76%, #7f9187);
+  font: 700 7px/10px ui-monospace, monospace;
+  opacity: 0;
+  transition: opacity .12s;
+}
+.buffer-position.has-above .buffer-cue-top,
+.buffer-position.has-below .buffer-cue-bottom { opacity: .85; }
+
+/* The buffer's file name, where Vim keeps it: along the bottom of the window,
+   read left to right. Absolutely positioned like `.buffer-position`, so it
+   spends no code row; the slab buys it a 14px strip through `--editor-height`
+   instead. It clears the decorative corner bracket at `right: 4px` and stops
+   short of the position rail's 11px right gutter. */
+.buffer-name {
+  position: absolute;
+  z-index: 10;
+  left: 8px;
+  right: 18px;
+  bottom: 2px;
+  overflow: hidden;
+  color: color-mix(in srgb, var(--theme-warm) 62%, #8fa197);
+  font: 600 10px/12px ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.next-code-slab .code-body { padding: 8px 5px; }
+.code-body .cm-scroller { font-size: var(--text-editor); }
+.code-body .cm-content,
+.code-body .cm-gutters {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.code-body .cm-content { pointer-events: none; }
+.code-body .cm-gutters { pointer-events: none; }
+.code-body .cm-cursorLayer {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.code-body .cm-cursorLayer .cm-cursor,
+.code-body .cm-vimMode .cm-cursor {
+  display: block !important;
+  width: .62em !important;
+  border-left: 0 !important;
+  background: rgba(247, 216, 120, .18);
+  outline: 1px solid rgba(255, 218, 126, .92);
+  box-shadow: 0 0 3px rgba(255, 205, 99, .38);
+  filter: none;
+}
+.code-body .cm-fat-cursor {
+  display: block !important;
+  width: .62em !important;
+  border-left: 0 !important;
+  color: inherit;
+  background: rgba(247, 216, 120, .18) !important;
+  /* Outranks the Vim extension's own unfocused-cursor outline. */
+  outline: 1px solid rgba(255, 218, 126, .92) !important;
+  box-shadow: 0 0 3px rgba(255, 205, 99, .38);
+}
+.code-body .cm-vim-panel {
+  align-items: flex-start;
+  padding: 4px 7px;
+  color: #f6edda;
+  background: rgba(5, 16, 14, .96);
+  font: 650 12px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.code-body .cm-vim-panel input,
+.code-body .cm-vim-panel textarea {
+  min-width: 0;
+  color: #f6edda;
+  background: transparent;
+  caret-color: #f7d878;
+  font: inherit;
+}
+.code-body .cm-vim-message {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+}
+.cm-preview-range { background: rgba(255, 207, 101, .3); outline: 1px solid rgba(255, 222, 139, .75); }
+/* Matched lines sit behind the preview range in emphasis: they mark where the
+   live pattern hits without competing with an authored checkpoint range. */
+.cm-match-line { background: rgba(255, 207, 101, .14); border-radius: 2px; }
+
+/* Semantic Vim effects stay inside CodeMirror's decoration layer. They use
+   borders and low-alpha color so the affected text remains fully readable. */
+.code-body .cm-editor.cm-effect-operator-pending {
+  box-shadow: inset 0 0 0 1px rgba(190, 155, 255, .72), inset 0 0 16px rgba(156, 104, 255, .12);
+  transition: box-shadow 90ms ease-out;
+}
+
+.code-body .cm-effect-selection {
+  position: relative;
+  background: rgba(158, 112, 232, .12);
+}
+
+.code-body .cm-effect-selection-character {
+  border-bottom: 2px solid rgba(223, 194, 255, .92);
+}
+
+.code-body .cm-effect-selection-line {
+  box-shadow: inset 0 2px 0 rgba(223, 194, 255, .88), inset 0 -2px 0 rgba(223, 194, 255, .88);
+}
+
+.code-body .cm-effect-selection-block {
+  border-right: 1px solid rgba(230, 209, 255, .95);
+  border-left: 1px solid rgba(230, 209, 255, .95);
+  background: rgba(145, 101, 216, .13);
+}
+
+.code-body .cm-effect-selection-block.cm-effect-block-start {
+  border-top: 2px solid rgba(230, 209, 255, .95);
+}
+
+.code-body .cm-effect-selection-block.cm-effect-block-end {
+  border-bottom: 2px solid rgba(230, 209, 255, .95);
+}
+
+.code-body .cm-effect-selection-block.cm-effect-block-start.cm-effect-block-end {
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+}
+
+.code-body .cm-effect-transient {
+  position: relative;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.code-body .cm-effect-range-change {
+  background: linear-gradient(90deg, rgba(191, 151, 255, .08), rgba(223, 202, 255, .34), rgba(191, 151, 255, .08)) 100% 0 / 220% 100%;
+  box-shadow: inset 0 -2px rgba(210, 177, 255, .9);
+  animation: vimRangeResolve 220ms ease-out both;
+}
+
+.code-body .cm-effect-capture {
+  background: linear-gradient(90deg, rgba(255, 205, 107, .08), rgba(255, 218, 143, .28)) 100% 0 / 100% 100% no-repeat;
+  box-shadow: inset 0 0 0 1px rgba(255, 218, 143, .78);
+  animation: vimCapture 200ms ease-in both;
+}
+
+.code-body .cm-effect-materialize {
+  background: rgba(100, 226, 169, .28);
+  box-shadow: inset 0 -2px rgba(126, 241, 188, .88);
+  animation: vimMaterialize 240ms ease-out both;
+}
+
+.code-body .cm-effect-repeat {
+  background: rgba(120, 211, 224, .2);
+  box-shadow: inset 0 -2px rgba(132, 225, 238, .88);
+  opacity: var(--vim-effect-intensity, .7);
+  animation: vimRepeatEcho 168ms ease-out both;
+}
+
+.code-body .cm-effect-repeat.cm-effect-materialize {
+  background: rgba(100, 226, 169, .28);
+  box-shadow: inset 0 -2px rgba(126, 241, 188, .88);
+}
+
+.code-body .cm-effect-repeat.cm-effect-range-change {
+  background: linear-gradient(90deg, rgba(191, 151, 255, .08), rgba(223, 202, 255, .34), rgba(191, 151, 255, .08)) 100% 0 / 220% 100%;
+  box-shadow: inset 0 -2px rgba(210, 177, 255, .9);
+}
+
+.code-body .cm-effect-matches {
+  background: rgba(255, 201, 96, .27);
+  box-shadow: inset 0 0 0 1px rgba(255, 222, 148, .76);
+  animation: vimMatchesResolve 250ms ease-out both;
+}
+
+.code-body .cm-effect-matches.cm-effect-phase-search {
+  background: rgba(103, 213, 229, .23);
+  box-shadow: inset 0 0 0 1px rgba(132, 229, 241, .76);
+}
+
+.code-body .cm-effect-rewind {
+  background: rgba(118, 195, 225, .2);
+  box-shadow: inset 0 0 0 1px rgba(151, 215, 240, .7);
+  animation: vimRewind 220ms ease-out both;
+}
+
+.code-body .cm-effect-rewind.cm-effect-operation-redo {
+  background: rgba(131, 224, 172, .2);
+  box-shadow: inset 0 0 0 1px rgba(154, 237, 191, .72);
+  animation-direction: reverse;
+}
+
+.code-body .cm-effect-pulse {
+  position: relative;
+  width: 0;
+  height: 1em;
+  display: inline-block;
+  vertical-align: text-bottom;
+  pointer-events: none;
+}
+
+.code-body .cm-effect-pulse::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  left: -.3em;
+  bottom: -.08em;
+  width: .6em;
+  height: .6em;
+  border: 1px solid rgba(172, 225, 235, .9);
+  border-radius: 50%;
+  background: rgba(75, 163, 184, .18);
+  box-shadow: 0 0 0 2px rgba(78, 178, 201, .12);
+  animation: vimPointPulse 220ms ease-out both;
+}
+
+.code-body .cm-effect-pulse.cm-effect-phase-record-start::after,
+.code-body .cm-effect-pulse.cm-effect-phase-record-stop::after {
+  border-color: rgba(255, 141, 123, .95);
+  background: rgba(255, 105, 91, .22);
+  box-shadow: 0 0 0 2px rgba(255, 115, 98, .16);
+}
+
+.code-body .cm-editor.cm-effect-recording {
+  box-shadow: inset 0 0 0 1px rgba(255, 126, 106, .36);
+}
+
+.code-body .cm-effect-deleted-ghost {
+  position: absolute;
+  z-index: 3;
+  max-width: calc(100% - 2px);
+  overflow: hidden;
+  border-bottom: 2px solid rgba(211, 171, 255, .88);
+  color: transparent;
+  background: rgba(168, 119, 230, .12);
+  white-space: pre;
+  pointer-events: none;
+  animation: vimDeletedRange 220ms ease-out both;
+}
+
+@media (max-height: 760px) {
+  .editor-stack { margin-top: 7px; }
+}
+@media (max-width: 599px) and (orientation: portrait) {
+  .editor-stack {
+    grid-row: 1 / 10;
+    align-self: stretch;
+    margin: 8px 13px 0;
+  }
+  .next-code-slab { height: max(132px, var(--editor-height)); min-height: 0; }
+  .editor-stack:has(.demo-controls) { grid-row: 1 / 10; grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
+  .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .editor-stack { grid-row: 1 / 10; margin: 7px 9px; }
+  .next-code-slab { height: min(var(--editor-height), 100%); min-height: 0; }
+  .editor-stack:has(.demo-controls) { grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
+  .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
+  .next-code-slab .code-body { padding: 3px; }
+  .code-body .cm-scroller { font-size: 14px; line-height: 1.3; }
+}
+@media (min-width: 600px) {
+  /* Keep the authored visual-line semantics stable as the board widens. */
+  .editor-stack { width: min(404px, calc(100% - 110px)); grid-row: 1 / 10; justify-self: center; margin: clamp(18px, 4vh, 34px) 0 0; }
+  .next-code-slab { height: max(132px, var(--editor-height)); max-height: none; }
+  .editor-stack:has(.demo-controls) { grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
+  .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
+}
+
+@media (min-width: 1024px) {
+  .editor-stack { width: min(404px, 62vw); max-height: 360px; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .editor-stack { width: auto; max-height: none; grid-row: 1 / 10; justify-self: stretch; margin: 7px 9px; }
+  .next-code-slab { height: min(var(--editor-height), 100%); max-height: none; }
+}
+@media (min-width: 600px) {
+
+  .editor-stack:not(.has-viewport) .next-code-slab {
+    max-height: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .code-body .cm-effect-transient,
+  .code-body .cm-effect-pulse::after,
+  .code-body .cm-effect-deleted-ghost {
+    animation: none !important;
+  }
+
+  .code-body .cm-effect-transient {
+    background-image: none;
+    opacity: 1;
+  }
+
+  .code-body .cm-effect-deleted-ghost {
+    opacity: .42;
+    clip-path: none;
+  }
+}
+
+@keyframes vimRangeResolve {
+  from { background-position: 100% 0; opacity: .72; }
+  to { background-position: 0 0; opacity: 1; }
+}
+
+@keyframes vimCapture {
+  from { background-size: 100% 100%; box-shadow: inset 0 0 0 1px rgba(255, 226, 166, .9); }
+  to { background-size: 12% 100%; box-shadow: inset 0 0 0 1px rgba(255, 218, 143, .28); }
+}
+
+@keyframes vimMaterialize {
+  from { background-color: rgba(100, 226, 169, .42); }
+  to { background-color: rgba(100, 226, 169, .08); }
+}
+
+@keyframes vimRepeatEcho {
+  from { background-color: rgba(120, 211, 224, .38); filter: brightness(1.14); }
+  to { background-color: rgba(120, 211, 224, .07); filter: none; }
+}
+
+@keyframes vimMatchesResolve {
+  0%, 40% { background-color: rgba(255, 201, 96, .33); }
+  100% { background-color: rgba(255, 201, 96, .06); }
+}
+
+@keyframes vimRewind {
+  from { background-color: rgba(118, 195, 225, .34); opacity: .58; }
+  to { background-color: rgba(118, 195, 225, .06); opacity: 1; }
+}
+
+@keyframes vimPointPulse {
+  from { opacity: .95; transform: scale(.55); }
+  to { opacity: .18; transform: scale(1.55); }
+}
+
+@keyframes vimDeletedRange {
+  from { opacity: .72; clip-path: inset(0 0 0 0); }
+  to { opacity: 0; clip-path: inset(0 0 0 100%); }
+}

@@ -2004,7 +2004,6 @@ function renderHints() {
 function renderActivityControls() {
   const activity = currentActivity();
   const completionInWorld = completionRendersInWorld();
-  elements.keyboardPanel.classList.remove("controls-only");
   elements.keyboardPanel.classList.toggle("empty-panel", !isRunnable(activity) || completionInWorld);
   elements.keyboardPanel.classList.toggle("completed", isPractice(activity) && state.complete);
   elements.keyboardPanel.classList.toggle("completion-in-world", completionInWorld);

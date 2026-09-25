@@ -1,0 +1,63 @@
+/* Colours, themes, fonts, and resets shared by every page. */
+
+:root {
+  color-scheme: dark;
+  --ink: #f7efdc;
+  --muted: #99b4a6;
+  --moss: #7ed69e;
+  --violet: #b694ff;
+  --amber: #ffc866;
+  --danger: #ef7660;
+  --deep: #06110f;
+  --panel: #0d1c19;
+  --key: #182522;
+  --key-edge: #30413b;
+  --key-shadow: #07100e;
+  --key-gap: 2.5px;
+  --theme-dark: #071a17;
+  --theme-mid: #173e33;
+  --theme-bright: #75d29a;
+  --theme-magic: #a77bff;
+  --theme-warm: #ffc866;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: var(--app-viewport-height, 100%);
+  margin: 0;
+  overscroll-behavior: none;
+  background: #071715;
+}
+
+body {
+  overflow: hidden;
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(51, 116, 94, .22), transparent 36rem),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px);
+}
+
+button { font: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

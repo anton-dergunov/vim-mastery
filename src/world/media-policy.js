@@ -30,16 +30,6 @@ function addAsset(target, asset, category) {
   if (!target.has(asset)) target.set(asset, category);
 }
 
-function stillSource(value) {
-  if (typeof value === "string") return value;
-  if (!value || typeof value !== "object") return null;
-  return value.still || value.src || null;
-}
-
-function reactionCandidates(value) {
-  return Array.isArray(value) ? value : [value];
-}
-
 export function collectMediaPolicy(presentation, characterManifest) {
   const core = new Map();
   const optional = new Map();
@@ -78,10 +68,8 @@ export function collectMediaPolicy(presentation, characterManifest) {
 
   for (const character of Object.values(characterManifest?.characters || {})) {
     addAsset(core, character.idle, "character-idle");
-    for (const reaction of Object.values(character.reactions || character.stills || {})) {
-      for (const candidate of reactionCandidates(reaction)) {
-        addAsset(optional, stillSource(candidate), "character-reaction");
-      }
+    for (const variants of Object.values(character.reactions || {})) {
+      for (const variant of variants) addAsset(optional, variant.src, "character-reaction");
     }
     for (const animation of Object.values(character.animations || {})) {
       addAsset(optional, animation?.src, "character-animation");
@@ -103,7 +91,7 @@ export function assertMediaAssets(rootDirectory, media) {
   }
 }
 
-export function coreMediaBytes(rootDirectory, media) {
+function coreMediaBytes(rootDirectory, media) {
   return media.core.reduce((total, asset) => total + statSync(resolve(rootDirectory, asset.path)).size, 0);
 }
 

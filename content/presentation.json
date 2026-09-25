@@ -380,8 +380,7 @@
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/compact/base.webp"
+      }
     },
     "text-objects": {
       "id": "text-objects",
@@ -448,8 +447,7 @@
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/nested-garden/compact/base.webp"
+      }
     },
     "visual-selection": {
       "id": "visual-selection",
@@ -516,8 +514,7 @@
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/compact/base.webp"
+      }
     },
     "registers-putting": {
       "id": "registers-putting",
@@ -584,8 +581,7 @@
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/memory-archive/compact/base.webp"
+      }
     },
     "position-memory": {
       "id": "position-memory",
@@ -652,8 +648,7 @@
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/far-beacons/compact/base.webp"
+      }
     },
     "viewport-control": {
       "id": "viewport-control",
@@ -721,8 +716,7 @@
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/compact/base.webp"
+      }
     },
     "repeatable-editing": {
       "id": "repeatable-editing",
@@ -789,8 +783,7 @@
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/archive-of-echoes/scenes/echo-clock/compact/base.webp"
+      }
     },
     "command-line-ranges-line-operations": {
       "id": "command-line-ranges-line-operations",
@@ -857,8 +850,7 @@
             "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-table/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-table/compact/base.webp"
+      }
     },
     "substitution-practical-regex": {
       "id": "substitution-practical-regex",
@@ -925,8 +917,7 @@
             "assetRoot": "assets/worlds/brass-meridian/scenes/mirror-loom/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/brass-meridian/scenes/mirror-loom/compact/base.webp"
+      }
     },
     "macros": {
       "id": "macros",
@@ -993,8 +984,7 @@
             "assetRoot": "assets/worlds/brass-meridian/scenes/echo-foundry/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/brass-meridian/scenes/echo-foundry/compact/base.webp"
+      }
     },
     "global-normal-automation": {
       "id": "global-normal-automation",
@@ -1062,8 +1052,7 @@
             "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-engine/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/brass-meridian/scenes/meridian-engine/compact/base.webp"
+      }
     },
     "real-code-workflow-capstones": {
       "id": "real-code-workflow-capstones",
@@ -1132,8 +1121,7 @@
             "assetRoot": "assets/worlds/brass-meridian/scenes/menders-confluence/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/brass-meridian/scenes/menders-confluence/compact/base.webp"
+      }
     },
     "mastery-loops": {
       "id": "mastery-loops",
@@ -1202,8 +1190,7 @@
             "assetRoot": "assets/worlds/brass-meridian/scenes/keepers-relay/variants"
           }
         }
-      },
-      "storyBackdrop": "assets/worlds/brass-meridian/scenes/keepers-relay/compact/base.webp"
+      }
     }
   },
   "story": {

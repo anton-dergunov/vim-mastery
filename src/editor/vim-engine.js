@@ -39,12 +39,13 @@ const previewRangeField = StateField.define({
   provide: field => EditorView.decorations.from(field),
 });
 
-export function toVimKey(key) {
+function toVimKey(key) {
   if (specialKeys[key]) return specialKeys[key];
   if (/^<[^>]+>$/.test(key)) return key;
 
-  const legacy = key.match(/^(Ctrl|Alt)-(.*)$/);
-  const parts = (legacy ? `${legacy[1]}+${legacy[2]}` : key).split("+");
+  // Lesson scripts spell chords "Ctrl-v"; the on-screen keyboard spells them "Ctrl+v".
+  const hyphenated = key.match(/^(Ctrl|Alt)-(.*)$/);
+  const parts = (hyphenated ? `${hyphenated[1]}+${hyphenated[2]}` : key).split("+");
   const value = parts.pop();
   const modifiers = new Set(parts);
   if (!value) return key;

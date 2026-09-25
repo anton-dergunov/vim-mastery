@@ -11,7 +11,7 @@ const DB_NAME = "vim-wilds-feedback";
 const DB_VERSION = 1;
 const STORE = "outbox";
 
-export const feedbackEndpoint = (import.meta.env?.VITE_FEEDBACK_ENDPOINT || "").replace(/\/$/, "");
+const feedbackEndpoint = (import.meta.env?.VITE_FEEDBACK_ENDPOINT || "").replace(/\/$/, "");
 
 export function hasEndpoint() {
   return Boolean(feedbackEndpoint);

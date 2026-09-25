@@ -4,8 +4,6 @@ const BOARD_PROFILES = ["tall", "compact", "wide", "shallow"];
 const SCENE_PROFILES = ["tall", "compact", "wide"];
 const VARIANT_POLICIES = ["registered", "practice", "static"];
 
-export { remoteVariantPaths } from "./presentation-data.js";
-
 export function boardProfileForBounds({ width = 0, height = 0 } = {}) {
   const ratio = height > 0 ? width / height : 1;
   if (ratio < 0.9) return "tall";
@@ -313,9 +311,6 @@ export class WorldPresentationRenderer {
     if (!force && nextProfile === this.profile) return;
     this.profile = nextProfile;
     this.world.dataset.boardProfile = nextProfile;
-    // Keep the old attribute for one compatibility release; its values now
-    // deliberately identify registered profiles, not prop-placement shapes.
-    this.world.dataset.boardShape = nextProfile;
     if (!this.presentation) return;
 
     const sceneProfile = sceneProfileForPolicy(
@@ -381,41 +376,15 @@ export class WorldPresentationRenderer {
   start() {
     this.reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     this.world.dataset.reducedMotion = String(this.reducedMotionQuery.matches);
-    if (this.reducedMotionQuery.addEventListener) {
-      this.reducedMotionQuery.addEventListener("change", this.handleReducedMotion);
-    } else {
-      this.reducedMotionQuery.addListener?.(this.handleReducedMotion);
-    }
-    if ("ResizeObserver" in window) {
-      this.resizeObserver = new ResizeObserver(this.handleResize);
-      this.resizeObserver.observe(this.world);
-    } else {
-      window.addEventListener("resize", this.handleResize);
-    }
+    this.reducedMotionQuery.addEventListener("change", this.handleReducedMotion);
+    this.resizeObserver = new ResizeObserver(this.handleResize);
+    this.resizeObserver.observe(this.world);
     window.addEventListener("orientationchange", this.handleOrientationChange);
     window.addEventListener("keydown", this.handleRevealInput, true);
     window.addEventListener("pointerdown", this.handleRevealInput, true);
     window.addEventListener("online", this.handleOnline);
     window.addEventListener("offline", this.handleOffline);
     this.updateLayout(true);
-  }
-
-  stop() {
-    this.cancelReveal();
-    this.cancelRemoteVariants({ clearLayer: true, resetBag: true });
-    cancelAnimationFrame(this.layoutFrame);
-    this.resizeObserver?.disconnect();
-    window.removeEventListener("resize", this.handleResize);
-    window.removeEventListener("orientationchange", this.handleOrientationChange);
-    window.removeEventListener("keydown", this.handleRevealInput, true);
-    window.removeEventListener("pointerdown", this.handleRevealInput, true);
-    window.removeEventListener("online", this.handleOnline);
-    window.removeEventListener("offline", this.handleOffline);
-    if (this.reducedMotionQuery?.removeEventListener) {
-      this.reducedMotionQuery.removeEventListener("change", this.handleReducedMotion);
-    } else {
-      this.reducedMotionQuery?.removeListener?.(this.handleReducedMotion);
-    }
   }
 }
 

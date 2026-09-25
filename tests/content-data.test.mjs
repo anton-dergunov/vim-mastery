@@ -4,6 +4,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import {
   loadUnitCatalogWithPresentation,
+  remoteVariantPaths,
   resolveUnitPresentation,
   validatePresentationManifest,
 } from "../src/world/presentation-data.js";
@@ -12,7 +13,6 @@ import { unitDigest } from "../src/progress/mastery.js";
 import {
   boardProfileForBounds,
   registeredSceneProfileForBoard,
-  remoteVariantPaths,
   sceneProfileForBoard,
   sceneProfileForPolicy,
 } from "../src/world/presentation.js";

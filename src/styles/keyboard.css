@@ -1,0 +1,223 @@
+/* The on-screen keyboard: keys, rows, and modifiers. (Its settings live in dialogs.css.) */
+
+.keyboard-panel {
+  position: relative;
+  z-index: 25;
+  flex: 0 0 auto;
+  padding: 7px 5px calc(7px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(153, 198, 177, .13);
+  background: linear-gradient(180deg, rgba(22, 36, 32, .98), rgba(7, 13, 12, .995));
+  box-shadow: 0 -9px 24px rgba(0,0,0,.34);
+}
+.keyboard.hidden { display: none; }
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--key-gap);
+  touch-action: manipulation;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout paint;
+}
+.key-row { display: flex; gap: var(--key-gap); width: 100%; }
+.key {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: clamp(31px, 4.35dvh, 39px);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--key-edge);
+  border-bottom-color: #101815;
+  border-radius: 5px;
+  color: #d8e2dc;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), transparent 35%), linear-gradient(#22302c, var(--key));
+  box-shadow: 0 2px 0 var(--key-shadow), inset 0 0 0 1px rgba(255,255,255,.018);
+  font: 700 clamp(13px, 3.55vw, 15px)/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  cursor: pointer;
+  transform: translateY(0);
+  transition: transform .055s, background .12s, border-color .12s, color .12s, box-shadow .12s;
+  touch-action: manipulation;
+}
+.key .stack { height: 88%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.key .shifted,
+.key .base { transition: color .12s, font-size .12s, font-weight .12s, order .12s; }
+.key .shifted { order: 1; color: #71867c; font-size: .68em; font-weight: 600; }
+.key .base { order: 2; color: inherit; font-size: 1em; font-weight: 750; }
+.keyboard.shift-layer .key .shifted { order: 2; color: #fff5d7; font-size: 1em; font-weight: 800; }
+.keyboard.shift-layer .key .base { order: 1; color: #71867c; font-size: .68em; font-weight: 600; }
+.keyboard.letter-uppercase .letter-key { text-transform: uppercase; }
+.key.modifier,
+.key.utility { color: #aebfb7; font-size: clamp(10px, 2.65vw, 11.5px); }
+.key.pressed,
+.key:active {
+  transform: translateY(2px);
+  color: #fff8df;
+  border-color: #536a60;
+  background: linear-gradient(#16211e, #101916);
+  box-shadow: 0 0 0 var(--key-shadow), inset 0 2px 5px rgba(0,0,0,.4);
+}
+.key.latched {
+  color: #191322;
+  border-color: #d4bcff;
+  background: linear-gradient(180deg, #dacbff, #a989e0);
+  box-shadow: 0 2px 0 #4d356f, 0 0 12px rgba(182, 148, 255, .48), inset 0 0 0 1px rgba(255,255,255,.35);
+}
+.key.hinted {
+  border-color: #efc86a;
+  color: #fff1bf;
+  box-shadow: 0 2px 0 var(--key-shadow), 0 0 10px rgba(255, 199, 83, .4), inset 0 0 0 1px rgba(255,223,144,.12);
+}
+.u-115 { flex-grow: 1.15; }
+.u-145 { flex-grow: 1.45; }
+.u-17 { flex-grow: 1.7; }
+.u-2 { flex-grow: 2; }
+.u-space { flex-grow: 6; }
+
+@media (max-height: 720px) {
+  .keyboard-panel { padding-top: 5px; }
+  .key { height: 30px; }
+}
+
+.key.wrong {
+  border-color: rgba(255, 132, 112, .92);
+  color: #fff0ea;
+  background: linear-gradient(#72342f, #351816);
+  box-shadow: 0 0 0 #401a18, 0 0 12px rgba(239, 116, 96, .44), inset 0 1px 0 rgba(255,255,255,.1);
+  animation: wrongKeyError .36s ease;
+}
+
+.keyboard-panel {
+  padding-top: 7px;
+}
+
+.keyboard-panel.empty-panel { display: none; }
+.keyboard-panel.completed .keyboard {
+  visibility: hidden;
+  pointer-events: none;
+}
+.keyboard-panel.completed .activity-controls {
+  position: absolute;
+  z-index: 2;
+  inset: 7px 5px calc(7px + env(safe-area-inset-bottom));
+}
+
+/* Keep both legends physically stable; Shift changes emphasis, not geometry. */
+
+.keyboard.shift-layer .key .shifted {
+  order: 1;
+  color: #fff5d7;
+  font-size: .68em;
+  font-weight: 800;
+}
+
+.keyboard.shift-layer .key .base {
+  order: 2;
+  color: #71867c;
+  font-size: 1em;
+  font-weight: 750;
+}
+
+@media (max-height: 760px) {
+  .key { height: 30px; }
+}
+
+.keyboard-hidden-by-user { display: none !important; }
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .keyboard-panel { padding: 4px 5px calc(4px + env(safe-area-inset-bottom)); }
+  .key { height: clamp(25px, 7.1dvh, 30px); }
+}
+@media (min-width: 600px) {
+  .keyboard-panel { padding-right: clamp(12px, 3vw, 28px); padding-left: clamp(12px, 3vw, 28px); }
+  .keyboard { width: 100%; }
+}
+
+@media (min-width: 1024px) {
+  .keyboard { width: min(1080px, 100%); margin: 0 auto; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .keyboard { width: 100%; }
+}
+@media (min-width: 600px) {
+
+  .keyboard-panel {
+    padding-top: 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+  .keyboard { gap: 5px; }
+  .key-row { gap: 5px; }
+  .key { height: clamp(36px, 4.9dvh, 46px); }
+}
+
+@media (min-width: 1024px) {
+
+  .keyboard-panel.completed {
+    padding: 0 0 18px;
+    border-top: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .keyboard-panel.completed .keyboard { display: none; }
+  .keyboard-panel.completed .activity-controls {
+    position: static;
+    width: min(calc(100% - 48px), 720px);
+    margin: 0 auto;
+  }
+  .keyboard-panel.completed .completion-panel {
+    min-height: 126px;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  /* A visible keyboard retains the original replacement panel. The hidden
+     keyboard's completion panel renders inside the world instead. */
+  .keyboard-panel.completed {
+    padding: 10px clamp(12px, 3vw, 28px) calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(153, 198, 177, .13);
+    background: linear-gradient(180deg, rgba(22, 36, 32, .98), rgba(7, 13, 12, .995));
+    box-shadow: 0 -9px 24px rgba(0,0,0,.34);
+  }
+  .keyboard-panel.completed .keyboard { display: flex; }
+  .keyboard-panel.completed .activity-controls {
+    position: absolute;
+    top: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 50%;
+    width: min(calc(100% - 48px), 1040px);
+    margin: 0;
+    transform: translateX(-50%);
+  }
+  .keyboard-panel.completed.completion-in-world { display: none; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+
+  .keyboard-panel {
+    padding: 3px max(4px, env(safe-area-inset-right))
+      calc(3px + env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
+  }
+
+  .keyboard {
+    gap: 2px;
+  }
+
+  .key-row {
+    gap: 2px;
+  }
+
+  .key {
+    height: clamp(24px, 6.1dvh, 27px);
+    font-size: clamp(11px, 1.8vw, 14px);
+  }
+
+  .key.modifier,
+  .key.utility {
+    font-size: clamp(8px, 1.35vw, 10px);
+  }
+}
+@keyframes wrongKeyError { 0%,100% { transform: translateY(0); } 35% { transform: translateY(2px); } 70% { transform: translateY(-1px); } }

@@ -1,4 +1,4 @@
-export const PRESENTATION_SCHEMA_VERSION = 2;
+const PRESENTATION_SCHEMA_VERSION = 2;
 
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const assetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;

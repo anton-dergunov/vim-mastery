@@ -188,7 +188,7 @@ export function conceptStateRank(state) {
   return CONCEPT_STATES.indexOf(state);
 }
 
-export function lastTouchedAt(concept, completions = {}) {
+function lastTouchedAt(concept, completions = {}) {
   return concept.refs.reduce((latest, ref) => Math.max(latest, completions[ref.activityId]?.lastAt || 0), 0);
 }
 

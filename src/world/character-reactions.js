@@ -76,10 +76,9 @@ export class CharacterReactions {
   }
 
   reactionCandidates(asset, state) {
-    const configured = asset?.reactions?.[state] ?? asset?.poses?.[state];
+    const configured = asset?.reactions?.[state];
     if (!configured) return [];
-    return (Array.isArray(configured) ? configured : [configured])
-      .filter(candidate => typeof candidate === "string" || candidate?.src);
+    return (Array.isArray(configured) ? configured : [configured]).filter(candidate => candidate?.src);
   }
 
   chooseReaction(candidates, state) {
@@ -189,7 +188,7 @@ export class CharacterReactions {
     const candidates = this.reactionCandidates(asset, state);
     const { candidate: pose, index } = this.chooseReaction(candidates, state);
     const presentation = { state, variant: pose ? index : null };
-    const source = typeof pose === "string" ? pose : pose?.src;
+    const source = pose?.src;
     const usesReactionMedia = Boolean(source && !this.reducedMotion());
     this.activeDurationMs = usesReactionMedia
       ? Math.max(4000, Number(pose?.duration_seconds || 4) * 1000)
@@ -254,13 +253,5 @@ export class CharacterReactions {
         this.apply("idle");
       }, duration);
     });
-  }
-
-  stop() {
-    this.clearTimer();
-    this.mediaRequest += 1;
-    this.cancelTransition();
-    this.activityKey = null;
-    this.state = "idle";
   }
 }

@@ -1,0 +1,358 @@
+/* The world board behind the lesson: scenes, ambient effects, and the guide characters. */
+
+.world {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  overflow: hidden;
+  border: 1px solid rgba(170, 225, 197, .2);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--theme-mid) 60%, transparent), transparent 62%),
+    linear-gradient(150deg, var(--theme-dark), #06100e 75%);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.38),
+    0 0 0 3px rgba(6, 18, 15, .86),
+    0 0 0 4px rgba(105, 151, 128, .18),
+    inset 0 0 42px rgba(1, 8, 7, .5);
+  transition: transform .34s cubic-bezier(.3,.8,.2,1), opacity .3s;
+}
+.world::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 16, 14, .24), transparent 25%, transparent 75%, rgba(3, 16, 14, .23)),
+    radial-gradient(ellipse at center, transparent 42%, rgba(1, 8, 7, .42) 100%);
+}
+
+.world.theme-moonroot {
+  --theme-dark: #071d18;
+  --theme-mid: #1c533d;
+  --theme-bright: #77e0a3;
+  --theme-magic: #a77bff;
+  --theme-warm: #ffc866;
+}
+.world.theme-ember {
+  --theme-dark: #20120e;
+  --theme-mid: #683420;
+  --theme-bright: #f59a61;
+  --theme-magic: #ff7468;
+  --theme-warm: #ffd06c;
+}
+.world.theme-glass {
+  --theme-dark: #0b1722;
+  --theme-mid: #234f68;
+  --theme-bright: #78dbea;
+  --theme-magic: #b89cff;
+  --theme-warm: #ffe08b;
+}
+.world.theme-deepwater {
+  --theme-dark: #07151d;
+  --theme-mid: #123f4e;
+  --theme-bright: #55bfd0;
+  --theme-magic: #888cff;
+  --theme-warm: #f6bd63;
+}
+
+.world-backdrop,
+.world-ambient,
+.world-remote-variant-layer,
+.world-grid,
+.character-layer {
+  position: absolute;
+  inset: 0;
+}
+.character-layer {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  pointer-events: none;
+}
+.world-grid {
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  pointer-events: none;
+}
+.world-grid > * { pointer-events: auto; }
+
+.world-backdrop,
+.world-ambient,
+.world-remote-variant-layer {
+  overflow: hidden;
+  pointer-events: none;
+}
+.world-backdrop {
+  z-index: 0;
+  /* Until the board image loads, or if it never does, the board is the world's
+     plain colour: no drawn pattern stands in for the art. */
+  background: var(--world-fallback, linear-gradient(150deg, var(--theme-dark), #06100e 75%));
+}
+.world-backdrop::before,
+.world-backdrop::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.world-backdrop::before {
+  inset: -4px;
+  background-image: var(--world-asset, none);
+  background-position: var(--scene-focal-position, 50% 50%);
+  background-size: cover;
+  filter: saturate(.88) brightness(.82);
+}
+.world-backdrop::after {
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(2, 8, 8, .32), transparent 24%, transparent 76%, rgba(2, 8, 8, .32)),
+    linear-gradient(0deg, rgba(2, 8, 8, .34), transparent 30%);
+}
+.world-ambient { z-index: 1; }
+.world-ambient-effect {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--theme-magic) 74%, white);
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--theme-magic) 72%, transparent),
+    42px 18px 0 -1px color-mix(in srgb, var(--theme-bright) 52%, transparent),
+    -24px 50px 0 -1px color-mix(in srgb, var(--theme-warm) 45%, transparent);
+  opacity: .34;
+  animation: worldAmbientDrift 8s ease-in-out infinite alternate;
+}
+.world-ambient-effect:nth-child(1) { top: 18%; left: 13%; }
+.world-ambient-effect:nth-child(2) { top: 31%; right: 12%; animation-delay: -2.8s; }
+.world-ambient-effect:nth-child(3) { right: 24%; bottom: 18%; animation-delay: -5.2s; }
+
+.world-remote-variant-layer { z-index: 3; }
+.world-remote-variant {
+  position: absolute;
+  inset: -4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--remote-variant-fade, 2600ms) ease-in-out;
+}
+.world-remote-variant::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+.world-remote-variant::before {
+  inset: 0;
+  background-image: var(--world-asset, none);
+  background-position: var(--scene-focal-position, 50% 50%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: saturate(.88) brightness(.82);
+}
+.world-remote-variant[data-media-mode="complete-board"]::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(2, 8, 8, .32), transparent 24%, transparent 76%, rgba(2, 8, 8, .32)),
+    linear-gradient(0deg, rgba(2, 8, 8, .34), transparent 30%);
+}
+.world-remote-variant.is-visible { opacity: 1; }
+.world[data-board-profile="shallow"] :is(.world-ambient, .world-remote-variant-layer) { display: none; }
+.world[data-reduced-motion="true"] .world-ambient-effect { animation: none; }
+.world[data-reduced-motion="true"] .world-remote-variant-layer { display: none; }
+
+.world-grid,
+.character-layer {
+  z-index: 4;
+  opacity: 1;
+  transition: opacity 140ms ease;
+}
+.world.scene-reveal-active .character-layer {
+  opacity: 0;
+}
+
+.nix {
+  --character-media-scale: 1;
+  z-index: 8;
+  align-self: end;
+  justify-self: center;
+  width: clamp(111px, 31.5vw, 138px);
+  aspect-ratio: 1;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 10px 7px rgba(0,0,0,.68));
+  transform-origin: 55% 88%;
+  transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1));
+  animation: nixIdle 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.nix.left { --character-facing: -1; position: relative; left: -6px; transform-origin: center; grid-column: 1 / span 3; grid-row: 7 / span 3; }
+.nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; }
+.world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
+.world.complete .nix.celebrating {
+  animation: none;
+  filter: none;
+  transform: scale(var(--success-canvas-scale, 1)) scaleX(var(--character-facing, 1));
+  transform-origin: center;
+}
+.world.complete .nix.transitioning-out { animation: nixSuccessFadeOut .42s ease-in-out forwards; }
+.world.complete .nix.transitioning-in { animation: nixSuccessFadeIn .42s ease-in-out forwards; }
+/* Reaction clips carry their own authored motion; the idle bob would layer a
+   second, unrelated wobble on top and pull the character off the neutral pose
+   the settle just parked it on. Declared before the settle so a swap back to
+   the idle still keeps animating to neutral. */
+
+.nix.reaction-has-media { animation: none; }
+.nix.reaction-settling {
+  animation: nixReactionSettle var(--reaction-settle-duration, 180ms) ease-out forwards;
+  will-change: transform;
+}
+.nix.reaction-attentive:not(.reaction-has-media) { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
+.nix.reaction-puzzled:not(.reaction-has-media) { animation: characterPuzzled .72s ease-in-out 2; }
+.nix.reaction-encouraging:not(.reaction-has-media) { animation: characterEncouraging .9s ease-in-out infinite alternate; }
+.nix.reaction-celebrating:not(.celebrating) { animation: nixCelebrate .72s ease-in-out 2; }
+
+.oracle {
+  z-index: 10;
+  align-self: center;
+  justify-self: center;
+  width: clamp(40px, 10.5vw, 46px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--theme-bright) 72%, transparent);
+  border-radius: 50% 50% 44% 44%;
+  color: #e6fff0;
+  background: radial-gradient(circle at 45% 38%, #e0ffec 0 5%, var(--theme-bright) 10%, var(--theme-mid) 57%, var(--theme-dark) 72%);
+  box-shadow: 0 0 8px var(--theme-bright), 0 0 22px color-mix(in srgb, var(--theme-bright) 35%, transparent), inset 0 0 7px rgba(255,255,255,.24);
+  cursor: pointer;
+  font: 800 19px/1 Georgia, serif;
+  animation: oracleFloat 2.1s ease-in-out infinite;
+}
+.oracle.left { grid-column: 2; grid-row: 8; }
+.oracle.right { grid-column: 11; grid-row: 8; }
+.oracle::after {
+  content: "HELP";
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  padding: 3px 5px;
+  border-radius: 3px;
+  color: var(--theme-bright);
+  background: rgba(4, 15, 12, .78);
+  font: 800 10px/1 ui-monospace, monospace;
+  letter-spacing: .1em;
+  transform: translateX(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world.complete .nix { animation: none !important; }
+  .nix.reaction-attentive { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.08); }
+  .nix.reaction-puzzled { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) saturate(.82); transform: rotate(1deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+  .nix.reaction-encouraging { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.12); }
+}
+
+.world { min-height: 150px; }
+.world[data-mode="insert"] .code-body .cm-cursorLayer .cm-cursor,
+.world[data-mode="insert"] .code-body .cm-vimMode .cm-cursor {
+  width: 0 !important;
+  border-left: 2px solid #78dbea !important;
+  background: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 0 3px rgba(120, 219, 234, .8));
+}
+.world[data-mode="replace"] .code-body .cm-cursorLayer .cm-cursor,
+.world[data-mode="replace"] .code-body .cm-vimMode .cm-cursor {
+  width: .62em !important;
+  border-left: 0 !important;
+  color: inherit !important;
+  background: linear-gradient(to bottom, transparent calc(100% - 3px), #f59a61 calc(100% - 3px)) !important;
+  outline: 0 !important;
+  box-shadow: 0 2px 5px rgba(245, 154, 97, .45) !important;
+  filter: none;
+  animation: cursorBlink .9s steps(1) infinite;
+}
+.world[data-mode="replace"] .code-body .cm-fat-cursor { display: none !important; }
+
+.nix { z-index: 4; margin-bottom: 6px; }
+.nix.left { left: 0; }
+.world[data-mode="insert"] .code-slab,
+.world[data-mode="replace"] .code-slab { box-shadow: inset 0 0 0 1px rgba(255, 200, 102, .3), 0 0 18px rgba(255, 181, 75, .08); }
+.world[data-mode="operator-pending"] .code-slab { box-shadow: inset 0 0 0 1px rgba(182, 148, 255, .4), 0 0 20px rgba(157, 110, 255, .12); }
+
+@media (max-height: 760px) {
+  .world { min-height: 130px; }
+}
+
+/* Compact portrait keeps the reading sequence vertical while moving only the
+   low-priority activity kind to the left edge. */
+@media (max-width: 599px) and (orientation: portrait) {
+  .world { min-height: 220px; }
+  .nix { width: clamp(70px, 23vw, 94px); grid-row: 8 / 10; }
+  .nix.left { grid-column: 1 / span 3; grid-row: 8 / 10; }
+  .nix.right { grid-column: 10 / span 3; grid-row: 8 / 10; }
+  .world:has(.editor-stack.has-expanded-rows) .nix { display: none; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .world { min-height: 0; }
+  .nix { display: none; }
+}
+@media (min-width: 600px) {
+  .world { min-height: 280px; }
+  .nix { width: clamp(153px, 19.5vw, 234px); margin-bottom: 12px; grid-row: 8 / 10; }
+  .nix.left { grid-column: 1 / span 3; grid-row: 8 / 10; }
+  .nix.right { grid-column: 9 / span 3; grid-row: 8 / 10; }
+}
+
+@media (min-width: 1024px) {
+  .world { min-height: 320px; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .world { min-height: 0; }
+  .nix { display: none; }
+}
+@media (min-width: 600px) {
+
+  .nix { width: clamp(153px, 19.5vw, 234px); }
+}
+
+@media (max-width: 599px) and (orientation: portrait) {
+  .world:has(.completion-panel.in-world) .nix { display: none; }
+}
+
+@media (min-width: 600px) {
+  .world:has(.completion-panel.in-world) .nix { grid-row: 8 / 10; }
+}
+
+@keyframes characterPuzzled {
+  0%, 100% { transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+  45% { transform: translateX(3px) rotate(2deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+}
+@keyframes characterEncouraging {
+  from { transform: translateY(0) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)); }
+  to { transform: translateY(-5px) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); filter: drop-shadow(0 10px 9px rgba(0,0,0,.65)) brightness(1.12); }
+}
+
+@keyframes cursorBlink { 0%, 48% { opacity: 1; } 49%, 100% { opacity: .28; } }
+@keyframes nixIdle {
+  0%, 100% { transform: translateY(0) rotate(0) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+  25%, 75% { transform: translateY(-1.5px) rotate(-1deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+  50% { transform: translateY(-3px) rotate(1deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+}
+@keyframes nixCelebrate { 0%,100% { transform: translateY(0) rotate(0) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); } 45% { transform: translateY(-15px) rotate(-7deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); } 70% { transform: translateY(-5px) rotate(6deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); } }
+@keyframes nixSuccessFadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes nixSuccessFadeIn { from { opacity: 0; transform: scale(var(--success-canvas-scale, 1)) scaleX(var(--character-facing, 1)); } to { opacity: 1; transform: scale(var(--success-canvas-scale, 1)) scaleX(var(--character-facing, 1)); } }
+@keyframes nixReactionSettle {
+  from { transform: var(--reaction-settle-from); }
+  to { transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
+}
+@keyframes oracleFloat { 0%,100% { transform: translateY(1px); } 50% { transform: translateY(-3px); } }
+@keyframes worldAmbientDrift {
+  from { transform: translate3d(0, 0, 0); opacity: .18; }
+  to { transform: translate3d(3px, -4px, 0); opacity: .4; }
+}

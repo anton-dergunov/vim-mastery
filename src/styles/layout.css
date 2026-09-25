@@ -1,0 +1,420 @@
+/* The phone frame, the top bar, and how the page adapts to landscape, tablet, and desktop. */
+
+.phone {
+  position: relative;
+  width: min(100%, 430px);
+  height: var(--app-viewport-height, 100dvh);
+  min-height: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(180deg, rgba(14, 34, 29, .98), rgba(5, 13, 12, .995) 55%);
+  box-shadow: 0 0 70px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(255,255,255,.035);
+  padding-top: env(safe-area-inset-top);
+}
+
+.game-area {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: stretch;
+  padding: 8px 8px;
+  overflow: hidden;
+  background: linear-gradient(#081613, #07110f);
+  touch-action: pan-y;
+}
+.runtime-notice {
+  grid-column: 2 / 12;
+  grid-row: 4 / 7;
+  align-self: center;
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(255, 208, 105, .45);
+  border-radius: 9px;
+  color: #f7e8bb;
+  background: rgba(4, 13, 12, .94);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
+  font: 650 13px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.runtime-notice strong { color: #ffd976; }
+.runtime-notice code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #e9fff1;
+  background: rgba(125, 220, 166, .13);
+}
+
+@media (max-height: 720px) {
+  .game-area { padding: 6px 7px; }
+}
+
+@media (min-width: 600px) {
+  .phone {
+    height: min(var(--app-viewport-height, 100dvh), 932px);
+    margin-top: max(0px, calc((var(--app-viewport-height, 100dvh) - 932px) / 2));
+    border: 1px solid rgba(180, 220, 200, .12);
+    border-radius: 28px;
+  }
+}
+
+.phone {
+  --text-meta: 11px;
+  --text-context: 12px;
+  --text-editor: clamp(14px, 3.8vw, 16px);
+  --text-body: 16px;
+  --text-guidance: clamp(16px, 4.25vw, 18px);
+}
+
+.next-topbar {
+  min-height: 54px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(166, 219, 192, .12);
+  background: rgba(5, 15, 13, .92);
+  backdrop-filter: blur(16px);
+  z-index: 30;
+}
+
+.icon-button,
+.dialog-close,
+.hint-button {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(150, 189, 171, .18);
+  border-radius: 10px;
+  color: #a9beb3;
+  background: rgba(255,255,255,.035);
+  cursor: pointer;
+}
+
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.next-topbar .mode-pill {
+  min-width: 60px;
+  height: 36px;
+  padding: 0 8px;
+  font-size: var(--text-meta);
+}
+
+.game-area {
+  min-height: 0;
+  padding: 7px;
+}
+
+@media (max-height: 760px) {
+  .next-topbar { min-height: 48px; padding-top: 4px; padding-bottom: 4px; }
+  .icon-button { width: 32px; height: 32px; flex-basis: 32px; }
+  .next-topbar .mode-pill { height: 32px; min-width: 56px; }
+  .game-area { padding: 5px 7px; }
+}
+
+/* Adaptive canvas --------------------------------------------------------- */
+
+.phone {
+  width: 100%;
+  max-width: none;
+  height: var(--app-viewport-height, 100dvh);
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.lesson-workspace {
+  min-height: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.lesson-context { display: contents; }
+.landscape-controls { display: none; }
+
+/* The short phone landscape arrangement is intentionally height-led. Tablets
+   retain the normal stacked sequence even in landscape. */
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .phone { padding-top: 0; }
+  .next-topbar { display: none; }
+  .landscape-controls {
+    position: absolute;
+    z-index: 40;
+    top: max(6px, env(safe-area-inset-top));
+    left: max(6px, env(safe-area-inset-left));
+    display: flex;
+    gap: 5px;
+  }
+  .landscape-controls .icon-button { width: 30px; height: 30px; flex-basis: 30px; border-radius:8px; }
+  .landscape-controls .icon-button svg { width: 17px; height: 17px; }
+  .lesson-workspace {
+    display: grid;
+    grid-template-columns: minmax(145px, 34%) minmax(0, 66%);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .lesson-context {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(166, 219, 192, .12);
+  }
+  .game-area { min-height: 0; padding: 6px; }
+}
+
+/* Tablet and desktop use the entire canvas, but preserve the vertical reading
+   order and cap the editor so reclaimed space becomes game board. */
+@media (min-width: 600px) {
+  .phone { height: var(--app-viewport-height, 100dvh); margin: 0; border: 0; border-radius: 0; }
+  .next-topbar { min-height: 60px; padding-right: clamp(16px, 3vw, 42px); padding-left: clamp(16px, 3vw, 42px); }
+  .game-area { padding: clamp(10px, 1.7vw, 20px); }
+}
+
+@media (min-width: 1024px) {
+  .next-topbar { min-height:64px; }
+}
+
+/* This follows the broad tablet rules above so a wide-but-short touch phone
+   retains its dedicated landscape composition. */
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .game-area { padding: 6px; }
+}
+
+/* Refinement pass: keep the reading surfaces deliberately bounded on larger
+   canvases, while allowing the world around them to use the remaining room. */
+@media (min-width: 600px) {
+  .next-topbar {
+    min-height: 64px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .next-topbar,
+  .activity-intro,
+  .next-command-tray {
+    width: min(calc(100% - 48px), 1040px);
+    align-self: center;
+    box-sizing: border-box;
+  }
+
+  .next-topbar {
+    margin: 12px auto 0;
+    border: 1px solid rgba(166, 219, 192, .12);
+    border-radius: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-area {
+    width: min(calc(100% - 48px), 1040px);
+    align-self: center;
+    box-sizing: border-box;
+    margin: 10px auto 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .phone.keyboard-visible .nix {
+    width: clamp(120px, 11.7vw, 164px);
+    grid-row: 5 / span 3;
+  }
+}
+
+/* iPhone landscape proof of concept ---------------------------------------
+   Keep the lesson essentials and editor above an always-reachable keyboard.
+   Installed iPhones have a sizeable left safe area around the sensor housing,
+   so the lesson rail owns that inset instead of letting text sit beneath it. */
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  .phone {
+    height: var(--app-viewport-height, 100dvh);
+  }
+
+  .lesson-workspace {
+    min-height: 0;
+    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+  }
+
+  .lesson-context {
+    min-width: 0;
+    padding-left: env(safe-area-inset-left);
+    overflow: hidden;
+  }
+
+  .landscape-controls {
+    top: max(5px, env(safe-area-inset-top));
+    left: max(5px, env(safe-area-inset-left));
+    gap: 4px;
+  }
+
+  .landscape-controls .icon-button {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+  }
+
+  /* When the editor consumes the available world height, remove the scenic
+     board rather than squeezing both surfaces into the same narrow strip. */
+  .phone.keyboard-visible .game-area {
+    padding: 4px max(4px, env(safe-area-inset-right)) 4px 4px;
+    background: #06110f;
+  }
+
+  .phone.keyboard-visible .world {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .phone.keyboard-visible .world::before,
+  .phone.keyboard-visible .world-backdrop,
+  .phone.keyboard-visible .world-ambient,
+  .phone.keyboard-visible .world-remote-variant-layer {
+    display: none;
+  }
+
+  .phone.keyboard-visible .editor-stack {
+    width: auto;
+    max-height: none;
+    grid-row: 1 / 10;
+    align-self: stretch;
+    justify-self: stretch;
+    margin: 0;
+  }
+
+  .phone.keyboard-visible .next-code-slab {
+    height: 100%;
+    max-height: none;
+  }
+
+  .phone.keyboard-visible .code-body .cm-scroller {
+    font-size: 12px;
+    line-height: 1.28;
+  }
+
+  .phone.keyboard-visible .code-body .cm-content {
+    padding-top: 2px;
+    padding-bottom: 3px;
+  }
+}
+
+/* Free practice ------------------------------------------------------------
+   The one surface where the code slab takes the whole canvas. This is the
+   short-landscape board-removal recipe above, promoted to every orientation:
+   with no instruction, console, board or character competing for the height,
+   there is nothing left to preserve behind the editor.
+
+   Every rule is gated on the surface attribute, and the block is appended last
+   on purpose. It ties on specificity (0,4,1) with the `.phone.keyboard-visible`
+   landscape rules, so source order is what lets it win without `!important` —
+   and gating on the attribute rather than `.keyboard-visible` is what keeps the
+   board removed for someone who has hidden the on-screen keyboard. */
+.phone[data-surface="free-practice"] .activity-intro,
+.phone[data-surface="free-practice"] .next-command-tray,
+.phone[data-surface="free-practice"] .help-card,
+.phone[data-surface="free-practice"] .character-layer,
+.phone[data-surface="free-practice"] .completion-host,
+.phone[data-surface="free-practice"] .world::before,
+.phone[data-surface="free-practice"] .world-backdrop,
+.phone[data-surface="free-practice"] .world-ambient,
+.phone[data-surface="free-practice"] .world-remote-variant-layer {
+  display: none;
+}
+
+.phone[data-surface="free-practice"] .game-area {
+  padding: 4px max(4px, env(safe-area-inset-right)) 4px max(4px, env(safe-area-inset-left));
+  background: #06110f;
+}
+
+.phone[data-surface="free-practice"] .world {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.phone[data-surface="free-practice"] .editor-stack {
+  width: auto;
+  max-height: none;
+  grid-row: 1 / 10;
+  align-self: stretch;
+  justify-self: stretch;
+  margin: 0;
+}
+
+.phone[data-surface="free-practice"] .next-code-slab {
+  height: 100%;
+  max-height: none;
+}
+
+/* The lesson's fixed-window clamp is deliberately absent: this is the only
+   natively scrolling buffer in the product, which is what lets Vim keep the
+   cursor in view across a sixty-line file. */
+.phone[data-surface="free-practice"] .code-body .cm-scroller {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Feedback capture.
+   The button lives in the board's empty bottom-right corner — the mirror of
+   the character's grid slot, which `.nix.right` reserves but nothing uses. It
+   sits above the grid, character and completion layers and below the help card
+   and the Ex output overlay, so the oracle and a `:print` dry run still cover
+   it, which is the right precedence. */
+.feedback-button {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #9fb6aa;
+  border: 1px solid rgba(150, 189, 171, .2);
+  border-radius: 10px;
+  background: rgba(7, 21, 18, .66);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.feedback-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.feedback-button:hover,
+.feedback-button:focus-visible {
+  color: var(--theme-bright);
+  border-color: color-mix(in srgb, var(--theme-bright) 45%, transparent);
+}
+
+/* Free practice is the one surface where the buffer fills the whole board, so a
+   floating button necessarily sits over text the learner is editing. It used to
+   stay and recede to half opacity, because it was the only way in. It no longer
+   is: the top bar swaps Settings out on this surface, and the freed slot holds
+   #practiceFeedbackButton, which covers nothing. */
+.phone[data-surface="free-practice"] .feedback-button { display: none; }
