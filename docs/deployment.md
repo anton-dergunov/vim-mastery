@@ -42,17 +42,19 @@ refer to the same revision.
 The service worker precaches the complete offline application in one install:
 
 - Both HTML pages, JavaScript, CSS, PWA manifest, and icons.
-- Every selected registered-scene base and exact-registration patch.
-- Approved story and reaction stills, all idle character PNGs, and the
-  character manifest.
-- The language profile data, unit catalog, and every unit JSON file.
+- Every selected scene base and registered patch, the intro, unit-ending, and
+  finale story art, all idle character PNGs, and the character manifest.
+- All content: the unit catalog and every unit file, `presentation.json`,
+  `reference.json`, `practice-samples.json`, `field-notes.json`,
+  `mastery-index.json`, and the language profiles.
 
 Consequently, after the first successful online installation, every available
 lesson can be opened and completed in airplane mode. Lesson JSON is fetched at
 runtime from the precache rather than compiled into the JavaScript bundle.
 
-Success-animation WebP files and complete-board scene variants are emitted to
-the GitHub Pages artifact but deliberately excluded from service-worker caches.
+Character reaction and action animations and complete-board scene variants
+are emitted to the GitHub Pages artifact but deliberately excluded from
+service-worker caches.
 The app fetches them in memory from that one Pages media origin only when
 needed. Local Vite development tries the project path first and then the same
 Pages URL. If a request is slow, fails, or the phone is offline, the local base
@@ -60,10 +62,12 @@ scene and idle character remain visible without delaying progress.
 
 The runtime manifest is the deployment allowlist for visual media. Builds fail
 on a declared missing asset, never discover source masters or review files, and
-report the deterministic core-media total without enforcing a size gate. A
-content digest in the cache name changes whenever any precached asset changes
-at a stable path. See `docs/media-and-story-infrastructure.md` for normalization
-commands and the WP-11 integration contract.
+report the core-media total; they fail above 300 MiB of core media. Nothing yet
+limits the total artifact, which GitHub Pages caps at 1 GB — see
+`docs/plans/asset-and-hosting-budget.md`. A content digest in the cache name
+changes whenever any precached asset changes at a stable path. See
+`docs/media-and-story-infrastructure.md` for normalization commands and how
+story art is wired.
 
 ## Feedback reporting
 
@@ -90,12 +94,25 @@ background. Once it is ready, the game shows an **Update** action and a
 worker and reloads into the new version; it never interrupts a lesson without
 the learner choosing to restart.
 
-The compact session record persists the active unit, active activity, theme
-preference, keyboard preference, and save timestamp. Independent story state
-stores only whether the introduction was seen and which unit transitions have
-already played by default. Direct `unit` and `activity` query parameters always
-win over the saved location. No editor buffers, educational completion ledger,
-lesson JSON, or animation media is stored as user state.
+Learner state lives in `localStorage`, in separate keys so that no surface can
+overwrite another's:
+
+- `vim-wilds.session.v1` — the active unit and activity, theme, keyboard,
+  effects, backdrop and character preferences, the entry level, and the save
+  time.
+- `vim-wilds.mastery.v1` — which activities have been completed, how often and
+  when, and the pinned concepts. This drives the progress states, focused
+  drills, and mixed review.
+- `vim-wilds.story.v1` — whether the introduction was seen and which unit
+  transitions have played; `vim-wilds.story-transition.v1` holds a transition
+  in flight across a refresh.
+- `vim-wilds.reference.v1` — whether the orientation deck has been seen.
+- `vim-wilds.practice.v1` — whether the free-practice notice has been seen.
+
+Direct `unit` and `activity` query parameters always win over the saved
+location. No editor buffer, lesson JSON, or media is stored as learner state,
+and no learner data leaves the device except in a problem report the learner
+chooses to send.
 
 ## Installing on iPhone and iPad
 

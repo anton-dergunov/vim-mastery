@@ -25,7 +25,6 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: node --check app.js
-      - run: node --check exercise-data.js
       - run: npm run test:full
       - name: Upload browser failure diagnostics
         if: failure()

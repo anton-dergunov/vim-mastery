@@ -1,12 +1,84 @@
-import { exercises } from "../exercise-data.js";
-
-export const lessonFixtures = exercises.map(exercise => ({
-  id: exercise.id,
-  initialCode: exercise.initialCode,
-  targetCode: exercise.targetCode,
-  cursor: exercise.cursor,
-  keys: exercise.solution,
-}));
+// The eleven exercises of the original prototype, kept as native-Vim fixtures.
+// They predate the unit files and now exist only here.
+export const lessonFixtures = Object.freeze([
+  {
+    id: "rune-column",
+    initialCode: ["const north = false; // [ ]", "const east  = false; // [ ]", "const south = false; // [ ]", "const west  = false; // [ ]"],
+    cursor: [0, 25],
+    keys: ["Ctrl-v", "3", "j", "r", "x"],
+    targetCode: ["const north = false; // [x]", "const east  = false; // [x]", "const south = false; // [x]", "const west  = false; // [x]"],
+  },
+  {
+    id: "crystal-string",
+    initialCode: ["const env = \"development\";"],
+    cursor: [0, 15],
+    keys: ["c", "i", "\"", "p", "r", "o", "d", "u", "c", "t", "i", "o", "n", "Escape"],
+    targetCode: ["const env = \"production\";"],
+  },
+  {
+    id: "empty-altar",
+    initialCode: ["renderCard(user, theme, debug);"],
+    cursor: [0, 16],
+    keys: ["d", "i", "("],
+    targetCode: ["renderCard();"],
+  },
+  {
+    id: "debug-thorns",
+    initialCode: ["debug(\"cache\");", "debug(\"auth\");", "debug(\"router\");", "return app.start();"],
+    cursor: [0, 0],
+    keys: ["3", "d", "d"],
+    targetCode: ["return app.start();"],
+  },
+  {
+    id: "mirror-repeat",
+    initialCode: ["cache.old = loader;", "auth.old  = verifier;", "api.old   = router;"],
+    cursor: [0, 7],
+    keys: ["c", "i", "w", "n", "e", "w", "Escape", "j", "b", ".", "j", "b", "."],
+    targetCode: ["cache.new = loader;", "auth.new  = verifier;", "api.new   = router;"],
+  },
+  {
+    id: "beacon-macro",
+    initialCode: ["fetchUser();", "fetchTeam();", "fetchAdmin();"],
+    cursor: [0, 0],
+    keys: ["q", "a", "I", "/", "/", " ", "Escape", "q", "j", "@", "a", "j", "@", "@"],
+    targetCode: ["// fetchUser();", "// fetchTeam();", "// fetchAdmin();"],
+  },
+  {
+    id: "terminal-substitute",
+    initialCode: ["var port = 3000;", "var host = \"localhost\";", "var secure = false;"],
+    cursor: [0, 0],
+    keys: [":", "%", "s", "/", "v", "a", "r", "/", "c", "o", "n", "s", "t", "/", "g", "Enter"],
+    targetCode: ["const port = 3000;", "const host = \"localhost\";", "const secure = false;"],
+  },
+  {
+    id: "bridge-indent",
+    initialCode: ["if (ready) {", "send();", "notify();", "}"],
+    cursor: [1, 0],
+    keys: ["V", "j", ">"],
+    targetCode: ["if (ready) {", "  send();", "  notify();", "}"],
+  },
+  {
+    id: "join-aqueduct",
+    initialCode: ["const label =", "  user.name;"],
+    cursor: [0, 0],
+    keys: ["J"],
+    targetCode: ["const label = user.name;"],
+  },
+  {
+    id: "cut-vine",
+    initialCode: ["const slug = \"draft-post\";"],
+    cursor: [0, 0],
+    keys: ["f", "-", "d", "t", "\""],
+    targetCode: ["const slug = \"draft\";"],
+  },
+  {
+    id: "echo-test",
+    initialCode: ["test(\"save\", () => ok(save()));"],
+    cursor: [0, 0],
+    keys: ["y", "y", "p"],
+    targetCode: ["test(\"save\", () => ok(save()));", "test(\"save\", () => ok(save()));"],
+  },
+]);
 
 export const inputFixtures = Object.freeze([
   {
@@ -479,7 +551,7 @@ export const conformanceFixtures = Object.freeze([
   // Vim leaves the cursor at the start of the last line a confirmed substitution
   // changed. The adapter leaves it wherever the first prompt appeared, which is
   // invisible when the first match is at column 0 on the only changed line and
-  // wrong otherwise. Unit 12 keeps its confirm exercises on that safe shape;
+  // wrong otherwise. Unit 13 keeps its confirm exercises on that safe shape;
   // these fixtures pin the divergence so it cannot widen unnoticed.
   {
     id: "substitute-confirm-accept-all-lands-on-the-last-changed-line",

@@ -107,7 +107,7 @@ characterwise and linewise `gp` and `gP`. Native fixtures alias `+` to an
 ordinary named register solely to provide a deterministic oracle on headless
 systems where the OS clipboard is unavailable.
 
-Unit 9 fixes authored viewport activities to seven 24px logical rows and exposes
+Unit 10 fixes authored viewport activities to seven 24px logical rows and exposes
 zero-based top and bottom visible lines through `VimEngine` and
 `window.VimWilds.getState()`. Native wheel/scrollbar/touch scrolling is hidden
 and canceled while adapter-initiated scrolling remains active; a pointer-
@@ -116,15 +116,16 @@ or below. Headless Vim verifies text, marks, histories, and structural cursor
 results, while Chromium owns exact viewport assertions because Ex mode has no
 reliable rendered window geometry.
 
-The versioned adapter patch adds native-conforming change-list traversal for
-`g;` and `g,`, records the Insert-exit mark used by `'^`, backtick-`^`, and
-`gi`, and maintains the previous operated range marks used by `'[` and `']`.
-It also corrects odd-row centering, page-size movement, and nested method
-boundaries. Activity reset clears marks, jump/change lists, insertion and
-selection history, and viewport state before deterministic setup is replayed.
-Specialized comment and preprocessor motions remain outside Unit 9.
+For Unit 9, the versioned adapter patch adds native-conforming change-list
+traversal for `g;` and `g,`, records the Insert-exit mark used by `'^`,
+backtick-`^`, and `gi`, maintains the previous operated range marks used by
+`'[` and `']`, and corrects nested method boundaries. For Unit 10 it corrects
+odd-row centering and page-size movement. Activity reset clears marks,
+jump/change lists, insertion and selection history, and viewport state before
+deterministic setup is replayed. Specialized comment and preprocessor motions
+remain outside Unit 9.
 
-Unit 12 configures every editor instance with `nopcre`, making the adapter use
+Unit 13 configures every editor instance with `nopcre`, making the adapter use
 Vim regular-expression syntax instead of its JavaScript-regex default. The
 versioned patch makes substitution case-sensitive by default, implements the
 `i`, `I`, and count-only `n` flags, and preserves `g` and interactive `c`.
@@ -141,7 +142,7 @@ groups, alternation, word boundaries, `\\v`, `\\zs`, and `\\ze` taught by the
 unit. Replacement case conversion and `\\=` expressions are intentionally
 orientation/reference material only and remain outside executable lessons.
 
-Unit 13 uses the adapter's named-register macro recorder for `q{register}…q`,
+Unit 14 uses the adapter's named-register macro recorder for `q{register}…q`,
 `@{register}`, `@@`, and counted replay. The app buffers `@` for one key so its
 existing `@:` bridge can coexist with ordinary macro registers, and it detects
 real search inputs rather than mistaking the recorder's `recording @a` message
@@ -154,15 +155,19 @@ macros are validated through their text and cursor results because the adapter
 stores recorded Insert changes separately from its printable register text.
 Inspection content therefore never seeds a register by recording: Vim writes
 K_SPECIAL prefixes into a recorded register, and while `getreg` readouts hide
-them, `"ap` puts those raw bytes into the buffer. Unit 13 keeps macro text as
+them, `"ap` puts those raw bytes into the buffer. Unit 14 keeps macro text as
 buffer text and loads it with `"ay$`, which is the verified round trip.
 Recursive macros remain optional explanatory material and are not part of the
 supported progression.
 
-## Session 01 — engine conformance spike
+## Verified families beyond the original units
 
-Session 01 verified the command families that the curriculum review proposes
-before any of them is authored into a lesson. Its fixtures live in
+> The sections from here on are a log written during the 25-session curriculum
+> plan that closed in September 2026. "Session N" means a session of that plan;
+> the plan itself is in git history. Unit numbers are current.
+
+Session 01 verified the command families that the curriculum review proposed,
+before any of them was authored into a lesson. Its fixtures live in
 `conformanceFixtures` in `tests/vim-fixtures.mjs` and run on both tiers:
 `tests/native-vim.test.mjs` asserts them against real Vim, and
 `tests/editor-conformance.spec.js` replays the identical fixtures through the
@@ -268,7 +273,7 @@ divergence. Three have since been lifted:
   the first prompt appeared. The two agree only when the run changes one line
   whose first match is at column 0, which is why every existing confirm fixture
   passed. Correcting it means reaching into the adapter's prompt loop rather
-  than its command parsing. Unit 12 keeps its confirm exercises on the shape
+  than its command parsing. Unit 13 keeps its confirm exercises on the shape
   where the two agree, and
   `substitute-confirm-accept-all-lands-on-the-last-changed-line` records the
   divergence with a `browserVerdict` so it cannot widen unnoticed.
@@ -277,11 +282,11 @@ Known debt: `AGENTS.md` states that the adapter owns Vim command interpretation,
 yet `vim-engine.js` implements `:t`, `:m`, `:put`, `:sort`, and `:global`
 itself. The cleaner arrangement is to register those as adapter Ex commands with
 `Vim.defineEx` and let the adapter's own `:global`, which already tracks line
-handles, compose them. That re-routes code every verified Unit 11 fixture
-depends on, so it was left alone here. Followup session 05 settled it the other
+handles, compose them. That re-routes code every verified Unit 12 fixture
+depends on, so it was left alone here. The Ex ownership work below settled it the other
 way round: the app keeps those commands, and `AGENTS.md` now says so.
 
-## Session 19 — an Ex output surface
+## The Ex output surface
 
 Session 01 dropped `:g/pat/p` and `:g/pat/nu` for a product reason rather than a
 conformance one: Vim prints the matched lines, and there was nowhere to print.
@@ -337,12 +342,12 @@ empty message.
 
 Known gap at the time: `@:` called `Vim.handleEx` directly instead of going
 through `executeEx`, so replaying a print through it produced no output. The
-same was true of `:t`, `:m`, `:put` and `:sort`. Followup session 05 closed it
+same was true of `:t`, `:m`, `:put` and `:sort`. The Ex ownership work below closed it
 without the `Vim.defineEx` re-routing.
 
-## Session 21 — search offsets
+## Search offsets
 
-Session 12 teaches that an operator plus a search is *exclusive*: `d/compute`
+Unit 5 teaches that an operator plus a search is *exclusive*: `d/compute`
 stops in front of the match. That is a sharp edge with no tool until offsets
 exist, because `d/compute/e` is how you delete *through* a match. Session 21
 closes that gap.
@@ -383,7 +388,7 @@ edge, `d`/`y`/`c` over each form, `?pat?e`, and offset-preserving `n` and `N`.
 Search offsets on Ex addresses (`:/pat/+1d`) are a different parser and remain
 out of scope.
 
-## Session 22 — the file-name register
+## The file-name register
 
 `"%` holds the name of the file in the buffer. It is how you write `:e <C-r>%`
 or drop a path into a comment, and session 01 dropped it for two reasons that
@@ -393,7 +398,7 @@ name. Only the first was a conformance problem.
 An activity already declares a `languageId`. Declaring an optional `fileName`
 beside it finishes a description that was half-written — a buffer with a name is
 more realistic than one without — and `content/practice-samples.json` had
-carried one since session 15. Absent, the buffer is unnamed and `"%` is empty,
+carried one since free practice shipped. Absent, the buffer is unnamed and `"%` is empty,
 which is what Vim reports for an unnamed buffer too.
 
 Two properties of the adapter shape the implementation. `Vim.defineRegister`
@@ -424,10 +429,9 @@ being ignored. Filename modifiers (`%:h`, `%:t`) are a different parser and are
 out of scope, as is anything implying the file exists — `:w` and `:e`. The name
 is a label, not a filesystem.
 
-## After the 25-session plan — Ex ownership and `@:`
+## Ex ownership and `@:`
 
-This work followed the closed 25-session plan above; it is not one of its
-sessions.
+This work came after the 25-session plan had closed.
 
 Two things were wrong at once, and they were the same thing. `AGENTS.md` said
 the adapter owns Vim command interpretation while `vim-engine.js` interprets
