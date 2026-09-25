@@ -39,7 +39,7 @@ The recommended order is:
 This document operationalizes the learning and practice portions of
 [Curriculum and Progression](../curriculum-and-progression.md). It relies on the
 validity/evidence/coaching separation in
-[Exercise Verification and Feedback](../exercise-verification-and-feedback.md),
+[Exercise Verification and Feedback](exercise-verification.md),
 the reviewed authoring flow in
 [Lesson Content Design](../lesson-content-design.md), and the release oracle in
 [Vim Conformance](../vim-conformance.md). The companion documents cover

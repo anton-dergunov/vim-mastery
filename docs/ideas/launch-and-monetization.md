@@ -12,7 +12,7 @@ offline-capable PWA on GitHub Pages: 17 units, local mastery progress, free
 practice, reference decks, and in-app problem reports. There is no product
 analytics, no account, no payment, and no beta cohort. Input is still graded
 against the next canonical key; see
-[../exercise-verification-and-feedback.md](../exercise-verification-and-feedback.md).
+[exercise-verification.md](exercise-verification.md).
 
 ## Principles
 

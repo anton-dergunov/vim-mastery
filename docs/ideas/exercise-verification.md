@@ -1,4 +1,10 @@
-# Exercise Verification and Feedback
+# Exercise verification and feedback
+
+**Status: idea, not scheduled.** The target design (July 2026) for how practice
+should be graded. None of it is implemented yet; see
+[Where grading stands](#where-grading-stands). Companion ideas:
+[adaptive-practice.md](adaptive-practice.md) for the learning loop that
+depends on it and [ml-strategy.md](ml-strategy.md) for the model research.
 
 ## Purpose and decision
 
@@ -43,8 +49,8 @@ taught command. It belongs in development and CI, not in learner scoring. Every
 supported command family needs fixtures for the state it can affect: text,
 cursor, selection, mode, registers, search, marks, and undo grouping where
 relevant. This is the contract described in
-[Vim Conformance](./vim-conformance.md) and
-[Vim Engine Choice](./vim-engine-choice.md).
+[Vim Conformance](../vim-conformance.md) and
+[Vim Engine Choice](../vim-engine-choice.md).
 
 ### Attempt verification
 
@@ -63,39 +69,35 @@ Separating these questions avoids several category errors: a conformant command
 can be pedagogically irrelevant, a valid alternative solution can differ from
 the hint, and one successful attempt does not prove durable mastery.
 
-## Current prototype baseline
+## Where grading stands
 
-The current implementation is already closer to outcome-based verification
-than its command tray suggests:
+Checked against the code in September 2026. Practice is stricter than this
+design wants, not looser:
 
-- `app.js` records normalized key tokens in `state.history`.
-- `canonicalProgress()` advances only while the entire history is a prefix of
-  the teaching solution. A divergent key resets visual progress to zero.
-- The canonical sequence drives next-key guidance, help highlights, scenery,
-  `solveCurrent()`, and regression fixtures. It does **not** gate success.
-- `isTargetSnapshot()` completes an exercise when the live text exactly equals
-  `targetCode` and the engine has returned to Normal mode.
-- `VimEngine` exposes text, cursor, primary selection, all selection ranges,
-  normalized mode, keys, document changes, selection changes, and
-  command-completion events.
-- The public `window.VimWilds` test surface exposes normalized history, code,
-  cursor, selection, mode, modifiers, and completion.
+- Every exercise declares `inputPolicy: "exact-sequence"`.
+- In guided and recall practice, `processToken()` in `app.js` compares each key
+  with the next canonical key (`scriptKeys()[state.progress]`) and refuses a
+  mismatch **before the engine sees it**. An equivalent Vim command, or a
+  mistake followed by `u`, cannot reach the target.
+- `isTargetSnapshot()` compares text, mode, cursor, declared registers, and an
+  optional viewport, so a full-state target check already exists — it is just
+  reached only through the canonical path.
+- Explore mode and free practice send every key to the engine; Explore detects
+  when the target is reached, and free practice has no target.
+- Refused keys are kept for problem reports (`state.rejectedKeys`), and
+  consecutive mistakes drive hints and character reactions.
 
-Important information is not yet represented in a lesson-facing trace:
+Not yet represented anywhere a lesson could use it:
 
-- Logical command spans are not assembled from raw keys and
-  `command-complete` events.
-- Before/after state is not retained for every logical command.
-- Registers, search state, marks, dot-repeat state, macro state, and undo groups
-  are not part of `EditorSnapshot`.
-- Hint openings, reset/retry events, undo recovery, and elapsed time are not
-  recorded as attempt events.
-- Checkpoints in `exercise-data.js` validate authored canonical solutions but
-  are not applied to arbitrary learner traces at runtime.
+- logical command spans assembled from raw keys and command-complete events;
+- before/after state for each logical command;
+- search, mark, dot-repeat, macro, and undo-group state in the snapshot;
+- hint, reset, retry, undo-recovery, and timing events for an attempt;
+- runtime checkpoints applied to arbitrary learner traces rather than only to
+  authored solutions.
 
-This means target-state validation is ready now, while trustworthy command
-family classification, richer constraints, and learned feedback require a
-small telemetry and adapter layer first.
+So a target-state validator is ready to be put in front of learners, while
+command-family evidence and learned feedback need a trace layer first.
 
 ## Verification option catalogue
 
@@ -751,207 +753,15 @@ Cloud judgment introduces cost, latency, privacy, availability, and model-versio
 drift into a product designed to be local and offline-capable. Make it optional,
 cache repeated trace classes, and prefer batch use during authoring.
 
-### Can a model be trained from scratch?
+### Learned models
 
-Yes, if “model” means a compact domain-specific sequence model rather than a
-general-purpose conversational LLM.
-
-The task can be formulated as supervised multi-task learning over an attempt
-trace:
-
-- Classify strategy family or families.
-- Classify misconception or failure mode.
-- Predict rubric dimensions or rank two valid solutions.
-- Select an authored feedback template.
-- Estimate confidence and abstain on unfamiliar traces.
-
-A reasonable starting experiment is a Transformer encoder with:
-
-- 4–6 layers.
-- Hidden dimension around 128–256.
-- 4–8 attention heads.
-- Relative or learned positional features.
-- Approximately 5–20 million parameters, depending on vocabulary and heads.
-- Separate classification, regression/ranking, and template-selection heads.
-
-These numbers are starting hypotheses, not performance or deployment
-guarantees. A GRU, temporal convolution, gradient-boosted tree over aggregated
-features, or even deterministic rules may outperform the Transformer at the
-available data scale. All should be baselines.
-
-Use a staged model ladder rather than committing immediately to one neural
-architecture:
-
-| Model | Role | Why try it | Main limitation |
-| --- | --- | --- | --- |
-| Deterministic rules | Strategy and evidence tags | Fully explainable and strong on known commands | Editorial coverage grows with the curriculum |
-| Logistic regression or boosted trees | Misconception and feedback-template classification from aggregate features | Fast baseline and easy feature attribution | Loses event order unless sequence features are engineered |
-| GRU or temporal convolution | Short trace classification | Compact and naturally sequential | Less flexible representation of long-range macro or repeat relationships |
-| Transformer encoder | Multi-task trace classification and ranking | Captures relationships among commands, state deltas, and distant events | Needs more data and careful calibration |
-| Small encoder-decoder | Constrained short feedback generation | Can produce compositional language from structured facts | Larger, harder to make faithful, and unnecessary if templates suffice |
-| Fine-tuned pretrained decoder | Rich advisory explanation | Reuses existing language knowledge | Laptop/server-sized and still unsuitable as a correctness authority |
-
-For the from-scratch encoder experiment, begin with solver-generated pretraining
-and a modest supervised set rather than waiting for a huge user population. A
-useful experimental corpus could contain hundreds of thousands to low millions
-of traces, with exercise families, identifiers, and buffer templates split so
-the test set measures structural generalization rather than memorization. The
-right scale should be established with learning curves; these are experimental
-ranges, not a claim that a particular sample count guarantees quality.
-
-Training a fluent decoder from scratch is a different project. It must learn
-English generation as well as Vim trace interpretation, consumes far more data
-and compute, and still requires factuality controls. If natural-language
-generation is the goal, fine-tuning or distillation from a pretrained model is
-the sensible comparison.
-
-### Input representation
-
-Use a compact event vocabulary rather than natural-language prompts. Each event
-may combine embeddings or features for:
-
-- Normalized key or logical command.
-- Command family and argument slots.
-- Mode before and after.
-- Cursor displacement and line/column buckets.
-- Selection kind and size change.
-- Document delta shape: insertion, deletion, replacement, affected lines, and
-  length buckets.
-- Literal insertion span, abstracted from its exact identifier where possible.
-- Register, search, repeat, or macro event.
-- Command completion boundary.
-- Hint, undo, retry, or reset.
-- Time since the previous event in coarse buckets.
-- Exercise skill tags and target-difference features.
-
-Keep the exact before/after state available to deterministic validation; the
-model generally needs abstractions, not an entire code buffer copied into every
-token.
-
-### Training data
-
-The solver and engine can generate much of the initial corpus:
-
-- Optimal and near-optimal solutions under several cost functions.
-- Diverse valid strategy clusters.
-- Solutions that reach the target without required skill evidence.
-- Prefix truncations and one-command corruptions.
-- Inefficient repeated manual actions.
-- Delete-and-retype shortcuts.
-- Accidental input followed by successful or unsuccessful recovery.
-- Brittle solutions tested on controlled variants.
-- Engine-conformance failures, excluded from positive data and retained as
-  diagnostics.
-
-Add simulated novice policies rather than relying only on uniform random
-corruption. Examples include repeated `x`, repeated `w`, overshooting then
-moving back, entering Insert too early, forgetting `Escape`, and replaying a
-macro from the wrong location.
-
-Synthetic data will overrepresent what the generator can imagine. Reserve an
-exercise- and strategy-disjoint human test set, collect consented real traces,
-and periodically compare their distribution with synthetic training data.
-
-### Using a larger LLM as teacher
-
-A larger model can generate candidate rationales, misconception labels, novice
-traces, and pairwise preferences between already-valid strategies. It should
-receive engine-derived facts and emit structured records.
-
-Programmatic filters should verify:
-
-- Every proposed key trace by replay.
-- Every claimed state change.
-- Mentioned commands against the supported-command catalogue.
-- Strategy labels against deterministic evidence where possible.
-- Feedback length, tone, and absence of invented product capabilities.
-
-Human review should sample every label class and all advanced automation
-families. The resulting dataset can distill a teacher's breadth into a smaller
-classifier or feedback selector without paying for a live call on every lesson.
-
-### Fine-tuning a pretrained small language model
-
-If free-form feedback proves materially better than templates, parameter-efficient
-fine-tuning is more practical than language-model pretraining. Apple's
-[MLX-LM](https://github.com/ml-explore/mlx-lm) supports generation, quantization,
-and low-rank or full-model fine-tuning on Apple silicon. A quantized small
-pretrained model with LoRA can therefore be an approachable laptop experiment,
-subject to the machine's unified memory and the selected model size.
-
-The training examples should pair structured verifier facts with short reviewed
-feedback. Optimize for faithfulness and concision rather than conversational
-breadth. Evaluate against held-out command families and adversarial traces.
-
-This model is unlikely to be the best mobile-web runtime initially. It may be
-useful as an offline authoring assistant, a laptop-local coach, or a teacher for
-a much smaller template selector.
-
-### Local inference
-
-A compact classifier or ranker can be exported to ONNX and evaluated in the
-browser. [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/) supports
-WebAssembly and GPU-oriented execution providers including WebGPU, with operator
-and browser support that must be tested on the target phones.
-
-Practical deployment gates include:
-
-- Download and cache size.
-- Cold-start latency.
-- Median and tail inference latency on representative iOS and Android devices.
-- Memory pressure alongside CodeMirror and visual effects.
-- WebAssembly fallback when WebGPU is absent.
-- Battery use.
-- Offline behavior and model versioning.
-
-Small-model research such as
-[TinyStories](https://arxiv.org/abs/2305.07759) shows that narrow, synthetic
-corpora can make small language models surprisingly capable within a restricted
-domain. It does not imply that a few-million-parameter model will generate
-reliably factual Vim coaching. Classification and ranking remain much easier
-targets than fluent explanation.
-
-### Vim trace language model experiment
-
-An especially relevant research project is a model pretrained on the Vim trace
-language itself. Given an exercise state and prior events, train it to predict:
-
-- The next logical command.
-- The next abstract state delta.
-- Whether a command will make progress toward the target.
-- The strategy family of the full trace.
-
-Then fine-tune heads for misconception classification, solution ranking, and
-feedback selection. This self-supervised stage can exploit a much larger corpus
-of solver- and policy-generated traces than the human-labeled dataset.
-
-Useful experiments include masked command prediction, contrastive learning
-between two traces that reach the same state, and representations invariant to
-renamed identifiers or changed literal values. This is a legitimate from-scratch
-ML project and potentially publishable, but it should begin only after the
-deterministic trace format, solver, and evaluation suite are stable.
-
-### Knowledge tracing is a different model
-
-Attempt interpretation describes what happened now. Knowledge tracing predicts
-what the learner is likely to recall later. Models such as
-[Deep Knowledge Tracing](https://arxiv.org/abs/1506.05908) operate over a
-sequence of exercise outcomes and skill tags.
-
-Inputs for a future learner model may include:
-
-- Skill evidence and attempt validity.
-- Guided versus independent success.
-- Hint and retry use.
-- Response latency.
-- Strategy efficiency bands.
-- Time since prior practice.
-- Performance on delayed and varied transfer tasks.
-
-Start with interpretable per-skill heuristics or Bayesian models. Compare more
-complex sequence models only when enough longitudinal data exists. Do not train
-the trace judge and mastery estimator as one opaque model until both tasks have
-strong independent baselines and evaluation sets.
+Whether a compact trace model can be trained from scratch, what its input
+representation and training data would be, how a larger LLM can act as a
+teacher, local inference, and why knowledge tracing is a separate model are
+all covered in [ml-strategy.md](ml-strategy.md). The rule for verification is
+unchanged: start with interpretable heuristics, and never train the trace judge
+and the mastery estimator as one opaque model before each has its own baseline
+and evaluation set.
 
 ## Evaluation
 
