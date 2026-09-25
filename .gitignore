@@ -8,4 +8,4 @@ artifacts/character-generation/
 artifacts/world-generation/
 /feedback/
 # Holds the feedback admin token in plaintext; this repository is public.
-scripts/feedback/fetch.sh
+/fetch-feedback.sh
