@@ -42,8 +42,9 @@ art has to fit under it.
 ### 1. Measure, and write the measurement down
 
 Reproduce the table above from the repository rather than trusting it — the
-numbers move with every art session. `collectMediaPolicy` and `coreMediaBytes`
-in `media-policy.js` give both tiers; `remoteVariantPaths` in
+numbers move with every art session. `collectMediaPolicy` in `media-policy.js`
+gives both tiers (`coreMediaBytes` there is internal; export it if a script
+needs it); `remoteVariantPaths` in
 `presentation-data.js` gives the variant expansion. Then add the measurement to
 the test tier so it stops being a thing someone has to remember to check:
 `tests/media-policy.test.mjs` asserts the core ceiling

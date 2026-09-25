@@ -25,6 +25,9 @@ UNIT_SCENES = {
     "entering-changing-text": "scribes-spring",
     "operator-grammar": "grammar-gate-court",
 }
+# Unit 2's wide layout reuses its compact board: the generated wide Wayfinder
+# scene duplicated its artwork across the canvas (2e8d1bd).
+SKIPPED_PROFILES = {("cursor-movement", "wide")}
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as source:
@@ -81,6 +84,8 @@ def main() -> int:
     ledger = {"schemaVersion": 1, "assets": []}
     for unit_id, scene_id in UNIT_SCENES.items():
         for profile, size in PROFILE_SIZES.items():
+            if (unit_id, profile) in SKIPPED_PROFILES:
+                continue
             source_path = approved_source(unit_id, scene_id, profile, approvals)
             base = cover_resize(Image.open(source_path), size)
             output = OUTPUT_ROOT / scene_id / profile

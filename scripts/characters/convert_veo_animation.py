@@ -86,8 +86,8 @@ def extract_frames(video: Path, fps: int, directory: Path) -> list[Image.Image]:
         str(video),
         "-vf",
         f"fps={fps}",
-        "-vsync",
-        "0",
+        "-fps_mode",
+        "passthrough",
         str(output_pattern),
     ]
     try:
