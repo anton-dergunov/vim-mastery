@@ -203,7 +203,7 @@ helpfulness against rule-based feedback, p50/p95 latency, and cost per
 *accepted* exercise and per *helpful* feedback event. Route: deterministic
 template → smallest qualified model → mid-tier coach → frontier only on a
 documented predicate. Model strategy is in
-[../ml-experimentation-and-model-strategy.md](../ml-experimentation-and-model-strategy.md).
+[ml-strategy.md](ml-strategy.md).
 
 ## Portfolio value
 

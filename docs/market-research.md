@@ -152,4 +152,4 @@ A niche of niches: the category leader gets ~60K visits a month.
 
 Treat revenue as upside. The durable value is a good product in a persistent
 niche — and, for this project, the learning-science and measurement work it
-enables (see [ml-experimentation-and-model-strategy.md](ml-experimentation-and-model-strategy.md)).
+enables (see [ideas/ml-strategy.md](ideas/ml-strategy.md)).

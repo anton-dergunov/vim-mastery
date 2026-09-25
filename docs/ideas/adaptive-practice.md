@@ -1,6 +1,10 @@
-# Adaptive Practice and Exercise Generation
+# Adaptive practice and exercise generation
 
-Research and product recommendation for Vim Wilds, current to **22 July 2026**.
+**Status: idea, not scheduled.** A research-backed proposal (July 2026) for
+making practice varied, graded on the outcome, and recurrent across sessions.
+Part of it has shipped since; see [Where it stands](#where-it-stands). The
+companion ideas are [ml-strategy.md](ml-strategy.md) for the model research and
+[launch-and-monetization.md](launch-and-monetization.md) for validation.
 
 ## Executive decision
 
@@ -33,65 +37,38 @@ The recommended order is:
    until real data demonstrates a need.
 
 This document operationalizes the learning and practice portions of
-[Curriculum and Progression](./curriculum-and-progression.md). It relies on the
+[Curriculum and Progression](../curriculum-and-progression.md). It relies on the
 validity/evidence/coaching separation in
-[Exercise Verification and Feedback](./exercise-verification-and-feedback.md),
+[Exercise Verification and Feedback](../exercise-verification-and-feedback.md),
 the reviewed authoring flow in
-[Lesson Content Design](./lesson-content-design.md), and the release oracle in
-[Vim Conformance](./vim-conformance.md). The companion documents cover
-[ML experiments and model selection](./ml-experimentation-and-model-strategy.md)
-and [launch and monetization](./ideas/launch-and-monetization.md).
+[Lesson Content Design](../lesson-content-design.md), and the release oracle in
+[Vim Conformance](../vim-conformance.md). The companion documents cover
+[ML experiments and model selection](ml-strategy.md)
+and [launch and monetization](launch-and-monetization.md).
 
-## What the app has now
+## Where it stands
 
-### Catalogue audit
+Checked against the code in September 2026.
 
-The figures below are derived from the 14 JSON files in `content/units/` and
-the runtime expansion in [`app.js`](../app.js), not from an estimate.
+| Idea | Status |
+| --- | --- |
+| Explore this exercise (unrestricted keys, target detection) | **Shipped** — the Explore button on practice activities |
+| Completion ledger and "due for a refresh" markers | **Shipped** — `mastery-progress.js`, with five product-facing states |
+| Goal-free sandbox with curated local packs | **Shipped** — free practice with bundled sample files |
+| Scenario chains and capstones | **Shipped** — Unit 16 real-code capstones |
+| Mixed tool-choice activities | **Shipped** — 60 choice activities |
+| Test-out, preview, entry level | **Shipped** |
+| Catalogue review | **Partial** — 211 runnable records reviewed, 393 still draft |
+| Outcome and skill-evidence grading in independent practice | **Not built** — every exercise is `exact-sequence`; the app rejects any key that is not the next canonical key before the engine sees it |
+| Fresh variants for recall | **Not built** — recall replays the guided scenario |
+| Per-skill review scheduler and startup review | **Not built** — staleness markers only, no scheduled queue |
+| Faded completion, prediction, contrast pairs, mistake clinic, erroneous-solution repair | **Not built** |
+| Templates, typed DSL, offline LLM generation, model coaching | **Not built** |
 
-| Measure | Current value | Consequence |
-| --- | ---: | --- |
-| Units | 14 | The planned core course is represented. |
-| Lessons | 116 | Scheduling should operate below the unit level. |
-| Authored exercise records | 362 | Raw record count is not the main shortage. |
-| Lessons with exactly three exercises | 102 of 116 | The user's perceived “three per concept” pattern is real. |
-| `guided-then-recall` exercises | 353 | Most records are presented twice without a new scenario. |
-| Guided-only / recall-only records | 7 / 2 | Exceptions are rare. |
-| Runtime guided / recall presentations | 360 / 355 | There are 715 presentations but only 362 authored scenarios. |
-| Unit JSON size | 2,072,224 bytes | Naively materializing ten variants would approach 20 MB before assets. |
-| Unit release status | 14 `authoring` | The catalogue is not yet a released gold set. |
-| Runnable provenance | 478 native passed | This includes 116 demos as well as 362 exercises. |
-| Human review | 317 draft; 161 reviewed | Units 1–9 are draft; Units 10–14 are reviewed. |
-| Browser conformance | 445 passed; 33 pending | The pending records are Unit 10. |
-
-`activityFlowFor()` currently clones one `guided-then-recall` activity into a
-guided presentation and a recall presentation. The clone retains the same
-buffer, cursor, goal, target, and script. In addition,
-`processToken()` rejects a key before sending it to the editor whenever it is
-not the next canonical key. `isTargetSnapshot()` already compares text, mode,
-cursor, registers, and viewport, but it is reached for completion only after
-the complete canonical script has been accepted.
-
-The content is therefore rich in **command coverage** but shallow in four
-different kinds of learning evidence:
-
-- recall after time has passed;
-- applying the same idea to a changed surface form;
-- choosing a command family without being told which one;
-- making, diagnosing, and recovering from an error.
-
-Local persistence currently stores the active unit/activity, theme preference,
-and save time. It does not retain completed attempts, hint use, errors, skill
-state, or review dates. Durable adaptation must begin with that progress record.
-
-### The stale-design warning
-
-[Exercise Verification and Feedback](./exercise-verification-and-feedback.md)
-describes the intended outcome-based architecture and parts of an earlier
-runtime baseline. The current `processToken()` implementation is stricter than
-that baseline description. When implementation begins, source code and tests
-are the current-state authority; the verification document remains the target
-design authority.
+The central gap is therefore unchanged: the catalogue is rich in command
+coverage but shallow in four kinds of learning evidence — recall after time has
+passed, the same idea on a changed surface, choosing a command family without
+being told, and making and recovering from an error.
 
 ## What improves learning
 
@@ -190,6 +167,9 @@ is easy, first remove cues and vary context; do not immediately jump to a new
 command family.
 
 ## Three kinds of free practice
+
+The first and third have shipped; realistic multi-goal scenarios exist only as
+the Unit 16 capstones.
 
 ### 1. Explore this exercise
 
@@ -304,12 +284,12 @@ The important boundary is that learned models select or propose. The executor
 contains Vim semantics and the verifier accepts content. A model trained from
 scratch over a small command DSL can therefore be tiny; a fluent exercise
 author is more realistically obtained by adapting a pretrained language model.
-See [ML Experimentation and Model Strategy](./ml-experimentation-and-model-strategy.md)
+See [ml-strategy.md](ml-strategy.md)
 for the size estimates and experiment ladder.
 
 ### Skill mixing instead of a unit matrix
 
-A complete 14 × 14 unit matrix is feasible but wastes authoring effort on
+A complete 17 × 17 unit matrix is feasible but wastes authoring effort on
 combinations that are either trivial, premature, or incoherent. Model the
 mixing contract at atomic skill/template level:
 
@@ -326,7 +306,7 @@ generation mechanism or learner model.
 ### Storage and delivery
 
 Ten fully materialized copies of the current unit JSON would grow the lesson
-data from about 2 MB toward 20 MB. That is avoidable:
+data from about 3 MB toward 30 MB. That is avoidable:
 
 - ship compact templates and seeds where the generator is closed and fully
   property-tested at build time;
@@ -433,7 +413,7 @@ template reuse.
 
 Wall-clock intervals must be configurable. “Next session” is a useful fallback
 for irregular PWA usage. More advanced scheduling and knowledge-tracing models
-belong in the companion [ML strategy](./ml-experimentation-and-model-strategy.md),
+belong in the companion [ML strategy](ml-strategy.md),
 after the rule baseline produces real longitudinal data.
 
 ### Unlocking
@@ -549,8 +529,8 @@ first adaptive release so later off-policy comparisons remain possible.
 
 ### Phase 0 — trustworthy baseline
 
-1. Review Units 1–9, finish Unit 10 browser conformance, and move only audited
-   items from `authoring` toward release.
+1. Review the remaining draft content and move only audited items from
+   `authoring` toward release.
 2. Create gold suites for ordinary alternatives, misconception traces,
    generated-item acceptance, and delayed-transfer outcome definitions.
 3. Record baseline completion, errors, hint use, and scenario reuse locally.
@@ -567,8 +547,9 @@ first adaptive release so later off-policy comparisons remain possible.
 
 8. Add prediction, faded completion, contrast, mixed tool-choice, recovery, and
    mistake-clinic activities.
-9. Add Explore this exercise.
-10. Add persistent scenario chains/capstones, then the full curated sandbox.
+9. ~~Add Explore this exercise.~~ Shipped.
+10. ~~Add persistent scenario chains/capstones, then the full curated sandbox.~~
+    Shipped as the Unit 16 capstones and free practice.
 
 ### Phase 3 — scale and personalize
 
