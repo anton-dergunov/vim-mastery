@@ -1,144 +1,147 @@
 # Media and story infrastructure
 
-This document is the implementation contract for WP-05 and WP-10 and the
-handoff boundary for WP-11. Generated scene review and art approval happen
-outside this package.
+How art gets from an approved file into the shipped app, and how the story
+surface works at runtime. What the art should look like, and how it is
+generated, is in [art-direction.md](art-direction.md) and
+[art-prompts.md](art-prompts.md).
 
 ## Runtime media policy
 
-`media-policy.js` derives the deployment from runtime manifests rather than
-walking production art directories:
+`media-policy.js` derives what ships from the runtime manifests
+(`content/presentation.json` and `assets/characters/manifest.json`) rather than
+walking the art directories:
 
-- Core media: selected registered-scene bases and patches, the fourteen
-  approved unit-story backdrops, non-null intro stills, character idle images,
-  and declared reaction stills.
-- Optional media: character animations and declared complete-board scene
-  variants.
-- Source masters, candidates, and review files are never discovered or emitted.
+- **Core media** — precached by the service worker, available offline:
+  registered scene bases and patches, unit-ending backdrops and story images,
+  intro stills, the finale, and character idle images.
+- **Optional media** — emitted to the build but never precached, fetched only
+  when shown: character reaction and action animations, and the complete-board
+  remote scene variants.
+- **Never shipped:** source masters, candidates, and review files. Paths under
+  `candidates/`, `masters/`, `review/`, `reviews/`, or `sources/` are never
+  discovered or emitted, and lossless PNG masters kept beside a runtime WebP are
+  not declared, so they stay out of the build.
 
-Every declared core or optional asset must exist. A production build fails with
-the manifest category and path when one is missing. Core declarations cannot
-point into a `variants/` directory. A story panel may use
-`"asset": null` while its CSS placeholder is the approved runtime fallback.
-WP-11 should replace `null` only after the corresponding reviewed file is in
-the production asset tree.
+Every declared asset must exist; a production build fails with the manifest
+category and path when one is missing. Core declarations may not point into a
+`variants/` directory.
 
-Core media is precached. Optional media is emitted to the GitHub Pages artifact
-but excluded from the service-worker precache. Production and fallback requests
-use the Pages origin; local Vite development tries the local asset first.
+**Budget.** The build prints the core file count and size. It **fails above
+300 MiB of core media** (`CORE_MEDIA_MAX_BYTES`), a ceiling meant to catch a
+mistake, not to ration artwork; `tests/media-policy.test.mjs` asserts it too.
+Nothing yet limits the *total* shipped size, including the optional tier —
+that is [plans/asset-and-hosting-budget.md](plans/asset-and-hosting-budget.md).
 
-The build prints the deterministic core file count and byte total for later
-optimization work, but does not reject a package based on media size. The
-service-worker cache name contains a digest of every precached file, so changing
-generated media at a stable path creates a new cache even when the application
-version is unchanged.
+**Origins.** Production and fallback requests use the GitHub Pages origin; local
+Vite development tries the local asset first. The service-worker cache name
+contains a digest of every precached file, so changing an image at a stable
+path creates a new cache even when the app version is unchanged.
 
-Character reaction stills can be declared in either of these compatible forms:
-
-```json
-{
-  "reactions": {
-    "attentive": "assets/characters/nix/reactions/attentive.webp",
-    "encouraging": {
-      "still": "assets/characters/nix/reactions/encouraging.webp"
-    }
-  }
-}
-```
-
-Large motion belongs under `animations` and remains optional.
+Character reactions can be declared as a path or as `{ "still": path }` under a
+character's `reactions` in the manifest. Motion lives under `animations`, and
+both stay optional.
 
 ## Repeatable normalization
 
 Keep original generation outputs outside `assets/`. Normalize an approved copy
-into its final manifest path with pinned local tool versions. The following
-commands strip metadata and use deterministic encoder settings:
+into its final manifest path with deterministic, metadata-free encoder settings:
 
 ```bash
+# General runtime art
 cwebp -quiet -mt -m 6 -q 82 -metadata none input.png -o output.webp
 pngquant --force --strip --speed 1 --quality 75-90 --output output.png input.png
-```
 
-Complete-board scene variants retain their coherent generated lighting. Encode
-them with high-quality lossy WebP:
-
-```bash
+# Complete-board scene variants: keep their generated lighting
 cwebp -quiet -mt -m 6 -q 95 -metadata none input.png -o output.webp
-```
 
-Approved full-frame story stills use the same deterministic settings at quality
-90 so the complete offline story remains inside the core-media budget:
-
-```bash
+# Full-frame story stills
 cwebp -quiet -mt -m 6 -q 90 -metadata none input.png -o output.webp
 ```
 
-The 2026-08-01 story batch was normalized with `cwebp 1.6.0` and
-`libsharpyuv 0.4.2`.
-
-Record the installed `cwebp -version` or `pngquant --version` with the art batch.
-Run `npm run test:pwa` after changing a manifest or normalized runtime asset.
+The 2026-08-01 story batch used `cwebp 1.6.0` and `libsharpyuv 0.4.2`. Record
+`cwebp -version` or `pngquant --version` with each art batch, and run
+`npm run test:pwa` after changing a manifest or a normalized runtime asset.
 
 ## Story state and navigation
 
-`story-transitions.js` owns the accessible modal surface, rendering, replay,
-navigation interception, and persistence.
+`story-transitions.js` owns the story surface: rendering, replay, navigation
+interception, and persistence.
 
-- Durable key: `vim-wilds.story.v1`
-- Durable fields: `introSeen`, `completedUnitStoryIds`
-- Refresh-safe transient key: `vim-wilds.story-transition.v1`
-- Session and curriculum state remain independent.
+- Durable key `vim-wilds.story.v1`, with `introSeen` and
+  `completedUnitStoryIds`.
+- Refresh-safe transient key `vim-wilds.story-transition.v1`.
+- Session and curriculum progress stay independent: replaying or clearing
+  story state never changes lesson progress.
 
-The intro opens only on the default play route or an explicit Unit 1 route
-without an activity. Direct activity links and later-unit links are never
-blocked. A unit story opens only from that unit's final continuation boundary
-and only once by default. Replays never mutate lesson or story completion.
+The intro opens only on the default play route, or an explicit Unit 1 route
+with no activity; direct activity links and later-unit links are never blocked.
+A unit story opens only from that unit's final continuation, and only once by
+default. Replays never mutate lesson or story completion.
 
 The surface has stacked and two-column layouts, keeps Skip and Continue
-immediately available, preserves its active descriptor through live shape
-changes, and uses no document scrolling. Reduced motion disables story
-transitions while keeping all states and controls.
+available immediately, survives live shape changes, and never scrolls the
+document. Reduced motion disables transitions but keeps every state and
+control.
 
-## WP-11 handoff
+## Where story art comes from
 
-Approved copy already comes from `content/presentation.json`; do not duplicate
-or rewrite it in markup or JavaScript.
+All copy comes from `content/presentation.json`; never duplicate or rewrite it
+in markup or JavaScript. Images are data too:
 
-The complete Nano Banana production prompts are in
-[art-prompts.md](art-prompts.md). Use them for candidate generation;
-do not ask an implementation session to improvise a shorter landmark or intro
-brief.
+- **Intro panels** — each `story.intro[]` entry's `asset`, under
+  `assets/worlds/story/intro/`. A panel may use `"asset": null`, in which case
+  its CSS placeholder is the fallback.
+- **Unit endings** — each unit's `completion.storyImage`, a full-frame portrait
+  painting at `assets/worlds/story/units/<unit-id>.webp`, with its lossless PNG
+  master beside it. `completion.storyBackdrop` is the scene base used when a
+  painting is missing. Endings with a painting add no character overlay.
+- **Finale** — `story.ending.asset`, under `assets/worlds/story/ending/`.
 
-Intro integration is data-only once approved files exist:
+Once a file is declared, the media policy emits, inventories, validates,
+revisions, and precaches it with no further wiring.
 
-1. Put each normalized still under `assets/worlds/story/`.
-2. Replace that panel's `asset: null` with its local runtime path.
-3. The story controller applies it to `.story-visual`; CSS placeholders remain
-   behind it for missing/slow media.
-4. The PWA policy automatically emits, inventories, validates, revisions, and
-   precaches it.
+Without a painting, the unit transition composes itself from layer slots —
+`.story-board-base`, `.story-landmark-dormant`, `.story-landmark-restored`, and
+`.story-light-path` — filled from the scene profile and its landmark plates.
+`.story-surface` exposes `data-unit-id`, `data-world-id`, `data-scene-id`,
+`data-landmark-id`, `data-guide-id`, and `data-action-id` for styling and tests.
 
-Unit transition integration has stable hooks on `.story-surface`:
+For checks without faking progress, `window.VimWilds.showUnitStory(unitId)`
+opens any of the 17 transitions as a non-mutating replay, and
+`window.VimWilds.getState().story` reports the active descriptor and durable
+story state.
 
-- `data-unit-id`
-- `data-world-id`
-- `data-scene-id`
-- `data-landmark-id`
-- `data-guide-id`
-- `data-action-id`
+## Reviewing story art
 
-The fallback layer slots are `.story-board-base`, `.story-landmark-dormant`,
-`.story-landmark-restored`, and `.story-light-path`. WP-11 fills these from the
-selected scene profile and its registered landmark patches when final art is
-unavailable. Approved unit endings use their complete portrait plates and do
-not add a character overlay.
+Start the dev server on a review port and use the preview routes, which render
+candidates in the real production dialog:
 
-`window.VimWilds.showUnitStory(unitId)` opens any of the 14 transitions as a
-non-mutating replay for choreography checks. `getState().story` reports the
-active descriptor and durable story state. These hooks allow Terra to validate
-every mapping without manufacturing curriculum completion.
+```sh
+npm run dev -- --port 4176
+```
 
-The WP-11 implementation should remain inside the story art/layer adapter,
-manifest assets, and story-specific CSS. If it requires changing persistence,
-navigation, the presentation data contract, or the PWA classifier, stop and
-return that architectural change to a Sol package.
+- All story panels: `/play/?preview=story-index`
+- One unit-ending candidate:
+  `/play/?preview=story&story=unit-ending&unit=<unit-id>&candidate=<n>`
+- An intro panel: `/play/?preview=story&story=intro&panel=<panel-id>`
+  (`connected-wilds`, `interrupted-command`, `nix-at-the-threshold`)
+- The finale: `/play/?preview=story&story=finale`
+
+Review at 360×740 before approving. Candidates and contact sheets live under the
+ignored `artifacts/world-generation/wp11/story-review-v2/unit-endings/`.
+
+Promote approved endings with, for example:
+
+```sh
+python scripts/world-art/promote_wp11_story_endings.py --approve macros=3
+```
+
+It verifies source hashes and 1792×2400 dimensions, records approval and
+rejection states, encodes with the recorded `cwebp` settings, installs the
+runtime WebP and its lossless master, and checks that all 17 endings are
+distinct. `python scripts/world-art/sync_story_ending_masters.py --check`
+reports drift between masters and runtime files without writing.
+
+The artifact directory `long-range-navigation` predates the Unit 9 split and
+holds the art for today's Unit 9, `position-memory`. Runtime paths and new
+review links always use `position-memory`; the old directory is provenance only.
