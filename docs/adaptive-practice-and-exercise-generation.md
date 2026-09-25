@@ -39,9 +39,8 @@ validity/evidence/coaching separation in
 the reviewed authoring flow in
 [Lesson Content Design](./lesson-content-design.md), and the release oracle in
 [Vim Conformance](./vim-conformance.md). The companion documents cover
-[ML experiments and model selection](./ml-experimentation-and-model-strategy.md),
-[unit economics and monetization](./monetization-and-unit-economics.md), and
-[product validation and launch](./product-validation-and-launch.md).
+[ML experiments and model selection](./ml-experimentation-and-model-strategy.md)
+and [launch and monetization](./ideas/launch-and-monetization.md).
 
 ## What the app has now
 

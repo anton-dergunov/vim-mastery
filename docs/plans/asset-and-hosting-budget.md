@@ -74,6 +74,13 @@ The three candidate answers, in the order the evidence favors them:
   artifact**, so on its own it does not solve the deadline. Only worth doing for
   the `.git` problem, and only alongside one of the above.
 
+Whichever host is chosen, note that **GitHub Pages does not allow commercial
+use** — its terms exclude an online business, e-commerce site, or commercial
+SaaS ([limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)).
+It is fine for the free product today, but a host picked now for the optional
+tier or the whole app should also work if the product ever takes payments; see
+[../ideas/launch-and-monetization.md](../ideas/launch-and-monetization.md#hosting-and-payments).
+
 Pick one, implement it, and record the reasoning in
 [../design-decisions.md](../design-decisions.md). A decision recorded is worth more than the bytes.
 

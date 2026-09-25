@@ -59,10 +59,9 @@ in:
 - [Vim Conformance](./vim-conformance.md) for native-Vim and browser truth;
 - [Curriculum and Progression](./curriculum-and-progression.md) for the skill
   graph and learning progression;
-- [Monetization and Unit Economics](./monetization-and-unit-economics.md) for
-  provider prices and deployment economics; and
-- [Product Validation and Launch](./product-validation-and-launch.md) for user
-  research, retention metrics, experiments, and rollout gates.
+- [Launch and Monetization](./ideas/launch-and-monetization.md) for pricing,
+  deployment economics, user research, retention metrics, experiments, and
+  rollout gates.
 
 ## How to read the claims
 
@@ -462,8 +461,8 @@ simple low-volume local service.
 
 The crossover must be calculated from measured accepted-candidate throughput,
 not raw tokens alone. See
-[Monetization and Unit Economics](./monetization-and-unit-economics.md) for the
-API/serverless/dedicated comparison.
+[Launch and Monetization](./ideas/launch-and-monetization.md) for the
+API/serverless/dedicated decision gates.
 
 ## Generation architecture and model context
 
