@@ -95,11 +95,12 @@ exercises never reach past what they already show.**
     the board that crossfade when a unit completes. **Only the four Arc 1
     (Moonroot) scenes have them**; the other 13 ship `patches: {}`. See
     [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
-- **The phase layer is retired.** Moonroot's `phase-a/b/c.webp` were local
-  brightness-and-tint proofs. Commit `06471e9` stopped rendering them; the
-  board does not change as a lesson progresses. They are not approved art and
-  must not be promoted. They are still registered, precached, and required by
-  a content test — removal is scoped in the landmark-plates plan.
+- **The phase layer is retired and removed.** Moonroot's `phase-a/b/c.webp`
+  were local brightness-and-tint proofs meant to add detail to the board as a
+  lesson progressed. Commit `06471e9` stopped rendering them, and the files,
+  their `patchRegions`/`phasePatches` data, schema, and validation were later
+  deleted. The board does not change as a lesson progresses; ambience comes
+  from remote scene variants. Reviving the idea would need real generated art.
 
 ### Smaller accepted trade-offs
 

@@ -85,7 +85,7 @@ test("production PWA precaches core media and streams optional animation and sce
   // A pending story reuses its tall board path, so the media collector
   // deduplicates one core file per pending unit. Promotion replaces those
   // aliases with three independent semantic story images.
-  assert.equal(media.core.length, 150 - pendingStoryArt);
+  assert.equal(media.core.length, 114 - pendingStoryArt);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "story-still").length, 3);

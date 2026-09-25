@@ -70,11 +70,6 @@ def scene_definition() -> dict:
     root = "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery"
     return {
         "id": SCENE_ID,
-        "patchRegions": {
-            "phase-a": {"x": 0.04, "y": 0.66, "width": 0.26, "height": 0.24},
-            "phase-b": {"x": 0.70, "y": 0.64, "width": 0.26, "height": 0.25},
-            "phase-c": {"x": 0.39, "y": 0.04, "width": 0.22, "height": 0.20},
-        },
         "profiles": {
             profile: {"base": f"{root}/{profile}/base.webp", "focalPosition": "50% 50%", "patches": {}}
             for profile in ("tall", "compact", "wide")
@@ -94,7 +89,6 @@ def scene_definition() -> dict:
             "mode": "transparent-patch",
             "assetRoot": f"{root}/variants",
         },
-        "phasePatches": {phase: [] for phase in ("explain", "demonstrate", "isolate", "mix", "challenge", "summary")},
         "landmarkPatches": {"dormant": None, "restored": None},
     }
 

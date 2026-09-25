@@ -47,17 +47,6 @@
       },
       "description": "World identity and ambient language only. All board imagery is registered on each unit scene."
     },
-    "patchBounds": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["x", "y", "width", "height"],
-      "properties": {
-        "x": { "type": "number", "minimum": 0, "maximum": 1 },
-        "y": { "type": "number", "minimum": 0, "maximum": 1 },
-        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
-        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
-      }
-    },
     "sceneProfile": {
       "type": "object",
       "additionalProperties": false,
@@ -70,19 +59,6 @@
           "propertyNames": { "$ref": "#/$defs/id" },
           "additionalProperties": { "$ref": "#/$defs/asset" }
         }
-      }
-    },
-    "phasePatches": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["explain", "demonstrate", "isolate", "mix", "challenge", "summary"],
-      "properties": {
-        "explain": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
-        "demonstrate": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
-        "isolate": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
-        "mix": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
-        "challenge": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true },
-        "summary": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true }
       }
     },
     "remoteVariants": {
@@ -162,16 +138,9 @@
     "scene": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "patchRegions", "profiles", "phasePatches", "landmarkPatches"],
+      "required": ["id", "profiles", "landmarkPatches"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
-        "patchRegions": {
-          "type": "object",
-          "minProperties": 3,
-          "maxProperties": 3,
-          "propertyNames": { "$ref": "#/$defs/id" },
-          "additionalProperties": { "$ref": "#/$defs/patchBounds" }
-        },
         "profiles": {
           "type": "object",
           "additionalProperties": false,
@@ -182,7 +151,6 @@
             "wide": { "$ref": "#/$defs/sceneProfile" }
           }
         },
-        "phasePatches": { "$ref": "#/$defs/phasePatches" },
         "remoteVariants": { "$ref": "#/$defs/remoteVariants" },
         "landmarkPatches": {
           "type": "object",

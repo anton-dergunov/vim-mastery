@@ -169,10 +169,9 @@ assets/characters/<character-id>/idle.png  animations/<action-id>.webp
   finale. Lossless masters sit beside the runtime WebP.
 - **Characters** — an idle still and approved reaction/action animations.
 
-Moonroot scenes also carry `phase-a/b/c` files. They are retired brightness and
-tint proofs: nothing renders them, and they must never be promoted or counted
-as approved art. They are still registered and precached; removing them is
-part of [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
+An earlier layer of lesson-phase plates (`phase-a/b/c`), made as local
+brightness and tint proofs, was retired and removed; the board does not change
+as a lesson progresses.
 
 Prompt experiments, rejected candidates, and 2K/4K masters never enter
 `assets/`. Scripts and approval metadata live under `scripts/world-art/`;

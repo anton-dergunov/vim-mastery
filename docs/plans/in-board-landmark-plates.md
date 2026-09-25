@@ -1,5 +1,14 @@
 # In-board landmark plates for Units 5–17
 
+> **Revisit before doing any of this (2026-09-25).** Every unit now has a
+> full-frame ending painting (`completion.storyImage`), and `renderUnit()` in
+> `story-transitions.js` shows the painting *instead of* calling
+> `renderUnitArt()`, the only code that draws landmark plates. So no learner
+> sees a landmark crossfade in any unit, including Moonroot — and Moonroot's
+> own plates are brightness/tint proofs from
+> `scripts/world-art/prepare_registered_moonroot_scenes.py`, not approved art.
+> The premise below ("every later unit does not") predates the paintings.
+
 **Size:** L (art generation). **Depends on:** [asset and hosting budget](asset-and-hosting-budget.md).
 
 ## First, two things called "restoration"
@@ -33,9 +42,8 @@ Moonroot scenes also register `phase-a/b/c` plates and a `phasePatches` map
 from lesson phase to plate. **That layer is retired.** The files were local
 brightness-and-tint proofs, and commit `06471e9` removed their renderer; the
 board does not change as a lesson progresses in any unit. Do not author phase
-plates for the other 13 scenes. The retired files are still registered, so
-`media-policy.js` precaches all 36 of them (~2.3 MiB of core media nothing
-draws), and `tests/content-data.test.mjs` requires them. Step 3 removes them.
+plates for the other 13 scenes. The 36 retired files and their data have been
+removed.
 
 ## Scope
 
@@ -74,22 +82,9 @@ Starwater first — `starneedle-observatory`, `nested-garden`, `prism-crossing`
 (Units 5–7) — because it follows the four that work and is where the seam is
 most visible. Then Archive of Echoes, then Brass Meridian.
 
-### 3. Retire the phase layer
+### 3. Guard it
 
-Independent of the decision in step 0, and cheap:
-
-- Remove `phase-a/b/c` from every scene's `patchRegions` and
-  `profiles[*].patches`, and remove `phasePatches`, in
-  `content/presentation.json` (the 13 declare phase regions with no files).
-- Delete the 36 `phase-*.webp` files under `assets/worlds/moonroot-ruins/`.
-- Drop the `phasePatches` validation in `presentation-data.js` if nothing else
-  reads it.
-- Update `tests/content-data.test.mjs`, which currently requires the phase
-  regions and files for the four Moonroot units.
-
-### 4. Guard it
-
-Replace the Moonroot-only assertion in `tests/content-data.test.mjs` with one
+Widen the Moonroot-only assertion in `tests/content-data.test.mjs` to one
 over every scene the step-0 decision covers, requiring `landmark-dormant` and
 `landmark-restored` in each profile, so the next scene cannot register with an
 empty set. `tests/media-policy.test.mjs` picks new files up as
@@ -99,8 +94,7 @@ empty set. `tests/media-policy.test.mjs` picks new files up as
 
 Landmark plates are `registered-patch`, which `media-policy.js` puts in the
 **core** precache, not the optional tier. Today the four Moonroot scenes
-contribute 60 such files — 24 landmark plates and the 36 retired phase plates
-step 3 removes. Core sits far below its 300 MiB ceiling, so the precache has
+contribute 24. Core sits far below its 300 MiB ceiling, so the precache has
 room for 78 more.
 
 The constraint is the total artifact, not the precache: `dist/` is 888 MB against

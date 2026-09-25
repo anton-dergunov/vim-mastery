@@ -189,15 +189,15 @@ test("the reference surface registers the Mosslight Landing board", () => {
       /^assets\/worlds\/moonroot-ruins\/scenes\/mosslight-landing\/[a-z]+\/base\.webp$/,
     );
   }
-  // The board is not a unit: it registers no phases, patch regions, or landmark
-  // states, and the standalone schema is what says so.
+  // The board is not a unit: it registers no landmark states, and the
+  // standalone schema is what says so.
   assert.deepEqual(
     Object.keys(surface.scene).sort(),
     ["id", "profiles", "remoteVariants"],
   );
   assert.equal(remoteVariantPaths(surface.scene.remoteVariants).length, 50);
   assert.equal(
-    presentationSchema.$defs.standaloneScene.required.includes("phasePatches"),
+    presentationSchema.$defs.standaloneScene.required.includes("landmarkPatches"),
     false,
   );
 });
@@ -284,14 +284,14 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert(resolved.scene, `${unitId} must select one registered scene`);
     assert.equal(resolved.scene.id, resolved.unit.sceneId);
     assert.deepEqual(Object.keys(resolved.scene.profiles), ["tall", "compact", "wide"]);
-    assert.deepEqual(Object.keys(resolved.scene.patchRegions), ["phase-a", "phase-b", "phase-c"]);
     for (const profile of ["tall", "compact", "wide"]) {
       const baseProfile = unitId === "cursor-movement" && profile === "wide" ? "compact" : profile;
       assert.match(
         resolved.scene.profiles[profile].base,
         new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${baseProfile}/base\\.webp$`),
       );
-      for (const patchId of ["phase-a", "phase-b", "phase-c", "landmark-dormant", "landmark-restored"]) {
+      assert.deepEqual(Object.keys(resolved.scene.profiles[profile].patches), ["landmark-dormant", "landmark-restored"]);
+      for (const patchId of ["landmark-dormant", "landmark-restored"]) {
         assert.match(
           resolved.scene.profiles[profile].patches[patchId],
           new RegExp(`/${profile}/${patchId}\\.webp$`),

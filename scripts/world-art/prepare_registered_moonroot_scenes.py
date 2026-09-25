@@ -13,7 +13,6 @@ from PIL import Image, ImageEnhance, ImageFilter
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_ROOT = ROOT / "artifacts" / "world-generation" / "unit-scenes"
 OUTPUT_ROOT = ROOT / "assets" / "worlds" / "moonroot-ruins" / "scenes"
-PRESENTATION = ROOT / "content" / "presentation.json"
 APPROVALS = ROOT / "scripts" / "world-art" / "moonroot-scene-approvals.json"
 PROFILE_SIZES = {
     "tall": (960, 1200),
@@ -101,22 +100,7 @@ def pixel_box(bounds: dict[str, float] | tuple[float, float, float, float], size
 
 def feathered_patch(base: Image.Image, box: tuple[int, int, int, int], variant: str) -> Image.Image:
     crop = base.crop(box)
-    if variant == "phase-a":
-        changed = ImageEnhance.Color(ImageEnhance.Brightness(crop).enhance(1.13)).enhance(1.16)
-        tint = Image.new("RGB", crop.size, "#78d7c1")
-        changed = Image.blend(changed, tint, 0.055)
-        opacity = 188
-    elif variant == "phase-b":
-        changed = ImageEnhance.Contrast(ImageEnhance.Brightness(crop).enhance(1.1)).enhance(1.08)
-        tint = Image.new("RGB", crop.size, "#a77bff")
-        changed = Image.blend(changed, tint, 0.045)
-        opacity = 174
-    elif variant == "phase-c":
-        changed = ImageEnhance.Color(ImageEnhance.Brightness(crop).enhance(1.16)).enhance(1.08)
-        tint = Image.new("RGB", crop.size, "#b7e9dc")
-        changed = Image.blend(changed, tint, 0.055)
-        opacity = 164
-    elif variant == "landmark-dormant":
+    if variant == "landmark-dormant":
         changed = ImageEnhance.Color(ImageEnhance.Brightness(crop).enhance(0.72)).enhance(0.72)
         opacity = 174
     elif variant == "landmark-restored":
@@ -153,12 +137,10 @@ def assert_registered(patch: Image.Image, base: Image.Image, allowed_box: tuple[
 
 
 def main() -> int:
-    presentation = json.loads(PRESENTATION.read_text())
     approval_data = json.loads(APPROVALS.read_text())
     approvals = {item["unitId"]: item for item in approval_data["approvals"]}
     ledger = {"schemaVersion": 1, "assets": []}
     for unit_id, scene_id in UNIT_SCENES.items():
-        scene = presentation["units"][unit_id]["scenes"][scene_id]
         for profile, size in PROFILE_SIZES.items():
             source_path = approved_source(unit_id, scene_id, profile, approvals)
             base = cover_resize(Image.open(source_path), size)
@@ -176,12 +158,6 @@ def main() -> int:
                 "sha256": sha256(base_path),
                 "dimensions": list(base.size),
             })
-
-            for patch_id, bounds in scene["patchRegions"].items():
-                box = pixel_box(bounds, base.size)
-                patch = feathered_patch(base, box, patch_id)
-                assert_registered(patch, base, box, f"{unit_id}/{profile}/{patch_id}")
-                patch.save(output / f"{patch_id}.webp", "WEBP", lossless=True, method=6)
 
             landmark_box = pixel_box(LANDMARK_REGIONS[scene_id], base.size)
             for state in ("landmark-dormant", "landmark-restored"):

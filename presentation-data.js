@@ -4,7 +4,6 @@ const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const assetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
 const assetDirectoryPattern = /^assets\/[a-z0-9][a-z0-9./-]*$/;
 const sceneProfiles = ["tall", "compact", "wide"];
-const learningPhases = ["explain", "demonstrate", "isolate", "mix", "challenge", "summary"];
 
 function object(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -75,21 +74,6 @@ export function remoteVariantPaths(config) {
   ));
 }
 
-function validatePatchBounds(value, path, errors) {
-  if (!object(value)) {
-    errors.push(`${path} must define normalized patch bounds`);
-    return;
-  }
-  for (const field of ["x", "y", "width", "height"]) {
-    if (typeof value[field] !== "number" || value[field] < 0 || value[field] > 1) {
-      errors.push(`${path}.${field} must be between 0 and 1`);
-    }
-  }
-  if ((value.x || 0) + (value.width || 0) > 1 || (value.y || 0) + (value.height || 0) > 1) {
-    errors.push(`${path} must remain inside the source canvas`);
-  }
-}
-
 function validateScene(scene, path, errors) {
   if (!object(scene)) {
     errors.push(`${path} must be a registered scene`);
@@ -97,13 +81,6 @@ function validateScene(scene, path, errors) {
   }
   validateId(scene.id, `${path}.id`, errors);
   if (scene.remoteVariants !== undefined) validateRemoteVariants(scene.remoteVariants, `${path}.remoteVariants`, errors);
-  const regionIds = new Set(Object.keys(object(scene.patchRegions) ? scene.patchRegions : {}));
-  if (regionIds.size !== 3) errors.push(`${path}.patchRegions must define exactly three registered regions`);
-  for (const [patchId, bounds] of Object.entries(scene.patchRegions || {})) {
-    validateId(patchId, `${path}.patchRegions.${patchId}`, errors);
-    validatePatchBounds(bounds, `${path}.patchRegions.${patchId}`, errors);
-  }
-
   const profilePatchSets = [];
   for (const profile of sceneProfiles) {
     const profileData = scene.profiles?.[profile];
@@ -128,20 +105,6 @@ function validateScene(scene, path, errors) {
     }
   }
 
-  for (const phase of learningPhases) {
-    const patchIds = scene.phasePatches?.[phase];
-    if (!Array.isArray(patchIds)) {
-      errors.push(`${path}.phasePatches.${phase} must be an array`);
-      continue;
-    }
-    for (const patchId of patchIds) {
-      if (!regionIds.has(patchId)) errors.push(`${path}.phasePatches.${phase} references undeclared patch "${patchId}"`);
-      if (profilePatchSets.some(ids => !ids.has(patchId))) {
-        errors.push(`${path}.phasePatches.${phase} patch "${patchId}" must exist in every profile`);
-      }
-    }
-  }
-
   if (scene.landmarkPatches !== undefined) {
     for (const state of ["dormant", "restored"]) {
       const patchId = scene.landmarkPatches?.[state];
@@ -153,9 +116,8 @@ function validateScene(scene, path, errors) {
 }
 
 // A standalone scene backs a surface that is not a unit: it has profile bases and
-// optional ambient variants, but no learning phases, patch regions, or landmark
-// states to register. `validateScene` cannot describe it without inventing three
-// meaningless patch regions, so it gets its own contract.
+// optional ambient variants, but no registered patches or landmark states, so it
+// gets its own contract rather than an empty copy of a unit scene's.
 function validateStandaloneScene(scene, path, errors) {
   if (!object(scene)) {
     errors.push(`${path} must be a registered scene`);

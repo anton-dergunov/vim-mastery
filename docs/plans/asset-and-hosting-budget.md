@@ -46,10 +46,13 @@ numbers move with every art session. `collectMediaPolicy` and `coreMediaBytes`
 in `media-policy.js` give both tiers; `remoteVariantPaths` in
 `presentation-data.js` gives the variant expansion. Then add the measurement to
 the test tier so it stops being a thing someone has to remember to check:
-`tests/media-policy.test.mjs` already asserts a core ceiling
-(`CORE_MEDIA_MAX_BYTES`, 300 MiB) but asserts **nothing** about the total
-shipped size. A total-artifact ceiling with a comment naming the Pages limit is
-the single most valuable line this session can add.
+`tests/media-policy.test.mjs` asserts the core ceiling
+(`CORE_MEDIA_MAX_BYTES`, 300 MiB), and `tests/pwa-build.test.mjs` already fails
+when the published build reaches GitHub Pages' 1 GiB (`GITHUB_PAGES_MAX_BYTES`).
+That total check only runs in `npm run test:pwa`, which is CI-only, so the
+margin (886 MB built on 2026-09-25) is still easy to miss locally. Report it
+somewhere a local run shows it, or give the check a warning threshold well
+below the limit.
 
 ### 2. Decide where the optional tier lives
 

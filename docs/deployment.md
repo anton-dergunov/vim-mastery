@@ -62,9 +62,9 @@ scene and idle character remain visible without delaying progress.
 
 The runtime manifest is the deployment allowlist for visual media. Builds fail
 on a declared missing asset, never discover source masters or review files, and
-report the core-media total; they fail above 300 MiB of core media. Nothing yet
-limits the total artifact, which GitHub Pages caps at 1 GB — see
-`docs/plans/asset-and-hosting-budget.md`. A content digest in the cache name
+report the core-media total; they fail above 300 MiB of core media. The PWA
+build audit also fails if the whole published artifact reaches GitHub Pages'
+1 GiB limit; see `docs/plans/asset-and-hosting-budget.md` for the margin. A content digest in the cache name
 changes whenever any precached asset changes at a stable path. See
 `docs/media-and-story-infrastructure.md` for normalization commands and how
 story art is wired.

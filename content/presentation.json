@@ -55,34 +55,11 @@
       "scenes": {
         "mode-lantern-grounds": {
           "id": "mode-lantern-grounds",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/tall/landmark-restored.webp"
               }
@@ -91,9 +68,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/compact/landmark-restored.webp"
               }
@@ -102,9 +76,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/wide/landmark-restored.webp"
               }
@@ -139,28 +110,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/mode-lantern-grounds/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [
-              "phase-a"
-            ],
-            "isolate": [
-              "phase-b"
-            ],
-            "mix": [
-              "phase-a",
-              "phase-b"
-            ],
-            "challenge": [
-              "phase-a",
-              "phase-b",
-              "phase-c"
-            ],
-            "summary": [
-              "phase-a",
-              "phase-c"
-            ]
-          },
           "landmarkPatches": {
             "dormant": "landmark-dormant",
             "restored": "landmark-restored"
@@ -189,34 +138,11 @@
       "scenes": {
         "wayfinder-crossroads": {
           "id": "wayfinder-crossroads",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/tall/landmark-restored.webp"
               }
@@ -225,9 +151,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/landmark-restored.webp"
               }
@@ -236,9 +159,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/landmark-restored.webp"
               }
@@ -273,28 +193,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [
-              "phase-a"
-            ],
-            "isolate": [
-              "phase-b"
-            ],
-            "mix": [
-              "phase-a",
-              "phase-b"
-            ],
-            "challenge": [
-              "phase-a",
-              "phase-b",
-              "phase-c"
-            ],
-            "summary": [
-              "phase-a",
-              "phase-c"
-            ]
-          },
           "landmarkPatches": {
             "dormant": "landmark-dormant",
             "restored": "landmark-restored"
@@ -323,34 +221,11 @@
       "scenes": {
         "scribes-spring": {
           "id": "scribes-spring",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/tall/landmark-restored.webp"
               }
@@ -359,9 +234,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/compact/landmark-restored.webp"
               }
@@ -370,9 +242,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/scribes-spring/wide/landmark-restored.webp"
               }
@@ -407,28 +276,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/scribes-spring/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [
-              "phase-a"
-            ],
-            "isolate": [
-              "phase-b"
-            ],
-            "mix": [
-              "phase-a",
-              "phase-b"
-            ],
-            "challenge": [
-              "phase-a",
-              "phase-b",
-              "phase-c"
-            ],
-            "summary": [
-              "phase-a",
-              "phase-c"
-            ]
-          },
           "landmarkPatches": {
             "dormant": "landmark-dormant",
             "restored": "landmark-restored"
@@ -457,34 +304,11 @@
       "scenes": {
         "grammar-gate-court": {
           "id": "grammar-gate-court",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/tall/landmark-restored.webp"
               }
@@ -493,9 +317,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/compact/landmark-restored.webp"
               }
@@ -504,9 +325,6 @@
               "base": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/base.webp",
               "focalPosition": "50% 50%",
               "patches": {
-                "phase-a": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/phase-a.webp",
-                "phase-b": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/phase-b.webp",
-                "phase-c": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/phase-c.webp",
                 "landmark-dormant": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/landmark-dormant.webp",
                 "landmark-restored": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/wide/landmark-restored.webp"
               }
@@ -540,28 +358,6 @@
             "format": "webp",
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/moonroot-ruins/scenes/grammar-gate-court/variants"
-          },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [
-              "phase-a"
-            ],
-            "isolate": [
-              "phase-b"
-            ],
-            "mix": [
-              "phase-a",
-              "phase-b"
-            ],
-            "challenge": [
-              "phase-a",
-              "phase-b",
-              "phase-c"
-            ],
-            "summary": [
-              "phase-a",
-              "phase-c"
-            ]
           },
           "landmarkPatches": {
             "dormant": "landmark-dormant",
@@ -604,26 +400,6 @@
       "scenes": {
         "starneedle-observatory": {
           "id": "starneedle-observatory",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/tall/base.webp",
@@ -670,14 +446,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/starneedle-observatory/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -707,26 +475,6 @@
       "scenes": {
         "nested-garden": {
           "id": "nested-garden",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/nested-garden/tall/base.webp",
@@ -773,14 +521,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/nested-garden/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -810,26 +550,6 @@
       "scenes": {
         "prism-crossing": {
           "id": "prism-crossing",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/tall/base.webp",
@@ -876,14 +596,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/starwater-sanctuary/scenes/prism-crossing/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -913,26 +625,6 @@
       "scenes": {
         "memory-archive": {
           "id": "memory-archive",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/memory-archive/tall/base.webp",
@@ -979,14 +671,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/memory-archive/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1016,26 +700,6 @@
       "scenes": {
         "far-beacons": {
           "id": "far-beacons",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/far-beacons/tall/base.webp",
@@ -1082,14 +746,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/far-beacons/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1119,26 +775,6 @@
       "scenes": {
         "beacon-glass-gallery": {
           "id": "beacon-glass-gallery",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/tall/base.webp",
@@ -1186,14 +822,6 @@
             "mode": "transparent-patch",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/beacon-glass-gallery/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1223,26 +851,6 @@
       "scenes": {
         "echo-clock": {
           "id": "echo-clock",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/archive-of-echoes/scenes/echo-clock/tall/base.webp",
@@ -1289,14 +897,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/archive-of-echoes/scenes/echo-clock/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1326,26 +926,6 @@
       "scenes": {
         "meridian-table": {
           "id": "meridian-table",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-table/tall/base.webp",
@@ -1392,14 +972,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-table/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1429,26 +1001,6 @@
       "scenes": {
         "mirror-loom": {
           "id": "mirror-loom",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/mirror-loom/tall/base.webp",
@@ -1495,14 +1047,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/mirror-loom/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1532,26 +1076,6 @@
       "scenes": {
         "echo-foundry": {
           "id": "echo-foundry",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/echo-foundry/tall/base.webp",
@@ -1598,14 +1122,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/echo-foundry/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1636,26 +1152,6 @@
       "scenes": {
         "meridian-engine": {
           "id": "meridian-engine",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.04,
-              "y": 0.66,
-              "width": 0.26,
-              "height": 0.24
-            },
-            "phase-b": {
-              "x": 0.7,
-              "y": 0.64,
-              "width": 0.26,
-              "height": 0.25
-            },
-            "phase-c": {
-              "x": 0.39,
-              "y": 0.04,
-              "width": 0.22,
-              "height": 0.2
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/meridian-engine/tall/base.webp",
@@ -1702,14 +1198,6 @@
             "registrationProfile": "compact",
             "assetRoot": "assets/worlds/brass-meridian/scenes/meridian-engine/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1740,26 +1228,6 @@
       "scenes": {
         "menders-confluence": {
           "id": "menders-confluence",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.06,
-              "y": 0.62,
-              "width": 0.27,
-              "height": 0.26
-            },
-            "phase-b": {
-              "x": 0.67,
-              "y": 0.6,
-              "width": 0.28,
-              "height": 0.27
-            },
-            "phase-c": {
-              "x": 0.4,
-              "y": 0.06,
-              "width": 0.22,
-              "height": 0.19
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/menders-confluence/tall/base.webp",
@@ -1807,14 +1275,6 @@
             "mode": "transparent-patch",
             "assetRoot": "assets/worlds/brass-meridian/scenes/menders-confluence/variants"
           },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
-          },
           "landmarkPatches": {
             "dormant": null,
             "restored": null
@@ -1845,26 +1305,6 @@
       "scenes": {
         "keepers-relay": {
           "id": "keepers-relay",
-          "patchRegions": {
-            "phase-a": {
-              "x": 0.06,
-              "y": 0.62,
-              "width": 0.27,
-              "height": 0.26
-            },
-            "phase-b": {
-              "x": 0.67,
-              "y": 0.6,
-              "width": 0.28,
-              "height": 0.27
-            },
-            "phase-c": {
-              "x": 0.4,
-              "y": 0.06,
-              "width": 0.22,
-              "height": 0.19
-            }
-          },
           "profiles": {
             "tall": {
               "base": "assets/worlds/brass-meridian/scenes/keepers-relay/tall/base.webp",
@@ -1911,14 +1351,6 @@
             "registrationProfile": "compact",
             "mode": "transparent-patch",
             "assetRoot": "assets/worlds/brass-meridian/scenes/keepers-relay/variants"
-          },
-          "phasePatches": {
-            "explain": [],
-            "demonstrate": [],
-            "isolate": [],
-            "mix": [],
-            "challenge": [],
-            "summary": []
           },
           "landmarkPatches": {
             "dormant": null,
