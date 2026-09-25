@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Atomically promote owner-selected WP-11 portrait unit endings.
+"""Atomically promote owner-selected portrait unit-ending paintings.
 
 Only the three endings currently behind the bespoke-art approval gate may be
 promoted. Candidate manifests and runtime presentation data are not changed

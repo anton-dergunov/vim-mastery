@@ -28,7 +28,7 @@ test("production PWA precaches core media and streams optional animation and sce
   const presentationData = JSON.parse(presentation);
   const characterManifest = JSON.parse(readFileSync(join(rootPath, "assets", "characters", "manifest.json"), "utf8"));
   const futureScenes = JSON.parse(
-    readFileSync(join(rootPath, "scripts", "world-art", "future-scene-patch-summary.json"), "utf8"),
+    readFileSync(join(rootPath, "scripts", "world-art", "board-edit-patch-summary.json"), "utf8"),
   ).scenes;
   const media = collectMediaPolicy(presentationData, characterManifest);
   const unitFiles = files(join(rootPath, "content", "units")).map(path => path.split("/").at(-1));

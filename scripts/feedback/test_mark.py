@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import mark_feedback as marker
-import pull_feedback as puller
+import mark as marker
+import pull as puller
 
 REPORT_ID = "3f2b1c4d-0000-4000-8000-000000000001"
 

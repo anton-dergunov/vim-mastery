@@ -6,15 +6,15 @@ survives a re-clone and can be read from a phone through the D1 console. This
 writes it and updates the local mirror in one step.
 
 A report is addressed the way it actually appears during triage: by the
-directory name that ``pull_feedback.py`` created, or by any unambiguous prefix
+directory name that ``pull.py`` created, or by any unambiguous prefix
 of its id. Nobody should have to retype a uuid.
 
 Example:
     ./fetch-feedback.sh                      # pull, see what is open
-    python3 scripts/mark_feedback.py 2026-09-07-yank-ready-field done \\
+    python3 scripts/feedback/mark.py 2026-09-07-yank-ready-field done \\
         "fixed the missing suggestion in a1b2c3d"
-    python3 scripts/mark_feedback.py 94dd7fb1 wontfix "works as intended"
-    python3 scripts/mark_feedback.py --list
+    python3 scripts/feedback/mark.py 94dd7fb1 wontfix "works as intended"
+    python3 scripts/feedback/mark.py --list
 
 Only the standard library is used.
 """
@@ -29,7 +29,7 @@ import urllib.error
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import pull_feedback as puller
+import pull as puller
 
 STATUSES = ("new", "done", "wontfix")
 

@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import pull_feedback as puller
+import pull as puller
 
 
 def report(**overrides) -> dict:

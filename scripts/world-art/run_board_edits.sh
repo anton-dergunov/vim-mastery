@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Resumable paid Nano Banana submission batch for the five approved Session 23 boards.
+# Resumable paid Nano Banana submission batch for the five later boards.
 # Each underlying manifest is updated after every generated image. Re-running this
 # script only submits candidates that still have no output.
 
@@ -10,7 +10,7 @@ set -u
 export PATH="/opt/homebrew/bin:/opt/homebrew/opt/python@3.14/bin:$PATH"
 
 run_root=${0:A:h:h:h}
-runner="$run_root/scripts/world-art/review_wayfinder_patches.py"
+runner="$run_root/scripts/world-art/board_edits.py"
 config_root="$run_root/artifacts/world-generation/future-board-media-runs"
 python_bin="/opt/homebrew/opt/python@3.14/bin/python3"
 

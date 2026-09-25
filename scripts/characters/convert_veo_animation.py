@@ -8,7 +8,7 @@ places the moving character on the same square canvas as an existing in-game
 sprite.  It never crops a foreground pixel to make the animation fit.
 
 Example:
-    python scripts/convert_veo_animation.py clip.mp4 \
+    python scripts/characters/convert_veo_animation.py clip.mp4 \
       --anchor assets/nix.png --output assets/nix-success.webp
 
 The normal path is entirely local and uses ffmpeg plus img2webp.  BiRefNet is

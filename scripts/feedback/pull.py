@@ -13,9 +13,9 @@ with ``wrangler secret put ADMIN_TOKEN``.
 Example:
     export FEEDBACK_ENDPOINT=https://vim-wilds-feedback.example.workers.dev
     export FEEDBACK_ADMIN_TOKEN=...
-    python3 scripts/pull_feedback.py
+    python3 scripts/feedback/pull.py
 
-Mark a report processed with ``scripts/mark_feedback.py``.
+Mark a report processed with ``scripts/feedback/mark.py``.
 
 Only the standard library is used, so no virtualenv is needed to run it.
 """
@@ -105,7 +105,7 @@ def write_meta(directory: Path, report: dict) -> None:
 
     Kept in its own file so ``report.md`` stays exactly what the reporter wrote
     and ``report.json`` stays exactly the envelope the app sent. The id lives
-    here because it is what ``mark_feedback.py`` needs to address a report.
+    here because it is what ``mark.py`` needs to address a report.
     """
     (directory / META_NAME).write_text(
         json.dumps({

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Promote five approved future boards as transparent runtime scene patches.
+"""Promote the approved board edits of the five later boards as transparent
+runtime variants.
 
 This deliberately reuses the final production extraction algorithm introduced
 in commit 7411392: whole-canvas 16px evidence cells, linearly weighted spatial
@@ -20,7 +21,7 @@ import numpy as np
 from PIL import Image
 from scipy import ndimage
 
-from prove_full_canvas_patch_extraction import (
+from patch_extraction import (
     NEIGHBOR_CELLS,
     cell_scores,
     delta_e,
@@ -34,7 +35,7 @@ from prove_full_canvas_patch_extraction import (
 
 ROOT = Path(__file__).resolve().parents[2]
 ARTIFACT_ROOT = ROOT / "artifacts/world-generation"
-SUMMARY = ROOT / "scripts/world-art/future-scene-patch-summary.json"
+SUMMARY = ROOT / "scripts/world-art/board-edit-patch-summary.json"
 EXPECTED_SCENES = 5
 EXPECTED_VARIANTS_PER_SCENE = 50
 EXPECTED_VARIANTS = EXPECTED_SCENES * EXPECTED_VARIANTS_PER_SCENE

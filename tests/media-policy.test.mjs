@@ -13,7 +13,7 @@ import {
 
 const rootPath = new URL("../", import.meta.url).pathname;
 const futureSceneInventory = JSON.parse(
-  readFileSync(join(rootPath, "scripts", "world-art", "future-scene-patch-summary.json"), "utf8"),
+  readFileSync(join(rootPath, "scripts", "world-art", "board-edit-patch-summary.json"), "utf8"),
 ).scenes;
 
 const expectedFutureSceneStates = {

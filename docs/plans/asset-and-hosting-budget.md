@@ -91,7 +91,7 @@ Pick one, implement it, and record the reasoning in
 
 The fifth board session 23 generated has 50 approved variants, 5.4 MB on disk,
 and **no unit**. It is correctly isolated today: `integrationState:
-"reserve-only"` in `scripts/world-art/future-scene-patch-summary.json`, absent
+"reserve-only"` in `scripts/world-art/board-edit-patch-summary.json`, absent
 from `content/presentation.json`, absent from `dist/`, and pinned in that state
 by `tests/media-policy.test.mjs:19-24`.
 

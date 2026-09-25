@@ -27,13 +27,13 @@ Shared rules:
 All paid commands are dry runs unless `--execute` is present. The append-only ledger and raw generations live under the ignored `artifacts/character-generation/` directory.
 
 ```bash
-python scripts/generate_character_assets.py catalogue --check
-python scripts/generate_character_assets.py approve --catalogue
-python scripts/generate_character_assets.py stills --candidates 3 --execute --budget-usd 25
-python scripts/generate_character_assets.py approve --character vela --candidate 2
-python scripts/generate_character_assets.py videos --execute --resume --budget-usd 25 --max-concurrency 2
-python scripts/generate_character_assets.py convert --resume
-python scripts/generate_character_assets.py approve --character vela --animation joyful-hop --attempt 1
+python scripts/characters/generate_character_assets.py catalogue --check
+python scripts/characters/generate_character_assets.py approve --catalogue
+python scripts/characters/generate_character_assets.py stills --candidates 3 --execute --budget-usd 25
+python scripts/characters/generate_character_assets.py approve --character vela --candidate 2
+python scripts/characters/generate_character_assets.py videos --execute --resume --budget-usd 25 --max-concurrency 2
+python scripts/characters/generate_character_assets.py convert --resume
+python scripts/characters/generate_character_assets.py approve --character vela --animation joyful-hop --attempt 1
 ```
 
 Approving the catalogue records its SHA-256, so editing the machine-readable source closes the paid-generation gate again. Exactly one static candidate per character must be approved before any Veo request can be submitted. Converted videos remain local review candidates until their individual animation approval command copies them into `assets/characters/`.

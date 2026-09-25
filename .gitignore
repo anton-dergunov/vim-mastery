@@ -6,6 +6,6 @@ playwright-report/
 __pycache__/
 artifacts/character-generation/
 artifacts/world-generation/
-feedback/
+/feedback/
 # Holds the feedback admin token in plaintext; this repository is public.
-fetch-feedback.sh
+scripts/feedback/fetch.sh

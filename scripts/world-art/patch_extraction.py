@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Prove whole-canvas registered-patch extraction on five approved variants.
+"""Extract only the changed pixels of a board edit as a transparent patch.
+
+Written as a proof on five approved variants and now the extractor that
+``integrate_board_edit_patches.py`` imports.
 
 This proof deliberately consumes no authored target bounds. It compares every
 16x16 cell in the complete approved base and Nano Banana output, measures each

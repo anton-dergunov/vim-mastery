@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the WP-11 handwriting pen with Gemini Nano Banana Pro."""
+"""Generate the story surface's handwriting pen with Gemini Nano Banana Pro."""
 
 from __future__ import annotations
 

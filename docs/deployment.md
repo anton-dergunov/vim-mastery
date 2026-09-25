@@ -76,7 +76,7 @@ sheet that captures the unit, lesson, activity, editor state, device, viewport
 and an optional screenshot, alongside a typed note.
 
 Reports post to a Cloudflare Worker, deployed separately from these Pages; see
-`worker/README.md` for its setup and `scripts/pull_feedback.py` for reading them
+`worker/README.md` for its setup and `scripts/feedback/pull.py` for reading them
 back. Set the repository variable `FEEDBACK_ENDPOINT` to connect the two — the
 deploy workflow passes it to the build as `VITE_FEEDBACK_ENDPOINT`.
 

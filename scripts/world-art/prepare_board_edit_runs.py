@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Stage the selected Session 23 boards for full-board edits and Veo loops.
+"""Stage board-edit runs, and optional Veo loops, for the five later boards.
+
+These are the boards added after the first fourteen units: Units 10, 16, and 17,
+the reference board, and the unassigned Open Trail Overlook.
 
 This is deliberately a preparation tool.  It creates the same 10-sites-by-5
 full-board Nano Banana work packages used by the live scenes, but never spends
@@ -19,7 +22,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PATCH_SCRIPT = ROOT / "scripts/world-art/review_wayfinder_patches.py"
+PATCH_SCRIPT = ROOT / "scripts/world-art/board_edits.py"
 PLAN = "docs/plans/in-board-landmark-plates.md"
 STAGING_ROOT = ROOT / "artifacts/world-generation/future-board-media-runs"
 

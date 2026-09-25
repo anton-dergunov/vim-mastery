@@ -659,7 +659,7 @@ aperture aligned.
 
 The approved tall Beacon Glass Gallery board is the primary reference. Generate
 five 1792×2400 restoration candidates with the current completion action and
-copy through `generate_wp11_story_review_v2.py --restoration-3x4 --group
+copy through `generate_story_candidates.py --restoration-3x4 --group
 viewport-control`.
 
 ## Unit 11 — Echo Clock
@@ -1030,7 +1030,7 @@ Start with Nix. Once the pose language is approved, repeat for other guides;
 characters without poses keep their idle still. Use Nano Banana 2 with the
 character's canonical `idle.png` and, when available, one approved pose as
 references. The character's permanent invariants are in
-`scripts/character_catalogue.md`.
+`scripts/characters/character_catalogue.md`.
 
 ```text
 The first attached image is the canonical production reference for an original

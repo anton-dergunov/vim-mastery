@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Write the ten reviewed WP-04 complete-board variation inventories.
+"""Write the reviewed board-edit inventories for the ten Starwater, Archive, and
+Brass Meridian scenes that use complete-board variants.
 
 This is intentionally a planning-only step: it creates the exact site and
-transformation descriptions consumed by ``review_wayfinder_patches.py`` but
+transformation descriptions consumed by ``board_edits.py`` but
 does not call Vertex.
 """
 

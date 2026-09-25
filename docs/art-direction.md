@@ -12,7 +12,7 @@ Where the rest lives:
 - **Prompts.** [art-prompts.md](art-prompts.md) holds the exact Nano Banana
   prompts for scenes, variants, landmarks, intro panels, and character poses.
 - **Pipeline.** `scripts/world-art/` generates, reviews, approves, derives, and
-  promotes scene art; `scripts/character_catalogue.md` and `.json` hold each
+  promotes scene art; `scripts/characters/character_catalogue.md` and `.json` hold each
   character's permanent invariants.
 - **Runtime media policy.** [media-and-story-infrastructure.md](media-and-story-infrastructure.md).
 

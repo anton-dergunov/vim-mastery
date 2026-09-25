@@ -31,7 +31,7 @@ import convert_veo_animation as converter
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-ROOT = SCRIPT_DIR.parent
+ROOT = SCRIPT_DIR.parents[1]
 CATALOGUE_PATH = SCRIPT_DIR / "character_catalogue.json"
 CATALOGUE_MD_PATH = SCRIPT_DIR / "character_catalogue.md"
 APPROVALS_PATH = SCRIPT_DIR / "character_approvals.json"
@@ -439,13 +439,13 @@ def render_catalogue_markdown(catalogue: dict[str, Any]) -> str:
         "All paid commands are dry runs unless `--execute` is present. The append-only ledger and raw generations live under the ignored `artifacts/character-generation/` directory.",
         "",
         "```bash",
-        "python scripts/generate_character_assets.py catalogue --check",
-        "python scripts/generate_character_assets.py approve --catalogue",
-        "python scripts/generate_character_assets.py stills --candidates 3 --execute --budget-usd 25",
-        "python scripts/generate_character_assets.py approve --character vela --candidate 2",
-        "python scripts/generate_character_assets.py videos --execute --resume --budget-usd 25 --max-concurrency 2",
-        "python scripts/generate_character_assets.py convert --resume",
-        "python scripts/generate_character_assets.py approve --character vela --animation joyful-hop --attempt 1",
+        "python scripts/characters/generate_character_assets.py catalogue --check",
+        "python scripts/characters/generate_character_assets.py approve --catalogue",
+        "python scripts/characters/generate_character_assets.py stills --candidates 3 --execute --budget-usd 25",
+        "python scripts/characters/generate_character_assets.py approve --character vela --candidate 2",
+        "python scripts/characters/generate_character_assets.py videos --execute --resume --budget-usd 25 --max-concurrency 2",
+        "python scripts/characters/generate_character_assets.py convert --resume",
+        "python scripts/characters/generate_character_assets.py approve --character vela --animation joyful-hop --attempt 1",
         "```",
         "",
         "Approving the catalogue records its SHA-256, so editing the machine-readable source closes the paid-generation gate again. Exactly one static candidate per character must be approved before any Veo request can be submitted. Converted videos remain local review candidates until their individual animation approval command copies them into `assets/characters/`.",
@@ -557,8 +557,8 @@ def require_catalogue_approval(catalogue_path: Path = CATALOGUE_PATH) -> dict[st
     current_hash = sha256_path(catalogue_path)
     if not approvals.get("catalogue_approved") or approved_hash != current_hash:
         raise PipelineError(
-            "Catalogue is not approved at its current revision. Review scripts/character_catalogue.md, then run "
-            "`python scripts/generate_character_assets.py approve --catalogue`."
+            "Catalogue is not approved at its current revision. Review scripts/characters/character_catalogue.md, then run "
+            "`python scripts/characters/generate_character_assets.py approve --catalogue`."
         )
     return approvals
 

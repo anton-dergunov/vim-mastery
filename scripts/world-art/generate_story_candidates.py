@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Generate review-only WP-11 story candidates with Gemini Nano Banana Pro.
+"""Generate review-only story candidates (intro panels and unit-ending paintings)
+with Gemini Nano Banana Pro.
 
 This batch intentionally does not promote anything into ``assets/``.  It
 creates five new variants for Intro Panels 2 and 3 and five registered-camera

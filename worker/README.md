@@ -119,7 +119,7 @@ npm run feedback:pull
 
 Writes `feedback/<date>-<activity>/report.md` plus the screenshot, so reports
 can be read directly by an agent working in the repository. `feedback/` is
-gitignored. See `scripts/pull_feedback.py`.
+gitignored. See `scripts/feedback/pull.py`.
 
 ### 2. Query D1 directly — the route that depends on nothing
 

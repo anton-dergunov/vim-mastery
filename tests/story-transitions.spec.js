@@ -126,7 +126,7 @@ test("allows skipping from every introduction panel", async ({ page }) => {
   }
 });
 
-test("renders selected WP-11 panorama candidates with a one-way in-game camera track", async ({ page }) => {
+test("renders selected intro panorama candidates with a one-way in-game camera track", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/");
   await waitForApp(page);
@@ -548,7 +548,7 @@ test("closes Unit 17 on the first mixed review, then keeps Mastery reusable", as
   expect((await page.evaluate(() => window.VimWilds.getState().story.active))).toBeNull();
 });
 
-test("exposes a non-mutating transition helper for WP-11 choreography checks", async ({ page }) => {
+test("exposes a non-mutating transition helper for story choreography checks", async ({ page }) => {
   await page.addInitScript(saved => {
     if (!window.localStorage.getItem("vim-wilds.story.v1")) {
       window.localStorage.setItem("vim-wilds.story.v1", JSON.stringify(saved));

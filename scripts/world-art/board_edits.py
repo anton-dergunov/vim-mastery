@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Stage and generate the WP-03P-A Wayfinder full-board edit review batch.
+"""Stage, generate, and approve a batch of full-board edits for one scene.
+
+Each edit changes one named site on an approved board; approved edits become the
+scene's remote variants. The engine behind every variant batch: it defaults to
+Wayfinder Crossroads, and ``--scene-config`` takes another scene's inventory.
 
 The paid path uses Nano Banana 2 through Vertex AI and application-default
-credentials. It never calls an OpenAI image generator. WP-03P-A writes only to
-the ignored artifact tree, keeps every decodable Gemini result for human
-review, and deliberately performs no diff extraction or aesthetic rejection.
+credentials. It never calls an OpenAI image generator. It writes only to the
+ignored artifact tree, keeps every decodable Gemini result for human review,
+and deliberately performs no diff extraction or aesthetic rejection.
 """
 
 from __future__ import annotations

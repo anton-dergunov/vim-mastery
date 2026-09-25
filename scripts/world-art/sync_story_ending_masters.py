@@ -20,7 +20,7 @@ import json
 import sys
 from pathlib import Path
 
-from promote_wp11_story_endings import (
+from promote_story_endings import (
     EXPECTED_SOURCE_SIZE,
     HISTORICAL_SOURCE_ALIASES,
     PRESENTATION_PATH,

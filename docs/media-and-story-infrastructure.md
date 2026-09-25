@@ -133,7 +133,7 @@ ignored `artifacts/world-generation/wp11/story-review-v2/unit-endings/`.
 Promote approved endings with, for example:
 
 ```sh
-python scripts/world-art/promote_wp11_story_endings.py --approve macros=3
+python scripts/world-art/promote_story_endings.py --approve macros=3
 ```
 
 It verifies source hashes and 1792×2400 dimensions, records approval and
