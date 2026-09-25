@@ -26,6 +26,8 @@ jobs:
         with:
           python-version: "3.13"
       - run: python3 -m pip install -r scripts/requirements-test.txt
+      # The character script tests encode real animated WebPs with img2webp.
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends webp
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: node --check src/app/main.js
