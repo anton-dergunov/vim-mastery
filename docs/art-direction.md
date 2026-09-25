@@ -170,8 +170,9 @@ assets/characters/<character-id>/idle.png  animations/<action-id>.webp
 - **Characters** — an idle still and approved reaction/action animations.
 
 Moonroot scenes also carry `phase-a/b/c` files. They are retired brightness and
-tint proofs: not rendered, excluded from the build, and never to be promoted or
-counted as approved art.
+tint proofs: nothing renders them, and they must never be promoted or counted
+as approved art. They are still registered and precached; removing them is
+part of [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
 
 Prompt experiments, rejected candidates, and 2K/4K masters never enter
 `assets/`. Scripts and approval metadata live under `scripts/world-art/`;

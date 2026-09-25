@@ -12,7 +12,7 @@ This resolves the linear-versus-circular question without forcing either extreme
 
 The product teaches Vim primarily as a **portable language for navigating and transforming text inside modern editors**. It prioritizes motions, operators, text objects, search, repeat, registers, visual editing, and deterministic automation. A small optional appendix covers standalone Vim survival, but editor administration, configuration, and plugin ecosystems are not part of the main path.
 
-This specification builds on the opportunity and learning research in [claude.md](./claude.md) and [deep-research-chatgpt.md](./deep-research-chatgpt.md). It does not repeat their market analysis.
+This specification builds on the opportunity and learning research in [market-research.md](./market-research.md). It does not repeat its market analysis.
 
 ## Audience and promise
 

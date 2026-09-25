@@ -96,9 +96,10 @@ exercises never reach past what they already show.**
     (Moonroot) scenes have them**; the other 13 ship `patches: {}`. See
     [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
 - **The phase layer is retired.** Moonroot's `phase-a/b/c.webp` were local
-  brightness-and-tint proofs. Commit `06471e9` stopped rendering them and
-  excluded them from the build; the board does not change as a lesson
-  progresses. They are not approved art and must not be promoted.
+  brightness-and-tint proofs. Commit `06471e9` stopped rendering them; the
+  board does not change as a lesson progresses. They are not approved art and
+  must not be promoted. They are still registered, precached, and required by
+  a content test — removal is scoped in the landmark-plates plan.
 
 ### Smaller accepted trade-offs
 
