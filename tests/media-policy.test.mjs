@@ -9,7 +9,7 @@ import {
   collectMediaPolicy,
   contentRevision,
   CORE_MEDIA_MAX_BYTES,
-} from "../media-policy.js";
+} from "../src/world/media-policy.js";
 
 const rootPath = new URL("../", import.meta.url).pathname;
 const futureSceneInventory = JSON.parse(

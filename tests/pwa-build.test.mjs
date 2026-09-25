@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { collectMediaPolicy } from "../media-policy.js";
+import { collectMediaPolicy } from "../src/world/media-policy.js";
 
 const root = new URL("../", import.meta.url);
 const rootPath = root.pathname;

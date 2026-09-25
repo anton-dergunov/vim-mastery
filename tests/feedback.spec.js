@@ -262,7 +262,7 @@ test("a failed send is queued rather than lost", async ({ page }) => {
   await page.locator("#feedbackNote").fill("queued while offline");
 
   const queued = await page.evaluate(async () => {
-    const { queueReport, pendingCount } = await import("/feedback-transport.js");
+    const { queueReport, pendingCount } = await import("/feedback/transport.js");
     await queueReport({ report: { note: "queued while offline" }, markdown: "# queued", blob: null });
     return pendingCount();
   });
@@ -319,7 +319,7 @@ test("capturing leaves the page exactly as it found it", async ({ page }) => {
 
   const before = await page.evaluate(() => document.querySelectorAll("#phone *").length);
   await page.evaluate(async () => {
-    const { captureScreenshot } = await import("/feedback-capture.js");
+    const { captureScreenshot } = await import("/feedback/capture.js");
     await captureScreenshot(document.querySelector("#phone"));
   });
 
@@ -340,7 +340,7 @@ test("capturing a dialog leaves the page exactly as it found it", async ({ page 
 
   const before = await page.evaluate(() => document.querySelectorAll("body *").length);
   const result = await page.evaluate(async () => {
-    const { captureScreenshot } = await import("/feedback-capture.js");
+    const { captureScreenshot } = await import("/feedback/capture.js");
     const shot = await captureScreenshot(document.querySelector("#referenceDialog"));
     return { bytes: shot?.bytes ?? null, error: shot?.error ?? null };
   });
@@ -361,7 +361,7 @@ test("a capture that fails still restores the page", async ({ page }) => {
 
   const before = await page.evaluate(() => document.querySelectorAll("#phone *").length);
   const result = await page.evaluate(async () => {
-    const { captureScreenshot } = await import("/feedback-capture.js");
+    const { captureScreenshot } = await import("/feedback/capture.js");
     // Zero milliseconds guarantees the timeout path, which is the ordinary
     // outcome on Safari and must not leave scaffolding behind.
     return captureScreenshot(document.querySelector("#phone"), { timeout: 0 });

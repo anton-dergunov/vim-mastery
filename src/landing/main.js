@@ -1,4 +1,4 @@
-import { appVersion } from "./app-version.js";
+import { appVersion } from "../app/version.js";
 
 const installButton = document.querySelector("#installButton");
 const installHint = document.querySelector("#installHint");

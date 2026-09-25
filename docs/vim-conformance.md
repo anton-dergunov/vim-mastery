@@ -9,11 +9,51 @@ Run `npm test` to execute the current native-Vim and Chromium checks. The
 browser tests use Google Chrome on macOS; on another platform, configure a
 Playwright Chromium executable before running them.
 
-`supported-commands.json` is the release gate. A command moves from pending to
-verified only with fixture coverage for text, cursor/selection, mode, registers
-when relevant, and undo grouping when relevant. Package defects are patched
-with `patch-package`, kept version-specific under `patches/`, and linked to the
-fixture that demonstrates the upstream mismatch.
+A command family moves from pending to verified only with fixture coverage for
+text, cursor/selection, mode, registers when relevant, and undo grouping when
+relevant. Package defects are patched with `patch-package`, kept
+version-specific under `patches/`, and linked to the fixture that demonstrates
+the upstream mismatch.
+
+## Supported command set
+
+What lessons may teach and what free practice promises to handle. A family is
+listed only after its native-Vim and browser fixtures pass. The list is kept by
+hand: nothing yet checks that every command used in `content/units/` appears
+here, and a test that did would turn it into an enforced gate.
+
+| Area | Verified |
+| --- | --- |
+| Modes | Modal transitions and cancellation (`i`, `R`, `v`, `V`, `Ctrl-v`, `:`, `Esc`, `Ctrl-[`); operator-pending state and counted operator-motion composition (`2dw`) |
+| Movement | `h` `j` `k` `l` with counts, `0` `^` `$` `g_` `\|`, `w` `W` `e` `E` `b` `B` `ge` `gE`, `gg` `G`, `gj` `gk` |
+| Entering text | `i` `I` `a` `A` `o` `O`; counted entry (`3i`, `3a`, `5o`) repeating the whole insertion when Insert mode ends; Insert-mode `Ctrl-r{register}`, `Ctrl-o` for one Normal command, `Ctrl-w`, `Ctrl-u` |
+| Local changes | `x` `X` `r` `R` `s` `S`; case `~` `g~` `gu` `gU`; decimal `Ctrl-a` `Ctrl-x`; join `J` and `gJ`; undo and redo `u` `Ctrl-r` |
+| Operators and repeat | `d` `c` `y` with motions and counts; `dd` `cc` `yy`; `D` `C` `Y`; counted line deletion; dot repeat; indentation and reindent `>` `<` `=`; reflow at an authored textwidth `gq` `gw` |
+| Search and precision motions | `f` `F` `t` `T` `;` `,`; `/` `?` `n` `N` `*` `#` `g*` `g#`; `gn` `gN`; `%`; sentences and paragraphs `(` `)` `{` `}`; search as an operator range (`d/pat`, `y/pat`, `c/pat`, `c?pat`, exclusive at the match, Escape aborting the operator); search offsets (`/pat/e`, `/pat/s`, `/pat/b` with signed counts, `/pat/+n` line offsets, remembered by `n` and `N`) |
+| Text objects | Word, quote, bracket, and tag objects (`ci"`, `di(`, …) |
+| Visual selection | Characterwise, linewise, and blockwise selection; Visual Block replace (`Ctrl-v`, count, motion, `r`); Visual Line indentation; ragged right edge (`$` with `A`, `I`, `d`); increment and decrement over a selection (`Ctrl-a`, `Ctrl-x`, `g Ctrl-a`, `g Ctrl-x`) |
+| Registers and putting | `p` `P` `gp` `gP` characterwise and linewise; unnamed, yank `0`, numbered `1`–`9`, named `a`–`z` with uppercase append, black hole, small delete, and an exercise-local `+`; read-only `".` `":` `"/` `"%`; `:registers`; `Ctrl-r{register}` on the Ex and search prompts |
+| Marks, jumps, and the viewport | `m{char}` with quote and backtick jumps; `Ctrl-o` `Ctrl-i`; `g;` `g,` `gi` `gv`; special marks `.` `^` `[` `]`; structural brackets `[[` `]]` `[]` `][` `[{` `]}` `[(` `])` `[m` `]m` `[M` `]M`; `H` `M` `L`, `zt` `zz` `zb`, `Ctrl-f` `Ctrl-b` `Ctrl-d` `Ctrl-u` `Ctrl-e` `Ctrl-y` |
+| Ex ranges and line operations | Addresses `.` `$` numbers, marks, searches, `%`, comma, semicolon, offsets, and Visual `'<,'>`; `:delete` `:yank` `:put` `:copy`/`:t` `:move`/`:m` `:join` `:sort` `:sort!`; `:sort` flags `n` `u` `i` and `/pat/`; listing without editing `:print`/`:p` and `:number`/`:nu`/`:#`, shown in the Ex output overlay |
+| Substitution | Vim-regex `:s` over current-line, numeric, Visual, and whole-buffer ranges; flags `g` `c` `i` `I` `n`; confirmation `y` `n` `a` `q` `l` Escape; empty pattern and replacement reuse; alternate delimiters; atoms, quantifiers, anchors, classes, groups, alternation, word boundaries, captures, `&`, `\0`–`\9`, `\r`, `\v`, `\zs`, `\ze` |
+| Macros | `q{register}…q`, `@{register}`, `@@`, counts, uppercase append, inspecting and repairing macro text, stopping on failure |
+| `:global` and `:normal` | `:normal` and `:normal!` over ranges and Visual selections; `:global`/`:g` and `:vglobal`/`:v` with delete, substitute, Normal-command, and macro workflows; relocation `:g/pat/t{addr}` and `:g/pat/m{addr}` with Vim's mark-then-execute order; bare `:g/pat` defaulting to `:print` |
+
+**Not supported yet:** specialized comment and preprocessor motions,
+replacement case conversion (`\u` `\U` `\E`), and `\=` replacement expressions.
+
+**Deliberately not exposed**, because the adapter disagrees with Vim:
+
+- `{count}O` — Vim leaves the cursor on the last opened line; the adapter leaves
+  it on the first. `{count}i`, `{count}a`, and `{count}o` conform.
+- Tag-object yanks that start before the cursor (`yit`/`yat`) — Vim moves the
+  cursor to the start of the yanked range; the adapter leaves it. Tag activities
+  start at the range, or use an operator that changes text.
+- `dat` over an element spanning whole lines — Vim removes the emptied lines;
+  the adapter leaves the indentation as a residual line. Multi-line tag work
+  uses `it`, `cit`, and `dit`, which conform exactly.
+
+## Notes by unit
 
 Unit 2 configures a fixed character wrap width for `gj`/`gk` fixtures so their
 display-line destinations remain deterministic across supported phone widths.

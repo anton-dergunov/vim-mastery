@@ -6,16 +6,16 @@ import {
   loadUnitCatalogWithPresentation,
   resolveUnitPresentation,
   validatePresentationManifest,
-} from "../presentation-data.js";
-import { findNextSequentialUnit } from "../unit-navigation.js";
-import { unitDigest } from "../mastery-progress.js";
+} from "../src/world/presentation-data.js";
+import { findNextSequentialUnit } from "../src/app/unit-navigation.js";
+import { unitDigest } from "../src/progress/mastery.js";
 import {
   boardProfileForBounds,
   registeredSceneProfileForBoard,
   remoteVariantPaths,
   sceneProfileForBoard,
   sceneProfileForPolicy,
-} from "../world-presentation.js";
+} from "../src/world/presentation.js";
 import { runNativeVim } from "./native-vim-runner.mjs";
 
 const readJson = path => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));

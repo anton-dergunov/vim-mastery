@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { CharacterReactions } from "../character-reactions.js";
+import { CharacterReactions } from "../src/world/character-reactions.js";
 
 function createLayer() {
   return {

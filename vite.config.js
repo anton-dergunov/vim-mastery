@@ -1,12 +1,27 @@
 import { execFileSync } from "node:child_process";
-import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { createReadStream, existsSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { dirname, extname, join, normalize, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
-import { assertCoreMediaBudget, assertMediaAssets, collectMediaPolicy, contentRevision } from "./media-policy.js";
-import { unitDigest } from "./mastery-progress.js";
+import { assertCoreMediaBudget, assertMediaAssets, collectMediaPolicy, contentRevision } from "./src/world/media-policy.js";
+import { unitDigest } from "./src/progress/mastery.js";
 
 const rootDirectory = dirname(fileURLToPath(import.meta.url));
+// Vite serves and builds the pages in src/. Content, art, and review artifacts
+// stay at the repository root: the build copies what ships, and in development
+// repoStaticFiles serves them at the same URLs.
+const sourceDirectory = join(rootDirectory, "src");
+const repoStaticPrefixes = ["/content/", "/assets/", "/artifacts/"];
+const staticContentTypes = {
+  ".json": "application/json",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+};
 const contentDirectory = join(rootDirectory, "content");
 const characterDirectory = join(rootDirectory, "assets", "characters");
 const iconDirectory = join(rootDirectory, "assets", "icons");
@@ -60,10 +75,20 @@ function offlineAssets() {
   };
 }
 
+function repoStaticFiles(request, response, next) {
+  const pathname = decodeURIComponent(new URL(request.url || "/", "http://vite.local").pathname);
+  if (!repoStaticPrefixes.some(prefix => pathname.startsWith(prefix))) return next();
+  const file = normalize(join(rootDirectory, pathname));
+  if (!file.startsWith(rootDirectory + sep) || !existsSync(file) || !statSync(file).isFile()) return next();
+  response.setHeader("Content-Type", staticContentTypes[extname(file).toLowerCase()] || "application/octet-stream");
+  createReadStream(file).pipe(response);
+}
+
 function pwaBuildPlugin(base, version) {
   return {
     name: "vim-wilds-pwa-build",
     configureServer(server) {
+      server.middlewares.use(repoStaticFiles);
       server.middlewares.use((request, response, next) => {
         const url = new URL(request.url || "/", "http://vite.local");
         if (url.pathname === "/" && ["unit", "activity", "preview", "practice"].some(key => url.searchParams.has(key))) {
@@ -86,7 +111,7 @@ function pwaBuildPlugin(base, version) {
       emit("content/practice-samples.json", readFileSync(join(contentDirectory, "practice-samples.json")));
       emit("content/field-notes.json", readFileSync(join(contentDirectory, "field-notes.json")));
       emit("content/mastery-index.json", JSON.stringify(masteryIndex, null, 2));
-      emit("manifest.webmanifest", readFileSync(join(rootDirectory, "manifest.webmanifest")));
+      emit("manifest.webmanifest", readFileSync(join(sourceDirectory, "manifest.webmanifest")));
       emit("assets/characters/manifest.json", readFileSync(join(characterDirectory, "manifest.json")));
       [...media.core, ...media.optional].forEach(asset => emit(asset.path, readFileSync(join(rootDirectory, asset.path))));
       emit("icons/icon-192.png", readFileSync(join(iconDirectory, "icon-192.png")));
@@ -130,15 +155,21 @@ export default defineConfig(({ command }) => {
   const revision = (process.env.GITHUB_SHA || shortGitHash()).slice(0, 8);
   const version = process.env.VITE_APP_VERSION || `${packageVersion}-dev.${revision}`;
   return {
+    root: sourceDirectory,
+    publicDir: false,
+    envDir: rootDirectory,
+    cacheDir: join(rootDirectory, "node_modules", ".vite"),
     base,
     define: {
       __VIM_WILDS_VERSION__: JSON.stringify(version),
     },
     build: {
+      outDir: join(rootDirectory, "dist"),
+      emptyOutDir: true,
       rollupOptions: {
         input: {
-          landing: join(rootDirectory, "index.html"),
-          play: join(rootDirectory, "play", "index.html"),
+          landing: join(sourceDirectory, "index.html"),
+          play: join(sourceDirectory, "play", "index.html"),
         },
       },
     },

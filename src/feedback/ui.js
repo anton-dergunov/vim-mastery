@@ -5,9 +5,9 @@
  * the whole reason the picture shows the problem rather than the report form.
  */
 
-import { captureEnvironment, captureLayout, captureScreenshot, describeScreenshot } from "./feedback-capture.js";
-import { buildReport, bufferIsUserAuthored, FEEDBACK_CATEGORIES, renderReportMarkdown, reportSlug } from "./feedback-report.js";
-import { copyReportText, flushOutbox, hasEndpoint, pendingCount, saveReport, sendReport } from "./feedback-transport.js";
+import { captureEnvironment, captureLayout, captureScreenshot, describeScreenshot } from "./capture.js";
+import { buildReport, bufferIsUserAuthored, FEEDBACK_CATEGORIES, renderReportMarkdown, reportSlug } from "./report.js";
+import { copyReportText, flushOutbox, hasEndpoint, pendingCount, saveReport, sendReport } from "./transport.js";
 
 export function createFeedbackSurface({ elements, getContext, onClose }) {
   const dialog = elements.feedbackDialog;

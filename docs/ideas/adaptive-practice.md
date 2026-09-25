@@ -53,7 +53,7 @@ Checked against the code in September 2026.
 | Idea | Status |
 | --- | --- |
 | Explore this exercise (unrestricted keys, target detection) | **Shipped** — the Explore button on practice activities |
-| Completion ledger and "due for a refresh" markers | **Shipped** — `mastery-progress.js`, with five product-facing states |
+| Completion ledger and "due for a refresh" markers | **Shipped** — `src/progress/mastery.js`, with five product-facing states |
 | Goal-free sandbox with curated local packs | **Shipped** — free practice with bundled sample files |
 | Scenario chains and capstones | **Shipped** — Unit 16 real-code capstones |
 | Mixed tool-choice activities | **Shipped** — 60 choice activities |

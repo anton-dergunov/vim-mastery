@@ -1,4 +1,4 @@
-import { boardProfileForBounds, sceneProfileForBoard } from "./world-presentation.js";
+import { boardProfileForBounds, sceneProfileForBoard } from "./presentation.js";
 
 export const STORY_STORAGE_KEY = "vim-wilds.story.v1";
 export const STORY_TRANSITION_KEY = "vim-wilds.story-transition.v1";

@@ -1170,7 +1170,7 @@ test.describe("Production lesson flow", () => {
   test("matches native substitution case and replacement edge cases", async ({ page }) => {
     await page.goto("/?unit=substitution-practical-regex");
     const results = await page.evaluate(async () => {
-      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
       const cases = [
         { id: "default-case", lines: ["Foo foo"], keys: [...":%s/foo/bar/g", "Enter"], expected: ["Foo bar"] },
         { id: "i-and-I", lines: ["Foo foo", "Foo foo"], keys: [...":s/foo/bar/gi", "Enter", "j", ...":s/foo/baz/gI", "Enter"], expected: ["bar bar", "Foo baz"] },
@@ -1214,7 +1214,7 @@ test.describe("Production lesson flow", () => {
   test("matches native Vim for every session 01 conformance candidate", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const results = await page.evaluate(async fixtures => {
-      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
       return fixtures.map(fixture => {
         resetVimEngineState();
         const host = document.createElement("div");
@@ -1274,7 +1274,7 @@ test.describe("Production lesson flow", () => {
   test("scopes the file-name register to the activity that named the buffer", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const results = await page.evaluate(async () => {
-      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
       const run = (fileName, keys) => {
         resetVimEngineState();
         const host = document.createElement("div");
@@ -1318,7 +1318,7 @@ test.describe("Production lesson flow", () => {
   test("names the trailing characters when a search offset is malformed", async ({ page }) => {
     await page.goto("/?unit=global-normal-automation");
     const message = await page.evaluate(async () => {
-      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
       resetVimEngineState();
       const host = document.createElement("div");
       document.body.append(host);
@@ -1448,7 +1448,7 @@ test.describe("Production lesson flow", () => {
     await page.goto("/?unit=position-memory");
     const lines = positionActivities.find(activity => activity.id === "method-start-mix").scenario.initial.lines;
     const results = await page.evaluate(async sourceLines => {
-      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
       const cases = [
         { keys: ["[", "m"], cursor: [12, 13] },
         { keys: ["]", "m"], cursor: [19, 10] },
@@ -1474,7 +1474,7 @@ test.describe("Production lesson flow", () => {
   test("matches native Visual Block insertion, block shifting, and characterwise gq", async ({ page }) => {
     await page.goto("/?unit=visual-selection");
     const results = await page.evaluate(async () => {
-      const { VimEngine, resetVimEngineState } = await import("/vim-engine.js");
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
       const cases = [
         { id: "block-I", lines: ["one", "two", "six"], cursor: [0, 0], keys: ["Ctrl-v", "2", "j", "I", ">", " ", "Escape"], code: ["> one", "> two", "> six"], finalCursor: [0, 0] },
         { id: "block-A", lines: ["one", "two", "six"], cursor: [0, 2], keys: ["Ctrl-v", "2", "j", "A", "!", "Escape"], code: ["one!", "two!", "six!"], finalCursor: [0, 2] },

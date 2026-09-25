@@ -7,7 +7,7 @@ import {
   FEEDBACK_SCHEMA_VERSION,
   renderReportMarkdown,
   reportSlug,
-} from "../feedback-report.js";
+} from "../src/feedback/report.js";
 
 const lessonState = {
   surface: "lesson",

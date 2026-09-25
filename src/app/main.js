@@ -1,11 +1,11 @@
 import { findNextSequentialUnit } from "./unit-navigation.js";
-import { canonicalKeyToken, VimEngine, resetVimEngineState } from "./vim-engine.js";
-import { appUrl, appVersion, remoteMediaUrls } from "./app-version.js";
+import { canonicalKeyToken, VimEngine, resetVimEngineState } from "../editor/vim-engine.js";
+import { appUrl, appVersion, remoteMediaUrls } from "./version.js";
 import {
   loadUnitCatalogWithPresentation,
   resolveReferencePresentation,
   resolveUnitPresentation,
-} from "./presentation-data.js";
+} from "../world/presentation-data.js";
 import {
   buildConceptIndex,
   buildFocusedPlan,
@@ -19,11 +19,11 @@ import {
   summarizeUnit,
   togglePinnedConcept,
   writeMasteryState,
-} from "./mastery-progress.js";
-import { StoryTransitions } from "./story-transitions.js";
-import { WorldPresentationRenderer } from "./world-presentation.js";
-import { CharacterReactions } from "./character-reactions.js";
-import { createFeedbackSurface } from "./feedback-ui.js";
+} from "../progress/mastery.js";
+import { StoryTransitions } from "../world/story-transitions.js";
+import { WorldPresentationRenderer } from "../world/presentation.js";
+import { CharacterReactions } from "../world/character-reactions.js";
+import { createFeedbackSurface } from "../feedback/ui.js";
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];

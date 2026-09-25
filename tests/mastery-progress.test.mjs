@@ -24,7 +24,7 @@ import {
   togglePinnedConcept,
   unitDigest,
   writeMasteryState,
-} from "../mastery-progress.js";
+} from "../src/progress/mastery.js";
 
 const rootPath = new URL("../", import.meta.url).pathname;
 const unitsPath = join(rootPath, "content", "units");

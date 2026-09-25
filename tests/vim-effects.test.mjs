@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { classifySemanticEffect } from "../vim-effects.js";
+import { classifySemanticEffect } from "../src/editor/vim-effects.js";
 
 function offsetFor(text, [row, column]) {
   return text.split("\n").slice(0, row).reduce((total, line) => total + line.length + 1, 0) + column;

@@ -3,8 +3,8 @@
  * This module is deliberately pure: it takes plain snapshots and returns plain
  * data, so the whole redaction contract can be unit-tested in Node without a
  * DOM, a browser, or a network. Everything that touches the page lives in
- * feedback-capture.js, and everything that touches the wire lives in
- * feedback-transport.js.
+ * capture.js, and everything that touches the wire lives in
+ * transport.js.
  *
  * The Markdown is rendered here rather than in the sync script on purpose. The
  * reviewer reads it before sending and the triage file on disk is the same

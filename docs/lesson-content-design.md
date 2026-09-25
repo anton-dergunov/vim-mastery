@@ -307,7 +307,8 @@ Authoring validation has three independent gates:
   fixture for every taught primitive and combination.
 
 `releaseStatus: "authoring"` is required while any browser fixture is pending.
-Content authoring must not promote a command in `supported-commands.json`.
+Content authoring must not add a command to the supported command set in
+`docs/vim-conformance.md`; only passing native and browser fixtures can.
 
 Syntax validation is profile-specific. `complete` sources should parse when a
 maintained parser is available. `fragment` sources use a fragment-aware parser
