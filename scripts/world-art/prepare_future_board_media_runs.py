@@ -20,7 +20,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 PATCH_SCRIPT = ROOT / "scripts/world-art/review_wayfinder_patches.py"
-PLAN = "docs/implementation-followup/07-in-board-landmark-plates.md"
+PLAN = "docs/plans/in-board-landmark-plates.md"
 STAGING_ROOT = ROOT / "artifacts/world-generation/future-board-media-runs"
 
 # These sites were placed only after inspecting the five explicitly selected

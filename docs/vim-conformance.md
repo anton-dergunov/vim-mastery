@@ -424,10 +424,10 @@ being ignored. Filename modifiers (`%:h`, `%:t`) are a different parser and are
 out of scope, as is anything implying the file exists — `:w` and `:e`. The name
 is a label, not a filesystem.
 
-## Followup session 05 — Ex ownership and `@:`
+## After the 25-session plan — Ex ownership and `@:`
 
-The numbering restarts here. This is the followup series in
-`docs/implementation-followup/`, not a later entry in the 25-session plan above.
+This work followed the closed 25-session plan above; it is not one of its
+sessions.
 
 Two things were wrong at once, and they were the same thing. `AGENTS.md` said
 the adapter owns Vim command interpretation while `vim-engine.js` interprets

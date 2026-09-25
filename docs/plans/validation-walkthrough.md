@@ -12,7 +12,7 @@ that a note referring to "item 7" still means item 7.
 
 File anything a check turns up through the in-app feedback sheet rather than
 here — that is what it is for, and a report carries its own context, buffer and
-screenshot. Brief 01 exists because five surfaces cannot currently file one.
+screenshot.
 
 ---
 
@@ -79,4 +79,5 @@ and nothing clips.
 Not defects to file — they are scheduled:
 
 - **Units 5–17 boards do not progress and their landmarks never light.** Only
-  the four Arc 1 scenes have a patch layer. Brief 07.
+  the four Arc 1 scenes have a patch layer. See
+  [in-board-landmark-plates.md](in-board-landmark-plates.md).

@@ -1,6 +1,6 @@
-# Session 07 — The in-board patch layer for Units 5–17
+# The in-board patch layer for Units 5–17
 
-**Size:** L (art generation). **Depends on:** brief 04.
+**Size:** L (art generation). **Depends on:** [asset and hosting budget](asset-and-hosting-budget.md).
 
 ## First, two things called "restoration"
 
@@ -82,7 +82,7 @@ validates that any referenced patch id "must exist in every profile", so an
 empty `phasePatches` array is the escape hatch that let those scenes register
 without art.
 
-Write the answer into `README.md`'s settled decisions either way. Three outcomes
+Write the answer into [../design-decisions.md](../design-decisions.md) either way. Three outcomes
 are all acceptable; leaving it undecided a fourth time is not:
 
 - **Full parity** — author phase patches and landmark plates for all 13.
@@ -138,7 +138,8 @@ four Moonroot scenes contribute all 60 `registered-patch` core assets today, and
 core sits at 47.8 MiB of its 300 MiB ceiling, so the precache has room.
 
 The constraint is the total artifact, not the precache: `dist/` is 888 MB against
-GitHub Pages' 1 GB limit. **That is why this session waits for brief 04.** Do not
+GitHub Pages' 1 GB limit. **That is why this session waits for the
+[asset and hosting budget](asset-and-hosting-budget.md).** Do not
 start generating until the hosting decision is made, and re-measure after
 integrating.
 
@@ -152,7 +153,7 @@ integrating.
 - **Regenerating any base board.** The boards are final. Session 23's rule
   stands: no replacement board unless phone-size review finds a concrete
   composition failure, and "it feels final" does not qualify.
-- **`open-trail-overlook`.** Brief 04 resolves it.
+- **`open-trail-overlook`.** The asset and hosting budget resolves it.
 
 ## Validation
 
@@ -166,5 +167,5 @@ integrating.
   `prefers-reduced-motion: reduce` skips straight to restored without a flash.
 - Inspect 360×740, 390×844, 412×915, 430×932 and 432×960. A plate that registers
   a pixel off is visible as a seam on the narrow phone before anywhere else.
-- Re-measure `dist/` and confirm it still satisfies the ceiling brief 04 added.
+- Re-measure `dist/` and confirm it still satisfies the ceiling the asset and hosting budget added.
 - Confirm no workspace-owned Playwright or Vite process survives the run.

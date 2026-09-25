@@ -1,6 +1,6 @@
-# Session 04 — Asset and hosting budget
+# Asset and hosting budget
 
-**Size:** M. **Depends on:** nothing. **Blocks:** brief 07.
+**Size:** M. **Depends on:** nothing. **Blocks:** [in-board landmark plates](in-board-landmark-plates.md).
 
 ## Why
 
@@ -34,8 +34,8 @@ service worker never precaches it. It breaks down as:
 - **216 `character-reaction`** frames.
 - **150 `character-animation`** frames.
 
-The hard deadline is the Pages 1 GB artifact limit, ~112 MB away. Brief 07 wants
-to add 78 more plates, so this decision comes first.
+The hard deadline is the Pages 1 GB artifact limit, ~112 MB away. The
+[in-board landmark plates](in-board-landmark-plates.md) plan wants to add 78 more plates, so this decision comes first.
 
 ## Scope
 
@@ -74,8 +74,8 @@ The three candidate answers, in the order the evidence favors them:
   artifact**, so on its own it does not solve the deadline. Only worth doing for
   the `.git` problem, and only alongside one of the above.
 
-Pick one, implement it, and record the reasoning in `README.md`'s settled
-decisions. A decision recorded is worth more than the bytes.
+Pick one, implement it, and record the reasoning in
+[../design-decisions.md](../design-decisions.md). A decision recorded is worth more than the bytes.
 
 ### 3. Resolve `open-trail-overlook`
 
@@ -87,14 +87,15 @@ by `tests/media-policy.test.mjs:19-24`.
 
 Either assign it to a unit or delete it. Session 23's constraint stands: **it
 must not create an empty unit** — a board is not a reason to invent curriculum.
-If neither assigning nor deleting is right yet, say so in `README.md` with the
+If neither assigning nor deleting is right yet, say so in `../design-decisions.md` with the
 date and the condition that would decide it, and leave the test pin alone. What
 is not acceptable is leaving it undiscussed for a third session.
 
 ## Out of scope
 
 - Regenerating, re-approving, or re-cropping any board. The art is final.
-- The 78 in-board landmark plates. That is brief 07, and it waits for this.
+- The 78 in-board landmark plates. That is the
+  [in-board landmark plates](in-board-landmark-plates.md) plan, and it waits for this.
 - Veo video loops. Optional and unstarted; if this session concludes that video
   is affordable, record that and stop.
 - Lowering `CORE_MEDIA_MAX_BYTES`. At 47.8 MiB of 300 the ceiling is doing its
