@@ -72,22 +72,29 @@ The visible curriculum has four arcs:
 3. **Automation** is an advanced prerequisite graph covering Ex ranges, substitution, regex, macros, `:normal`, and `:global`.
 4. **Integration and mastery** combines the earlier skills in realistic work and sustains them indefinitely.
 
-The dependency shape is:
+The dependency shape, from each unit's required prerequisites (recommended
+ones are left out):
 
 ```text
-Modal model
-    -> movement
-    -> basic changes
-    -> operator grammar
-       -> precision motion and search
-          -> text objects
-             -> visual selection ------┐
-             -> registers and putting -+-> macros -----------┐
-             -> repeatable editing ----┘                      |
-          -> long-range navigation ---------------------------+-> capstones
-       -> Ex ranges -> substitution and regex ----------------+-> global/normal
-                                                              |
-All completed topics ------------------------------------------+-> mastery loops
+Foundations, sequential
+  modal model → movement → basic changes → operator grammar
+  → precision motion and search → text objects
+
+Fluency tracks
+  operator grammar                    → visual selection
+  text objects                        → registers and putting
+  basic changes                       → position memory → viewport control
+  operator grammar                    → repeatable editing
+
+Automation
+  movement                            → Ex ranges
+  search + Ex ranges                  → substitution and regex
+  registers + repeatable editing      → macros
+  substitution + macros               → global and normal
+
+Integration
+  visual selection + global and normal → real-code capstones
+  any completed topics                 → mastery loops
 ```
 
 The map may render this as regions or chapters, but prerequisites—not screen position—define the learning order.
@@ -278,31 +285,33 @@ This progression creates “advanced levels of the same concept” without dupli
 
 Free Practice is always callable from the primary navigation, including before the learner begins the curriculum. It is a playground, not the main progression path and not a gated reward.
 
-### Session setup
+### What ships
 
-The user may choose:
+Free practice opens a scratchpad on one of 20 bundled real-world files — source
+code in several languages, configuration, structured data, CSV, logs, Markdown,
+and prose, each roughly 20–50 lines. The learner picks a file from a list or
+asks for a random one, and can switch files or leave at any time.
 
-- Code or prose.
-- A supported language or neutral text.
-- Small, medium, or large buffer.
-- Optional theme such as strings, functions, logs, structured data, or prose.
-- Optional command-family emphasis.
-- Goal-free editing or lightweight edit prompts.
+- Every key the keyboard can produce is sent to the engine, whether or not the
+  corresponding lesson has been reached.
+- A one-time notice, and a line above the file list, label this as the **Vim
+  Wilds supported command set**, not complete Vim or Neovim.
+- There is no target, no canonical solution, and no scoring. Reset and undo
+  work as usual.
+- Nothing in free practice changes lesson progress or consumes a review, and the
+  buffer is not saved; only whether the notice has been seen is remembered.
+- Everything is local and offline; no model defines what Vim does.
 
-Defaults should open a small generated code buffer immediately. Setup must not become a barrier to a spare-minute session.
+Focused Practice remains a separate mode. It has a named learning objective, a
+controlled starting state, and feedback. Free Practice gives the learner
+ownership of the buffer and does not judge what they intended to do.
 
-### Behavior
+### Not built yet
 
-- Every command implemented for the practical curriculum is available whether or not the corresponding lesson is unlocked.
-- The app labels this as the **Vim Wilds supported command set**, not complete Vim or Neovim compatibility.
-- There is no canonical solution in goal-free mode.
-- Undo, reset, generate another buffer, open command reference, and leave the session are always available.
-- Optional prompts suggest transformations but may be dismissed permanently for that session.
-- An optional recap may show commands used, modes entered, repeated manual patterns, and relevant focused drills.
-- Free-practice activity never lowers progression, consumes a review opportunity, or blocks curriculum advancement.
-- Generated material must be local/offline-capable and must not depend on an LLM to define correct Vim behavior.
-
-Focused Practice remains a separate mode. It has a named learning objective, controlled starting state, and feedback. Free Practice gives the learner ownership of the buffer and does not judge what they intended to do.
+Generated buffers, choosing code or prose, a language, a size, or a theme,
+optional edit prompts, and a session recap of commands used and repeated manual
+patterns. These are part of the goal-free sandbox idea in
+[ideas/adaptive-practice.md](./ideas/adaptive-practice.md).
 
 ## Curriculum data required for future adaptation
 
@@ -319,27 +328,7 @@ Adaptation mechanics are out of scope, but the curriculum should be authored so 
 - Whether the task measures recall, application, discrimination, composition, tool choice, or automation.
 - Portability notes for behavior that may differ in host integrations.
 
-This is a curriculum contract, not a proposed schema or learner model. Proficiency formulas, forgetting curves, review intervals, telemetry, and next-exercise selection policies will be designed separately.
-
-## Mapping the current prototype
-
-The current eleven exercises are useful examples of visual presentation and advanced commands, but their order is not a viable beginner progression. They should be mapped into the curriculum as follows:
-
-| Prototype exercise | Primary curriculum location | Foundations it assumes | Future role |
-| --- | --- | --- | --- |
-| `rune-column` | Unit 7, Visual Block | Modes, `j`, counts, selection, `r` | Guided Visual Block replace exercise after Visual modes are introduced |
-| `crystal-string` | Unit 6, quote text objects | Insert/Normal transitions, `c`, inside/around semantics | Early text-object change exercise |
-| `empty-altar` | Unit 6, delimiter text objects | Operator grammar and parentheses boundaries | Introductory `di(` exercise |
-| `debug-thorns` | Unit 4, counts plus line operators | Counts and `dd` | Foundation mixed exercise |
-| `mirror-repeat` | Unit 11, repeatable editing | `ciw`, Insert/Normal transition, `j`, dot-repeat | Core repeat workflow after text objects |
-| `beacon-macro` | Unit 14, macros | `I`, Insert/Normal transition, registers, movement, repeat concepts | First guided record-and-replay macro |
-| `terminal-substitute` | Unit 13, substitution | Command-line mode, `%` range, substitute syntax | First whole-buffer literal substitution |
-| `bridge-indent` | Unit 7, Visual Line | Visual mode, `j`, indent operator | Introductory line-selection transformation |
-| `join-aqueduct` | Unit 3, basic changes | Normal mode and uppercase command entry | Early local-edit exercise for `J` |
-| `cut-vine` | Unit 5 plus Unit 4 | `f`, operator-pending mode, `t`, delete | Mixed precision-motion exercise |
-| `echo-test` | Unit 8 plus Unit 4 | `yy`, linewise registers, `p` | Bridge from basic yank/put to register concepts |
-
-No exercise-specific runtime branch or existing prototype sequence should define the eventual curriculum. These scenarios may be retained, rewritten, or replaced according to the lesson rules above.
+This is a curriculum contract, not a proposed schema or learner model. Proficiency formulas, forgetting curves, review intervals, telemetry, and next-exercise selection policies will be designed separately; the current proposals are in [ideas/adaptive-practice.md](./ideas/adaptive-practice.md) and [ideas/ml-strategy.md](./ideas/ml-strategy.md).
 
 ## Optional standalone Vim survival
 

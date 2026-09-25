@@ -8,8 +8,8 @@ of prompts: it contains the theory, executable demonstrations, practice,
 challenges, reference material, verification intent, and coverage evidence that
 a lesson UI needs.
 
-The first conforming unit is Unit 10, Repeatable Editing, in
-`content/units/10-repeatable-editing.json`. Unit files use a two-digit numeric
+The first conforming unit was Repeatable Editing, now Unit 11 in
+`content/units/11-repeatable-editing.json`. Unit files use a two-digit numeric
 prefix for course ordering; Unit 1 is `content/units/01-modal-model.json`. The JSON Schema is
 `content/unit-content.schema.json`, and the shared language registry is
 `content/language-profiles.json`.
