@@ -3,8 +3,8 @@
 A decision record, made in July 2026 and still the architecture: why the app
 runs CodeMirror 6 with `@replit/codemirror-vim`, and what that lets the
 product claim. How the engine is tested is in
-[vim-conformance.md](vim-conformance.md); how it is wired is in `vim-engine.js`
-and `src/app/main.js`.
+[vim-conformance.md](vim-conformance.md); how it is wired is in `vim-engine.js`,
+`src/editor/mount.js`, and `src/lesson/practice.js`.
 
 ## Decision
 
@@ -71,7 +71,7 @@ Vim — not that a Vim binary secretly renders the exercise.
   `:put`, `:copy`/`:t`, `:move`/`:m`, `:join`, `:sort`, and `:print`/`:number`.
   Adding to that set needs both conformance tiers and a note in
   `vim-conformance.md`.
-- **The Vim Wilds (`src/app/main.js` and friends):** exercises, initial and target
+- **The Vim Wilds (the rest of `src/`):** exercises, initial and target
   states, touch-keyboard input, the command tray, hints and copy, validation,
   progress, effects, and story.
 

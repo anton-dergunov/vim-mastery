@@ -419,44 +419,6 @@
   font: 750 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-.story-review-index p {
-  margin: 8px 0 0;
-  color: #a9beb3;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.story-review-unit {
-  margin-bottom: 10px;
-}
-
-.story-review-links {
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.story-review-links a {
-  min-height: 38px;
-  box-sizing: border-box;
-  padding: 9px 11px;
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid rgba(193, 220, 206, .25);
-  border-radius: 8px;
-  color: #e4eee8;
-  background: rgba(255,255,255,.045);
-  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-  text-decoration: none;
-}
-
-.story-review-links a:hover,
-.story-review-links a:focus-visible {
-  border-color: rgba(255, 225, 145, .62);
-  color: #fff1bd;
-  background: rgba(255, 213, 112, .1);
-}
 @media (min-width: 600px) {
   .story-dialog[open],
   .story-dialog:has(.story-visual.has-story-art)[open] {

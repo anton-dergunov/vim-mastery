@@ -126,21 +126,6 @@ test("allows skipping from every introduction panel", async ({ page }) => {
   }
 });
 
-test("renders selected intro panorama candidates with a one-way in-game camera track", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/play/");
-  await waitForApp(page);
-
-  for (const candidate of ["05", "07", "10", "14"]) {
-    expect(await page.evaluate(id => window.VimWilds.previewIntroArt(id), candidate)).toBe(true);
-    const visual = page.locator(".story-visual");
-    await expect(visual).toHaveClass(/story-panorama/);
-    await expect(visual).toHaveAttribute("data-review-story-asset", new RegExp(`candidate-${candidate}\\.png$`));
-    expect(await visual.evaluate(element => getComputedStyle(element).animationName)).toBe("story-panorama-camera-track");
-    expect(await visual.evaluate(element => getComputedStyle(element).animationDuration)).toBe("60s");
-  }
-});
-
 test("keeps Panels 1 and 2 on one camera clock, crossfades them, and restarts Panel 3", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/play/?preview=story&story=intro&panel=connected-wilds");
@@ -180,7 +165,7 @@ test("keeps Panels 1 and 2 on one camera clock, crossfades them, and restarts Pa
   expect(await visual.evaluate(element => getComputedStyle(element).backgroundPosition)).not.toBe(thirdPosition);
 });
 
-test("opens direct review URLs for intro, unit-ending candidates, and the finale", async ({ page }) => {
+test("opens direct preview URLs for an intro panel, a unit ending, and the finale", async ({ page }) => {
   await page.goto("/play/?preview=story&story=intro&panel=nix-at-the-threshold");
   await waitForApp(page);
   let surface = page.locator(".story-surface");
@@ -190,13 +175,13 @@ test("opens direct review URLs for intro, unit-ending candidates, and the finale
     "assets/worlds/story/intro/nix-at-the-threshold.webp",
   );
 
-  await page.goto("/play/?preview=story&story=unit-ending&unit=cursor-movement&candidate=3");
+  await page.goto("/play/?preview=story&story=unit-ending&unit=cursor-movement");
   await waitForApp(page);
   surface = page.locator(".story-surface");
   await expect(surface).toHaveAttribute("data-kind", "unit");
   await expect(page.locator(".story-visual")).toHaveAttribute(
-    "data-review-story-asset",
-    "artifacts/world-generation/wp11/story-review-v2/unit-endings/cursor-movement-restoration-3x4/candidate-03.png",
+    "data-story-asset",
+    "assets/worlds/story/units/cursor-movement.webp",
   );
   await expect(page.locator(".story-visual")).toHaveClass(/story-unit-ending/);
 
@@ -204,13 +189,6 @@ test("opens direct review URLs for intro, unit-ending candidates, and the finale
   await waitForApp(page);
   await expect(page.locator(".story-surface")).toHaveAttribute("data-kind", "ending");
   await expect(page.locator(".story-visual")).toHaveClass(/story-panorama-reverse/);
-
-  await page.goto("/play/?preview=story-index");
-  await waitForApp(page);
-  await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Story scene review" })).toBeVisible();
-  const finalUnitReview = page.locator(".story-review-unit").filter({ hasText: "Unit 17" });
-  await expect(finalUnitReview.getByRole("link", { name: /Candidate/ })).toHaveCount(5);
 });
 
 test("uses a full portrait frame with top narrative text for unit-ending art", async ({ page }) => {

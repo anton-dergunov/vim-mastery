@@ -111,24 +111,21 @@ opens any of the 17 transitions as a non-mutating replay, and
 `window.VimWilds.getState().story` reports the active descriptor and durable
 story state.
 
-## Reviewing story art
+## Previewing and replacing story art
 
-Start the dev server on a review port and use the preview routes, which render
-candidates in the real production dialog:
+The preview routes open one story scene in the real production dialog, with no
+lesson completion or saved progress needed:
 
-```sh
-npm run dev -- --port 4176
-```
-
-- All story panels: `/play/?preview=story-index`
-- One unit-ending candidate:
-  `/play/?preview=story&story=unit-ending&unit=<unit-id>&candidate=<n>`
+- A unit ending: `/play/?preview=story&story=unit-ending&unit=<unit-id>`
 - An intro panel: `/play/?preview=story&story=intro&panel=<panel-id>`
   (`connected-wilds`, `interrupted-command`, `nix-at-the-threshold`)
 - The finale: `/play/?preview=story&story=finale`
 
-Review at 360×740 before approving. Candidates and contact sheets live under the
-ignored `artifacts/world-generation/wp11/story-review-v2/unit-endings/`.
+Review at 360×740 before approving. The shipped art's lossless masters sit next
+to each runtime WebP in `assets/worlds/story/`; the candidate batches they were
+chosen from have been deleted. A replacement batch goes under the ignored
+`artifacts/world-generation/wp11/story-review-v2/unit-endings/<unit-id>-restoration-3x4/`,
+where the promotion script expects it.
 
 Promote approved endings with, for example:
 
@@ -142,6 +139,6 @@ runtime WebP and its lossless master, and checks that all 17 endings are
 distinct. `python scripts/world-art/sync_story_ending_masters.py --check`
 reports drift between masters and runtime files without writing.
 
-The artifact directory `long-range-navigation` predates the Unit 9 split and
-holds the art for today's Unit 9, `position-memory`. Runtime paths and new
-review links always use `position-memory`; the old directory is provenance only.
+The recorded approvals name `long-range-navigation` for the art that became
+Unit 9, `position-memory`, after the unit split. Runtime paths always use
+`position-memory`.

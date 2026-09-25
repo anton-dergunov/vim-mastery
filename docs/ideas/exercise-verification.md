@@ -75,7 +75,7 @@ Checked against the code in September 2026. Practice is stricter than this
 design wants, not looser:
 
 - Every exercise declares `inputPolicy: "exact-sequence"`.
-- In guided and recall practice, `processToken()` in `src/app/main.js` compares each key
+- In guided and recall practice, `processToken()` in `src/lesson/practice.js` compares each key
   with the next canonical key (`scriptKeys()[state.progress]`) and refuses a
   mismatch **before the engine sees it**. An equivalent Vim command, or a
   mistake followed by `u`, cannot reach the target.

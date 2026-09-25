@@ -7,11 +7,11 @@ import { assertCoreMediaBudget, assertMediaAssets, collectMediaPolicy, contentRe
 import { unitDigest } from "./src/progress/mastery.js";
 
 const rootDirectory = dirname(fileURLToPath(import.meta.url));
-// Vite serves and builds the pages in src/. Content, art, and review artifacts
-// stay at the repository root: the build copies what ships, and in development
+// Vite serves and builds the pages in src/. Content and art stay at the
+// repository root: the build copies what ships, and in development
 // repoStaticFiles serves them at the same URLs.
 const sourceDirectory = join(rootDirectory, "src");
-const repoStaticPrefixes = ["/content/", "/assets/", "/artifacts/"];
+const repoStaticPrefixes = ["/content/", "/assets/"];
 const staticContentTypes = {
   ".json": "application/json",
   ".png": "image/png",

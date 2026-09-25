@@ -94,7 +94,7 @@ export class StoryTransitions {
     this.handleResize = () => {
       if (this.active?.kind !== "unit") return;
       const completion = this.presentation?.units?.[this.active.unitId]?.completion;
-      if (this.active.reviewAsset || completion?.storyImage) return;
+      if (completion?.storyImage) return;
       cancelAnimationFrame(this.layoutFrame);
       this.layoutFrame = requestAnimationFrame(() => {
         this.layoutFrame = null;
@@ -130,7 +130,6 @@ export class StoryTransitions {
       this.showUnit(transition.unitId, {
         targetUnitId: transition.targetUnitId || null,
         replay: transition.replay === true,
-        reviewAsset: transition.reviewAsset || null,
         restoring: true,
       });
       return true;
@@ -186,7 +185,6 @@ export class StoryTransitions {
     panelIndex = 0,
     replay = false,
     restoring = false,
-    reviewAsset = null,
     panoramaStartedAt = null,
   } = {}) {
     const panels = this.presentation?.story?.intro;
@@ -203,7 +201,6 @@ export class StoryTransitions {
       kind: "intro",
       panelIndex: safeIndex,
       replay,
-      reviewAsset,
       panoramaStartedAt: sharedStart,
     };
     if (!restoring) this.persistTransition();
@@ -215,11 +212,10 @@ export class StoryTransitions {
   showUnit(unitId, {
     targetUnitId = null,
     replay = false,
-    reviewAsset = null,
     restoring = false,
   } = {}) {
     if (!this.presentation?.units?.[unitId]) return false;
-    this.active = { kind: "unit", unitId, targetUnitId, replay, reviewAsset };
+    this.active = { kind: "unit", unitId, targetUnitId, replay };
     if (!restoring) this.persistTransition();
     this.render();
     this.open();
@@ -325,7 +321,6 @@ export class StoryTransitions {
       "guideId",
       "actionId",
       "storyAsset",
-      "reviewStoryAsset",
       "storyProfile",
       "registeredScene",
     ]) {
@@ -440,9 +435,7 @@ export class StoryTransitions {
     this.elements.surface.dataset.panelId = panel.id;
     this.elements.visual.dataset.panelId = panel.id;
     const isPanorama = ["connected-wilds", "interrupted-command", "nix-at-the-threshold"].includes(panel.id);
-    const asset = panel.id === "connected-wilds" && this.active.reviewAsset
-      ? this.active.reviewAsset
-      : panel.asset;
+    const asset = panel.asset;
     if (asset) {
       this.elements.visual.dataset.storyAsset = asset;
       this.elements.visual.style.setProperty("--story-asset", `url("${this.assetUrl(asset)}")`);
@@ -453,7 +446,6 @@ export class StoryTransitions {
     if (crossfadeFromConnected) {
       this.addPanoramaCrossfade(previousAsset);
     }
-    if (isPanorama && this.active.reviewAsset) this.elements.visual.dataset.reviewStoryAsset = this.active.reviewAsset;
     this.elements.visual.setAttribute("aria-label", `Story illustration ${this.active.panelIndex + 1} of ${panels.length}`);
     this.elements.progress.textContent = `${this.active.panelIndex + 1} of ${panels.length}`;
     this.elements.kicker.textContent = this.active.replay ? "Replay story" : "The Wilds remember";
@@ -470,7 +462,7 @@ export class StoryTransitions {
     const unit = this.units.get(this.active.unitId);
     const world = this.presentation.worlds[unitPresentation.worldId];
     const completion = unitPresentation.completion;
-    const storyAsset = this.active.reviewAsset || completion.storyImage || null;
+    const storyAsset = completion.storyImage || null;
     const title = unit ? `Unit ${unit.unitNumber} · ${unit.title}` : "Unit restored";
     this.elements.surface.dataset.kind = "unit";
     this.elements.surface.dataset.unitId = this.active.unitId;
@@ -485,7 +477,6 @@ export class StoryTransitions {
     this.elements.title.textContent = title;
     if (storyAsset) {
       this.elements.visual.dataset.storyAsset = storyAsset;
-      if (this.active.reviewAsset) this.elements.visual.dataset.reviewStoryAsset = storyAsset;
       this.elements.visual.style.setProperty("--story-asset", `url("${this.assetUrl(storyAsset)}")`);
       this.elements.visual.classList.add("has-story-art", "story-unit-ending");
     } else {
