@@ -4,5 +4,5 @@
 raise SystemExit(
     "Free Moonroot props and a hard-coded shared backdrop are retired. "
     "Use the approval-gated unit-scene scripts documented in "
-    "docs/gamification-implementation-plan.md."
+    "docs/art-direction.md."
 )

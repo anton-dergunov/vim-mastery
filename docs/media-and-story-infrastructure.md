@@ -104,8 +104,8 @@ transitions while keeping all states and controls.
 Approved copy already comes from `content/presentation.json`; do not duplicate
 or rewrite it in markup or JavaScript.
 
-The complete Sol-authored Nano Banana production descriptions are in
-`docs/wp11-nano-banana-prompt-pack.md`. Use that pack for candidate generation;
+The complete Nano Banana production prompts are in
+[art-prompts.md](art-prompts.md). Use them for candidate generation;
 do not ask an implementation session to improvise a shorter landmark or intro
 brief.
 

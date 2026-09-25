@@ -90,13 +90,15 @@ exercises never reach past what they already show.**
     `assets/worlds/story/units/<unit>.webp`, generated from a
     `*-restoration-3x4` candidate set. The full-frame image shown when a unit
     completes. **All 17 exist and are promoted.**
-  - An in-board **patch plate** — `phase-a/b/c.webp`,
-    `landmark-dormant.webp` and `landmark-restored.webp` *inside a scene
-    directory*. Transparent overlays that composite onto the gameplay board as
-    a lesson progresses and when a unit completes. **Only the four Arc 1
-    (Moonroot) scenes have any of them**; the other 13 declare
-    `patchRegions` and ship `patches: {}`. See
+  - An in-board **landmark plate** — `landmark-dormant.webp` and
+    `landmark-restored.webp` *inside a scene directory*. Overlays registered to
+    the board that crossfade when a unit completes. **Only the four Arc 1
+    (Moonroot) scenes have them**; the other 13 ship `patches: {}`. See
     [plans/in-board-landmark-plates.md](plans/in-board-landmark-plates.md).
+- **The phase layer is retired.** Moonroot's `phase-a/b/c.webp` were local
+  brightness-and-tint proofs. Commit `06471e9` stopped rendering them and
+  excluded them from the build; the board does not change as a lesson
+  progresses. They are not approved art and must not be promoted.
 
 ### Smaller accepted trade-offs
 

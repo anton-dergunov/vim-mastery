@@ -1,13 +1,130 @@
-# WP-11 Nano Banana generation prompt pack
+# Art prompts
 
-This is the Sol-authored production brief for generating WP-11 art. It is
-deliberately more specific than the compact prompts in the implementation plan.
-It does not approve art: generate 5–10 candidates, review them manually in the
-real story surface, and record the selected interaction/output metadata.
+The exact Nano Banana prompts used to make The Vim Wilds art. Principles, the
+worlds, the acceptance loop, and approval rules are in
+[art-direction.md](art-direction.md); read it first.
 
-Do not place generated files directly in `assets/`. Keep candidates under
-`artifacts/world-generation/wp11/`; normalize and promote only approved
-outputs.
+None of these prompts approves art. Generate candidates, review them in the
+real UI at phone size, and record the selection. Never place generated files
+directly in `assets/`: keep candidates under `artifacts/world-generation/` and
+normalize and promote only approved outputs.
+
+- [Scenes](#scenes) — new unit scenes and their tall and wide profiles.
+- [Landmarks and unit endings](#landmarks-and-unit-endings) — dormant and
+  restored states for each unit.
+- [Intro panels](#intro-panel-1--the-connected-wilds).
+- [Character poses](#character-poses).
+- [Selection record](#selection-record).
+
+## Scenes
+
+### Unit-scene candidate prompt
+
+Use with Nano Banana 2. Replace the unit location, landmark vocabulary,
+conceptual feeling, and one of the five candidate directions from the
+acceptance loop in [art-direction.md](art-direction.md#scene-acceptance-loop).
+
+```text
+Use case: stylized-concept
+Asset type: responsive environmental backdrop for the live Vim Wilds exercise board
+Primary request: Create a new original [REGION] location for [UNIT].
+Scene/backdrop: [UNIT LOCATION].
+Landmark vocabulary: [LANDMARK], integrated into real terrain or architecture.
+Conceptual feeling: [LEARNING CONCEPT EXPRESSED SPATIALLY].
+Style/medium: polished original 2D pixel-art fantasy matching the attached world
+references in rendering language, material vocabulary and regional palette.
+Composition/framing: 4:3 landscape. [CANDIDATE DIRECTION]
+UI occlusion reference: The attached mask records where live HTML may cover the
+art. It is measurement data only. Do not reproduce its rectangle, hatching,
+shape, color or emptiness. The scene must remain coherent without the editor.
+Constraints: coherent background, middle ground and foreground; every object
+supported by terrain or architecture; no characters.
+Avoid: a generic central black hole; editor-shaped cavity; floating objects;
+isolated prop-sheet elements; writing; symbols; code; UI; pseudo-text; watermark.
+Output one 2K 4:3 image.
+```
+
+World substitutions for `[REGION]`:
+
+**Moonroot Ruins**
+
+```text
+An ancient forest sanctuary at blue-green moonlit dusk: enormous roots framing
+the sides, moss-covered dark stone, shallow still water, a few tiny amber
+lanterns, restrained violet spores and narrow turquoise mineral veins. The mood
+is warm, mysterious and safe. Handcrafted ruins are partially reclaimed by
+plants. Avoid horror, dense jungle clutter, bright daylight and top-down map
+perspective.
+```
+
+**Starwater Sanctuary**
+
+```text
+A nocturnal sanctuary built across dark reflective water: distant glass
+observatory structures, slim stone islands, star reflections, translucent
+reeds, pale cyan and violet light, and sparse warm-gold navigation points. The
+space feels precise, open and contemplative. Suggest lenses, alignment and
+reflection through architecture without symbols or writing. Avoid outer space,
+modern science equipment and neon cyberpunk clutter.
+```
+
+**Archive of Echoes**
+
+```text
+A warm subterranean archive carved into dark stone: crystal drawers, suspended
+shelves, distant beacons and quiet clockwork forms. Use teal glass, muted brass,
+amber memory lights and violet shadows. The place is cozy, wondrous and ordered,
+with repeated architectural rhythms. Avoid readable books, labels, dusty realism
+and steampunk clutter.
+```
+
+**Brass Meridian**
+
+```text
+A vast precision workshop and command observatory beneath a dark ridge: brass
+rails, copper conduits, glass lenses, controlled ember light and narrow cyan
+currents. The space feels powerful, exact and welcoming. Use endpoints, routes,
+pattern alignment and coordinated mechanisms as abstract spatial motifs. Avoid
+smoke, weapons, factories, grim industrial decay and excessive gears.
+```
+
+### Tall profile
+
+Run only after approval, as an edit of the approved `4:3` scene:
+
+```text
+Create the tall responsive profile of this explicitly approved scene. Recompose
+and extend it vertically to 4:5 while preserving the location, landmark
+identity, material logic, perspective and grounded attachments. Use the
+attached DOM mask only as occlusion measurement; never draw its shape or a
+central cavity. Preserve meaningful grounded foreground below the editor and
+useful atmosphere above it. Add no characters, writing, UI or text. Output 2K.
+```
+
+### Wide profile
+
+A separate edit of the same approved `4:3` scene:
+
+```text
+Create the wide responsive profile of this explicitly approved scene. Recompose
+and extend it horizontally to 16:9 while preserving the location, landmark
+identity, material logic, perspective and grounded attachments. Continue
+coherent traversable scenery into both sides. Use the DOM mask only as
+occlusion measurement and do not draw its shape or emptiness. Add no characters,
+writing, UI or text. Output 2K.
+```
+
+For a shallow landscape-phone board, first test a centre crop of the 16:9
+output. Only if that fails, make a further conversational 4:1 expansion whose
+central identity and low-contrast editor region remain unchanged.
+
+Remote scene variants are complete-board edits of one named site, generated
+from a per-scene site inventory; the method is in [art-direction.md](art-direction.md#remote-variant-method).
+
+## Landmarks and unit endings
+
+Dormant and restored landmark states, and the unit-ending restoration
+paintings, are both edits of the unit's approved scene.
 
 ## Model and reference discipline
 
@@ -37,7 +154,7 @@ outputs.
 
 ## Approved backdrop reference set
 
-These fourteen compact backdrops are the owner-approved geometry and restored
+These seventeen compact backdrops are the owner-approved geometry and restored
 composition references. For a unit transition, attach that unit's exact file as
 Image 1. Do not substitute a candidate from `variants/` or a scene-generation
 artifact. For an intro panorama, use one representative approved backdrop per
@@ -48,16 +165,20 @@ regional reference order below.
   `wayfinder-crossroads/compact/base.webp`, `scribes-spring/compact/base.webp`,
   and `grammar-gate-court/compact/base.webp` under
   `assets/worlds/moonroot-ruins/scenes/`
-- Starwater: `starneedle-observatory/compact/base.png`,
-  `nested-garden/compact/base.png`, and `prism-crossing/compact/base.png` under
-  `assets/worlds/starwater-sanctuary/scenes/`
-- Archive: `memory-archive/compact/base.png`,
-  `far-beacons/compact/base.png`, and `echo-clock/compact/base.png` under
-  `assets/worlds/archive-of-echoes/scenes/`
-- Brass Meridian: `meridian-table/compact/base.png`,
-  `mirror-loom/compact/base.png`, `echo-foundry/compact/base.png`, and
-  `meridian-engine/compact/base.png` under
+- Starwater: `starneedle-observatory/compact/base.webp`,
+  `nested-garden/compact/base.webp`, and `prism-crossing/compact/base.webp`
+  under `assets/worlds/starwater-sanctuary/scenes/`
+- Archive: `memory-archive/compact/base.webp`, `far-beacons/compact/base.webp`,
+  `beacon-glass-gallery/compact/base.webp`, and `echo-clock/compact/base.webp`
+  under `assets/worlds/archive-of-echoes/scenes/`
+- Brass Meridian: `meridian-table/compact/base.webp`,
+  `mirror-loom/compact/base.webp`, `echo-foundry/compact/base.webp`,
+  `meridian-engine/compact/base.webp`, `menders-confluence/compact/base.webp`,
+  and `keepers-relay/compact/base.webp` under
   `assets/worlds/brass-meridian/scenes/`
+
+Unit 16 and 17 sections below use the approved tall board as their primary
+reference instead.
 
 The approved files are strong enough for production continuation. Preserve
 their landmark silhouette and surrounding negative space. Several are already
@@ -901,11 +1022,51 @@ Candidate axes: Nix-to-landmark distance; threshold framing by roots; reflection
 path; degree of environmental intimacy. Reject any candidate that redesigns
 Nix or makes the character more important than the world and landmark.
 
+## Character poses
+
+Start with Nix. Once the pose language is approved, repeat for other guides;
+characters without poses keep their idle still. Use Nano Banana 2 with the
+character's canonical `idle.png` and, when available, one approved pose as
+references. The character's permanent invariants are in
+`scripts/character_catalogue.md`.
+
+```text
+The first attached image is the canonical production reference for an original
+Vim Wilds character. The second image, when supplied, is an approved pose-style
+reference from the same game.
+
+Create exactly the same character in a new [POSE] production pose. Preserve the
+exact species, face, silhouette, proportions, costume, permanent props, number
+of limbs, wings and antennae, pixel-art rendering, outline treatment, palette,
+camera angle and scale. This is a pose change, not a redesign.
+
+[POSE ACTION]
+
+Keep the full body visible and centred in a 1:1 canvas with generous margins.
+Make the silhouette readable at 96 CSS pixels. Use a single flat saturated
+magenta background (#ff00ff) with no texture or cast shadow for local background
+removal. Include one character only, with the canonical props attached. Include
+no text, letters, code, UI, symbols, captions, watermark, scenery or additional
+objects. Output one 1K square image.
+```
+
+`[POSE ACTION]` substitutions:
+
+- `attentive` — "The character leans forward very slightly, gaze focused
+  inward toward the editor, permanent prop held steady, alert and interested
+  rather than excited."
+- `puzzled` — "The character makes a small thoughtful head tilt and one
+  restrained questioning gesture. The emotion is curious and supportive, never
+  disappointed, sad, mocking or alarmed."
+- `encouraging` — "The character settles into a calm open posture with a small
+  approving gesture toward the learner. The emotion is patient confidence, not
+  celebration."
+
 ## Selection record
 
 For every selected output, record:
 
-- prompt pack section and candidate axis;
+- section of this file and candidate axis;
 - model and model revision;
 - interaction/conversation ID;
 - reference filenames and SHA-256 hashes;
@@ -917,9 +1078,9 @@ For every selected output, record:
 The approved intro runtime paths are:
 
 ```text
-assets/worlds/story/intro-connected.webp
-assets/worlds/story/intro-interrupted.webp
-assets/worlds/story/intro-nix-threshold.webp
+assets/worlds/story/intro/connected-wilds.webp
+assets/worlds/story/intro/interrupted-wilds.webp
+assets/worlds/story/intro/nix-at-the-threshold.webp
 ```
 
 The approved landmark runtime paths are profile-local:
@@ -929,7 +1090,7 @@ assets/worlds/<world-id>/scenes/<scene-id>/<profile>/landmark-dormant.webp
 assets/worlds/<world-id>/scenes/<scene-id>/<profile>/landmark-restored.webp
 ```
 
-After promotion, replace the corresponding `asset: null` intro entries, add or
-verify selected scene profile paths, run `npm run test:pwa`, then use
-`window.VimWilds.showUnitStory(unitId)` to inspect all 14 transitions without
+After promotion, point the intro entries in `content/presentation.json` at
+their runtime paths, add or verify selected scene profile paths, run `npm run test:pwa`, then use
+`window.VimWilds.showUnitStory(unitId)` to inspect all 17 transitions without
 changing curriculum completion.

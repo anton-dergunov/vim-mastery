@@ -1,14 +1,14 @@
-# Validation walkthrough — author-run checks
+# Manual testing plan
 
-**This is not a coding session.** Every item here is a manual check to perform
-while walking the course on a real phone. An agent can help fix what a check
-finds, but it cannot perform the check — each one is a judgement about whether
-something reads and feels right at 360 CSS pixels.
+**This is Anton's own testing plan, not a task for a coding agent.** Each item
+is a manual check to perform while walking the course on a real phone. An
+agent can help fix what a check finds, but it cannot perform the check — each
+one is a judgement about whether something reads and feels right at 360 CSS
+pixels.
 
-Carried forward from the untracked root `IMPROVEMENTS.md` so it survives in the
-repository. **The numbering gaps are deliberate**: items 1, 3, 4 and 5 were
-checked and passed, and their numbers are left empty rather than closed up so
-that a note referring to "item 7" still means item 7.
+Status: not started (as of 2026-09-25). Items 1, 3, 4 and 5 were checked and
+passed earlier; **the numbering gaps are deliberate**, so that a note referring
+to "item 7" still means item 7.
 
 File anything a check turns up through the in-app feedback sheet rather than
 here — that is what it is for, and a report carries its own context, buffer and
