@@ -57,7 +57,7 @@ test("the opening deck follows the story introduction and hands off to Unit 1", 
   // The final card is the handoff, so it offers a choice instead of "Next".
   await expect(reference.getByRole("button", { name: "Next" })).toHaveCount(0);
   await expect(reference.getByRole("button", { name: "Read the survival cards" })).toBeVisible();
-  await reference.getByRole("button", { name: "Start Unit 1" }).click();
+  await reference.getByRole("button", { name: "Start the lessons" }).click();
 
   await expect(reference).toBeHidden();
   expect((await referenceState(page)).orientationSeen).toBe(true);

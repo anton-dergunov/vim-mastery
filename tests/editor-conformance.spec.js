@@ -2467,6 +2467,32 @@ test.describe("Production lesson flow", () => {
     expect(baseBackground).toContain("scenes/echo-clock/");
   });
 
+  // The capture-phase keydown handler routes every key to the lesson unless a
+  // dialog is named in its bail-out list. Settings has no autofocus, so Escape
+  // arrives with the dialog itself as the target and the `button` escape hatch
+  // never matches: without the bail-out the sheet cannot be closed by keyboard
+  // and its radio groups cannot be walked with the arrow keys.
+  test("settings keeps Escape and arrow keys instead of feeding them to the lesson", async ({ page }) => {
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
+    const before = await state(page);
+    const settings = page.locator("#settingsDialog");
+
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await expect(settings).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(settings).toBeHidden();
+
+    await page.getByRole("button", { name: "Open settings" }).click();
+    await page.locator('#themeOptions input[value="ember"]').focus();
+    await page.keyboard.press("ArrowDown");
+    expect(await page.evaluate(() => document.activeElement?.value)).not.toBe("ember");
+
+    await page.keyboard.press("Escape");
+    await expect(settings).toBeHidden();
+    // Nothing typed at the sheet reached the buffer behind it.
+    expect(await state(page)).toMatchObject({ code: before.code, cursor: before.cursor });
+  });
+
   test("preserves settings, pointer locking, and compact completion geometry", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open settings" }).click();

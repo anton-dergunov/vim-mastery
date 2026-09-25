@@ -2910,9 +2910,12 @@ document.addEventListener("keydown", event => {
   if (elements.practiceFilesDialog?.open || elements.practiceNoticeDialog?.open) return;
   if (elements.masteryDialog?.open) return;
   // Radios, not text: the escape hatch below covers select and button only, so
-  // without this the handler swallows Escape — leaving the question
-  // undismissable by keyboard — and eats the arrows that move between options.
+  // without these the handler swallows Escape — leaving the sheet undismissable
+  // by keyboard — and eats the arrows that move between options. Settings has
+  // no autofocus either, so its Escape arrives with the dialog itself as the
+  // target and is swallowed even before anything is focused.
   if (elements.entryLevelDialog?.open) return;
+  if (elements.settingsDialog?.open) return;
   // The feedback form holds the only free-text fields in the product. Without
   // this bail-out the capture handler below eats every character: swallowed
   // outright in a theory activity, and typed into the Vim buffer in an
