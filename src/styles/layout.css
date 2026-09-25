@@ -2,10 +2,8 @@
 
 .phone {
   position: relative;
-  width: min(100%, 430px);
   height: var(--app-viewport-height, 100dvh);
   min-height: 0;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -13,15 +11,18 @@
   background: linear-gradient(180deg, rgba(14, 34, 29, .98), rgba(5, 13, 12, .995) 55%);
   box-shadow: 0 0 70px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(255,255,255,.035);
   padding-top: env(safe-area-inset-top);
+  --text-meta: 11px;
+  --text-context: 12px;
+  --text-editor: clamp(14px, 3.8vw, 16px);
+  --text-body: 16px;
+  --text-guidance: clamp(16px, 4.25vw, 18px);
 }
 
 .game-area {
   position: relative;
-  min-height: 0;
   flex: 1 1 auto;
   display: flex;
   align-items: stretch;
-  padding: 8px 8px;
   overflow: hidden;
   background: linear-gradient(#081613, #07110f);
   touch-action: pan-y;
@@ -48,25 +49,11 @@
   background: rgba(125, 220, 166, .13);
 }
 
-@media (max-height: 720px) {
-  .game-area { padding: 6px 7px; }
-}
-
 @media (min-width: 600px) {
   .phone {
     height: min(var(--app-viewport-height, 100dvh), 932px);
     margin-top: max(0px, calc((var(--app-viewport-height, 100dvh) - 932px) / 2));
-    border: 1px solid rgba(180, 220, 200, .12);
-    border-radius: 28px;
   }
-}
-
-.phone {
-  --text-meta: 11px;
-  --text-context: 12px;
-  --text-editor: clamp(14px, 3.8vw, 16px);
-  --text-body: 16px;
-  --text-guidance: clamp(16px, 4.25vw, 18px);
 }
 
 .next-topbar {
@@ -151,7 +138,6 @@
 /* The short phone landscape arrangement is intentionally height-led. Tablets
    retain the normal stacked sequence even in landscape. */
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
-  .phone { padding-top: 0; }
   .next-topbar { display: none; }
   .landscape-controls {
     position: absolute;
@@ -159,34 +145,40 @@
     top: max(6px, env(safe-area-inset-top));
     left: max(6px, env(safe-area-inset-left));
     display: flex;
-    gap: 5px;
+    gap: 4px;
+    top: max(5px, env(safe-area-inset-top));
+    left: max(5px, env(safe-area-inset-left));
   }
-  .landscape-controls .icon-button { width: 30px; height: 30px; flex-basis: 30px; border-radius:8px; }
+  .landscape-controls .icon-button { width: 29px; height: 29px; flex-basis: 29px; border-radius:8px; }
   .landscape-controls .icon-button svg { width: 17px; height: 17px; }
   .lesson-workspace {
     display: grid;
-    grid-template-columns: minmax(145px, 34%) minmax(0, 66%);
     grid-template-rows: minmax(0, 1fr);
+    min-height: 0;
+    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
   }
   .lesson-context {
     min-height: 0;
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(166, 219, 192, .12);
+    min-width: 0;
+    padding-left: env(safe-area-inset-left);
+    overflow: hidden;
   }
-  .game-area { min-height: 0; padding: 6px; }
+  .game-area { min-height: 0; }
 }
 
 /* Tablet and desktop use the entire canvas, but preserve the vertical reading
    order and cap the editor so reclaimed space becomes game board. */
 @media (min-width: 600px) {
   .phone { height: var(--app-viewport-height, 100dvh); margin: 0; border: 0; border-radius: 0; }
-  .next-topbar { min-height: 60px; padding-right: clamp(16px, 3vw, 42px); padding-left: clamp(16px, 3vw, 42px); }
+  .next-topbar { padding-right: clamp(16px, 3vw, 42px); padding-left: clamp(16px, 3vw, 42px); }
   .game-area { padding: clamp(10px, 1.7vw, 20px); }
 }
 
 @media (min-width: 1024px) {
-  .next-topbar { min-height:64px; }
+  .next-topbar { min-height:64px; margin: 12px auto 0; border: 1px solid rgba(166, 219, 192, .12); border-radius: 12px; }
 }
 
 /* This follows the broad tablet rules above so a wide-but-short touch phone
@@ -210,12 +202,6 @@
     width: min(calc(100% - 48px), 1040px);
     align-self: center;
     box-sizing: border-box;
-  }
-
-  .next-topbar {
-    margin: 12px auto 0;
-    border: 1px solid rgba(166, 219, 192, .12);
-    border-radius: 12px;
   }
 }
 
@@ -241,30 +227,8 @@
    so the lesson rail owns that inset instead of letting text sit beneath it. */
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
   .phone {
+    padding-top: 0;
     height: var(--app-viewport-height, 100dvh);
-  }
-
-  .lesson-workspace {
-    min-height: 0;
-    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
-  }
-
-  .lesson-context {
-    min-width: 0;
-    padding-left: env(safe-area-inset-left);
-    overflow: hidden;
-  }
-
-  .landscape-controls {
-    top: max(5px, env(safe-area-inset-top));
-    left: max(5px, env(safe-area-inset-left));
-    gap: 4px;
-  }
-
-  .landscape-controls .icon-button {
-    width: 29px;
-    height: 29px;
-    flex-basis: 29px;
   }
 
   /* When the editor consumes the available world height, remove the scenic

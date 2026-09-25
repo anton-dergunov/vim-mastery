@@ -48,8 +48,8 @@
 .key .base { transition: color .12s, font-size .12s, font-weight .12s, order .12s; }
 .key .shifted { order: 1; color: #71867c; font-size: .68em; font-weight: 600; }
 .key .base { order: 2; color: inherit; font-size: 1em; font-weight: 750; }
-.keyboard.shift-layer .key .shifted { order: 2; color: #fff5d7; font-size: 1em; font-weight: 800; }
-.keyboard.shift-layer .key .base { order: 1; color: #71867c; font-size: .68em; font-weight: 600; }
+.keyboard.shift-layer .key .shifted { order: 1; color: #fff5d7; /* Keep both legends physically stable; Shift changes emphasis, not geometry. */ font-size: .68em; font-weight: 800; }
+.keyboard.shift-layer .key .base { order: 2; color: #71867c; font-size: 1em; font-weight: 750; }
 .keyboard.letter-uppercase .letter-key { text-transform: uppercase; }
 .key.modifier,
 .key.utility { color: #aebfb7; font-size: clamp(10px, 2.65vw, 11.5px); }
@@ -79,7 +79,6 @@
 .u-space { flex-grow: 6; }
 
 @media (max-height: 720px) {
-  .keyboard-panel { padding-top: 5px; }
   .key { height: 30px; }
 }
 
@@ -106,22 +105,6 @@
   inset: 7px 5px calc(7px + env(safe-area-inset-bottom));
 }
 
-/* Keep both legends physically stable; Shift changes emphasis, not geometry. */
-
-.keyboard.shift-layer .key .shifted {
-  order: 1;
-  color: #fff5d7;
-  font-size: .68em;
-  font-weight: 800;
-}
-
-.keyboard.shift-layer .key .base {
-  order: 2;
-  color: #71867c;
-  font-size: 1em;
-  font-weight: 750;
-}
-
 @media (max-height: 760px) {
   .key { height: 30px; }
 }
@@ -132,23 +115,17 @@
   .key { height: clamp(25px, 7.1dvh, 30px); }
 }
 @media (min-width: 600px) {
-  .keyboard-panel { padding-right: clamp(12px, 3vw, 28px); padding-left: clamp(12px, 3vw, 28px); }
-  .keyboard { width: 100%; }
+  .keyboard-panel { padding-right: clamp(12px, 3vw, 28px); padding-left: clamp(12px, 3vw, 28px); padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .keyboard { width: 100%; gap: 5px; }
 }
 
 @media (min-width: 1024px) {
   .keyboard { width: min(1080px, 100%); margin: 0 auto; }
 }
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
-  .keyboard { width: 100%; }
+  .keyboard { width: 100%; gap: 2px; }
 }
 @media (min-width: 600px) {
-
-  .keyboard-panel {
-    padding-top: 10px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  }
-  .keyboard { gap: 5px; }
   .key-row { gap: 5px; }
   .key { height: clamp(36px, 4.9dvh, 46px); }
 }
@@ -157,15 +134,22 @@
 
   .keyboard-panel.completed {
     padding: 0 0 18px;
-    border-top: 0;
-    background: transparent;
-    box-shadow: none;
+    border-top: 1px solid rgba(153, 198, 177, .13);
+    background: linear-gradient(180deg, rgba(22, 36, 32, .98), rgba(7, 13, 12, .995));
+    box-shadow: 0 -9px 24px rgba(0,0,0,.34);
+    /* A visible keyboard retains the original replacement panel. The hidden
+     keyboard's completion panel renders inside the world instead. */
+    padding: 10px clamp(12px, 3vw, 28px) calc(10px + env(safe-area-inset-bottom));
   }
-  .keyboard-panel.completed .keyboard { display: none; }
+  .keyboard-panel.completed .keyboard { display: flex; }
   .keyboard-panel.completed .activity-controls {
-    position: static;
-    width: min(calc(100% - 48px), 720px);
-    margin: 0 auto;
+    position: absolute;
+    width: min(calc(100% - 48px), 1040px);
+    margin: 0;
+    top: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
   }
   .keyboard-panel.completed .completion-panel {
     min-height: 126px;
@@ -173,25 +157,6 @@
 }
 
 @media (min-width: 1024px) {
-
-  /* A visible keyboard retains the original replacement panel. The hidden
-     keyboard's completion panel renders inside the world instead. */
-  .keyboard-panel.completed {
-    padding: 10px clamp(12px, 3vw, 28px) calc(10px + env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(153, 198, 177, .13);
-    background: linear-gradient(180deg, rgba(22, 36, 32, .98), rgba(7, 13, 12, .995));
-    box-shadow: 0 -9px 24px rgba(0,0,0,.34);
-  }
-  .keyboard-panel.completed .keyboard { display: flex; }
-  .keyboard-panel.completed .activity-controls {
-    position: absolute;
-    top: 10px;
-    bottom: calc(10px + env(safe-area-inset-bottom));
-    left: 50%;
-    width: min(calc(100% - 48px), 1040px);
-    margin: 0;
-    transform: translateX(-50%);
-  }
   .keyboard-panel.completed.completion-in-world { display: none; }
 }
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
@@ -200,10 +165,6 @@
     padding: 3px max(4px, env(safe-area-inset-right))
       calc(3px + env(safe-area-inset-bottom))
       max(4px, env(safe-area-inset-left));
-  }
-
-  .keyboard {
-    gap: 2px;
   }
 
   .key-row {

@@ -53,11 +53,13 @@
 .code-body .cm-scroller {
   overflow: auto;
   font: 650 clamp(15px, 4vw, 17px)/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--text-editor);
 }
 .code-body .cm-content {
   min-height: 100%;
   padding: 5px 8px 9px 3px;
   caret-color: transparent;
+  pointer-events: none;
 }
 .code-body .cm-line {
   padding: 0 0 0 7px;
@@ -67,6 +69,7 @@
   border: 0;
   color: #435e52;
   background: transparent;
+  pointer-events: none;
 }
 .code-body .cm-lineNumbers .cm-gutterElement {
   min-width: 20px;
@@ -78,10 +81,8 @@
   filter: drop-shadow(0 0 3px rgba(255, 205, 99, .72));
 }
 .code-body .cm-fat-cursor {
-  color: #192019;
   background: #f7d878;
   outline: 1px solid rgba(255, 232, 159, .75);
-  box-shadow: 0 0 7px rgba(255, 205, 99, .7);
   animation: cursorBlink .9s steps(1) infinite;
 }
 .code-body .cm-selectionBackground,
@@ -181,7 +182,7 @@
 
 .editor-stack.has-viewport .next-code-slab { position: relative; }
 .editor-stack.has-viewport .code-body .cm-scroller {
-  overflow: hidden !important;
+  overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
   scrollbar-width: none;
@@ -263,15 +264,12 @@
 }
 
 .next-code-slab .code-body { padding: 8px 5px; }
-.code-body .cm-scroller { font-size: var(--text-editor); }
 .code-body .cm-content,
 .code-body .cm-gutters {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
-.code-body .cm-content { pointer-events: none; }
-.code-body .cm-gutters { pointer-events: none; }
 .code-body .cm-cursorLayer {
   display: block !important;
   opacity: 1 !important;
@@ -487,8 +485,7 @@
   .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
 }
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
-  .editor-stack { grid-row: 1 / 10; margin: 7px 9px; }
-  .next-code-slab { height: min(var(--editor-height), 100%); min-height: 0; }
+  .next-code-slab { min-height: 0; }
   .editor-stack:has(.demo-controls) { grid-template-rows: max(132px, var(--editor-height)) auto; align-content: start; }
   .editor-stack:has(.demo-controls) .next-code-slab { height: 100%; }
   .next-code-slab .code-body { padding: 3px; }

@@ -4,7 +4,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 260px;
+  min-height: 150px;
   overflow: hidden;
   border: 1px solid rgba(170, 225, 197, .2);
   border-radius: 12px;
@@ -142,8 +142,6 @@
   content: "";
   position: absolute;
   pointer-events: none;
-}
-.world-remote-variant::before {
   inset: 0;
   background-image: var(--world-asset, none);
   background-position: var(--scene-focal-position, 50% 50%);
@@ -177,7 +175,7 @@
 
 .nix {
   --character-media-scale: 1;
-  z-index: 8;
+  z-index: 4;
   align-self: end;
   justify-self: center;
   width: clamp(111px, 31.5vw, 138px);
@@ -189,8 +187,9 @@
   transform: scale(var(--character-media-scale)) scaleX(var(--character-facing, 1));
   animation: nixIdle 2.4s ease-in-out infinite;
   pointer-events: none;
+  margin-bottom: 6px;
 }
-.nix.left { --character-facing: -1; position: relative; left: -6px; transform-origin: center; grid-column: 1 / span 3; grid-row: 7 / span 3; }
+.nix.left { --character-facing: -1; position: relative; left: 0; transform-origin: center; grid-column: 1 / span 3; grid-row: 7 / span 3; }
 .nix.right { grid-column: 10 / span 3; grid-row: 7 / span 3; }
 .world.complete .nix { animation: nixCelebrate .72s ease-in-out 2; }
 .world.complete .nix.celebrating {
@@ -255,8 +254,6 @@
   .nix.reaction-puzzled { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) saturate(.82); transform: rotate(1deg) scale(var(--character-media-scale)) scaleX(var(--character-facing, 1)); }
   .nix.reaction-encouraging { filter: drop-shadow(0 10px 7px rgba(0,0,0,.68)) brightness(1.12); }
 }
-
-.world { min-height: 150px; }
 .world[data-mode="insert"] .code-body .cm-cursorLayer .cm-cursor,
 .world[data-mode="insert"] .code-body .cm-vimMode .cm-cursor {
   width: 0 !important;
@@ -278,9 +275,6 @@
   animation: cursorBlink .9s steps(1) infinite;
 }
 .world[data-mode="replace"] .code-body .cm-fat-cursor { display: none !important; }
-
-.nix { z-index: 4; margin-bottom: 6px; }
-.nix.left { left: 0; }
 .world[data-mode="insert"] .code-slab,
 .world[data-mode="replace"] .code-slab { box-shadow: inset 0 0 0 1px rgba(255, 200, 102, .3), 0 0 18px rgba(255, 181, 75, .08); }
 .world[data-mode="operator-pending"] .code-slab { box-shadow: inset 0 0 0 1px rgba(182, 148, 255, .4), 0 0 20px rgba(157, 110, 255, .12); }
@@ -299,7 +293,6 @@
   .world:has(.editor-stack.has-expanded-rows) .nix { display: none; }
 }
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
-  .world { min-height: 0; }
   .nix { display: none; }
 }
 @media (min-width: 600px) {
@@ -314,11 +307,6 @@
 }
 @media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
   .world { min-height: 0; }
-  .nix { display: none; }
-}
-@media (min-width: 600px) {
-
-  .nix { width: clamp(153px, 19.5vw, 234px); }
 }
 
 @media (max-width: 599px) and (orientation: portrait) {
