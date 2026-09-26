@@ -121,23 +121,24 @@ lesson completion or saved progress needed:
   (`connected-wilds`, `interrupted-command`, `nix-at-the-threshold`)
 - The finale: `/play/?preview=story&story=finale`
 
-Review at 360×740 before approving. The shipped art's lossless masters sit next
-to each runtime WebP in `assets/worlds/story/`; the candidate batches they were
-chosen from have been deleted. A replacement batch goes under the ignored
-`artifacts/world-generation/wp11/story-review-v2/unit-endings/<unit-id>-restoration-3x4/`,
-where the promotion script expects it.
+Review at 360×740 before approving. The approved lossless master sits next to
+each runtime WebP in `assets/worlds/story/`, and
+`python scripts/world-art/encode_runtime_images.py` confirms every WebP still
+encodes from its master (`--write` re-encodes). The candidate batches the art
+was chosen from have been deleted.
 
-Promote approved endings with, for example:
+The scripts that generated and promoted the story art were removed once it was
+approved; the prompts are in [art-prompts.md](art-prompts.md). To make new story
+art, start from them in git history:
 
 ```sh
-python scripts/world-art/promote_story_endings.py --approve macros=3
+git show 66077c2:scripts/world-art/generate_story_candidates.py
+git show 66077c2:scripts/world-art/promote_story_endings.py
 ```
 
-It verifies source hashes and 1792×2400 dimensions, records approval and
-rejection states, encodes with the recorded `cwebp` settings, installs the
-runtime WebP and its lossless master, and checks that all 17 endings are
-distinct. `python scripts/world-art/sync_story_ending_masters.py --check`
-reports drift between masters and runtime files without writing.
+They expect their review batches under the ignored
+`artifacts/world-generation/wp11/story-review-v2/`, and the generator's
+reference images need repointing at the masters in `assets/worlds/story/`.
 
 The recorded approvals name `long-range-navigation` for the art that became
 Unit 9, `position-memory`, after the unit split. Runtime paths always use

@@ -17,7 +17,6 @@ import argparse
 import hashlib
 import json
 import os
-import shutil
 import subprocess
 import time
 from datetime import UTC, datetime
@@ -26,6 +25,8 @@ from typing import Any
 
 from PIL import Image, ImageDraw, ImageFont
 from google.genai import errors
+
+from encode_runtime_images import VARIANT_QUALITY
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -1001,6 +1002,7 @@ def stage_replacements(from_round: int) -> None:
 
 
 def promote() -> None:
+    """Encode the round's approved edits as the scene's runtime variants."""
     manifest = json.loads(MANIFEST_PATH.read_text())
     winners = [
         candidate for candidate in manifest["candidates"]
@@ -1012,14 +1014,15 @@ def promote() -> None:
         )
     if not winners:
         raise RuntimeError("WP-03P-B requires at least one explicitly approved candidate")
-    destination_root = ROOT / f"assets/worlds/moonroot-ruins/scenes/{SCENE_ID}/variants"
+    # Beside the scene's profile folders, in whichever world it belongs to.
+    destination_root = BASES["compact"].parent.parent / "variants"
     destination_root.mkdir(parents=True, exist_ok=True)
     for candidate in winners:
         source = ROOT / candidate["output"]["path"]
         if not source.is_file():
             raise RuntimeError(f"Missing approved candidate output: {source}")
-        destination = destination_root / f"{candidate['id']}.png"
-        shutil.copy2(source, destination)
+        with Image.open(source) as image:
+            image.save(destination_root / f"{candidate['id']}.webp", "WEBP", quality=VARIANT_QUALITY, method=6)
     manifest["promotion"] = {
         "workPackage": "WP-03P-B",
         "promotedAt": datetime.now(UTC).isoformat(),

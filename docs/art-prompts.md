@@ -659,8 +659,8 @@ aperture aligned.
 
 The approved tall Beacon Glass Gallery board is the primary reference. Generate
 five 1792×2400 restoration candidates with the current completion action and
-copy through `generate_story_candidates.py --restoration-3x4 --group
-viewport-control`.
+copy; the generator that did it is in git history (see
+[media-and-story-infrastructure.md](media-and-story-infrastructure.md#previewing-and-replacing-story-art)).
 
 ## Unit 11 — Echo Clock
 
