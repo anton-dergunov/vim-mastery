@@ -173,8 +173,8 @@ with local fallback, and alerts on cost per active user.
 - **Leave GitHub Pages before taking money.** GitHub's terms say Pages is not
   for an online business, e-commerce site, or commercial SaaS. Cloudflare
   Pages or Netlify are plausible commercial hosts; Vercel's free tier is
-  non-commercial too. This also bears on
-  [../plans/asset-and-hosting-budget.md](../plans/asset-and-hosting-budget.md).
+  non-commercial too. The hosting decision and its size margin are in
+  [../design-decisions.md](../design-decisions.md#settled-decisions).
 - **Keep the static learning path up during backend outages.** Accounts, sync,
   entitlements, and AI degrade independently.
 - **Use a Merchant of Record** (for example Paddle) for the first worldwide

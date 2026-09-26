@@ -30,9 +30,9 @@ category and path when one is missing. Core declarations may not point into a
 300 MiB of core media** (`CORE_MEDIA_MAX_BYTES`), a ceiling meant to catch a
 mistake, not to ration artwork; `tests/media-policy.test.mjs` asserts it too.
 The PWA build audit (`npm run test:pwa`) also fails if the whole published
-build, optional tier included, reaches GitHub Pages' 1 GiB; how close it is,
-and what to do about it, is
-[plans/asset-and-hosting-budget.md](plans/asset-and-hosting-budget.md).
+build, optional tier included, reaches GitHub Pages' 1 GiB; the measured
+margin and when to revisit hosting are in
+[design-decisions.md](design-decisions.md#settled-decisions).
 
 **Origins.** Production and fallback requests use the GitHub Pages origin; local
 Vite development tries the local asset first. The service-worker cache name

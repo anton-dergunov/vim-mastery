@@ -97,6 +97,29 @@ exercises never reach past what they already show.**
   Reviving either idea would need real generated art.
 - **The fallback is plain colour.** A board or story surface whose image is
   missing shows the world's plain `fallbackGradient`, never a drawn pattern.
+- **Hosting stays on GitHub Pages, whole build included (2026-09-26).** The
+  published build is 877 MiB against Pages' 1 GiB: 39 MiB of precached core
+  media, 832 MiB of optional media (character reactions 376, character
+  animations 246, 900 scene variants 210), and ~6 MiB of everything else. There
+  is no CDN, no Git LFS, and `variantsPerSite` stays at 5. The margin moves only
+  when art is added, and the art is essentially final; new exercises and
+  features add kilobytes. `tests/pwa-build.test.mjs` fails CI at 1 GiB, and an
+  oversized Pages deploy is rejected while the previous site stays live, so
+  nothing new watches the number. Revisit on either of two conditions:
+  - **New art would push the build past ~950 MiB.** First lever: lower
+    `variantsPerSite` from 5 to 3 in `content/presentation.json`, which frees
+    ~84 MiB with no architectural change, and update the variant count asserted
+    in `tests/pwa-build.test.mjs`. Beyond that, the character frames are the
+    bulk.
+  - **The product takes payments.** Pages' terms exclude commercial use, so the
+    whole static site moves to a commercial host
+    ([ideas/launch-and-monetization.md](ideas/launch-and-monetization.md#hosting-and-payments)).
+- **`open-trail-overlook` stays in reserve (2026-09-26).** Its approved board
+  and 50 variants (5.4 MB in `assets/`) ship nowhere, are pinned `reserve-only`
+  by `tests/media-policy.test.mjs`, and cost nothing in the build. It is the
+  one ready board if new exercises ever grow into a new unit. Assign it when a
+  unit whose content is real needs a board, or delete it if the unit list is
+  declared final. A board is never a reason to create a unit.
 
 ### Smaller accepted trade-offs
 
