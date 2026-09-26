@@ -26,11 +26,19 @@ jobs:
         with:
           python-version: "3.13"
       - run: python3 -m pip install -r scripts/requirements-test.txt
-      # The character script tests encode real animated WebPs with img2webp.
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends webp
+      # The character script tests encode real animated WebPs with img2webp,
+      # whose -exact flag needs libwebp 1.4+; Ubuntu's webp package is older.
+      # This is Google's static build of the version used locally.
+      - name: Install libwebp 1.6.0 tools
+        run: |
+          curl -sSfL -o /tmp/libwebp.tar.gz https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.6.0-linux-x86-64.tar.gz
+          echo "1c5ffab71efecefa0e3c23516c3a3a1dccb45cc310ae1095c6f14ae268e38067  /tmp/libwebp.tar.gz" | sha256sum --check
+          tar -xzf /tmp/libwebp.tar.gz -C /tmp
+          echo "/tmp/libwebp-1.6.0-linux-x86-64/bin" >> "$GITHUB_PATH"
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: node --check src/app/main.js
+      - name: Check the syntax of every app module
+        run: git ls-files 'src/*.js' | xargs -n1 node --check
       - run: npm run test:full
       - name: Upload browser failure diagnostics
         if: failure()
