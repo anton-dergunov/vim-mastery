@@ -25,6 +25,34 @@ async function expectNoHorizontalOverflow(page) {
   expect(overflow).toBe(0);
 }
 
+async function expectNoDocumentScroll(page) {
+  expect(await page.evaluate(() => (
+    document.documentElement.scrollHeight <= document.documentElement.clientHeight
+  ))).toBe(true);
+}
+
+// A command chip may wrap at a space when it is wider than the whole row, but
+// never inside a token: a range over a token that crossed a line break would
+// report one rectangle per line.
+async function expectChipsUnbroken(page) {
+  const broken = await page.evaluate(() => {
+    const found = [];
+    for (const code of document.querySelectorAll("#referenceCardBody .reference-row-command code")) {
+      const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+      for (let text = walker.nextNode(); text; text = walker.nextNode()) {
+        for (const match of text.data.matchAll(/\S+/g)) {
+          const range = document.createRange();
+          range.setStart(text, match.index);
+          range.setEnd(text, match.index + match[0].length);
+          if (range.getClientRects().length !== 1) found.push(match[0]);
+        }
+      }
+    }
+    return found;
+  });
+  expect(broken).toEqual([]);
+}
+
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
 });
@@ -313,6 +341,8 @@ test("every card fits the phone viewport matrix without overflow", async ({ page
       for (let card = 0; card < cardCount; card += 1) {
         if (card) await page.locator('#referenceDialog [data-reference-action="next"]').click();
         await expectNoHorizontalOverflow(page);
+        await expectNoDocumentScroll(page);
+        await expectChipsUnbroken(page);
         const bounds = await page.locator("#referenceDialog").boundingBox();
         expect(bounds.x).toBeGreaterThanOrEqual(0);
         expect(bounds.y).toBeGreaterThanOrEqual(0);
@@ -320,6 +350,53 @@ test("every card fits the phone viewport matrix without overflow", async ({ page
         expect(bounds.y + bounds.height).toBeLessThanOrEqual(viewport.height);
         await expect(page.locator("#referenceActions")).toBeInViewport();
       }
+      await page.evaluate(() => window.VimWilds.closeReference());
+    }
+  }
+});
+
+test("alternative commands render as separate chips", async ({ page }) => {
+  await seedStorySeen(page);
+  await seedOrientationSeen(page);
+  await page.goto("/play/?reference=survival");
+  await waitForApp(page);
+
+  const chips = await page.locator("#referenceCardBody .reference-row-command").evaluateAll(rows => (
+    rows.map(row => [...row.querySelectorAll("code")].map(code => code.textContent))
+  ));
+  expect(chips).toContainEqual([":wq", ":x"]);
+  expect(chips.flat().some(chip => chip.includes("·"))).toBe(false);
+
+  // Squeezed below its content, a row may overflow but must not split a
+  // command: the phone report showed :w as ":" over "w".
+  await page.locator("#referenceCardBody .reference-row-command").evaluateAll(rows => {
+    rows.forEach(row => { row.style.width = "12px"; });
+  });
+  await expectChipsUnbroken(page);
+});
+
+test("per-unit reference pages keep long commands inside the card", async ({ page }) => {
+  await seedStorySeen(page);
+  await seedOrientationSeen(page);
+  await page.goto("/play/");
+  await waitForApp(page);
+
+  for (const viewport of [{ width: 360, height: 740 }, { width: 430, height: 932 }]) {
+    await page.setViewportSize(viewport);
+    for (const unitId of ["global-normal-automation", "macros", "viewport-control", "entering-changing-text"]) {
+      await page.evaluate(id => window.VimWilds.openUnitReference(id), unitId);
+      await expect(page.locator("#referenceCardBody .reference-row").first()).toBeVisible();
+      await expectNoHorizontalOverflow(page);
+      await expectNoDocumentScroll(page);
+      await expectChipsUnbroken(page);
+      const overflowing = await page.locator("#referenceCardBody .reference-row-command code").evaluateAll(chips => (
+        chips.filter(chip => {
+          const body = chip.closest("#referenceCardBody").getBoundingClientRect();
+          const box = chip.getBoundingClientRect();
+          return box.left < body.left || box.right > body.right;
+        }).map(chip => chip.textContent)
+      ));
+      expect(overflowing).toEqual([]);
       await page.evaluate(() => window.VimWilds.closeReference());
     }
   }

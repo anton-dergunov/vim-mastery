@@ -65,3 +65,42 @@ test("routes help input back to practice and preserves exact canonical completio
     mode: "Complete",
   });
 });
+
+// The touch keyboard acts on pointerdown, and the last key swaps the keyboard
+// for the completion panel under the finger. The click from that same tap must
+// not land on Next and skip the completion screen.
+test.describe("touch completion", () => {
+  test.use({ hasTouch: true, isMobile: true });
+
+  test("the tap that completes an exercise does not also press Next", async ({ page }) => {
+    const url = "/play/?unit=precision-motions-search&activity=repeat-separator-edit";
+    const next = page.locator('.completion-panel [data-action="next"]');
+    await page.goto(url);
+    await state(page);
+    await page.evaluate(() => window.VimWilds.solveCurrent());
+    const nextBox = await next.boundingBox();
+
+    await page.goto(url);
+    await state(page);
+    await page.evaluate(() => ["f", ";", "r", ",", ";"].forEach(key => window.VimWilds.emit(key)));
+    const keyBox = await page.locator('.key[data-key="."]').boundingBox();
+    const left = Math.max(keyBox.x, nextBox.x);
+    const right = Math.min(keyBox.x + keyBox.width, nextBox.x + nextBox.width);
+    const top = Math.max(keyBox.y, nextBox.y);
+    const bottom = Math.min(keyBox.y + keyBox.height, nextBox.y + nextBox.height);
+    // The case only means something while the final key sits under Next.
+    expect(right).toBeGreaterThan(left);
+    expect(bottom).toBeGreaterThan(top);
+
+    await page.touchscreen.tap((left + right) / 2, (top + bottom) / 2);
+    expect(await state(page)).toMatchObject({
+      activityId: "repeat-separator-edit",
+      complete: true,
+      code: ["x=1, y=2, z=3"],
+    });
+    await expect(page.locator(".completion-panel")).toBeVisible();
+
+    await next.tap();
+    expect((await state(page)).activityId).not.toBe("repeat-separator-edit");
+  });
+});

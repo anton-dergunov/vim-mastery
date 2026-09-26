@@ -55,6 +55,16 @@ async function unitReferenceEntries(unitId) {
   return (await unitData(unitId))?.reference || [];
 }
 
+// Alternatives are joined with a middle dot. Each one gets its own chip so a
+// row wraps between commands, never inside one. A chip wider than the whole
+// row may still wrap, but only at a space: each token is held together, since
+// a browser would otherwise break Ctrl-y after its hyphen.
+function commandChips(command) {
+  return command.split(/\s+·\s+/).map(part => `<code>${part.split(/(\s+)/)
+    .map(token => /\S/.test(token) ? `<span>${escapeHtml(token)}</span>` : token)
+    .join("")}</code>`).join("");
+}
+
 function renderUnitReferenceEntries(unitId, entries) {
   if (!entries.length) return '<p class="reference-empty">This unit has no reference entries.</p>';
   return `<div class="reference-rows">${entries.map(entry => {
@@ -65,7 +75,7 @@ function renderUnitReferenceEntries(unitId, entries) {
         : `<a href="${escapeHtml(activityHref(unitId, activityRef))}">${escapeHtml(activityRef)}</a>`;
     }).join("");
     return `<div class="reference-row single">
-      <div class="reference-row-command"><code>${escapeHtml(entry.command)}</code></div>
+      <div class="reference-row-command">${commandChips(entry.command)}</div>
       <div class="reference-row-cell reference-row-vim"><p>${renderInline(entry.purpose)}</p></div>
       ${(entry.notes || []).length ? `<ul class="reference-notes">${entry.notes.map(note => `<li>${renderInline(note)}</li>`).join("")}</ul>` : ""}
       ${examples ? `<div class="reference-examples"><span class="reference-cell-label">Seen in</span>${examples}</div>` : ""}
@@ -120,7 +130,7 @@ function renderReferenceRows(card) {
   const hostHeading = columns.host || "In an editor's Vim mode";
   const twoColumn = card.rows.some(row => row.host);
   const rows = card.rows.map(row => `<div class="reference-row${row.host ? "" : " single"}">
-      <div class="reference-row-command"><code>${escapeHtml(row.command)}</code>${row.affects ? `<span class="reference-row-affects">${renderInline(row.affects)}</span>` : ""}</div>
+      <div class="reference-row-command">${commandChips(row.command)}${row.affects ? `<span class="reference-row-affects">${renderInline(row.affects)}</span>` : ""}</div>
       <div class="reference-row-cell reference-row-vim"><span class="reference-cell-label">${escapeHtml(vimHeading)}</span><p>${renderInline(row.vim)}</p></div>
       ${row.host ? `<div class="reference-row-cell reference-row-host"><span class="reference-cell-label">${escapeHtml(hostHeading)}</span><p>${renderInline(row.host)}</p></div>` : ""}
     </div>`).join("");

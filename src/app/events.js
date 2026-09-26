@@ -46,7 +46,19 @@ elements.worldGrid.addEventListener("click", event => {
   const unitId = event.target.closest("button[data-unit-id]")?.dataset.unitId;
   if (unitId) navigateToUnit(unitId);
 });
+// The touch keyboard acts on pointerdown, and the last key of an exercise puts
+// the completion panel where the keyboard was. The click from that same tap is
+// aimed where the finger lifts, which is now Next. Honor a pointer click on
+// these panels only when its press started on the same control; keyboard and
+// scripted activation (detail 0) always count.
+let lastPressTarget = null;
+document.addEventListener("pointerdown", event => { lastPressTarget = event.target; }, true);
+function pressStartedOn(control, event) {
+  return event.detail === 0 || Boolean(control?.contains(lastPressTarget));
+}
+
 elements.completionHost.addEventListener("click", event => {
+  if (!pressStartedOn(event.target.closest("button"), event)) return;
   handleActivityAction(event.target.closest("[data-action]")?.dataset.action);
 });
 const editorPointerEvents = ["pointerdown", "mousedown", "dblclick", "selectstart", "contextmenu"];
@@ -84,6 +96,7 @@ $$('.app-dialog:not(.feedback-dialog)').forEach(dialog => dialog.addEventListene
   if (event.target === dialog) dialog.close();
 }));
 elements.activityControls.addEventListener("click", event => {
+  if (!pressStartedOn(event.target.closest("button"), event)) return;
   const action = event.target.closest("[data-action]")?.dataset.action;
   handleActivityAction(action);
   const remediation = event.target.closest("[data-remediation]")?.dataset.remediation;

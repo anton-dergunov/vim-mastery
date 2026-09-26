@@ -56,7 +56,7 @@
           "type": "theory",
           "phase": "explain",
           "title": "Leave Insert mode before repeating an edit",
-          "body": "An Insert-mode edit becomes repeatable after you return to Normal mode. Dot remembers how Insert mode started, the text you typed, and how it ended.",
+          "body": "An Insert-mode edit becomes repeatable after you return to Normal mode. Dot replays how Insert mode started, the text you typed, and how it ended.",
           "grammar": "A + ; + Escape → .",
           "contrast": "Pressing dot while the first change is unfinished cannot replay it.",
           "demoRef": "dot-append-demo"
@@ -1588,7 +1588,7 @@
           ],
           "feedback": {
             "success": "All three settings are new.",
-            "why": "Comma and semicolon traversed the remembered `=` target; dot supplied the value change."
+            "why": "Comma and semicolon repeated the `f=` find; dot supplied the value change."
           },
           "skills": {
             "primary": [
@@ -3217,7 +3217,7 @@
           "id": "dot-count-memory",
           "type": "theory",
           "phase": "explain",
-          "title": "Dot remembers the previous count",
+          "title": "Dot repeats the previous count",
           "body": "If the last change used a count, plain `.` repeats that count. Put a new count before dot to replace it for the next replay.",
           "grammar": "2x → . repeats 2x; 3. repeats 3x",
           "contrast": "The count belongs to the change recipe, not to the movement between instances.",
@@ -3548,7 +3548,7 @@
             ]
           },
           "hints": [
-            "Dot remembers the count attached to the change.",
+            "Dot repeats the count attached to the change.",
             "Make `2dd` the last change.",
             "Then press `.` once."
           ],

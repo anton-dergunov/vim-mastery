@@ -585,7 +585,7 @@
           "title": "Repeat or reverse a character search",
           "body": "After `f`, `F`, `t`, or `T`, press `;` to search again in the same direction. Press `,` to search in the opposite direction.",
           "grammar": "find once → ; continues → , reverses",
-          "contrast": "The repeat remembers both the target character and the direction of the original find.",
+          "contrast": "`;` repeats the last find: the same character, in the same direction. `,` repeats it in reverse.",
           "demoRef": "repeat-find-demo"
         },
         {
@@ -940,7 +940,7 @@
           },
           "hints": [
             "Find `;` before replacing it.",
-            "`;` still remembers the character search.",
+            "`;` repeats the last character search.",
             "Dot can replay `r,`."
           ],
           "feedback": {

@@ -660,7 +660,7 @@
 
 .reference-row {
   display: grid;
-  gap: 4px;
+  gap: 6px;
   padding: 10px 0 0;
   border-top: 1px solid rgba(193, 220, 206, .16);
 }
@@ -673,11 +673,15 @@
   min-width: 0;
 }
 
+/* A chip wraps only when it is wider than the whole row, and then only at a
+   space between its tokens. overflow-wrap would let flex squeeze a short
+   command like :w down to one character per line. */
 .reference-row-command code {
   white-space: normal;
-  overflow-wrap: anywhere;
   color: #ffd79a;
 }
+
+.reference-row-command code span { white-space: nowrap; }
 
 .reference-row-affects {
   color: #8fa79a;
@@ -690,7 +694,7 @@
 .reference-row-cell p {
   margin: 0;
   color: #cfe0d6;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -700,7 +704,7 @@
   display: block;
   margin-bottom: 2px;
   color: #7fbf9f;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -713,7 +717,7 @@
   border-radius: 10px;
   background: rgba(255,255,255,.025);
   color: #b6c9be;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -721,7 +725,7 @@
   margin: 0;
   padding-left: 18px;
   color: #a9bdb2;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -811,7 +815,7 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: 14px;
     color: #7fbf9f;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
