@@ -22,7 +22,8 @@
     "test:targeted": "playwright test --workers=1 --max-failures=1",
     "test:exhaustive": "playwright test --grep @exhaustive",
     "feedback:pull": "python3 scripts/feedback/pull.py",
-    "feedback:mark": "python3 scripts/feedback/mark.py"
+    "feedback:mark": "python3 scripts/feedback/mark.py",
+    "audit:routes": "node scripts/route-audit/audit.mjs"
   },
   "dependencies": {
     "@codemirror/commands": "6.10.4",

@@ -17,6 +17,7 @@ import { functionalThemeFor, renderCompletionHost, renderWorld, setTheme } from 
 import { characterReactions, playSuccessCharacter } from "./characters.js";
 import { renderCommand } from "./console.js";
 import { clearPlayback } from "./demo.js";
+import { matchesTarget } from "./target.js";
 import { vimEngine } from "../editor/mount.js";
 import {
   dismissExOutput,
@@ -35,20 +36,7 @@ export function renderHints() {
 function isTargetSnapshot(snapshot) {
   // Free practice has no target. Answering here keeps the predicate honest
   // instead of making every caller check first.
-  const target = currentActivity().scenario?.target;
-  if (!target) return false;
-  const registersMatch = Object.entries(target.registers || {}).every(([name, expected]) => {
-    const actual = snapshot.registers?.[name];
-    return actual?.text === expected.text && actual.type === expected.type;
-  });
-  const viewportMatches = !target.viewport
-    || (snapshot.viewport?.topLine === target.viewport.topLine && snapshot.viewport?.bottomLine === target.viewport.bottomLine);
-  return snapshot.text === target.lines.join("\n")
-    && snapshot.mode === target.mode
-    && snapshot.cursorPosition[0] === target.cursor[0]
-    && snapshot.cursorPosition[1] === target.cursor[1]
-    && registersMatch
-    && viewportMatches;
+  return matchesTarget(snapshot, currentActivity().scenario?.target);
 }
 
 function completeActivity() {

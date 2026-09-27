@@ -2181,7 +2181,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-line-scope"
-            ]
+            ],
+            "routeNote": "The instruction asks to see which lines will move before they move, which only a Visual selection shows; the operator-and-motion form is one key shorter."
           },
           "delivery": "guided-then-recall"
         },
@@ -2196,14 +2197,16 @@
           "scenario": {
             "initial": {
               "lines": [
-                "Run each step in order and record the row counts before and after.",
+                "Run each step in order and record the row",
+                "counts",
+                "before and after each step, so the diff can be checked.",
                 "",
                 "1. Connect to the database",
                 "1. Run the migration",
                 "1. Verify the row counts"
               ],
               "cursor": [
-                0,
+                1,
                 0
               ],
               "mode": "normal"
@@ -2211,14 +2214,15 @@
             "target": {
               "lines": [
                 "Run each step in order and record the",
-                "row counts before and after.",
+                "row counts before and after each step,",
+                "so the diff can be checked.",
                 "",
                 "1. Connect to the database",
                 "1. Run the migration",
                 "1. Verify the row counts"
               ],
               "cursor": [
-                2,
+                3,
                 0
               ],
               "mode": "normal"
@@ -2250,14 +2254,15 @@
                 "afterStep": 4,
                 "lines": [
                   "Run each step in order and record the",
-                  "row counts before and after.",
+                  "row counts before and after each step,",
+                  "so the diff can be checked.",
                   "",
                   "1. Connect to the database",
                   "1. Run the migration",
                   "1. Verify the row counts"
                 ],
                 "cursor": [
-                  2,
+                  3,
                   0
                 ],
                 "mode": "normal"
@@ -3794,7 +3799,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "count-only-flag"
-            ]
+            ],
+            "routeNote": "The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -4184,7 +4190,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "confirm-flag"
-            ]
+            ],
+            "routeNote": "The work is the decision at the confirmation prompt, which leaves the buffer as it was; the target cannot record a declined match, so a route that never asks looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {

@@ -214,6 +214,42 @@ data nevertheless records target state and required skill evidence so later
 isolated and mixed practice can accept equivalent conformant solutions without
 rewriting the catalog.
 
+## The taught route is the shortest
+
+The route an exercise teaches must be the shortest route available from what
+the course has taught by then, or the exercise must say why it is not. An
+exercise whose taught answer loses to a route the learner already knows
+teaches the wrong lesson: that the new command is ceremony.
+
+- **Taught by then** means every command used in a demo or exercise the
+  learner has already met, in course order, plus the exercise's own. Choose
+  the buffer, cursor, and target so the new command is the natural choice,
+  not merely a correct one: if the value sits one `W` from the cursor, no
+  backward find from the line end will ever look sensible.
+- **Shortest** counts keys first, then distinct commands. A route that wins
+  only with a count of four or more is not easier, because counting that many
+  objects on screen is an error of its own, so it does not beat the taught
+  route. A line number typed before `G` is read off the gutter, not counted,
+  as long as that line is on screen; a line a fixed viewport hides has no
+  number the learner can see.
+- A tie is allowed. The rule forbids a shorter route, not an equal one.
+- An exercise that deliberately teaches a longer route, usually a repeatable
+  one that `.`, a macro, or `:normal` pays off, says so in its instruction and
+  records the same reason in `verification.routeNote`.
+- The rule governs how exercises are authored, not how copy argues. Capstone
+  summaries still compare routes by clarity, setup cost, repeatability, and
+  risk, and Unit 16's closing summaries are tested to keep key counts out.
+
+`npm run audit:routes` checks the rule. For each exercise it searches for a
+cheaper route built only from commands taught by then, replays every candidate
+in the app's own Vim adapter, and reports a route only when native Vim reaches
+the same target. The committed report is `scripts/route-audit/report.md`; its
+header lists what the search does not try. Fix a flagged exercise by
+re-authoring its buffer, moving it after the competing command stops being
+shorter, or splitting it so one exercise meets the case the new command wins.
+Re-audit it with `npm run audit:routes -- --activity <id> --update`. The audit
+is not part of `npm test`.
+
 ## Language profiles and selection
 
 The registry separates language choice from lesson structure. Each profile

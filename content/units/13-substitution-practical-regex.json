@@ -2388,7 +2388,8 @@
             "requiredEvidence": [
               "count-only-flag",
               "global-flag"
-            ]
+            ],
+            "routeNote": "The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -2582,7 +2583,8 @@
             "requiredEvidence": [
               "confirm-flag",
               "confirm-no"
-            ]
+            ],
+            "routeNote": "The work is the decision at the confirmation prompt, which leaves the buffer as it was; the target cannot record a declined match, so a route that never asks looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {

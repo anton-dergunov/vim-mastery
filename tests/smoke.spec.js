@@ -96,7 +96,7 @@ test.describe("touch completion", () => {
     expect(await state(page)).toMatchObject({
       activityId: "repeat-separator-edit",
       complete: true,
-      code: ["x=1, y=2, z=3"],
+      code: ["x = 1, y = 2, z = 3"],
     });
     await expect(page.locator(".completion-panel")).toBeVisible();
 

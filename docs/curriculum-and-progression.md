@@ -57,8 +57,8 @@ Theory should explain an editing idea, not present a command dump. For example, 
 - Keep the difficult part aligned with the Vim skill. Do not hide the intended command behind riddles, domain trivia, or maze solving.
 - Show the affected motion or text object visually while a command is being composed.
 - Prefer meaningful transformations over arbitrary cursor races.
-- Teach efficient canonical solutions, while allowing equivalent correct solutions when the eventual execution engine can validate them safely.
-- Explain why a solution is useful. Keystroke count is feedback, not the sole definition of quality.
+- Teach the shortest route the learner can already take: no route built from commands taught so far may beat the canonical, unless the exercise says why (see “The taught route is the shortest” in `docs/lesson-content-design.md`). Allow equivalent correct solutions when the eventual execution engine can validate them safely.
+- Explain why a solution is useful. Keystroke count decides whether a buffer makes its taught command the natural choice; it is not the whole definition of quality, and copy does not need to argue by it.
 - Use inserted text sparingly on mobile. The practice target is the command grammar, not touchscreen prose entry.
 
 ## Progression model

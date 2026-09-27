@@ -251,7 +251,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete one visible word",
-          "instruction": "Delete “alpha” without taking the space after it.",
+          "instruction": "Delete “alpha” without taking the space after it. Select the range first, so you can see it before it changes.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -369,7 +369,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-character"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall"
         },
@@ -378,7 +379,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove obsolete imports",
-          "instruction": "Delete the two obsolete imports while keeping the application import.",
+          "instruction": "Delete the two obsolete imports while keeping the application import. Select the range first, so you can see it before it changes.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -498,7 +499,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-line"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall"
         },
@@ -862,7 +864,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Delete the selected token",
-          "instruction": "Delete “alpha” while preserving the comma and the following item.",
+          "instruction": "Delete “alpha” while preserving the comma and the following item. Select the range first, so you can see it before it changes.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
@@ -971,7 +973,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-delete"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall"
         },
@@ -1445,7 +1448,7 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Remove one indentation level",
-          "instruction": "Remove one indentation level from the first two rows.",
+          "instruction": "Remove one indentation level from the first two rows. Select the range first, so you can see it before it changes.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1559,7 +1562,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-line-outdent"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -1571,7 +1575,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Duplicate two complete rows",
-          "instruction": "Duplicate the complete “alpha” and “beta” rows beneath “alpha”.",
+          "instruction": "Duplicate the complete “alpha” and “beta” rows beneath “alpha”. Select the range first, so you can see it before it changes.",
           "languageId": "csv",
           "sourceKind": "neutral",
           "scenario": {
@@ -1696,7 +1700,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-line-yank"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall"
         },
@@ -1705,7 +1710,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Delete obsolete settings",
-          "instruction": "Delete the three obsolete settings while keeping the active setting.",
+          "instruction": "Delete the three obsolete settings while keeping the active setting. Select the range first, so you can see it before it changes.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
@@ -1817,7 +1822,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-line-delete"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall"
         },
@@ -2996,7 +3002,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-reselect-case"
-            ]
+            ],
+            "routeNote": "Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end."
           },
           "delivery": "guided-then-recall"
         },
@@ -3158,7 +3165,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-reselect-delete"
-            ]
+            ],
+            "routeNote": "Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end."
           },
           "delivery": "guided-then-recall"
         },
@@ -3296,7 +3304,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-reselect"
-            ]
+            ],
+            "routeNote": "Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -3344,7 +3353,7 @@
             "browserConformance": "passed",
             "reviewStatus": "draft"
           },
-          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-reselect"] },
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-reselect"], "routeNote": "Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end."},
           "delivery": "guided-then-recall"
         },
         {
@@ -3861,7 +3870,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-reindent"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -3987,7 +3997,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-format"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -3998,29 +4009,130 @@
           "id": "selection-reindent-code-challenge",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Reindent a function body",
-          "instruction": "Correct the indentation of the three statements inside the JavaScript function.",
-          "languageId": "javascript",
+          "title": "Indent a column list",
+          "instruction": "Indent the five column names one level under SELECT, leaving the SELECT and FROM lines where they are.",
+          "languageId": "sql",
           "sourceKind": "fragment",
           "scenario": {
-            "initial": { "lines": ["function main() {", "run();", "log();", "save();", "}"], "cursor": [0, 0], "mode": "normal" },
-            "target": { "lines": ["function main() {", "  run();", "  log();", "  save();", "}"], "cursor": [0, 0], "mode": "normal" }
+            "initial": {
+              "lines": [
+                "SELECT",
+                "id,",
+                "name,",
+                "email,",
+                "created_at,",
+                "updated_at",
+                "FROM users;"
+              ],
+              "cursor": [
+                1,
+                0
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "SELECT",
+                "  id,",
+                "  name,",
+                "  email,",
+                "  created_at,",
+                "  updated_at",
+                "FROM users;"
+              ],
+              "cursor": [
+                1,
+                2
+              ],
+              "mode": "normal"
+            }
           },
           "script": {
-            "steps": ["V", "3", "j", "="],
+            "steps": [
+              "V",
+              "j",
+              "j",
+              "j",
+              "j",
+              ">"
+            ],
             "commandGroups": [
-              { "from": 0, "to": 1, "display": "V", "explanation": "Switch to Visual Line mode." },
-              { "from": 1, "to": 3, "display": "3j", "explanation": "Move three lines down to extend the selection." },
-              { "from": 3, "to": 4, "display": "=", "explanation": "Reindent the selected code lines." }
+              {
+                "from": 0,
+                "to": 1,
+                "display": "V",
+                "explanation": "Start a linewise selection on the first column."
+              },
+              {
+                "from": 1,
+                "to": 5,
+                "display": "jjjj",
+                "explanation": "Grow it one row at a time to the fifth column."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": ">",
+                "explanation": "Shift exactly the selected rows one level in."
+              }
             ],
             "checkpoints": [
-              { "afterStep": 3, "cursor": [3, 0], "mode": "visual-line" },
-              { "afterStep": 4, "lines": ["function main() {", "  run();", "  log();", "  save();", "}"], "cursor": [0, 0], "mode": "normal" }
+              {
+                "afterStep": 1,
+                "lines": [
+                  "SELECT",
+                  "id,",
+                  "name,",
+                  "email,",
+                  "created_at,",
+                  "updated_at",
+                  "FROM users;"
+                ],
+                "cursor": [
+                  1,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 5,
+                "lines": [
+                  "SELECT",
+                  "id,",
+                  "name,",
+                  "email,",
+                  "created_at,",
+                  "updated_at",
+                  "FROM users;"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "visual-line"
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "SELECT",
+                  "  id,",
+                  "  name,",
+                  "  email,",
+                  "  created_at,",
+                  "  updated_at",
+                  "FROM users;"
+                ],
+                "cursor": [
+                  1,
+                  2
+                ],
+                "mode": "normal"
+              }
             ]
           },
-          "hints": ["Formatting applies to complete code lines.", "Include the function header so indentation has structural context."],
-          "feedback": { "success": "The function body now follows its surrounding structure.", "why": "A linewise selection gave the reindent operation complete code rows." },
-          "skills": { "primary": ["visual-reindent"], "supporting": ["visual-line", "visual-selection"] },
+          "hints": ["Shifting applies to complete lines.", "Grow the selection row by row until it covers the five steps, rather than counting them in advance."],
+          "feedback": {"success": "The column names now sit under SELECT, and the clauses around them stayed put.", "why": "Growing a linewise selection showed the exact rows before the shift, with nothing to count."},
+          "skills": {"primary": ["visual-line-shift"], "supporting": ["visual-line", "visual-selection"]},
           "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "code-formatting"] },
           "portability": "Core Vim Visual-mode behavior.",
           "provenance": {
@@ -4031,7 +4143,7 @@
             "browserConformance": "passed",
             "reviewStatus": "draft"
           },
-          "verification": { "inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-reindent"] },
+          "verification": {"inputPolicy": "exact-sequence", "requiredEvidence": ["visual-line", "visual-line-shift"]},
           "delivery": "guided-then-recall"
         },
         {
@@ -6691,7 +6803,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-strategy-reselect"
-            ]
+            ],
+            "routeNote": "Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -6892,19 +7005,74 @@
           "languageId": "ruby",
           "sourceKind": "fragment",
           "scenario": {
-            "initial": { "lines": ["deploy(staging, safe)"], "cursor": [0, 7], "mode": "normal" },
-            "target": { "lines": ["deploy(STAGING, safe)"], "cursor": [0, 7], "mode": "normal" }
+            "initial": {
+              "lines": [
+                "deploy(\"eu west\", safe)"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            },
+            "target": {
+              "lines": [
+                "deploy(\"EU WEST\", safe)"
+              ],
+              "cursor": [
+                0,
+                7
+              ],
+              "mode": "normal"
+            }
           },
           "script": {
-            "steps": ["v", "t", ",", "U"],
+            "steps": [
+              "v",
+              "t",
+              ",",
+              "U"
+            ],
             "commandGroups": [
-              { "from": 0, "to": 1, "display": "v", "explanation": "Switch to Visual Character mode." },
-              { "from": 1, "to": 3, "display": "t,", "explanation": "Extend the selection to just before the comma." },
-              { "from": 3, "to": 4, "display": "U", "explanation": "Uppercase the inspected argument." }
+              {
+                "from": 0,
+                "to": 1,
+                "display": "v",
+                "explanation": "Switch to Visual Character mode."
+              },
+              {
+                "from": 1,
+                "to": 3,
+                "display": "t,",
+                "explanation": "Extend the selection to just before the comma."
+              },
+              {
+                "from": 3,
+                "to": 4,
+                "display": "U",
+                "explanation": "Uppercase the inspected argument."
+              }
             ],
             "checkpoints": [
-              { "afterStep": 3, "cursor": [0, 13], "mode": "visual" },
-              { "afterStep": 4, "lines": ["deploy(STAGING, safe)"], "cursor": [0, 7], "mode": "normal" }
+              {
+                "afterStep": 3,
+                "cursor": [
+                  0,
+                  15
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 4,
+                "lines": [
+                  "deploy(\"EU WEST\", safe)"
+                ],
+                "cursor": [
+                  0,
+                  7
+                ],
+                "mode": "normal"
+              }
             ]
           },
           "hints": ["Inspect the visible punctuation-bounded range before changing it.", "Keep the comma outside the selection."],

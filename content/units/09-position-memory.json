@@ -1780,7 +1780,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "previous-context"
-            ]
+            ],
+            "routeNote": "The previous-context mark and a single Ctrl-o return to the same place by definition, and Ctrl-o is one key shorter; this exercise practises the mark, whose toggling back and forth Ctrl-o does not do."
           },
           "editor": {
             "viewportRows": 7,
@@ -2077,6 +2078,9 @@
                 "steps": [
                   "r",
                   "t",
+                  "2",
+                  "1",
+                  "G",
                   "1",
                   "3",
                   "G",
@@ -2505,6 +2509,12 @@
                 "steps": [
                   "a",
                   "Escape",
+                  "2",
+                  "1",
+                  "G",
+                  "2",
+                  "6",
+                  "G",
                   "1",
                   "3",
                   "G",
@@ -3397,6 +3407,9 @@
                   "2",
                   "l",
                   "y",
+                  "2",
+                  "1",
+                  "G",
                   "1",
                   "3",
                   "G",
@@ -4068,6 +4081,14 @@
                   "G",
                   "r",
                   "c",
+                  "2",
+                  "6",
+                  "G",
+                  "2",
+                  "8",
+                  "G",
+                  "1",
+                  "G",
                   "1",
                   "3",
                   "G",
@@ -4308,6 +4329,14 @@
                   "G",
                   "r",
                   "c",
+                  "2",
+                  "6",
+                  "G",
+                  "2",
+                  "8",
+                  "G",
+                  "1",
+                  "G",
                   "1",
                   "3",
                   "G",
@@ -4498,7 +4527,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "change-list-newer"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           },
           "editor": {
             "viewportRows": 7,
@@ -4569,6 +4599,14 @@
                   "G",
                   "r",
                   "c",
+                  "2",
+                  "6",
+                  "G",
+                  "2",
+                  "8",
+                  "G",
+                  "1",
+                  "G",
                   "1",
                   "3",
                   "G",
@@ -5815,7 +5853,7 @@
                 "function check(value) {",
                 "  if (value === '') {",
                 "    throw new Error('empty');",
-                "  }",
+                "  } // if",
                 "  return true;",
                 "}",
                 "}",
@@ -5868,7 +5906,7 @@
                 "function check(value) {",
                 "  if (value === '') {",
                 "    throw new Error('empty');",
-                "  }",
+                "  } // if",
                 "  return true;",
                 "}",
                 "}",
@@ -5927,7 +5965,7 @@
                   "function check(value) {",
                   "  if (value === '') {",
                   "    throw new Error('empty');",
-                  "  }",
+                  "  } // if",
                   "  return true;",
                   "}",
                   "}",
@@ -6022,7 +6060,7 @@
                 "// section: validation",
                 "{",
                 "function check(value) {",
-                "  if (value === '') {",
+                "  if (ok && ready(v)) {",
                 "    throw new Error('empty');",
                 "  }",
                 "  return true;",
@@ -6042,7 +6080,7 @@
               ],
               "cursor": [
                 13,
-                18
+                12
               ],
               "mode": "normal",
               "viewport": {
@@ -6052,7 +6090,7 @@
               "setup": {
                 "cursor": [
                   13,
-                  18
+                  12
                 ],
                 "steps": [
                   "z",
@@ -6075,7 +6113,7 @@
                 "// section: validation",
                 "{",
                 "function check(value) {",
-                "  if (value === '') {",
+                "  if (ok && ready(v)) {",
                 "    throw new Error('empty');",
                 "  }",
                 "  return true;",
@@ -6134,7 +6172,7 @@
                   "// section: validation",
                   "{",
                   "function check(value) {",
-                  "  if (value === '') {",
+                  "  if (ok && ready(v)) {",
                   "    throw new Error('empty');",
                   "  }",
                   "  return true;",

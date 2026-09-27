@@ -219,7 +219,7 @@
           "scenario": {
             "initial": {
               "lines": [
-                "send(value, retries)"
+                "send(value, retries); log()"
               ],
               "cursor": [
                 0,
@@ -229,7 +229,7 @@
             },
             "target": {
               "lines": [
-                "send(value, retries)"
+                "send(value, retries); log()"
               ],
               "cursor": [
                 0,
@@ -255,7 +255,7 @@
               {
                 "afterStep": 2,
                 "lines": [
-                  "send(value, retries)"
+                  "send(value, retries); log()"
                 ],
                 "cursor": [
                   0,
@@ -307,13 +307,13 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Keep the safe mode",
-          "instruction": "Remove the “-debug” suffix from the quoted mode.",
+          "instruction": "Remove the “-debug=on” suffix from the quoted mode.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "const mode = \"safe-debug\";"
+                "const mode = \"safe-debug=on\";"
               ],
               "cursor": [
                 0,
@@ -420,146 +420,106 @@
           "id": "change-after-colon",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Replace only the status value",
-          "instruction": "Replace the status value “pending” with “ready”.",
+          "title": "Clear only the backoff value",
+          "instruction": "Clear the backoff value so the default applies. Keep the key and its colon.",
           "languageId": "yaml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "status: pending"
+                "retries: 3",
+                "backoff: every five minutes"
               ],
               "cursor": [
-                0,
-                0
+                1,
+                26
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "status: ready"
+                "retries: 3",
+                "backoff:"
               ],
               "cursor": [
-                0,
-                12
+                1,
+                7
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              "$",
               "T",
               ":",
-              "l",
-              "c",
-              "$",
-              "r",
-              "e",
-              "a",
-              "d",
-              "y",
-              "Escape"
+              "D"
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 1,
-                "display": "$",
-                "explanation": "Move to the physical line end."
-              },
-              {
-                "from": 1,
-                "to": 3,
+                "to": 2,
                 "display": "T:",
-                "explanation": "Stop just after the colon."
+                "explanation": "Move back to just after the colon, onto the space before the value."
               },
               {
-                "from": 3,
-                "to": 4,
-                "display": "l",
-                "explanation": "Enter the value."
-              },
-              {
-                "from": 4,
-                "to": 6,
-                "display": "c$",
-                "explanation": "Change from the cursor through the end of the line."
-              },
-              {
-                "from": 6,
-                "to": 11,
-                "display": "ready",
-                "explanation": "Type the requested text."
-              },
-              {
-                "from": 11,
-                "to": 12,
-                "display": "Esc",
-                "explanation": "Return to Normal mode."
+                "from": 2,
+                "to": 3,
+                "display": "D",
+                "explanation": "Delete from the cursor to the end of the line."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 3,
+                "afterStep": 2,
                 "cursor": [
-                  0,
-                  7
-                ],
-                "mode": "normal"
-              },
-              {
-                "afterStep": 4,
-                "cursor": [
-                  0,
+                  1,
                   8
                 ],
                 "mode": "normal"
               },
               {
-                "afterStep": 12,
+                "afterStep": 3,
                 "lines": [
-                  "status: ready"
+                  "retries: 3",
+                  "backoff:"
                 ],
                 "cursor": [
-                  0,
-                  12
+                  1,
+                  7
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Start at the end with `$`.",
-            "`T:` preserves the colon.",
-            "Move onto the value, then use `c$`."
+            "The value lies to the left of the cursor, so search backward.",
+            "`T:` stops on the space just after the colon.",
+            "From there, `D` removes the space and the value together."
           ],
           "feedback": {
-            "success": "Only the YAML value changed.",
-            "why": "Backward till found the structural boundary without disturbing it."
+            "success": "The key and its colon stayed. The value is gone.",
+            "why": "Backward till stopped one character short of the colon, so deleting to the end left the key intact."
           },
           "skills": {
             "primary": [
               "till-backward"
             ],
             "supporting": [
-              "change-operator",
-              "line-end"
+              "delete-to-line-end"
             ]
           },
           "difficulty": {
             "level": "hard",
             "dimensions": [
               "backward-motion",
-              "operator-composition",
-              "literal-insert"
+              "structural-boundary"
             ]
           },
           "portability": "Core Vim behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "precision-motions-search-v1",
-            "languageRationale": "A YAML key/value pair gives the colon a stable boundary.",
+            "languageRationale": "An empty YAML value falls back to the default, and the colon is the boundary the edit must keep.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -843,7 +803,7 @@
           "scenario": {
             "initial": {
               "lines": [
-                "x=1; y=2; z=3"
+                "x = 1; y = 2; z = 3"
               ],
               "cursor": [
                 0,
@@ -853,11 +813,11 @@
             },
             "target": {
               "lines": [
-                "x=1, y=2, z=3"
+                "x = 1, y = 2, z = 3"
               ],
               "cursor": [
                 0,
-                8
+                12
               ],
               "mode": "normal"
             }
@@ -902,18 +862,18 @@
                 "afterStep": 2,
                 "cursor": [
                   0,
-                  3
+                  5
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 4,
                 "lines": [
-                  "x=1, y=2; z=3"
+                  "x = 1, y = 2; z = 3"
                 ],
                 "cursor": [
                   0,
-                  3
+                  5
                 ],
                 "mode": "normal"
               },
@@ -921,18 +881,18 @@
                 "afterStep": 5,
                 "cursor": [
                   0,
-                  8
+                  12
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 6,
                 "lines": [
-                  "x=1, y=2, z=3"
+                  "x = 1, y = 2, z = 3"
                 ],
                 "cursor": [
                   0,
-                  8
+                  12
                 ],
                 "mode": "normal"
               }
@@ -1119,7 +1079,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "repeat-find-reverse"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           }
         }
       ]
@@ -1443,7 +1404,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-forward"
-            ]
+            ],
+            "routeNote": "Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units."
           }
         },
         {
@@ -1568,7 +1530,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-backward"
-            ]
+            ],
+            "routeNote": "Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units."
           }
         },
         {
@@ -1721,7 +1684,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-repeat"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           }
         }
       ]
@@ -2565,7 +2529,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-operator-range"
-            ]
+            ],
+            "routeNote": "Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units."
           }
         },
         {
@@ -3471,7 +3436,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-offset"
-            ]
+            ],
+            "routeNote": "Introduces a search offset on a single search, where a plain search followed by a motion is as short or shorter; the offset pays off when n repeats it, because Vim stores the offset with the pattern."
           }
         },
         {
@@ -3791,7 +3757,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-offset"
-            ]
+            ],
+            "routeNote": "Introduces a search offset on a single search, where a plain search followed by a motion is as short or shorter; the offset pays off when n repeats it, because Vim stores the offset with the pattern."
           }
         },
         {
@@ -3947,7 +3914,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-offset"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           }
         },
         {
@@ -4475,7 +4443,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-match-selection"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           },
           "delivery": "guided"
         },
@@ -5228,7 +5197,7 @@
           "scenario": {
             "initial": {
               "lines": [
-                "wrap(temp)"
+                "wrap(temp);"
               ],
               "cursor": [
                 0,
@@ -5238,11 +5207,11 @@
             },
             "target": {
               "lines": [
-                "wrap"
+                "wrap;"
               ],
               "cursor": [
                 0,
-                3
+                4
               ],
               "mode": "normal"
             }
@@ -5264,11 +5233,11 @@
               {
                 "afterStep": 2,
                 "lines": [
-                  "wrap"
+                  "wrap;"
                 ],
                 "cursor": [
                   0,
-                  3
+                  4
                 ],
                 "mode": "normal"
               }
@@ -6759,7 +6728,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "search-pair-integration"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           }
         },
         {

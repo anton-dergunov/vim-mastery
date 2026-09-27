@@ -22,6 +22,10 @@ listed only after its native-Vim and browser fixtures pass. The list is kept by
 hand: nothing yet checks that every command used in `content/units/` appears
 here, and a test that did would turn it into an enforced gate.
 
+The route audit (`scripts/route-audit/`) searches only this table's families
+when it looks for a route shorter than an exercise's taught one, and reports a
+route only after native Vim agrees with the browser adapter about it.
+
 | Area | Verified |
 | --- | --- |
 | Modes | Modal transitions and cancellation (`i`, `R`, `v`, `V`, `Ctrl-v`, `:`, `Esc`, `Ctrl-[`); operator-pending state and counted operator-motion composition (`2dw`) |

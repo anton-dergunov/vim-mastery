@@ -1944,7 +1944,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "count-only-flag"
-            ]
+            ],
+            "routeNote": "The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -2137,7 +2138,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "global-print"
-            ]
+            ],
+            "routeNote": "The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -2338,7 +2340,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "global-print"
-            ]
+            ],
+            "routeNote": "The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter."
           },
           "delivery": "guided-then-recall",
           "editor": {
@@ -7711,7 +7714,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "global-delete"
-            ]
+            ],
+            "routeNote": "Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo."
           },
           "delivery": "guided-then-recall",
           "editor": {

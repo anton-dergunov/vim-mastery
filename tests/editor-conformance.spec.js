@@ -1531,10 +1531,10 @@ test.describe("Production lesson flow", () => {
       { id: "line-indent-branch-challenge", afterStep: 5, mode: "visual-line", cursor: [3, 10], kind: "linear" },
       { id: "selection-corner-block-challenge", afterStep: 6, mode: "visual-block", cursor: [2, 9], kind: "block" },
       { id: "reselection-correction-challenge", afterStep: 6, mode: "visual-line", cursor: [2, 8], kind: "linear" },
-      { id: "selection-reindent-code-challenge", afterStep: 3, mode: "visual-line", cursor: [3, 7], kind: "linear" },
+      { id: "selection-reindent-code-challenge", afterStep: 5, mode: "visual-line", cursor: [5, 10], kind: "linear" },
       { id: "block-column-delete-challenge", afterStep: 3, mode: "visual-block", cursor: [3, 10], kind: "block" },
       { id: "block-prefix-declarations-challenge", afterStep: 3, mode: "visual-block", cursor: [3, 0], kind: "block" },
-      { id: "visual-strategy-range-challenge", afterStep: 3, mode: "visual", cursor: [0, 14], kind: "linear" },
+      { id: "visual-strategy-range-challenge", afterStep: 3, mode: "visual", cursor: [0, 16], kind: "linear" },
       { id: "integrated-character-edit", afterStep: 3, mode: "visual", cursor: [0, 10], kind: "linear" },
       { id: "integrated-character-edit", afterStep: 13, mode: "visual-line", cursor: [1, 17], kind: "linear" },
       { id: "append-trailing-commas", afterStep: 4, mode: "visual-block", cursor: [2, 11], kind: "block" },
@@ -1737,16 +1737,15 @@ test.describe("Production lesson flow", () => {
       cursor: [5, 6],
     });
 
-    // `dat` takes both tags but not the indentation in front of them.
+    // `dat` takes the innermost element and both of its tags, and nothing
+    // around them: the enclosing cell stays.
     await page.goto("/?unit=text-objects&activity=delete-around-tag");
     await expect.poll(async () => (await state(page)).activityId).toBe("delete-around-tag");
     await page.evaluate(() => window.VimWilds.solveCurrent());
     expect((await state(page))).toMatchObject({
       complete: true,
-      code: ["<section>", "  <h2>Release</h2>", "  <p>", "    Draft copy here.", "  </p>", "  <ul>",
-        "    ", "    <li>Flag handling</li>", "    <li>Docs pending</li>", "  </ul>",
-        "  <footer>v2</footer>", "</section>"],
-      cursor: [6, 3],
+      code: ["<table>", "  <tr>", "    <td>Parser</td>", "    <td></td>", "  </tr>", "</table>"],
+      cursor: [3, 8],
     });
   });
 

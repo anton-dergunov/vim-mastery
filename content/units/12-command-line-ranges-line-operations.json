@@ -314,7 +314,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "dot-offset-addresses"
-            ]
+            ],
+            "routeNote": "Introduces the current-line address on an Ex command through join, whose effect is easy to see; Normal-mode J is shorter for two adjacent lines, and later exercises use ranges J cannot reach."
           },
           "delivery": "guided-then-recall"
         },
@@ -2407,7 +2408,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "safe-ex-undo"
-            ]
+            ],
+            "routeNote": "Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo."
           },
           "delivery": "guided-then-recall"
         }

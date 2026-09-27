@@ -260,7 +260,7 @@
           "difficulty": {"level":"medium","dimensions":["three-landmarks","whitespace"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Indented YAML naturally distinguishes first text from both kinds of line end.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["line-landmarks"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["line-landmarks"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "counted-last-nonblank-column",
@@ -279,7 +279,7 @@
           "difficulty": {"level":"hard","dimensions":["two-counts","multi-line-landmark"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Calls of different lengths prove that g_ follows content rather than a fixed column.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["counted-last-nonblank","column-motion"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["counted-last-nonblank","column-motion"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         }
       ]
     },
@@ -350,7 +350,7 @@
           "difficulty": {"level":"medium","dimensions":["mixed-boundaries","line-change"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Log-like tokens naturally contrast hyphen, underscore, and whitespace boundaries.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["word-versus-word"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["word-versus-word"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "path-word-challenge",
@@ -368,7 +368,7 @@
           "difficulty": {"level":"hard","dimensions":["path-punctuation","case-switching"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"A shell-style path token makes punctuation-aware navigation practical.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["word-boundary-choice"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["word-boundary-choice"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         }
       ]
     },
@@ -421,7 +421,7 @@
           "difficulty": {"level":"easy","dimensions":["case-contrast"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"A log-style route provides several punctuation boundaries inside one WORD.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["e-motion","uppercase-end-motion"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["e-motion","uppercase-end-motion"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "backward-word-starts",
@@ -439,7 +439,7 @@
           "difficulty": {"level":"medium","dimensions":["reverse-direction","case-contrast"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"The same path line supports a controlled reverse-boundary comparison.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["b-motion","uppercase-back-motion"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["b-motion","uppercase-back-motion"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "backward-word-ends",
@@ -457,7 +457,7 @@
           "difficulty": {"level":"hard","dimensions":["g-prefix","reverse-ends"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Mixed punctuation makes the reverse end targets visually distinct.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["ge-motion","uppercase-ge-motion"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["ge-motion","uppercase-ge-motion"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         }
       ]
     },
@@ -520,7 +520,7 @@
           "instruction": "Jump to “west”, then finish on the first letter of “east”.",
           "languageId": "csv",
           "sourceKind": "neutral",
-          "scenario": {"initial":{"lines":["  north","  east","  south","  west"],"cursor":[1,4],"mode":"normal"},"target":{"lines":["  north","  east","  south","  west"],"cursor":[1,2],"mode":"normal"}},
+          "scenario": {"initial":{"lines":["  north","  east","  south","  west"],"cursor":[0,4],"mode":"normal"},"target":{"lines":["  north","  east","  south","  west"],"cursor":[1,2],"mode":"normal"}},
           "script": {"steps":["G","2","G"],"commandGroups":[{"from":0,"to":1,"display":"G","explanation":"Reach the final line."},{"from":1,"to":3,"display":"2G","explanation":"Address one-based line two."}],"checkpoints":[{"afterStep":1,"cursor":[3,2],"mode":"normal"},{"afterStep":3,"lines":["  north","  east","  south","  west"],"cursor":[1,2],"mode":"normal"}]},
           "hints": ["Use uppercase G for both destinations.","The second command needs a line number."],
           "feedback": {"success":"Used both forms of G.","why":"Bare G chose the buffer end; 2G treated the count as an address."},
@@ -528,7 +528,7 @@
           "difficulty": {"level":"medium","dimensions":["bottom-jump","line-address"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"A short region list makes one-based line addressing easy to verify.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["last-line-motion","counted-last-line-motion"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["last-line-motion","counted-last-line-motion"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "requested-line-four",
@@ -692,7 +692,7 @@
           "difficulty": {"level":"easy","dimensions":["word-and-row"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Parallel dotted properties provide stable word positions across rows.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["movement-integration"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["movement-integration"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "top-line-next-word",
@@ -710,7 +710,7 @@
           "difficulty": {"level":"medium","dimensions":["absolute-and-lexical"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Hyphenated zone names make uppercase WORD movement the natural choice.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["movement-integration"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["movement-integration"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "final-buffer-word-edge",
@@ -728,7 +728,7 @@
           "difficulty": {"level":"hard","dimensions":["four-motion-families","reverse-correction"]},
           "portability": "Core Vim behavior.",
           "provenance": {"method":"llm-authored","promptVersion":"cursor-movement-v1","languageRationale":"Parallel dotted assignments support a precise mixed-motion destination.","nativeValidation":"passed","browserConformance":"passed","reviewStatus":"draft"},
-          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["movement-integration"]}
+          "verification": {"inputPolicy":"exact-sequence","requiredEvidence":["movement-integration"],"routeNote":"A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."}
         },
         {
           "id": "choose-last-nonblank-motion",

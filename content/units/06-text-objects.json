@@ -1630,29 +1630,39 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Capture a whole single-quoted value",
-          "instruction": "Capture “'draft'” together with its quotes.",
+          "instruction": "Capture “'draft copy'” together with its quotes.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "'draft' next"
+                "mode = 'draft copy' # default"
               ],
               "cursor": [
                 0,
-                0
+                7
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "'draft' next"
+                "mode = 'draft copy' # default"
               ],
               "cursor": [
                 0,
-                0
+                7
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "'draft copy' "
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "'draft copy' "
+                }
+              }
             }
           },
           "script": {
@@ -1685,11 +1695,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "'draft' next"
+                  "mode = 'draft copy' # default"
                 ],
                 "cursor": [
                   0,
-                  0
+                  7
                 ],
                 "mode": "normal"
               }
@@ -2352,13 +2362,13 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove a complete parameter list",
-          "instruction": "Remove the complete argument list from “load(cache, auth)”, including its parentheses.",
+          "instruction": "Remove the complete argument list from “load(cache, auth);”, including its parentheses.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "load(cache, auth)"
+                "load(cache, auth);"
               ],
               "cursor": [
                 0,
@@ -2368,11 +2378,11 @@
             },
             "target": {
               "lines": [
-                "load"
+                "load;"
               ],
               "cursor": [
                 0,
-                3
+                4
               ],
               "mode": "normal"
             }
@@ -2407,11 +2417,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "load"
+                  "load;"
                 ],
                 "cursor": [
                   0,
-                  3
+                  4
                 ],
                 "mode": "normal"
               }
@@ -2460,13 +2470,13 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Remove a call boundary",
-          "instruction": "Remove the complete argument list from “call(one, two)”, including its parentheses.",
+          "instruction": "Remove the complete argument list from “call(one, two)”, including its parentheses, and keep the fallback.",
           "languageId": "javascript",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "call(one, two)"
+                "call(one, two) || retry();"
               ],
               "cursor": [
                 0,
@@ -2476,11 +2486,11 @@
             },
             "target": {
               "lines": [
-                "call"
+                "call || retry();"
               ],
               "cursor": [
                 0,
-                3
+                4
               ],
               "mode": "normal"
             }
@@ -2515,11 +2525,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "call"
+                  "call || retry();"
                 ],
                 "cursor": [
                   0,
-                  3
+                  4
                 ],
                 "mode": "normal"
               }
@@ -2892,7 +2902,17 @@
                 0,
                 5
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "[one, two]"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "[one, two]"
+                }
+              }
             }
           },
           "script": {
@@ -2968,7 +2988,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "around-square-brackets"
-            ]
+            ],
+            "routeNote": "Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise."
           },
           "delivery": "guided-then-recall"
         },
@@ -3090,7 +3111,7 @@
           "scenario": {
             "initial": {
               "lines": [
-                "items[one, two]"
+                "items[one, two].sort();"
               ],
               "cursor": [
                 0,
@@ -3100,11 +3121,11 @@
             },
             "target": {
               "lines": [
-                "items"
+                "items.sort();"
               ],
               "cursor": [
                 0,
-                4
+                5
               ],
               "mode": "normal"
             }
@@ -3139,11 +3160,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "items"
+                  "items.sort();"
                 ],
                 "cursor": [
                   0,
-                  4
+                  5
                 ],
                 "mode": "normal"
               }
@@ -3213,7 +3234,17 @@
                 0,
                 10
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "one: 1"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "one: 1"
+                }
+              }
             }
           },
           "script": {
@@ -3320,7 +3351,17 @@
                 0,
                 9
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "{one: 1}"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "{one: 1}"
+                }
+              }
             }
           },
           "script": {
@@ -3396,7 +3437,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "around-curly-braces"
-            ]
+            ],
+            "routeNote": "Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise."
           },
           "delivery": "guided-then-recall"
         },
@@ -3518,21 +3560,21 @@
           "scenario": {
             "initial": {
               "lines": [
-                "config = {one: 1}"
+                "render({one: 1});"
               ],
               "cursor": [
                 0,
-                11
+                9
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "config = "
+                "render();"
               ],
               "cursor": [
                 0,
-                8
+                7
               ],
               "mode": "normal"
             }
@@ -3567,11 +3609,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "config = "
+                  "render();"
                 ],
                 "cursor": [
                   0,
-                  8
+                  7
                 ],
                 "mode": "normal"
               }
@@ -3625,23 +3667,33 @@
           "scenario": {
             "initial": {
               "lines": [
-                "config = {one: 1}"
+                "opts = {retry: 3}"
               ],
               "cursor": [
                 0,
-                10
+                8
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "config = {one: 1}"
+                "opts = {retry: 3}"
               ],
               "cursor": [
                 0,
-                10
+                8
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "retry: 3"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "retry: 3"
+                }
+              }
             }
           },
           "script": {
@@ -3674,11 +3726,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "config = {one: 1}"
+                  "opts = {retry: 3}"
                 ],
                 "cursor": [
                   0,
-                  10
+                  8
                 ],
                 "mode": "normal"
               }
@@ -3726,29 +3778,39 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Capture the complete braced block",
-          "instruction": "Capture “{one: 1}” together with its braces.",
+          "instruction": "Capture “{title: 'Docs'}” together with its braces.",
           "languageId": "json",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "config = {one: 1}"
+                "render({title: 'Docs'})"
               ],
               "cursor": [
                 0,
-                9
+                7
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "config = {one: 1}"
+                "render({title: 'Docs'})"
               ],
               "cursor": [
                 0,
-                9
+                7
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "{title: 'Docs'}"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "{title: 'Docs'}"
+                }
+              }
             }
           },
           "script": {
@@ -3781,11 +3843,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "config = {one: 1}"
+                  "render({title: 'Docs'})"
                 ],
                 "cursor": [
                   0,
-                  9
+                  7
                 ],
                 "mode": "normal"
               }
@@ -3824,7 +3886,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "around-curly-braces"
-            ]
+            ],
+            "routeNote": "Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise."
           },
           "delivery": "guided-then-recall"
         }
@@ -3989,23 +4052,33 @@
           "scenario": {
             "initial": {
               "lines": [
-                "Result<Ok, Error>"
+                "fn f() -> Result<Ok, Error> {"
               ],
               "cursor": [
                 0,
-                6
+                16
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "Result<Ok, Error>"
+                "fn f() -> Result<Ok, Error> {"
               ],
               "cursor": [
                 0,
-                6
+                16
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "<Ok, Error>"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "<Ok, Error>"
+                }
+              }
             }
           },
           "script": {
@@ -4038,11 +4111,11 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "Result<Ok, Error>"
+                  "fn f() -> Result<Ok, Error> {"
                 ],
                 "cursor": [
                   0,
-                  6
+                  16
                 ],
                 "mode": "normal"
               }
@@ -4596,7 +4669,7 @@
                 "- Archive the branch"
               ],
               "cursor": [
-                3,
+                4,
                 0
               ],
               "mode": "normal",
@@ -4663,7 +4736,7 @@
             ]
           },
           "hints": [
-            "The block runs from the cursor's line to the next blank line.",
+            "The block runs from the blank line above the cursor to the blank line below it.",
             "Give the indent operator a paragraph object rather than a line count.",
             "Press `>ip`."
           ],
@@ -5160,7 +5233,7 @@
             "initial": {
               "lines": [
                 "<section>",
-                "  <h2>Release</h2>",
+                "  <h2>Release notes</h2><hr>",
                 "  <p>",
                 "    Draft copy here.",
                 "  </p>",
@@ -5185,7 +5258,7 @@
             "target": {
               "lines": [
                 "<section>",
-                "  <h2>Release</h2>",
+                "  <h2>Release notes</h2><hr>",
                 "  <p>",
                 "    Draft copy here.",
                 "  </p>",
@@ -5201,7 +5274,17 @@
                 1,
                 2
               ],
-              "mode": "normal"
+              "mode": "normal",
+              "registers": {
+                "0": {
+                  "type": "characterwise",
+                  "text": "<h2>Release notes</h2>"
+                },
+                "\"": {
+                  "type": "characterwise",
+                  "text": "<h2>Release notes</h2>"
+                }
+              }
             }
           },
           "script": {
@@ -5223,7 +5306,7 @@
                 "afterStep": 3,
                 "lines": [
                   "<section>",
-                  "  <h2>Release</h2>",
+                  "  <h2>Release notes</h2><hr>",
                   "  <p>",
                   "    Draft copy here.",
                   "  </p>",
@@ -5290,53 +5373,41 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Remove one item outright",
-          "instruction": "Remove the first list item entirely, its markup included, leaving the other two.",
+          "instruction": "Empty the status cell, removing the bold element together with its tags.",
           "languageId": "html",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "<section>",
-                "  <h2>Release</h2>",
-                "  <p>",
-                "    Draft copy here.",
-                "  </p>",
-                "  <ul>",
-                "    <li>Parser fixes</li>",
-                "    <li>Flag handling</li>",
-                "    <li>Docs pending</li>",
-                "  </ul>",
-                "  <footer>v2</footer>",
-                "</section>"
+                "<table>",
+                "  <tr>",
+                "    <td>Parser</td>",
+                "    <td><b>draft</b></td>",
+                "  </tr>",
+                "</table>"
               ],
               "cursor": [
-                6,
-                8
+                3,
+                13
               ],
               "mode": "normal",
               "viewport": {
                 "topLine": 0,
-                "bottomLine": 6
+                "bottomLine": 5
               }
             },
             "target": {
               "lines": [
-                "<section>",
-                "  <h2>Release</h2>",
-                "  <p>",
-                "    Draft copy here.",
-                "  </p>",
-                "  <ul>",
-                "    ",
-                "    <li>Flag handling</li>",
-                "    <li>Docs pending</li>",
-                "  </ul>",
-                "  <footer>v2</footer>",
-                "</section>"
+                "<table>",
+                "  <tr>",
+                "    <td>Parser</td>",
+                "    <td></td>",
+                "  </tr>",
+                "</table>"
               ],
               "cursor": [
-                6,
-                3
+                3,
+                8
               ],
               "mode": "normal"
             }
@@ -5359,30 +5430,24 @@
               {
                 "afterStep": 3,
                 "lines": [
-                  "<section>",
-                  "  <h2>Release</h2>",
-                  "  <p>",
-                  "    Draft copy here.",
-                  "  </p>",
-                  "  <ul>",
-                  "    ",
-                  "    <li>Flag handling</li>",
-                  "    <li>Docs pending</li>",
-                  "  </ul>",
-                  "  <footer>v2</footer>",
-                  "</section>"
+                  "<table>",
+                  "  <tr>",
+                  "    <td>Parser</td>",
+                  "    <td></td>",
+                  "  </tr>",
+                  "</table>"
                 ],
                 "cursor": [
-                  6,
-                  3
+                  3,
+                  8
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "The item's tags have to go as well, so inside is the wrong reading.",
-            "The cursor is already within the item; the object finds its boundaries.",
+            "The bold tags have to go as well, so inside is the wrong reading.",
+            "The cursor is already within the element; the object finds its boundaries.",
             "Press `dat`."
           ],
           "feedback": {

@@ -3462,7 +3462,8 @@
             "requiredEvidence": [
               "count-vs-repeat",
               "dot-repeat"
-            ]
+            ],
+            "routeNote": "Practises repeating a deletion with dot one row at a time, as the instruction asks, so each row can be checked before the next goes; a single counted delete is shorter."
           }
         },
         {
@@ -3585,7 +3586,8 @@
             "requiredEvidence": [
               "dot-count",
               "dot-repeat"
-            ]
+            ],
+            "routeNote": "Practises how dot inherits the count of the change it repeats; the instruction asks for two equal deletions, and one larger delete would be shorter."
           }
         },
         {
@@ -3702,7 +3704,8 @@
             "requiredEvidence": [
               "dot-count",
               "count-vs-repeat"
-            ]
+            ],
+            "routeNote": "Practises giving dot a new count that replaces the remembered one; the instruction asks for that replacement, and a single word delete would be shorter."
           }
         }
       ]

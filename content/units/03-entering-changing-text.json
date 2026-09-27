@@ -783,13 +783,15 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Navigate, then open above",
-          "instruction": "Insert “middle” between “north” and “south”.",
+          "instruction": "Insert “middle” on a new line just above “south”.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
                 "north",
+                "east",
+                "west",
                 "south"
               ],
               "cursor": [
@@ -801,11 +803,13 @@
             "target": {
               "lines": [
                 "north",
+                "east",
+                "west",
                 "middle",
                 "south"
               ],
               "cursor": [
-                1,
+                3,
                 5
               ],
               "mode": "normal"
@@ -853,7 +857,7 @@
               {
                 "afterStep": 1,
                 "cursor": [
-                  1,
+                  3,
                   0
                 ],
                 "mode": "normal"
@@ -862,11 +866,13 @@
                 "afterStep": 9,
                 "lines": [
                   "north",
+                  "east",
+                  "west",
                   "middle",
                   "south"
                 ],
                 "cursor": [
-                  1,
+                  3,
                   5
                 ],
                 "mode": "normal"
@@ -2253,28 +2259,28 @@
           "id": "substitute-one-letter",
           "type": "exercise",
           "phase": "isolate",
-          "title": "Substitute a character",
-          "instruction": "Correct “hxgh” to “high”.",
+          "title": "Substitute one character with several",
+          "instruction": "Rewrite the timeout “5s” as “5000”, keeping the semicolon.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "level = hxgh"
+                "timeout = 5s;"
               ],
               "cursor": [
                 0,
-                9
+                11
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "level = high"
+                "timeout = 5000;"
               ],
               "cursor": [
                 0,
-                9
+                13
               ],
               "mode": "normal"
             }
@@ -2282,7 +2288,9 @@
           "script": {
             "steps": [
               "s",
-              "i",
+              "0",
+              "0",
+              "0",
               "Escape"
             ],
             "commandGroups": [
@@ -2290,30 +2298,30 @@
                 "from": 0,
                 "to": 1,
                 "display": "s",
-                "explanation": "Remove the character under the cursor and enter Insert mode."
+                "explanation": "Replace the unit letter and enter Insert mode."
               },
               {
                 "from": 1,
-                "to": 2,
-                "display": "i",
-                "explanation": "Type the requested text."
+                "to": 4,
+                "display": "000",
+                "explanation": "Type the three digits."
               },
               {
-                "from": 2,
-                "to": 3,
+                "from": 4,
+                "to": 5,
                 "display": "Esc",
                 "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 3,
+                "afterStep": 5,
                 "lines": [
-                  "level = high"
+                  "timeout = 5000;"
                 ],
                 "cursor": [
                   0,
-                  9
+                  13
                 ],
                 "mode": "normal"
               }
@@ -2322,7 +2330,7 @@
           "hints": [
             "This replacement enters Insert mode.",
             "Use lowercase `s`.",
-            "Press `siEsc`."
+            "Press `s000Esc`."
           ],
           "feedback": {
             "success": "The level now reads high.",
@@ -3358,7 +3366,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "undo"
-            ]
+            ],
+            "routeNote": "Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo."
           }
         },
         {
@@ -3505,7 +3514,8 @@
               "undo",
               "redo",
               "insert-undo-group"
-            ]
+            ],
+            "routeNote": "Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo."
           }
         },
         {
@@ -3651,7 +3661,8 @@
             "requiredEvidence": [
               "undo",
               "redo"
-            ]
+            ],
+            "routeNote": "Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo."
           }
         }
       ]
@@ -6052,7 +6063,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Reach and advance a build",
-          "instruction": "Advance build 40 to build 42 from the start of the line.",
+          "instruction": "Advance build 40 to build 45 from the start of the line.",
           "languageId": "shell",
           "sourceKind": "neutral",
           "scenario": {
@@ -6068,7 +6079,7 @@
             },
             "target": {
               "lines": [
-                "build = 42"
+                "build = 45"
               ],
               "cursor": [
                 0,
@@ -6079,37 +6090,22 @@
           },
           "script": {
             "steps": [
-              "$",
-              "2",
+              "5",
               "Ctrl-a"
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 1,
-                "display": "$",
-                "explanation": "Reach the final digit."
-              },
-              {
-                "from": 1,
-                "to": 3,
-                "display": "2Ctrl-a",
-                "explanation": "Add two to the complete decimal token."
+                "to": 2,
+                "display": "5Ctrl-a",
+                "explanation": "Add five to the first number at or after the cursor."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 1,
-                "cursor": [
-                  0,
-                  9
-                ],
-                "mode": "normal"
-              },
-              {
-                "afterStep": 3,
+                "afterStep": 2,
                 "lines": [
-                  "build = 42"
+                  "build = 45"
                 ],
                 "cursor": [
                   0,
@@ -6120,9 +6116,9 @@
             ]
           },
           "hints": [
-            "Use a known line landmark first.",
-            "Then count the increment amount.",
-            "Press `$2Ctrl-a`."
+            "The increment finds the next number on the line by itself.",
+            "Count the increment amount.",
+            "Press `5Ctrl-a`."
           ],
           "feedback": {
             "success": "Build 40 became 42.",
@@ -6379,103 +6375,72 @@
               ],
               "cursor": [
                 0,
-                11
+                12
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
+              "Ctrl-a",
               "A",
               ";",
-              "Escape",
-              "$",
-              "h",
-              "Ctrl-a"
+              "Escape"
             ],
             "commandGroups": [
               {
                 "from": 0,
                 "to": 1,
-                "display": "A",
-                "explanation": "Enter Insert mode at the end of the line."
+                "display": "Ctrl-a",
+                "explanation": "Raise the first number on the line by one."
               },
               {
                 "from": 1,
                 "to": 2,
-                "display": ";",
-                "explanation": "Type the requested text."
+                "display": "A",
+                "explanation": "Append at the end of the line."
               },
               {
                 "from": 2,
                 "to": 3,
-                "display": "Esc",
-                "explanation": "Return to Normal mode."
+                "display": ";",
+                "explanation": "Type the semicolon."
               },
               {
                 "from": 3,
                 "to": 4,
-                "display": "$",
-                "explanation": "Move to the line end."
-              },
-              {
-                "from": 4,
-                "to": 5,
-                "display": "h",
-                "explanation": "Move one column left."
-              },
-              {
-                "from": 5,
-                "to": 6,
-                "display": "Ctrl-a",
-                "explanation": "Increment the number in place."
+                "display": "Esc",
+                "explanation": "Return to Normal mode."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 3,
+                "afterStep": 1,
                 "lines": [
-                  "attempts = 2;"
+                  "attempts = 3"
                 ],
                 "cursor": [
                   0,
-                  12
+                  11
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 4,
-                "cursor": [
-                  0,
-                  12
-                ],
-                "mode": "normal"
-              },
-              {
-                "afterStep": 5,
-                "cursor": [
-                  0,
-                  11
-                ],
-                "mode": "normal"
-              },
-              {
-                "afterStep": 6,
                 "lines": [
                   "attempts = 3;"
                 ],
                 "cursor": [
                   0,
-                  11
+                  12
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Finish the line before changing the value.",
-            "Move left from the final semicolon.",
-            "Use Ctrl-a on the number."
+            "The increment finds the number from the start of the line.",
+            "Then append the missing semicolon."
           ],
           "feedback": {
             "success": "The setting is terminated and incremented.",

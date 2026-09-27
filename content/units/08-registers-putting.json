@@ -690,7 +690,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "unnamed-register"
-            ]
+            ],
+            "routeNote": "Practises naming the unnamed register explicitly, the form the later register exercises build on; a bare put reaches the same text here."
           }
         }
       ]
@@ -1194,7 +1195,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Insert before and resume below",
-          "instruction": "Duplicate “two” above “three”, then continue on the original “three” row.",
+          "instruction": "Duplicate “four” above “two”, then continue on the original “two” row.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {
@@ -1206,7 +1207,7 @@
                 "four"
               ],
               "cursor": [
-                1,
+                3,
                 0
               ],
               "mode": "normal"
@@ -1214,59 +1215,73 @@
             "target": {
               "lines": [
                 "one",
-                "two",
+                "four",
                 "two",
                 "three",
                 "four"
               ],
               "cursor": [
-                3,
+                2,
                 0
               ],
               "mode": "normal",
               "registers": {
                 "0": {
                   "type": "linewise",
-                  "text": "two\n"
+                  "text": "four\n"
                 },
                 "\"": {
                   "type": "linewise",
-                  "text": "two\n"
+                  "text": "four\n"
                 }
               }
             }
           },
           "script": {
             "steps": [
-              "y",
-              "y",
-              "j",
+              "Y",
+              "2",
+              "k",
               "g",
               "P"
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 2,
-                "display": "yy",
-                "explanation": "Yank the second line."
+                "to": 1,
+                "display": "Y",
+                "explanation": "Yank the row."
               },
               {
-                "from": 2,
+                "from": 1,
                 "to": 3,
-                "display": "j",
-                "explanation": "Move one line down."
+                "display": "2k",
+                "explanation": "Climb to the row the copy goes above."
               },
               {
                 "from": 3,
                 "to": 5,
                 "display": "gP",
-                "explanation": "Put the captured text and leave the cursor after it."
+                "explanation": "Put above and leave the cursor after the copy."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 2,
+                "afterStep": 1,
+                "lines": [
+                  "one",
+                  "two",
+                  "three",
+                  "four"
+                ],
+                "cursor": [
+                  3,
+                  0
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 3,
                 "lines": [
                   "one",
                   "two",
@@ -1277,50 +1292,28 @@
                   1,
                   0
                 ],
-                "mode": "normal",
-                "registers": {
-                  "0": {
-                    "type": "linewise",
-                    "text": "two\n"
-                  },
-                  "\"": {
-                    "type": "linewise",
-                    "text": "two\n"
-                  }
-                },
-                "caption": "Yank the second line."
+                "mode": "normal"
               },
               {
                 "afterStep": 5,
                 "lines": [
                   "one",
-                  "two",
+                  "four",
                   "two",
                   "three",
                   "four"
                 ],
                 "cursor": [
-                  3,
+                  2,
                   0
                 ],
-                "mode": "normal",
-                "registers": {
-                  "0": {
-                    "type": "linewise",
-                    "text": "two\n"
-                  },
-                  "\"": {
-                    "type": "linewise",
-                    "text": "two\n"
-                  }
-                },
-                "caption": "Put before the third line and land on the line after the inserted copy."
+                "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Yank the second line.",
-            "Use `yy` then `jgP`."
+            "Yank the row, then climb to the row that should end up below the copy.",
+            "The g form of put leaves the cursor just after the new text."
           ],
           "feedback": {
             "success": "The intended text and register state are exact.",

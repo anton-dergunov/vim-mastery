@@ -215,6 +215,21 @@ test("reaction manifest preserves the four-second idle-ramp contract", () => {
   }
 });
 
+// The taught route must be the shortest the course allows by then, or say why
+// it is not (docs/lesson-content-design.md). The route audit reads the reason
+// from verification.routeNote; the instruction tells the learner the same.
+test("a route note is a written reason on an exercise", () => {
+  const runnables = units.flatMap(({ data }) => data.lessons)
+    .flatMap(lesson => lesson.activities)
+    .filter(activity => activity.type === "exercise" || activity.type === "demo");
+  for (const activity of runnables) {
+    const note = activity.verification?.routeNote;
+    if (note === undefined) continue;
+    assert.equal(activity.type, "exercise", `${activity.id} is a demo; only an exercise can justify its route`);
+    assert(typeof note === "string" && note.trim().split(/\s+/).length >= 4, `${activity.id} routeNote must say why in words`);
+  }
+});
+
 test("every practice prompt describes outcomes without revealing its canonical recipe", () => {
   const exercises = units.flatMap(({ data }) => data.lessons)
     .flatMap(lesson => lesson.activities)
@@ -673,7 +688,7 @@ test("runnable activities reserve every authored editor row before execution", (
     }
   }
 
-  assert.equal(growing.length, 36);
+  assert.equal(growing.length, 35);
   for (const id of [
     "entering-changing-text/open-middle-line-demo",
     "entering-changing-text/open-beta-above",
