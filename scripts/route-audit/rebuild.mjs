@@ -53,6 +53,9 @@ const output = input.map(job => {
     fileName: activity.fileName,
     textWidth: activity.editor?.textWidth,
     registerNames,
+    // Headless Vim has no clipboard; `"+` stands in for a named register, as
+    // in the content tests.
+    registerAliases: { "+": "z" },
   });
   // Headless Vim also ends Visual mode when its keys run out, without moving
   // the cursor. A yank into an unused register lands only when a selection is

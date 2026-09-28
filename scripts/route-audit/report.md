@@ -6,11 +6,13 @@ For every exercise the audit searches for a route shorter than the taught one, u
 used in a demo or exercise before it (plus the exercise's own), and replays every candidate in the app's Vim
 adapter. A route it reports also reaches the target in native Vim.
 
-- **shorter**: a route with fewer keys exists. Fix the exercise or give it a `verification.routeNote`.
-- **justified**: shorter routes exist, and the exercise says why it teaches the longer one.
+- **shorter**: a route with fewer keys exists. This flags the exercise for review: re-author it if a small
+  buffer can show the command doing real work, or record in `verification.routeNote` why it stays as it is.
+- **justified**: shorter routes exist, and the exercise's `routeNote` records the review and why it teaches the
+  longer one.
 - **counted** routes need a count of 4 or more. They are listed but do not beat the canonical.
 - **none-shorter**: the search covered every route cheaper than the canonical.
-- **inconclusive**: the budget ran out first; `reached` is the cost searched completely.
+- **inconclusive**: the budget ran out first; **searched** says how far the search got. This is not a flag.
 - **engine-mismatch**: the app's adapter and native Vim disagree about the shorter route.
 - **host-mismatch**: the canonical does not reach the target inside the audit; results are not trusted.
 - **trivial**: the start already matches the target, so the target does not check what the taught keys change
@@ -32,7 +34,19 @@ What the search tries, and so what "none-shorter" speaks for:
 It does not try macros, marks, undo, or Insert-mode controls. **covered** says whether the canonical itself can be
 spelled from the offered commands; when it cannot, a none-shorter verdict speaks only for what the grammar covers.
 
-Budget: 60000 states or 60s per exercise.
+Two prunings keep the search inside its budget without changing what it covers. Commands that differ only in a
+motion that lands in the same place (an operator and two motions of the same kind, or two Visual selections) are
+replayed once. An edit that may not move the text away from the target is replayed only if it can change a line
+that still differs. States are told apart by the text, cursor, mode, checked registers, the viewport where it is
+fixed, and what `;`, `n`, `.`, `&`, `@:`, and a run of `j` would do next. When native Vim rejects a route, the
+other spellings that tied with it in the search are tried before the verdict becomes engine-mismatch.
+
+An inconclusive exercise's **searched** column reads, for example, `3 of 12`: every route of up to 3 keys was
+tried, and a shorter route could have up to 12. When the full search is inconclusive, a second, deeper search
+tries only the core commands (line and word motions, operators, standalone edits, typed text, and the canonical's
+own Ex lines, with counts up to 3). Any route it finds is reported like any other; finding none proves nothing.
+
+Budget: 200000 states or 45s per exercise, then 20s for the core search.
 
 ## Summary
 
@@ -40,26 +54,26 @@ Budget: 60000 states or 60s per exercise.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 0 | 0 | 0 | 0 | 0 | 9 | 0 | 0 |
 | 2 | 0 | 11 | 0 | 0 | 0 | 10 | 0 | 5 |
-| 3 | 0 | 3 | 0 | 0 | 9 | 25 | 0 | 1 |
-| 4 | 0 | 0 | 0 | 0 | 8 | 20 | 0 | 2 |
-| 5 | 0 | 8 | 0 | 0 | 12 | 16 | 0 | 5 |
-| 6 | 0 | 3 | 2 | 0 | 7 | 26 | 0 | 0 |
-| 7 | 0 | 9 | 0 | 0 | 29 | 7 | 0 | 4 |
-| 8 | 0 | 0 | 0 | 0 | 46 | 2 | 0 | 0 |
+| 3 | 0 | 5 | 0 | 0 | 6 | 26 | 0 | 1 |
+| 4 | 0 | 0 | 0 | 0 | 5 | 23 | 0 | 2 |
+| 5 | 0 | 11 | 0 | 0 | 8 | 17 | 0 | 9 |
+| 6 | 0 | 0 | 2 | 0 | 7 | 29 | 0 | 0 |
+| 7 | 0 | 14 | 1 | 0 | 22 | 8 | 0 | 5 |
+| 8 | 0 | 4 | 0 | 0 | 40 | 4 | 0 | 0 |
 | 9 | 0 | 2 | 0 | 0 | 1 | 22 | 0 | 0 |
 | 10 | 0 | 0 | 0 | 0 | 2 | 13 | 0 | 0 |
-| 11 | 0 | 2 | 0 | 0 | 21 | 1 | 0 | 1 |
-| 12 | 0 | 2 | 0 | 0 | 25 | 0 | 0 | 0 |
-| 13 | 0 | 2 | 0 | 0 | 22 | 0 | 0 | 1 |
-| 14 | 0 | 0 | 0 | 0 | 24 | 0 | 0 | 0 |
+| 11 | 0 | 3 | 0 | 0 | 20 | 1 | 0 | 2 |
+| 12 | 0 | 7 | 0 | 0 | 20 | 0 | 0 | 0 |
+| 13 | 0 | 3 | 0 | 0 | 21 | 0 | 0 | 1 |
+| 14 | 0 | 0 | 0 | 0 | 23 | 1 | 0 | 0 |
 | 15 | 0 | 4 | 0 | 0 | 27 | 0 | 0 | 0 |
-| 16 | 0 | 3 | 0 | 0 | 26 | 3 | 0 | 0 |
+| 16 | 0 | 3 | 0 | 0 | 25 | 4 | 0 | 1 |
 
 | Phase | shorter | justified | engine-mismatch | host-mismatch | inconclusive | none-shorter | trivial |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| isolate | 0 | 14 | 1 | 0 | 77 | 55 | 0 |
-| mix | 0 | 21 | 1 | 0 | 99 | 54 | 0 |
-| challenge | 0 | 14 | 0 | 0 | 83 | 45 | 0 |
+| isolate | 0 | 24 | 2 | 0 | 60 | 61 | 0 |
+| mix | 0 | 27 | 1 | 0 | 91 | 56 | 0 |
+| challenge | 0 | 16 | 0 | 0 | 76 | 50 | 0 |
 
 ## Shorter routes
 
@@ -83,34 +97,52 @@ None.
 | 3 | undo-character-delete | isolate | 2 | 0 | Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo. |
 | 3 | redo-substitution | mix | 5 | 2 | Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo. |
 | 3 | history-confidence-check | challenge | 5 | 3 | Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo. |
+| 3 | retype-a-mistyped-argument | isolate | 17 | 5 | Practises correcting text without leaving Insert mode: the instruction scripts the mistake and its correction, and the target records only the corrected text, so typing it right the first time is shorter. |
+| 3 | clear-what-you-typed | isolate | 14 | 6 | Practises correcting text without leaving Insert mode: the instruction scripts the mistake and its correction, and the target records only the corrected text, so typing it right the first time is shorter. |
 | 5 | reverse-repeated-find | challenge | 5 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
 | 5 | search-forward-timeout | isolate | 9 | 1 | Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units. |
 | 5 | search-backward-error | mix | 7 | 1 | Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units. |
 | 5 | search-repeat-directions | challenge | 9 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
+| 5 | trim-to-level-tag | isolate | 7 | 3 | Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units. |
 | 5 | land-on-the-match-end | isolate | 8 | 2 | Introduces a search offset on a single search, where a plain search followed by a motion is as short or shorter; the offset pays off when n repeats it, because Vim stores the offset with the pattern. |
+| 5 | delete-through-the-marker | mix | 9 | 3 | Introduces a search offset on a single search, where a plain search followed by a motion is as short or shorter; the offset pays off when n repeats it, because Vim stores the offset with the pattern. |
 | 5 | repeat-the-line-offset | challenge | 10 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
 | 5 | select-search-matches | mix | 15 | 1 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
+| 5 | cut-vine | isolate | 6 | 3 | Practises chaining a forward find, its repeat with `;`, and a till into one delete. Working back from the line end (`$h` then `dF,`, or word motions) is one key shorter here; the forward chain is the skill this exercise isolates. |
 | 5 | search-then-match-pair | mix | 10 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
-| 6 | around-open-square | isolate | 3 | 2 | Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise. |
-| 6 | around-open-brace | mix | 3 | 2 | Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise. |
-| 6 | around-big-b-alias | challenge | 3 | 2 | Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise. |
 | 7 | select-character-range | isolate | 3 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
 | 7 | select-line-range | mix | 3 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
 | 7 | delete-selected-token | isolate | 4 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
+| 7 | yank-selected-token | mix | 5 | 3 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
 | 7 | outdent-selected-lines | isolate | 3 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
-| 7 | yank-selected-lines | mix | 4 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
+| 7 | yank-selected-lines | mix | 4 | 3 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
+| 7 | change-selected-lines | mix | 4 | 3 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
+| 7 | reselect-case-correction | isolate | 6 | 3 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
 | 7 | reselect-yanked-word | mix | 8 | 2 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
 | 7 | reselect-line-correction | mix | 6 | 0 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
 | 7 | reselection-correction-challenge | challenge | 7 | 0 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
 | 7 | reindent-selected-lines | mix | 4 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
+| 7 | format-selected-lines | mix | 4 | 3 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
+| 7 | integrated-reselect-correction | mix | 7 | 3 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
+| 8 | explicit-unnamed-put | challenge | 6 | 3 | Practises naming the unnamed register explicitly, the form the later register exercises build on; a bare put reaches the same text here. |
+| 8 | small-delete-word | isolate | 6 | 3 | Practises naming the small-delete register. Straight after the delete the unnamed register holds the same text, so a bare put is shorter here; `"-` matters once a later yank or delete has replaced the unnamed register. |
+| 8 | small-delete-character | mix | 6 | 3 | Practises naming the small-delete register. Straight after the delete the unnamed register holds the same text, so a bare put is shorter here; `"-` matters once a later yank or delete has replaced the unnamed register. |
+| 8 | inspect-plus-register | challenge | 17 | 3 | The inspection is a report Vim prints, which the target cannot record, so a route that only copies to the register looks shorter. |
 | 9 | previous-context-exact-challenge | challenge | 2 | 1 | The previous-context mark and a single Ctrl-o return to the same place by definition, and Ctrl-o is one key shorter; this exercise practises the mark, whose toggling back and forth Ctrl-o does not do. |
 | 9 | change-list-newer-mix | mix | 6 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
-| 11 | dot-inherited-count | mix | 4 | 2 | Practises how dot inherits the count of the change it repeats; the instruction asks for two equal deletions, and one larger delete would be shorter. |
+| 11 | repeat-delete-inspect | isolate | 4 | 3 | Practises repeating a deletion with dot one row at a time, as the instruction asks, so each row can be checked before the next goes; a single counted delete is shorter. |
+| 11 | dot-inherited-count | mix | 4 | 3 | Practises how dot inherits the count of the change it repeats; the instruction asks for two equal deletions, and one larger delete would be shorter. |
 | 11 | dot-replace-count | challenge | 4 | 2 | Practises giving dot a new count that replaces the remembered one; the instruction asks for that replacement, and a single word delete would be shorter. |
 | 12 | current-range-join | isolate | 11 | 2 | Introduces the current-line address on an Ex command through join, whose effect is easy to see; Normal-mode J is shorter for two adjacent lines, and later exercises use ranges J cannot reach. |
+| 12 | semicolon-relative-delete | mix | 12 | 2 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
+| 12 | delete-debug-range | isolate | 11 | 3 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
 | 12 | undo-range-delete | challenge | 12 | 0 | Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo. |
+| 12 | transpose-one-line | isolate | 5 | 4 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
+| 12 | visual-delete-lines | isolate | 11 | 3 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
+| 12 | visual-join-lines | challenge | 10 | 3 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
 | 13 | count-without-changing | isolate | 18 | 0 | The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter. |
 | 13 | confirm-skip-match | mix | 19 | 2 | The work is the decision at the confirmation prompt, which leaves the buffer as it was; the target cannot record a declined match, so a route that never asks looks shorter. |
+| 13 | empty-replacement | isolate | 13 | 3 | Introduces an empty replacement on two rows, where a word delete and `.` are shorter. The substitution wins once the prefix is on more rows than are worth visiting one by one. |
 | 15 | preview-global-scope | isolate | 17 | 0 | The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter. |
 | 15 | list-global-matches | isolate | 11 | 2 | The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter. |
 | 15 | list-unmatched-rows | mix | 14 | 1 | The result is the report Vim prints while the buffer stays as it was, and the target cannot record a report, so any route that leaves the buffer alone looks shorter. |
@@ -123,272 +155,241 @@ None.
 
 | Unit | Exercise | Phase | Keys | Reached | Note |
 | --- | --- | --- | --- | --- | --- |
-| 6 | inside-open-brace | isolate | 3 | 2 |  |
-| 6 | inside-big-b-alias | mix | 3 | 2 |  |
+| 6 | inside-open-brace | isolate | 3 | 2 | `y )` reaches the target in the app's adapter and not in native Vim |
+| 6 | inside-big-b-alias | mix | 3 | 2 | `y )` reaches the target in the app's adapter and not in native Vim |
+| 7 | append-block-demo | isolate | 6 | 5 | `Ctrl-v ) A ! <Esc>` reaches the target in the app's adapter and not in native Vim |
 
 ## Inconclusive
 
-| Unit | Exercise | Phase | Keys | Reached | Note |
+| Unit | Exercise | Phase | Keys | Searched | Note |
 | --- | --- | --- | --- | --- | --- |
-| 3 | open-header-and-footer | challenge | 17 | 8 |  |
-| 3 | counted-open-table-rows | challenge | 7 | 4 |  |
-| 3 | retype-a-mistyped-argument | isolate | 17 | 5 |  |
-| 3 | clear-what-you-typed | isolate | 14 | 5 |  |
-| 3 | replace-a-whole-argument-list | mix | 25 | 4 |  |
-| 3 | truncate-while-inserting | mix | 10 | 3 |  |
-| 3 | complete-the-signature | challenge | 28 | 3 |  |
-| 3 | normalize-two-case-styles | challenge | 7 | 3 |  |
-| 3 | integrated-join-and-uppercase | mix | 6 | 4 |  |
-| 4 | change-whole-line | isolate | 16 | 3 |  |
-| 4 | change-tail-value | challenge | 7 | 3 |  |
-| 4 | dot-delete-lines | isolate | 4 | 2 |  |
-| 4 | dot-append-lines | mix | 7 | 4 |  |
-| 4 | dot-replace-characters | challenge | 6 | 3 |  |
-| 4 | integrated-indent-repeat | isolate | 5 | 3 |  |
-| 4 | integrated-change-repeat | mix | 12 | 3 |  |
-| 4 | integrated-count-put | challenge | 5 | 2 |  |
-| 5 | trim-debug-suffix | mix | 5 | 3 |  |
-| 5 | trim-to-level-tag | isolate | 7 | 2 | Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units. |
-| 5 | copy-row-prefix | mix | 11 | 3 |  |
-| 5 | widen-field-visibility | mix | 14 | 2 |  |
-| 5 | collapse-arguments-backward | challenge | 14 | 3 |  |
-| 5 | change-through-the-type | mix | 20 | 3 |  |
-| 5 | delete-through-the-marker | mix | 9 | 2 | Introduces a search offset on a single search, where a plain search followed by a motion is as short or shorter; the offset pays off when n repeats it, because Vim stores the offset with the pattern. |
-| 5 | change-next-search-match | isolate | 15 | 3 |  |
-| 5 | change-previous-search-match | mix | 16 | 3 |  |
-| 5 | match-direction-after-question-search | challenge | 16 | 3 |  |
-| 5 | cut-vine | isolate | 6 | 2 |  |
-| 5 | precision-search-edit | challenge | 17 | 3 |  |
-| 6 | change-inside-word | mix | 9 | 2 |  |
-| 6 | change-big-word | mix | 9 | 3 |  |
-| 6 | change-inside-double-quotes | isolate | 9 | 2 |  |
-| 6 | change-around-open-paren | challenge | 10 | 2 |  |
-| 6 | change-inside-tag | isolate | 9 | 2 |  |
-| 6 | integration-yank-object-literal | mix | 8 | 3 |  |
-| 6 | integration-replace-tag | challenge | 23 | 2 |  |
-| 7 | select-block-range | mix | 5 | 2 |  |
-| 7 | selection-shape-column-challenge | challenge | 5 | 2 |  |
-| 7 | yank-selected-token | mix | 5 | 2 |  |
-| 7 | character-argument-change-challenge | challenge | 10 | 2 |  |
-| 7 | change-selected-lines | mix | 4 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
-| 7 | line-indent-branch-challenge | challenge | 6 | 3 |  |
-| 7 | swap-block-opposite-end | isolate | 8 | 3 |  |
-| 7 | swap-block-same-row-corner | mix | 8 | 3 |  |
-| 7 | swap-character-end-recall | mix | 5 | 2 |  |
-| 7 | selection-corner-block-challenge | challenge | 8 | 3 |  |
-| 7 | reselect-case-correction | isolate | 6 | 2 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
-| 7 | format-selected-lines | mix | 4 | 2 | Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count. |
-| 7 | selection-reindent-code-challenge | challenge | 6 | 2 |  |
-| 7 | change-block-column | isolate | 6 | 2 |  |
-| 7 | block-column-delete-challenge | challenge | 4 | 2 |  |
-| 7 | append-block-demo | isolate | 6 | 4 |  |
-| 7 | prepend-comment-markers | mix | 7 | 3 |  |
-| 7 | append-csv-markers | mix | 8 | 4 |  |
-| 7 | block-prefix-declarations-challenge | challenge | 9 | 3 |  |
-| 7 | append-semicolons-to-ragged-block | isolate | 7 | 3 |  |
-| 7 | clear-ragged-config-values | mix | 5 | 2 |  |
-| 7 | append-trailing-commas | mix | 7 | 3 |  |
-| 7 | ragged-statement-challenge | challenge | 7 | 3 |  |
-| 7 | renumber-reordered-list | isolate | 5 | 3 |  |
-| 7 | bump-selected-defaults | mix | 6 | 3 |  |
-| 7 | number-enum-values | mix | 5 | 3 |  |
-| 7 | integrated-column-marker | isolate | 9 | 3 |  |
-| 7 | integrated-reselect-correction | mix | 7 | 2 | Practises reselecting a changed range with gv: the instruction asks for the first change and the correction, and the target records only the end. |
-| 7 | integrated-character-edit | mix | 14 | 3 |  |
-| 8 | explicit-unnamed-put | challenge | 6 | 2 | Practises naming the unnamed register explicitly, the form the later register exercises build on; a bare put reaches the same text here. |
-| 8 | character-gp-before | isolate | 5 | 3 |  |
-| 8 | line-gp-after | mix | 5 | 2 |  |
-| 8 | line-gp-before | challenge | 5 | 2 |  |
-| 8 | yank-zero-word | isolate | 8 | 2 |  |
-| 8 | yank-zero-after-change | mix | 14 | 2 |  |
-| 8 | yank-zero-distant-line | challenge | 9 | 2 |  |
-| 8 | numbered-three | isolate | 9 | 2 |  |
-| 8 | numbered-nonadjacent | mix | 8 | 2 |  |
-| 8 | numbered-counted-delete | challenge | 8 | 2 |  |
-| 8 | small-delete-word | isolate | 6 | 2 |  |
-| 8 | small-delete-character | mix | 6 | 2 |  |
-| 8 | small-change-register | mix | 12 | 2 |  |
-| 8 | small-delete-not-numbered | challenge | 11 | 2 |  |
-| 8 | black-hole-preserve-yank | isolate | 8 | 2 |  |
-| 8 | black-hole-word | mix | 8 | 2 |  |
-| 8 | black-hole-character | mix | 9 | 2 |  |
-| 8 | black-hole-cleanup | challenge | 9 | 2 |  |
-| 8 | black-hole-visual-named | challenge | 14 | 2 |  |
-| 8 | named-word | isolate | 8 | 3 |  |
-| 8 | two-named-registers | mix | 16 | 2 |  |
-| 8 | named-delete-recovery | challenge | 8 | 2 |  |
-| 8 | append-words | isolate | 13 | 2 |  |
-| 8 | append-nonadjacent-lines | mix | 14 | 2 |  |
-| 8 | append-three-lines | challenge | 18 | 2 |  |
-| 8 | plus-word | isolate | 10 | 2 |  |
-| 8 | plus-delete-and-put | mix | 8 | 2 |  |
-| 8 | inspect-plus-register | challenge | 17 | 2 |  |
-| 8 | put-last-inserted-text | isolate | 14 | 2 |  |
-| 8 | put-the-file-name | isolate | 5 | 2 |  |
-| 8 | rerun-last-ex-command | mix | 18 | 2 |  |
-| 8 | inspect-read-only-registers | mix | 23 | 2 |  |
-| 8 | reuse-the-file-name-in-a-substitution | mix | 13 | 3 |  |
-| 8 | substitute-without-retyping | challenge | 33 | 2 |  |
-| 8 | title-a-note-from-its-file-name | challenge | 7 | 2 |  |
-| 8 | type-the-unnamed-register | isolate | 8 | 2 |  |
-| 8 | retype-your-last-insertion | isolate | 12 | 2 |  |
-| 8 | type-a-named-register | mix | 11 | 2 |  |
-| 8 | reach-past-the-newest-delete | mix | 10 | 2 |  |
-| 8 | stamp-the-file-name-while-inserting | mix | 5 | 3 |  |
-| 8 | record-the-pattern-you-searched | challenge | 16 | 2 |  |
-| 8 | carry-a-value-into-a-command | challenge | 16 | 2 |  |
-| 8 | integrated-named-gp | isolate | 10 | 2 |  |
-| 8 | integrated-plus-gp | mix | 12 | 3 |  |
-| 8 | integrated-numbered-recovery | challenge | 9 | 2 |  |
-| 8 | integrated-pattern-reuse | mix | 29 | 2 |  |
-| 9 | change-list-oldest-isolate | isolate | 4 | 2 |  |
-| 10 | change-and-mark-mix | mix | 4 | 2 |  |
-| 10 | frame-after-return-challenge | challenge | 4 | 2 |  |
-| 11 | dot-python-values | isolate | 13 | 3 |  |
-| 11 | dot-java-terminators | mix | 7 | 3 |  |
-| 11 | dot-go-booleans | challenge | 12 | 3 |  |
-| 11 | repeat-yaml-quotes | isolate | 12 | 3 |  |
-| 11 | repeat-css-colons | mix | 14 | 3 |  |
-| 11 | repeat-rust-await | challenge | 12 | 3 |  |
-| 11 | find-csv-statuses | isolate | 14 | 3 |  |
-| 11 | find-csharp-arrows | mix | 12 | 3 |  |
-| 11 | find-shell-flags | challenge | 13 | 3 |  |
-| 11 | search-python-backward | isolate | 19 | 3 |  |
-| 11 | search-sql-bidirectional | mix | 23 | 3 |  |
-| 11 | search-log-codes | challenge | 26 | 3 |  |
-| 11 | repeat-delete-inspect | isolate | 4 | 2 | Practises repeating a deletion with dot one row at a time, as the instruction asks, so each row can be checked before the next goes; a single counted delete is shorter. |
-| 11 | at-colon-python-none | isolate | 17 | 3 |  |
-| 11 | at-colon-sql-status | mix | 23 | 3 |  |
-| 11 | at-colon-shell-levels | challenge | 21 | 3 |  |
-| 11 | ampersand-flags | isolate | 17 | 3 |  |
-| 11 | tilde-yaml-stages | mix | 27 | 3 |  |
-| 11 | substitution-tool-choice | challenge | 20 | 3 |  |
-| 11 | integrated-cpp-find | isolate | 8 | 4 |  |
-| 11 | integrated-xml-ex | challenge | 22 | 3 |  |
-| 12 | move-number-to-end | mix | 8 | 2 |  |
-| 12 | sort-whole-buffer | challenge | 7 | 2 |  |
-| 12 | relative-delete | isolate | 10 | 2 |  |
-| 12 | semicolon-relative-delete | mix | 12 | 2 |  |
-| 12 | sort-from-cursor-down | challenge | 11 | 2 |  |
-| 12 | delete-search-address | isolate | 18 | 2 |  |
-| 12 | sort-between-searches | mix | 20 | 2 |  |
-| 12 | move-marked-helper | challenge | 9 | 2 |  |
-| 12 | delete-debug-range | isolate | 11 | 2 |  |
-| 12 | named-yank-and-put | mix | 19 | 2 |  |
-| 12 | transpose-one-line | isolate | 5 | 2 |  |
-| 12 | move-range-to-bottom | mix | 10 | 2 |  |
-| 12 | move-range-to-top | challenge | 7 | 2 |  |
-| 12 | sort-import-range | isolate | 9 | 2 |  |
-| 12 | reverse-priority-range | mix | 10 | 2 |  |
-| 12 | sort-numeric-range | isolate | 11 | 2 |  |
-| 12 | dedupe-sorted-range | mix | 11 | 2 |  |
-| 12 | sort-on-pattern | challenge | 15 | 2 |  |
-| 12 | join-then-sort | challenge | 18 | 2 |  |
-| 12 | visual-delete-lines | isolate | 11 | 2 |  |
-| 12 | visual-move-lines | mix | 10 | 2 |  |
-| 12 | visual-join-lines | challenge | 10 | 2 |  |
-| 12 | search-and-move-helper | isolate | 15 | 2 |  |
-| 12 | copy-marked-pair | mix | 14 | 2 |  |
-| 12 | yank-put-sort-challenge | challenge | 24 | 2 |  |
-| 13 | rename-current-status | isolate | 15 | 2 |  |
-| 13 | replace-all-todos | mix | 16 | 2 |  |
-| 13 | literal-token-boundary | challenge | 14 | 2 |  |
-| 13 | single-line-scope | isolate | 12 | 2 |  |
-| 13 | visual-range-substitute | mix | 14 | 2 |  |
-| 13 | range-versus-global | challenge | 15 | 2 |  |
-| 13 | first-match-only | isolate | 12 | 2 |  |
-| 13 | ignore-case-flag | mix | 15 | 3 |  |
-| 13 | force-case-flag | challenge | 14 | 3 |  |
-| 13 | confirm-all-remaining | challenge | 19 | 2 |  |
-| 13 | empty-replacement | isolate | 13 | 2 |  |
-| 13 | alternate-url-delimiter | mix | 22 | 2 |  |
-| 13 | repeat-substitution-history | challenge | 17 | 3 |  |
-| 13 | normalize-digits | isolate | 18 | 2 |  |
-| 13 | optional-spelling | mix | 19 | 2 |  |
-| 13 | bounded-code-class | challenge | 22 | 2 |  |
-| 13 | alternation-alerts | isolate | 27 | 2 |  |
-| 13 | whole-word-and-match | mix | 17 | 3 |  |
-| 13 | split-key-value | challenge | 29 | 2 |  |
-| 13 | start-match-late | isolate | 26 | 2 |  |
-| 13 | end-match-early | mix | 25 | 3 |  |
-| 13 | precise-scoped-cleanup | challenge | 26 | 3 |  |
-| 14 | comment-python-jobs | isolate | 14 | 2 |  |
-| 14 | disable-config-depths | mix | 22 | 2 |  |
-| 14 | comment-sql-batch | challenge | 19 | 2 |  |
-| 14 | latest-markdown-items | isolate | 24 | 2 |  |
-| 14 | count-python-legacy | mix | 29 | 2 |  |
-| 14 | count-scattered-csv | challenge | 16 | 2 |  |
-| 14 | anchor-indented-list | isolate | 10 | 2 |  |
-| 14 | anchor-quoted-values | mix | 18 | 2 |  |
-| 14 | anchor-bracket-tails | challenge | 14 | 2 |  |
-| 14 | final-go-fields | isolate | 9 | 2 |  |
-| 14 | final-split-commands | mix | 13 | 2 |  |
-| 14 | final-search-errors | challenge | 18 | 2 |  |
-| 14 | failed-pipe-log | isolate | 12 | 2 |  |
-| 14 | failed-search-python | mix | 20 | 2 |  |
-| 14 | failed-counted-csv | challenge | 13 | 2 |  |
-| 14 | append-shell-pipes | isolate | 17 | 2 |  |
-| 14 | append-json-quotes | mix | 18 | 2 |  |
-| 14 | append-warning-search | challenge | 18 | 1 |  |
-| 14 | inspect-list-macro | isolate | 4 | 2 |  |
-| 14 | repair-delimiter-macro | mix | 13 | 2 |  |
-| 14 | repair-final-motion | challenge | 12 | 2 |  |
-| 14 | selective-fixme-notes | isolate | 20 | 2 |  |
-| 14 | selective-error-log | mix | 23 | 1 |  |
-| 14 | selective-sql-updates | challenge | 25 | 1 |  |
-| 15 | normal-python-comments | isolate | 16 | 2 |  |
-| 15 | normal-css-terminators | mix | 12 | 2 |  |
-| 15 | normal-csv-delimiters | challenge | 16 | 2 |  |
-| 15 | visual-normal-commas | isolate | 16 | 2 |  |
-| 15 | normal-bang-colons | mix | 19 | 2 |  |
-| 15 | normal-bang-markers | challenge | 13 | 2 |  |
-| 15 | global-delete-comments | isolate | 8 | 1 |  |
-| 15 | range-global-delete | mix | 14 | 2 |  |
-| 15 | global-delete-alternation | challenge | 17 | 1 |  |
-| 15 | vglobal-exports | isolate | 18 | 1 |  |
-| 15 | range-vglobal-enabled | mix | 17 | 2 |  |
-| 15 | vglobal-errors | challenge | 11 | 1 |  |
-| 15 | global-substitute-const | isolate | 21 | 2 |  |
-| 15 | range-global-substitute | mix | 28 | 1 |  |
-| 15 | inverse-global-substitute | challenge | 25 | 1 |  |
-| 15 | global-normal-todos | isolate | 20 | 1 |  |
-| 15 | inverse-global-normal | mix | 26 | 2 |  |
-| 15 | global-normal-delimiters | challenge | 24 | 2 |  |
-| 15 | global-macro-semicolons | isolate | 20 | 1 |  |
-| 15 | global-macro-colons | mix | 21 | 1 |  |
-| 15 | global-macro-status | challenge | 18 | 1 |  |
-| 15 | global-collect-warnings | isolate | 11 | 1 |  |
-| 15 | global-reverse-imports | mix | 14 | 1 |  |
-| 15 | global-gather-inverted | challenge | 9 | 2 |  |
-| 15 | integrated-global-delete | isolate | 14 | 1 |  |
-| 15 | integrated-global-substitute | mix | 30 | 1 |  |
-| 15 | integrated-combined-normal | challenge | 26 | 1 |  |
-| 16 | retarget-one-connection | isolate | 11 | 2 |  |
-| 16 | drop-audit-flag | mix | 6 | 2 |  |
-| 16 | reorder-audit-arguments | mix | 17 | 2 |  |
-| 16 | finish-remaining-environments | challenge | 21 | 2 |  |
-| 16 | correct-cache-name | isolate | 17 | 2 |  |
-| 16 | rename-cache-receiver | mix | 11 | 2 |  |
-| 16 | rename-local-record | mix | 16 | 2 |  |
-| 16 | retitle-debug-log-calls | challenge | 18 | 2 |  |
-| 16 | quote-by-separator | isolate | 17 | 2 |  |
-| 16 | let-the-count-stop-itself | mix | 16 | 2 |  |
-| 16 | search-past-the-odd-row | mix | 14 | 2 |  |
-| 16 | repair-a-recording-in-place | challenge | 19 | 2 |  |
-| 16 | retire-the-first-three | mix | 20 | 2 |  |
-| 16 | commit-the-proven-pattern | challenge | 20 | 2 |  |
-| 16 | hold-the-stray-import | isolate | 4 | 2 |  |
-| 16 | move-the-stray-import | mix | 9 | 2 |  |
-| 16 | recover-the-constant | mix | 9 | 2 |  |
-| 16 | protect-the-constant | challenge | 13 | 2 |  |
-| 16 | mark-the-deferred-steps | isolate | 26 | 2 |  |
-| 16 | gather-the-deferred-steps | mix | 12 | 2 |  |
-| 16 | comment-everything-that-is-not-a-step | mix | 20 | 2 |  |
-| 16 | replay-a-macro-over-matches | challenge | 19 | 2 |  |
-| 16 | mark-before-you-leave | isolate | 14 | 2 |  |
-| 16 | return-to-the-last-change | mix | 22 | 2 |  |
-| 16 | walk-back-through-the-corrections | mix | 22 | 2 |  |
-| 16 | resume-the-interrupted-note | challenge | 14 | 2 |  |
+| 3 | open-header-and-footer | challenge | 17 | 7 of 16 |  |
+| 3 | replace-a-whole-argument-list | mix | 25 | 5 of 24 |  |
+| 3 | truncate-while-inserting | mix | 10 | 3 of 9 |  |
+| 3 | complete-the-signature | challenge | 28 | 4 of 27 |  |
+| 3 | normalize-two-case-styles | challenge | 7 | 4 of 6 |  |
+| 3 | integrated-join-and-uppercase | mix | 6 | 4 of 5 |  |
+| 4 | change-whole-line | isolate | 16 | 4 of 15 |  |
+| 4 | dot-append-lines | mix | 7 | 5 of 6 |  |
+| 4 | dot-replace-characters | challenge | 6 | 3 of 5 |  |
+| 4 | integrated-change-repeat | mix | 12 | 3 of 11 |  |
+| 4 | integrated-count-put | challenge | 5 | 3 of 4 |  |
+| 5 | copy-row-prefix | mix | 11 | 3 of 10 |  |
+| 5 | widen-field-visibility | mix | 14 | 3 of 13 |  |
+| 5 | collapse-arguments-backward | challenge | 14 | 3 of 13 |  |
+| 5 | change-through-the-type | mix | 20 | 3 of 19 |  |
+| 5 | change-next-search-match | isolate | 15 | 3 of 14 |  |
+| 5 | change-previous-search-match | mix | 16 | 3 of 15 |  |
+| 5 | match-direction-after-question-search | challenge | 16 | 3 of 15 |  |
+| 5 | precision-search-edit | challenge | 17 | 3 of 16 |  |
+| 6 | change-inside-word | mix | 9 | 3 of 8 |  |
+| 6 | change-big-word | mix | 9 | 3 of 8 |  |
+| 6 | change-inside-double-quotes | isolate | 9 | 3 of 8 |  |
+| 6 | change-around-open-paren | challenge | 10 | 3 of 9 |  |
+| 6 | change-inside-tag | isolate | 9 | 2 of 8 |  |
+| 6 | integration-yank-object-literal | mix | 8 | 3 of 7 |  |
+| 6 | integration-replace-tag | challenge | 23 | 2 of 22 |  |
+| 7 | select-block-range | mix | 5 | 3 of 4 |  |
+| 7 | selection-shape-column-challenge | challenge | 5 | 3 of 4 |  |
+| 7 | character-argument-change-challenge | challenge | 10 | 3 of 9 |  |
+| 7 | line-indent-branch-challenge | challenge | 6 | 3 of 5 |  |
+| 7 | swap-block-opposite-end | isolate | 8 | 3 of 7 |  |
+| 7 | swap-block-same-row-corner | mix | 8 | 3 of 7 |  |
+| 7 | swap-character-end-recall | mix | 5 | 3 of 4 |  |
+| 7 | selection-corner-block-challenge | challenge | 8 | 3 of 7 |  |
+| 7 | selection-reindent-code-challenge | challenge | 6 | 3 of 5 |  |
+| 7 | change-block-column | isolate | 6 | 3 of 5 |  |
+| 7 | prepend-comment-markers | mix | 7 | 3 of 6 |  |
+| 7 | append-csv-markers | mix | 8 | 4 of 7 |  |
+| 7 | block-prefix-declarations-challenge | challenge | 9 | 3 of 8 |  |
+| 7 | append-semicolons-to-ragged-block | isolate | 7 | 3 of 6 |  |
+| 7 | clear-ragged-config-values | mix | 5 | 3 of 4 |  |
+| 7 | append-trailing-commas | mix | 7 | 3 of 6 |  |
+| 7 | ragged-statement-challenge | challenge | 7 | 3 of 6 |  |
+| 7 | renumber-reordered-list | isolate | 5 | 3 of 4 |  |
+| 7 | bump-selected-defaults | mix | 6 | 3 of 5 |  |
+| 7 | number-enum-values | mix | 5 | 3 of 4 |  |
+| 7 | integrated-column-marker | isolate | 9 | 3 of 8 |  |
+| 7 | integrated-character-edit | mix | 14 | 3 of 13 |  |
+| 8 | line-gp-after | mix | 6 | 3 of 5 |  |
+| 8 | yank-zero-word | isolate | 8 | 3 of 7 |  |
+| 8 | yank-zero-after-change | mix | 14 | 3 of 13 |  |
+| 8 | yank-zero-distant-line | challenge | 9 | 3 of 8 |  |
+| 8 | numbered-three | isolate | 9 | 3 of 8 |  |
+| 8 | numbered-nonadjacent | mix | 8 | 3 of 7 |  |
+| 8 | numbered-counted-delete | challenge | 8 | 3 of 7 |  |
+| 8 | small-change-register | mix | 12 | 3 of 11 |  |
+| 8 | small-delete-not-numbered | challenge | 11 | 3 of 10 |  |
+| 8 | black-hole-preserve-yank | isolate | 8 | 3 of 7 |  |
+| 8 | black-hole-word | mix | 8 | 3 of 7 |  |
+| 8 | black-hole-character | mix | 9 | 3 of 8 |  |
+| 8 | black-hole-cleanup | challenge | 9 | 3 of 8 |  |
+| 8 | black-hole-visual-named | challenge | 14 | 3 of 13 |  |
+| 8 | named-word | isolate | 8 | 3 of 7 |  |
+| 8 | two-named-registers | mix | 16 | 3 of 15 |  |
+| 8 | named-delete-recovery | challenge | 8 | 3 of 7 |  |
+| 8 | append-words | isolate | 13 | 3 of 12 |  |
+| 8 | append-nonadjacent-lines | mix | 14 | 3 of 13 |  |
+| 8 | append-three-lines | challenge | 18 | 3 of 17 |  |
+| 8 | plus-word | isolate | 10 | 3 of 9 |  |
+| 8 | plus-delete-and-put | mix | 8 | 3 of 7 |  |
+| 8 | put-last-inserted-text | isolate | 14 | 3 of 13 |  |
+| 8 | put-the-file-name | isolate | 5 | 3 of 4 |  |
+| 8 | rerun-last-ex-command | mix | 18 | 3 of 17 |  |
+| 8 | inspect-read-only-registers | mix | 23 | 3 of 22 |  |
+| 8 | reuse-the-file-name-in-a-substitution | mix | 13 | 3 of 12 |  |
+| 8 | substitute-without-retyping | challenge | 33 | 3 of 32 |  |
+| 8 | title-a-note-from-its-file-name | challenge | 7 | 3 of 6 |  |
+| 8 | type-the-unnamed-register | isolate | 20 | 3 of 19 |  |
+| 8 | retype-your-last-insertion | isolate | 12 | 3 of 11 |  |
+| 8 | type-a-named-register | mix | 11 | 3 of 10 |  |
+| 8 | reach-past-the-newest-delete | mix | 10 | 3 of 9 |  |
+| 8 | stamp-the-file-name-while-inserting | mix | 5 | 3 of 4 |  |
+| 8 | record-the-pattern-you-searched | challenge | 16 | 3 of 15 |  |
+| 8 | carry-a-value-into-a-command | challenge | 16 | 3 of 15 |  |
+| 8 | integrated-named-gp | isolate | 10 | 3 of 9 |  |
+| 8 | integrated-plus-gp | mix | 12 | 3 of 11 |  |
+| 8 | integrated-numbered-recovery | challenge | 9 | 3 of 8 |  |
+| 8 | integrated-pattern-reuse | mix | 29 | 3 of 28 |  |
+| 9 | change-list-oldest-isolate | isolate | 4 | 2 of 3 |  |
+| 10 | change-and-mark-mix | mix | 4 | 2 of 3 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
+| 10 | frame-after-return-challenge | challenge | 4 | 2 of 3 |  |
+| 11 | dot-python-values | isolate | 13 | 3 of 12 |  |
+| 11 | dot-java-terminators | mix | 7 | 3 of 6 |  |
+| 11 | dot-go-booleans | challenge | 12 | 3 of 11 |  |
+| 11 | repeat-yaml-quotes | isolate | 12 | 3 of 11 |  |
+| 11 | repeat-css-colons | mix | 14 | 3 of 13 |  |
+| 11 | repeat-rust-await | challenge | 12 | 3 of 11 |  |
+| 11 | find-csv-statuses | isolate | 14 | 3 of 13 |  |
+| 11 | find-csharp-arrows | mix | 12 | 3 of 11 |  |
+| 11 | find-shell-flags | challenge | 13 | 3 of 12 |  |
+| 11 | search-python-backward | isolate | 19 | 3 of 18 |  |
+| 11 | search-sql-bidirectional | mix | 23 | 3 of 22 |  |
+| 11 | search-log-codes | challenge | 26 | 3 of 25 |  |
+| 11 | at-colon-python-none | isolate | 17 | 3 of 16 |  |
+| 11 | at-colon-sql-status | mix | 23 | 3 of 22 |  |
+| 11 | at-colon-shell-levels | challenge | 21 | 3 of 20 |  |
+| 11 | ampersand-flags | isolate | 17 | 3 of 16 |  |
+| 11 | tilde-yaml-stages | mix | 27 | 3 of 26 |  |
+| 11 | substitution-tool-choice | challenge | 20 | 3 of 19 |  |
+| 11 | integrated-cpp-find | isolate | 8 | 3 of 7 |  |
+| 11 | integrated-xml-ex | challenge | 22 | 3 of 21 |  |
+| 12 | move-number-to-end | mix | 8 | 3 of 7 |  |
+| 12 | sort-whole-buffer | challenge | 7 | 3 of 6 |  |
+| 12 | relative-delete | isolate | 10 | 3 of 9 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
+| 12 | sort-from-cursor-down | challenge | 11 | 3 of 10 |  |
+| 12 | delete-search-address | isolate | 18 | 3 of 17 | Introduces this Ex line command on rows you can see, where a Normal-mode route is shorter. The exercise practises the Ex syntax itself; Ex addresses pay off when rows are named by number, pattern, or mark instead of walked to, and when the same command runs under :global in later units. |
+| 12 | sort-between-searches | mix | 20 | 3 of 19 |  |
+| 12 | move-marked-helper | challenge | 9 | 3 of 8 |  |
+| 12 | named-yank-and-put | mix | 19 | 3 of 18 |  |
+| 12 | move-range-to-bottom | mix | 10 | 3 of 9 |  |
+| 12 | move-range-to-top | challenge | 7 | 3 of 6 |  |
+| 12 | sort-import-range | isolate | 9 | 3 of 8 |  |
+| 12 | reverse-priority-range | mix | 10 | 3 of 9 |  |
+| 12 | sort-numeric-range | isolate | 11 | 2 of 10 |  |
+| 12 | dedupe-sorted-range | mix | 11 | 2 of 10 |  |
+| 12 | sort-on-pattern | challenge | 15 | 2 of 14 |  |
+| 12 | join-then-sort | challenge | 18 | 3 of 17 |  |
+| 12 | visual-move-lines | mix | 10 | 3 of 9 |  |
+| 12 | search-and-move-helper | isolate | 15 | 3 of 14 |  |
+| 12 | copy-marked-pair | mix | 14 | 3 of 13 |  |
+| 12 | yank-put-sort-challenge | challenge | 24 | 3 of 23 |  |
+| 13 | rename-current-status | isolate | 15 | 3 of 14 |  |
+| 13 | replace-all-todos | mix | 16 | 3 of 15 |  |
+| 13 | literal-token-boundary | challenge | 14 | 3 of 13 |  |
+| 13 | single-line-scope | isolate | 12 | 2 of 11 |  |
+| 13 | visual-range-substitute | mix | 14 | 2 of 13 |  |
+| 13 | range-versus-global | challenge | 15 | 2 of 14 |  |
+| 13 | first-match-only | isolate | 12 | 3 of 11 |  |
+| 13 | ignore-case-flag | mix | 15 | 3 of 14 |  |
+| 13 | force-case-flag | challenge | 14 | 4 of 13 |  |
+| 13 | confirm-all-remaining | challenge | 19 | 2 of 18 |  |
+| 13 | alternate-url-delimiter | mix | 22 | 3 of 21 |  |
+| 13 | repeat-substitution-history | challenge | 17 | 3 of 16 |  |
+| 13 | normalize-digits | isolate | 18 | 3 of 17 |  |
+| 13 | optional-spelling | mix | 19 | 3 of 18 |  |
+| 13 | bounded-code-class | challenge | 22 | 3 of 21 |  |
+| 13 | alternation-alerts | isolate | 27 | 3 of 26 |  |
+| 13 | whole-word-and-match | mix | 17 | 3 of 16 |  |
+| 13 | split-key-value | challenge | 29 | 3 of 28 |  |
+| 13 | start-match-late | isolate | 26 | 3 of 25 |  |
+| 13 | end-match-early | mix | 25 | 3 of 24 |  |
+| 13 | precise-scoped-cleanup | challenge | 26 | 3 of 25 |  |
+| 14 | comment-python-jobs | isolate | 14 | 2 of 13 |  |
+| 14 | disable-config-depths | mix | 22 | 2 of 21 |  |
+| 14 | comment-sql-batch | challenge | 19 | 2 of 18 |  |
+| 14 | latest-markdown-items | isolate | 24 | 2 of 23 |  |
+| 14 | count-python-legacy | mix | 29 | 2 of 28 |  |
+| 14 | count-scattered-csv | challenge | 16 | 2 of 15 |  |
+| 14 | anchor-indented-list | isolate | 10 | 2 of 9 |  |
+| 14 | anchor-quoted-values | mix | 18 | 2 of 17 |  |
+| 14 | anchor-bracket-tails | challenge | 14 | 2 of 13 |  |
+| 14 | final-go-fields | isolate | 9 | 2 of 8 |  |
+| 14 | final-split-commands | mix | 13 | 2 of 12 |  |
+| 14 | final-search-errors | challenge | 18 | 2 of 17 |  |
+| 14 | failed-pipe-log | isolate | 12 | 2 of 11 |  |
+| 14 | failed-search-python | mix | 20 | 2 of 19 |  |
+| 14 | failed-counted-csv | challenge | 13 | 2 of 12 |  |
+| 14 | append-shell-pipes | isolate | 17 | 2 of 16 |  |
+| 14 | append-json-quotes | mix | 18 | 2 of 17 |  |
+| 14 | append-warning-search | challenge | 18 | 2 of 17 |  |
+| 14 | repair-delimiter-macro | mix | 13 | 2 of 12 |  |
+| 14 | repair-final-motion | challenge | 12 | 2 of 11 |  |
+| 14 | selective-fixme-notes | isolate | 20 | 2 of 19 |  |
+| 14 | selective-error-log | mix | 23 | 2 of 22 |  |
+| 14 | selective-sql-updates | challenge | 25 | 2 of 24 |  |
+| 15 | normal-python-comments | isolate | 16 | 2 of 15 |  |
+| 15 | normal-css-terminators | mix | 12 | 2 of 11 |  |
+| 15 | normal-csv-delimiters | challenge | 16 | 2 of 15 |  |
+| 15 | visual-normal-commas | isolate | 16 | 2 of 15 |  |
+| 15 | normal-bang-colons | mix | 19 | 2 of 18 |  |
+| 15 | normal-bang-markers | challenge | 13 | 2 of 12 |  |
+| 15 | global-delete-comments | isolate | 8 | 2 of 7 |  |
+| 15 | range-global-delete | mix | 14 | 2 of 13 |  |
+| 15 | global-delete-alternation | challenge | 17 | 2 of 16 |  |
+| 15 | vglobal-exports | isolate | 18 | 2 of 17 |  |
+| 15 | range-vglobal-enabled | mix | 17 | 2 of 16 |  |
+| 15 | vglobal-errors | challenge | 11 | 2 of 10 |  |
+| 15 | global-substitute-const | isolate | 21 | 2 of 20 |  |
+| 15 | range-global-substitute | mix | 28 | 2 of 27 |  |
+| 15 | inverse-global-substitute | challenge | 25 | 2 of 24 |  |
+| 15 | global-normal-todos | isolate | 20 | 2 of 19 |  |
+| 15 | inverse-global-normal | mix | 26 | 2 of 25 |  |
+| 15 | global-normal-delimiters | challenge | 24 | 2 of 23 |  |
+| 15 | global-macro-semicolons | isolate | 20 | 2 of 19 |  |
+| 15 | global-macro-colons | mix | 21 | 2 of 20 |  |
+| 15 | global-macro-status | challenge | 18 | 2 of 17 |  |
+| 15 | global-collect-warnings | isolate | 11 | 2 of 10 |  |
+| 15 | global-reverse-imports | mix | 14 | 2 of 13 |  |
+| 15 | global-gather-inverted | challenge | 9 | 2 of 8 |  |
+| 15 | integrated-global-delete | isolate | 14 | 2 of 13 |  |
+| 15 | integrated-global-substitute | mix | 30 | 2 of 29 |  |
+| 15 | integrated-combined-normal | challenge | 26 | 2 of 25 |  |
+| 16 | retarget-one-connection | isolate | 11 | 3 of 10 |  |
+| 16 | drop-audit-flag | mix | 6 | 3 of 5 |  |
+| 16 | reorder-audit-arguments | mix | 17 | 3 of 16 |  |
+| 16 | finish-remaining-environments | challenge | 21 | 3 of 20 |  |
+| 16 | correct-cache-name | isolate | 17 | 3 of 16 |  |
+| 16 | rename-cache-receiver | mix | 11 | 3 of 10 |  |
+| 16 | rename-local-record | mix | 16 | 3 of 15 |  |
+| 16 | retitle-debug-log-calls | challenge | 18 | 2 of 17 |  |
+| 16 | quote-by-separator | isolate | 17 | 2 of 16 |  |
+| 16 | let-the-count-stop-itself | mix | 16 | 2 of 15 |  |
+| 16 | search-past-the-odd-row | mix | 14 | 2 of 13 |  |
+| 16 | repair-a-recording-in-place | challenge | 19 | 3 of 18 |  |
+| 16 | retire-the-first-three | mix | 20 | 2 of 19 |  |
+| 16 | commit-the-proven-pattern | challenge | 20 | 2 of 19 |  |
+| 16 | move-the-stray-import | mix | 9 | 2 of 8 |  |
+| 16 | recover-the-constant | mix | 9 | 2 of 8 |  |
+| 16 | protect-the-constant | challenge | 13 | 2 of 12 |  |
+| 16 | mark-the-deferred-steps | isolate | 26 | 2 of 25 |  |
+| 16 | gather-the-deferred-steps | mix | 12 | 2 of 11 |  |
+| 16 | comment-everything-that-is-not-a-step | mix | 20 | 2 of 19 |  |
+| 16 | replay-a-macro-over-matches | challenge | 19 | 2 of 18 |  |
+| 16 | mark-before-you-leave | isolate | 14 | 2 of 13 |  |
+| 16 | return-to-the-last-change | mix | 22 | 2 of 21 |  |
+| 16 | walk-back-through-the-corrections | mix | 22 | 2 of 21 |  |
+| 16 | resume-the-interrupted-note | challenge | 14 | 2 of 13 |  |
 
 ## Canonicals outside the search grammar
 
@@ -407,16 +408,15 @@ Their verdicts speak only for the routes the grammar covers.
 | 1 | quick-cancel-operator | none-shorter | `<Esc>` |
 | 3 | counted-open-records | none-shorter | `5 o , , <Esc>` |
 | 3 | counted-append-table-rule | none-shorter | `3 a - <Esc>` |
-| 3 | counted-open-table-rows | inconclusive | `G 3 o | | | <Esc>` |
+| 3 | counted-open-table-rows | none-shorter | `G 3 o | | | <Esc>` |
 | 3 | substitute-counted-run | none-shorter | `4 s i n f o <Esc>` |
 | 3 | replace-aligned-status | none-shorter | `R E R R <Esc>` |
 | 3 | replace-partial-version | none-shorter | `R 2 . 0 <Esc>` |
 | 3 | replace-beyond-line-end | none-shorter | `R p r o d u c t i o n <Esc>` |
-| 3 | retype-a-mistyped-argument | inconclusive | `i ,   l a y u o t Ctrl-w l a y o u t <Esc>` |
-| 3 | clear-what-you-typed | inconclusive | `A . l o c a l Ctrl-u . t e s t <Esc>` |
 | 3 | replace-a-whole-argument-list | inconclusive | `i ,   c o l o r = r e d Ctrl-u ,   f i l l = b l u e <Esc>` |
 | 3 | truncate-while-inserting | inconclusive | `i f i n a l Ctrl-o D ' <Esc>` |
 | 3 | complete-the-signature | inconclusive | `i ,   d r y _ r n u Ctrl-w d r y _ r u n = F a l s e Ctrl-o $ : <Esc>` |
+| 4 | change-whole-line | inconclusive | `c c e n a b l e d :   t r u e <Esc>` |
 | 4 | multiply-operator-counts | none-shorter | `2 d 3 w` |
 | 7 | character-argument-change-challenge | inconclusive | `v t , c r e a d y <Esc>` |
 | 7 | line-indent-branch-challenge | inconclusive | `V j > G V <` |
@@ -424,7 +424,6 @@ Their verdicts speak only for the routes the grammar covers.
 | 7 | swap-block-same-row-corner | inconclusive | `Ctrl-v 2 j 2 l O r x` |
 | 7 | swap-character-end-recall | inconclusive | `v j l o d` |
 | 7 | selection-corner-block-challenge | inconclusive | `Ctrl-v 2 j 2 l O r 0` |
-| 7 | reselect-case-correction | inconclusive | `v e ~ g v U` |
 | 7 | selection-reindent-code-challenge | inconclusive | `V j j j j >` |
 | 7 | append-semicolons-to-ragged-block | inconclusive | `Ctrl-v 3 j $ A ; <Esc>` |
 | 7 | clear-ragged-config-values | inconclusive | `Ctrl-v 2 j $ d` |
@@ -434,12 +433,11 @@ Their verdicts speak only for the routes the grammar covers.
 | 7 | bump-selected-defaults | inconclusive | `V 2 j 1 0 Ctrl-a` |
 | 7 | number-enum-values | inconclusive | `Ctrl-v 3 j g Ctrl-a` |
 | 7 | renumber-rows-challenge | none-shorter | `V G g Ctrl-a` |
-| 7 | integrated-reselect-correction | inconclusive | `V 2 j ~ g v U` |
 | 7 | integrated-character-edit | inconclusive | `v t , c a c t i v e <Esc> j V d` |
 | 7 | visual-strategy-range-challenge | none-shorter | `v t , U` |
 | 8 | black-hole-character | inconclusive | `x j $ " _ x " - p` |
 | 8 | black-hole-visual-named | inconclusive | `" a y y j V j " _ d j " a P` |
-| 8 | type-the-unnamed-register | inconclusive | `y i w j A Ctrl-r " <Esc>` |
+| 8 | type-the-unnamed-register | inconclusive | `y i w j A h t t p : / / Ctrl-r " : 8 0 8 0 <Esc>` |
 | 8 | retype-your-last-insertion | inconclusive | `A _ 2 0 2 6 <Esc> j A Ctrl-r . <Esc>` |
 | 8 | type-a-named-register | inconclusive | `" a y i w G A   Ctrl-r a <Esc>` |
 | 8 | reach-past-the-newest-delete | inconclusive | `y $ j d d A   Ctrl-r 0 <Esc>` |
@@ -461,12 +459,9 @@ Their verdicts speak only for the routes the grammar covers.
 | 9 | change-list-count-challenge | none-shorter | `2 g ;` |
 | 9 | method-start-mix | none-shorter | `[ m` |
 | 9 | method-end-challenge | none-shorter | `] M` |
-| 10 | inspect-and-return-isolate | none-shorter | `Ctrl-o` |
 | 10 | change-and-mark-mix | inconclusive | `g ; ` a` |
 | 10 | frame-after-return-challenge | inconclusive | `` a z t` |
-| 12 | visual-delete-lines | inconclusive | `j V j : d e l e t e <CR>` |
 | 12 | visual-move-lines | inconclusive | `j V j : m o v e $ <CR>` |
-| 12 | visual-join-lines | inconclusive | `j V 2 j : j o i n <CR>` |
 | 13 | visual-range-substitute | inconclusive | `j V j : s / o f f / o n / <CR>` |
 | 13 | confirm-all-remaining | inconclusive | `: 8 s / d r a f t / l i v e / g c <CR> a` |
 | 14 | comment-python-jobs | inconclusive | `q a I #   <Esc> j q @ a @ a @ a` |
@@ -521,15 +516,22 @@ Routes that win only with a count of 4 or more.
 | 3 | integrated-join-and-uppercase | 6 | `J 6 ~ b` | 4 |
 | 4 | motion-count-delete | 3 | `8 x` | 2 |
 | 4 | multiply-operator-counts | 4 | `d 6 w` | 3 |
+| 5 | trim-debug-suffix | 5 | `5 w 9 x` | 4 |
 | 5 | repeat-forward-commas | 3 | `6 w` | 2 |
 | 5 | reverse-repeated-find | 5 | `5 w` | 2 |
+| 5 | trim-to-level-tag | 7 | `d 8 w` | 3 |
 | 5 | land-on-the-match-end | 8 | `9 l` | 2 |
+| 5 | delete-through-the-marker | 9 | `4 d d` | 3 |
 | 5 | repeat-the-line-offset | 10 | `7 w` | 2 |
+| 5 | cut-vine | 6 | `% 7 X` | 3 |
 | 5 | search-then-match-pair | 10 | `7 w` | 2 |
 | 7 | select-character-range | 3 | `5 x` | 2 |
 | 7 | delete-selected-token | 4 | `5 x` | 2 |
 | 7 | reselect-case-correction | 6 | `5 ~ b` | 3 |
 | 7 | reselect-yanked-word | 8 | `5 x` | 2 |
+| 7 | selection-reindent-code-challenge | 6 | `> 4 j` | 3 |
+| 11 | dot-inherited-count | 4 | `4 d d` | 3 |
 | 11 | dot-replace-count | 4 | `5 x` | 2 |
 | 13 | confirm-skip-match | 19 | `9 j` | 2 |
+| 16 | drop-audit-flag | 6 | `% 6 X` | 3 |
 

@@ -1026,7 +1026,7 @@
           "type": "exercise",
           "phase": "mix",
           "title": "Continue on the line after a put",
-          "instruction": "Copy “alpha = 1” below “beta = 2”, then continue on the following “gamma” row.",
+          "instruction": "Copy the “alpha” and “beta” rows below “gamma = 3”, then continue on the “total” row.",
           "languageId": "python",
           "sourceKind": "fragment",
           "scenario": {
@@ -1035,7 +1035,8 @@
                 "alpha = 1",
                 "beta = 2",
                 "gamma = 3",
-                "return gamma"
+                "total = gamma",
+                "print(total)"
               ],
               "cursor": [
                 0,
@@ -1047,23 +1048,25 @@
               "lines": [
                 "alpha = 1",
                 "beta = 2",
-                "alpha = 1",
                 "gamma = 3",
-                "return gamma"
+                "alpha = 1",
+                "beta = 2",
+                "total = gamma",
+                "print(total)"
               ],
               "cursor": [
-                3,
+                5,
                 0
               ],
               "mode": "normal",
               "registers": {
                 "0": {
                   "type": "linewise",
-                  "text": "alpha = 1\n"
+                  "text": "alpha = 1\nbeta = 2\n"
                 },
                 "\"": {
                   "type": "linewise",
-                  "text": "alpha = 1\n"
+                  "text": "alpha = 1\nbeta = 2\n"
                 }
               }
             }
@@ -1071,7 +1074,8 @@
           "script": {
             "steps": [
               "y",
-              "y",
+              "j",
+              "2",
               "j",
               "g",
               "p"
@@ -1080,20 +1084,20 @@
               {
                 "from": 0,
                 "to": 2,
-                "display": "yy",
-                "explanation": "Yank the first line."
+                "display": "yj",
+                "explanation": "Yank this row and the next."
               },
               {
                 "from": 2,
-                "to": 3,
-                "display": "j",
-                "explanation": "Move one line down."
+                "to": 4,
+                "display": "2j",
+                "explanation": "Move down to “gamma = 3”."
               },
               {
-                "from": 3,
-                "to": 5,
+                "from": 4,
+                "to": 6,
                 "display": "gp",
-                "explanation": "Put the captured text and leave the cursor after it."
+                "explanation": "Put the captured rows below and leave the cursor after them."
               }
             ],
             "checkpoints": [
@@ -1103,7 +1107,8 @@
                   "alpha = 1",
                   "beta = 2",
                   "gamma = 3",
-                  "return gamma"
+                  "total = gamma",
+                  "print(total)"
                 ],
                 "cursor": [
                   0,
@@ -1113,50 +1118,78 @@
                 "registers": {
                   "0": {
                     "type": "linewise",
-                    "text": "alpha = 1\n"
+                    "text": "alpha = 1\nbeta = 2\n"
                   },
                   "\"": {
                     "type": "linewise",
-                    "text": "alpha = 1\n"
+                    "text": "alpha = 1\nbeta = 2\n"
                   }
                 },
-                "caption": "Yank the first line."
+                "caption": "Yank the first two rows."
               },
               {
-                "afterStep": 5,
+                "afterStep": 4,
                 "lines": [
                   "alpha = 1",
                   "beta = 2",
-                  "alpha = 1",
                   "gamma = 3",
-                  "return gamma"
+                  "total = gamma",
+                  "print(total)"
                 ],
                 "cursor": [
-                  3,
+                  2,
                   0
                 ],
                 "mode": "normal",
                 "registers": {
                   "0": {
                     "type": "linewise",
-                    "text": "alpha = 1\n"
+                    "text": "alpha = 1\nbeta = 2\n"
                   },
                   "\"": {
                     "type": "linewise",
-                    "text": "alpha = 1\n"
+                    "text": "alpha = 1\nbeta = 2\n"
                   }
                 },
-                "caption": "Put below the second row and land on the following row."
+                "caption": "Stand on the row the copy goes below."
+              },
+              {
+                "afterStep": 6,
+                "lines": [
+                  "alpha = 1",
+                  "beta = 2",
+                  "gamma = 3",
+                  "alpha = 1",
+                  "beta = 2",
+                  "total = gamma",
+                  "print(total)"
+                ],
+                "cursor": [
+                  5,
+                  0
+                ],
+                "mode": "normal",
+                "registers": {
+                  "0": {
+                    "type": "linewise",
+                    "text": "alpha = 1\nbeta = 2\n"
+                  },
+                  "\"": {
+                    "type": "linewise",
+                    "text": "alpha = 1\nbeta = 2\n"
+                  }
+                },
+                "caption": "Put below and land on the row after the copy."
               }
             ]
           },
           "hints": [
-            "Yank the first line.",
-            "Use `yy` then `jgp`."
+            "Yank both rows at once with a line motion.",
+            "Use `yj`, then `2jgp`."
           ],
           "feedback": {
             "success": "The intended text and register state are exact.",
-            "why": "Yank the first row, move down, and use linewise `gp` to finish on the following row."
+            "why": "Yank the two rows, move to “gamma”, and use linewise `gp`: it lands after the copy, where `p` would leave you on the first copied row."
           },
           "skills": {
             "primary": [
@@ -1195,7 +1228,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Insert before and resume below",
-          "instruction": "Duplicate “four” above “two”, then continue on the original “two” row.",
+          "instruction": "Duplicate the “three” and “four” rows above “two”, then continue on the original “two” row.",
           "languageId": "yaml",
           "sourceKind": "neutral",
           "scenario": {
@@ -1215,32 +1248,33 @@
             "target": {
               "lines": [
                 "one",
+                "three",
                 "four",
                 "two",
                 "three",
                 "four"
               ],
               "cursor": [
-                2,
+                3,
                 0
               ],
               "mode": "normal",
               "registers": {
                 "0": {
                   "type": "linewise",
-                  "text": "four\n"
+                  "text": "three\nfour\n"
                 },
                 "\"": {
                   "type": "linewise",
-                  "text": "four\n"
+                  "text": "three\nfour\n"
                 }
               }
             }
           },
           "script": {
             "steps": [
-              "Y",
-              "2",
+              "y",
+              "k",
               "k",
               "g",
               "P"
@@ -1248,14 +1282,14 @@
             "commandGroups": [
               {
                 "from": 0,
-                "to": 1,
-                "display": "Y",
-                "explanation": "Yank the row."
+                "to": 2,
+                "display": "yk",
+                "explanation": "Yank this row and the one above."
               },
               {
-                "from": 1,
+                "from": 2,
                 "to": 3,
-                "display": "2k",
+                "display": "k",
                 "explanation": "Climb to the row the copy goes above."
               },
               {
@@ -1267,7 +1301,7 @@
             ],
             "checkpoints": [
               {
-                "afterStep": 1,
+                "afterStep": 2,
                 "lines": [
                   "one",
                   "two",
@@ -1275,7 +1309,7 @@
                   "four"
                 ],
                 "cursor": [
-                  3,
+                  2,
                   0
                 ],
                 "mode": "normal"
@@ -1298,13 +1332,14 @@
                 "afterStep": 5,
                 "lines": [
                   "one",
+                  "three",
                   "four",
                   "two",
                   "three",
                   "four"
                 ],
                 "cursor": [
-                  2,
+                  3,
                   0
                 ],
                 "mode": "normal"
@@ -1312,12 +1347,12 @@
             ]
           },
           "hints": [
-            "Yank the row, then climb to the row that should end up below the copy.",
+            "Yank both rows with one line motion, then climb to the row that should end up below the copy.",
             "The g form of put leaves the cursor just after the new text."
           ],
           "feedback": {
             "success": "The intended text and register state are exact.",
-            "why": "Yank the second row, move down, and use linewise `gP` so work resumes on the row after the insertion."
+            "why": "Yank the last two rows, climb to “two”, and use linewise `gP` so work resumes on “two”; `P` would leave you on the first copied row."
           },
           "skills": {
             "primary": [
@@ -3495,7 +3530,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "small-delete-register"
-            ]
+            ],
+            "routeNote": "Practises naming the small-delete register. Straight after the delete the unnamed register holds the same text, so a bare put is shorter here; `\"-` matters once a later yank or delete has replaced the unnamed register."
           }
         },
         {
@@ -3679,7 +3715,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "small-delete-register"
-            ]
+            ],
+            "routeNote": "Practises naming the small-delete register. Straight after the delete the unnamed register holds the same text, so a bare put is shorter here; `\"-` matters once a later yank or delete has replaced the unnamed register."
           }
         },
         {
@@ -7708,7 +7745,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "register-inspection"
-            ]
+            ],
+            "routeNote": "The inspection is a report Vim prints, which the target cannot record, so a route that only copies to the register looks shorter."
           }
         }
       ]
@@ -8104,7 +8142,7 @@
           "scenario": {
             "initial": {
               "lines": [
-                "SOURCE = \"\"",
+                "SOURCE = \"\"  # for logs",
                 "total = 0"
               ],
               "cursor": [
@@ -8115,7 +8153,7 @@
             },
             "target": {
               "lines": [
-                "SOURCE = \"report.py\"",
+                "SOURCE = \"report.py\"  # for logs",
                 "total = 0"
               ],
               "cursor": [
@@ -8157,7 +8195,7 @@
               {
                 "afterStep": 2,
                 "lines": [
-                  "SOURCE = \"\"",
+                  "SOURCE = \"\"  # for logs",
                   "total = 0"
                 ],
                 "cursor": [
@@ -8176,7 +8214,7 @@
               {
                 "afterStep": 5,
                 "lines": [
-                  "SOURCE = \"report.py\"",
+                  "SOURCE = \"report.py\"  # for logs",
                   "total = 0"
                 ],
                 "cursor": [
@@ -9435,37 +9473,25 @@
           "type": "exercise",
           "phase": "isolate",
           "title": "Repeat a value into the next line",
-          "instruction": "Give the proxy the same host value as the line above, without typing the name a second time.",
+          "instruction": "Point the proxy at http://, the host from the line above, and port 8080, typing the URL in one insert without typing the host name again.",
           "languageId": "shell",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
-              "lines": [
-                "HOST=localhost",
-                "PROXY="
-              ],
-              "cursor": [
-                0,
-                5
-              ],
+              "lines": ["HOST=localhost", "PROXY="],
+              "cursor": [0, 5],
               "mode": "normal"
             },
             "target": {
-              "lines": [
-                "HOST=localhost",
-                "PROXY=localhost"
-              ],
-              "cursor": [
-                1,
-                14
-              ],
+              "lines": ["HOST=localhost", "PROXY=http://localhost:8080"],
+              "cursor": [1, 26],
               "mode": "normal",
               "registers": {
-                "\"": {
+                "0": {
                   "type": "characterwise",
                   "text": "localhost"
                 },
-                "0": {
+                "\"": {
                   "type": "characterwise",
                   "text": "localhost"
                 }
@@ -9473,16 +9499,7 @@
             }
           },
           "script": {
-            "steps": [
-              "y",
-              "i",
-              "w",
-              "j",
-              "A",
-              "Ctrl-r",
-              "\"",
-              "Escape"
-            ],
+            "steps": ["y", "i", "w", "j", "A", "h", "t", "t", "p", ":", "/", "/", "Ctrl-r", "\"", ":", "8", "0", "8", "0", "Escape"],
             "commandGroups": [
               {
                 "from": 0,
@@ -9504,13 +9521,25 @@
               },
               {
                 "from": 5,
-                "to": 7,
-                "display": "Ctrl-r\"",
-                "explanation": "Type the unnamed register's contents."
+                "to": 12,
+                "display": "http://",
+                "explanation": "Type the start of the URL."
               },
               {
-                "from": 7,
-                "to": 8,
+                "from": 12,
+                "to": 14,
+                "display": "Ctrl-r\"",
+                "explanation": "Type the unnamed register's contents without leaving the insert."
+              },
+              {
+                "from": 14,
+                "to": 19,
+                "display": ":8080",
+                "explanation": "Keep typing the rest of the URL."
+              },
+              {
+                "from": 19,
+                "to": 20,
                 "display": "Esc",
                 "explanation": "Return to Normal mode."
               }
@@ -9518,20 +9547,15 @@
             "checkpoints": [
               {
                 "afterStep": 3,
-                "lines": [
-                  "HOST=localhost",
-                  "PROXY="
-                ],
-                "cursor": [
-                  0,
-                  5
-                ],
+                "lines": ["HOST=localhost", "PROXY="],
+                "cursor": [0, 5],
+                "mode": "normal",
                 "registers": {
-                  "\"": {
+                  "0": {
                     "type": "characterwise",
                     "text": "localhost"
                   },
-                  "0": {
+                  "\"": {
                     "type": "characterwise",
                     "text": "localhost"
                   }
@@ -9539,21 +9563,32 @@
                 "caption": "A yank fills the unnamed register as well as the yank register."
               },
               {
-                "afterStep": 8,
-                "lines": [
-                  "HOST=localhost",
-                  "PROXY=localhost"
-                ],
-                "cursor": [
-                  1,
-                  14
-                ],
+                "afterStep": 4,
+                "lines": ["HOST=localhost", "PROXY="],
+                "cursor": [1, 5],
+                "mode": "normal",
                 "registers": {
-                  "\"": {
+                  "0": {
                     "type": "characterwise",
                     "text": "localhost"
                   },
+                  "\"": {
+                    "type": "characterwise",
+                    "text": "localhost"
+                  }
+                }
+              },
+              {
+                "afterStep": 20,
+                "lines": ["HOST=localhost", "PROXY=http://localhost:8080"],
+                "cursor": [1, 26],
+                "mode": "normal",
+                "registers": {
                   "0": {
+                    "type": "characterwise",
+                    "text": "localhost"
+                  },
+                  "\"": {
                     "type": "characterwise",
                     "text": "localhost"
                   }
@@ -9561,28 +9596,18 @@
               }
             ]
           },
-          "hints": [
-            "The value is already stored; the insert can read it back.",
-            "The unnamed register is named by the double-quote character.",
-            "Use `yiw`, `j`, `A`, then `Ctrl-r` and `\"`, and `Esc`."
-          ],
+          "hints": ["The value is already stored; the insert can read it back.", "The unnamed register is named by the double-quote character.", "Use `yiw`, `j`, `A`, type `http://`, then `Ctrl-r` and `\"`, type `:8080`, and `Esc`."],
           "feedback": {
             "success": "Both variables hold the same host value.",
-            "why": "The yank filled the unnamed register, and Ctrl-r\" typed it into the insert unchanged."
+            "why": "The yank filled the unnamed register, and Ctrl-r\" typed it into the middle of the URL without leaving Insert mode."
           },
           "skills": {
-            "primary": [
-              "insert-register"
-            ],
-            "supporting": [
-              "unnamed-register"
-            ]
+            "primary": ["insert-register"],
+            "supporting": ["unnamed-register"]
           },
           "difficulty": {
             "level": "easy",
-            "dimensions": [
-              "register-selection"
-            ]
+            "dimensions": ["register-selection"]
           },
           "portability": "Core Vim register behavior. A host editor that embeds Vim may claim this Ctrl chord by default, so check the host you are in.",
           "provenance": {
@@ -9595,9 +9620,7 @@
           },
           "verification": {
             "inputPolicy": "exact-sequence",
-            "requiredEvidence": [
-              "insert-register"
-            ]
+            "requiredEvidence": ["insert-register"]
           }
         },
         {

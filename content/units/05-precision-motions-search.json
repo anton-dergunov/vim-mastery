@@ -6575,7 +6575,8 @@
             "requiredEvidence": [
               "find-till-integration",
               "repeat-find"
-            ]
+            ],
+            "routeNote": "Practises chaining a forward find, its repeat with `;`, and a till into one delete. Working back from the line end (`$h` then `dF,`, or word motions) is one key shorter here; the forward chain is the skill this exercise isolates."
           }
         },
         {

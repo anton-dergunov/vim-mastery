@@ -12,8 +12,15 @@
  *                                                merge a slice into the report
  *
  * Options: --budget <evaluations> --seconds <per exercise> --pages <n>
+ * --probe-seconds <n> (a deeper search of the core actions when the full one
+ * is inconclusive; default 20, 0 turns it off)
  * --extra-edits <n> (edits a route may make beyond the canonical's, default 1)
  * --out <file> (filtered runs print only unless given) --update --no-native
+ * --no-reuse (a new editor for every replayed path; slower, never needed to
+ * trust a result, since a reset mismatch already triggers it)
+ * --no-merge (replay every command rather than one per motion landing) and
+ * --no-row-filter (replay edits that cannot reach a differing line): both
+ * for checking that the pruning hides no route
  * --layout-only (exercises with a fixed viewport or wrap width)
  * --phase <isolate|mix|challenge> --verdict <verdict in the committed report>.
  *
@@ -31,7 +38,7 @@ import { dirname, relative, resolve } from "node:path";
 import process from "node:process";
 import { chromium } from "@playwright/test";
 import { runNativeVim } from "../../tests/native-vim-runner.mjs";
-import { buildActions, COUNTED_FROM } from "./actions.mjs";
+import { buildActions, coreActions, COUNTED_FROM } from "./actions.mjs";
 import { parseTrace } from "./grammar.mjs";
 import { renderMarkdown } from "./report.mjs";
 import { editProfile, searchShorter } from "./search.mjs";
@@ -51,6 +58,7 @@ const unitFilter = option("--unit", null);
 const activityFilter = option("--activity", null);
 const maxEvaluations = Number(option("--budget", "60000"));
 const maxMilliseconds = Number(option("--seconds", "180")) * 1000;
+const probeMilliseconds = Number(option("--probe-seconds", "20")) * 1000;
 const pageCount = Math.max(1, Number(option("--pages", "1")));
 const extraEdits = Number(option("--extra-edits", "1"));
 const filtered = Boolean(unitFilter || activityFilter || flag("--layout-only") || option("--phase", null) || option("--verdict", null));
@@ -91,13 +99,13 @@ async function openUnit(page, unit) {
   await page.waitForFunction(() => Boolean(window.RouteAudit));
 }
 
-async function showActivity(page, activity) {
-  await page.evaluate(({ id, config }) => {
+async function showActivity(page, activity, options = {}) {
+  await page.evaluate(({ id, config, options }) => {
     const index = window.VimWilds.activities.findIndex(candidate => candidate.id === id || candidate.sourceActivityId === id);
     if (index === -1) throw new Error(`activity ${id} not in the flow`);
     window.VimWilds.goToActivity(index);
-    window.RouteAudit.prepare(config);
-  }, { id: activity.id, config: activity });
+    window.RouteAudit.prepare(config, options);
+  }, { id: activity.id, config: activity, options });
 }
 
 function runnerConfig(activity) {
@@ -142,6 +150,9 @@ function confirmNative(exercise, keys, atoms = []) {
     fileName: exercise.fileName,
     textWidth: exercise.editor?.textWidth,
     registerNames: Object.keys(target.registers || {}),
+    // Headless Vim has no clipboard, so `"+` stands in for a named register,
+    // as in the content tests.
+    registerAliases: { "+": "z" },
   });
   const sameText = JSON.stringify(result.code) === JSON.stringify(target.lines);
   // Headless Vim has no display geometry, so wrapped cursor positions and
@@ -176,22 +187,63 @@ async function auditExercise(page, item, taught, parsedById, profiles, hostMisma
     for (const action of actions) histogram[action.atoms.join(" ")] = (histogram[action.atoms.join(" ")] || 0) + 1;
     console.log(`  ${activity.id}: ${actions.length} actions`, Object.entries(histogram).sort((a, b) => b[1] - a[1]).slice(0, 25));
   }
-  await showActivity(page, runnerConfig(activity));
-  const outcome = await searchShorter(
-    activity,
-    actions,
-    allowed,
-    paths => page.evaluate(batch => window.RouteAudit.evaluate(batch), paths),
-    {
-      maxEvaluations,
-      maxMilliseconds,
-      maxEdits: profile.edits + extraEdits,
-      allowWorsen: profile.worsens,
-      onLevel: flag("--verbose")
-        ? level => console.log(`  ${activity.id} cost ${level.cost}: ${level.evaluated} evaluated, ${level.states} states, ${level.texts} texts, ${level.elapsedMs}ms`, flag("--samples") ? level.sample : "")
-        : undefined,
-    },
-  );
+  const search = async (reuse, actionList = actions, milliseconds = maxMilliseconds) => {
+    await showActivity(page, runnerConfig(activity), { reuse });
+    const outcome = await searchShorter(
+      activity,
+      actionList,
+      allowed,
+      paths => page.evaluate(batch => window.RouteAudit.evaluate(batch), paths),
+      {
+        maxEvaluations,
+        maxMilliseconds: milliseconds,
+        maxEdits: profile.edits + extraEdits,
+        allowWorsen: profile.worsens,
+        merge: !flag("--no-merge"),
+        rowFilter: !flag("--no-row-filter"),
+        onLevel: flag("--verbose")
+          ? level => console.log(`  ${activity.id} cost ${level.cost}: ${level.evaluated} evaluated, ${level.states} states, ${level.texts} texts, ${level.elapsedMs}ms`, flag("--samples") ? level.sample : "")
+          : undefined,
+      },
+    );
+    // A sample of the search's paths checks the reused editor against fresh
+    // ones.
+    const mismatches = outcome.samplePaths?.length ? await page.evaluate(paths => window.RouteAudit.checkReset(paths), outcome.samplePaths) : [];
+    return { outcome, mismatches };
+  };
+  // The search reuses one editor and resets it between paths. A fixed
+  // viewport keeps scroll measurements a reset does not restore (`M` and
+  // `Ctrl-f` land a line off), so those exercises never reuse one. Elsewhere
+  // a quick probe runs first, so an exercise whose reset drifts does not
+  // spend its budget on a search that is then thrown away. If the sample
+  // taken during the search still shows a drift, the search runs again with a
+  // new editor for every path, and only that run is reported.
+  let reuse = !flag("--no-reuse") && !activity.editor?.viewportRows && !(await resetDrifts(page, activity, actions));
+  let { outcome, mismatches } = await search(reuse);
+  if (mismatches.length && reuse) {
+    if (flag("--verbose")) {
+      const [{ keys, reused, fresh }] = mismatches;
+      const differs = Object.keys(fresh).filter(field => JSON.stringify(reused[field]) !== JSON.stringify(fresh[field]));
+      console.log(`  ${activity.id}: reset mismatch, searching again without reuse`, keys.join(" "),
+        JSON.stringify(Object.fromEntries(differs.map(field => [field, [reused[field], fresh[field]]]))));
+    }
+    reuse = false;
+    ({ outcome, mismatches } = await search(false));
+  }
+  // When the full search runs out of budget, a probe searches the core
+  // actions deeper. It can only add routes, never a none-shorter verdict.
+  if (outcome.verdict === "inconclusive" && probeMilliseconds > 0) {
+    const core = coreActions(actions);
+    let probe = await search(reuse, core, probeMilliseconds);
+    if (probe.mismatches.length && reuse) {
+      reuse = false;
+      probe = await search(false, core, probeMilliseconds);
+    }
+    mismatches = [...mismatches, ...probe.mismatches];
+    outcome.probe = { actionCount: core.length, reachedCost: probe.outcome.reachedCost, exhausted: probe.outcome.verdict !== "inconclusive" };
+    if (probe.outcome.routes.length) Object.assign(outcome, { verdict: "shorter", routes: probe.outcome.routes, counted: [...outcome.counted, ...probe.outcome.counted].slice(0, 3) });
+    else if (probe.outcome.counted.length && !outcome.counted.length) outcome.counted = probe.outcome.counted;
+  }
   const { samplePaths, ...outcome2 } = outcome;
   const result = {
     ...base,
@@ -200,33 +252,60 @@ async function auditExercise(page, item, taught, parsedById, profiles, hostMisma
     canonicalEdits: profile.edits,
     canonicalCovered: expressible(keysOf(activity), actions),
   };
-  // Every reported route is replayed once more in a fresh editor, and a sample
-  // of the search's paths checks the reused editor against fresh ones.
-  const fresh = await page.evaluate(paths => window.RouteAudit.evaluate(paths, { fresh: true }), [...result.routes, ...result.counted].map(route => route.keys));
-  [...result.routes, ...result.counted].forEach((route, index) => { route.freshEditor = fresh[index].match; });
+  // Every reported route is replayed once more in a fresh editor and, unless
+  // --no-native, run in native Vim. A route that fails either is replaced by
+  // the first of its tied spellings (`alternatives`) that passes both.
+  const native = !flag("--no-native");
   const rejected = [];
-  const keep = route => (route.freshEditor ? true : (rejected.push(route), false));
-  result.routes = result.routes.filter(keep);
-  result.counted = result.counted.filter(keep);
-  const resetMismatches = samplePaths?.length ? await page.evaluate(paths => window.RouteAudit.checkReset(paths), samplePaths) : [];
-  result.resetMismatches = resetMismatches.map(item => item.keys);
+  const confirm = async routes => {
+    const kept = [];
+    for (const route of routes) {
+      const spellings = [route, ...(route.alternatives || [])];
+      const fresh = await page.evaluate(paths => window.RouteAudit.evaluate(paths, { fresh: true }), spellings.map(spelling => spelling.keys));
+      const { alternatives, ...primary } = route;
+      let chosen = null;
+      for (const [index, spelling] of spellings.entries()) {
+        const candidate = index === 0 ? primary : { ...spelling };
+        delete candidate.alternatives;
+        candidate.freshEditor = fresh[index].match;
+        if (candidate.freshEditor && native) candidate.nativeVim = confirmNative(activity, candidate.keys, candidate.atoms);
+        if (candidate.atoms.some(atom => WINDOW_ATOMS.has(atom))) candidate.cursorJudgedBy = "browser";
+        if (candidate.freshEditor && (!native || candidate.nativeVim)) {
+          chosen = candidate;
+          break;
+        }
+        rejected.push(candidate);
+      }
+      if (chosen) kept.push(chosen);
+    }
+    return kept;
+  };
+  result.routes = await confirm(result.routes);
+  result.counted = await confirm(result.counted);
+  result.resetMismatches = mismatches.map(item => item.keys);
+  result.reusedEditor = reuse;
   if (result.verdict === "shorter" && !result.routes.length) result.verdict = "engine-mismatch";
-  if (!flag("--no-native")) {
-    for (const route of [...result.routes, ...result.counted]) {
-      route.nativeVim = confirmNative(activity, route.keys, route.atoms);
-      if (route.atoms.some(atom => WINDOW_ATOMS.has(atom))) route.cursorJudgedBy = "browser";
-    }
-    const agreed = route => (route.nativeVim ? true : (rejected.push(route), false));
-    if (result.verdict === "shorter") {
-      result.routes = result.routes.filter(agreed);
-      if (!result.routes.length) result.verdict = "engine-mismatch";
-    }
-    result.counted = result.counted.filter(agreed);
-  }
   // Routes one engine accepted and the other did not, kept for diagnosis.
   if (rejected.length) result.rejectedRoutes = rejected.slice(0, 5);
   if (["shorter", "trivial"].includes(result.verdict) && result.routeNote) result.verdict = "justified";
   return result;
+}
+
+// Replays random two- and three-command paths in the reused editor and in
+// fresh ones. Each reused replay starts from wherever the previous path left
+// the editor, which is what a search does to it.
+async function resetDrifts(page, activity, actions) {
+  if (!actions.length) return false;
+  await showActivity(page, runnerConfig(activity), { reuse: true });
+  let seed = 7;
+  const random = () => {
+    seed = (seed * 16807) % 2147483647;
+    return seed / 2147483647;
+  };
+  const paths = Array.from({ length: 60 }, (_, index) => Array.from({ length: 2 + (index % 2) },
+    () => actions[Math.floor(random() * actions.length)].keys).flat());
+  const mismatches = await page.evaluate(batch => window.RouteAudit.checkReset(batch), paths);
+  return mismatches.length > 0;
 }
 
 // Whether the canonical route can be spelled from the search's actions. When
@@ -269,6 +348,9 @@ function traceCacheKey() {
     "scripts/route-audit/page-runner.js",
     "scripts/route-audit/audit.mjs",
     "src/editor/vim-engine.js",
+    // The adapter's behaviour is part of the trace, and patches/ is what
+    // changes it.
+    ...readdirSync(resolve(root, "patches")).sort().map(name => `patches/${name}`),
   ];
   for (const file of files) hash.update(readFileSync(resolve(root, file)));
   return hash.digest("hex");
@@ -375,7 +457,7 @@ async function main() {
         generatedBy: "scripts/route-audit/audit.mjs",
         countedFrom: COUNTED_FROM,
         extraEdits,
-        budget: { maxEvaluations, secondsPerExercise: maxMilliseconds / 1000 },
+        budget: { maxEvaluations, secondsPerExercise: maxMilliseconds / 1000, probeSecondsPerExercise: probeMilliseconds / 1000 },
         exercises: merged,
       };
       writeFileSync(resolve(root, outPath), `${JSON.stringify(report, null, 2)}\n`);

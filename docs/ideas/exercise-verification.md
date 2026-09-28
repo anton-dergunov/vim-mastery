@@ -730,6 +730,35 @@ cursor. Re-solve them or replay a parameterized strategy skeleton. This can
 identify brittle absolute-column navigation, unsafe broad substitutions, and
 macros that lack stable anchors.
 
+### What the route audit implements, and what it leaves open
+
+`scripts/route-audit/` (`npm run audit:routes`) is the first working piece of
+this design, scoped to one question: does a route built from commands taught
+so far beat an exercise's taught route? It searches logical commands with a
+bounded best-first search, replays candidates in the app's own adapter, keeps
+the state listed above (including find, search, dot, `&`/`@:`, and the column
+a run of `j` keeps), and confirms every reported route in native Vim. Its
+findings drove the conformance fixes recorded in `docs/vim-conformance.md`.
+
+Measured limits. Replaying a path costs 3–10 ms in the browser, and the number
+of distinct states grows about tenfold per key, so an exhaustive search settles
+taught routes of up to about 6–8 keys within a minute. Longer taught routes,
+most of Units 11–16, stay inconclusive; a second search over a small core
+grammar reaches a few keys deeper and catches the obvious competitors. Constant
+factors (reusing one editor, skipping the app's effects and DOM selection,
+merging operators by where their motion lands, skipping edits that cannot
+touch a differing line) moved each exercise about one key deeper; only a
+stronger lower bound, or an abstract transition layer that avoids the browser
+for motions, would move it much further.
+
+Not yet tried by the search, and so not covered by a none-shorter verdict:
+
+- Visual selections extended with several motions (`vjey`);
+- macros, marks, undo, Replace mode, and Insert-mode controls;
+- search prefixes longer than three letters. Before offering them, settle
+  whether typing a unique prefix counts as taught: whole-word search drills
+  otherwise lose to a prefix on every short buffer.
+
 ## ML and LLM research directions
 
 ### Should this use an LLM at runtime?

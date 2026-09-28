@@ -3124,7 +3124,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "empty-replacement"
-            ]
+            ],
+            "routeNote": "Introduces an empty replacement on two rows, where a word delete and `.` are shorter. The substitution wins once the prefix is on more rows than are worth visiting one by one."
           },
           "delivery": "guided-then-recall"
         },

@@ -1113,7 +1113,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "visual-yank"
-            ]
+            ],
+            "routeNote": "Introduces the Visual form of an operator the learner already knows, so the range is visible before it changes; the operator-and-motion form is one key shorter here. The unit's challenges use ranges that are easier to extend visibly than to count."
           },
           "delivery": "guided-then-recall"
         },

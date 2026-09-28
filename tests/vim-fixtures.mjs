@@ -1000,4 +1000,131 @@ export const conformanceFixtures = Object.freeze([
     targetCode: ["item 1", "item 1", "item 1", "item 1"],
     targetCursor: [0, 0],
   },
+  // The shortest-route audit (scripts/route-audit/) replays candidate routes
+  // in both engines and rejects the ones they disagree about. These fixtures
+  // pin what it found. The first nine are patched in patches/ and must agree;
+  // the last two are accepted divergences, recorded as `browserVerdict`.
+  {
+    // Vim leaves the cursor at the start of the yanked text. The adapter left
+    // it where the yank began, for every object and backward motion.
+    id: "yank-around-quote-moves-to-the-range-start",
+    initialCode: ["say 'hello there' now"],
+    cursor: [0, 8],
+    keys: ["y", "a", "'"],
+    registerNames: ["0"],
+    targetCode: ["say 'hello there' now"],
+    targetCursor: [0, 4],
+    targetRegisters: { 0: { type: "characterwise", text: "'hello there' " } },
+  },
+  {
+    id: "yank-inside-brackets-moves-to-the-range-start",
+    initialCode: ["call(alpha, beta)"],
+    cursor: [0, 8],
+    keys: ["y", "i", "("],
+    registerNames: ["0"],
+    targetCode: ["call(alpha, beta)"],
+    targetCursor: [0, 5],
+    targetRegisters: { 0: { type: "characterwise", text: "alpha, beta" } },
+  },
+  {
+    id: "yank-backward-word-moves-to-the-range-start",
+    initialCode: ["alpha beta gamma"],
+    cursor: [0, 8],
+    keys: ["y", "b"],
+    targetCode: ["alpha beta gamma"],
+    targetCursor: [0, 6],
+  },
+  {
+    // A linewise yank upward lands on the first line, in the column `k` kept.
+    id: "yank-lines-upward-moves-to-the-first-line",
+    initialCode: ["alpha", "beta gamma"],
+    cursor: [1, 6],
+    keys: ["y", "k"],
+    registerNames: ["0"],
+    targetCode: ["alpha", "beta gamma"],
+    targetCursor: [0, 4],
+    targetRegisters: { 0: { type: "linewise", text: "alpha\nbeta gamma\n" } },
+  },
+  {
+    // `*` on a character that is not part of a word searches the non-blank
+    // text under the cursor. The adapter escaped it for JavaScript regex, and
+    // `\)` is an unbalanced group in Vim regex, so the search failed.
+    id: "star-on-punctuation-searches-the-non-blank-text",
+    initialCode: ["f(a)", "g(b)", "f(a)"],
+    cursor: [0, 3],
+    keys: ["*"],
+    targetCode: ["f(a)", "g(b)", "f(a)"],
+    targetCursor: [1, 3],
+  },
+  {
+    // `j` on the last line fails: the cursor stays. The adapter moved it to
+    // the end of the line.
+    id: "down-on-the-last-line-stays-put",
+    initialCode: ["one", "two words"],
+    cursor: [1, 0],
+    keys: ["j"],
+    targetCode: ["one", "two words"],
+    targetCursor: [1, 0],
+  },
+  {
+    // A failed motion cancels its operator. The adapter changed the case of
+    // the whole line.
+    id: "operator-with-a-failed-line-motion-changes-nothing",
+    initialCode: ["public DRAFT"],
+    cursor: [0, 0],
+    keys: ["g", "~", "j"],
+    targetCode: ["public DRAFT"],
+    targetCursor: [0, 0],
+  },
+  {
+    // Lines deleted through the last one take the newline before them, and
+    // the register holds just those lines. The adapter left an empty line,
+    // and for `dd` on the last line filed a leading newline.
+    id: "delete-through-the-last-line-leaves-no-empty-line",
+    initialCode: ["a", "  b", "c", "d"],
+    cursor: [1, 0],
+    keys: ["d", "5", "j"],
+    registerNames: ["1"],
+    targetCode: ["a"],
+    targetCursor: [0, 0],
+    targetRegisters: { 1: { type: "linewise", text: "  b\nc\nd\n" } },
+  },
+  {
+    // Blockwise `A` returns to the block's upper-left corner, which is left of
+    // where it started when the motion moved left (`G` lands on column 0).
+    id: "visual-block-append-returns-to-the-left-edge",
+    initialCode: ["one", "two", "six"],
+    cursor: [0, 2],
+    keys: ["Ctrl-v", "G", "A", "!", "Escape"],
+    targetCode: ["one!", "two!", "six!"],
+    targetCursor: [0, 0],
+  },
+  {
+    // Accepted: the adapter's sentence motion stops one character short where
+    // a sentence ends at a closing brace or the end of the buffer. Nothing
+    // authored uses `)` there; the audit reports routes that do as engine
+    // mismatches.
+    id: "sentence-forward-before-a-closing-brace",
+    initialCode: ["const o = {one: 1}"],
+    cursor: [0, 11],
+    keys: ["y", ")"],
+    registerNames: ["0"],
+    targetCode: ["const o = {one: 1}"],
+    targetCursor: [0, 11],
+    targetRegisters: { 0: { type: "characterwise", text: "one: 1}" } },
+    browserVerdict: { targetRegisters: { 0: { type: "characterwise", text: "one: 1" } } },
+  },
+  {
+    // Accepted: CodeMirror's JavaScript indentation keeps a continuation line
+    // aligned under the opening bracket, where Vim's C indenting uses its own
+    // continuation indent. Reindent activities avoid hand-aligned lines.
+    id: "reindent-of-an-aligned-continuation-line",
+    language: "javascript",
+    initialCode: ["call(alpha,", "     beta);"],
+    cursor: [0, 0],
+    keys: ["=", "j"],
+    targetCode: ["call(alpha,", "    beta);"],
+    targetCursor: [0, 0],
+    browserVerdict: { targetCode: ["call(alpha,", "     beta);"] },
+  },
 ]);

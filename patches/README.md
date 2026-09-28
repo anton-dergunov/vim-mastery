@@ -100,3 +100,25 @@ session 01 had dropped. Six hunks, each motivated by a fixture in
 - `Vim.parseSearchQuery` exposes the same split to `vim-engine.js`, which owns
   the command-line text and needs the bare pattern for the highlight, `"/`, and
   a later `:s//`.
+
+The shortest-route audit extends the patch for five mismatches its native
+confirmations found. Each is pinned by a fixture in `conformanceFixtures`:
+
+- `yank` returns the start of the operated range, taken before a linewise
+  range is widened to whole lines, instead of the position the yank began at.
+  Fixtures: `yank-around-quote-moves-to-the-range-start`,
+  `yank-inside-brackets-moves-to-the-range-start`,
+  `yank-backward-word-moves-to-the-range-start`, and
+  `yank-lines-upward-moves-to-the-first-line`.
+- `*` and `#` on non-word text escape only Vim's magic characters when `pcre`
+  is off. Fixture: `star-on-punctuation-searches-the-non-blank-text`.
+- `moveByLines` fails on the first or last line instead of moving to the line's
+  start or end, which cancels a pending operator, and clamps a count that runs
+  past the edge. Fixtures: `down-on-the-last-line-stays-put` and
+  `operator-with-a-failed-line-motion-changes-nothing`.
+- A linewise `delete` through the last line takes the newline before it for any
+  number of lines, not only for `dd`, and files the deleted lines without that
+  newline. Fixture: `delete-through-the-last-line-leaves-no-empty-line`.
+- Blockwise `I`/`A` remember the block's upper-left corner (the smaller line and
+  the smaller column) rather than the earlier of its two ends. Fixture:
+  `visual-block-append-returns-to-the-left-edge`.

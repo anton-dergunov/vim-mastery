@@ -50,12 +50,17 @@ replacement case conversion (`\u` `\U` `\E`), and `\=` replacement expressions.
 
 - `{count}O` — Vim leaves the cursor on the last opened line; the adapter leaves
   it on the first. `{count}i`, `{count}a`, and `{count}o` conform.
-- Tag-object yanks that start before the cursor (`yit`/`yat`) — Vim moves the
-  cursor to the start of the yanked range; the adapter leaves it. Tag activities
-  start at the range, or use an operator that changes text.
 - `dat` over an element spanning whole lines — Vim removes the emptied lines;
   the adapter leaves the indentation as a residual line. Multi-line tag work
   uses `it`, `cit`, and `dit`, which conform exactly.
+- `)` where a sentence ends at a closing brace or at the end of the buffer — the
+  adapter's sentence motion stops one character short of where Vim lands, so
+  `y)` misses the `}` and a Visual Block extended by `)` misses the last column
+  (`sentence-forward-before-a-closing-brace`).
+- `=` over a continuation line aligned by hand — CodeMirror's JavaScript
+  indentation keeps the alignment; Vim's C indenting uses its own continuation
+  indent (`reindent-of-an-aligned-continuation-line`). Reindent activities use
+  lines with no hand alignment.
 
 ## Notes by unit
 
@@ -100,11 +105,12 @@ fixtures deliberately use well-formed, lowercase HTML and avoid malformed
 tags, comments, and ambiguous angle brackets. Tag and paragraph objects run on
 buffers taller than their fixed window so the matching close lies off screen;
 `it` with a text-changing operator resolves that range exactly, including
-collapsing a multi-row element onto one line. Two tag behaviors remain outside
-the contract and are not authored: a tag-object yank whose range begins before
-the cursor does not move the cursor to the range start, and `at` over an element
-spanning whole lines leaves the leading indentation as a residual line instead
-of removing the emptied rows. The pinned adapter also omitted
+collapsing a multi-row element onto one line. One tag behavior remains outside
+the contract and is not authored: `at` over an element spanning whole lines
+leaves the leading indentation as a residual line instead of removing the
+emptied rows. A yank of any object now leaves the cursor at the start of the
+yanked text, as Vim does (see "Findings from the route audit" below), so yank
+drills may start inside the object. The pinned adapter also omitted
 Vim's adjacent-whitespace rule for around-quote objects: `a"`, `a'`, and
 ``a` `` now include following horizontal whitespace when present, otherwise
 preceding whitespace. The versioned compatibility patch applies that behavior
@@ -576,3 +582,41 @@ are not being measured. Register aliases are still resolved across the whole run
 so a `"` at the boundary still names the register after it, and the browser tier
 replays `setupKeys` too. The authored-content replays that share the runner pass
 `setupKeys` without ever setting `targetExOutput`, so nothing changed for them.
+
+## Findings from the route audit
+
+The shortest-route audit (`scripts/route-audit/`) replays thousands of candidate
+routes per exercise in the adapter and confirms every route it reports in native
+Vim, so it meets divergences that no authored activity had reached. The pinned
+adapter patch now corrects five of them, each pinned by a fixture in
+`conformanceFixtures` that both tiers must pass:
+
+- A yank leaves the cursor at the start of the yanked text. The adapter left it
+  where the yank began, so `yb`, `y0`, `yk`, `yiw`, `ya'`, `yi(`, and `yit` all
+  disagreed with Vim. Fixtures: `yank-around-quote-moves-to-the-range-start`,
+  `yank-inside-brackets-moves-to-the-range-start`,
+  `yank-backward-word-moves-to-the-range-start`, and
+  `yank-lines-upward-moves-to-the-first-line`.
+- `*` and `#` on a character that is not part of a word escaped the text for
+  JavaScript regex. With `nopcre`, `\)` is an unbalanced group in Vim regex and
+  the search failed. Fixture: `star-on-punctuation-searches-the-non-blank-text`.
+- `j` on the last line (and `k` on the first) moved the cursor to the end (or
+  start) of the line, and an operator with that motion acted on the current
+  line (`dj` deleted it, `g~j` changed its case). In Vim the motion fails, the
+  cursor stays, and the operator is cancelled; a failed `j` also ends a macro,
+  as it does in Vim. A count that runs past the edge now stops at it. Fixtures:
+  `down-on-the-last-line-stays-put` and
+  `operator-with-a-failed-line-motion-changes-nothing`.
+- Lines deleted through the last one (`dG`, `d2j` reaching the end, and `dd` on
+  the last line) left an empty line behind, and `dd` on the last line filed a
+  leading newline in the register. Fixture:
+  `delete-through-the-last-line-leaves-no-empty-line`.
+- Blockwise `I` and `A` returned to where the selection started rather than
+  the block's upper-left corner, which differ when the motion moved left
+  (`Ctrl-v G` lands on column 0). Fixture:
+  `visual-block-append-returns-to-the-left-edge`.
+
+Two are accepted and listed under "Deliberately not exposed": `)` where a
+sentence ends at a closing brace or the end of the buffer, and `=` over
+hand-aligned continuation lines. The audit reports a route through either as an
+engine mismatch rather than a shorter route.

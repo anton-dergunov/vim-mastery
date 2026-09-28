@@ -734,16 +734,16 @@ test.describe("Production lesson flow", () => {
     // Ctrl-r{register} inside Insert mode is two chords in a row on touch: the
     // Ctrl latch for the chord itself, then a Shift layer for the register name.
     await page.goto("/?unit=registers-putting&activity=type-the-unnamed-register");
-    for (const key of ["y", "i", "w", "j", "A"]) await page.evaluate(token => window.VimWilds.emit(token), key);
+    for (const key of ["y", "i", "w", "j", "A", ..."http://"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     await page.locator('[data-mod="Ctrl"]').click();
     await page.locator('.key[data-key="r"]').click();
     await page.locator('[data-mod="Shift"]').first().click();
     await page.locator('.key[data-key="\'"]').click();
-    await page.evaluate(() => window.VimWilds.emit("Escape"));
+    for (const key of [...":8080", "Escape"]) await page.evaluate(token => window.VimWilds.emit(token), key);
     await expect.poll(() => state(page)).toMatchObject({
       complete: true,
       modifiers: [],
-      code: ["HOST=localhost", "PROXY=localhost"],
+      code: ["HOST=localhost", "PROXY=http://localhost:8080"],
       registers: { '"': { text: "localhost", type: "characterwise" } },
     });
 
@@ -774,7 +774,7 @@ test.describe("Production lesson flow", () => {
     await expect.poll(() => state(page)).toMatchObject({
       complete: true,
       modifiers: [],
-      code: ["SOURCE = \"report.py\"", "total = 0"],
+      code: ["SOURCE = \"report.py\"  # for logs", "total = 0"],
     });
 
     await page.goto("/?unit=registers-putting&activity=put-the-file-name-recall");
@@ -1224,6 +1224,7 @@ test.describe("Production lesson flow", () => {
           text: fixture.initialCode.join("\n"),
           cursor: fixture.cursor,
           fileName: fixture.fileName,
+          language: fixture.language,
           onEvent() {},
         });
         let error = null;

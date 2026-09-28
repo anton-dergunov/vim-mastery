@@ -2890,7 +2890,7 @@
               ],
               "cursor": [
                 0,
-                5
+                11
               ],
               "mode": "normal"
             },
@@ -2988,8 +2988,7 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "around-square-brackets"
-            ],
-            "routeNote": "Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise."
+            ]
           },
           "delivery": "guided-then-recall"
         },
@@ -3339,7 +3338,7 @@
               ],
               "cursor": [
                 0,
-                9
+                15
               ],
               "mode": "normal"
             },
@@ -3437,8 +3436,7 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "around-curly-braces"
-            ],
-            "routeNote": "Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise."
+            ]
           },
           "delivery": "guided-then-recall"
         },
@@ -3788,7 +3786,7 @@
               ],
               "cursor": [
                 0,
-                7
+                16
               ],
               "mode": "normal"
             },
@@ -3886,8 +3884,7 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "around-curly-braces"
-            ],
-            "routeNote": "Yank drills start on the object's first character, because the adapter does not yet move the cursor to the start of a yanked object the way Vim does (docs/vim-conformance.md). From there a percent motion yanks the same text; the object form is what works from inside the brackets, as this unit's delete and change drills practise."
+            ]
           },
           "delivery": "guided-then-recall"
         }

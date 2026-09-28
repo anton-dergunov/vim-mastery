@@ -12,6 +12,13 @@ function table(headers, rows) {
   ].join("\n");
 }
 
+function rejection(route) {
+  if (!route) return "";
+  return route.freshEditor
+    ? `${code(route.keys)} reaches the target in the app's adapter and not in native Vim`
+    : `${code(route.keys)} reached the target in the search's editor and not in a fresh one`;
+}
+
 export function renderMarkdown(report) {
   const exercises = report.exercises.filter(Boolean);
   const byVerdict = verdict => exercises.filter(exercise => exercise.verdict === verdict);
@@ -25,11 +32,13 @@ export function renderMarkdown(report) {
     "used in a demo or exercise before it (plus the exercise's own), and replays every candidate in the app's Vim",
     "adapter. A route it reports also reaches the target in native Vim.",
     "",
-    "- **shorter**: a route with fewer keys exists. Fix the exercise or give it a `verification.routeNote`.",
-    "- **justified**: shorter routes exist, and the exercise says why it teaches the longer one.",
+    "- **shorter**: a route with fewer keys exists. This flags the exercise for review: re-author it if a small",
+    "  buffer can show the command doing real work, or record in `verification.routeNote` why it stays as it is.",
+    "- **justified**: shorter routes exist, and the exercise's `routeNote` records the review and why it teaches the",
+    "  longer one.",
     `- **counted** routes need a count of ${report.countedFrom} or more. They are listed but do not beat the canonical.`,
     "- **none-shorter**: the search covered every route cheaper than the canonical.",
-    "- **inconclusive**: the budget ran out first; `reached` is the cost searched completely.",
+    "- **inconclusive**: the budget ran out first; **searched** says how far the search got. This is not a flag.",
     "- **engine-mismatch**: the app's adapter and native Vim disagree about the shorter route.",
     "- **host-mismatch**: the canonical does not reach the target inside the audit; results are not trusted.",
     "- **trivial**: the start already matches the target, so the target does not check what the taught keys change",
@@ -51,7 +60,20 @@ export function renderMarkdown(report) {
     "It does not try macros, marks, undo, or Insert-mode controls. **covered** says whether the canonical itself can be",
     "spelled from the offered commands; when it cannot, a none-shorter verdict speaks only for what the grammar covers.",
     "",
-    `Budget: ${report.budget.maxEvaluations} states or ${report.budget.secondsPerExercise}s per exercise.`,
+    "Two prunings keep the search inside its budget without changing what it covers. Commands that differ only in a",
+    "motion that lands in the same place (an operator and two motions of the same kind, or two Visual selections) are",
+    "replayed once. An edit that may not move the text away from the target is replayed only if it can change a line",
+    "that still differs. States are told apart by the text, cursor, mode, checked registers, the viewport where it is",
+    "fixed, and what `;`, `n`, `.`, `&`, `@:`, and a run of `j` would do next. When native Vim rejects a route, the",
+    "other spellings that tied with it in the search are tried before the verdict becomes engine-mismatch.",
+    "",
+    "An inconclusive exercise's **searched** column reads, for example, `3 of 12`: every route of up to 3 keys was",
+    "tried, and a shorter route could have up to 12. When the full search is inconclusive, a second, deeper search",
+    "tries only the core commands (line and word motions, operators, standalone edits, typed text, and the canonical's",
+    "own Ex lines, with counts up to 3). Any route it finds is reported like any other; finding none proves nothing.",
+    "",
+    `Budget: ${report.budget.maxEvaluations} states or ${report.budget.secondsPerExercise}s per exercise`
+      + (report.budget.probeSecondsPerExercise ? `, then ${report.budget.probeSecondsPerExercise}s for the core search.` : "."),
     "",
     "## Summary",
     "",
@@ -86,9 +108,13 @@ export function renderMarkdown(report) {
     const rows = byVerdict(verdict);
     if (!rows.length) continue;
     lines.push(`## ${title}`, "");
-    lines.push(table(["Unit", "Exercise", "Phase", "Keys", "Reached", "Note"], rows.map(exercise => [
+    const searched = exercise => (verdict === "inconclusive"
+      ? `${exercise.reachedCost ?? 0} of ${exercise.canonical.cost - 1}`
+      : String(exercise.reachedCost ?? ""));
+    lines.push(table(["Unit", "Exercise", "Phase", "Keys", verdict === "inconclusive" ? "Searched" : "Reached", "Note"], rows.map(exercise => [
       String(exercise.unitNumber), exercise.id, exercise.phase, String(exercise.canonical.cost),
-      String(exercise.reachedCost ?? ""), exercise.routeNote || (exercise.routes?.[0] ? code(exercise.routes[0].keys) : ""),
+      searched(exercise), exercise.routeNote || (exercise.routes?.[0] ? code(exercise.routes[0].keys) : "")
+        || rejection(exercise.rejectedRoutes?.[0]),
     ])));
     lines.push("");
   }

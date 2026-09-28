@@ -87,6 +87,35 @@ export function textDistance(left, right) {
 }
 
 /**
+ * The lines of `text` a change has to touch to bring it closer to `target`:
+ * from the end of their common prefix to the start of their common suffix.
+ * Where repeated text makes that ambiguous (deleting either of two equal
+ * lines), both readings count, the prefix taken first and the suffix first.
+ */
+export function differingRows(text, target) {
+  if (text === target) return null;
+  const prefix = limit => {
+    let length = 0;
+    while (length < limit && text[length] === target[length]) length += 1;
+    return length;
+  };
+  const suffix = limit => {
+    let length = 0;
+    while (length < limit && text[text.length - 1 - length] === target[target.length - 1 - length]) length += 1;
+    return length;
+  };
+  const shorter = Math.min(text.length, target.length);
+  const firstPrefix = prefix(shorter);
+  const firstSuffix = suffix(shorter - firstPrefix);
+  const lastSuffix = suffix(shorter);
+  const lastPrefix = prefix(shorter - lastSuffix);
+  const from = Math.min(firstPrefix, lastPrefix);
+  const to = Math.max(text.length - firstSuffix, text.length - lastSuffix);
+  const rowOf = offset => text.slice(0, offset).split("\n").length - 1;
+  return [rowOf(from), rowOf(Math.max(from, to - 1))];
+}
+
+/**
  * How the canonical changes the text: the number of edits (text changes seen
  * each time the editor is back in Normal mode) and whether any of them moves
  * the text away from the target first.
@@ -150,6 +179,17 @@ function canFinish(text, targetText, finish) {
   return false;
 }
 
+// Where a motion lands, with the hidden state later keys can read. Merging
+// two motions by landing must not merge what `;` or `n` would do next.
+function landingKeyFor(allowed) {
+  const watchFind = allowed.has(";") || allowed.has(",");
+  const watchSearch = ["n", "N", "&", "g&", "gn", "gN"].some(atom => allowed.has(atom));
+  return result => {
+    const hidden = JSON.parse(result.hidden || "{}");
+    return JSON.stringify([result.cursor, watchFind ? hidden.find : null, watchSearch ? hidden.search : null]);
+  };
+}
+
 function stateKeyFor(exercise, allowed, pasteMatters) {
   const target = exercise.scenario.target;
   const registerNames = new Set(Object.keys(target.registers || {}));
@@ -157,6 +197,7 @@ function stateKeyFor(exercise, allowed, pasteMatters) {
   const watchFind = allowed.has(";") || allowed.has(",");
   const watchSearch = ["n", "N", "&", "g&", "gn", "gN"].some(atom => allowed.has(atom));
   const watchEdit = allowed.has(".");
+  const watchEx = ["&", "g&", "@:"].some(atom => allowed.has(atom));
   const watchViewport = Boolean(exercise.editor?.viewportRows);
   // `watchEdit` is passed per state: once the one edit a route has left must
   // type characters `.` cannot supply, what `.` would repeat no longer matters.
@@ -171,6 +212,8 @@ function stateKeyFor(exercise, allowed, pasteMatters) {
       watchFind ? hidden.find : null,
       watchSearch ? hidden.search : null,
       watchEdit && repeatMatters ? [hidden.edit, hidden.insert] : null,
+      watchEx ? hidden.ex : null,
+      hidden.column ?? null,
     ]);
   };
 }
@@ -183,12 +226,17 @@ function stateKeyFor(exercise, allowed, pasteMatters) {
  * @param options    { maxEvaluations, maxMilliseconds, batchSize }
  */
 export async function searchShorter(exercise, actions, allowed, evaluate, options = {}) {
-  const { maxEvaluations = 60_000, maxMilliseconds = 180_000, batchSize = 150, maxEdits = Infinity, allowWorsen = true } = options;
+  const { maxEvaluations = 60_000, maxMilliseconds = 180_000, batchSize = 150, maxEdits = Infinity, allowWorsen = true, merge = true, rowFilter = true } = options;
   const canonicalCost = exercise.script.steps.length;
   const bound = canonicalCost - 1;
   const targetText = exercise.scenario.target.lines.join("\n");
   const targetMode = exercise.scenario.target.mode;
   const stateKey = stateKeyFor(exercise, allowed, actions.pasteMatters);
+  const landingKey = landingKeyFor(allowed);
+  // An operator applied to a motion is repeated by `.` with that motion, so
+  // two motions that land together today can repeat differently later. Such
+  // edits merge only when no edit can follow them.
+  const dotTaught = allowed.has(".");
   const free = freeCharacters(actions);
   const finish = finishers(actions);
   // Missing characters are compared case-folded when case commands exist, so
@@ -218,11 +266,6 @@ export async function searchShorter(exercise, actions, allowed, evaluate, option
     for (let cursor = node; cursor.action; cursor = cursor.parent) parts.push(cursor.action.keys);
     return parts.reverse().flat();
   };
-  const actionsOf = node => {
-    const list = [];
-    for (let cursor = node; cursor.action; cursor = cursor.parent) list.push(cursor.action);
-    return list.reverse();
-  };
   function* childrenAt(cost) {
     for (const [length, group] of byLength) {
       for (const parent of expandedByCost.get(cost - length) || []) {
@@ -237,6 +280,38 @@ export async function searchShorter(exercise, actions, allowed, evaluate, option
           // anything, so it keeps its parent's estimate; an edit that does not
           // type every missing character leaves one edit fewer to type them.
           if (cost + (action.edit ? estimateAfterEdit(parent, action) : parent.estimate) > bound) continue;
+          // When this edit may not move the text away from the target (no
+          // slack left, or it is the last edit), it has to change a line
+          // that still differs, give or take the line next to it (a join, a
+          // put, an opened line). Where it acts is known before replaying it
+          // for most commands; the rest are always replayed.
+          if (rowFilter && action.edit && action.rows && parent.rowsToFix && (parent.editsLeft === 1 || !allowWorsen || parent.slack)) {
+            const row = parent.cursor[0];
+            let low = row;
+            let high = row + (action.rows.count || 1) - 1;
+            if (action.rows.reach) {
+              const landing = parent.landingRows?.get(action.rows.reach);
+              if (landing === undefined) {
+                low = -Infinity;
+                high = Infinity;
+              } else {
+                low = Math.min(row, landing);
+                high = Math.max(row, landing);
+              }
+            }
+            if (high + 1 < parent.rowsToFix[0] || low - 1 > parent.rowsToFix[1]) continue;
+          }
+          // Commands that differ only in a motion that lands in the same
+          // place change the same text; the cheapest one stands for all.
+          if (merge && action.group && !(action.repeatable && dotTaught && parent.editsLeft > 1)) {
+            const landing = parent.landings?.get(action.reach);
+            if (landing !== undefined && landing !== parent.selfLanding) {
+              const merged = `${action.group}\u0002${landing}`;
+              parent.merged ??= new Set();
+              if (parent.merged.has(merged)) continue;
+              parent.merged.add(merged);
+            }
+          }
           yield { parent, action, cost, counted: parent.counted || action.counted, slack: parent.slack, edits: parent.edits };
         }
       }
@@ -254,8 +329,10 @@ export async function searchShorter(exercise, actions, allowed, evaluate, option
     return coverCost.get(key);
   };
   const describeState = (node, result) => {
+    node.rowsToFix = differingRows(result.text, targetText);
     node.text = result.text;
     node.cursor = result.cursor;
+    node.selfLanding = landingKey(result);
     node.missing = missingCharacters(result, targetText, free);
     node.editsLeft = maxEdits - node.edits;
   };
@@ -270,12 +347,26 @@ export async function searchShorter(exercise, actions, allowed, evaluate, option
   // A node carries its handicaps: whether it used a large count, whether it
   // spent its one edit away from the target, and how many edits it has made.
   // A state reached earlier with no more of any of them dominates this node.
+  //
+  // A node that ties with the one kept (same state, same handicaps, same
+  // cost) is remembered as its alternative. Two commands can reach the same
+  // state in the app's adapter while only one of them does in native Vim, and
+  // the route through the other must not be lost when native Vim rejects the
+  // first (`g~j` on the last line changes nothing in Vim; `g~$` does the same
+  // work in both).
   const visit = (key, node) => {
-    const labels = visited.get(key) || [];
+    const seenLabels = visited.get(key) || [];
     const label = [node.counted ? 1 : 0, node.slack ? 1 : 0, node.edits];
-    if (labels.some(seen => seen.every((value, index) => value <= label[index]))) return false;
-    labels.push(label);
-    visited.set(key, labels);
+    for (const seen of seenLabels) {
+      if (!seen.label.every((value, index) => value <= label[index])) continue;
+      if (seen.node.cost === node.cost && seen.label.every((value, index) => value === label[index])) {
+        seen.node.alternatives ??= [];
+        if (seen.node.alternatives.length < 6) seen.node.alternatives.push(node);
+      }
+      return false;
+    }
+    seenLabels.push({ label, node });
+    visited.set(key, seenLabels);
     return true;
   };
 
@@ -307,6 +398,14 @@ export async function searchShorter(exercise, actions, allowed, evaluate, option
         const node = batch[index];
         sample(paths[index]);
         if (result.error) return;
+        // A motion's landing is recorded on its parent before anything prunes
+        // it, for merging the commands that use the same motion.
+        if (node.action.reachId && !result.pending && result.mode === "normal") {
+          node.parent.landings ??= new Map();
+          node.parent.landings.set(node.action.reachId, landingKey(result));
+          node.parent.landingRows ??= new Map();
+          node.parent.landingRows.set(node.action.reachId, result.cursor[0]);
+        }
         if (result.match) {
           (node.counted ? counted : routes).push(node);
           return;
@@ -358,15 +457,29 @@ export async function searchShorter(exercise, actions, allowed, evaluate, option
     if (routes.length) break;
   }
 
+  const describeActions = used => ({
+    keys: used.flatMap(action => action.keys),
+    cost: used.reduce((total, action) => total + action.keys.length, 0),
+    commands: used.map(action => action.keys.join("")),
+    distinctCommands: new Set(used.map(action => action.keys.join(""))).size,
+    atoms: [...new Set(used.flatMap(action => action.atoms))],
+  });
+  // Every spelling of a route through tied nodes, up to `limit`, the kept
+  // one first.
+  const spellings = (node, limit) => {
+    if (!node.action) return [[]];
+    const found = [];
+    for (const variant of [node, ...(node.alternatives || [])]) {
+      for (const prefix of spellings(variant.parent, limit - found.length)) {
+        found.push([...prefix, variant.action]);
+        if (found.length >= limit) return found;
+      }
+    }
+    return found;
+  };
   const describe = node => {
-    const used = actionsOf(node);
-    return {
-      keys: pathOf(node),
-      cost: node.cost,
-      commands: used.map(action => action.keys.join("")),
-      distinctCommands: new Set(used.map(action => action.keys.join(""))).size,
-      atoms: [...new Set(used.flatMap(action => action.atoms))],
-    };
+    const [primary, ...others] = spellings(node, 24).map(describeActions);
+    return { ...primary, alternatives: others };
   };
   const rank = (left, right) => left.cost - right.cost || left.distinctCommands - right.distinctCommands;
   const found = routes.map(describe).sort(rank);

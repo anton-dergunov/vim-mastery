@@ -236,6 +236,11 @@ teaches the wrong lesson: that the new command is ceremony.
 - An exercise that deliberately teaches a longer route, usually a repeatable
   one that `.`, a macro, or `:normal` pays off, says so in its instruction and
   records the same reason in `verification.routeNote`.
+- An introduction may lose on purpose. The first exercises for an Ex line
+  command, a Visual form, or a search address show what the command does on a
+  few rows the learner can see, where a Normal-mode command is often shorter;
+  later exercises show where it wins. Such an exercise keeps its small buffer
+  and records the reason in `verification.routeNote`.
 - The rule governs how exercises are authored, not how copy argues. Capstone
   summaries still compare routes by clarity, setup cost, repeatability, and
   risk, and Unit 16's closing summaries are tested to keep key counts out.
@@ -244,11 +249,21 @@ teaches the wrong lesson: that the new command is ceremony.
 cheaper route built only from commands taught by then, replays every candidate
 in the app's own Vim adapter, and reports a route only when native Vim reaches
 the same target. The committed report is `scripts/route-audit/report.md`; its
-header lists what the search does not try. Fix a flagged exercise by
-re-authoring its buffer, moving it after the competing command stops being
-shorter, or splitting it so one exercise meets the case the new command wins.
-Re-audit it with `npm run audit:routes -- --activity <id> --update`. The audit
-is not part of `npm test`.
+header lists what the search does not try. Re-audit a changed exercise with
+`npm run audit:routes -- --activity <id> --update`. The audit is not part of
+`npm test`.
+
+A flag is a reason to look at the exercise, not a verdict on it. Read the
+shorter route and ask whether the exercise shows the command doing real work.
+Re-author it only when the new version is still a small, phone-sized piece of
+text in which the command is the natural choice: re-author its buffer, move it
+after the competing command stops being shorter, or split it so one exercise
+meets the case the new command wins. Do not grow a buffer, add rows to walk
+past, or hide a shortcut in setup keys only to silence the audit; that trades
+the phone layout and a believable example for a clean report. When the
+exercise is right as it is, write why in `verification.routeNote`. The note is
+the record that someone reviewed the flag, and the audit reports a noted
+exercise as `justified` rather than `shorter`.
 
 ## Language profiles and selection
 

@@ -3997,14 +3997,13 @@
                   "a",
                   "r",
                   "t",
-                  "2",
                   "1",
-                  "G",
+                  "6",
+                  "+",
                   "r",
                   "c",
-                  "1",
-                  "3",
-                  "G",
+                  "8",
+                  "k",
                   "z",
                   "z"
                 ]
@@ -4158,7 +4157,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "integrated-navigation"
-            ]
+            ],
+            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
           },
           "editor": {
             "viewportRows": 7,
@@ -4170,7 +4170,7 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Return and reveal what follows",
-          "instruction": "Return to the saved routes position and place that row at the top of the window.",
+          "instruction": "Return to the saved logging position and place that row at the top of the window.",
           "languageId": "typescript",
           "sourceKind": "fragment",
           "scenario": {
@@ -4218,15 +4218,15 @@
               },
               "setup": {
                 "cursor": [
-                  4,
-                  9
+                  23,
+                  10
                 ],
                 "steps": [
                   "m",
                   "a",
                   "1",
-                  "3",
-                  "G",
+                  "1",
+                  "k",
                   "z",
                   "z"
                 ]
@@ -4266,13 +4266,13 @@
                 "}"
               ],
               "cursor": [
-                4,
-                9
+                23,
+                10
               ],
               "mode": "normal",
               "viewport": {
-                "topLine": 4,
-                "bottomLine": 10
+                "topLine": 23,
+                "bottomLine": 29
               }
             }
           },
@@ -4333,13 +4333,13 @@
                   "}"
                 ],
                 "cursor": [
-                  4,
-                  9
+                  23,
+                  10
                 ],
                 "mode": "normal",
                 "viewport": {
-                  "topLine": 4,
-                  "bottomLine": 10
+                  "topLine": 23,
+                  "bottomLine": 29
                 }
               }
             ]

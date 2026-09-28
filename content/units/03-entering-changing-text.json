@@ -4125,7 +4125,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "insert-delete-word"
-            ]
+            ],
+            "routeNote": "Practises correcting text without leaving Insert mode: the instruction scripts the mistake and its correction, and the target records only the corrected text, so typing it right the first time is shorter."
           }
         },
         {
@@ -4269,7 +4270,8 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "insert-clear-insertion"
-            ]
+            ],
+            "routeNote": "Practises correcting text without leaving Insert mode: the instruction scripts the mistake and its correction, and the target records only the corrected text, so typing it right the first time is shorter."
           }
         },
         {
@@ -5575,13 +5577,13 @@
           "type": "exercise",
           "phase": "challenge",
           "title": "Give both words their requested case",
-          "instruction": "Uppercase “public” and lowercase “DRAFT”.",
+          "instruction": "Make “Public” all capitals and “DRAFT” all lowercase.",
           "languageId": "prose",
           "sourceKind": "neutral",
           "scenario": {
             "initial": {
               "lines": [
-                "public DRAFT"
+                "Public DRAFT"
               ],
               "cursor": [
                 0,
