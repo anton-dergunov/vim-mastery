@@ -177,11 +177,12 @@ function renderReferenceCard() {
   elements.referenceActions.innerHTML = `${back}${skip}${authoredMarkup}${advance}`;
 }
 
-export function openReferenceDeck(deckId, { opening = false } = {}) {
+export function openReferenceDeck(deckId, { opening = false, cardIndex = 0 } = {}) {
   const deck = referenceDecks.get(deckId);
   if (!deck) throw new RangeError(`Unknown reference deck "${deckId}"`);
   referenceSession.deckId = deckId;
-  referenceSession.cardIndex = 0;
+  // The course map lists every card, so a deck can open part-way through.
+  referenceSession.cardIndex = Number.isInteger(cardIndex) && cardIndex >= 0 && cardIndex < deck.cards.length ? cardIndex : 0;
   referenceSession.opening = opening;
   elements.referenceDialog.dataset.deckId = deckId;
   elements.referenceDialog.dataset.opening = String(opening);

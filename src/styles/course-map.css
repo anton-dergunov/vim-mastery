@@ -1,0 +1,966 @@
+/* The course map: the contents sheet's head and tabs, the unit list, a unit's
+   page, and the Practice (mastery map) and Reference tabs.
+
+   The sheet frame itself (.app-dialog, .dialog-head, .dialog-body and their
+   phone and desktop placement) is in dialogs.css. Each unit on the map is
+   tinted by its world through --unit-mid, --unit-bright and --unit-warm, set
+   inline, with --unit-thumb and --unit-hero for its board when generated
+   backdrops are on and --unit-gradient as the fallback when they are off. */
+
+#tocDialog .dialog-head {
+  padding-bottom: 10px;
+  border-bottom: 0;
+}
+
+.toc-head-progress {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+  color: #77e0a3;
+  font: 800 16px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+.toc-head-progress b span { color: #7f998c; font-size: 12px; }
+
+.toc-head-progress small {
+  color: #7f998c;
+  font: 700 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.toc-tabs {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  margin: 0 12px 2px;
+  padding: 3px;
+  border: 1px solid rgba(193, 220, 206, .12);
+  border-radius: 11px;
+  background: rgba(0, 0, 0, .25);
+}
+
+.toc-tabs button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 8px;
+  color: #99b4a6;
+  background: transparent;
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.toc-tabs button[aria-selected="true"] {
+  color: #fff7df;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .04));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 1px 0 rgba(0, 0, 0, .4);
+}
+
+.toc-tabs button:focus-visible {
+  outline: 2px solid var(--theme-bright);
+  outline-offset: -2px;
+}
+
+.toc-panel[hidden] { display: none; }
+
+.toc-tab-lede,
+#tocPractice .mastery-intro {
+  margin: 2px 2px 14px;
+  color: #99b4a6;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.toc-tab-lede strong,
+#tocPractice .mastery-intro strong { color: #e4ede7; font-weight: 650; }
+
+/* ---- Course: two views, each its own scroll container ------------------- */
+
+.toc-course {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.toc-view {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  transition: transform .28s ease, opacity .28s ease, visibility 0s linear 0s;
+}
+
+.toc-view[inert] {
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .28s ease, opacity .28s ease, visibility 0s linear .28s;
+}
+
+.toc-unit-list { padding: 4px 12px 28px; }
+.toc-unit-list[inert] { transform: translateX(-18%); opacity: 0; }
+.toc-unit-page { padding-bottom: 28px; }
+.toc-unit-page[inert] { transform: translateX(100%); }
+
+/* ---- Story rows: the prologue opens the list, the epilogue closes it ---- */
+
+.toc-story-row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 4px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid rgba(242, 209, 125, .2);
+  border-radius: 12px;
+  color: inherit;
+  background: rgba(242, 209, 125, .04);
+  text-align: left;
+}
+
+.toc-story-row:last-child { margin: 20px 0 0; }
+.toc-story-row.later { opacity: .62; }
+.toc-story-row img { width: 56px; height: 40px; border-radius: 7px; object-fit: cover; }
+.toc-story-glyph { width: 56px; color: #f2d17d; font: 400 22px/1 Georgia, serif; text-align: center; }
+
+.toc-story-kicker {
+  display: block;
+  color: #f2d17d;
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.toc-story-row strong { display: block; color: #fff7df; font: 700 15px/1.25 Georgia, serif; }
+.toc-story-row em { color: #8aa396; font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; font-style: normal; text-align: right; }
+
+/* ---- Arcs --------------------------------------------------------------- */
+
+.toc-arc-divider {
+  margin: 20px 3px 10px;
+  display: grid;
+  grid-template-columns: minmax(28px, 1fr) auto minmax(28px, 1fr);
+  align-items: center;
+  gap: 10px;
+  color: var(--theme-warm);
+}
+
+.toc-arc-divider::before,
+.toc-arc-divider::after {
+  content: "";
+  height: 5px;
+  background: linear-gradient(to bottom, rgba(247, 200, 102, .38) 0 1px, transparent 1px 4px, rgba(247, 200, 102, .2) 4px 5px);
+}
+
+.toc-arc-divider::before { mask-image: linear-gradient(to left, #000, transparent); }
+.toc-arc-divider::after { mask-image: linear-gradient(to right, #000, transparent); }
+
+.toc-arc-divider span {
+  font: 400 22px/1.2 Georgia, "Times New Roman", serif;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--theme-warm) 30%, transparent));
+}
+
+/* Line boxes taller than the glyphs, and wrapping allowed: at 392px the old
+   one-line heading and its 1.0 line height clipped by a pixel or two. */
+.toc-arc-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin: 16px 0 10px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.toc-arc:first-of-type .toc-arc-heading { margin-top: 18px; }
+
+.toc-arc-heading span {
+  color: var(--theme-warm);
+  font: 850 13px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.toc-arc-heading strong {
+  color: #dce9e2;
+  font: 750 18px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.toc-arc-units { display: grid; gap: 6px; }
+
+/* ---- Unit rows: a strip of the unit's board, its title, and a mark ------ */
+
+.toc-unit-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 0 12px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(193, 220, 206, .13);
+  border-radius: 12px;
+  color: inherit;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--unit-mid) 22%, transparent), rgba(255, 255, 255, .015) 60%);
+  text-align: left;
+}
+
+.toc-unit-strip {
+  position: relative;
+  align-self: stretch;
+  background: var(--unit-thumb, var(--unit-gradient, #173e33)) center / cover no-repeat;
+  filter: saturate(.85) brightness(.82);
+}
+
+.toc-unit-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 40%, rgba(11, 24, 21, .9));
+}
+
+.toc-unit-row:not(.current):not(.finished) .toc-unit-strip { filter: saturate(.4) brightness(.55); }
+
+.toc-unit-strip b {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  z-index: 1;
+  color: #fff7df;
+  font: 850 15px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-shadow: 0 1px 3px #000, 0 0 8px #000;
+}
+
+.toc-unit-text { min-width: 0; padding: 8px 0; }
+
+/* The strip already shows the number; this spells it out for a screen reader
+   without repeating it on screen. */
+.toc-unit-number {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.toc-unit-text strong { display: block; color: #fff7df; font: 700 14.5px/1.25 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.toc-unit-row:not(.current):not(.finished) .toc-unit-text strong { color: #c9d6cf; }
+.toc-unit-text small { display: block; margin-top: 4px; color: #7f998c; font: 700 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.toc-unit-mark { color: #7f998c; font-size: 20px; }
+.toc-unit-mark.toc-unit-complete { color: #77e0a3; font: 800 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.toc-unit-row.current {
+  border-color: color-mix(in srgb, var(--unit-bright) 45%, transparent);
+  box-shadow: inset 3px 0 0 var(--unit-bright), 0 0 18px color-mix(in srgb, var(--unit-bright) 12%, transparent);
+}
+
+.toc-unit-row.current .toc-unit-text small { color: var(--unit-bright); font-weight: 800; }
+.toc-unit-row.current .toc-unit-mark:not(.toc-unit-complete) { color: var(--unit-bright); }
+
+.toc-unit-row:focus-visible,
+.toc-story-row:focus-visible {
+  outline: 2px solid var(--theme-bright);
+  outline-offset: 2px;
+}
+
+/* ---- A unit's page ------------------------------------------------------ */
+
+/* Sits over the hero and stays as the page scrolls. It turns solid, and names
+   the unit, once the hero's title has passed under it. */
+.toc-page-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  margin-bottom: -52px;
+  padding: 0 10px;
+  transition: background .2s, box-shadow .2s;
+}
+
+.toc-page-bar.solid {
+  background: #0b1815;
+  box-shadow: 0 1px 0 rgba(193, 220, 206, .12), 0 8px 18px rgba(0, 0, 0, .35);
+}
+
+.toc-back {
+  min-height: 36px;
+  padding: 0 12px 0 9px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  color: #fff7df;
+  background: rgba(7, 18, 16, .66);
+  backdrop-filter: blur(6px);
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+.toc-page-bar-title {
+  min-width: 0;
+  overflow: hidden;
+  color: #fff7df;
+  font: 700 14px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.toc-page-bar-title b { color: var(--unit-warm); }
+.toc-page-bar.solid .toc-page-bar-title { opacity: 1; }
+
+.toc-here {
+  grid-column: 3;
+  padding: 4px 7px;
+  border: 1px solid color-mix(in srgb, var(--unit-bright) 60%, transparent);
+  border-radius: 999px;
+  color: var(--unit-bright);
+  background: rgba(7, 20, 22, .72);
+  font: 800 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* About 140px on a 740px-tall phone, up to 176px on the tallest. */
+.toc-unit-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(112px, 19dvh, 176px);
+  padding: 56px 14px 12px;
+  background: var(--unit-hero, var(--unit-gradient, #173e33)) center / cover no-repeat;
+}
+
+.toc-unit-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 24, 21, .35) 0%, rgba(11, 24, 21, .15) 30%, rgba(11, 24, 21, .78) 72%, #0b1815 100%);
+}
+
+.toc-unit-hero > * { position: relative; }
+
+.toc-hero-kicker {
+  color: var(--unit-warm);
+  font: 850 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px #000;
+}
+
+.toc-unit-hero h3 {
+  margin: 3px 0 0;
+  color: #fff7df;
+  font: 700 20px/1.2 Georgia, serif;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .8);
+  outline: none;
+}
+
+.toc-page-body { padding: 0 12px; }
+
+.toc-guide {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 10px;
+}
+
+.toc-guide img {
+  width: 40px;
+  height: 40px;
+  border: 2px solid color-mix(in srgb, var(--unit-bright) 70%, #000);
+  border-radius: 50%;
+  background: #0b1815;
+  object-fit: cover;
+}
+
+.toc-guide p { grid-column: 2; margin: 0; color: #c7d6ce; font: italic 400 13px/1.4 Georgia, serif; }
+
+.toc-guide b {
+  display: block;
+  color: #8aa396;
+  font: 800 10.5px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-style: normal;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.toc-unit-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 2px 10px;
+  color: var(--unit-bright);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.toc-bar { flex: 1; height: 4px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, .08); }
+.toc-bar i { display: block; height: 100%; background: var(--unit-bright); }
+
+.toc-unit-open {
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 10px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--unit-bright) 45%, transparent);
+  border-radius: 10px;
+  color: #fff7df;
+  background: linear-gradient(#2c443a, #18251f);
+  box-shadow: 0 2px 0 #07100e;
+  font: 800 13px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* A warning, never a lock: the open button beside it stays enabled. */
+.toc-unit-warning {
+  margin: 0 0 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(240, 215, 154, .28);
+  border-radius: 9px;
+  background: rgba(120, 82, 194, .12);
+}
+
+.toc-unit-warning p { margin: 0; color: #d9d2c0; font-size: 12.5px; line-height: 1.4; }
+.toc-unit-warning p + p { margin-top: 4px; }
+.toc-unit-warning-head { color: #f0d79a !important; font-weight: 800; }
+
+.toc-unit-warning button {
+  margin-top: 8px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(240, 215, 154, .32);
+  border-radius: 8px;
+  color: #f0d79a;
+  background: rgba(120, 82, 194, .18);
+  font: 750 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.toc-unit-recommended {
+  margin: 0 2px 10px;
+  color: #91aa9d;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.toc-lessons-box {
+  padding: 0 8px;
+  border: 1px solid rgba(193, 220, 206, .13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .02);
+}
+
+.toc-lesson + .toc-lesson { border-top: 1px solid rgba(193, 220, 206, .1); }
+
+.toc-lesson summary {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) repeat(2, auto);
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 6px 2px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.toc-lesson summary::-webkit-details-marker { display: none; }
+
+/* :first-child so the rule keeps addressing the lesson number and leaves the
+   track badge, also a span, alone. */
+.toc-lesson summary > span:first-child {
+  color: var(--theme-warm);
+  font: 800 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: center;
+}
+
+.toc-lesson summary strong { color: #f1ead6; font: 650 14px/1.3 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+.toc-lesson summary small {
+  min-width: 22px;
+  color: #7f998c;
+  font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.toc-lesson summary small::after { content: " ▾"; font-size: 10px; }
+.toc-lesson[open] summary small::after { content: " ▴"; }
+
+/* The count reads "5" on a phone; the word is for a screen reader. */
+.toc-count-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.toc-activities { display: grid; gap: 4px; padding: 0 0 10px; }
+
+.toc-activity {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #e4ede7;
+  background: rgba(4, 13, 12, .55);
+  text-align: left;
+}
+
+.toc-activity.current {
+  border-color: color-mix(in srgb, var(--theme-bright) 58%, transparent);
+  background: color-mix(in srgb, var(--theme-mid) 40%, rgba(4, 13, 12, .8));
+  box-shadow: inset 3px 0 0 var(--theme-bright), 0 0 18px color-mix(in srgb, var(--theme-bright) 18%, transparent);
+}
+
+.toc-number { color: #7f998c; font: 700 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
+.toc-activity.current .toc-number { color: var(--theme-bright); }
+
+.toc-activity-title {
+  font-size: 14px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.toc-unit-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
+
+.toc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 4px 12px 4px 8px;
+  border: 1px solid rgba(193, 220, 206, .2);
+  border-radius: 999px;
+  color: #dce9e2;
+  background: rgba(255, 255, 255, .04);
+  font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.toc-chip span { width: 18px; color: var(--theme-warm); text-align: center; }
+
+.toc-unit-unavailable { margin: 6px 2px; color: #a9bdb2; font-size: 13px; line-height: 1.4; }
+
+/* The portability note: every unit's page carries it. */
+.toc-unit-editor {
+  margin-top: 12px;
+  padding: 8px 10px;
+  border-left: 2px solid var(--theme-warm);
+  border-radius: 0 8px 8px 0;
+  background: rgba(255, 255, 255, .03);
+}
+
+.toc-unit-editor p { margin: 0; color: #b9c9c0; font-size: 12.5px; line-height: 1.4; }
+
+.toc-unit-editor-label {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--theme-warm);
+  font: 750 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.toc-unit-editor button {
+  margin-top: 6px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  color: #f0d79a;
+  background: none;
+  font: 750 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toc-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+
+.toc-pager button {
+  min-height: 54px;
+  padding: 6px 10px;
+  border: 1px solid rgba(193, 220, 206, .13);
+  border-radius: 10px;
+  color: inherit;
+  background: rgba(255, 255, 255, .02);
+  text-align: left;
+}
+
+.toc-pager .toc-pager-next { grid-column: 2; text-align: right; }
+
+.toc-pager small {
+  display: block;
+  color: #8aa396;
+  font: 800 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.toc-pager span { display: block; margin-top: 3px; color: #dce9e2; font: 650 12.5px/1.25 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+.toc-escape-hint {
+  display: none;
+  margin: 14px 4px 0;
+  color: #7f998c;
+  font: 700 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: center;
+}
+
+.toc-escape-hint kbd { padding: 1px 5px; border: 1px solid rgba(193, 220, 206, .2); border-radius: 4px; font: inherit; }
+
+/* Escape means nothing on a touch screen, so the hint is for a real keyboard. */
+@media (hover: hover) and (pointer: fine) {
+  .toc-escape-hint { display: block; }
+}
+
+/* ---- Practice: the mastery map ------------------------------------------ */
+
+#tocPractice h3 {
+  margin: 0 2px 8px;
+  color: #cbb8ff;
+  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+#tocPractice .mastery-caveat { margin: 0 2px 10px; color: #8fa89b; font-size: 12px; line-height: 1.4; }
+
+.mastery-sessions { margin-bottom: 18px; }
+
+.mastery-session-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 8px;
+}
+
+.mastery-session-actions button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(193, 220, 206, .2);
+  border-radius: 12px;
+  color: #e4ede7;
+  background: rgba(255, 255, 255, .03);
+  text-align: left;
+}
+
+.mastery-session-actions .mastery-session-primary {
+  border-color: rgba(168, 140, 255, .4);
+  background: linear-gradient(160deg, rgba(168, 140, 255, .18), rgba(168, 140, 255, .04));
+}
+
+.mastery-session-actions button strong { color: #fff7df; font-size: 15px; font-weight: 750; }
+.mastery-session-actions button small { color: #a9bdb2; font-size: 12px; line-height: 1.35; }
+.mastery-session-actions button[disabled] { opacity: .55; cursor: default; }
+
+.mastery-topics-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mastery-topics-head h3 { margin-bottom: 0 !important; }
+
+.mastery-arrange {
+  display: flex;
+  padding: 2px;
+  border: 1px solid rgba(193, 220, 206, .12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, .25);
+}
+
+.mastery-arrange button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 6px;
+  color: #99b4a6;
+  background: none;
+  font: 750 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+.mastery-arrange button[aria-pressed="true"] { color: #fff7df; background: rgba(255, 255, 255, .09); }
+
+.mastery-arc {
+  margin: 16px 2px 6px;
+  color: #dce9e2;
+  font: 750 13px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.mastery-arc:first-child { margin-top: 4px; }
+.mastery-arc span { color: var(--theme-warm); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+
+.mastery-unit,
+.mastery-group {
+  margin-bottom: 6px;
+  border: 1px solid rgba(193, 220, 206, .13);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .02);
+}
+
+.mastery-unit > summary,
+.mastery-group > summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  min-height: 48px;
+  padding: 7px 10px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.mastery-unit > summary::-webkit-details-marker,
+.mastery-group > summary::-webkit-details-marker { display: none; }
+
+.mastery-unit > summary > span:first-child { color: var(--theme-warm); font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.mastery-unit > summary strong { color: #f1ead6; font-size: 13.5px; font-weight: 650; line-height: 1.3; }
+.mastery-unit > summary small,
+.mastery-group > summary small { color: #8aa396; font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
+.mastery-unit > summary small b { color: #ff9d94; }
+
+.mastery-meter {
+  grid-column: 1 / -1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, .06);
+}
+
+.mastery-meter i { display: block; height: 100%; background: linear-gradient(90deg, #78dbea, #77e0a3); }
+
+.mastery-group > summary { grid-template-columns: minmax(0, 1fr) auto; }
+.mastery-group > summary strong { color: #fff7df; font-size: 14px; font-weight: 750; }
+.mastery-group-due { border-color: rgba(255, 116, 104, .32); background: rgba(255, 116, 104, .05); }
+.mastery-group-due .mastery-chip.maintenance { display: none; }
+.mastery-group-note { margin: -4px 10px 8px; color: #8aa396; font-size: 12px; line-height: 1.35; }
+
+.mastery-unit-concepts { display: grid; gap: 4px; padding: 0 6px 6px; }
+
+.mastery-concept {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(4, 13, 12, .55);
+}
+
+.mastery-concept.is-due { box-shadow: inset 2px 0 0 #ff9d94; }
+.mastery-concept-head { display: grid; gap: 5px; min-width: 0; }
+
+.mastery-concept-unit {
+  color: #8aa396;
+  font: 750 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.mastery-concept-head strong { color: #e4ede7; font-size: 13.5px; font-weight: 550; line-height: 1.3; overflow-wrap: anywhere; }
+.mastery-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* The achieved state and the refresh marker are separate chips on purpose.
+   A state never moves down; the marker says only that it has been a while. */
+.mastery-chip {
+  padding: 3px 6px;
+  border: 1px solid rgba(193, 220, 206, .22);
+  border-radius: 999px;
+  color: #a9bdb2;
+  font: 750 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mastery-chip.state-learning { border-color: rgba(255, 208, 108, .4); color: #ffd06c; }
+.mastery-chip.state-practiced { border-color: rgba(120, 219, 234, .4); color: #78dbea; }
+.mastery-chip.state-integrated { border-color: rgba(119, 224, 163, .45); color: #77e0a3; }
+.mastery-chip.maintenance { border-color: rgba(255, 116, 104, .45); color: #ff9d94; }
+
+.mastery-concept-actions { display: flex; flex-direction: column; gap: 4px; }
+
+.mastery-concept-actions button {
+  min-width: 64px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(168, 140, 255, .4);
+  border-radius: 8px;
+  color: #e3d9ff;
+  background: rgba(168, 140, 255, .12);
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.mastery-concept-actions .mastery-pin { border-color: rgba(193, 220, 206, .16); color: #8aa396; background: transparent; }
+.mastery-concept-actions .mastery-pin.pinned { border-color: rgba(255, 208, 108, .45); color: #ffd06c; }
+
+/* Testing out is an invitation to try something unmet, so it reads warm rather
+   than as the same violet as a drill of something already practised. */
+.mastery-concept-actions .mastery-test-out {
+  border-color: rgba(240, 215, 154, .3);
+  background: rgba(120, 82, 194, .18);
+  color: #f0d79a;
+}
+
+/* Free practice: one row, because it is one button's worth of choice. */
+.mastery-scratchpad {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 6px 8px 6px 6px;
+  border: 1px dashed rgba(255, 200, 102, .3);
+  border-radius: 12px;
+  background: rgba(255, 200, 102, .03);
+}
+
+.mastery-scratchpad button {
+  border: 0;
+  color: inherit;
+  background: none;
+  text-align: left;
+}
+
+.mastery-scratchpad-open {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 4px;
+}
+
+.mastery-scratchpad-open > span:first-child { color: #ffc866; font-size: 20px; text-align: center; }
+.mastery-scratchpad-open strong { display: block; color: #ffe0a3; font: 750 14px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.mastery-scratchpad-open small { display: block; margin-top: 3px; color: #a9bdb2; font-size: 12px; line-height: 1.35; }
+
+.mastery-scratchpad .mastery-scratchpad-browse {
+  min-height: 38px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 200, 102, .3);
+  border-radius: 8px;
+  color: #ffe0a3;
+  font: 750 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+/* ---- Reference: every deck, one level deep ------------------------------ */
+
+.toc-deck {
+  margin-bottom: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(193, 220, 206, .13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .02);
+}
+
+.toc-deck-head { display: grid; gap: 4px; padding: 12px 12px 10px; }
+
+button.toc-deck-head {
+  grid-template-columns: minmax(0, 1fr) auto;
+  width: 100%;
+  border: 0;
+  color: inherit;
+  background: none;
+  text-align: left;
+}
+
+button.toc-deck-head > :not(i) { grid-column: 1; }
+button.toc-deck-head i { grid-column: 2; grid-row: 1 / 4; align-self: center; color: #7f998c; font-size: 20px; font-style: normal; }
+
+.toc-deck-kicker {
+  color: #8fd7b6;
+  font: 800 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.toc-deck-head strong { color: #fff7df; font: 700 16px/1.25 Georgia, serif; }
+.toc-deck-head small { color: #a9bdb2; font-size: 12.5px; line-height: 1.35; }
+
+.toc-deck-cards { display: grid; gap: 3px; margin: 0; padding: 0 6px 6px; list-style: none; }
+
+.toc-deck-cards button {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 10px 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  color: #e4ede7;
+  background: rgba(4, 13, 12, .55);
+  font-size: 14px;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.toc-deck-cards button span { color: #7f998c; font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
+.toc-deck-cards button i { color: #7f998c; font-style: normal; }
+
+.toc-reference-units { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 0 6px 6px; }
+
+.toc-reference-units button {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 4px 8px 4px 6px;
+  border: 0;
+  border-radius: 8px;
+  color: #e4ede7;
+  background: rgba(4, 13, 12, .55);
+  text-align: left;
+}
+
+.toc-reference-units b { color: var(--theme-warm); font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
+
+.toc-reference-units span {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* ---- Wider sheets ------------------------------------------------------- */
+
+@media (min-width: 600px) {
+  .toc-arc-units { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .toc-unit-list { padding-inline: 20px; }
+  .toc-page-body { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  /* The hero's words line up with the 720px column below them; the board
+     itself still runs the full width of the sheet. */
+  .toc-unit-hero { padding-inline: max(20px, calc((100% - 720px) / 2 + 20px)); }
+  .toc-reference-units { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Short landscape: the hero gives up most of its height to the lessons. */
+@media (orientation: landscape) and (max-height: 560px) {
+  .toc-unit-hero { min-height: 96px; }
+}

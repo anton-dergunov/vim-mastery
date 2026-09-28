@@ -249,40 +249,38 @@
       </div>
     </section>
 
-    <dialog class="app-dialog" id="tocDialog" aria-labelledby="tocTitle">
+    <dialog class="app-dialog course-map" id="tocDialog" aria-labelledby="tocTitle">
       <div class="dialog-head">
         <div>
           <span class="dialog-kicker">Course map</span>
-          <h2 id="tocTitle">Table of contents</h2>
+          <h2 id="tocTitle">Contents</h2>
         </div>
+        <span class="toc-head-progress" id="tocProgress"></span>
         <!-- A modal dialog renders in the top layer, above the board's flag
              button and above the top bar, so this is the only way to report
-             what is on this sheet. Excluded from its own screenshot. It sits
-             ahead of the close button, which is why that button now names
-             itself the sheet's focus target rather than inheriting it by being
-             first. -->
+             what is on this sheet. Excluded from its own screenshot. It names
+             the Practice tab "mastery" while that tab is showing, so reports
+             keep the origin they had when the map was its own dialog. -->
         <button class="icon-button dialog-report" type="button" data-feedback-open="contents"
-                data-feedback-exclude aria-label="Report a problem with the table of contents" title="Report a problem">
+                data-feedback-exclude aria-label="Report a problem with the course map" title="Report a problem">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h9l.5 2H20v9h-7l-.5-2H6v8Z"/></svg>
         </button>
         <button class="dialog-close" type="button" autofocus data-close-dialog="tocDialog" aria-label="Close table of contents">×</button>
       </div>
-      <div class="dialog-body toc-lessons" id="tocLessons"></div>
-    </dialog>
-
-    <dialog class="app-dialog" id="masteryDialog" aria-labelledby="masteryTitle">
-      <div class="dialog-head">
-        <div>
-          <span class="dialog-kicker">Long-term practice</span>
-          <h2 id="masteryTitle">Mastery</h2>
-        </div>
-        <button class="icon-button dialog-report" type="button" data-feedback-open="mastery"
-                data-feedback-exclude aria-label="Report a problem with mastery" title="Report a problem">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h9l.5 2H20v9h-7l-.5-2H6v8Z"/></svg>
-        </button>
-        <button class="dialog-close" type="button" autofocus data-close-dialog="masteryDialog" aria-label="Close mastery">×</button>
+      <div class="toc-tabs" role="tablist" aria-label="Course map">
+        <button type="button" role="tab" id="tocTabCourse" aria-controls="tocCourse" aria-selected="true" data-toc-tab="course">Course</button>
+        <button type="button" role="tab" id="tocTabPractice" aria-controls="tocPractice" aria-selected="false" tabindex="-1" data-toc-tab="practice">Practice</button>
+        <button type="button" role="tab" id="tocTabReference" aria-controls="tocReference" aria-selected="false" tabindex="-1" data-toc-tab="reference">Reference</button>
       </div>
-      <div class="dialog-body" id="masteryBody"></div>
+      <!-- Course holds two views, each its own scroll container: the list of
+           units and one unit's page. The dialog opens on the current unit's
+           page; "All units" slides back to the list. -->
+      <div class="toc-panel toc-course" id="tocCourse" role="tabpanel" aria-labelledby="tocTabCourse">
+        <div class="toc-view toc-unit-list" id="tocUnitList"></div>
+        <div class="toc-view toc-unit-page" id="tocUnitPage"></div>
+      </div>
+      <div class="toc-panel dialog-body" id="tocPractice" role="tabpanel" aria-labelledby="tocTabPractice" hidden></div>
+      <div class="toc-panel dialog-body" id="tocReference" role="tabpanel" aria-labelledby="tocTabReference" hidden></div>
     </dialog>
 
     <dialog class="app-dialog" id="practiceFilesDialog" aria-labelledby="practiceFilesTitle">

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { remoteVariantPaths } from "./presentation-data.js";
+import { remoteVariantPaths, sceneThumbnailPath } from "./presentation-data.js";
 
 const runtimeAssetPattern = /^assets\/[a-z0-9][a-z0-9./-]*\.(?:png|webp|svg)$/;
 const sourcePathSegments = new Set(["candidates", "masters", "review", "reviews", "sources"]);
@@ -41,6 +41,7 @@ export function collectMediaPolicy(presentation, characterManifest) {
     for (const profile of Object.values(scene?.profiles || {})) {
       addAsset(core, profile.base, "world-base");
     }
+    addAsset(core, sceneThumbnailPath(scene), "scene-thumb");
 
     const variants = scene?.remoteVariants;
     if (variants) {

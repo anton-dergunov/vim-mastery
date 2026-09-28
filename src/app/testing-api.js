@@ -50,7 +50,7 @@ import { feedback } from "./feedback.js";
 
 window.VimWilds = Object.freeze({
   openMastery,
-  closeMastery: () => elements.masteryDialog?.close(),
+  closeMastery: () => elements.tocDialog?.close(),
   startMasteryDrill: startFocusedDrill,
   startMixedReview,
   startToolChoice,

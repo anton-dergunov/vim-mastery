@@ -390,8 +390,11 @@ test("intercepts the final unit boundary, restores on refresh, and archives the 
   await dialog.getByRole("button", { name: "Continue to next unit" }).click();
   await page.waitForFunction(() => window.VimWilds?.getState().unitId === "cursor-movement");
 
+  // A finished unit's page carries its chapter replay.
   await page.getByRole("button", { name: "Open table of contents" }).click();
-  await page.getByRole("button", { name: "Unit 1: The modal model" }).click();
+  await page.locator("#tocDialog [data-toc-back]").click();
+  await page.locator('#tocUnitList [data-toc-unit="modal-model"]').click();
+  await page.locator("#tocUnitPage").getByRole("button", { name: "Replay chapter" }).click();
   await expect(dialog).toBeVisible();
   await expect(dialog.locator(".story-kicker")).toHaveText("Restoration replay");
   await dialog.getByRole("button", { name: "Close", exact: true }).click();
@@ -456,7 +459,7 @@ test("closes Unit 17 on the first mixed review, then keeps Mastery reusable", as
 
   const dialog = page.locator("#storyDialog");
   await page.getByRole("button", { name: "Open Mastery" }).click();
-  await expect(page.locator("#masteryDialog")).toBeVisible();
+  await expect(page.locator("#tocPractice")).toBeVisible();
   expect(await page.evaluate(() => window.VimWilds.masteryState())).toMatchObject({
     chapterUnitId: "mastery-loops",
     chapterComplete: false,
@@ -510,13 +513,15 @@ test("closes Unit 17 on the first mixed review, then keeps Mastery reusable", as
   await expect(dialog.locator(".story-visual")).toHaveClass(/story-panorama-reverse/);
 
   await dialog.getByRole("button", { name: "View the restored Wilds" }).click();
-  await expect(page.getByRole("dialog", { name: "Table of contents" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Contents" })).toBeVisible();
   expect(await page.evaluate(() => window.VimWilds.getState().story)).toMatchObject({
     endingSeen: true,
     completedUnitStoryIds: ["mastery-loops"],
   });
   expect(await page.evaluate(() => window.VimWilds.masteryState())).toMatchObject({ chapterComplete: true });
-  await page.getByRole("button", { name: "Replay finale" }).click();
+  // The epilogue closes the unit list, and replays once the finale was seen.
+  await page.locator("#tocDialog [data-toc-back]").click();
+  await page.locator("#tocUnitList [data-story-replay-ending]").click();
   await expect(surface).toHaveAttribute("data-kind", "ending");
   await expect(dialog.locator(".story-kicker")).toHaveText("Finale replay");
   await dialog.getByRole("button", { name: "Close", exact: true }).click();

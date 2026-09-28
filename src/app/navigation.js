@@ -56,10 +56,14 @@ export function goToActivity(index, { preserveRemediation = false } = {}) {
   persistSession();
 }
 
-export function navigateToUnit(unitId) {
+// Opening another unit is a page load: only the current unit's editor state
+// and board are live. The course map passes an activity to land on one; without
+// it the unit starts at its first activity.
+export function navigateToUnit(unitId, activityId = null) {
   const nextUrl = new URL(window.location.href);
   nextUrl.searchParams.set("unit", unitId);
-  nextUrl.searchParams.delete("activity");
+  if (activityId) nextUrl.searchParams.set("activity", activityId);
+  else nextUrl.searchParams.delete("activity");
   window.location.assign(nextUrl);
 }
 

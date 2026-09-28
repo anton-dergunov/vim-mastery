@@ -7,7 +7,8 @@
  *   editor.css    the code slab, cursor, selection, Vim effects, Ex output, position rail
  *   lesson.css    cards, theory, field notes, demos, choices, hints, command tray, completion
  *   keyboard.css  the on-screen keyboard
- *   dialogs.css   contents, settings, reference, mastery, free practice files, feedback
+ *   dialogs.css   the sheet frame, settings, reference decks, free practice files, feedback
+ *   course-map.css the contents sheet: tabs, unit list and pages, the mastery map, reference list
  *   story.css     intro, unit endings, finale
  *
  * In development the browser's inspector names the file beside every rule.
@@ -20,4 +21,5 @@
 @import "./lesson.css";
 @import "./keyboard.css";
 @import "./dialogs.css";
+@import "./course-map.css";
 @import "./story.css";

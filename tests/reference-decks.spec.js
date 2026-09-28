@@ -18,6 +18,14 @@ const seedOrientationSeen = page => page.addInitScript(key => {
   window.localStorage.setItem(key, JSON.stringify({ orientationSeen: true }));
 }, referenceKey);
 
+// The decks, the field notes and every unit's command table are listed on the
+// course map's Reference tab.
+async function openReferenceTab(page) {
+  await page.locator("#tocButton").click();
+  await page.getByRole("tab", { name: "Reference" }).click();
+  await expect(page.locator("#tocReference [data-reference-unit]").first()).toBeVisible();
+}
+
 async function expectNoHorizontalOverflow(page) {
   const overflow = await page.evaluate(() => (
     document.documentElement.scrollWidth - document.documentElement.clientWidth
@@ -177,17 +185,25 @@ test("every deck is reachable from the table of contents without touching progre
     { id: "host-reality", cards: 1 },
     { id: "orientation-only", cards: 1 },
   ];
-  // Scoped to the Reference section: every unit summary also carries a link to
-  // the host-reality deck, and those are not deck listings.
-  await expect(page.locator("#tocLessons .toc-reference-actions [data-reference-deck]")).toHaveCount(decks.length);
+  // Scoped to the Reference tab: every unit page also carries a link to the
+  // host-reality deck, and those are not deck listings. Each deck lists every
+  // one of its cards, so nothing sits behind a collapse.
+  await openReferenceTab(page);
+  await expect(page.locator("#tocReference [data-deck-section]:not([data-deck-section='field-notes']):not([data-deck-section='units'])")).toHaveCount(decks.length);
+  for (const deck of decks) {
+    await expect(page.locator(`#tocReference [data-reference-deck="${deck.id}"]`)).toHaveCount(deck.cards);
+  }
+  await page.locator("#tocDialog .dialog-close").click();
 
   const before = await page.evaluate(() => window.VimWilds.getState().activityId);
   for (const deck of decks) {
-    await page.evaluate(() => document.querySelector("#tocDialog").showModal());
-    await page.locator(`#tocLessons .toc-reference-actions [data-reference-deck="${deck.id}"]`).click();
+    await openReferenceTab(page);
+    // The last card, so a deck opening part-way through is covered too.
+    await page.locator(`#tocReference [data-reference-deck="${deck.id}"][data-reference-card="${deck.cards - 1}"]`).click();
     await expect(page.locator("#referenceDialog")).toBeVisible();
     expect((await referenceState(page)).deckId).toBe(deck.id);
     expect((await referenceState(page)).cardCount).toBe(deck.cards);
+    expect((await referenceState(page)).cardIndex).toBe(deck.cards - 1);
     await expectNoHorizontalOverflow(page);
     await page.locator('#referenceDialog [data-reference-action="close"]').first().click();
     await expect(page.locator("#referenceDialog")).toBeHidden();
@@ -408,11 +424,11 @@ test("per-unit reference entries render and open their examples", async ({ page 
   await page.goto("/play/");
   await waitForApp(page);
 
-  await page.evaluate(() => document.querySelector("#tocDialog").showModal());
-  await expect(page.locator("#tocLessons [data-reference-unit]")).toHaveCount(17);
+  await openReferenceTab(page);
+  await expect(page.locator("#tocReference [data-reference-unit]")).toHaveCount(17);
 
   // The loaded unit is in memory; a later unit has to be fetched.
-  await page.locator('#tocLessons [data-reference-unit="modal-model"]').click();
+  await page.locator('#tocReference [data-reference-unit="modal-model"]').click();
   await expect(page.locator("#referenceKicker")).toHaveText("Unit 1");
   await expect(page.locator("#referenceTitle")).toHaveText("The modal model");
   await expect(page.locator("#referenceCardBody .reference-row")).toHaveCount(7);
@@ -423,8 +439,8 @@ test("per-unit reference entries render and open their examples", async ({ page 
   await expect(page.locator("#referenceDialog")).toBeHidden();
   expect(await page.evaluate(() => window.VimWilds.getState().activityId)).toBe("escape-seeded-insert");
 
-  await page.evaluate(() => document.querySelector("#tocDialog").showModal());
-  await page.locator('#tocLessons [data-reference-unit="macros"]').click();
+  await openReferenceTab(page);
+  await page.locator('#tocReference [data-reference-unit="macros"]').click();
   await expect(page.locator("#referenceTitle")).toHaveText("Macros");
   await expect(page.locator("#referenceCardBody .reference-row")).toHaveCount(9);
   // A cross-unit example is a link, because reaching it reloads the app.

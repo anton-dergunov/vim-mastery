@@ -253,6 +253,18 @@ export function resolveReferencePresentation(manifest) {
   };
 }
 
+// The course map lists every unit at once, and seventeen full boards decoded
+// for 64px strips would cost a phone hundreds of megabytes. Each unit's scene
+// therefore ships a small thumbnail beside its profile folders, downscaled from
+// the compact base by scripts/world-art/build_scene_thumbnails.py. The path is
+// a convention rather than a field, so the manifest schema does not change.
+export function sceneThumbnailPath(scene) {
+  const compact = scene?.profiles?.compact?.base;
+  return typeof compact === "string" && compact.endsWith("/compact/base.webp")
+    ? compact.replace(/\/compact\/base\.webp$/, "/thumb.webp")
+    : null;
+}
+
 export function resolveUnitPresentation(manifest, unitId) {
   const unit = manifest?.units?.[unitId];
   const world = unit && manifest?.worlds?.[unit.worldId];

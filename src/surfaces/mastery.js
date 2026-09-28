@@ -1,5 +1,5 @@
 /* Mastery: the record of completed work, the drills and reviews built from it,
- * field notes, and the mastery map.
+ * field notes, and the mastery map the course map's Practice tab shows.
  */
 
 import { appUrl } from "../app/version.js";
@@ -18,11 +18,12 @@ import {
   writeMasteryState,
 } from "../progress/mastery.js";
 import { escapeHtml, renderInline } from "../app/html.js";
-import { elements, state, unit, unitData, units } from "../app/context.js";
+import { curriculumArcs, elements, persistSession, state, unit, unitData, units } from "../app/context.js";
 import { currentActivity, isFreePractice, isMasterySession } from "../app/activity.js";
 import { resetActivity } from "../app/navigation.js";
 import { clearPlayback } from "../lesson/demo.js";
 import { storyTransitions } from "../dialogs/story.js";
+import { courseMapTab, openTableOfContents } from "../dialogs/contents.js";
 
 // Mastery owns the only record of what a learner has finished. It is kept out
 // of the session key because the two mean opposite things: the session key is a
@@ -62,9 +63,9 @@ export function fieldNoteCatalog() {
 
 function persistMasteryState() {
   writeMasteryState(window.localStorage, masteryState);
-  // The contents dialog shows no mastery state, so completing an exercise has
-  // nothing to redraw there. Only the map itself, and only while it is open.
-  if (elements.masteryDialog?.open) void renderMasteryDialog();
+  // The course list shows no mastery state, so completing an exercise has
+  // nothing to redraw there. Only the Practice tab, and only while it shows.
+  if (courseMapTab() === "practice") void renderMasteryMap();
 }
 
 /**
@@ -176,7 +177,6 @@ async function startMasterySession(kind, plan, { title = null } = {}) {
   const queue = plan.kind === "field-note" ? plan.steps : await resolveMasteryQueue(plan);
   if (!queue.length) return null;
   clearPlayback();
-  elements.masteryDialog?.close();
   elements.tocDialog?.close();
   state.freePractice = null;
   state.practicePolicyOverride = null;
@@ -275,20 +275,34 @@ export async function startFieldNote(noteId) {
 async function toggleMasteryPin(conceptId) {
   masteryState = togglePinnedConcept(masteryState, conceptId);
   persistMasteryState();
-  await renderMasteryDialog();
 }
 
 function conceptStateLabel(conceptState_) {
   return { unseen: "Unseen", learning: "Learning", practiced: "Practiced", integrated: "Integrated" }[conceptState_];
 }
 
-async function renderMasteryDialog() {
+const arcHeading = arc => `<h4 class="mastery-arc"><span>Arc ${arc.arcNumber}</span> ${renderInline(arc.title)}</h4>`;
+
+/**
+ * The mastery map, drawn into the course map's Practice tab.
+ *
+ * Topics come in two arrangements the learner switches between: by what to do
+ * next (due, learning, kept, not started), or under the course's own arcs and
+ * units. Either way every row carries the same state, due marker, drill or
+ * test out, and pin. Redrawing keeps open groups open and the scroll where it
+ * was, because a pin or a finished drill redraws the tab under the learner.
+ */
+export async function renderMasteryMap() {
+  const target = elements.tocPractice;
+  if (!target) return;
+  if (!target.childElementCount) target.innerHTML = '<p class="practice-loading">Loading…</p>';
   const index = await masteryConceptIndex();
-  const notes = await fieldNoteCatalog();
   const now = Math.floor(Date.now() / 1000);
   const completions = masteryState.completions;
   const eligible = eligibleConcepts(index, completions);
   const pool = reviewPool(index);
+  const arrangement = state.masteryArrangement;
+  const unitNumbers = new Map(units.map(candidate => [candidate.id, candidate.unitNumber]));
 
   const conceptRow = concept => {
     const conceptStateName = conceptState(concept, completions);
@@ -302,11 +316,14 @@ async function renderMasteryDialog() {
     const drillHint = replayable
       ? "Replay this topic with the prompt withheld"
       : "Try this topic now, before the lesson";
-    return `<div class="mastery-concept">
+    return `<div class="mastery-concept${due ? " is-due" : ""}">
       <div class="mastery-concept-head">
+        ${arrangement === "next" ? `<span class="mastery-concept-unit">Unit ${unitNumbers.get(concept.unitId) ?? ""}</span>` : ""}
         <strong>${renderInline(concept.concept)}</strong>
-        <span class="mastery-chip state-${conceptStateName}">${conceptStateLabel(conceptStateName)}</span>
-        ${due ? '<span class="mastery-chip maintenance">Due for a refresh</span>' : ""}
+        <span class="mastery-chips">
+          <span class="mastery-chip state-${conceptStateName}">${conceptStateLabel(conceptStateName)}</span>
+          ${due ? '<span class="mastery-chip maintenance">Due for a refresh</span>' : ""}
+        </span>
       </div>
       <div class="mastery-concept-actions">
         <button type="button" data-mastery-drill="${escapeHtml(concept.id)}"${replayable ? "" : ' class="mastery-test-out"'} title="${escapeHtml(drillHint)}">${drillLabel}</button>
@@ -315,41 +332,65 @@ async function renderMasteryDialog() {
     </div>`;
   };
 
-  const unitSections = units.map(candidate => {
-    const summary = summarizeUnit(index, candidate.id, completions, now);
-    if (!summary.total) return "";
-    const applied = summary.counts.practiced + summary.counts.integrated;
-    const concepts = index.concepts.filter(concept => concept.unitId === candidate.id);
-    return `<details class="mastery-unit">
-      <summary>
-        <span>Unit ${candidate.unitNumber}</span>
-        <strong>${renderInline(candidate.title)}</strong>
-        <small>${applied} of ${summary.total} practised${summary.maintenanceDue ? ` · ${summary.maintenanceDue} due` : ""}</small>
-      </summary>
-      <div class="mastery-unit-concepts">${concepts.map(conceptRow).join("")}</div>
-    </details>`;
+  const byUnit = () => curriculumArcs.map(arc => {
+    const sections = units.filter(candidate => arc.unitNumbers.includes(candidate.unitNumber)).map(candidate => {
+      const summary = summarizeUnit(index, candidate.id, completions, now);
+      if (!summary.total) return "";
+      const applied = summary.counts.practiced + summary.counts.integrated;
+      const concepts = index.concepts.filter(concept => concept.unitId === candidate.id);
+      return `<details class="mastery-unit${summary.maintenanceDue ? " has-due" : ""}" data-mastery-group="unit-${escapeHtml(candidate.id)}">
+        <summary>
+          <span>Unit ${candidate.unitNumber}</span>
+          <strong>${renderInline(candidate.title)}</strong>
+          <small>${applied} of ${summary.total} practised${summary.maintenanceDue ? ` · <b>${summary.maintenanceDue} due</b>` : ""}</small>
+          <span class="mastery-meter" aria-hidden="true"><i style="width:${Math.round(applied / summary.total * 100)}%"></i></span>
+        </summary>
+        <div class="mastery-unit-concepts">${concepts.map(conceptRow).join("")}</div>
+      </details>`;
+    }).join("");
+    return sections ? `${arcHeading(arc)}${sections}` : "";
   }).join("");
+
+  const byNextStep = () => {
+    const rows = index.concepts.map(concept => ({
+      concept,
+      stateName: conceptState(concept, completions),
+      due: isMaintenanceDue(concept, completions, now),
+    }));
+    const groups = [
+      { id: "due", title: "Due for a refresh", note: "Integrated a while ago. A short drill keeps them.", items: rows.filter(row => row.due), open: true },
+      { id: "learning", title: "Learning", note: "Met in a lesson, not yet applied on your own.", items: rows.filter(row => !row.due && row.stateName === "learning"), open: true },
+      { id: "kept", title: "Practiced and integrated", note: "Replay any of these whenever you like.", items: rows.filter(row => !row.due && ["practiced", "integrated"].includes(row.stateName)), open: false },
+      { id: "unseen", title: "Not started yet", note: "Test out of a topic before its lesson. Passing counts.", items: rows.filter(row => row.stateName === "unseen"), open: false },
+    ].filter(group => group.items.length);
+    return groups.map(group => `<details class="mastery-group mastery-group-${group.id}" data-mastery-group="${group.id}"${group.open ? " open" : ""}>
+      <summary><strong>${group.title}</strong><small>${group.items.length}</small></summary>
+      <p class="mastery-group-note">${group.note}</p>
+      <div class="mastery-unit-concepts">${group.items.map(row => conceptRow(row.concept)).join("")}</div>
+    </details>`).join("");
+  };
 
   const pinnedCount = eligible.filter(concept => masteryState.pinned.includes(concept.id)).length;
   const mixedReady = pool.length >= 2;
-  const noteButtons = notes.map(note => `<button type="button" data-mastery-note="${escapeHtml(note.id)}">
-      <strong>${renderInline(note.title)}</strong>
-      <small>${renderInline(note.summary)}</small>
-    </button>`).join("");
-
+  const dueCount = index.concepts.filter(concept => isMaintenanceDue(concept, completions, now)).length;
   const chapterPending = unit.surface === "mastery" && !storyTransitions.hasCompletedUnitStory(unit.id);
-  elements.masteryBody.innerHTML = `
+
+  const open = new Set([...target.querySelectorAll("details[data-mastery-group]")]
+    .filter(details => details.open).map(details => details.dataset.masteryGroup));
+  const closed = new Set([...target.querySelectorAll("details[data-mastery-group]")]
+    .filter(details => !details.open).map(details => details.dataset.masteryGroup));
+  const scrollTop = target.scrollTop;
+  target.innerHTML = `
     <p class="mastery-intro">${chapterPending
       ? "Complete one mixed review to close Keeper’s circuit. That first circuit advances the story once; every Mastery session remains reusable afterward."
-      : "Finishing a chapter and keeping a skill are different things. Nothing here advances the story or unlocks a unit; it replays work you have already done."}</p>
-    <p class="mastery-caveat">A drill replays an exercise you have met, with the prompt withheld. A test out runs the same exercises for a topic you have not reached yet, and passing one counts. Larger buffers, distractors and varied cursor placement are authoring work that has not been done.</p>
+      : "<strong>Drills and reviews of what you have met.</strong> Every result is kept. Nothing here advances the story or unlocks a unit."}</p>
     <section class="mastery-sessions" aria-labelledby="masterySessionsTitle">
       <h3 id="masterySessionsTitle">Sessions</h3>
       <div class="mastery-session-actions">
-        <button type="button" data-mastery-mixed ${mixedReady ? "" : "disabled"}>
+        <button type="button" class="mastery-session-primary" data-mastery-mixed ${mixedReady ? "" : "disabled"}>
           <strong>Mixed review</strong>
           <small>${mixedReady
-            ? `Interleaves ${Math.min(pool.length, 5)} of your ${pinnedCount >= 2 ? "pinned" : "practised"} topics.`
+            ? `Interleaves ${Math.min(pool.length, 5)} of your ${pinnedCount >= 2 ? "pinned" : "practised"} topics.${dueCount ? ` ${dueCount} ${dueCount === 1 ? "is" : "are"} due for a refresh.` : ""}`
             : "Needs two practised topics. Finish an isolated exercise in two of them."}</small>
         </button>
         <button type="button" data-mastery-tool-choice ${pool.length ? "" : "disabled"}>
@@ -358,31 +399,50 @@ async function renderMasteryDialog() {
         </button>
       </div>
     </section>
-    <section class="mastery-notes" aria-labelledby="masteryNotesTitle">
-      <h3 id="masteryNotesTitle">Field notes</h3>
-      <p>Batch and command-line Vim. These are briefings, not drills — the app runs one buffer, so the multi-file commands they describe cannot be practised here.</p>
-      <div class="mastery-note-actions">${noteButtons}</div>
-    </section>
     <section class="mastery-topics" aria-labelledby="masteryTopicsTitle">
-      <h3 id="masteryTopicsTitle">Topics</h3>
-      <p>Every topic you have applied stays directly replayable. Pin the ones you want mixed review to draw from.</p>
-      <div class="mastery-units">${unitSections}</div>
-    </section>`;
+      <div class="mastery-topics-head">
+        <h3 id="masteryTopicsTitle">Topics</h3>
+        <div class="mastery-arrange" role="group" aria-label="Arrange topics">
+          <button type="button" data-mastery-arrange="next" aria-pressed="${arrangement === "next"}">By next step</button>
+          <button type="button" data-mastery-arrange="unit" aria-pressed="${arrangement === "unit"}">By unit</button>
+        </div>
+      </div>
+      <p class="mastery-caveat">A drill replays an exercise you have met, with the prompt withheld. A test out runs the same exercises for a topic you have not reached yet, and passing one counts. Pin the topics you want mixed review to draw from. Larger buffers, distractors and varied cursor placement are authoring work that has not been done.</p>
+      <div class="mastery-units">${arrangement === "unit" ? byUnit() : byNextStep()}</div>
+    </section>
+    <div class="mastery-scratchpad">
+      <button type="button" class="mastery-scratchpad-open" data-practice-random>
+        <span aria-hidden="true">✎</span>
+        <span><strong>Scratchpad</strong><small>A real file, no goal. Nothing here is scored or unlocked, and it is open before Unit 1.</small></span>
+      </button>
+      <button type="button" class="mastery-scratchpad-browse" data-practice-browse>Browse files</button>
+    </div>`;
+  target.querySelectorAll("details[data-mastery-group]").forEach(details => {
+    if (open.has(details.dataset.masteryGroup)) details.open = true;
+    if (closed.has(details.dataset.masteryGroup)) details.open = false;
+  });
+  target.scrollTop = scrollTop;
 }
 
+// The map is the course map's Practice tab now. Every way in — Unit 17's
+// "Open Mastery", the end of a session, "Test out a topic" beside a
+// prerequisite warning — lands there.
 export async function openMastery() {
-  elements.tocDialog?.close();
-  elements.masteryBody.innerHTML = '<p class="practice-loading">Loading…</p>';
-  if (!elements.masteryDialog.open) elements.masteryDialog.showModal();
-  await renderMasteryDialog();
+  openTableOfContents({ tab: "practice" });
+  await renderMasteryMap();
 }
-elements.masteryDialog?.addEventListener("click", event => {
+elements.tocPractice?.addEventListener("click", event => {
   const drill = event.target.closest("[data-mastery-drill]")?.dataset.masteryDrill;
   if (drill) return void startFocusedDrill(drill);
   const pin = event.target.closest("[data-mastery-pin]")?.dataset.masteryPin;
   if (pin) return void toggleMasteryPin(pin);
-  const note = event.target.closest("[data-mastery-note]")?.dataset.masteryNote;
-  if (note) return void startFieldNote(note);
+  const arrangement = event.target.closest("[data-mastery-arrange]")?.dataset.masteryArrange;
+  if (arrangement && arrangement !== state.masteryArrangement) {
+    state.masteryArrangement = arrangement;
+    persistSession();
+    elements.tocPractice.scrollTop = 0;
+    return void renderMasteryMap();
+  }
   if (event.target.closest("[data-mastery-mixed]")) return void startMixedReview();
   if (event.target.closest("[data-mastery-tool-choice]")) return void startToolChoice();
 });
@@ -400,7 +460,7 @@ export async function masteryStateSnapshot() {
     // The queued activity's authored id, not the namespaced one it runs under.
     queue: session ? session.queue.map(activity => activity.masteryOrigin?.activityId || activity.id) : [],
     conceptIds: session?.conceptIds || [],
-    dialogOpen: Boolean(elements.masteryDialog?.open),
+    dialogOpen: courseMapTab() === "practice",
     chapterUnitId: unit.surface === "mastery" ? unit.id : null,
     chapterComplete: unit.surface === "mastery" && storyTransitions.hasCompletedUnitStory(unit.id),
     pinned: [...masteryState.pinned],

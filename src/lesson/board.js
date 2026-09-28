@@ -26,7 +26,7 @@ const presentations = [
   { theme: "ember", codeSide: "right" },
 ];
 
-const themeColors = {
+export const themeColors = {
   moonroot: ["#071d18", "#1c533d", "#77e0a3", "#a77bff", "#ffc866"],
   ember: ["#20120e", "#683420", "#f59a61", "#ff7468", "#ffd06c"],
   glass: ["#0b1722", "#234f68", "#78dbea", "#b89cff", "#ffe08b"],

@@ -190,9 +190,9 @@ test.describe("Production lesson flow", () => {
   test("renders the unit table of contents with Guided and Recall pairs", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(17);
-    await expect(page.locator(".toc-lesson")).toHaveCount(unit.lessons.length);
-    await expect(page.locator(".toc-activity")).toHaveCount(73);
+    await expect(page.locator("#tocUnitList .toc-unit-row")).toHaveCount(17);
+    await expect(page.locator("#tocUnitPage .toc-lesson")).toHaveCount(unit.lessons.length);
+    await expect(page.locator("#tocUnitPage .toc-activity")).toHaveCount(73);
     await expect(page.locator(".activity-type.type-guided").first()).toHaveText("guided");
     await expect(page.locator(".activity-type.type-recall").first()).toHaveText("recall");
     const badgeColors = await page.evaluate(() => ({
@@ -212,14 +212,14 @@ test.describe("Production lesson flow", () => {
     await page.setViewportSize({ width: 360, height: 740 });
     await page.goto("/?unit=position-memory&activity=local-mark-meaning");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    const badges = page.locator(".toc-unit[open] .track-badge");
+    const badges = page.locator("#tocUnitPage .track-badge");
     await expect(badges).toHaveText(["Advanced", "Advanced"]);
-    const marked = page.locator(".toc-lesson").filter({ has: page.locator(".track-badge") });
+    const marked = page.locator("#tocUnitPage .toc-lesson").filter({ has: page.locator(".track-badge") });
     await expect(marked).toHaveCount(2);
     await expect(marked.first()).toContainText("Revisit an operated range");
     await expect(marked.last()).toContainText("Navigate code structure");
     // Core lessons carry no badge at all; absence is what "core" means.
-    await expect(page.locator(".toc-lesson").first().locator(".track-badge")).toHaveCount(0);
+    await expect(page.locator("#tocUnitPage .toc-lesson").first().locator(".track-badge")).toHaveCount(0);
     const summaryOverflow = await marked.last().locator("summary").evaluate(node => ({
       overflow: node.scrollWidth - node.clientWidth,
       badgeSize: getComputedStyle(node.querySelector(".track-badge")).fontSize,
@@ -261,12 +261,14 @@ test.describe("Production lesson flow", () => {
       { id: "mastery-loops", unitNumber: 17, title: "Mastery loops" },
     ]);
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    await expect(page.locator(".toc-unit")).toHaveCount(17);
+    // The map opens on the current unit's page; the whole course is the list.
+    await page.locator("#tocDialog [data-toc-back]").click();
+    await expect(page.locator(".toc-unit-row")).toHaveCount(17);
     await expect(page.locator(".toc-arc-heading")).toHaveText(["Arc 1Foundations", "Arc 2Fluency tracks", "Arc 3Automation", "Arc 4Integration and lifelong practice"]);
-    await expect(page.locator(".toc-arc").first().locator(".toc-unit")).toHaveCount(6);
-    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit")).toHaveCount(5);
-    await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit")).toHaveCount(4);
-    await expect(page.locator(".toc-arc").nth(3).locator(".toc-unit")).toHaveCount(2);
+    await expect(page.locator(".toc-arc").first().locator(".toc-unit-row")).toHaveCount(6);
+    await expect(page.locator(".toc-arc").nth(1).locator(".toc-unit-row")).toHaveCount(5);
+    await expect(page.locator(".toc-arc").nth(2).locator(".toc-unit-row")).toHaveCount(4);
+    await expect(page.locator(".toc-arc").nth(3).locator(".toc-unit-row")).toHaveCount(2);
     await expect(page.locator(".toc-arc-divider")).toHaveCount(3);
     const arcPresentation = await page.evaluate(() => {
       const heading = document.querySelector(".toc-arc-heading");
@@ -280,17 +282,19 @@ test.describe("Production lesson flow", () => {
         ornament: divider.textContent.trim(),
       };
     });
-    expect(arcPresentation).toEqual({ justify: "center", align: "center", labelSize: "15px", titleSize: "21px", dividerDisplay: "grid", ornament: "❦" });
-    await expect(page.locator('[data-unit-id="cursor-movement"]')).toContainText("Unit 2");
-    await expect(page.locator('[data-unit-id="visual-selection"]')).toContainText("Unit 7");
-    await expect(page.locator('[data-unit-id="registers-putting"]')).toContainText("Unit 8");
-    await expect(page.locator('[data-unit-id="position-memory"]')).toContainText("Unit 9");
-    await expect(page.locator('[data-unit-id="viewport-control"]')).toContainText("Unit 10");
-    await expect(page.locator('[data-unit-id="repeatable-editing"]')).toContainText("Unit 11");
-    await expect(page.locator('[data-unit-id="command-line-ranges-line-operations"]')).toContainText("Unit 12");
-    await expect(page.locator('[data-unit-id="substitution-practical-regex"]')).toContainText("Unit 13");
-    await expect(page.locator('[data-unit-id="macros"]')).toContainText("Unit 14");
-    await expect(page.locator('[data-unit-id="global-normal-automation"]')).toContainText("Unit 15");
+    // Baseline-aligned and a size down from the first map, so a heading that
+    // wraps at 392px no longer clips inside a one-line box.
+    expect(arcPresentation).toEqual({ justify: "center", align: "baseline", labelSize: "13px", titleSize: "18px", dividerDisplay: "grid", ornament: "❦" });
+    await expect(page.locator('#tocUnitList [data-toc-unit="cursor-movement"]')).toContainText("Unit 2");
+    await expect(page.locator('#tocUnitList [data-toc-unit="visual-selection"]')).toContainText("Unit 7");
+    await expect(page.locator('#tocUnitList [data-toc-unit="registers-putting"]')).toContainText("Unit 8");
+    await expect(page.locator('#tocUnitList [data-toc-unit="position-memory"]')).toContainText("Unit 9");
+    await expect(page.locator('#tocUnitList [data-toc-unit="viewport-control"]')).toContainText("Unit 10");
+    await expect(page.locator('#tocUnitList [data-toc-unit="repeatable-editing"]')).toContainText("Unit 11");
+    await expect(page.locator('#tocUnitList [data-toc-unit="command-line-ranges-line-operations"]')).toContainText("Unit 12");
+    await expect(page.locator('#tocUnitList [data-toc-unit="substitution-practical-regex"]')).toContainText("Unit 13");
+    await expect(page.locator('#tocUnitList [data-toc-unit="macros"]')).toContainText("Unit 14");
+    await expect(page.locator('#tocUnitList [data-toc-unit="global-normal-automation"]')).toContainText("Unit 15");
   });
 
   test("routes confident learners into the recall-only quick check", async ({ page }) => {
@@ -678,12 +682,12 @@ test.describe("Production lesson flow", () => {
     await page.setViewportSize({ width: 360, height: 740 });
     await page.goto("/?unit=registers-putting&activity=unnamed-register-meaning");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    const marked = page.locator(".toc-unit[open] .toc-lesson").filter({ has: page.locator(".track-badge") });
+    const marked = page.locator("#tocUnitPage .toc-lesson").filter({ has: page.locator(".track-badge") });
     await expect(marked).toHaveCount(3);
     await expect(marked.nth(0)).toContainText("Continue after a put");
     await expect(marked.nth(1)).toContainText("Recover older linewise deletes");
     await expect(marked.nth(2)).toContainText("Recover small deletes");
-    await expect(page.locator(".toc-unit[open] .toc-lesson").filter({ hasText: "Discard text on purpose" }).locator(".track-badge")).toHaveCount(0);
+    await expect(page.locator("#tocUnitPage .toc-lesson").filter({ hasText: "Discard text on purpose" }).locator(".track-badge")).toHaveCount(0);
     await page.keyboard.press("Escape");
 
     await page.goto("/?unit=registers-putting&activity=small-black-hole-meaning");
@@ -2566,19 +2570,27 @@ test.describe("Production lesson flow", () => {
   test("keeps the complete contents dialog scrollable and persists a selected theme", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open table of contents" }).click();
-    const finalLesson = page.locator(".toc-lesson").last();
+    const finalLesson = page.locator("#tocUnitPage .toc-lesson").last();
     await finalLesson.locator("summary").click();
-    await page.locator(".toc-activity").last().scrollIntoViewIfNeeded();
-    await page.locator("#tocLessons").evaluate(node => { node.scrollTop = node.scrollHeight; });
+    await page.locator("#tocUnitPage .toc-activity").last().scrollIntoViewIfNeeded();
+    await page.locator("#tocUnitPage").evaluate(node => { node.scrollTop = node.scrollHeight; });
     const geometry = await page.evaluate(() => {
-      const body = document.querySelector("#tocLessons");
-      const unit = document.querySelector(".toc-unit");
-      const last = document.querySelector(".toc-lesson:last-child .toc-activity:last-child");
-      return { scrolls: body.scrollHeight > body.clientHeight, bodyBottom: body.getBoundingClientRect().bottom, unitBottom: unit.getBoundingClientRect().bottom, lastBottom: last.getBoundingClientRect().bottom };
+      const body = document.querySelector("#tocUnitPage");
+      const lessons = body.querySelector(".toc-lessons-box");
+      const last = body.querySelector(".toc-lesson:last-child .toc-activity:last-child");
+      const pager = body.querySelector(".toc-pager");
+      return {
+        scrolls: body.scrollHeight > body.clientHeight,
+        bodyBottom: body.getBoundingClientRect().bottom,
+        lessonsBottom: lessons.getBoundingClientRect().bottom,
+        lastBottom: last.getBoundingClientRect().bottom,
+        pagerBottom: pager.getBoundingClientRect().bottom,
+      };
     });
     expect(geometry.scrolls).toBe(true);
     expect(geometry.lastBottom).toBeLessThanOrEqual(geometry.bodyBottom + 1);
-    expect(geometry.unitBottom).toBeLessThanOrEqual(geometry.bodyBottom + 1);
+    expect(geometry.lessonsBottom).toBeLessThanOrEqual(geometry.bodyBottom + 1);
+    expect(geometry.pagerBottom).toBeLessThanOrEqual(geometry.bodyBottom + 1);
     await page.getByRole("button", { name: "Close table of contents" }).click();
     await page.getByRole("button", { name: "Open settings" }).click();
     await page.getByLabel("Hall of Mirrors").check();

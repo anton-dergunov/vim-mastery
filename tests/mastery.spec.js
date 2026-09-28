@@ -41,8 +41,15 @@ const seedMastery = (page, completions, at = Math.floor(Date.now() / 1000)) => p
 // A learner opens the unit rows they care about; the test opens all of them so
 // a concept row can be clicked without the walk being the subject of the test.
 const expandMasteryUnits = page => page.evaluate(() => {
-  document.querySelectorAll("#masteryDialog details").forEach(row => { row.open = true; });
+  document.querySelectorAll("#tocPractice details").forEach(row => { row.open = true; });
 });
+
+// The Practice tab opens arranged by next step; these tests read the topics
+// under their units, the way the map was laid out before the tab existed.
+async function arrangeByUnit(page) {
+  await page.locator('#tocPractice [data-mastery-arrange="unit"]').click();
+  await expect(page.locator('#tocPractice [data-mastery-arrange="unit"]')).toHaveAttribute("aria-pressed", "true");
+}
 
 async function expectNoDocumentOverflow(page) {
   expect(await page.evaluate(() => ({
@@ -60,10 +67,10 @@ test("the mastery map is reachable from the contents before any progress", async
   await page.goto("/play/");
   await waitForApp(page);
   await page.click("#tocButton");
-  await expect(page.locator(".toc-mastery")).toBeVisible();
-  await page.click("[data-mastery-open]");
-  await expect(page.locator("#masteryDialog")).toBeVisible();
+  await page.getByRole("tab", { name: "Practice" }).click();
+  await expect(page.locator("#tocPractice")).toBeVisible();
   const state = await masteryState(page);
+  expect(state.dialogOpen).toBe(true);
   expect(state.concepts).toHaveLength(139);
   expect(state.units).toHaveLength(17);
   // Nothing completed, so nothing is drillable and mixed review is closed.
@@ -85,6 +92,7 @@ test("all five progress states are represented, and maintenance sits beside inte
   expect(byId["inside-around-words"].maintenanceDue).toBe(true);
   expect(new Set(state.concepts.map(concept => concept.state))).toContain("unseen");
   await page.evaluate(() => window.VimWilds.openMastery());
+  await arrangeByUnit(page);
   const chips = page.locator(".mastery-unit", { hasText: "Text objects" });
   await page.locator(".mastery-unit").filter({ hasText: "Text objects" }).locator("summary").click();
   await expect(chips.locator(".mastery-chip.state-integrated").first()).toBeVisible();
@@ -295,6 +303,7 @@ test("a pinned focus list narrows mixed review without widening it", async ({ pa
   await page.goto("/play/");
   await waitForApp(page);
   await page.evaluate(() => window.VimWilds.openMastery());
+  await arrangeByUnit(page);
   await expandMasteryUnits(page);
   await page.locator('[data-mastery-pin="inside-around-words"]').click();
   await expandMasteryUnits(page);
@@ -324,12 +333,13 @@ for (const viewport of PHONE_VIEWPORTS) {
     await waitForApp(page);
 
     await page.evaluate(() => window.VimWilds.openMastery());
+    await arrangeByUnit(page);
     await page.locator(".mastery-unit").first().locator("summary").click();
     await expectNoDocumentOverflow(page);
-    // The map is long by nature; it must scroll inside its own dialog body and
-    // never hand that scrolling to the document.
+    // The map is long by nature; it must scroll inside its own tab and never
+    // hand that scrolling to the document.
     expect(await page.evaluate(() => {
-      const body = document.querySelector("#masteryBody");
+      const body = document.querySelector("#tocPractice");
       return body.scrollHeight > body.clientHeight;
     })).toBe(true);
     await page.evaluate(() => window.VimWilds.closeMastery());
@@ -359,14 +369,45 @@ test("chapter completion and mastery read as different things", async ({ page })
   await page.goto("/play/");
   await waitForApp(page);
   await page.click("#tocButton");
-  // The chapter marker lives on the unit row in the contents...
-  await expect(page.locator(".toc-unit-complete")).toHaveCount(1);
-  await expect(page.locator(".toc-mastery")).toBeVisible();
-  await page.click("[data-mastery-open]");
-  // ...and the mastery states live in their own surface, never on that row.
-  await page.locator("#masteryDialog .mastery-unit").first().locator("summary").click();
-  await expect(page.locator("#masteryDialog .toc-unit-complete")).toHaveCount(0);
-  const chip = page.locator("#masteryDialog .mastery-chip").first();
+  await page.locator("[data-toc-back]").click();
+  // The chapter marker lives on the unit row in the course list...
+  await expect(page.locator("#tocUnitList .toc-unit-complete")).toHaveCount(1);
+  await expect(page.locator("#tocUnitList .mastery-chip")).toHaveCount(0);
+  await page.getByRole("tab", { name: "Practice" }).click();
+  await arrangeByUnit(page);
+  // ...and the mastery states live in the Practice tab, never on that row.
+  await page.locator("#tocPractice .mastery-unit").first().locator("summary").click();
+  await expect(page.locator("#tocPractice .toc-unit-complete")).toHaveCount(0);
+  const chip = page.locator("#tocPractice .mastery-chip").first();
   await chip.scrollIntoViewIfNeeded();
   await expect(chip).toBeVisible();
+});
+
+test("the Practice tab groups topics by next step and remembers the arrangement", async ({ page }) => {
+  const integrated = ["uppercase-inside-word", "change-inside-word", "delete-around-word"];
+  await seedMastery(page, integrated, Math.floor(Date.now() / 1000) - 40 * 24 * 60 * 60);
+  await page.goto("/play/");
+  await waitForApp(page);
+  await page.evaluate(() => window.VimWilds.openMastery());
+  const practice = page.locator("#tocPractice");
+  await expect(practice.locator('[data-mastery-arrange="next"]')).toHaveAttribute("aria-pressed", "true");
+  // A stale integrated topic leads the tab, tagged with its unit, and the
+  // untouched rest waits collapsed under "Not started yet".
+  const due = practice.locator('details[data-mastery-group="due"]');
+  await expect(due).toHaveAttribute("open", "");
+  await expect(due.locator('[data-mastery-drill="inside-around-words"]')).toHaveText("Drill");
+  await expect(due.locator(".mastery-concept-unit").first()).toHaveText("Unit 6");
+  await expect(practice.locator('details[data-mastery-group="unseen"]')).not.toHaveAttribute("open", "");
+  // Free practice is one row at the foot of the tab, open before Unit 1.
+  await expect(practice.locator("[data-practice-random]")).toBeVisible();
+  await expect(practice.locator("[data-practice-browse]")).toBeVisible();
+
+  await arrangeByUnit(page);
+  // Every unit that teaches a topic gets a block; Unit 17 replays the others.
+  const teaching = (await masteryState(page)).units.filter(unit => unit.total > 0).length;
+  await expect(practice.locator(".mastery-unit")).toHaveCount(teaching);
+  await page.reload();
+  await waitForApp(page);
+  await page.evaluate(() => window.VimWilds.openMastery());
+  await expect(practice.locator('[data-mastery-arrange="unit"]')).toHaveAttribute("aria-pressed", "true");
 });

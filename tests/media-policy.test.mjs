@@ -41,6 +41,10 @@ test("media policy is deterministic and fails declared missing runtime assets", 
   assert.equal(first.core.filter(asset => asset.category === "unit-story-base").length, 17);
   assert.equal(first.core.filter(asset => asset.category === "unit-story-image").length, 17);
   assert.equal(first.core.filter(asset => asset.category === "story-ui").length, 1);
+  // One course-map thumbnail per unit scene, never one for the reference board.
+  const thumbs = first.core.filter(asset => asset.category === "scene-thumb");
+  assert.equal(thumbs.length, 17);
+  assert(thumbs.every(asset => asset.path.endsWith("/thumb.webp")));
   assert(first.optional.every(asset => [
     "character-animation",
     "character-reaction",

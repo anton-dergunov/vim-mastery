@@ -56,11 +56,13 @@ test("free practice opens from the contents before any lesson is finished", asyn
   // and free practice is reachable anyway.
   expect(await appState(page)).toMatchObject({ activityIndex: 0, unitId: "modal-model" });
 
+  // It lives at the foot of the Practice tab, as the one untracked row there.
   await page.locator("#tocButton").click();
-  const section = page.locator("#tocLessons > *").first();
-  await expect(section).toHaveClass(/toc-practice/);
+  await page.getByRole("tab", { name: "Practice" }).click();
+  const scratchpad = page.locator("#tocPractice .mastery-scratchpad");
+  await expect(scratchpad).toContainText("open before Unit 1");
 
-  await page.locator("[data-practice-random]").first().click();
+  await scratchpad.locator("[data-practice-random]").click();
   await expect(page.locator("#phone")).toHaveAttribute("data-surface", "free-practice");
   expect(await appState(page)).toMatchObject({ surface: "free-practice", practicePolicy: "free" });
   expect((await practiceState(page)).active).toBe(true);

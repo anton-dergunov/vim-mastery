@@ -25,8 +25,10 @@ const DIALOG_ENTRIES = [
     open: page => page.locator("#tocButton").click(),
   },
   {
+    // The mastery map is the course map's Practice tab; a report from it keeps
+    // the "mastery" origin it had as a dialog of its own.
     name: "the mastery panel",
-    dialog: "#masteryDialog",
+    dialog: "#tocDialog",
     reportedFrom: "mastery",
     open: page => page.evaluate(() => window.VimWilds.openMastery()),
   },
@@ -36,6 +38,7 @@ const DIALOG_ENTRIES = [
     reportedFrom: "practice-files",
     open: async page => {
       await page.locator("#tocButton").click();
+      await page.getByRole("tab", { name: "Practice" }).click();
       await page.locator("[data-practice-browse]").click();
     },
   },

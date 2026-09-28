@@ -52,11 +52,20 @@ async function openContents(page) {
   await expect(page.locator("#tocDialog")).toBeVisible();
 }
 
-// The unit whose details block a test wants to read, addressed by its summary
-// text rather than by index, so renumbering does not silently retarget a test.
-const unitBlock = (page, number) => page
-  .locator("#tocLessons .toc-unit")
-  .filter({ has: page.locator(`summary span:text-is("Unit ${number}")`) });
+// Opens a unit's page on the course map, addressed by its number rather than
+// by index, so renumbering does not silently retarget a test. The map opens on
+// the current unit's page, so this goes back to the list first when it must.
+async function openUnitPage(page, number) {
+  const map = page.locator("#tocDialog");
+  if (await map.locator("#tocUnitList[inert]").count()) await map.locator("[data-toc-back]").click();
+  await map.locator("#tocUnitList .toc-unit-row")
+    .filter({ has: page.locator(`.toc-unit-number:text-is("Unit ${number}")`) })
+    .click();
+  const unitPage = map.locator("#tocUnitPage");
+  await expect(unitPage.locator(".toc-hero-kicker")).toHaveText(new RegExp(`Unit ${number}$`));
+  await expect(unitPage.locator(".toc-lessons-box")).toBeVisible();
+  return unitPage;
+}
 
 async function expectNoHorizontalOverflow(page) {
   const overflow = await page.evaluate(() => (
@@ -79,10 +88,9 @@ test("every unit carries an in-your-editor note that opens the host-reality deck
   });
   expect(catalog.units.length).toBe(17);
 
-  const notes = page.locator("#tocLessons .toc-unit-editor");
-  await expect(notes).toHaveCount(catalog.units.length);
   for (const entry of catalog.units) {
-    const block = unitBlock(page, entry.unitNumber);
+    const block = await openUnitPage(page, entry.unitNumber);
+    await expect(block.locator(".toc-unit-editor")).toHaveCount(1);
     await expect(block.locator(".toc-unit-editor-label")).toHaveText("In your editor");
     // The note is authored, not derived, so assert the authored text reaches
     // the screen rather than merely that some paragraph exists.
@@ -90,8 +98,7 @@ test("every unit carries an in-your-editor note that opens the host-reality deck
     await expect(block.locator(".toc-unit-editor p")).toContainText(plain.slice(0, 40));
   }
 
-  const viewport = unitBlock(page, 10);
-  await viewport.locator("summary").click();
+  const viewport = await openUnitPage(page, 10);
   await viewport.locator(".toc-unit-editor button").click();
   await expect(page.locator("#tocDialog")).toBeHidden();
   const reference = page.locator("#referenceDialog");
@@ -104,8 +111,7 @@ test("skipping into Arc 3 warns about the whole closure and still opens the unit
   await seedReturningLearner(page);
   await openContents(page);
 
-  const macros = unitBlock(page, 14);
-  await macros.locator("summary").click();
+  const macros = await openUnitPage(page, 14);
   const warning = macros.locator(".toc-unit-warning");
   await expect(warning).toBeVisible();
 
@@ -138,8 +144,7 @@ test("a finished prerequisite drops out of the warning", async ({ page }) => {
   ]);
   await openContents(page);
 
-  const macros = unitBlock(page, 14);
-  await macros.locator("summary").click();
+  const macros = await openUnitPage(page, 14);
   await expect(macros.locator(".toc-unit-warning")).toHaveCount(0);
   // Unit 5 is only recommended, so it survives as the soft line and never as a
   // warning.
@@ -150,12 +155,11 @@ test("the mastery surface never warns and Unit 1 has nothing to warn about", asy
   await seedReturningLearner(page);
   await openContents(page);
 
-  const mastery = unitBlock(page, 17);
-  await mastery.locator("summary").click();
+  const mastery = await openUnitPage(page, 17);
   await expect(mastery.locator(".toc-unit-warning")).toHaveCount(0);
   await expect(mastery.locator(".toc-unit-editor")).toBeVisible();
 
-  const first = unitBlock(page, 1);
+  const first = await openUnitPage(page, 1);
   await expect(first.locator(".toc-unit-warning")).toHaveCount(0);
   await expect(first.locator(".toc-unit-recommended")).toHaveCount(0);
 });
@@ -165,9 +169,13 @@ test("an unreached topic offers a test out that actually starts", async ({ page 
   await page.goto("/play/");
   await waitForApp(page);
   await page.click("#tocButton");
-  await page.click("[data-mastery-open]");
-  const mastery = page.locator("#masteryDialog");
+  // The warning's own way in: Unit 14 reaches back past what this learner has
+  // finished, and its "Test out a topic" opens the Practice tab.
+  await openUnitPage(page, 14);
+  await page.locator("#tocUnitPage .toc-unit-warning button").click();
+  const mastery = page.locator("#tocPractice");
   await expect(mastery).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Practice" })).toHaveAttribute("aria-selected", "true");
   await mastery.locator("details").first().evaluate(node => { node.open = true; });
 
   const row = mastery.locator(".mastery-concept").first();
@@ -178,7 +186,7 @@ test("an unreached topic offers a test out that actually starts", async ({ page 
   await expect(button).toHaveClass(/mastery-test-out/);
 
   await button.click();
-  await expect(mastery).toBeHidden();
+  await expect(page.locator("#tocDialog")).toBeHidden();
   // A test out plays the authored exercises for a topic the learner has not
   // reached, which is the whole point of the skip path being usable.
   await expect(page.locator("#activityInstruction")).toBeVisible();
@@ -190,8 +198,8 @@ test("test out does not widen the review pool", async ({ page }) => {
   await page.goto("/play/");
   await waitForApp(page);
   await page.click("#tocButton");
-  await page.click("[data-mastery-open]");
-  const mastery = page.locator("#masteryDialog");
+  await page.getByRole("tab", { name: "Practice" }).click();
+  const mastery = page.locator("#tocPractice");
   await expect(mastery).toBeVisible();
 
   // `isEligibleForReview` deliberately excludes unseen and learning topics.
@@ -206,9 +214,9 @@ for (const [width, height] of [[360, 740], [390, 844], [412, 915], [430, 932], [
     await page.setViewportSize({ width, height });
     await seedReturningLearner(page);
     await openContents(page);
-    const macros = unitBlock(page, 14);
-    await macros.locator("summary").click();
+    const macros = await openUnitPage(page, 14);
     await expect(macros.locator(".toc-unit-warning")).toBeVisible();
+    await macros.locator(".toc-unit-editor").scrollIntoViewIfNeeded();
     await expect(macros.locator(".toc-unit-editor")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
@@ -265,8 +273,7 @@ test("entering as experienced completes nothing it did not earn", async ({ page 
 
   // The prerequisite warning is the feature working, not a bug to suppress.
   await page.click("#tocButton");
-  const macros = unitBlock(page, 14);
-  await macros.locator("summary").click();
+  const macros = await openUnitPage(page, 14);
   const warning = macros.locator(".toc-unit-warning");
   await expect(warning).toBeVisible();
   const head = warning.locator(".toc-unit-warning-head");
@@ -328,13 +335,12 @@ test("the starting point can be changed later from Settings without losing the s
 });
 
 // The curriculum promises any topic can be opened without finishing what comes
-// before it. The contents dialog is that affordance; this is the half that was
+// before it. The course map is that affordance; this is the half that was
 // never asserted.
 test("opening an unreached topic records no progress", async ({ page }) => {
   await seedReturningLearner(page);
   await openContents(page);
-  const macros = unitBlock(page, 14);
-  await macros.locator("summary").click();
+  const macros = await openUnitPage(page, 14);
   await macros.locator('button[data-unit-id="macros"]').click();
   await page.waitForURL(/unit=macros/);
   await waitForApp(page);

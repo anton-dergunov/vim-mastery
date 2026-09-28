@@ -93,7 +93,12 @@ export const elements = {
   statusKey: $("#statusKey"),
   keyboard: $("#keyboard"),
   tocDialog: $("#tocDialog"),
-  tocLessons: $("#tocLessons"),
+  tocProgress: $("#tocProgress"),
+  tocCourse: $("#tocCourse"),
+  tocUnitList: $("#tocUnitList"),
+  tocUnitPage: $("#tocUnitPage"),
+  tocPractice: $("#tocPractice"),
+  tocReference: $("#tocReference"),
   settingsDialog: $("#settingsDialog"),
   keyboardOptions: $("#keyboardOptions"),
   vimEffectOptions: $("#vimEffectOptions"),
@@ -123,8 +128,6 @@ export const elements = {
   practiceFilesDialog: $("#practiceFilesDialog"),
   practiceFileList: $("#practiceFileList"),
   practiceNoticeDialog: $("#practiceNoticeDialog"),
-  masteryDialog: $("#masteryDialog"),
-  masteryBody: $("#masteryBody"),
   currentVersion: $("#currentVersion"),
   updateStatus: $("#updateStatus"),
   restartUpdateButton: $("#restartUpdateButton"),
@@ -151,41 +154,51 @@ export const elements = {
   feedbackCopy: $("#feedbackCopy"),
 };
 
-export const lessons = unit.lessons.map((lesson, lessonIndex) => ({ ...lesson, lessonIndex }));
-const contextualizeActivity = (activity, lesson, activityIndex, extra = {}) => ({
-  ...activity,
-  ...extra,
-  lessonId: lesson.id,
-  lessonTitle: lesson.title,
-  lessonTrack: lesson.track,
-  lessonTrackNote: lesson.trackNote,
-  lessonIndex: lesson.lessonIndex,
-  authoredActivityIndex: activityIndex,
-});
-const activityFlowFor = lesson => {
-  const authored = lesson.activities.map((activity, activityIndex) => contextualizeActivity(activity, lesson, activityIndex));
-  const practices = authored.filter(activity => activity.type === "exercise");
-  const guided = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "recall")
-    .map(activity => ({ ...activity, practiceMode: "guided", sourceActivityId: activity.id }));
-  const recall = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "guided")
-    .map(activity => ({ ...activity, id: `${activity.id}-recall`, practiceMode: "recall", sourceActivityId: activity.id }));
-  // A lesson that teaches a new command introduces everything first and closes
-  // with its question and summary. A capstone runs the other way round: it asks
-  // which tool fits before any keys are pressed, and only once the work is done
-  // does it run the alternative it turned down. Opting in keeps that authored
-  // position instead of sorting every non-practice activity to the front.
-  if (lesson.flow === "authored") {
-    const firstPractice = authored.findIndex(activity => activity.type === "exercise");
-    const lastPractice = authored.findLastIndex(activity => activity.type === "exercise");
-    const opening = authored.filter((activity, index) => activity.type !== "exercise" && index < lastPractice);
-    const closing = authored.filter((activity, index) => activity.type !== "exercise" && index > lastPractice);
-    return [...opening, ...guided, ...recall, ...closing];
-  }
-  const leadIn = authored.filter(activity => !["exercise", "choice", "summary"].includes(activity.type));
-  const closing = authored.filter(activity => ["choice", "summary"].includes(activity.type));
-  return [...leadIn, ...guided, ...recall, ...closing];
-};
-export const activities = lessons.flatMap(activityFlowFor).map((activity, activityIndex) => ({ ...activity, activityIndex }));
+// Any unit's lessons and the activity flow the lesson view runs them in. The
+// current unit is built from this at launch; the course map builds the same
+// flow for every other unit it lists, so a row there opens the activity the
+// unit will actually show at that position.
+export function unitFlow(unitData) {
+  const unitLessons = unitData.lessons.map((lesson, lessonIndex) => ({ ...lesson, lessonIndex }));
+  const contextualizeActivity = (activity, lesson, activityIndex, extra = {}) => ({
+    ...activity,
+    ...extra,
+    lessonId: lesson.id,
+    lessonTitle: lesson.title,
+    lessonTrack: lesson.track,
+    lessonTrackNote: lesson.trackNote,
+    lessonIndex: lesson.lessonIndex,
+    authoredActivityIndex: activityIndex,
+  });
+  const activityFlowFor = lesson => {
+    const authored = lesson.activities.map((activity, activityIndex) => contextualizeActivity(activity, lesson, activityIndex));
+    const practices = authored.filter(activity => activity.type === "exercise");
+    const guided = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "recall")
+      .map(activity => ({ ...activity, practiceMode: "guided", sourceActivityId: activity.id }));
+    const recall = practices.filter(activity => (activity.delivery || "guided-then-recall") !== "guided")
+      .map(activity => ({ ...activity, id: `${activity.id}-recall`, practiceMode: "recall", sourceActivityId: activity.id }));
+    // A lesson that teaches a new command introduces everything first and closes
+    // with its question and summary. A capstone runs the other way round: it asks
+    // which tool fits before any keys are pressed, and only once the work is done
+    // does it run the alternative it turned down. Opting in keeps that authored
+    // position instead of sorting every non-practice activity to the front.
+    if (lesson.flow === "authored") {
+      const lastPractice = authored.findLastIndex(activity => activity.type === "exercise");
+      const opening = authored.filter((activity, index) => activity.type !== "exercise" && index < lastPractice);
+      const closing = authored.filter((activity, index) => activity.type !== "exercise" && index > lastPractice);
+      return [...opening, ...guided, ...recall, ...closing];
+    }
+    const leadIn = authored.filter(activity => !["exercise", "choice", "summary"].includes(activity.type));
+    const closing = authored.filter(activity => ["choice", "summary"].includes(activity.type));
+    return [...leadIn, ...guided, ...recall, ...closing];
+  };
+  return {
+    lessons: unitLessons,
+    activities: unitLessons.flatMap(activityFlowFor).map((activity, activityIndex) => ({ ...activity, activityIndex })),
+  };
+}
+
+export const { lessons, activities } = unitFlow(unit);
 export const exercises = activities.filter(activity => activity.type === "exercise" && activity.practiceMode === "guided");
 export const languageNames = new Map(languageProfiles.profiles.map(profile => [profile.id, profile.displayName]));
 
@@ -242,6 +255,9 @@ export const state = {
   generatedBackdrops: storedDecorativeMedia("generatedBackdrops"),
   characters: storedDecorativeMedia("characters"),
   entryLevel: storedEntryLevel(),
+  // How the Practice tab arranges its topics: by what to do next, or under the
+  // course's own units. A viewing preference, so it lives with the theme.
+  masteryArrangement: savedSession.masteryArrangement === "unit" ? "unit" : "next",
   practicePolicyOverride: null,
   exploreTargetReached: false,
   freePractice: null,
@@ -269,6 +285,7 @@ export function persistSession() {
       generatedBackdrops: state.generatedBackdrops,
       characters: state.characters,
       entryLevel: state.entryLevel,
+      masteryArrangement: state.masteryArrangement,
       savedAt: new Date().toISOString(),
     }));
   } catch {}

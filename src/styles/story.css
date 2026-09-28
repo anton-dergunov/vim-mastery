@@ -386,39 +386,6 @@
   box-shadow: 0 2px 0 #715222;
 }
 
-.toc-story-archive {
-  margin-bottom: 16px;
-  padding: 13px;
-  border: 1px solid rgba(193, 220, 206, .2);
-  border-radius: 12px;
-  background: rgba(255,255,255,.025);
-}
-
-.toc-story-archive h3 {
-  margin: 0;
-  color: #f2d17d;
-  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.toc-story-actions {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.toc-story-actions button {
-  min-height: 40px;
-  padding: 8px 11px;
-  border: 1px solid rgba(193, 220, 206, .25);
-  border-radius: 8px;
-  color: #dce9e2;
-  background: rgba(255,255,255,.04);
-  font: 750 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
 @media (min-width: 600px) {
   .story-dialog[open],
   .story-dialog:has(.story-visual.has-story-art)[open] {

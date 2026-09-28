@@ -90,7 +90,10 @@ document.addEventListener("keydown", event => {
   if (event.vimWildsPrompt) return;
   if (elements.storyDialog?.open) return;
   if (elements.practiceFilesDialog?.open || elements.practiceNoticeDialog?.open) return;
-  if (elements.masteryDialog?.open) return;
+  // The course map holds tabs, the mastery map and plain buttons. Arrow keys
+  // move between its tabs and Escape steps back through it, and the capture
+  // handler below would swallow both whenever focus is off a button.
+  if (elements.tocDialog?.open) return;
   // Radios, not text: the escape hatch below covers select and button only, so
   // without these the handler swallows Escape — leaving the sheet undismissable
   // by keyboard — and eats the arrows that move between options. Settings has

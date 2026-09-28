@@ -16,6 +16,7 @@ import {
   referenceSession,
 } from "../dialogs/reference.js";
 import { masteryLabel } from "../surfaces/mastery.js";
+import { courseMapLocation } from "../dialogs/contents.js";
 
 export let feedback = null;
 
@@ -58,9 +59,11 @@ feedback = createFeedbackSurface({
 function feedbackOrigin(kind) {
   switch (kind) {
     case "contents":
-      return { id: "contents", label: "Contents", detail: null, node: elements.tocDialog };
+      return { id: "contents", label: "Contents", detail: courseMapLocation(), node: elements.tocDialog };
+    // The mastery map is the course map's Practice tab; its reports keep their
+    // own origin so triage reads the same as before the two sheets merged.
     case "mastery":
-      return { id: "mastery", label: "Mastery", detail: masteryLabel() || null, node: elements.masteryDialog };
+      return { id: "mastery", label: "Mastery", detail: masteryLabel() || null, node: elements.tocDialog };
     case "practice-files":
       return { id: "practice-files", label: "File list", detail: null, node: elements.practiceFilesDialog };
     case "story": {

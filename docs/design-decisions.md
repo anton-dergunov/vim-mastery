@@ -82,8 +82,40 @@ exercises never reach past what they already show.**
   and resolves to the first unit of its arc through `content/unit-index.json`.
   The level is self-reported: no placement test, and no adaptive scheduling or
   knowledge tracing — progress states are state, not a scheduling algorithm.
-- **"Preview any topic" is the contents dialog and the deep links**, not a named
-  affordance. A test asserts that opening an unreached unit records no progress.
+- **"Preview any topic" is the course map and the deep links**, not a named
+  affordance. Every unit's page lists its lessons and activities, and any row
+  opens that unit there. A test asserts that opening an unreached unit records
+  no progress.
+- **The course map is one sheet with three tabs (2026-09-28).** The contents
+  dialog had grown one section at a time: Free practice, Mastery, Reference and
+  the story archive all came before the course, and it always opened at the
+  top. Four designs were mocked up (`docs/mockups/course-map/`); the drill-in
+  one was chosen.
+  - **Course** is the default tab and lists units by arc, each with a strip of
+    its board. Opening a unit slides to its page: board, guide, lessons and
+    activities, a pager to its neighbours. The sheet opens on the current
+    unit's page, scrolled to the current activity. Escape steps back to the
+    list before it closes the sheet; the close button always closes.
+  - **Units are grouped by topic, never by world.** Arcs and worlds do not
+    line up (Arc 1 spans Moonroot and half of Starwater), so a world only
+    tints a unit's row and page. It gets no heading of its own.
+  - **Practice is the mastery map**, no longer a dialog of its own. Everything
+    in it is a drill or a review and is recorded; its topics are arranged by
+    next step or by unit, a per-learner preference saved in the session key.
+    Free practice is one untracked row at its foot and stays reachable before
+    Unit 1.
+  - **Reference is reading only**, one level deep: every deck lists its cards,
+    field notes sit here rather than under Practice, and each unit's command
+    table is one tap away.
+  - **The story lives in the course.** The prologue opens the unit list, a
+    finished unit's page replays its chapter, and the epilogue closes the
+    list once the finale has been seen. Settings keeps "Replay Story".
+  - **The list paints 320px thumbnails**, `thumb.webp` beside each scene's
+    profiles, built by `scripts/world-art/build_scene_thumbnails.py` and
+    precached as core media. Seventeen full boards decoded for 64px strips
+    would cost a phone hundreds of megabytes.
+  - **Mastery state stays off the course list.** A chapter's ✓ and a topic's
+    state are read from different stores and shown on different tabs.
 - **A unit ends with its painting.** Each unit's restoration painting,
   `assets/worlds/story/units/<unit>.webp` (from a `*-restoration-3x4` candidate
   set), is the full-frame image shown when it completes; all 17 exist. The
