@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C · Themed contents</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .c-unit {
+    --w: #55bfd0;
+    --w-warm: #f6bd63;
+    --w-mid: #123f4e;
+    margin-bottom: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--w-mid) 22%, transparent), rgba(255, 255, 255, .015) 60%);
+  }
+  .c-unit > summary {
+    position: relative;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    padding-right: 12px;
+    list-style: none;
+    cursor: pointer;
+  }
+  .c-unit > summary::-webkit-details-marker { display: none; }
+
+  /* Collapsed: a slim strip of the unit's board on the left. */
+  .strip {
+    position: relative;
+    align-self: stretch;
+    background: var(--board) center / cover no-repeat;
+    filter: saturate(.85) brightness(.8);
+  }
+  .strip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 40%, rgba(11, 24, 21, .9));
+  }
+  .ahead .strip { filter: saturate(.35) brightness(.5); }
+  .strip b {
+    position: absolute;
+    left: 8px;
+    bottom: 6px;
+    z-index: 1;
+    color: #fff7df;
+    font: 850 15px/1 var(--mono);
+    text-shadow: 0 1px 3px #000, 0 0 8px #000;
+  }
+  .c-title { color: var(--title); font: 700 14.5px/1.25 var(--mono); }
+  .ahead .c-title { color: #c9d6cf; }
+  .c-meta { color: var(--dim); font: 700 12px/1 var(--mono); white-space: nowrap; }
+  .c-done { color: #77e0a3; font: 800 14px/1 var(--mono); }
+
+  /* Open: the summary becomes a banner of the board, title on a scrim. */
+  .c-unit[open] > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    min-height: 128px;
+    padding: 10px 12px 12px;
+    background: var(--board-wide) center / cover no-repeat;
+  }
+  .c-unit[open] > summary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(11, 24, 21, .15) 0%, rgba(11, 24, 21, .35) 40%, rgba(11, 24, 21, .94) 100%),
+      linear-gradient(90deg, rgba(11, 24, 21, .5), transparent 70%);
+  }
+  .c-unit[open] > summary > :not(.here) { position: relative; }
+  .c-unit[open] .strip { display: none; }
+  .banner-kicker { display: none; }
+  .c-unit[open] .banner-kicker {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--w-warm);
+    font: 850 11px/1 var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 3px #000;
+  }
+  .c-unit[open] .c-title { font: 700 19px/1.2 var(--serif); text-shadow: 0 1px 6px rgba(0, 0, 0, .8); }
+  .c-unit[open] .c-meta, .c-unit[open] .c-done { display: none; }
+  .guide {
+    display: none;
+    width: 48px;
+    height: 48px;
+    border: 2px solid color-mix(in srgb, var(--w) 70%, #000);
+    border-radius: 50%;
+    background: #0b1815;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+  }
+  .c-unit[open] .guide { display: block; }
+  .c-progress { display: none; }
+  .c-unit[open] .c-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    color: #dff5f8;
+    font: 800 11px/1 var(--mono);
+    text-shadow: 0 1px 3px #000;
+  }
+  .c-progress .bar { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .15); overflow: hidden; }
+  .c-progress .bar i { display: block; height: 100%; background: var(--w); }
+
+  .c-unit.current { border-color: color-mix(in srgb, var(--w) 45%, transparent); box-shadow: 0 0 20px color-mix(in srgb, var(--w) 14%, transparent); }
+  .c-unit.current:not([open]) > summary { box-shadow: inset 3px 0 0 var(--w); }
+  .here {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    display: none;
+    padding: 4px 7px;
+    border: 1px solid color-mix(in srgb, var(--w) 60%, transparent);
+    border-radius: 999px;
+    color: var(--w);
+    background: rgba(7, 20, 22, .72);
+    font: 800 10.5px/1 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .c-unit.current[open] .here { display: block; }
+  .c-unit.current:not([open]) .c-meta { color: var(--w); }
+
+  .c-body { padding: 4px 8px 8px; }
+  .c-editor { margin: 8px 4px 2px; color: var(--dim); font-size: 12px; line-height: 1.4; }
+  .c-editor b { color: var(--theme-warm); font: 750 10.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+
+  .story-row { margin-bottom: 4px; }
+  .epilogue { margin-top: 18px; }
+</style>
+</head>
+<body>
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+  const M = MapMock;
+
+  function unit(u) {
+    const s = M.status(u);
+    const pos = M.position(u);
+    const right = s === "done" ? '<span class="c-done" aria-label="Finished">✓</span>'
+      : s === "current" ? `<span class="c-meta">${pos.lesson}/${pos.lessons}</span>`
+      : `<span class="c-meta">${u.lessons.length} lessons</span>`;
+    const progress = s === "current"
+      ? `Lesson ${pos.lesson} of ${pos.lessons}`
+      : s === "done" ? "Restored" : `${u.lessons.length} lessons`;
+    const style = `--w:${u.palette.bright};--w-warm:${u.palette.warm};--w-mid:${u.palette.mid};--board:url('${M.asset(u.board)}');--board-wide:url('${M.asset(u.wideBoard)}')`;
+    return `<details class="c-unit ${s}" style="${style}"${s === "current" ? " open data-current" : ""}>
+      <summary>
+        <span class="strip"><b>${u.number}</b></span>
+        <span>
+          <span class="banner-kicker">Unit ${u.number}</span>
+          <span class="c-title">${M.inline(u.title)}</span>
+          <span class="c-progress"><span>${progress}</span>${s === "current" ? `<span class="bar"><i style="width:${Math.max(4, pos.fraction * 100)}%"></i></span>` : ""}</span>
+        </span>
+        ${right}
+        <img class="guide" src="${M.portrait(u.guide)}" alt="">
+        <span class="here">Here</span>
+      </summary>
+      <div class="c-body">
+        ${M.unitNotice(u)}
+        ${M.lessons(u)}
+        ${M.unitActions(u, { replayThumb: true })}
+        ${u.editorNote ? `<p class="c-editor"><b>In your editor</b> ${M.inline(u.editorNote)}</p>` : ""}
+      </div>
+    </details>`;
+  }
+
+  function course() {
+    const arcs = M.D.arcs.map((arc, index) => `
+      ${index ? '<div class="arc-divider" aria-hidden="true"><span>❦</span></div>' : ""}
+      <h3 class="arc-heading"><span>Arc ${arc.number}</span><strong>${M.esc(arc.title)}</strong></h3>
+      ${M.unitsOfArc(arc).map(unit).join("")}`).join("");
+    return `
+      <button type="button" class="story-row" data-open="Prologue">
+        <img src="${M.asset(M.D.story.intro[0].asset)}" alt="">
+        <span><span>Prologue</span><strong>The Wilds fall silent</strong></span>
+        <em>Replay</em>
+      </button>
+      ${arcs}
+      <button type="button" class="story-row later epilogue" data-open="Epilogue (after Unit 17)">
+        <img src="${M.asset(M.D.story.ending.image)}" alt="">
+        <span><span>Epilogue</span><strong>${M.esc(M.D.story.ending.title)}</strong></span>
+        <em>After Unit 17</em>
+      </button>`;
+  }
+
+  M.mount({
+    course,
+    onCourse: panel => M.landOn(panel, panel.querySelector("[data-current]"), 72)
+  });
+</script>
+</body>
+</html>

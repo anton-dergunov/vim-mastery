@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Map mockups</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --ink: #f7efdc;
+    --text: #d9e5de;
+    --muted: #93ab9f;
+    --line: rgba(193, 220, 206, .16);
+    --warm: #ffc866;
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 24px 80px;
+    color: var(--text);
+    background: #06110f radial-gradient(circle at 50% 0, rgba(51, 116, 94, .25), transparent 40rem);
+    font: 15px/1.55 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; color: var(--ink); font: 700 32px/1.15 var(--serif); }
+  .kicker { color: var(--warm); font: 800 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .lede { max-width: 760px; margin: 10px 0 0; color: var(--muted); }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 8px; }
+  nav a {
+    padding: 7px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink);
+    font: 700 13px/1 var(--mono);
+    text-decoration: none;
+  }
+  nav a.rec { border-color: rgba(119, 224, 163, .5); color: #9ff0c0; }
+
+  .shared {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin: 26px 0 10px;
+  }
+  .shared div { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, .02); }
+  .shared h3 { margin: 0 0 6px; color: var(--ink); font: 800 13px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .shared p, .shared ul { margin: 0; color: var(--muted); font-size: 14px; }
+  .shared ul { padding-left: 18px; }
+
+  section.design { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); }
+  section.design h2 { margin: 4px 0 8px; color: var(--ink); font: 700 25px/1.2 var(--serif); }
+  .badge { margin-left: 8px; padding: 3px 8px; border: 1px solid rgba(119, 224, 163, .5); border-radius: 999px; color: #9ff0c0; font: 800 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }
+  .about { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 18px; max-width: 1100px; }
+  .about h4 { margin: 0 0 4px; color: var(--warm); font: 800 11px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  .about p, .about ul { margin: 0; color: var(--muted); font-size: 14px; }
+  .about ul { padding-left: 18px; }
+  .phones { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px; margin-top: 20px; }
+  figure { margin: 0; }
+  figcaption { margin-bottom: 8px; color: var(--muted); font: 700 12px/1 var(--mono); }
+  figcaption a { color: var(--muted); }
+  iframe {
+    display: block;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 26px;
+    background: #071715;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+  }
+  .w360 { width: 360px; height: 740px; }
+  .w430 { width: 430px; height: 932px; }
+  @media (max-width: 860px) { .about { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <span class="kicker">The Vim Wilds · design review</span>
+  <h1>Course Map mockups</h1>
+  <p class="lede">
+    Four designs for the Contents sheet, plus two ways to arrange the Practice tab.
+    Every mockup draws the same learner: in <b>Unit 5, Lesson 2</b>, with Units 1–4 finished.
+    Titles, boards, guides and paintings are the real content, read from <code>content/</code> and <code>assets/</code>.
+    The phones are live: switch tabs, open units and lessons. A tap on anything else shows what it would open.
+  </p>
+  <nav>
+    <a href="#a">A · Index</a>
+    <a href="#b">B · Trail</a>
+    <a class="rec" href="#c">C · Themed contents</a>
+    <a href="#d">D · Drill-in</a>
+    <a href="#practice">Practice tab: P1 vs P2</a>
+    <a href="#reference">Reference tab</a>
+  </nav>
+
+  <div class="shared">
+    <div>
+      <h3>Shared by all four</h3>
+      <p>Three tabs: <b>Course</b> (the default), <b>Practice</b> and <b>Reference</b>. The sheet opens on Course, scrolled to the unit you're in, which is expanded down to your activity.</p>
+    </div>
+    <div>
+      <h3>Any unit opens in place</h3>
+      <p>Every unit expands to its lessons and activities. Tapping an activity goes straight there. Nothing is locked; a soft note still says when a unit builds on one you haven't finished.</p>
+    </div>
+    <div>
+      <h3>Where things went</h3>
+      <ul>
+        <li><b>Story:</b> Prologue at the top of Course, "Replay chapter" on each finished unit, Epilogue at the end.</li>
+        <li><b>Mastery map:</b> it now <i>is</i> the Practice tab.</li>
+        <li><b>Free practice:</b> one Scratchpad row at the bottom of Practice.</li>
+        <li><b>Field notes:</b> moved to Reference, since they're reading, not drills.</li>
+        <li><b>Commands by unit:</b> on each unit, and as a compact grid in Reference.</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="design" id="a">
+    <span class="kicker">Pragmatic</span>
+    <h2>A · Index</h2>
+    <div class="about">
+      <div><h4>Idea</h4><p>A calm, dense table of contents with no art. It keeps today's arc headings and type, cleaned up, with one line per unit.</p></div>
+      <div><h4>Progress reads as</h4><p>A ✓ on finished units, a "Here" pill and a lesson bar on the current one, and a lesson count on the rest.</p></div>
+      <div><h4>Trade-offs</h4><ul><li>Fastest to scan, and the smallest build.</li><li>Uses none of the world, so it feels like a utility.</li></ul></div>
+    </div>
+    <div class="phones">
+      <figure><figcaption>360 × 740 · <a href="a-index.html" target="_blank">open</a></figcaption><iframe class="w360" src="a-index.html" title="A at 360"></iframe></figure>
+      <figure><figcaption>430 × 932</figcaption><iframe class="w430" src="a-index.html" title="A at 430"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="design" id="b">
+    <span class="kicker">Gamified</span>
+    <h2>B · Trail</h2>
+    <div class="about">
+      <div><h4>Idea</h4><p>The course as a path. Each unit is a node with its guide's portrait, and each arc is a milestone. The line takes each unit's world colour, which is the only sign of a world. Finished nodes carry their chapter painting.</p></div>
+      <div><h4>Progress reads as</h4><p>A solid trail behind you and a dashed one ahead. Guides you've met are in colour, the ones ahead are greyed. The current node glows, and the next one shows the hook the last chapter left.</p></div>
+      <div><h4>Trade-offs</h4><ul><li>The most "journey" of the four, and the characters do the work.</li><li>The trail rail costs width, so activity rows wrap more at 360.</li><li>Three guides teach two units each (Cinder, Luma, Tock), so a few faces repeat.</li></ul></div>
+    </div>
+    <div class="phones">
+      <figure><figcaption>360 × 740 · <a href="b-trail.html" target="_blank">open</a></figcaption><iframe class="w360" src="b-trail.html" title="B at 360"></iframe></figure>
+      <figure><figcaption>430 × 932</figcaption><iframe class="w430" src="b-trail.html" title="B at 430"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="design" id="c">
+    <span class="kicker">Middle ground</span>
+    <h2>C · Themed contents <span class="badge">Recommended</span></h2>
+    <div class="about">
+      <div><h4>Idea</h4><p>A's structure and density. Each unit row carries a slim strip of its own board. When a unit opens, its row turns into a banner of that board, with the title on a scrim and the guide beside it, and the lessons below.</p></div>
+      <div><h4>Progress reads as</h4><p>A ✓ on finished units, and a lesson bar in the banner of the open unit. Units ahead have desaturated strips, so the colour spreads as you go.</p></div>
+      <div><h4>Trade-offs</h4><ul><li>Scans like a table of contents but feels like the Wilds.</li><li>The banner doubles as your "you are here".</li><li>The build needs small board thumbnails; today's boards are about 500 KB each.</li></ul></div>
+    </div>
+    <div class="phones">
+      <figure><figcaption>360 × 740 · <a href="c-themed.html" target="_blank">open</a></figcaption><iframe class="w360" src="c-themed.html" title="C at 360"></iframe></figure>
+      <figure><figcaption>430 × 932</figcaption><iframe class="w430" src="c-themed.html" title="C at 430"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="design" id="d">
+    <span class="kicker">Two levels</span>
+    <h2>D · Drill-in</h2>
+    <div class="about">
+      <div><h4>Idea</h4><p>The Course tab is a list of unit cards with board thumbnails. Opening one slides to a full page for that unit: its board as the hero, its guide, then lessons and activities. "‹ All units" goes back, and a pager steps to the next or previous unit.</p></div>
+      <div><h4>Progress reads as</h4><p>On the unit page: a lesson bar, and a story line (how a finished chapter ended, or the hook the previous one left). In the list: ✓, "here", or a lesson count.</p></div>
+      <div><h4>Trade-offs</h4><ul><li>The biggest stage for the art, and the pager makes hopping between units easy.</li><li>The map opens on your unit's page, not the whole course, so it takes one extra tap to see everything.</li><li>A second navigation level to build and test.</li></ul></div>
+    </div>
+    <div class="phones">
+      <figure><figcaption>360 × 740 · <a href="d-drill-in.html" target="_blank">open</a></figcaption><iframe class="w360" src="d-drill-in.html" title="D at 360"></iframe></figure>
+      <figure><figcaption>430 × 932</figcaption><iframe class="w430" src="d-drill-in.html" title="D at 430"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="design" id="practice">
+    <span class="kicker">Practice tab</span>
+    <h2>P1 · By unit &nbsp;vs&nbsp; P2 · By next step</h2>
+    <div class="about">
+      <div><h4>Shared</h4><p>Sessions first: Mixed review as the main card, Tool choice beside it. Then Topics, each with its state, a due marker, Drill or Test out, and a pin for mixed review. Free practice shrinks to one Scratchpad row at the bottom. The progress data is sample data; real mastery lives in the learner's browser.</p></div>
+      <div><h4>P1 · By unit</h4><p>Mirrors the Course tab: arcs, then units with "6/7 · 1 due" and a meter. This is how the mastery map is arranged today.</p></div>
+      <div><h4>P2 · By next step</h4><p>Groups by what to do: Due, Learning, Practiced and integrated, and Not started (where Test out lives). Each topic names its unit. It answers "what should I practise?" directly.</p></div>
+    </div>
+    <div class="phones">
+      <figure><figcaption>P1 · 360 × 740</figcaption><iframe class="w360" src="c-themed.html?tab=practice&amp;arrange=unit" title="P1"></iframe></figure>
+      <figure><figcaption>P2 · 360 × 740</figcaption><iframe class="w360" src="c-themed.html?tab=practice&amp;arrange=next" title="P2"></iframe></figure>
+    </div>
+  </section>
+
+  <section class="design" id="reference">
+    <span class="kicker">Reference tab</span>
+    <h2>One level, nothing hidden</h2>
+    <div class="about">
+      <div><h4>Idea</h4><p>Every deck is a visible heading with its cards listed underneath, so there is no collapsed "Orientation" to guess at. Field notes join as a deck. A compact grid at the end reaches each unit's command table.</p></div>
+      <div><h4>Reads as</h4><p>"Cards to read. Nothing here is scored." That line, set against Practice's "Every result is kept", is what tells Reference and Mastery apart.</p></div>
+      <div><h4>Same in every design</h4><p>Practice and Reference are shared. Only the Course tab differs between A–D.</p></div>
+    </div>
+    <div class="phones">
+      <figure><figcaption>360 × 740</figcaption><iframe class="w360" src="c-themed.html?tab=reference" title="Reference"></iframe></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

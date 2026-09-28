@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>B · Trail</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .trail { margin: 0; padding: 0; list-style: none; }
+  .trail > li { position: relative; }
+  /* The trail line: one segment per row, in the unit's world colour.
+     Finished stretches are solid; the road ahead is dashed. */
+  .trail > li::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 27px;
+    width: 3px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--w, #55bfd0) 70%, transparent);
+  }
+  .trail > li.ahead::before {
+    background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--w) 38%, transparent) 0 6px, transparent 6px 12px);
+  }
+  .trail > li.current::before {
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--w) 70%, transparent) 0 32px, color-mix(in srgb, var(--w) 38%, transparent) 32px);
+  }
+  .trail > li.first::before { top: 30px; }
+  .trail > li.last::before { bottom: calc(100% - 30px); }
+
+  .node > summary, .milestone, .story-node {
+    position: relative;
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 68px;
+    padding: 6px 4px 6px 0;
+    list-style: none;
+    cursor: pointer;
+  }
+  .node > summary::-webkit-details-marker { display: none; }
+
+  .face {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    width: 48px;
+    height: 48px;
+    border: 2px solid color-mix(in srgb, var(--w) 70%, #000);
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--w) 40%, #0b1815), #0b1815 72%);
+    overflow: visible;
+  }
+  .face img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; transform: scale(1.18); }
+  .ahead .face img { filter: grayscale(.75) brightness(.7); }
+  .ahead .face { border-color: rgba(193, 220, 206, .28); }
+  .done .face { border-color: #77e0a3; }
+  .done .face::after {
+    content: "✓";
+    position: absolute;
+    right: -4px;
+    bottom: -3px;
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    color: #07130f;
+    background: #77e0a3;
+    font: 900 11px/1 var(--mono);
+  }
+  .current .face {
+    width: 54px;
+    height: 54px;
+    border-color: var(--theme-bright);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--theme-bright) 18%, transparent), 0 0 22px color-mix(in srgb, var(--theme-bright) 45%, transparent);
+    animation: glow 2.6s ease-in-out infinite;
+  }
+  @keyframes glow { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--theme-bright) 10%, transparent), 0 0 30px color-mix(in srgb, var(--theme-bright) 55%, transparent); } }
+
+  .node-text { min-width: 0; }
+  .node-kicker { display: block; color: color-mix(in srgb, var(--w) 80%, #fff); font: 800 10.5px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+  .ahead .node-kicker { color: var(--dim); }
+  .node-title { display: block; margin-top: 2px; color: var(--title); font: 700 15px/1.25 var(--sans); }
+  .ahead .node-title { color: #c9d6cf; font-weight: 600; }
+  .node-meta { display: block; margin-top: 3px; color: var(--dim); font: 700 11px/1.2 var(--mono); }
+  .node-hook { display: block; margin-top: 4px; color: #b9c9c0; font: italic 400 12.5px/1.35 var(--serif); }
+  .node-progress { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--theme-bright); font: 800 11px/1 var(--mono); }
+  .node-progress .bar { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+  .node-progress .bar i { display: block; height: 100%; background: var(--theme-bright); }
+
+  .painting {
+    width: 38px;
+    height: 50px;
+    border: 1px solid rgba(242, 209, 125, .35);
+    border-radius: 6px;
+    background: center / cover no-repeat;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
+  }
+
+  .node-body {
+    margin: 0 0 10px 42px;
+    padding: 4px 8px 8px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .025);
+  }
+  .current .node-body { border-color: color-mix(in srgb, var(--theme-bright) 28%, transparent); }
+
+  .milestone { min-height: 54px; margin-top: 8px; cursor: default; }
+  .milestone .gem {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--theme-warm);
+    background: #0b1815;
+    transform: rotate(45deg);
+  }
+  .milestone > span > span { color: var(--theme-warm); font: 850 11.5px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  .milestone strong { display: block; color: #dce9e2; font: 750 17px/1.25 var(--mono); }
+
+  .story-node { width: 100%; border: 0; background: none; text-align: left; color: inherit; }
+  .story-node .face { border-color: #f2d17d; }
+  .story-node .face img { transform: none; }
+  .story-node .node-kicker { color: #f2d17d; }
+  .story-node .node-title { font: 700 15px/1.25 var(--serif); }
+  .story-node em { color: var(--dim); font: 700 12px/1 var(--mono); font-style: normal; }
+  .story-node.later { opacity: .6; }
+</style>
+</head>
+<body>
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+  const M = MapMock;
+  const cap = id => id[0].toUpperCase() + id.slice(1);
+  const next = M.D.units.find(unit => M.status(unit) === "ahead");
+
+  function node(u, index) {
+    const s = M.status(u);
+    const pos = M.position(u);
+    const previous = M.D.units[index - 1];
+    const detail = s === "current"
+      ? `<span class="node-progress"><span>Lesson ${pos.lesson} of ${pos.lessons}</span><span class="bar"><i style="width:${Math.max(4, pos.fraction * 100)}%"></i></span></span>`
+      : u === next && previous?.hook
+        ? `<span class="node-hook">“${M.esc(previous.hook)}”</span>`
+        : `<span class="node-meta">${u.lessons.length} lessons${s === "done" ? " · restored" : ""}</span>`;
+    const right = s === "done"
+      ? `<span class="painting" style="background-image:url('${M.asset(u.painting)}')" data-open="Chapter replay · Unit ${u.number}" title="Replay chapter"></span>`
+      : "";
+    return `<li class="${s}" style="--w:${u.palette.bright}">
+      <details class="node"${s === "current" ? " open data-current" : ""}>
+        <summary>
+          <span class="face"><img src="${M.portrait(u.guide)}" alt=""></span>
+          <span class="node-text">
+            <span class="node-kicker">Unit ${u.number} · ${cap(u.guide)}</span>
+            <span class="node-title">${M.inline(u.title)}</span>
+            ${detail}
+          </span>
+          ${right}
+        </summary>
+        <div class="node-body">
+          ${M.unitNotice(u)}
+          ${M.lessons(u)}
+          ${M.unitActions(u, { replayThumb: true })}
+        </div>
+      </details>
+    </li>`;
+  }
+
+  function course() {
+    const firstWorld = M.D.units[0].palette.bright;
+    const lastWorld = M.D.units.at(-1).palette.bright;
+    const rows = [`<li class="done first" style="--w:${firstWorld}">
+      <button type="button" class="story-node" data-open="Prologue">
+        <span class="face"><img src="${M.asset(M.D.story.intro[0].asset)}" alt=""></span>
+        <span class="node-text"><span class="node-kicker">Prologue</span><span class="node-title">The Wilds fall silent</span></span>
+        <em>Replay</em>
+      </button></li>`];
+    M.D.arcs.forEach(arc => {
+      const units = M.unitsOfArc(arc);
+      const tone = M.status(units[0]) === "ahead" ? "ahead" : "done";
+      rows.push(`<li class="${tone}" style="--w:${units[0].palette.bright}">
+        <div class="milestone"><span class="gem" aria-hidden="true"></span><span><span>Arc ${arc.number}</span><strong>${M.esc(arc.title)}</strong></span></div>
+      </li>`);
+      units.forEach(unit => rows.push(node(unit, M.D.units.indexOf(unit))));
+    });
+    rows.push(`<li class="ahead last" style="--w:${lastWorld}">
+      <button type="button" class="story-node later" data-open="Epilogue (after Unit 17)">
+        <span class="face"><img src="${M.asset(M.D.story.ending.image)}" alt=""></span>
+        <span class="node-text"><span class="node-kicker">Epilogue</span><span class="node-title">${M.esc(M.D.story.ending.title)}</span></span>
+        <em>After Unit 17</em>
+      </button></li>`);
+    return `<ol class="trail">${rows.join("")}</ol>`;
+  }
+
+  M.mount({
+    course,
+    onCourse: panel => M.landOn(panel, panel.querySelector("[data-current]"), 76)
+  });
+</script>
+</body>
+</html>

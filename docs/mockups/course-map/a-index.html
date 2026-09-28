@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A · Index</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .a-unit {
+    margin-bottom: 6px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .02);
+  }
+  .a-unit > summary {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2px 10px;
+    min-height: 52px;
+    padding: 8px 12px 8px 8px;
+    list-style: none;
+    cursor: pointer;
+  }
+  .a-unit > summary::-webkit-details-marker { display: none; }
+  .a-num { color: var(--theme-warm); font: 850 15px/1 var(--mono); text-align: center; }
+  .a-title { color: var(--title); font: 700 15px/1.25 var(--mono); }
+  .a-meta { color: var(--dim); font: 700 12px/1 var(--mono); white-space: nowrap; }
+  .a-done { color: #77e0a3; font: 800 14px/1 var(--mono); }
+  .a-here {
+    padding: 4px 7px;
+    border: 1px solid color-mix(in srgb, var(--theme-bright) 55%, transparent);
+    border-radius: 999px;
+    color: var(--theme-bright);
+    font: 800 10.5px/1 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .a-unit.is-current { border-color: color-mix(in srgb, var(--theme-bright) 32%, transparent); }
+  .a-unit.is-done .a-title { color: #cfdcd3; }
+  .a-progress { grid-column: 2 / 4; display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--muted); font: 700 11px/1 var(--mono); }
+  .a-progress .bar { flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+  .a-progress .bar i { display: block; height: 100%; background: var(--theme-bright); }
+  .a-body { padding: 0 8px 8px; border-top: 1px solid var(--line-soft); }
+  .a-editor { margin: 8px 4px 2px; color: var(--dim); font-size: 12px; line-height: 1.4; }
+  .a-editor b { color: var(--theme-warm); font: 750 10.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .story-row { margin-bottom: 4px; }
+  .story-row .glyph { width: 40px; color: #f2d17d; font: 400 22px/1 var(--serif); text-align: center; }
+  .story-row { grid-template-columns: 40px minmax(0, 1fr) auto; }
+  .epilogue { margin-top: 18px; }
+</style>
+</head>
+<body>
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+  const M = MapMock;
+
+  function unit(u) {
+    const s = M.status(u);
+    const pos = M.position(u);
+    const right = s === "done" ? '<span class="a-done" aria-label="Finished">✓</span>'
+      : s === "current" ? '<span class="a-here">Here</span>'
+      : `<span class="a-meta">${u.lessons.length} lessons</span>`;
+    const progress = s === "current"
+      ? `<span class="a-progress"><span>Lesson ${pos.lesson} of ${pos.lessons}</span><span class="bar"><i style="width:${Math.max(4, pos.fraction * 100)}%"></i></span></span>`
+      : "";
+    return `<details class="a-unit is-${s}"${s === "current" ? " open data-current" : ""}>
+      <summary>
+        <span class="a-num">${u.number}</span>
+        <span class="a-title">${M.inline(u.title)}</span>
+        ${right}
+        ${progress}
+      </summary>
+      <div class="a-body">
+        ${M.unitNotice(u)}
+        ${M.lessons(u)}
+        ${M.unitActions(u)}
+        ${u.editorNote ? `<p class="a-editor"><b>In your editor</b> ${M.inline(u.editorNote)}</p>` : ""}
+      </div>
+    </details>`;
+  }
+
+  function course() {
+    const arcs = M.D.arcs.map((arc, index) => `
+      ${index ? '<div class="arc-divider" aria-hidden="true"><span>❦</span></div>' : ""}
+      <h3 class="arc-heading"><span>Arc ${arc.number}</span><strong>${M.esc(arc.title)}</strong></h3>
+      ${M.unitsOfArc(arc).map(unit).join("")}`).join("");
+    return `
+      <button type="button" class="story-row" data-open="Prologue">
+        <span class="glyph" aria-hidden="true">❦</span>
+        <span><span>Prologue</span><strong>The Wilds fall silent</strong></span>
+        <em>Replay</em>
+      </button>
+      ${arcs}
+      <button type="button" class="story-row later epilogue" data-open="Epilogue (after Unit 17)">
+        <span class="glyph" aria-hidden="true">❦</span>
+        <span><span>Epilogue</span><strong>${M.esc(M.D.story.ending.title)}</strong></span>
+        <em>After Unit 17</em>
+      </button>`;
+  }
+
+  M.mount({
+    course,
+    onCourse: panel => M.landOn(panel, panel.querySelector("[data-current]"), 64)
+  });
+</script>
+</body>
+</html>
