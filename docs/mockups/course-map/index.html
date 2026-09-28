@@ -85,8 +85,8 @@
   <nav>
     <a href="#a">A · Index</a>
     <a href="#b">B · Trail</a>
-    <a class="rec" href="#c">C · Themed contents</a>
-    <a href="#d">D · Drill-in</a>
+    <a href="#c">C · Themed contents</a>
+    <a class="rec" href="#d">D · Drill-in</a>
     <a href="#practice">Practice tab: P1 vs P2</a>
     <a href="#reference">Reference tab</a>
   </nav>
@@ -142,7 +142,7 @@
 
   <section class="design" id="c">
     <span class="kicker">Middle ground</span>
-    <h2>C · Themed contents <span class="badge">Recommended</span></h2>
+    <h2>C · Themed contents</h2>
     <div class="about">
       <div><h4>Idea</h4><p>A's structure and density. Each unit row carries a slim strip of its own board. When a unit opens, its row turns into a banner of that board, with the title on a scrim and the guide beside it, and the lessons below.</p></div>
       <div><h4>Progress reads as</h4><p>A ✓ on finished units, and a lesson bar in the banner of the open unit. Units ahead have desaturated strips, so the colour spreads as you go.</p></div>
@@ -156,15 +156,16 @@
 
   <section class="design" id="d">
     <span class="kicker">Two levels</span>
-    <h2>D · Drill-in</h2>
+    <h2>D · Drill-in <span class="badge">Chosen · revised</span></h2>
     <div class="about">
-      <div><h4>Idea</h4><p>The Course tab is a list of unit cards with board thumbnails. Opening one slides to a full page for that unit: its board as the hero, its guide, then lessons and activities. "‹ All units" goes back, and a pager steps to the next or previous unit.</p></div>
-      <div><h4>Progress reads as</h4><p>On the unit page: a lesson bar, and a story line (how a finished chapter ended, or the hook the previous one left). In the list: ✓, "here", or a lesson count.</p></div>
-      <div><h4>Trade-offs</h4><ul><li>The biggest stage for the art, and the pager makes hopping between units easy.</li><li>The map opens on your unit's page, not the whole course, so it takes one extra tap to see everything.</li><li>A second navigation level to build and test.</li></ul></div>
+      <div><h4>Idea</h4><p>The Course tab is a list of units in C's slim rows. Opening one slides to a full page for that unit: a short board hero, its guide, then lessons and activities. The hero collapses into a sticky bar as you scroll, so "‹ All units" and the unit's title stay on screen. A pager steps to the previous or next unit.</p></div>
+      <div><h4>Progress reads as</h4><p>On the unit page: a lesson bar, and a story line (how a finished chapter ended, or the hook the previous one left). In the list: ✓, "here" with the lesson, or a lesson count.</p></div>
+      <div><h4>Behaviour</h4><ul><li>Opens on your unit's page; the list is one tap back and lands on your unit.</li><li>Esc or back steps to the list first; a second press closes the map. × always closes.</li><li>The hero is about 140px on a 740px phone, 176px on the tallest.</li></ul></div>
     </div>
     <div class="phones">
       <figure><figcaption>360 × 740 · <a href="d-drill-in.html" target="_blank">open</a></figcaption><iframe class="w360" src="d-drill-in.html" title="D at 360"></iframe></figure>
       <figure><figcaption>430 × 932</figcaption><iframe class="w430" src="d-drill-in.html" title="D at 430"></iframe></figure>
+      <figure><figcaption>List · 360 × 740</figcaption><iframe class="w360" src="d-drill-in.html?view=list" title="D list at 360"></iframe></figure>
     </div>
   </section>
 
@@ -177,8 +178,8 @@
       <div><h4>P2 · By next step</h4><p>Groups by what to do: Due, Learning, Practiced and integrated, and Not started (where Test out lives). Each topic names its unit. It answers "what should I practise?" directly.</p></div>
     </div>
     <div class="phones">
-      <figure><figcaption>P1 · 360 × 740</figcaption><iframe class="w360" src="c-themed.html?tab=practice&amp;arrange=unit" title="P1"></iframe></figure>
-      <figure><figcaption>P2 · 360 × 740</figcaption><iframe class="w360" src="c-themed.html?tab=practice&amp;arrange=next" title="P2"></iframe></figure>
+      <figure><figcaption>P1 · 360 × 740</figcaption><iframe class="w360" src="d-drill-in.html?tab=practice&amp;arrange=unit" title="P1"></iframe></figure>
+      <figure><figcaption>P2 · 360 × 740</figcaption><iframe class="w360" src="d-drill-in.html?tab=practice&amp;arrange=next" title="P2"></iframe></figure>
     </div>
   </section>
 
@@ -191,7 +192,7 @@
       <div><h4>Same in every design</h4><p>Practice and Reference are shared. Only the Course tab differs between A–D.</p></div>
     </div>
     <div class="phones">
-      <figure><figcaption>360 × 740</figcaption><iframe class="w360" src="c-themed.html?tab=reference" title="Reference"></iframe></figure>
+      <figure><figcaption>360 × 740</figcaption><iframe class="w360" src="d-drill-in.html?tab=reference" title="Reference"></iframe></figure>
     </div>
   </section>
 </main>

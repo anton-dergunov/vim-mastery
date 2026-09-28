@@ -236,14 +236,14 @@
 
   // ---- Sheet ------------------------------------------------------------
 
-  function toast(message) {
+  function toast(message, prefix = "Would open: ") {
     let node = document.querySelector(".toast");
     if (!node) {
       node = document.createElement("div");
       node.className = "toast";
       document.body.append(node);
     }
-    node.textContent = `Would open: ${message}`;
+    node.textContent = `${prefix}${message}`;
     node.classList.add("show");
     clearTimeout(toast.timer);
     toast.timer = setTimeout(() => node.classList.remove("show"), 1600);

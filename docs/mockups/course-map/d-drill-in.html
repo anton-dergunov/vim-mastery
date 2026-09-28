@@ -13,60 +13,78 @@
   .view.page { padding: 0 0 28px; }
   .view.page.away { transform: translateX(100%); pointer-events: none; }
 
-  .d-card {
+  /* ---- List: C's slim rows, so more of the course fits on a screen ---- */
+
+  .d-row {
     --w: #55bfd0;
     display: grid;
-    grid-template-columns: 76px minmax(0, 1fr) auto;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
     width: 100%;
+    min-height: 56px;
     margin-bottom: 6px;
-    padding: 6px 12px 6px 6px;
+    padding: 0 12px 0 0;
+    overflow: hidden;
     border: 1px solid var(--line-soft);
     border-radius: 12px;
-    background: rgba(255, 255, 255, .02);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--w-mid) 22%, transparent), rgba(255, 255, 255, .015) 60%);
     text-align: left;
   }
-  .d-thumb {
-    width: 76px;
-    height: 56px;
-    border-radius: 8px;
-    background: var(--board) center / cover no-repeat;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
-  }
-  .ahead .d-thumb { filter: saturate(.35) brightness(.55); }
-  .d-kicker { display: block; color: var(--w-warm); font: 800 10.5px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-  .ahead .d-kicker { color: var(--dim); }
-  .d-title { display: block; margin-top: 2px; color: var(--title); font: 700 14.5px/1.25 var(--mono); }
-  .ahead .d-title { color: #c9d6cf; }
-  .d-sub { display: block; margin-top: 4px; color: var(--dim); font: 700 11px/1 var(--mono); }
-  .d-right { color: var(--dim); font-size: 20px; }
-  .done .d-right { color: #77e0a3; font: 800 14px/1 var(--mono); }
-  .d-card.current { border-color: color-mix(in srgb, var(--w) 45%, transparent); box-shadow: inset 3px 0 0 var(--w), 0 0 18px color-mix(in srgb, var(--w) 12%, transparent); }
-  .d-card.current .d-sub { color: var(--w); }
-
-  /* Unit page */
-  .hero {
+  .strip {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 212px;
-    padding: 12px 14px 14px;
-    background: var(--board-wide) center / cover no-repeat;
+    align-self: stretch;
+    background: var(--board) center / cover no-repeat;
+    filter: saturate(.85) brightness(.8);
   }
-  .hero::before {
+  .strip::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(11, 24, 21, .25) 0%, rgba(11, 24, 21, .1) 30%, rgba(11, 24, 21, .72) 70%, #0b1815 100%);
+    background: linear-gradient(90deg, transparent 40%, rgba(11, 24, 21, .9));
   }
-  .hero > * { position: relative; }
-  .back {
+  .ahead .strip { filter: saturate(.35) brightness(.5); }
+  .strip b {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
+    left: 8px;
+    bottom: 6px;
+    z-index: 1;
+    color: #fff7df;
+    font: 850 15px/1 var(--mono);
+    text-shadow: 0 1px 3px #000, 0 0 8px #000;
+  }
+  .d-title { display: block; color: var(--title); font: 700 14.5px/1.25 var(--mono); }
+  .ahead .d-title { color: #c9d6cf; }
+  .d-sub { display: block; margin-top: 4px; color: var(--dim); font: 700 11px/1 var(--mono); }
+  .current .d-sub { color: var(--w); font-weight: 800; }
+  .d-right { color: var(--dim); font-size: 20px; }
+  .done .d-right { color: #77e0a3; font-size: 14px; font-weight: 800; }
+  .d-row.current { border-color: color-mix(in srgb, var(--w) 45%, transparent); box-shadow: inset 3px 0 0 var(--w), 0 0 18px color-mix(in srgb, var(--w) 12%, transparent); }
+  .d-row.current .d-right { color: var(--w); font-size: 20px; }
+
+  /* ---- Unit page ---------------------------------------------------- */
+
+  /* The bar sits over the hero and stays put as the page scrolls. Once the
+     hero has scrolled away it turns solid and shows the unit's title, so
+     "All units" and where you are never leave the screen. */
+  .page-bar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    margin-bottom: -52px;
+    padding: 0 10px;
+    transition: background .2s, box-shadow .2s;
+  }
+  .page-bar.solid {
+    background: var(--sheet);
+    box-shadow: 0 1px 0 var(--line-soft), 0 8px 18px rgba(0, 0, 0, .35);
+  }
+  .back {
     min-height: 36px;
     padding: 0 12px 0 9px;
     border: 1px solid rgba(255, 255, 255, .22);
@@ -75,11 +93,20 @@
     background: rgba(7, 18, 16, .66);
     backdrop-filter: blur(6px);
     font: 800 12px/1 var(--mono);
+    white-space: nowrap;
   }
-  .hero .here {
-    position: absolute;
-    top: 12px;
-    right: 12px;
+  .bar-title {
+    overflow: hidden;
+    color: var(--title);
+    font: 700 14px/1.2 var(--mono);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .bar-title b { color: var(--w-warm); }
+  .page-bar.solid .bar-title { opacity: 1; }
+  .here {
     padding: 4px 7px;
     border: 1px solid color-mix(in srgb, var(--w) 60%, transparent);
     border-radius: 999px;
@@ -89,20 +116,38 @@
     letter-spacing: .08em;
     text-transform: uppercase;
   }
+
+  /* About 140px on a 740px-tall phone, up to 176px on the tallest. */
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: clamp(128px, 19dvh, 176px);
+    padding: 56px 14px 12px;
+    background: var(--board-wide) center / cover no-repeat;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11, 24, 21, .35) 0%, rgba(11, 24, 21, .15) 30%, rgba(11, 24, 21, .78) 72%, #0b1815 100%);
+  }
+  .hero > * { position: relative; }
   .hero-kicker { color: var(--w-warm); font: 850 11px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; text-shadow: 0 1px 3px #000; }
-  .hero h3 { margin: 4px 0 0; color: #fff7df; font: 700 22px/1.15 var(--serif); text-shadow: 0 1px 8px rgba(0, 0, 0, .8); }
+  .hero h3 { margin: 3px 0 0; color: #fff7df; font: 700 20px/1.15 var(--serif); text-shadow: 0 1px 8px rgba(0, 0, 0, .8); }
 
   .page-body { padding: 0 12px; }
   .guide-row {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: 40px minmax(0, 1fr);
     align-items: center;
     gap: 10px;
-    margin: 4px 0 10px;
+    margin: 6px 0 10px;
   }
   .guide-row img {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border: 2px solid color-mix(in srgb, var(--w) 70%, #000);
     border-radius: 50%;
     background: #0b1815;
@@ -129,6 +174,8 @@
   .pager small { display: block; color: var(--dim); font: 800 10.5px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
   .pager span { display: block; margin-top: 3px; color: #dce9e2; font: 650 12.5px/1.25 var(--sans); }
   .pager button:disabled { visibility: hidden; }
+  .esc-hint { margin: 14px 4px 0; color: var(--dim); font: 700 11px/1.4 var(--mono); text-align: center; }
+  .esc-hint kbd { padding: 1px 5px; border: 1px solid var(--line); border-radius: 4px; font: inherit; }
 
   .story-row { margin-bottom: 4px; }
   .epilogue { margin-top: 18px; }
@@ -140,18 +187,17 @@
 <script>
   const M = MapMock;
   const cap = id => id[0].toUpperCase() + id.slice(1);
-  const vars = u => `--w:${u.palette.bright};--w-warm:${u.palette.warm};--board:url('${M.asset(u.board)}');--board-wide:url('${M.asset(u.wideBoard)}')`;
+  const vars = u => `--w:${u.palette.bright};--w-warm:${u.palette.warm};--w-mid:${u.palette.mid};--board:url('${M.asset(u.board)}');--board-wide:url('${M.asset(u.wideBoard)}')`;
 
-  function card(u) {
+  function row(u) {
     const s = M.status(u);
     const pos = M.position(u);
-    const sub = s === "current" ? `Lesson ${pos.lesson} of ${pos.lessons} · here`
-      : s === "done" ? `${u.lessons.length} lessons · restored`
-      : `${u.lessons.length} lessons`;
-    return `<button type="button" class="d-card ${s}" style="${vars(u)}" data-unit="${u.id}"${s === "current" ? " data-current" : ""}>
-      <span class="d-thumb"></span>
-      <span><span class="d-kicker">Unit ${u.number}</span><span class="d-title">${M.inline(u.title)}</span><span class="d-sub">${sub}</span></span>
-      <span class="d-right">${s === "done" ? "✓" : "›"}</span>
+    const right = s === "done" ? '<span aria-label="Finished">✓</span>' : "›";
+    const sub = s === "current" ? `Lesson ${pos.lesson} of ${pos.lessons} · here` : `${u.lessons.length} lessons`;
+    return `<button type="button" class="d-row ${s}" style="${vars(u)}" data-unit="${u.id}"${s === "current" ? " data-current" : ""}>
+      <span class="strip"><b>${u.number}</b></span>
+      <span><span class="d-title">${M.inline(u.title)}</span><span class="d-sub">${sub}</span></span>
+      <span class="d-right">${right}</span>
     </button>`;
   }
 
@@ -159,7 +205,7 @@
     const arcs = M.D.arcs.map((arc, index) => `
       ${index ? '<div class="arc-divider" aria-hidden="true"><span>❦</span></div>' : ""}
       <h3 class="arc-heading"><span>Arc ${arc.number}</span><strong>${M.esc(arc.title)}</strong></h3>
-      ${M.unitsOfArc(arc).map(card).join("")}`).join("");
+      ${M.unitsOfArc(arc).map(row).join("")}`).join("");
     return `
       <button type="button" class="story-row" data-open="Prologue">
         <img src="${M.asset(M.D.story.intro[0].asset)}" alt="">
@@ -187,9 +233,12 @@
     const progress = s === "current"
       ? `<div class="page-progress"><span>Lesson ${pos.lesson} of ${pos.lessons}</span><span class="bar"><i style="width:${Math.max(4, pos.fraction * 100)}%"></i></span></div>`
       : "";
-    return `<div class="hero" style="${vars(u)}">
+    return `<div class="page-bar" style="${vars(u)}">
         <button type="button" class="back" data-back>‹ All units</button>
-        ${s === "current" ? '<span class="here">Here</span>' : ""}
+        <span class="bar-title"><b>${u.number}</b> ${M.inline(u.title)}</span>
+        ${s === "current" ? '<span class="here">Here</span>' : "<span></span>"}
+      </div>
+      <div class="hero" style="${vars(u)}">
         <span class="hero-kicker">Arc ${arc.number} · Unit ${u.number}</span>
         <h3>${M.inline(u.title)}</h3>
       </div>
@@ -204,6 +253,7 @@
           <button type="button" data-unit="${prev?.id || ""}"${prev ? "" : " disabled"}><small>‹ Unit ${prev?.number ?? ""}</small><span>${prev ? M.inline(prev.title) : ""}</span></button>
           <button type="button" data-unit="${next?.id || ""}"${next ? "" : " disabled"}><small>Unit ${next?.number ?? ""} ›</small><span>${next ? M.inline(next.title) : ""}</span></button>
         </div>
+        <p class="esc-hint"><kbd>Esc</kbd> or back returns to all units; a second press closes the map.</p>
       </div>`;
   }
 
@@ -216,6 +266,15 @@
     onCourse: panel => {
       const listView = panel.querySelector(".view.list");
       const pageView = panel.querySelector(".view.page");
+      const onPage = () => !pageView.classList.contains("away");
+
+      // Solid bar once the hero's title has scrolled under it.
+      pageView.addEventListener("scroll", () => {
+        const hero = pageView.querySelector(".hero");
+        const bar = pageView.querySelector(".page-bar");
+        if (hero && bar) bar.classList.toggle("solid", pageView.scrollTop > hero.offsetHeight - 60);
+      });
+
       const showList = () => {
         listView.classList.remove("away");
         pageView.classList.add("away");
@@ -234,7 +293,20 @@
         const unit = event.target.closest("[data-unit]");
         if (unit && unit.dataset.unit) showUnit(unit.dataset.unit);
       });
+
+      // Two-step Escape: a unit page steps back to the list first; only the
+      // list closes the map. The × button always closes straight away.
+      document.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        const course = document.querySelector('[data-panel="course"]');
+        if (!course.hidden && onPage()) showList();
+        else M.toast("Would close the map", "");
+      });
+      document.querySelector(".close").addEventListener("click", () => M.toast("Would close the map", ""));
+
       showUnit(M.state.unitId);
+      if (new URLSearchParams(location.search).get("view") === "list") showList();
     }
   });
 </script>
