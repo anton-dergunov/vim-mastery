@@ -54,7 +54,8 @@ export function showEntryLevelQuestion() {
 }
 
 // One helper for both surfaces: the first-run question and the Settings row
-// hold the same three options and must never drift apart. Destinations are
+// hold the same three options and must never drift apart. The question names
+// each option's destination; Settings names only the chosen one's. Destinations are
 // written from the catalog, so no unit number is spelled out in the markup.
 export function renderEntryLevelOptions() {
   const level = entryLevelValues.has(state.entryLevel) ? state.entryLevel : "new";
@@ -67,6 +68,7 @@ export function renderEntryLevelOptions() {
   const landing = entryLandingUnit(level);
   if (elements.entryStartButton) elements.entryStartButton.textContent = `Start Unit ${landing.unitNumber}`;
   if (elements.entryLandingButton) elements.entryLandingButton.textContent = `Open Unit ${landing.unitNumber}`;
+  if (elements.entryLevelSummary) elements.entryLevelSummary.textContent = `Starts at Unit ${landing.unitNumber}, ${landing.title}.`;
 }
 function handleEntryLevelChange(event) {
   const value = event.target.closest('input[name="entry-level"], input[name="entry-level-question"]')?.value;

@@ -336,66 +336,55 @@
       </div>
     </dialog>
 
-    <dialog class="app-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+    <dialog class="app-dialog settings-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
       <div class="dialog-head">
         <div>
-          <span class="dialog-kicker">Appearance</span>
           <h2 id="settingsTitle">Settings</h2>
         </div>
         <button class="dialog-close" type="button" data-close-dialog="settingsDialog" aria-label="Close settings">×</button>
       </div>
-      <div class="dialog-body">
-        <fieldset class="keyboard-options" id="keyboardOptions">
-          <legend>On-screen keyboard</legend>
-          <label><input type="radio" name="keyboard-visibility" value="visible"> <span><strong>Show keyboard</strong><small>Keep the physical-style keys available on screen.</small></span></label>
-          <label><input type="radio" name="keyboard-visibility" value="hidden"> <span><strong>Hide keyboard</strong><small>Physical keyboard input still controls the lesson.</small></span></label>
-        </fieldset>
-        <fieldset class="keyboard-options vim-effect-options" id="vimEffectOptions">
-          <legend>Vim action effects</legend>
-          <label><input type="radio" name="vim-effects" value="enabled"> <span><strong>Enable effects</strong><small>Animate exact ranges, selections, captures, repeats, and jumps.</small></span></label>
-          <label><input type="radio" name="vim-effects" value="disabled"> <span><strong>Disable effects</strong><small>Keep the editor still while preserving all Vim behavior and feedback.</small></span></label>
-        </fieldset>
-        <fieldset class="keyboard-options" id="backdropOptions">
-          <legend>Generated backdrops</legend>
-          <label><input type="radio" name="generated-backdrops" value="enabled"> <span><strong>Show generated scenes</strong><small>Use the illustrated lesson worlds and their subtle scene variations.</small></span></label>
-          <label><input type="radio" name="generated-backdrops" value="disabled"> <span><strong>Use simple backgrounds</strong><small>Use quiet world-colored gradients and abstract shapes instead.</small></span></label>
-        </fieldset>
-        <fieldset class="keyboard-options" id="characterOptions">
-          <legend>Characters</legend>
-          <label><input type="radio" name="characters" value="enabled"> <span><strong>Show characters</strong><small>Display lesson companions and their success celebrations.</small></span></label>
-          <label><input type="radio" name="characters" value="disabled"> <span><strong>Hide characters</strong><small>Remove companions, animations, and character crossfades.</small></span></label>
-        </fieldset>
-        <fieldset class="theme-options" id="themeOptions">
-          <legend>World theme</legend>
-          <label><input type="radio" name="theme" value="auto"> <span><strong>Follow lesson</strong><small>Use the world chosen for each lesson.</small></span></label>
-          <label><input type="radio" name="theme" value="moonroot"> <span><strong>Moonroot Ruins</strong><small>Verdant stone and violet magic.</small></span></label>
-          <label><input type="radio" name="theme" value="ember"> <span><strong>Ember Vault</strong><small>Warm stone and beacon light.</small></span></label>
-          <label><input type="radio" name="theme" value="glass"> <span><strong>Hall of Mirrors</strong><small>Cool glass and reflected light.</small></span></label>
-          <label><input type="radio" name="theme" value="deepwater"> <span><strong>Deepwater Archive</strong><small>Dark water and archive blue.</small></span></label>
-        </fieldset>
-        <fieldset class="keyboard-options" id="entryLevelOptions">
-          <legend>Starting point</legend>
-          <label><input type="radio" name="entry-level" value="new"> <span><strong>New to Vim</strong><small>You have not used Vim, or only briefly. <span data-entry-destination="new"></span></small></span></label>
-          <label><input type="radio" name="entry-level" value="basics"> <span><strong>Familiar with the basics</strong><small>You move and edit, but not with registers or macros. <span data-entry-destination="basics"></span></small></span></label>
-          <label><input type="radio" name="entry-level" value="experienced"> <span><strong>Experienced</strong><small>You want the automation arc: ranges, substitution, macros. <span data-entry-destination="experienced"></span></small></span></label>
-          <button class="note-action secondary-action" id="entryLandingButton" type="button">Open Unit 1</button>
-        </fieldset>
-        <section class="story-settings" aria-labelledby="storySettingsTitle">
-          <strong id="storySettingsTitle">Story</strong>
-          <p>Replay the three-part introduction without changing lesson progress.</p>
+      <div class="dialog-body settings-body">
+        <section class="settings-update" id="updateBanner" aria-live="polite" hidden>
+          <span><strong>A new version is ready.</strong><small>Restarting keeps your place in the course.</small></span>
+          <button class="note-action" id="restartUpdateButton" type="button">Restart</button>
+        </section>
+        <section class="settings-section settings-display" aria-labelledby="settingsDisplayTitle">
+          <h3 class="settings-heading" id="settingsDisplayTitle">Display</h3>
+          <div class="settings-group">
+            <label class="setting-switch" id="keyboardOptions"><span><strong>On-screen keyboard</strong><small>A physical keyboard still works when it is hidden.</small></span><input type="checkbox" role="switch" name="keyboard-visibility"></label>
+            <label class="setting-switch" id="vimEffectOptions"><span><strong>Vim action effects</strong><small>Animate ranges, selections, repeats, and jumps.</small></span><input type="checkbox" role="switch" name="vim-effects"></label>
+            <label class="setting-switch" id="backdropOptions"><span><strong>Illustrated scenes</strong><small>Off uses quiet world-colored backgrounds.</small></span><input type="checkbox" role="switch" name="generated-backdrops"></label>
+            <label class="setting-switch" id="characterOptions"><span><strong>Characters</strong><small>Lesson companions and their celebrations.</small></span><input type="checkbox" role="switch" name="characters"></label>
+          </div>
+        </section>
+        <div class="settings-section settings-choices">
+          <fieldset class="settings-chips" id="themeOptions">
+            <legend class="settings-heading">World theme</legend>
+            <label title="Use the world chosen for each lesson."><input type="radio" name="theme" value="auto"><i class="settings-swatch" data-swatch="auto" aria-hidden="true"></i><span>Follow lesson</span></label>
+            <label title="Verdant stone and violet magic."><input type="radio" name="theme" value="moonroot"><i class="settings-swatch" data-swatch="moonroot" aria-hidden="true"></i><span>Moonroot Ruins</span></label>
+            <label title="Warm stone and beacon light."><input type="radio" name="theme" value="ember"><i class="settings-swatch" data-swatch="ember" aria-hidden="true"></i><span>Ember Vault</span></label>
+            <label title="Cool glass and reflected light."><input type="radio" name="theme" value="glass"><i class="settings-swatch" data-swatch="glass" aria-hidden="true"></i><span>Hall of Mirrors</span></label>
+            <label title="Dark water and archive blue."><input type="radio" name="theme" value="deepwater"><i class="settings-swatch" data-swatch="deepwater" aria-hidden="true"></i><span>Deepwater Archive</span></label>
+          </fieldset>
+          <fieldset class="settings-chips settings-entry" id="entryLevelOptions">
+            <legend class="settings-heading">Starting point</legend>
+            <label title="You have not used Vim, or only briefly."><input type="radio" name="entry-level" value="new"><span>New to Vim</span></label>
+            <label title="You move and edit, but not with registers or macros."><input type="radio" name="entry-level" value="basics"><span>Familiar with the basics</span></label>
+            <label title="You want the automation arc: ranges, substitution, macros."><input type="radio" name="entry-level" value="experienced"><span>Experienced</span></label>
+            <div class="settings-entry-summary">
+              <p id="entryLevelSummary"></p>
+              <button class="note-action secondary-action" id="entryLandingButton" type="button">Open Unit 1</button>
+            </div>
+          </fieldset>
+        </div>
+        <div class="settings-actions">
           <button class="note-action secondary-action" id="replayStoryButton" type="button">Replay Story</button>
-        </section>
-        <section class="story-settings" aria-labelledby="feedbackSettingsTitle">
-          <strong id="feedbackSettingsTitle">Feedback</strong>
-          <p>Report a problem with this lesson, or anything else you noticed.</p>
           <button class="note-action secondary-action" id="feedbackSettingsButton" type="button">Report a problem</button>
-        </section>
-        <section class="app-version-panel" aria-label="Application version">
-          <strong>Application</strong>
+        </div>
+        <footer class="settings-footer" aria-label="Application version">
           <span id="currentVersion"></span>
-          <p id="updateStatus">Checking for updates when Vim Wilds opens.</p>
-          <button class="note-action" id="restartUpdateButton" type="button" hidden>Restart with update</button>
-        </section>
+          <span id="updateStatus">Checking for updates when Vim Wilds opens.</span>
+        </footer>
       </div>
     </dialog>
 

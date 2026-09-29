@@ -25,7 +25,9 @@ export function activeCommandGroup(activity = currentActivity(), step = state.pl
     || activity.script?.commandGroups.at(-1);
 }
 
-function executionAssembly(steps, step, done) {
+// Recall asks for the command from memory, so an untyped chip keeps its role
+// ("delete", "around word") and hides its key, the way NEXT hides the next one.
+function executionAssembly(steps, step, done, conceal = false) {
   const parts = [];
   for (let index = 0; index < steps.length; index += 1) {
     const item = steps[index];
@@ -41,12 +43,13 @@ function executionAssembly(steps, step, done) {
         kind: "text-object",
         cue: `${item.cue} ${next.cue || "object"}`,
         active: done || index + 1 < step,
+        concealed: conceal && !(done || index + 1 < step),
       });
       index += 1;
       continue;
     }
     if (!["count", "operator", "motion", "text-object"].includes(item.kind)) continue;
-    parts.push({ key: item.key, kind: item.kind, cue: item.cue, active: done || index < step });
+    parts.push({ key: item.key, kind: item.kind, cue: item.cue, active: done || index < step, concealed: conceal && !(done || index < step) });
   }
   return parts;
 }
@@ -88,14 +91,14 @@ function executionContent(activity, step, history, complete = false, preview = {
     secondary: done ? "Complete" : activity.type === "demo" ? `${step + 1} / ${keys.length}` : retry ? "Again" : reveal ? "A clue" : recall ? "From\nmemory" : "",
     stepStatus: !done && activity.type === "demo",
     key: done || (recall && !reveal) ? null : keys[step],
-    assembly: executionAssembly(activity.script.steps, step, done),
+    assembly: executionAssembly(activity.script.steps, step, done, recall && !reveal),
     impact,
   };
 }
 
 function applyExecutionContent(root, content) {
   const assembly = content.assembly.length
-    ? `<div class="execution-assembly" style="--assembly-count:${content.assembly.length}">${content.assembly.map(part => `<span class="assembly-part role-${part.kind}${part.active ? " active" : ""}"><kbd>${escapeHtml(part.key)}</kbd><small>${escapeHtml(part.cue || part.kind)}</small></span>`).join("")}</div>`
+    ? `<div class="execution-assembly" style="--assembly-count:${content.assembly.length}">${content.assembly.map(part => `<span class="assembly-part role-${part.kind}${part.active ? " active" : ""}">${part.concealed ? `<kbd class="concealed" aria-hidden="true">·</kbd>` : `<kbd>${escapeHtml(part.key)}</kbd>`}<small>${escapeHtml(part.cue || part.kind)}</small></span>`).join("")}</div>`
     : "";
   $(".command-explanation", root).innerHTML = `${renderInline(content.explanation)}${assembly}`;
   const history = $(".command-text", root);

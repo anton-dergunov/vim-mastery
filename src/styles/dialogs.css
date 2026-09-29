@@ -1,17 +1,5 @@
 /* Dialogs: the shared sheet frame, settings, reference decks, free practice files, feedback, and the entry question. The course map's own rules are in course-map.css. */
 
-.app-version-panel {
-  display: grid;
-  gap: 6px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(206, 238, 219, .13);
-}
-
-.app-version-panel strong { font-size: 12px; }
-.app-version-panel span { color: var(--amber); font: 700 11px/1.2 ui-monospace, monospace; }
-.app-version-panel p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.35; }
-
 /* The in-dialog report control. It sits in each sheet's heading row rather than
    in its body, because every one of those bodies is replaced wholesale on
    render, and because a row of its own would cost the contents and reference
@@ -82,44 +70,6 @@
   scrollbar-gutter: stable;
 }
 
-.theme-options {
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-  border: 0;
-}
-
-.theme-options legend {
-  margin-bottom: 10px;
-  color: #fff7df;
-  font: 700 20px/1.2 Georgia, serif;
-}
-
-.theme-options label {
-  min-height: 60px;
-  padding: 11px 12px;
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgba(160, 199, 180, .16);
-  border-radius: 9px;
-  background: rgba(255,255,255,.025);
-  cursor: pointer;
-}
-
-.theme-options label:has(input:checked) {
-  border-color: color-mix(in srgb, var(--theme-bright) 60%, transparent);
-  background: color-mix(in srgb, var(--theme-mid) 28%, rgba(4, 13, 12, .75));
-}
-
-.theme-options input { accent-color: var(--theme-bright); }
-.theme-options span { min-width: 0; display: grid; gap: 4px; }
-.theme-options strong { font-size: 15px; line-height: 1.25; overflow-wrap: anywhere; }
-.theme-options small { color: #91aa9d; font-size: 13px; line-height: 1.3; overflow-wrap: anywhere; }
-
-.settingsButton.update-ready,
 #settingsButton.update-ready { position: relative; }
 #settingsButton.update-ready::after,
 .landscape-controls .icon-button.update-ready::after {
@@ -133,6 +83,207 @@
   border-radius: 50%;
   background: var(--amber);
   box-shadow: 0 0 8px rgba(255, 200, 102, .6);
+}
+
+/* Settings. On/off preferences are switch rows in one group; the theme and the
+   starting point are chips, so the whole sheet reads at a glance. Its frame
+   follows the shared sheet frame below. */
+.settings-body {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 14px 14px 12px;
+}
+
+.settings-heading {
+  margin: 0 0 8px;
+  padding: 0;
+  color: #7fbf9f;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.settings-update {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 200, 102, .45);
+  border-radius: 12px;
+  background: rgba(255, 200, 102, .08);
+}
+
+.settings-update[hidden] { display: none; }
+.settings-update span { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.settings-update strong { color: #ffe2a0; font-size: 14px; line-height: 1.25; }
+.settings-update small { color: #c9b791; font-size: 12px; line-height: 1.3; }
+.settings-update .note-action { flex: none; min-height: 40px; margin: 0; padding: 8px 16px; }
+
+.settings-group {
+  overflow: hidden;
+  border: 1px solid rgba(160, 199, 180, .16);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+
+.setting-switch {
+  min-height: 58px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.setting-switch + .setting-switch { border-top: 1px solid rgba(166, 219, 192, .1); }
+.setting-switch span { min-width: 0; display: grid; gap: 3px; }
+.setting-switch strong { font-size: 15px; line-height: 1.25; }
+.setting-switch small { color: #91aa9d; font-size: 12.5px; line-height: 1.3; }
+
+.setting-switch input {
+  position: relative;
+  width: 46px;
+  height: 28px;
+  margin: 0;
+  flex: none;
+  appearance: none;
+  border: 1px solid rgba(160, 199, 180, .3);
+  border-radius: 999px;
+  background: #16241f;
+  cursor: pointer;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+
+.setting-switch input::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #8fa69a;
+  box-shadow: 0 1px 3px rgba(0,0,0,.45);
+  transition: transform .18s ease, background-color .18s ease;
+}
+
+.setting-switch input:checked {
+  border-color: var(--theme-bright);
+  background: color-mix(in srgb, var(--theme-bright) 62%, #0b1815);
+}
+
+.setting-switch input:checked::before {
+  transform: translateX(18px);
+  background: #fbfff9;
+}
+
+.setting-switch input:focus-visible,
+.settings-chips label:has(input:focus-visible) {
+  outline: 2px solid var(--theme-bright);
+  outline-offset: 2px;
+}
+
+.settings-choices { display: grid; gap: 18px; align-content: start; }
+
+.settings-chips {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  border: 0;
+}
+
+.settings-chips label {
+  position: relative;
+  min-height: 44px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgba(160, 199, 180, .16);
+  border-radius: 10px;
+  color: #d6e5dc;
+  background: rgba(255,255,255,.025);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+/* The radio covers its chip, so a tap anywhere selects it and arrow keys still
+   move between the options of one group. */
+.settings-chips input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.settings-chips span { min-width: 0; overflow-wrap: anywhere; }
+
+.settings-chips label:has(input:checked) {
+  border-color: color-mix(in srgb, var(--theme-bright) 60%, transparent);
+  color: #fff7df;
+  background: color-mix(in srgb, var(--theme-mid) 34%, rgba(4, 13, 12, .75));
+}
+
+#themeOptions label:first-of-type { grid-column: 1 / -1; }
+
+.settings-swatch {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 50%;
+}
+
+.settings-swatch[data-swatch="auto"] { background: conic-gradient(#77e0a3 0 25%, #f59a61 0 50%, #78dbea 0 75%, #55bfd0 0); }
+.settings-swatch[data-swatch="moonroot"] { background: linear-gradient(135deg, #77e0a3, #1c533d 58%, #a77bff); }
+.settings-swatch[data-swatch="ember"] { background: linear-gradient(135deg, #f59a61, #683420 58%, #ff7468); }
+.settings-swatch[data-swatch="glass"] { background: linear-gradient(135deg, #78dbea, #234f68 58%, #b89cff); }
+.settings-swatch[data-swatch="deepwater"] { background: linear-gradient(135deg, #55bfd0, #123f4e 58%, #888cff); }
+
+.settings-entry { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.settings-entry label { justify-content: center; padding: 8px; font-size: 13px; text-align: center; }
+
+.settings-entry-summary {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.settings-entry-summary p { flex: 1; min-width: 0; margin: 0; color: #adc1b6; font-size: 13px; line-height: 1.35; }
+.settings-entry-summary .note-action { flex: none; min-height: 40px; margin: 0; padding: 8px 14px; }
+
+.settings-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.settings-actions .note-action { width: 100%; margin: 0; }
+
+.settings-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.settings-footer #currentVersion { color: var(--amber); font: 700 11px/1.35 ui-monospace, monospace; }
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-switch input,
+  .setting-switch input::before { transition: none; }
 }
 
 .keyboard-options {
@@ -173,16 +324,6 @@
 .keyboard-options strong { font-size: 15px; line-height: 1.25; }
 .keyboard-options small { color: #91aa9d; font-size: 13px; line-height: 1.3; }
 
-/* The entry level reuses the settings option rows verbatim. In Settings it
-   follows the theme fieldset, which ends without a rule, so it carries its own
-   separator instead of the shared bottom border. */
-#entryLevelOptions {
-  margin: 16px 0 0;
-  padding: 16px 0 0;
-  border-top: 1px solid rgba(166, 219, 192, .12);
-  border-bottom: 0;
-}
-
 .entry-dialog #entryQuestionOptions {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -190,9 +331,8 @@
 }
 
 /* `.note-action` is a centered block with a 20px top margin, which would shrink
-   it inside these grid parents. Both surfaces want a full-width commit button,
-   the way the story and practice-notice rows already do. */
-#entryLevelOptions .note-action,
+   it inside this grid parent. The entry question wants a full-width commit
+   button, the way the practice-notice row already does. */
 .entry-dialog .note-action {
   width: 100%;
   margin: 12px 0 0;
@@ -241,6 +381,32 @@
     margin: 0;
     transform: translateX(-50%);
   }
+}
+
+/* Settings is only as tall as its contents, and on a tablet it sits in the
+   middle of the screen in two columns instead of stretching to the bottom. */
+.settings-dialog[open] {
+  bottom: auto;
+  max-height: calc(100% - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+@media (min-width: 600px) {
+  .settings-dialog[open] {
+    top: 50%;
+    width: min(calc(100% - 48px), 820px);
+    max-height: calc(100% - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    transform: translate(-50%, -50%);
+  }
+
+  .settings-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 22px;
+    padding: 18px 20px 14px;
+  }
+
+  .settings-update,
+  .settings-actions,
+  .settings-footer { grid-column: 1 / -1; }
 }
 
 /* ---------------------------------------------------------------------------
@@ -488,6 +654,36 @@
   }
 
   .reference-row-heading span:first-child { display: none; }
+}
+
+/* Tablets get the same frame as the course map. A 16:9 board at that width
+   would push the cards off screen, so its height is capped instead; a wide
+   screen puts it beside the cards, the way the story sheet does. */
+@media (min-width: 600px) {
+  .reference-dialog[open] {
+    inset: calc(12px + env(safe-area-inset-top)) auto calc(12px + env(safe-area-inset-bottom)) 50%;
+    width: min(calc(100% - 48px), 920px);
+  }
+
+  .reference-dialog .reference-visual.world {
+    height: clamp(180px, 30dvh, 340px);
+    aspect-ratio: auto;
+  }
+
+  .reference-content { padding: 18px 24px 22px; }
+}
+
+@media (min-width: 600px) and (min-aspect-ratio: 5 / 4) {
+  .reference-surface {
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .reference-dialog .reference-visual.world {
+    height: 100%;
+    border-right: 1px solid rgba(193, 220, 206, .18);
+    border-bottom: 0;
+  }
 }
 
 /* Short landscape leaves no room for a board above the text; the cards matter

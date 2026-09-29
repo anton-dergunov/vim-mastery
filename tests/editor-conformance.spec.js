@@ -2243,6 +2243,50 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".hint-step")).toHaveCount(1);
   });
 
+  test("lights the keyboard only for the final hint, one key at a time", async ({ page }) => {
+    await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
+    const lit = page.locator("#keyboard .key.hinted, #keyboard .key.hint-playing");
+    for (const level of [1, 2]) {
+      await page.getByRole("button", { name: "Open hints" }).click();
+      await expect(page.locator(".hint-step")).toHaveCount(level);
+      await expect(lit).toHaveCount(0);
+      await page.getByRole("button", { name: "Close help" }).click();
+    }
+    await page.getByRole("button", { name: "Open hints" }).click();
+    await expect(page.locator(".hint-step")).toHaveCount(3);
+    await expect(page.locator('#keyboard .key.hint-playing[data-key="c"]')).toHaveCount(1);
+    await expect(page.locator('#keyboard .key.hint-playing[data-key="i"]')).toHaveCount(1);
+    await expect(page.locator('#keyboard .key.hint-playing[data-key="c"]')).toHaveCount(0);
+    // An accepted key closes the card and stops the loop for good.
+    await page.keyboard.press("c");
+    await expect(page.locator("#helpCard")).not.toHaveClass(/open/);
+    await page.waitForTimeout(900);
+    await expect(lit).toHaveCount(0);
+  });
+
+  test("outlines the remaining keys at once on the final hint under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/?unit=text-objects&activity=delete-around-word");
+    await page.getByRole("button", { name: "Open hints" }).click();
+    await expect(page.locator("#keyboard .key.hinted")).toHaveCount(0);
+    await page.getByRole("button", { name: "Close help" }).click();
+    await page.getByRole("button", { name: "Open hints" }).click();
+    for (const key of ["d", "a", "w"]) await expect(page.locator(`#keyboard .key.hinted[data-key="${key}"]`)).toHaveCount(1);
+    await expect(page.locator("#keyboard .key.hint-playing")).toHaveCount(0);
+  });
+
+  test("recall keeps the command chips' roles but hides their keys until typed", async ({ page }) => {
+    await page.goto("/?unit=text-objects&activity=delete-around-word-recall");
+    const keys = page.locator(".command-explanation .assembly-part kbd");
+    await expect(page.locator(".command-explanation .assembly-part small")).toHaveText(["delete", "around word"]);
+    await expect(keys).toHaveText(["·", "·"]);
+    await page.evaluate(() => window.VimWilds.emit("d"));
+    await expect(keys).toHaveText(["d", "·"]);
+    for (let attempt = 0; attempt < 3; attempt += 1) await page.evaluate(() => window.VimWilds.emit("x"));
+    await expect(page.locator(".status-primary")).toHaveText("Next");
+    await expect(keys).toHaveText(["d", "aw"]);
+  });
+
   test("returns physical keyboard focus to practice after opening or closing Help", async ({ page }) => {
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.getByRole("button", { name: "Open hints" }).click();
@@ -2430,8 +2474,12 @@ test.describe("Production lesson flow", () => {
     expect(decorativeRequests.some(url => url.includes("scenes/mode-lantern-grounds/"))).toBe(true);
 
     const editorBefore = await state(page);
+    const scenesSwitch = page.getByRole("switch", { name: "Illustrated scenes" });
+    const charactersSwitch = page.getByRole("switch", { name: "Characters" });
     await page.getByRole("button", { name: "Open settings" }).click();
-    await page.getByLabel("Show generated scenes").check();
+    await expect(scenesSwitch).not.toBeChecked();
+    await expect(charactersSwitch).not.toBeChecked();
+    await scenesSwitch.check();
     await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");
     expect((await state(page))).toMatchObject({
       code: editorBefore.code,
@@ -2440,17 +2488,17 @@ test.describe("Production lesson flow", () => {
     });
     await expect(page.locator(".nix")).toHaveCount(0);
 
-    await page.getByLabel("Show characters").check();
+    await charactersSwitch.check();
     await page.waitForFunction(() => document.documentElement.dataset.charactersReady === "true");
     await expect(page.locator(".nix")).toHaveCount(1);
     expect((await state(page))).toMatchObject({
       generatedBackdrops: "enabled",
       characters: "enabled",
     });
-    await page.getByLabel("Use simple backgrounds").check();
+    await scenesSwitch.uncheck();
     await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");
     await expect(page.locator(".nix")).toHaveCount(1);
-    await page.getByLabel("Show generated scenes").check();
+    await scenesSwitch.check();
 
     await page.reload();
     expect((await state(page))).toMatchObject({
@@ -2460,8 +2508,8 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator(".nix")).toHaveCount(1);
 
     await page.getByRole("button", { name: "Open settings" }).click();
-    await page.getByLabel("Use simple backgrounds").check();
-    await page.getByLabel("Hide characters").check();
+    await scenesSwitch.uncheck();
+    await charactersSwitch.uncheck();
     await page.getByRole("button", { name: "Close settings" }).click();
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await expect(page.locator("#world")).toHaveAttribute("data-renderer", "registered-scenes");

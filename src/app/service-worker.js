@@ -12,8 +12,8 @@ function showUpdateReady(registration) {
   elements.settingsButton?.classList.add("update-ready");
   elements.settingsButton?.setAttribute("aria-label", "Open settings — update ready");
   $("[data-layout-action=\"settings\"]")?.classList.add("update-ready");
-  elements.restartUpdateButton.hidden = false;
-  elements.updateStatus.textContent = "A newer build has downloaded and is ready to restart.";
+  elements.updateBanner.hidden = false;
+  elements.updateStatus.textContent = "A newer build has downloaded.";
 }
 
 export function registerServiceWorker() {

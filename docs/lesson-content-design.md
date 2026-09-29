@@ -71,6 +71,12 @@ Runnable activities share an editor scenario:
 - primary/supporting skills, difficulty dimensions, portability, and generation
   provenance.
 
+Hints are staged so each one gives away a little more, and the last one names
+the answer. The on-screen keyboard stays out of the hints until the last one,
+then plays the remaining keys in order, one at a time, and loops. Earlier
+hints are words only. A recall run shows each command chip's role but not its
+key until the key is typed, just as it hides the next key.
+
 Ranges use zero-based `[line, column]` positions and an exclusive end. Incidental
 cursor or mode properties should not be required. Cursor-moving teaching steps
 must have checkpoints so demonstrations and conformance fixtures cannot drift.

@@ -184,7 +184,7 @@ test("unit rows paint small thumbnails, and nothing when backdrops are off", asy
   await page.locator("#tocDialog .dialog-close").click();
 
   await page.getByRole("button", { name: "Open settings" }).click();
-  await page.locator('#settingsDialog input[name="generated-backdrops"][value="disabled"]').check();
+  await page.getByRole("switch", { name: "Illustrated scenes" }).uncheck();
   await page.locator("#settingsDialog .dialog-close").click();
   await page.locator("#tocButton").click();
   expect(await strip.evaluate(node => getComputedStyle(node).backgroundImage)).not.toContain("url(");

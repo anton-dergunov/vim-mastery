@@ -72,6 +72,17 @@
   color: #fff1bf;
   box-shadow: 0 2px 0 var(--key-shadow), 0 0 10px rgba(255, 199, 83, .4), inset 0 0 0 1px rgba(255,223,144,.12);
 }
+/* The final hint plays the answer one key at a time; the lit key is filled so
+   it reads as a press, not as one outline among many. */
+.key.hint-playing {
+  transform: translateY(1px);
+  color: #2a1d08;
+  border-color: #ffe29a;
+  background: linear-gradient(#ffe59a, #d9ad57);
+  box-shadow: 0 1px 0 #715222, 0 0 16px rgba(255, 199, 83, .6);
+}
+.key.hint-playing .shifted,
+.key.hint-playing .base { color: inherit; }
 .u-115 { flex-grow: 1.15; }
 .u-145 { flex-grow: 1.45; }
 .u-17 { flex-grow: 1.7; }

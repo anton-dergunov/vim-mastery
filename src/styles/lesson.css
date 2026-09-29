@@ -826,6 +826,7 @@
 }
 .assembly-part.active { opacity: 1; border-color: rgba(255, 211, 111, .42); background: rgba(101, 71, 24, .18); }
 .assembly-part kbd { color: #ffe5a4; font: 900 13px/1 ui-monospace, monospace; }
+.assembly-part kbd.concealed { color: #7d8f86; }
 .assembly-part small {
   max-width: 100%;
   overflow: hidden;

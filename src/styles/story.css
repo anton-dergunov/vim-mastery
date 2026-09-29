@@ -1,26 +1,5 @@
 /* The story surface: intro panels, unit endings, the finale, and the writing pen. */
 
-.story-settings,
-.app-version-panel {
-  margin-top: 14px;
-  padding: 14px;
-  border: 1px solid rgba(193, 220, 206, .18);
-  border-radius: 12px;
-  background: rgba(255,255,255,.025);
-}
-
-.story-settings p {
-  margin: 6px 0 0;
-  color: #adc1b6;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.story-settings .note-action {
-  width: 100%;
-  margin-top: 12px;
-}
-
 .story-dialog[open] {
   position: fixed;
   z-index: 100;

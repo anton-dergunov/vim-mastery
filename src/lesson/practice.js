@@ -187,19 +187,52 @@ export function processToken(token, button) {
   return vimEngine.sendKey(token, { source: "lesson" });
 }
 
+// The keyboard answers only the final hint, which already spells the answer
+// out in text. It plays the remaining keys in order, each with the modifier it
+// needs, and loops until the card closes. Earlier hints stay words only.
+const hintKeyTiming = { on: 550, off: 150, rest: 1200 };
+let hintKeyTimer = null;
+
+function clearHintKeys() {
+  window.clearTimeout(hintKeyTimer);
+  hintKeyTimer = null;
+  $$(".key", elements.keyboard).forEach(button => button.classList.remove("hinted", "hint-playing"));
+}
+
+function showHintKeys() {
+  const tokens = scriptKeys().slice(state.progress);
+  if (!tokens.length) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    tokens.forEach(token => requiredButtons(token).forEach(button => button.classList.add("hinted")));
+    return;
+  }
+  let index = 0;
+  const light = () => {
+    requiredButtons(tokens[index]).forEach(button => button.classList.add("hint-playing"));
+    hintKeyTimer = window.setTimeout(dim, hintKeyTiming.on);
+  };
+  const dim = () => {
+    $$(".key.hint-playing", elements.keyboard).forEach(button => button.classList.remove("hint-playing"));
+    index = (index + 1) % tokens.length;
+    hintKeyTimer = window.setTimeout(light, index ? hintKeyTiming.off : hintKeyTiming.rest);
+  };
+  light();
+}
+
 export function setHelp(open) {
   const canHelp = isPractice() && !isFreePractice();
+  const hints = currentActivity().hints || [];
   if (open && canHelp) {
-    state.hintLevel = Math.min(currentActivity().hints.length, state.hintLevel + 1);
+    state.hintLevel = Math.min(hints.length, state.hintLevel + 1);
     renderHints();
   }
   elements.helpCard.classList.toggle("open", Boolean(open && canHelp));
   elements.helpCard.setAttribute("aria-hidden", String(!(open && canHelp)));
   if (open) vimEngine?.clearEffects();
   elements.hintButton?.setAttribute("aria-expanded", String(Boolean(open && canHelp)));
-  $$(".key", elements.keyboard).forEach(button => button.classList.remove("hinted"));
+  clearHintKeys();
   if (open && canHelp) {
-    scriptKeys().forEach(token => requiredButtons(token).forEach(button => button.classList.add("hinted")));
+    if (hints.length && state.hintLevel >= hints.length) showHintKeys();
     vibrate(5);
   }
   // The hint control receives browser focus on tap. Restore the practice

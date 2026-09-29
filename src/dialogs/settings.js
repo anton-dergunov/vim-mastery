@@ -4,12 +4,9 @@
 import { $ } from "../app/dom.js";
 import {
   allowedThemes,
-  decorativeMediaValues,
   elements,
-  keyboardVisibilityValues,
   persistSession,
   state,
-  vimEffectValues,
 } from "../app/context.js";
 import { currentActivity } from "../app/activity.js";
 import { renderActivityControls } from "../app/render.js";
@@ -31,21 +28,27 @@ import { vimEngine } from "../editor/mount.js";
 import { storyTransitions } from "./story.js";
 import { renderEntryLevelOptions } from "./entry-level.js";
 
+// The on/off preferences are switches, but the session keeps the two-valued
+// strings it always has, so a saved session reads the same either way.
+function switchFor(container) {
+  return $('input[type="checkbox"]', container);
+}
+
 export function renderKeyboardOptions() {
-  const selected = $(`input[name="keyboard-visibility"][value="${state.keyboardVisibility}"]`, elements.keyboardOptions);
-  if (selected) selected.checked = true;
+  const input = switchFor(elements.keyboardOptions);
+  if (input) input.checked = state.keyboardVisibility === "visible";
 }
 
 export function renderVimEffectOptions() {
-  const selected = $(`input[name="vim-effects"][value="${state.vimEffects}"]`, elements.vimEffectOptions);
-  if (selected) selected.checked = true;
+  const input = switchFor(elements.vimEffectOptions);
+  if (input) input.checked = state.vimEffects === "enabled";
 }
 
 export function renderDecorativeMediaOptions() {
-  const backdrop = $(`input[name="generated-backdrops"][value="${state.generatedBackdrops}"]`, elements.backdropOptions);
-  const characters = $(`input[name="characters"][value="${state.characters}"]`, elements.characterOptions);
-  if (backdrop) backdrop.checked = true;
-  if (characters) characters.checked = true;
+  const backdrop = switchFor(elements.backdropOptions);
+  const characters = switchFor(elements.characterOptions);
+  if (backdrop) backdrop.checked = state.generatedBackdrops === "enabled";
+  if (characters) characters.checked = state.characters === "enabled";
 }
 
 export function renderThemeOptions() {
@@ -67,8 +70,7 @@ elements.replayStoryButton?.addEventListener("click", () => {
   storyTransitions.showIntro({ replay: true });
 });
 elements.keyboardOptions?.addEventListener("change", event => {
-  const value = event.target.closest('input[name="keyboard-visibility"]')?.value;
-  if (!keyboardVisibilityValues.has(value)) return;
+  const value = event.target.checked ? "visible" : "hidden";
   state.keyboardVisibility = value;
   persistSession();
   if (state.complete) renderCompletionHost();
@@ -76,22 +78,19 @@ elements.keyboardOptions?.addEventListener("change", event => {
   scheduleExecutionConsoleMeasurement();
 });
 elements.vimEffectOptions?.addEventListener("change", event => {
-  const value = event.target.closest('input[name="vim-effects"]')?.value;
-  if (!vimEffectValues.has(value)) return;
+  const value = event.target.checked ? "enabled" : "disabled";
   state.vimEffects = value;
   persistSession();
   if (value === "disabled") vimEngine?.clearEffects();
 });
 elements.backdropOptions?.addEventListener("change", event => {
-  const value = event.target.closest('input[name="generated-backdrops"]')?.value;
-  if (!decorativeMediaValues.has(value)) return;
+  const value = event.target.checked ? "enabled" : "disabled";
   state.generatedBackdrops = value;
   persistSession();
   refreshWorldPresentation();
 });
 elements.characterOptions?.addEventListener("change", event => {
-  const value = event.target.closest('input[name="characters"]')?.value;
-  if (!decorativeMediaValues.has(value)) return;
+  const value = event.target.checked ? "enabled" : "disabled";
   state.characters = value;
   persistSession();
   if (value === "disabled") {

@@ -167,8 +167,9 @@ test.describe("Semantic Vim effects", () => {
     expect(await page.evaluate(() => window.VimWilds.getState().vimEffects)).toBe("enabled");
 
     await page.getByRole("button", { name: "Open settings" }).click();
-    await expect(page.getByLabel("Enable effects")).toBeChecked();
-    await page.getByLabel("Disable effects").check();
+    const effectsSwitch = page.getByRole("switch", { name: "Vim action effects" });
+    await expect(effectsSwitch).toBeChecked();
+    await effectsSwitch.uncheck();
     await page.getByRole("button", { name: "Close settings" }).click();
 
     await emit(page, ["v", "e"]);
@@ -179,9 +180,9 @@ test.describe("Semantic Vim effects", () => {
     await page.waitForFunction(() => window.VimWilds?.getEffects && document.querySelector(".cm-editor"));
     expect(await page.evaluate(() => window.VimWilds.getState().vimEffects)).toBe("disabled");
     await page.getByRole("button", { name: "Open settings" }).click();
-    await expect(page.getByLabel("Disable effects")).toBeChecked();
+    await expect(effectsSwitch).not.toBeChecked();
 
-    await page.getByLabel("Enable effects").check();
+    await effectsSwitch.check();
     await page.getByRole("button", { name: "Close settings" }).click();
     await emit(page, ["v", "e"]);
     await expect(page.locator(".cm-effect-selection-character")).not.toHaveCount(0);
