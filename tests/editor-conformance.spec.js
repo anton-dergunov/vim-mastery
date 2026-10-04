@@ -101,39 +101,104 @@ test.describe("Production lesson flow", () => {
     });
   });
 
-  test("introduces the installable game at the root route", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.getByRole("heading", { name: "The Vim Wilds" })).toBeVisible();
-    await expect(page.getByRole("link", { name: /start or continue practice/i })).toHaveAttribute("href", "./play/");
-    await expect(page.locator("#appVersion")).toContainText("Build 0.1.0-dev.");
+  const androidAgent = "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 Chrome/130.0";
+  const useAgent = (page, agent) => page.addInitScript(value => {
+    Object.defineProperty(navigator, "userAgent", { configurable: true, get: () => value });
+  }, agent);
+  // The suite seeds a saved session before every test; a first-time visitor has none.
+  const firstVisit = page => page.addInitScript(() => window.localStorage.removeItem("vim-wilds.session.v1"));
+  const offerInstall = page => page.evaluate(() => {
+    const offer = new Event("beforeinstallprompt", { cancelable: true });
+    offer.prompt = () => { window.installPromptShown = true; };
+    offer.userChoice = Promise.resolve({ outcome: "dismissed" });
+    window.dispatchEvent(offer);
   });
 
-  test("selects iPhone and iPad Safari instructions, including desktop-mode iPads", async ({ page }) => {
+  test("leads with practice in a desktop browser and points to the phone", async ({ page }) => {
+    await firstVisit(page);
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "The Vim Wilds" })).toBeVisible();
+    await expect(page.locator("#landingPage")).toHaveAttribute("data-state", "desktop");
+    await expect(page.locator("#startLink")).toHaveText("Start practice");
+    await expect(page.locator("#startLink")).toHaveClass("landing-primary");
+    await expect(page.locator("#startLink")).toHaveAttribute("href", "./play/");
+    await expect(page.locator("#installNote")).toHaveText("On your phone: 127.0.0.1:4176");
+    await expect(page.locator("#installButton")).toBeHidden();
+    await expect(page.locator("#appVersion")).toContainText("Build 0.1.0-dev.");
+    await offerInstall(page);
+    await expect(page.locator("#installButton")).toHaveText("Install as an app");
+    await expect(page.locator("#installButton")).toHaveClass("landing-link");
+    await expect(page.locator("#startLink")).toHaveClass("landing-primary");
+  });
+
+  test("offers to continue once there is saved progress", async ({ page }) => {
+    await page.addInitScript(() => window.localStorage.setItem("vim-wilds.session.v1", "{}"));
+    await page.goto("/");
+    await expect(page.locator("#startLink")).toHaveText("Continue practice");
+  });
+
+  test("shows iPhone and iPad the Safari steps, including desktop-mode iPads", async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "userAgent", { configurable: true, get: () => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15" });
       Object.defineProperty(navigator, "platform", { configurable: true, get: () => "MacIntel" });
       Object.defineProperty(navigator, "maxTouchPoints", { configurable: true, get: () => 5 });
     });
+    await firstVisit(page);
     await page.goto("/");
-    await expect(page.locator("#install-ios-tab")).toHaveAttribute("aria-selected", "true");
-    await expect(page.locator("#install-ios-panel")).toBeVisible();
-    await expect(page.locator("#install-ios-panel")).toContainText("Add to Home Screen");
-    await page.locator("#install-other-tab").click();
-    await expect(page.locator("#install-other-tab")).toHaveAttribute("aria-selected", "true");
-    await expect(page.locator("#install-other-panel")).toBeVisible();
-    await expect(page.locator("#install-ios-panel")).toBeHidden();
+    await expect(page.locator("#landingPage")).toHaveAttribute("data-state", "ios");
+    await expect(page.locator("#iosSteps")).toBeVisible();
+    await expect(page.locator("#iosSteps")).toContainText("Add to Home Screen");
+    await expect(page.locator("#startLink")).toHaveText("Try it in the browser");
+    await expect(page.locator("#startLink")).toHaveClass("landing-link");
+    await page.locator(".landing-other summary").click();
+    await expect(page.locator('[data-other="android"]')).toBeVisible();
+    await expect(page.locator('[data-other="ios"]')).toBeHidden();
   });
 
-  test("selects Android instructions and supports keyboard-accessible install tabs", async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "userAgent", { configurable: true, get: () => "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 Chrome/130.0" });
-    });
+  test("leads with one-tap install on Android once the browser offers it", async ({ page }) => {
+    await useAgent(page, androidAgent);
+    await firstVisit(page);
     await page.goto("/");
-    await expect(page.locator("#install-android-tab")).toHaveAttribute("aria-selected", "true");
-    await expect(page.locator("#install-android-panel")).toContainText("Install app");
-    await page.locator("#install-android-tab").press("ArrowLeft");
-    await expect(page.locator("#install-ios-tab")).toHaveAttribute("aria-selected", "true");
-    await expect(page.locator("#install-ios-tab")).toBeFocused();
+    // Before the offer, and in browsers that never make one, practice leads and
+    // the menu route is spelled out.
+    await expect(page.locator("#landingPage")).toHaveAttribute("data-state", "android");
+    await expect(page.locator("#startLink")).toHaveClass("landing-primary");
+    await expect(page.locator("#installNote")).toContainText("Install app");
+    await offerInstall(page);
+    await expect(page.locator("#landingPage")).toHaveAttribute("data-state", "android-offer");
+    await expect(page.locator("#installButton")).toHaveText("Install app");
+    await expect(page.locator("#installButton")).toHaveClass("landing-primary");
+    await expect(page.locator("#startLink")).toHaveText("Try it in the browser");
+    await expect(page.locator("#installNote")).toBeHidden();
+    await page.locator("#installButton").click();
+    expect(await page.evaluate(() => window.installPromptShown)).toBe(true);
+    // A prompt can be shown once; after it the menu instruction returns.
+    await expect(page.locator("#installButton")).toBeHidden();
+    await expect(page.locator("#installNote")).toContainText("Install app");
+    await page.evaluate(() => window.dispatchEvent(new Event("appinstalled")));
+    await expect(page.locator("#installNote")).toHaveText("Installed. Open Vim Wilds from your home screen.");
+    await expect(page.locator("#startLink")).toHaveText("Open it here");
+  });
+
+  test("fits the first screen on a phone and scrolls when it cannot", async ({ page }) => {
+    await useAgent(page, androidAgent);
+    for (const [width, height] of [[360, 740], [390, 844], [412, 915], [430, 932], [432, 960]]) {
+      await page.setViewportSize({ width, height });
+      await page.goto("/");
+      await offerInstall(page);
+      const fit = await page.evaluate(() => ({
+        height: document.documentElement.scrollHeight <= window.innerHeight,
+        width: document.documentElement.scrollWidth <= window.innerWidth,
+      }));
+      expect(fit, `${width}x${height}`).toEqual({ height: true, width: true });
+    }
+    // The app never scrolls, but this page must: on a short screen the build
+    // line is below the fold and has to be reachable.
+    await page.setViewportSize({ width: 360, height: 320 });
+    await page.goto("/");
+    await page.locator("#appVersion").scrollIntoViewIfNeeded();
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    await expect(page.locator("#appVersion")).toBeInViewport();
   });
 
   test("uses the polished UI as the only route and derives 73 runtime activities", async ({ page }) => {

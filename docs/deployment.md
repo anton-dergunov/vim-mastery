@@ -137,24 +137,34 @@ location. No editor buffer, lesson JSON, or media is stored as learner state,
 and no learner data leaves the device except in a problem report the learner
 chooses to send.
 
-## Installing on iPhone and iPad
+## The first screen and installing
 
-1. Open <https://vim-wilds.pages.dev/> in **Safari**.
-2. Tap **Share**, then choose **Add to Home Screen**.
-3. Tap **Add**. Vim Wilds now starts from the Home Screen in its own app window.
+The root URL shows one card with one leading action, chosen from what the
+visitor's browser can do. On a phone that action is installing, because the
+installed app has the whole screen and works offline; on a computer it is
+practising in the browser.
 
-Safari is the recommended browser for iPhone and iPad installation. The landing
-page selects these instructions automatically, including on iPads that request
-desktop-style sites; its tabs also let visitors read the instructions for a
-different device.
+| Visitor | Leads with | Below it |
+| --- | --- | --- |
+| Android, once Chrome offers installation | **Install app**, which opens Chrome's install confirmation directly | Try it in the browser |
+| Android before that offer, or in a browser that never makes one | **Start practice** | To install, open ⋮ and choose Install app |
+| iPhone and iPad, including iPads requesting desktop sites | The three Safari steps: Share, Add to Home Screen, Add | Try it in the browser |
+| Computer | **Start practice** | The address to open on a phone, and Install as an app when the browser offers it |
 
-## Installing on Android
+"Start" reads "Continue" when the browser holds saved progress. Instructions
+for the other platforms sit under **Installing on another device**. Unlike the
+app, this page scrolls, so nothing is out of reach on a short screen.
 
-1. Open <https://vim-wilds.pages.dev/> in Chrome on Android.
-2. Tap **Install Vim Wilds** when Chrome offers it, or use Chrome’s three-dot
-   menu and choose **Install app**.
-3. Open Vim Wilds from the new home-screen icon. It starts at `/play/` in a
-   standalone app window.
+Chrome's own ⋮ menu offers both **Install** and **Create shortcut**. That sheet
+is Chrome's and cannot be changed; the page's Install button skips it. A
+shortcut opens in a browser tab, so Install is the one to choose.
+
+The manifest must stay at the site root: its icons, `start_url` and `scope` are
+relative to it. Its `<link>` carries `vite-ignore` so the build does not move
+it into `assets/`, where those paths would point nowhere and the browser would
+refuse to install. The PWA build test checks this.
+
+The installed app starts at `play/` in a standalone window.
 
 The first installation needs a connection so the complete offline cache can be
 downloaded. Updates likewise need a connection once, after which the new lesson

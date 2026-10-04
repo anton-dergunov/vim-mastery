@@ -41,6 +41,13 @@ test("production PWA precaches core media and streams optional animation and sce
 
   assert.equal(existsSync(join(dist, "play", "index.html")), true);
   assert.equal(manifest.start_url, "./play/");
+  // The manifest's paths are relative to the manifest itself, so it has to stay
+  // at the site root. A bundler that moves it into assets/ leaves the icons and
+  // the start address pointing nowhere, and the browser refuses to install.
+  assert.deepEqual(emittedPaths.filter(path => path.endsWith(".webmanifest")), ["manifest.webmanifest"]);
+  for (const page of [landing, play]) assert.match(page, /rel="manifest" href="\/manifest\.webmanifest"/);
+  assert.equal(existsSync(join(dist, manifest.start_url, "index.html")), true);
+  manifest.icons.forEach(icon => assert.equal(existsSync(join(dist, icon.src)), true, `${icon.src} must be emitted`));
   assert.equal(existsSync(join(dist, "icons", "icon-192.png")), true);
   assert.equal(existsSync(join(dist, "icons", "icon-512.png")), true);
   for (const page of [landing, play]) {

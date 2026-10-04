@@ -1,3 +1,8 @@
+/* The app never scrolls; this page may, so nothing on it can be out of reach on
+   a short screen or with enlarged text. */
+html, body { height: auto; }
+body { overflow: auto; }
+
 .landing-page {
   min-height: 100dvh;
   display: grid;
@@ -7,7 +12,6 @@
 
 .landing-card {
   width: min(100%, 430px);
-  min-height: min(100dvh - 32px, 760px);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -21,28 +25,30 @@
 .landing-kicker { margin: 0; color: var(--amber); font: 700 11px/1 ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
 .landing-title { margin: 0; max-width: 8ch; font-size: clamp(40px, 12vw, 54px); line-height: .94; letter-spacing: -.055em; }
 .landing-lede { margin: 0; color: #bdd0c5; font-size: 16px; line-height: 1.45; }
-.landing-features { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.landing-features li { padding: 10px 12px; border-radius: 12px; background: rgba(2, 10, 8, .34); color: #dcebe1; font-size: 13px; }
-.landing-features strong { color: var(--amber); }
-.landing-primary, .landing-install { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; border: 0; border-radius: 14px; padding: 0 17px; color: #10201b; background: var(--amber); font-weight: 800; text-decoration: none; box-shadow: 0 5px 0 #ac752e; }
-.landing-install { width: 100%; margin-top: 10px; background: #b9f1ce; box-shadow: 0 5px 0 #6aaf85; }
-.landing-install[hidden] { display: none; }
-.landing-secondary { display: inline-flex; min-height: 44px; margin-top: 10px; align-items: center; justify-content: center; border: 1px solid rgba(185, 241, 206, .28); border-radius: 14px; padding: 0 17px; color: #b9f1ce; background: rgba(6, 19, 16, .6); font-weight: 700; text-decoration: none; }
-.landing-installation { margin-top: auto; padding: 14px; border: 1px solid rgba(185, 241, 206, .16); border-radius: 15px; background: rgba(6, 19, 16, .72); }
-.landing-installation strong { display: block; font-size: 13px; }
-.landing-installation p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
-.install-tabs { display: grid; grid-template-columns: 1.5fr 1fr .75fr; gap: 4px; margin-top: 10px; padding: 3px; border-radius: 10px; background: rgba(0, 0, 0, .22); }
-.install-tab { min-height: 30px; border: 0; border-radius: 7px; padding: 4px 5px; color: #a7c1b4; background: transparent; font: 700 9px/1.15 ui-monospace, monospace; }
-.install-tab[aria-selected="true"] { color: #13231d; background: #b9f1ce; box-shadow: 0 1px 5px rgba(0, 0, 0, .28); }
-.install-tab:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
-.install-panel { min-height: 57px; padding-top: 2px; }
-.install-panel[hidden] { display: none; }
-.install-steps { margin: 7px 0 0; padding-left: 17px; color: var(--muted); font-size: 12px; line-height: 1.4; }
-.install-steps strong { display: inline; font-size: inherit; color: #dcebe1; }
-.landing-footer { display: flex; justify-content: space-between; gap: 8px; color: #789287; font: 11px/1.3 ui-monospace, monospace; }
 
-@media (max-height: 720px) {
-  .landing-card { gap: 12px; padding-top: 20px; }
-  .landing-title { font-size: 38px; }
-  .landing-features li { padding: 7px 10px; }
-}
+.landing-actions { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+.landing-actions [hidden] { display: none; }
+/* Whichever action leads comes first, whatever its place in the markup. */
+.landing-actions .landing-link { order: 1; }
+.landing-actions .landing-note { order: 2; }
+.landing-primary { display: flex; width: 100%; min-height: 52px; align-items: center; justify-content: center; border: 0; border-radius: 14px; padding: 0 17px; color: #10201b; background: var(--amber); font-size: 17px; font-weight: 800; text-decoration: none; box-shadow: 0 5px 0 #ac752e; cursor: pointer; }
+.landing-link { display: flex; min-height: 44px; align-items: center; justify-content: center; border: 0; padding: 0 12px; color: #b9f1ce; background: none; font-size: 16px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.landing-primary:focus-visible, .landing-link:focus-visible, .landing-other summary:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.landing-note { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.4; text-align: center; user-select: text; }
+
+.install-steps { display: grid; gap: 8px; margin: 0; padding: 14px 14px 14px 38px; border: 1px solid rgba(185, 241, 206, .16); border-radius: 15px; background: rgba(6, 19, 16, .72); color: #dcebe1; font-size: 16px; line-height: 1.35; }
+.install-steps strong { color: var(--amber); }
+
+.landing-other { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.landing-other summary { min-height: 32px; display: flex; align-items: center; gap: 6px; cursor: pointer; list-style: none; }
+.landing-other summary::-webkit-details-marker { display: none; }
+.landing-other summary::before { content: "+"; font: 700 14px/1 ui-monospace, monospace; }
+.landing-other[open] summary::before { content: "−"; }
+.landing-other ul { display: grid; gap: 6px; margin: 6px 0 0; padding: 0; list-style: none; }
+.landing-other strong { color: #dcebe1; }
+/* The visitor's own device is already covered by the action above. */
+[data-platform="ios"] [data-other="ios"],
+[data-platform="android"] [data-other="android"],
+[data-platform="desktop"] [data-other="desktop"] { display: none; }
+
+.landing-footer { color: #789287; font: 12px/1.3 ui-monospace, monospace; }

@@ -60,8 +60,10 @@ jobs:
           # saving and copying a report instead of posting one.
           VITE_FEEDBACK_ENDPOINT: ${{ vars.FEEDBACK_ENDPOINT }}
         run: |
-          VERSION="$(node -p 'require("./package.json").version')"
-          echo "VITE_APP_VERSION=${VERSION}+${GITHUB_SHA::8}" >> "$GITHUB_ENV"
+          # Exported for this build, and written to the environment file for
+          # the GitHub Pages build in a later step.
+          export VITE_APP_VERSION="$(node -p 'require("./package.json").version')+${GITHUB_SHA::8}"
+          echo "VITE_APP_VERSION=${VITE_APP_VERSION}" >> "$GITHUB_ENV"
           npm run build
       - run: git diff --check
       - name: Deploy to Cloudflare Pages
