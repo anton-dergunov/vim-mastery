@@ -1,9 +1,9 @@
 # Feedback receiver
 
-The app is a static PWA on GitHub Pages, so there is nowhere in it to put a
+The app is a static PWA on Cloudflare Pages, so there is nowhere in it to put a
 secret and nowhere for a report to land. This Worker is that place. It is
-deployed separately from the Pages build and is the only server-side component
-in the project.
+deployed separately from the site and is the only server-side component in the
+project.
 
 Reports go to D1; screenshots, when there are any, go to R2. Nothing here writes
 to GitHub, which is the point: the repository is public and the review backlog

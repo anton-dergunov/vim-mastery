@@ -129,23 +129,27 @@ exercises never reach past what they already show.**
   Reviving either idea would need real generated art.
 - **The fallback is plain colour.** A board or story surface whose image is
   missing shows the world's plain `fallbackGradient`, never a drawn pattern.
-- **Hosting stays on GitHub Pages, whole build included (2026-09-26).** The
-  published build is 877 MiB against Pages' 1 GiB: 39 MiB of precached core
-  media, 832 MiB of optional media (character reactions 376, character
-  animations 246, 900 scene variants 210), and ~6 MiB of everything else. There
-  is no CDN, no Git LFS, and `variantsPerSite` stays at 5. The margin moves only
-  when art is added, and the art is essentially final; new exercises and
-  features add kilobytes. `tests/pwa-build.test.mjs` fails CI at 1 GiB, and an
-  oversized Pages deploy is rejected while the previous site stays live, so
-  nothing new watches the number. Revisit on either of two conditions:
-  - **New art would push the build past ~950 MiB.** First lever: lower
-    `variantsPerSite` from 5 to 3 in `content/presentation.json`, which frees
-    ~84 MiB with no architectural change, and update the variant count asserted
-    in `tests/pwa-build.test.mjs`. Beyond that, the character frames are the
-    bulk.
-  - **The product takes payments.** Pages' terms exclude commercial use, so the
-    whole static site moves to a commercial host
+- **Hosting is Cloudflare Pages, whole build included; GitHub Pages stays as a
+  second target (2026-10-04).** The published build is 880 MB in 1,412 files:
+  39 MiB of precached core media, 832 MiB of optional media (character
+  reactions 376, character animations 246, 900 scene variants 210), and ~6 MiB
+  of everything else. Cloudflare Pages accepted all of it in one direct upload
+  (72 seconds; later deployments send only changed files). Its limits are
+  20,000 files and 25 MiB per file, with no limit on the total and none on
+  requests; the largest file is 2.9 MB. There is no CDN, no R2 media origin, no
+  Git LFS, and `variantsPerSite` stays at 5. The build names no host: it is
+  rooted at `/` unless `VITE_BASE` says otherwise, and optional media comes
+  from the site's own origin.
+  - **GitHub Pages is still deployed** by the same workflow behind the
+    repository variable `DEPLOY_GITHUB_PAGES`, and its code stays when the
+    variable is turned off. While it is a target its 1 GiB limit still binds,
+    and `tests/pwa-build.test.mjs` fails CI at 1 GiB as well as at Cloudflare's
+    limits. If new art would push the build past ~950 MiB, turn GitHub Pages
+    off rather than cut art.
+  - **GitHub Pages cannot carry a paid product.** Its terms exclude commercial
+    use, so it is switched off before the product takes payments
     ([ideas/launch-and-monetization.md](ideas/launch-and-monetization.md#hosting-and-payments)).
+  - **Progress is per origin.** The two addresses are separate installs.
 - **`open-trail-overlook` stays in reserve (2026-09-26).** Its approved board
   and 50 variants (5.4 MB in `assets/`) ship nowhere, are pinned `reserve-only`
   by `tests/media-policy.test.mjs`, and cost nothing in the build. It is the

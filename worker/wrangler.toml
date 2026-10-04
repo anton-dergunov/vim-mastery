@@ -5,10 +5,10 @@ compatibility_date = "2026-09-01"
 # workers.dev is how the app reaches this endpoint, so it stays on.
 workers_dev = true
 
-# Comma-separated. The production origin plus the local dev and Playwright
+# Comma-separated. The two production origins plus the local dev and Playwright
 # servers, so a report can be exercised end to end before deploying.
 [vars]
-ALLOWED_ORIGINS = "https://anton-dergunov.github.io,http://127.0.0.1:5173,http://127.0.0.1:4176,http://localhost:5173"
+ALLOWED_ORIGINS = "https://vim-wilds.pages.dev,https://anton-dergunov.github.io,http://127.0.0.1:5173,http://127.0.0.1:4176,http://localhost:5173"
 
 # ADMIN_TOKEN is a secret, not a var: `wrangler secret put ADMIN_TOKEN`.
 

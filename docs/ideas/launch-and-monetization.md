@@ -170,10 +170,11 @@ with local fallback, and alerts on cost per active user.
 ## Hosting and payments
 
 - **PWA first.** Native stores come only after repeat use and payment intent.
-- **Leave GitHub Pages before taking money.** GitHub's terms say Pages is not
-  for an online business, e-commerce site, or commercial SaaS. Cloudflare
-  Pages or Netlify are plausible commercial hosts; Vercel's free tier is
-  non-commercial too. The hosting decision and its size margin are in
+- **Switch GitHub Pages off before taking money.** GitHub's terms say Pages is
+  not for an online business, e-commerce site, or commercial SaaS. The site is
+  already on Cloudflare Pages, which has no such restriction; GitHub Pages is
+  a second target that one repository variable turns off. The hosting decision
+  and its limits are in
   [../design-decisions.md](../design-decisions.md#settled-decisions).
 - **Keep the static learning path up during backend outages.** Accounts, sync,
   entitlements, and AI degrade independently.

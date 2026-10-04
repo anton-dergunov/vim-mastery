@@ -578,32 +578,6 @@ test("uses Keeper’s Relay tall and animated compact art for the corresponding 
   await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
 });
 
-test("falls back to GitHub Pages when a local development variant is missing", async ({ page }) => {
-  await page.addInitScript(() => {
-    window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "visible" }));
-  });
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/play/?unit=cursor-movement&activity=home-row-identifier");
-  await page.waitForFunction(() => document.querySelector("#world")?.dataset.boardProfile === "compact");
-
-  const localOrigin = new URL(page.url()).origin;
-  const requests = [];
-  await page.route("**/assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/*.webp", route => {
-    const source = route.request().url();
-    requests.push(source);
-    if (new URL(source).origin === localOrigin) return route.fulfill({ status: 404 });
-    return route.fulfill({
-      path: "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/variants/northwest-hanging-lantern-c01.webp",
-      contentType: "image/webp",
-      headers: { "access-control-allow-origin": "*" },
-    });
-  });
-
-  await expect(page.locator(".world-remote-variant")).toHaveCount(1, { timeout: 5_000 });
-  expect(new URL(requests[0]).origin).toBe(localOrigin);
-  expect(new URL(requests[1]).origin).toBe("https://anton-dergunov.github.io");
-});
-
 test("uses the static wide source on wide gameplay boards", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem("vim-wilds.session.v1", JSON.stringify({ keyboardVisibility: "hidden" }));

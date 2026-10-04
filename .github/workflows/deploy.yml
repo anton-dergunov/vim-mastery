@@ -5,20 +5,20 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# The site is built to run under any path, so one tested commit goes to two
+# hosts. Each is switched by a repository variable, so turning a host off
+# needs no change here:
+#   DEPLOY_CLOUDFLARE_PAGES=true  https://vim-wilds.pages.dev
+#   DEPLOY_GITHUB_PAGES=true      https://<owner>.github.io/<repository>/
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
+  group: deploy
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - uses: actions/configure-pages@v5
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -57,7 +56,6 @@ jobs:
           retention-days: 7
       - name: Build the versioned PWA
         env:
-          VITE_MEDIA_REVISION: ${{ github.sha }}
           # Unset is a supported configuration: the feedback sheet falls back to
           # saving and copying a report instead of posting one.
           VITE_FEEDBACK_ENDPOINT: ${{ vars.FEEDBACK_ENDPOINT }}
@@ -66,8 +64,36 @@ jobs:
           echo "VITE_APP_VERSION=${VERSION}+${GITHUB_SHA::8}" >> "$GITHUB_ENV"
           npm run build
       - run: git diff --check
-      - uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare Pages
+        if: vars.DEPLOY_CLOUDFLARE_PAGES == 'true'
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=vim-wilds --branch=main
+      # GitHub Pages serves the site from /<repository>/, so it gets its own
+      # build of the same commit.
+      - name: Build for GitHub Pages
+        if: vars.DEPLOY_GITHUB_PAGES == 'true'
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+          VITE_FEEDBACK_ENDPOINT: ${{ vars.FEEDBACK_ENDPOINT }}
+        run: npm run build
+      - if: vars.DEPLOY_GITHUB_PAGES == 'true'
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
+  github-pages:
+    if: vars.DEPLOY_GITHUB_PAGES == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4

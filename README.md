@@ -5,7 +5,7 @@ exercises, installable as a web app. It runs CodeMirror 6 with the Replit Vim
 extension, so the editor executes real Vim commands, and checks every taught
 command against native Vim.
 
-Live at <https://anton-dergunov.github.io/vim-mastery/>.
+Live at <https://vim-wilds.pages.dev/>.
 
 ## Run locally
 

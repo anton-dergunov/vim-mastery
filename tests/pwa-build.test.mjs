@@ -7,7 +7,11 @@ import { collectMediaPolicy } from "../src/world/media-policy.js";
 
 const root = new URL("../", import.meta.url);
 const rootPath = root.pathname;
+// The build is published to Cloudflare Pages and, while that is on trial, to
+// GitHub Pages as well, so it has to fit both.
 const GITHUB_PAGES_MAX_BYTES = 1024 ** 3;
+const CLOUDFLARE_PAGES_MAX_FILES = 20_000;
+const CLOUDFLARE_PAGES_MAX_FILE_BYTES = 25 * 1024 ** 2;
 
 function files(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
@@ -42,8 +46,19 @@ test("production PWA precaches core media and streams optional animation and sce
   for (const page of [landing, play]) {
     assert.match(page, /name="apple-mobile-web-app-capable" content="yes"/);
     assert.match(page, /name="apple-mobile-web-app-title" content="Vim Wilds"/);
-    assert.match(page, /rel="apple-touch-icon" href="\/vim-mastery\/icons\/icon-192\.png"/);
+    assert.match(page, /rel="apple-touch-icon" href="\/icons\/icon-192\.png"/);
   }
+  // Pages are precached under their directory URLs: Cloudflare Pages redirects
+  // index.html there, and a redirected response cannot answer a navigation.
+  const precached = JSON.parse(worker.match(/const PRECACHE_URLS = (\[.*?\]);/)[1]);
+  assert(precached.includes("/"));
+  assert(precached.includes("/play/"));
+  assert.equal(precached.some(url => url.endsWith("index.html")), false);
+  assert.match(worker, /new URL\("play\/", self\.registration\.scope\)/);
+  // A missing file must be a real 404, and a 404 response would fail the
+  // service worker's install if it were precached.
+  assert.equal(existsSync(join(dist, "404.html")), true);
+  assert.equal(precached.includes("/404.html"), false);
   unitFiles.forEach(file => {
     assert.equal(existsSync(join(dist, "content", "units", file)), true);
     assert.match(worker, new RegExp(`content/units/${file.replace(".", "\\.")}`));
@@ -101,6 +116,10 @@ test("production PWA precaches core media and streams optional animation and sce
     publishedBytes < GITHUB_PAGES_MAX_BYTES,
     `Published PWA is ${(publishedBytes / 1024 / 1024).toFixed(2)} MiB; GitHub Pages allows less than 1024 MiB`,
   );
+  assert(output.length <= CLOUDFLARE_PAGES_MAX_FILES, `Published PWA has ${output.length} files; Cloudflare Pages allows ${CLOUDFLARE_PAGES_MAX_FILES}`);
+  output.forEach(path => {
+    assert(statSync(path).size <= CLOUDFLARE_PAGES_MAX_FILE_BYTES, `${path} is larger than Cloudflare Pages' 25 MiB per file`);
+  });
   media.core.forEach(({ path: file }) => {
     assert.equal(existsSync(join(dist, file)), true, `${file} must be emitted`);
     assert.equal(worker.includes(file), true, `${file} must be precached`);

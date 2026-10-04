@@ -4,8 +4,7 @@ export function appUrl(path = "") {
   return `${import.meta.env.BASE_URL}${String(path).replace(/^\//, "")}`;
 }
 
+// Optional media is streamed rather than precached, from the site's own origin.
 export function remoteMediaUrls(path) {
-  const normalizedPath = String(path).replace(/^\//, "");
-  const githubPagesUrl = `https://anton-dergunov.github.io/vim-mastery/${normalizedPath}`;
-  return import.meta.env.DEV ? [appUrl(normalizedPath), githubPagesUrl] : [githubPagesUrl];
+  return [appUrl(path)];
 }

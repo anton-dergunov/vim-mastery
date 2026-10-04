@@ -48,7 +48,6 @@ const automationActivities = automationUnit.lessons.flatMap(lesson => lesson.act
 const automationExercises = automationActivities.filter(activity => activity.type === "exercise");
 const capstoneActivities = capstoneUnit.lessons.flatMap(lesson => lesson.activities.map(activity => ({ ...activity, lessonId: lesson.id })));
 const capstoneExercises = capstoneActivities.filter(activity => activity.type === "exercise");
-const successAnimation = readFileSync(new URL("../assets/characters/nix/animations/joyful-hop.webp", import.meta.url));
 const keysFor = activity => activity.script?.steps.map(step => typeof step === "string" ? step : step.key) || [];
 const indexOf = id => authoredActivities.findIndex(activity => activity.id === id);
 
@@ -2316,10 +2315,6 @@ test.describe("Production lesson flow", () => {
   });
 
   test("shows characters only for practice and choices, with stable practice celebrations", async ({ page }) => {
-    await page.route("https://raw.githubusercontent.com/anton-dergunov/vim-mastery/**", route => route.fulfill({
-      contentType: "image/webp",
-      body: successAnimation,
-    }));
     await page.goto("/?unit=repeatable-editing&activity=dot-python-values");
     await page.waitForFunction(() => document.documentElement.dataset.charactersReady === "true");
     await page.waitForTimeout(120);

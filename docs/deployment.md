@@ -1,9 +1,14 @@
 # Deploying The Vim Wilds
 
 The Vim Wilds is a static Progressive Web App (PWA), published from this
-repository at <https://anton-dergunov.github.io/vim-mastery/>. The root URL is
-the introduction and installation page. The playable app and PWA launch URL
-are <https://anton-dergunov.github.io/vim-mastery/play/>.
+repository at <https://vim-wilds.pages.dev/> on Cloudflare Pages. The root URL
+is the introduction and installation page. The playable app and PWA launch URL
+are <https://vim-wilds.pages.dev/play/>.
+
+While Cloudflare is on trial the same commit is also published to GitHub Pages
+at <https://anton-dergunov.github.io/vim-mastery/>. The two addresses are
+separate installs: a browser keeps progress per origin, so progress made on one
+does not appear on the other.
 
 ## Local development
 
@@ -19,23 +24,41 @@ to start a lesson. Development builds use a version in the form
 `0.1.0-dev.<short-git-hash>`. This keeps the local build visibly distinct from
 a deployed release.
 
-## GitHub Pages deployment
+## Deployment
 
-`.github/workflows/deploy-pages.yml` runs on every push to `main` and can also
-be started manually from the Actions tab. It installs dependencies, runs the
-Vim and browser test suite, creates a production build, and deploys `dist`
-using the official GitHub Pages Actions flow.
+`.github/workflows/deploy.yml` runs on every push to `main` and can also be
+started manually from the Actions tab. It installs dependencies, runs the Vim
+and browser test suite once, and then publishes that commit to each host that
+is switched on by a repository variable:
 
-Before the first deployment, set **Settings → Pages → Build and deployment →
-Source** to **GitHub Actions** in the `anton-dergunov/vim-mastery` repository.
-The workflow then deploys only from `main`.
+| Variable | Host | Also needs |
+| --- | --- | --- |
+| `DEPLOY_CLOUDFLARE_PAGES=true` | Cloudflare Pages project `vim-wilds` | secret `CLOUDFLARE_API_TOKEN` (permission: Account → Cloudflare Pages → Edit) and variable `CLOUDFLARE_ACCOUNT_ID` |
+| `DEPLOY_GITHUB_PAGES=true` | GitHub Pages | **Settings → Pages → Source** set to **GitHub Actions** |
+
+Turning a host off is `gh variable set DEPLOY_GITHUB_PAGES --body false`; the
+workflow keeps the code for both.
+
+The site runs under any path. A build is rooted at `/` unless `VITE_BASE` names
+a subdirectory, which the workflow sets to `/<repository>/` for the GitHub
+Pages build. Nothing in the app names a host.
+
+To publish to Cloudflare from a laptop that has run `wrangler login`:
+
+```bash
+VITE_FEEDBACK_ENDPOINT=<worker URL> npm run build
+wrangler pages deploy dist --project-name vim-wilds --branch main
+```
+
+Wrangler uploads only files whose content changed, so a deployment after the
+first takes seconds. Cloudflare Pages redirects `index.html` to its directory
+and serves `404.html` for unknown paths; the service worker precaches pages
+under their directory URLs for that reason, and leaves `404.html` out.
 
 Each deployed build receives a version such as `0.1.0+02aa1f4c`: the package
 version plus the eight-character commit hash. The value is displayed on the
 landing page and in the in-game Settings dialog, and is also part of the
-service-worker cache name. The workflow supplies the exact commit hash for
-remote celebration media, so the app shell and its media references always
-refer to the same revision.
+service-worker cache name.
 
 ## Offline and media policy
 
@@ -53,18 +76,17 @@ lesson can be opened and completed in airplane mode. Lesson JSON is fetched at
 runtime from the precache rather than compiled into the JavaScript bundle.
 
 Character reaction and action animations and complete-board scene variants
-are emitted to the GitHub Pages artifact but deliberately excluded from
-service-worker caches.
-The app fetches them in memory from that one Pages media origin only when
-needed. Local Vite development tries the project path first and then the same
-Pages URL. If a request is slow, fails, or the phone is offline, the local base
+are published with the site but deliberately excluded from service-worker
+caches. The app fetches them in memory from its own origin only when needed.
+If a request is slow, fails, or the phone is offline, the local base
 scene and idle character remain visible without delaying progress.
 
 The runtime manifest is the deployment allowlist for visual media. Builds fail
 on a declared missing asset, never discover source masters or review files, and
 report the core-media total; they fail above 300 MiB of core media. The PWA
 build audit also fails if the whole published artifact reaches GitHub Pages'
-1 GiB limit; the measured margin and when to revisit hosting are in
+1 GiB limit, or Cloudflare Pages' 20,000 files or 25 MiB per file; the measured
+margin is in
 `docs/design-decisions.md`. A content digest in the cache name
 changes whenever any precached asset changes at a stable path. See
 `docs/media-and-story-infrastructure.md` for normalization commands and how
@@ -76,7 +98,7 @@ The flag button on the board and the **Report a problem** row in Settings open a
 sheet that captures the unit, lesson, activity, editor state, device, viewport
 and an optional screenshot, alongside a typed note.
 
-Reports post to a Cloudflare Worker, deployed separately from these Pages; see
+Reports post to a Cloudflare Worker, deployed separately from the site; see
 `worker/README.md` for its setup and `scripts/feedback/pull.py` for reading them
 back. Set the repository variable `FEEDBACK_ENDPOINT` to connect the two — the
 deploy workflow passes it to the build as `VITE_FEEDBACK_ENDPOINT`.
@@ -117,7 +139,7 @@ chooses to send.
 
 ## Installing on iPhone and iPad
 
-1. Open <https://anton-dergunov.github.io/vim-mastery/> in **Safari**.
+1. Open <https://vim-wilds.pages.dev/> in **Safari**.
 2. Tap **Share**, then choose **Add to Home Screen**.
 3. Tap **Add**. Vim Wilds now starts from the Home Screen in its own app window.
 
@@ -128,7 +150,7 @@ different device.
 
 ## Installing on Android
 
-1. Open <https://anton-dergunov.github.io/vim-mastery/> in Chrome on Android.
+1. Open <https://vim-wilds.pages.dev/> in Chrome on Android.
 2. Tap **Install Vim Wilds** when Chrome offers it, or use Chrome’s three-dot
    menu and choose **Install app**.
 3. Open Vim Wilds from the new home-screen icon. It starts at `/play/` in a
