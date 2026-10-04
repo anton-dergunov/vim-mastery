@@ -159,17 +159,21 @@ function pwaBuildPlugin(base, version) {
       // answer to a navigation.
       const entries = precacheFiles.map(file => `${base}${file.replace(/(^|\/)index\.html$/, "$1")}`);
       const cacheRevision = contentRevision(output, precacheFiles);
-      const worker = `const CACHE_NAME = ${JSON.stringify(`vim-wilds-${version}-${cacheRevision}`)};\nconst BASE_PATH = ${JSON.stringify(base)};\nconst PRECACHE_URLS = ${JSON.stringify(entries)};\n\nself.addEventListener("install", event => {\n  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS)));\n});\n\nself.addEventListener("activate", event => {\n  event.waitUntil(caches.keys().then(names => Promise.all(names\n    .filter(name => name.startsWith("vim-wilds-") && name !== CACHE_NAME)\n    .map(name => caches.delete(name))\n  )).then(() => self.clients.claim()));\n});\n\nself.addEventListener("message", event => {\n  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();\n});\n\nself.addEventListener("fetch", event => {\n  if (event.request.method !== "GET") return;\n  const requestUrl = new URL(event.request.url);\n  if (requestUrl.origin !== self.location.origin) return;\n  event.respondWith((async () => {\n    const cached = await caches.match(event.request);\n    if (cached) return cached;\n    if (event.request.mode === "navigate") {\n      return caches.match(new URL("play/", self.registration.scope));\n    }\n    return fetch(event.request);\n  })());\n});\n`;
+      const worker = `const CACHE_NAME = ${JSON.stringify(`vim-wilds-${version}-${cacheRevision}`)};\nconst PRECACHE_URLS = ${JSON.stringify(entries)};\n\nself.addEventListener("install", event => {\n  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS)));\n});\n\nself.addEventListener("activate", event => {\n  event.waitUntil(caches.keys().then(names => Promise.all(names\n    .filter(name => name.startsWith("vim-wilds-") && name !== CACHE_NAME)\n    .map(name => caches.delete(name))\n  )).then(() => self.clients.claim()));\n});\n\nself.addEventListener("message", event => {\n  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();\n});\n\nself.addEventListener("fetch", event => {\n  if (event.request.method !== "GET") return;\n  const requestUrl = new URL(event.request.url);\n  if (requestUrl.origin !== self.location.origin) return;\n  event.respondWith((async () => {\n    const cached = await caches.match(event.request);\n    if (cached) return cached;\n    if (event.request.mode === "navigate") {\n      return caches.match(new URL("play/", self.registration.scope));\n    }\n    return fetch(event.request);\n  })());\n});\n`;
       const navigationAwareWorker = worker.replace(
-        `if (event.request.mode === "navigate") {
-      return caches.match(new URL("play/", self.registration.scope));
-    }`,
-        `if (event.request.mode === "navigate") {
-      if (requestUrl.pathname === BASE_PATH || requestUrl.pathname === BASE_PATH.slice(0, -1)) {
-        return caches.match(new URL("./", self.registration.scope));
+        `const cached = await caches.match(event.request);`,
+        // The first screen is where a visitor installs from, so it comes from
+        // the network when there is one. Served from the cache it would stay
+        // on the old release until an update is applied from inside the app.
+        `const landing = new URL("./", self.registration.scope);
+    if (event.request.mode === "navigate" && requestUrl.pathname.replace(/\\/?$/, "/") === landing.pathname) {
+      try {
+        return await fetch(event.request);
+      } catch {
+        return caches.match(landing);
       }
-      return caches.match(new URL("play/", self.registration.scope));
-    }`,
+    }
+    const cached = await caches.match(event.request);`,
       );
       writeFileSync(serviceWorker, navigationAwareWorker);
     },

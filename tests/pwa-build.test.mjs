@@ -62,6 +62,11 @@ test("production PWA precaches core media and streams optional animation and sce
   assert(precached.includes("/play/"));
   assert.equal(precached.some(url => url.endsWith("index.html")), false);
   assert.match(worker, /new URL\("play\/", self\.registration\.scope\)/);
+  // The first screen is fetched before the cache is consulted, so a visitor
+  // who has opened the app before still gets the current install page.
+  const landingFetch = worker.indexOf("return await fetch(event.request);");
+  assert(landingFetch > 0 && landingFetch < worker.indexOf("const cached = await caches.match(event.request);"));
+  assert.doesNotThrow(() => new Function(worker));
   // A missing file must be a real 404, and a 404 response would fail the
   // service worker's install if it were precached.
   assert.equal(existsSync(join(dist, "404.html")), true);

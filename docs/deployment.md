@@ -164,6 +164,12 @@ relative to it. Its `<link>` carries `vite-ignore` so the build does not move
 it into `assets/`, where those paths would point nowhere and the browser would
 refuse to install. The PWA build test checks this.
 
+The service worker answers the first screen from the network whenever there is
+one, and from its cache only offline. Everything else is cache-first. Without
+this exception a visitor who had opened the app before would keep the old
+first screen, and its install instructions, until they applied an update from
+inside the app.
+
 The installed app starts at `play/` in a standalone window.
 
 The first installation needs a connection so the complete offline cache can be
