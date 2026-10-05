@@ -113,7 +113,7 @@ test("production PWA precaches core media and streams optional animation and sce
   // deduplicates one core file per pending unit. Promotion replaces those
   // aliases with three independent semantic story images. Each of the 17
   // unit scenes adds its course-map thumbnail.
-  assert.equal(media.core.length, 107 - pendingStoryArt);
+  assert.equal(media.core.length, 108 - pendingStoryArt);
   assert.equal(media.core.filter(asset => asset.category === "scene-thumb").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-base").length, 17);
   assert.equal(media.core.filter(asset => asset.category === "unit-story-image").length, 17);
