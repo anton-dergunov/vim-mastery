@@ -67,6 +67,19 @@
       ]
     },
     {
+      "unitId": "cursor-movement",
+      "sceneId": "wayfinder-crossroads",
+      "profile": "wide",
+      "asset": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/base.webp",
+      "source": "artifacts/world-generation/unit-scenes/cursor-movement/wide-source.png",
+      "sourceSha256": "fa4c684d7f6b5410ecfd44d1b52c0b0227dfec09b7bf8dafff45efdd5cbe19a3",
+      "sha256": "8a59c1097f268ec50a4a48a7c29cd51ce81c0fec8f754c3c5e45152cba088912",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
       "unitId": "entering-changing-text",
       "sceneId": "scribes-spring",
       "profile": "tall",

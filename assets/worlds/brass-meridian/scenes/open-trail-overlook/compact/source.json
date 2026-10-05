@@ -20,9 +20,11 @@
     },
     "wide": {
       "path": "wide-source.png",
-      "sha256": "b3bd165be0c32dd2480b6f16b7930f77f34e2c3c438c022647915a77edde1d5b",
-      "generatedAt": "2026-08-31T13:07:19.544204+00:00",
-      "model": "gemini-3.1-flash-image"
+      "sha256": "adcfe2c9b5b98e52e7462331a12f0c47e2608e38049d408ff344eb188331ea52",
+      "generatedAt": "2026-10-05T00:23:27.318621+00:00",
+      "model": "gemini-3.1-flash-image",
+      "mode": "repair",
+      "promotedFrom": "wide-candidate-01.png"
     }
   },
   "variantMode": "transparent-patch",

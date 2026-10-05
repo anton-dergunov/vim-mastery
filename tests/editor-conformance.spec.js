@@ -2339,6 +2339,16 @@ test.describe("Production lesson flow", () => {
     await expect(page.locator("#keyboard .key.hint-playing")).toHaveCount(0);
   });
 
+  test("lights an uppercase letter's own key together with Shift", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/?unit=text-objects&activity=uppercase-inside-word-recall");
+    await page.getByRole("button", { name: "Open hints" }).click();
+    await page.getByRole("button", { name: "Close help" }).click();
+    await page.getByRole("button", { name: "Open hints" }).click();
+    for (const key of ["g", "u", "i", "w"]) await expect(page.locator(`#keyboard .key.hinted[data-key="${key}"]`)).toHaveCount(1);
+    await expect(page.locator('#keyboard .key.hinted[data-mod="Shift"]')).toHaveCount(2);
+  });
+
   test("recall keeps the command chips' roles but hides their keys until typed", async ({ page }) => {
     await page.goto("/?unit=text-objects&activity=delete-around-word-recall");
     const keys = page.locator(".command-explanation .assembly-part kbd");

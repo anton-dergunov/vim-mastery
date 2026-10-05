@@ -132,7 +132,7 @@
               "focalPosition": "50% 50%"
             },
             "wide": {
-              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/compact/base.webp",
+              "base": "assets/worlds/moonroot-ruins/scenes/wayfinder-crossroads/wide/base.webp",
               "focalPosition": "50% 50%"
             }
           },

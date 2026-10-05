@@ -362,7 +362,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `:2,4normal I# `."
+            "Use `:2,12normal I# `."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -715,7 +715,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `:2,3normal $r,`."
+            "Use `:2,17normal $r,`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -1134,7 +1134,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `jVj:normal A,`."
+            "Use `jV10j:normal A,`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -1314,7 +1314,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `:2,4normal! 0f=r:`."
+            "Use `:2,12normal! 0f=r:`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -2652,7 +2652,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `:2,6g/TEMP/d`."
+            "Use `:2,16g/TEMP/d`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -3359,7 +3359,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `:2,5v/enabled/d`."
+            "Use `:2,16v/enabled/d`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",
@@ -4130,7 +4130,7 @@
           "hints": [
             "Identify the exact line set before choosing the transformation.",
             "Read the outer range or predicate separately from the inner command.",
-            "Use `:2,4g/ERROR/s/open/closed/`."
+            "Use `:2,16g/ERROR/s/open/closed/`."
           ],
           "feedback": {
             "success": "The automation changed only the intended lines.",

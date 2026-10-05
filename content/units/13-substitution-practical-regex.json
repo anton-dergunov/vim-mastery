@@ -991,7 +991,7 @@
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
-            "why": "Address line three directly and update its value."
+            "why": "Address line six directly and update its value."
           },
           "skills": {
             "primary": [
@@ -1370,7 +1370,7 @@
           ],
           "feedback": {
             "success": "The substitution produced the intended text.",
-            "why": "Replace both `off` values, but only on lines two and three."
+            "why": "Replace the `off` values, but only on lines two through seven."
           },
           "skills": {
             "primary": [

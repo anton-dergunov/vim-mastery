@@ -295,10 +295,9 @@ test("presentation manifest covers the catalog with valid worlds, characters, an
     assert.equal(resolved.scene.id, resolved.unit.sceneId);
     assert.deepEqual(Object.keys(resolved.scene.profiles), ["tall", "compact", "wide"]);
     for (const profile of ["tall", "compact", "wide"]) {
-      const baseProfile = unitId === "cursor-movement" && profile === "wide" ? "compact" : profile;
       assert.match(
         resolved.scene.profiles[profile].base,
-        new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${baseProfile}/base\\.webp$`),
+        new RegExp(`^assets/worlds/moonroot-ruins/scenes/${resolved.scene.id}/${profile}/base\\.webp$`),
       );
       // A board is its base image and nothing more; no overlay plates.
       assert.deepEqual(Object.keys(resolved.scene.profiles[profile]).filter(key => key !== "focalPosition"), ["base"]);

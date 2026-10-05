@@ -9598,7 +9598,7 @@
           },
           "hints": ["The value is already stored; the insert can read it back.", "The unnamed register is named by the double-quote character.", "Use `yiw`, `j`, `A`, type `http://`, then `Ctrl-r` and `\"`, type `:8080`, and `Esc`."],
           "feedback": {
-            "success": "Both variables hold the same host value.",
+            "success": "The proxy URL carries the host from the line above.",
             "why": "The yank filled the unnamed register, and Ctrl-r\" typed it into the middle of the URL without leaving Insert mode."
           },
           "skills": {

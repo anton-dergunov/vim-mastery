@@ -2333,7 +2333,7 @@
             "Press `s000Esc`."
           ],
           "feedback": {
-            "success": "The level now reads high.",
+            "success": "The timeout now reads 5000.",
             "why": "s combined a one-character deletion with Insert mode."
           },
           "skills": {
@@ -2354,7 +2354,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "entering-changing-text-v1",
-            "languageRationale": "A short string value gives s an obvious one-character correction.",
+            "languageRationale": "A unit suffix gives s one character to replace with several.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -6064,7 +6064,7 @@
           "id": "increment-build-from-line-start",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Reach and advance a build",
+          "title": "Advance a build from the line start",
           "instruction": "Advance build 40 to build 45 from the start of the line.",
           "languageId": "shell",
           "sourceKind": "neutral",
@@ -6123,8 +6123,8 @@
             "Press `5Ctrl-a`."
           ],
           "feedback": {
-            "success": "Build 40 became 42.",
-            "why": "Ctrl-a found the numeric token even from its final digit."
+            "success": "Build 40 became 45.",
+            "why": "Ctrl-a found the number from the start of the line and added the count to it."
           },
           "skills": {
             "primary": [
@@ -6145,7 +6145,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "entering-changing-text-v1",
-            "languageRationale": "A build number provides a realistic counted increment after movement.",
+            "languageRationale": "A build number provides a realistic counted increment with no movement needed.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"

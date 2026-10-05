@@ -39,6 +39,9 @@ export function requiredButtons(token) {
   if (token.startsWith("Ctrl-")) return [...modifierButtonsFor("Ctrl"), ...keyButtonsFor(token.slice(5))];
   const exact = keyButtonsFor(token);
   result.push(...exact);
+  // Letter keys carry only their lowercase legend, so an uppercase letter is
+  // its lowercase key plus Shift.
+  if (!exact.length && token.length === 1 && token !== token.toLowerCase()) result.push(...keyButtonsFor(token.toLowerCase()));
   if (token.length === 1 && (token !== token.toLowerCase() || exact.some(button => button.dataset.shift === token))) result.push(...modifierButtonsFor("Shift"));
   return result;
 }

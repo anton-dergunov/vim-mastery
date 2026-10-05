@@ -15,7 +15,7 @@
     "test:effects": "node --test tests/vim-effects.test.mjs",
     "test:native": "node --test tests/native-vim.test.mjs",
     "test:media": "node --test tests/media-policy.test.mjs",
-    "test:scripts": "python3 -m unittest discover -s scripts/characters -p 'test_*.py' && python3 -m unittest discover -s scripts/feedback -p 'test_*.py'",
+    "test:scripts": "python3 -m unittest discover -s scripts/characters -p 'test_*.py' && python3 -m unittest discover -s scripts/feedback -p 'test_*.py' && python3 -m unittest discover -s scripts/world-art -p 'test_*.py'",
     "test:pwa": "node --test tests/pwa-build.test.mjs",
     "test:browser": "playwright test",
     "test:browser:smoke": "playwright test tests/smoke.spec.js --workers=1",

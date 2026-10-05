@@ -5369,7 +5369,7 @@
           "id": "delete-around-tag",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Remove one item outright",
+          "title": "Remove an element outright",
           "instruction": "Empty the status cell, removing the bold element together with its tags.",
           "languageId": "html",
           "sourceKind": "fragment",
@@ -5448,8 +5448,8 @@
             "Press `dat`."
           ],
           "feedback": {
-            "success": "The item and both of its tags are gone.",
-            "why": "The object covered the element but not the indentation in front of it, which is why the row is left blank rather than removed."
+            "success": "The bold element and both of its tags are gone.",
+            "why": "The object covered the bold element from its opening tag to its closing one, so the cell around it stayed in place, empty."
           },
           "skills": {
             "primary": [
@@ -5468,7 +5468,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "text-objects-v1",
-            "languageRationale": "One item among three shows the element boundary precisely, including the indentation the object leaves behind.",
+            "languageRationale": "A bold element nested in a table cell shows the element boundary precisely: the cell keeps its own tags.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"

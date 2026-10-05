@@ -4131,7 +4131,7 @@
               }
             ]
           },
-          "hints": ["Shifting applies to complete lines.", "Grow the selection row by row until it covers the five steps, rather than counting them in advance."],
+          "hints": ["Shifting applies to complete lines.", "Grow the selection row by row until it covers the five column names, rather than counting them in advance."],
           "feedback": {"success": "The column names now sit under SELECT, and the clauses around them stayed put.", "why": "Growing a linewise selection showed the exact rows before the shift, with nothing to count."},
           "skills": {"primary": ["visual-line-shift"], "supporting": ["visual-line", "visual-selection"]},
           "difficulty": { "level": "medium", "dimensions": ["selection-geometry", "code-formatting"] },
@@ -4139,7 +4139,7 @@
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "visual-selection-v1",
-            "languageRationale": "The supported JavaScript indentation profile makes structural reindentation deterministic in both Vim engines.",
+            "languageRationale": "A SQL column list gives a linewise shift an exact set of rows to cover.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"

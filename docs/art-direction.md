@@ -250,7 +250,11 @@ for one scene came to about $3.35.
    Scripts must fail while approval is pending or when the approved source
    hash changes.
 5. Only then derive tall and wide profiles, as conversational edits of the
-   approved scene.
+   approved scene. Look at every derived profile at full size before it
+   ships: the model can copy the red-hatched occlusion mask into the
+   picture, where the editor then hides most of it. The derivation script
+   warns when an output is mask-coloured, can generate several candidates to
+   choose from, and can repair a profile that already carries the mask.
 6. Downscale with a pixel-art-aware method, export WebP, and inspect any alpha
    channel — "transparent background" is a request, not a guarantee.
 7. Record model, prompt, references, date, dimensions, and approval state.
