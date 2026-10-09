@@ -1,7 +1,8 @@
 # Scene variations on wide boards
 
-Status: options laid out, none chosen (as of 2026-10-05). The next step is a
-visual check, described at the end. Nothing here has been built.
+Status: options laid out, none chosen. The visual check described at the end
+was built on 2026-10-09 and is waiting for Anton's judgement; see "The visual
+check, as built". Nothing in the app has changed.
 
 ## The problem
 
@@ -175,7 +176,47 @@ How the result steers the choice:
   option 2 (generate a wide set), depending on whether the current wide art or
   the generation cost matters more.
 
-The throwaway scripts used for the measurements were not kept. The method is
-SIFT features with a RANSAC similarity fit (`cv2.estimateAffinePartial2D`),
+## The visual check, as built
+
+Both sheets exist under `artifacts/world-generation/wide-transplant-check/`
+(gitignored, about 800 MB). They are rebuilt with
+`scripts/world-art/transplant_variants_to_wide.py` (add `--cut-out tight` for
+the second set) and `scripts/world-art/build_wide_crop_review.py`. The scores
+are committed in `scripts/world-art/wide-transplant-check.json`.
+
+- `mode-lantern-grounds/index.html` and `meridian-engine/index.html`: all 50
+  variations of each scene on the wide board, beside the compact original
+  warped into the same frame, worst score first, with a blink between the wide
+  board with and without the variation.
+- `mode-lantern-grounds-tight/` and `meridian-engine-tight/`: the same with a
+  tighter cut-out. The production cut-out turned out to carry a wide margin of
+  re-rendered base around each change (a typical patch covers 3–8% of the
+  board). Over the compact picture that margin is invisible. On a recomposed
+  wide picture it lands on its own counterpart and doubles it: on Meridian
+  Engine the central column appears twice. The tight cut-out keeps only what
+  clearly changed (1.5–5% of the board).
+- `phone-crops.html`: all 19 scenes, today's phone and tablet boards beside
+  two crops of the wide picture.
+
+What the numbers say, before anyone has looked at the sheets at full size:
+
+- Every one of the 100 variations found a local fit; none fell back to the
+  whole-picture placement.
+- Mode Lantern Grounds: the two base pictures agree closely around every
+  variation (colour difference ΔE 2.6–3.4), and variations are *reduced* to
+  about 0.68× on the wide board, so softness is not a question there.
+- Meridian Engine: variations are enlarged 1.35–1.45×. The base pictures
+  disagree far more around each variation (ΔE 5–20), and the left walkway and
+  left rail junction are the worst. With a provisional cut-off at ΔE 12, 38 of
+  50 pass with the production cut-out and 41 of 50 with the tight one. That
+  cut-off is a guess that the sheets are meant to correct, not a measured
+  reject rate.
+- Phone crops: the compact scene sits in the wide picture at 0.59× (Nested
+  Garden) to 0.91× (Far Beacons) of its own pixels. Seven scenes are at 0.74×
+  or below: Nested Garden, Meridian Table, Meridian Engine, Mode Lantern
+  Grounds, Menders' Confluence, Memory Archive and Scribe's Spring.
+
+The earlier throwaway scripts were not kept; the method now lives in the two
+scripts above. It is SIFT features with a RANSAC similarity fit (`cv2.estimateAffinePartial2D`),
 over the whole picture for the alignment table and over a window around each
 variation for the transplant.

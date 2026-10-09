@@ -1,0 +1,5709 @@
+{
+  "schemaVersion": 1,
+  "thresholds": {
+    "minInliers": 12,
+    "maxSurroundDeltaE": 12.0
+  },
+  "scenes": [
+    {
+      "sceneId": "meridian-engine",
+      "cutOut": "production",
+      "compactSize": [
+        2400,
+        1792
+      ],
+      "wideSize": [
+        2752,
+        1536
+      ],
+      "wholePictureFit": {
+        "scale": 0.6827,
+        "rotationDegrees": -0.38,
+        "offset": [
+          257.7,
+          307.1
+        ],
+        "inliers": 189
+      },
+      "variants": 50,
+      "passed": 38,
+      "rows": [
+        {
+          "id": "lower-left-walkway-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 17.8)",
+          "localFit": true,
+          "inliers": 99,
+          "matches": 1627,
+          "inlierRatio": 0.061,
+          "enlargement": 1.411,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 17.85,
+          "driftFromWholePictureFitPixels": 39.2,
+          "patchBoardPercent": 9.13,
+          "wideBox": [
+            302,
+            762,
+            1077,
+            1499
+          ],
+          "crop": [
+            0,
+            319,
+            1542,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 17.7)",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 17.75,
+          "driftFromWholePictureFitPixels": 30.3,
+          "patchBoardPercent": 5.98,
+          "wideBox": [
+            551,
+            869,
+            1233,
+            1490
+          ],
+          "crop": [
+            141,
+            496,
+            1643,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 17.5)",
+          "localFit": true,
+          "inliers": 99,
+          "matches": 1627,
+          "inlierRatio": 0.061,
+          "enlargement": 1.411,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 17.53,
+          "driftFromWholePictureFitPixels": 34.9,
+          "patchBoardPercent": 7.87,
+          "wideBox": [
+            436,
+            763,
+            1144,
+            1500
+          ],
+          "crop": [
+            11,
+            320,
+            1569,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 16.6)",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 16.63,
+          "driftFromWholePictureFitPixels": 33.3,
+          "patchBoardPercent": 8.71,
+          "wideBox": [
+            442,
+            767,
+            1190,
+            1506
+          ],
+          "crop": [
+            0,
+            323,
+            1639,
+            1536
+          ]
+        },
+        {
+          "id": "distant-left-structure-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 15.1)",
+          "localFit": true,
+          "inliers": 50,
+          "matches": 739,
+          "inlierRatio": 0.068,
+          "enlargement": 1.367,
+          "rotationDegrees": 0.22,
+          "surroundDeltaE": 15.08,
+          "driftFromWholePictureFitPixels": 7.6,
+          "patchBoardPercent": 1.27,
+          "wideBox": [
+            357,
+            373,
+            830,
+            762
+          ],
+          "crop": [
+            73,
+            139,
+            1114,
+            996
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 15.1)",
+          "localFit": true,
+          "inliers": 63,
+          "matches": 1060,
+          "inlierRatio": 0.059,
+          "enlargement": 1.361,
+          "rotationDegrees": -0.17,
+          "surroundDeltaE": 15.08,
+          "driftFromWholePictureFitPixels": 1.7,
+          "patchBoardPercent": 3.54,
+          "wideBox": [
+            404,
+            304,
+            982,
+            787
+          ],
+          "crop": [
+            57,
+            14,
+            1329,
+            1077
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 15.0)",
+          "localFit": true,
+          "inliers": 58,
+          "matches": 799,
+          "inlierRatio": 0.073,
+          "enlargement": 1.357,
+          "rotationDegrees": -0.27,
+          "surroundDeltaE": 14.98,
+          "driftFromWholePictureFitPixels": 2.0,
+          "patchBoardPercent": 1.46,
+          "wideBox": [
+            315,
+            411,
+            828,
+            795
+          ],
+          "crop": [
+            7,
+            180,
+            1136,
+            1026
+          ]
+        },
+        {
+          "id": "distant-left-structure-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 14.6)",
+          "localFit": true,
+          "inliers": 49,
+          "matches": 779,
+          "inlierRatio": 0.063,
+          "enlargement": 1.374,
+          "rotationDegrees": -0.7,
+          "surroundDeltaE": 14.56,
+          "driftFromWholePictureFitPixels": 9.1,
+          "patchBoardPercent": 1.37,
+          "wideBox": [
+            361,
+            402,
+            888,
+            769
+          ],
+          "crop": [
+            44,
+            181,
+            1205,
+            990
+          ]
+        },
+        {
+          "id": "distant-left-structure-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 14.0)",
+          "localFit": true,
+          "inliers": 55,
+          "matches": 899,
+          "inlierRatio": 0.061,
+          "enlargement": 1.373,
+          "rotationDegrees": -0.83,
+          "surroundDeltaE": 13.97,
+          "driftFromWholePictureFitPixels": 8.5,
+          "patchBoardPercent": 1.89,
+          "wideBox": [
+            360,
+            403,
+            954,
+            777
+          ],
+          "crop": [
+            3,
+            178,
+            1311,
+            1002
+          ]
+        },
+        {
+          "id": "left-rail-junction-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 13.3)",
+          "localFit": true,
+          "inliers": 66,
+          "matches": 1239,
+          "inlierRatio": 0.053,
+          "enlargement": 1.375,
+          "rotationDegrees": -1.17,
+          "surroundDeltaE": 13.28,
+          "driftFromWholePictureFitPixels": 10.5,
+          "patchBoardPercent": 3.24,
+          "wideBox": [
+            298,
+            406,
+            885,
+            1074
+          ],
+          "crop": [
+            0,
+            5,
+            1238,
+            1475
+          ]
+        },
+        {
+          "id": "right-rail-junction-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 13.1)",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 13.07,
+          "driftFromWholePictureFitPixels": 23.3,
+          "patchBoardPercent": 5.71,
+          "wideBox": [
+            694,
+            725,
+            1415,
+            1390
+          ],
+          "crop": [
+            261,
+            326,
+            1848,
+            1536
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 12.5)",
+          "localFit": true,
+          "inliers": 65,
+          "matches": 1300,
+          "inlierRatio": 0.05,
+          "enlargement": 1.376,
+          "rotationDegrees": -1.39,
+          "surroundDeltaE": 12.47,
+          "driftFromWholePictureFitPixels": 8.8,
+          "patchBoardPercent": 2.87,
+          "wideBox": [
+            319,
+            609,
+            936,
+            1111
+          ],
+          "crop": [
+            0,
+            307,
+            1307,
+            1413
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 11.8,
+          "driftFromWholePictureFitPixels": 19.0,
+          "patchBoardPercent": 7.62,
+          "wideBox": [
+            803,
+            807,
+            1535,
+            1524
+          ],
+          "crop": [
+            363,
+            376,
+            1975,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 89,
+          "matches": 1605,
+          "inlierRatio": 0.055,
+          "enlargement": 1.415,
+          "rotationDegrees": 0.98,
+          "surroundDeltaE": 10.96,
+          "driftFromWholePictureFitPixels": 33.8,
+          "patchBoardPercent": 4.87,
+          "wideBox": [
+            554,
+            531,
+            1191,
+            1118
+          ],
+          "crop": [
+            171,
+            178,
+            1574,
+            1471
+          ]
+        },
+        {
+          "id": "right-platform-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 10.62,
+          "driftFromWholePictureFitPixels": 22.8,
+          "patchBoardPercent": 5.2,
+          "wideBox": [
+            784,
+            564,
+            1393,
+            1232
+          ],
+          "crop": [
+            418,
+            163,
+            1759,
+            1536
+          ]
+        },
+        {
+          "id": "right-platform-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 10.27,
+          "driftFromWholePictureFitPixels": 21.4,
+          "patchBoardPercent": 5.88,
+          "wideBox": [
+            827,
+            495,
+            1444,
+            1255
+          ],
+          "crop": [
+            456,
+            39,
+            1815,
+            1536
+          ]
+        },
+        {
+          "id": "distant-right-structure-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 87,
+          "matches": 904,
+          "inlierRatio": 0.096,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.24,
+          "surroundDeltaE": 9.83,
+          "driftFromWholePictureFitPixels": 18.4,
+          "patchBoardPercent": 2.54,
+          "wideBox": [
+            1488,
+            358,
+            1919,
+            881
+          ],
+          "crop": [
+            1229,
+            44,
+            2178,
+            1195
+          ]
+        },
+        {
+          "id": "distant-right-structure-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 92,
+          "matches": 945,
+          "inlierRatio": 0.097,
+          "enlargement": 1.372,
+          "rotationDegrees": -0.11,
+          "surroundDeltaE": 9.8,
+          "driftFromWholePictureFitPixels": 3.2,
+          "patchBoardPercent": 2.97,
+          "wideBox": [
+            1308,
+            295,
+            1841,
+            757
+          ],
+          "crop": [
+            988,
+            17,
+            2161,
+            1035
+          ]
+        },
+        {
+          "id": "distant-left-structure-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 9.71,
+          "driftFromWholePictureFitPixels": 33.7,
+          "patchBoardPercent": 10.29,
+          "wideBox": [
+            428,
+            359,
+            1288,
+            1186
+          ],
+          "crop": [
+            0,
+            0,
+            1804,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 9.62,
+          "driftFromWholePictureFitPixels": 22.1,
+          "patchBoardPercent": 8.1,
+          "wideBox": [
+            767,
+            437,
+            1511,
+            1210
+          ],
+          "crop": [
+            320,
+            0,
+            1958,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 99,
+          "matches": 1370,
+          "inlierRatio": 0.072,
+          "enlargement": 1.408,
+          "rotationDegrees": 1.24,
+          "surroundDeltaE": 9.61,
+          "driftFromWholePictureFitPixels": 16.9,
+          "patchBoardPercent": 5.87,
+          "wideBox": [
+            1263,
+            310,
+            1920,
+            994
+          ],
+          "crop": [
+            868,
+            0,
+            2315,
+            1405
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 22,
+          "matches": 291,
+          "inlierRatio": 0.076,
+          "enlargement": 1.353,
+          "rotationDegrees": -0.11,
+          "surroundDeltaE": 9.48,
+          "driftFromWholePictureFitPixels": 3.9,
+          "patchBoardPercent": 0.57,
+          "wideBox": [
+            332,
+            784,
+            512,
+            1052
+          ],
+          "crop": [
+            192,
+            623,
+            652,
+            1213
+          ]
+        },
+        {
+          "id": "distant-right-structure-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 78,
+          "matches": 753,
+          "inlierRatio": 0.104,
+          "enlargement": 1.403,
+          "rotationDegrees": 1.21,
+          "surroundDeltaE": 9.36,
+          "driftFromWholePictureFitPixels": 18.6,
+          "patchBoardPercent": 2.04,
+          "wideBox": [
+            1504,
+            360,
+            1919,
+            808
+          ],
+          "crop": [
+            1255,
+            91,
+            2168,
+            1077
+          ]
+        },
+        {
+          "id": "left-platform-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 67,
+          "matches": 1302,
+          "inlierRatio": 0.051,
+          "enlargement": 1.357,
+          "rotationDegrees": -0.33,
+          "surroundDeltaE": 9.28,
+          "driftFromWholePictureFitPixels": 2.6,
+          "patchBoardPercent": 6.13,
+          "wideBox": [
+            374,
+            799,
+            961,
+            1502
+          ],
+          "crop": [
+            21,
+            377,
+            1314,
+            1536
+          ]
+        },
+        {
+          "id": "left-platform-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 66,
+          "matches": 1158,
+          "inlierRatio": 0.057,
+          "enlargement": 1.372,
+          "rotationDegrees": -1.42,
+          "surroundDeltaE": 9.26,
+          "driftFromWholePictureFitPixels": 7.2,
+          "patchBoardPercent": 4.58,
+          "wideBox": [
+            345,
+            804,
+            875,
+            1450
+          ],
+          "crop": [
+            27,
+            416,
+            1193,
+            1536
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 103,
+          "matches": 1613,
+          "inlierRatio": 0.064,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 9.22,
+          "driftFromWholePictureFitPixels": 11.2,
+          "patchBoardPercent": 7.39,
+          "wideBox": [
+            1003,
+            923,
+            1750,
+            1535
+          ],
+          "crop": [
+            554,
+            555,
+            2199,
+            1536
+          ]
+        },
+        {
+          "id": "distant-right-structure-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 100,
+          "matches": 1113,
+          "inlierRatio": 0.09,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.25,
+          "surroundDeltaE": 9.16,
+          "driftFromWholePictureFitPixels": 16.9,
+          "patchBoardPercent": 3.39,
+          "wideBox": [
+            1400,
+            370,
+            1919,
+            930
+          ],
+          "crop": [
+            1088,
+            34,
+            2231,
+            1266
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 69,
+          "matches": 1283,
+          "inlierRatio": 0.054,
+          "enlargement": 1.375,
+          "rotationDegrees": -1.06,
+          "surroundDeltaE": 8.98,
+          "driftFromWholePictureFitPixels": 5.5,
+          "patchBoardPercent": 6.31,
+          "wideBox": [
+            344,
+            801,
+            936,
+            1488
+          ],
+          "crop": [
+            0,
+            388,
+            1292,
+            1536
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 95,
+          "matches": 1654,
+          "inlierRatio": 0.057,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.24,
+          "surroundDeltaE": 8.97,
+          "driftFromWholePictureFitPixels": 9.5,
+          "patchBoardPercent": 8.94,
+          "wideBox": [
+            1002,
+            763,
+            1776,
+            1535
+          ],
+          "crop": [
+            537,
+            299,
+            2241,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 100,
+          "matches": 1596,
+          "inlierRatio": 0.063,
+          "enlargement": 1.414,
+          "rotationDegrees": 0.94,
+          "surroundDeltaE": 8.97,
+          "driftFromWholePictureFitPixels": 12.2,
+          "patchBoardPercent": 6.12,
+          "wideBox": [
+            1028,
+            603,
+            1730,
+            1193
+          ],
+          "crop": [
+            606,
+            249,
+            2152,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 66,
+          "matches": 1061,
+          "inlierRatio": 0.062,
+          "enlargement": 1.354,
+          "rotationDegrees": -0.44,
+          "surroundDeltaE": 8.94,
+          "driftFromWholePictureFitPixels": 1.5,
+          "patchBoardPercent": 2.96,
+          "wideBox": [
+            280,
+            723,
+            786,
+            1200
+          ],
+          "crop": [
+            0,
+            436,
+            1090,
+            1487
+          ]
+        },
+        {
+          "id": "right-platform-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.83,
+          "driftFromWholePictureFitPixels": 14.3,
+          "patchBoardPercent": 10.45,
+          "wideBox": [
+            829,
+            491,
+            1820,
+            1267
+          ],
+          "crop": [
+            234,
+            25,
+            2415,
+            1536
+          ]
+        },
+        {
+          "id": "left-platform-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 83,
+          "matches": 1499,
+          "inlierRatio": 0.055,
+          "enlargement": 1.371,
+          "rotationDegrees": -0.17,
+          "surroundDeltaE": 8.72,
+          "driftFromWholePictureFitPixels": 4.7,
+          "patchBoardPercent": 6.99,
+          "wideBox": [
+            366,
+            794,
+            1047,
+            1440
+          ],
+          "crop": [
+            0,
+            406,
+            1456,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 69,
+          "matches": 1283,
+          "inlierRatio": 0.054,
+          "enlargement": 1.375,
+          "rotationDegrees": -1.06,
+          "surroundDeltaE": 8.68,
+          "driftFromWholePictureFitPixels": 5.3,
+          "patchBoardPercent": 5.97,
+          "wideBox": [
+            348,
+            829,
+            939,
+            1524
+          ],
+          "crop": [
+            0,
+            412,
+            1294,
+            1536
+          ]
+        },
+        {
+          "id": "left-platform-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 68,
+          "matches": 1360,
+          "inlierRatio": 0.05,
+          "enlargement": 1.368,
+          "rotationDegrees": -0.71,
+          "surroundDeltaE": 8.6,
+          "driftFromWholePictureFitPixels": 1.7,
+          "patchBoardPercent": 6.64,
+          "wideBox": [
+            413,
+            779,
+            1006,
+            1462
+          ],
+          "crop": [
+            57,
+            369,
+            1362,
+            1536
+          ]
+        },
+        {
+          "id": "left-platform-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 80,
+          "matches": 1523,
+          "inlierRatio": 0.053,
+          "enlargement": 1.368,
+          "rotationDegrees": -0.27,
+          "surroundDeltaE": 8.57,
+          "driftFromWholePictureFitPixels": 2.6,
+          "patchBoardPercent": 8.11,
+          "wideBox": [
+            260,
+            797,
+            1005,
+            1508
+          ],
+          "crop": [
+            0,
+            370,
+            1452,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.4,
+          "driftFromWholePictureFitPixels": 26.1,
+          "patchBoardPercent": 5.35,
+          "wideBox": [
+            700,
+            467,
+            1422,
+            1074
+          ],
+          "crop": [
+            266,
+            102,
+            1856,
+            1439
+          ]
+        },
+        {
+          "id": "distant-right-structure-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 101,
+          "matches": 1217,
+          "inlierRatio": 0.083,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.23,
+          "surroundDeltaE": 8.38,
+          "driftFromWholePictureFitPixels": 8.2,
+          "patchBoardPercent": 4.94,
+          "wideBox": [
+            1354,
+            534,
+            1917,
+            1178
+          ],
+          "crop": [
+            1016,
+            147,
+            2255,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 97,
+          "matches": 1108,
+          "inlierRatio": 0.088,
+          "enlargement": 1.414,
+          "rotationDegrees": 1.17,
+          "surroundDeltaE": 8.28,
+          "driftFromWholePictureFitPixels": 10.4,
+          "patchBoardPercent": 4.58,
+          "wideBox": [
+            1420,
+            574,
+            1921,
+            1090
+          ],
+          "crop": [
+            1119,
+            264,
+            2222,
+            1400
+          ]
+        },
+        {
+          "id": "right-platform-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 95,
+          "matches": 1249,
+          "inlierRatio": 0.076,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.25,
+          "surroundDeltaE": 8.1,
+          "driftFromWholePictureFitPixels": 6.2,
+          "patchBoardPercent": 4.97,
+          "wideBox": [
+            1331,
+            587,
+            1918,
+            1245
+          ],
+          "crop": [
+            978,
+            192,
+            2271,
+            1536
+          ]
+        },
+        {
+          "id": "right-platform-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 100,
+          "matches": 1103,
+          "inlierRatio": 0.091,
+          "enlargement": 1.412,
+          "rotationDegrees": 1.23,
+          "surroundDeltaE": 8.01,
+          "driftFromWholePictureFitPixels": 8.0,
+          "patchBoardPercent": 4.7,
+          "wideBox": [
+            1418,
+            575,
+            1918,
+            1201
+          ],
+          "crop": [
+            1118,
+            199,
+            2218,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 101,
+          "matches": 1217,
+          "inlierRatio": 0.083,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.23,
+          "surroundDeltaE": 7.94,
+          "driftFromWholePictureFitPixels": 3.1,
+          "patchBoardPercent": 4.29,
+          "wideBox": [
+            1346,
+            656,
+            1916,
+            1311
+          ],
+          "crop": [
+            1004,
+            263,
+            2258,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 107,
+          "matches": 1304,
+          "inlierRatio": 0.082,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.23,
+          "surroundDeltaE": 7.85,
+          "driftFromWholePictureFitPixels": 3.4,
+          "patchBoardPercent": 4.37,
+          "wideBox": [
+            1278,
+            834,
+            1887,
+            1445
+          ],
+          "crop": [
+            912,
+            467,
+            2253,
+            1536
+          ]
+        },
+        {
+          "id": "distant-left-structure-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 50,
+          "matches": 519,
+          "inlierRatio": 0.096,
+          "enlargement": 1.452,
+          "rotationDegrees": -0.23,
+          "surroundDeltaE": 7.83,
+          "driftFromWholePictureFitPixels": 47.4,
+          "patchBoardPercent": 1.5,
+          "wideBox": [
+            213,
+            386,
+            632,
+            774
+          ],
+          "crop": [
+            0,
+            153,
+            884,
+            1007
+          ]
+        },
+        {
+          "id": "upper-right-lens-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 90,
+          "matches": 1178,
+          "inlierRatio": 0.076,
+          "enlargement": 1.423,
+          "rotationDegrees": 1.17,
+          "surroundDeltaE": 7.49,
+          "driftFromWholePictureFitPixels": 16.4,
+          "patchBoardPercent": 3.16,
+          "wideBox": [
+            1371,
+            467,
+            1919,
+            996
+          ],
+          "crop": [
+            1042,
+            149,
+            2248,
+            1314
+          ]
+        },
+        {
+          "id": "right-rail-junction-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 110,
+          "matches": 1078,
+          "inlierRatio": 0.102,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.21,
+          "surroundDeltaE": 7.24,
+          "driftFromWholePictureFitPixels": 2.7,
+          "patchBoardPercent": 4.43,
+          "wideBox": [
+            1436,
+            732,
+            1917,
+            1470
+          ],
+          "crop": [
+            1147,
+            289,
+            2206,
+            1536
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 104,
+          "matches": 1150,
+          "inlierRatio": 0.09,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.15,
+          "surroundDeltaE": 6.89,
+          "driftFromWholePictureFitPixels": 6.0,
+          "patchBoardPercent": 3.68,
+          "wideBox": [
+            1391,
+            880,
+            1909,
+            1535
+          ],
+          "crop": [
+            1080,
+            487,
+            2220,
+            1536
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 93,
+          "matches": 1010,
+          "inlierRatio": 0.092,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.27,
+          "surroundDeltaE": 6.87,
+          "driftFromWholePictureFitPixels": 8.8,
+          "patchBoardPercent": 3.18,
+          "wideBox": [
+            1404,
+            1015,
+            1907,
+            1534
+          ],
+          "crop": [
+            1102,
+            703,
+            2209,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 86,
+          "matches": 818,
+          "inlierRatio": 0.105,
+          "enlargement": 1.431,
+          "rotationDegrees": 0.96,
+          "surroundDeltaE": 6.86,
+          "driftFromWholePictureFitPixels": 21.2,
+          "patchBoardPercent": 2.44,
+          "wideBox": [
+            1488,
+            437,
+            1921,
+            880
+          ],
+          "crop": [
+            1228,
+            171,
+            2181,
+            1146
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 43,
+          "matches": 483,
+          "inlierRatio": 0.089,
+          "enlargement": 1.449,
+          "rotationDegrees": 0.11,
+          "surroundDeltaE": 5.48,
+          "driftFromWholePictureFitPixels": 52.7,
+          "patchBoardPercent": 2.13,
+          "wideBox": [
+            214,
+            251,
+            640,
+            674
+          ],
+          "crop": [
+            0,
+            0,
+            896,
+            928
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "meridian-engine",
+      "cutOut": "tight",
+      "compactSize": [
+        2400,
+        1792
+      ],
+      "wideSize": [
+        2752,
+        1536
+      ],
+      "wholePictureFit": {
+        "scale": 0.6827,
+        "rotationDegrees": -0.38,
+        "offset": [
+          257.7,
+          307.1
+        ],
+        "inliers": 189
+      },
+      "variants": 50,
+      "passed": 41,
+      "rows": [
+        {
+          "id": "lower-left-walkway-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 20.1)",
+          "localFit": true,
+          "inliers": 99,
+          "matches": 1627,
+          "inlierRatio": 0.061,
+          "enlargement": 1.411,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 20.13,
+          "driftFromWholePictureFitPixels": 34.9,
+          "patchBoardPercent": 4.04,
+          "wideBox": [
+            437,
+            771,
+            1143,
+            1481
+          ],
+          "crop": [
+            13,
+            345,
+            1567,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 19.9)",
+          "localFit": true,
+          "inliers": 99,
+          "matches": 1627,
+          "inlierRatio": 0.061,
+          "enlargement": 1.411,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 19.88,
+          "driftFromWholePictureFitPixels": 39.1,
+          "patchBoardPercent": 5.42,
+          "wideBox": [
+            303,
+            768,
+            1076,
+            1481
+          ],
+          "crop": [
+            0,
+            340,
+            1540,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 19.7)",
+          "localFit": true,
+          "inliers": 101,
+          "matches": 1654,
+          "inlierRatio": 0.061,
+          "enlargement": 1.411,
+          "rotationDegrees": 1.22,
+          "surroundDeltaE": 19.71,
+          "driftFromWholePictureFitPixels": 31.3,
+          "patchBoardPercent": 2.74,
+          "wideBox": [
+            550,
+            869,
+            1225,
+            1442
+          ],
+          "crop": [
+            145,
+            525,
+            1630,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 17.7)",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 17.69,
+          "driftFromWholePictureFitPixels": 33.2,
+          "patchBoardPercent": 5.29,
+          "wideBox": [
+            443,
+            772,
+            1189,
+            1481
+          ],
+          "crop": [
+            0,
+            346,
+            1637,
+            1536
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 14.7)",
+          "localFit": true,
+          "inliers": 56,
+          "matches": 848,
+          "inlierRatio": 0.066,
+          "enlargement": 1.361,
+          "rotationDegrees": -0.77,
+          "surroundDeltaE": 14.7,
+          "driftFromWholePictureFitPixels": 4.6,
+          "patchBoardPercent": 1.94,
+          "wideBox": [
+            398,
+            305,
+            862,
+            769
+          ],
+          "crop": [
+            119,
+            26,
+            1141,
+            1048
+          ]
+        },
+        {
+          "id": "right-rail-junction-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 14.4)",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 14.36,
+          "driftFromWholePictureFitPixels": 23.3,
+          "patchBoardPercent": 2.38,
+          "wideBox": [
+            695,
+            739,
+            1414,
+            1389
+          ],
+          "crop": [
+            263,
+            349,
+            1846,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 14.1)",
+          "localFit": true,
+          "inliers": 62,
+          "matches": 1044,
+          "inlierRatio": 0.059,
+          "enlargement": 1.358,
+          "rotationDegrees": -0.73,
+          "surroundDeltaE": 14.12,
+          "driftFromWholePictureFitPixels": 2.3,
+          "patchBoardPercent": 1.84,
+          "wideBox": [
+            314,
+            537,
+            828,
+            978
+          ],
+          "crop": [
+            5,
+            272,
+            1137,
+            1243
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 13.6)",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 13.58,
+          "driftFromWholePictureFitPixels": 19.1,
+          "patchBoardPercent": 3.91,
+          "wideBox": [
+            804,
+            828,
+            1528,
+            1509
+          ],
+          "crop": [
+            369,
+            419,
+            1963,
+            1536
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": false,
+          "reason": "surroundings differ (ΔE 12.7)",
+          "localFit": true,
+          "inliers": 64,
+          "matches": 1039,
+          "inlierRatio": 0.062,
+          "enlargement": 1.355,
+          "rotationDegrees": -0.46,
+          "surroundDeltaE": 12.75,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 1.32,
+          "wideBox": [
+            450,
+            672,
+            938,
+            1010
+          ],
+          "crop": [
+            157,
+            469,
+            1231,
+            1213
+          ]
+        },
+        {
+          "id": "right-platform-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 97,
+          "matches": 1634,
+          "inlierRatio": 0.059,
+          "enlargement": 1.415,
+          "rotationDegrees": 0.99,
+          "surroundDeltaE": 11.79,
+          "driftFromWholePictureFitPixels": 24.5,
+          "patchBoardPercent": 2.63,
+          "wideBox": [
+            822,
+            494,
+            1389,
+            1257
+          ],
+          "crop": [
+            481,
+            36,
+            1730,
+            1536
+          ]
+        },
+        {
+          "id": "right-platform-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 10.76,
+          "driftFromWholePictureFitPixels": 22.7,
+          "patchBoardPercent": 2.19,
+          "wideBox": [
+            785,
+            575,
+            1392,
+            1232
+          ],
+          "crop": [
+            420,
+            180,
+            1757,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 10.22,
+          "driftFromWholePictureFitPixels": 22.1,
+          "patchBoardPercent": 3.65,
+          "wideBox": [
+            767,
+            448,
+            1511,
+            1209
+          ],
+          "crop": [
+            320,
+            0,
+            1958,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 90,
+          "matches": 1596,
+          "inlierRatio": 0.056,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.21,
+          "surroundDeltaE": 10.08,
+          "driftFromWholePictureFitPixels": 30.2,
+          "patchBoardPercent": 2.31,
+          "wideBox": [
+            567,
+            593,
+            1194,
+            1115
+          ],
+          "crop": [
+            190,
+            279,
+            1571,
+            1429
+          ]
+        },
+        {
+          "id": "distant-right-structure-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 86,
+          "matches": 842,
+          "inlierRatio": 0.102,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.27,
+          "surroundDeltaE": 9.99,
+          "driftFromWholePictureFitPixels": 18.1,
+          "patchBoardPercent": 1.6,
+          "wideBox": [
+            1511,
+            367,
+            1917,
+            875
+          ],
+          "crop": [
+            1267,
+            62,
+            2161,
+            1180
+          ]
+        },
+        {
+          "id": "upper-right-lens-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 106,
+          "matches": 1285,
+          "inlierRatio": 0.082,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.21,
+          "surroundDeltaE": 9.96,
+          "driftFromWholePictureFitPixels": 16.4,
+          "patchBoardPercent": 2.66,
+          "wideBox": [
+            1264,
+            320,
+            1827,
+            991
+          ],
+          "crop": [
+            926,
+            0,
+            2165,
+            1394
+          ]
+        },
+        {
+          "id": "left-platform-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 66,
+          "matches": 1158,
+          "inlierRatio": 0.057,
+          "enlargement": 1.372,
+          "rotationDegrees": -1.42,
+          "surroundDeltaE": 9.82,
+          "driftFromWholePictureFitPixels": 7.2,
+          "patchBoardPercent": 1.93,
+          "wideBox": [
+            346,
+            810,
+            873,
+            1448
+          ],
+          "crop": [
+            29,
+            427,
+            1190,
+            1536
+          ]
+        },
+        {
+          "id": "left-platform-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 67,
+          "matches": 1302,
+          "inlierRatio": 0.051,
+          "enlargement": 1.357,
+          "rotationDegrees": -0.33,
+          "surroundDeltaE": 9.8,
+          "driftFromWholePictureFitPixels": 2.5,
+          "patchBoardPercent": 3.05,
+          "wideBox": [
+            374,
+            805,
+            961,
+            1491
+          ],
+          "crop": [
+            21,
+            393,
+            1314,
+            1536
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 105,
+          "matches": 1652,
+          "inlierRatio": 0.064,
+          "enlargement": 1.404,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 9.77,
+          "driftFromWholePictureFitPixels": 9.6,
+          "patchBoardPercent": 4.8,
+          "wideBox": [
+            1004,
+            764,
+            1773,
+            1531
+          ],
+          "crop": [
+            542,
+            303,
+            2235,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 67,
+          "matches": 1265,
+          "inlierRatio": 0.053,
+          "enlargement": 1.364,
+          "rotationDegrees": -0.69,
+          "surroundDeltaE": 9.76,
+          "driftFromWholePictureFitPixels": 1.7,
+          "patchBoardPercent": 2.58,
+          "wideBox": [
+            371,
+            827,
+            939,
+            1493
+          ],
+          "crop": [
+            30,
+            427,
+            1280,
+            1536
+          ]
+        },
+        {
+          "id": "distant-left-structure-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 9.71,
+          "driftFromWholePictureFitPixels": 31.9,
+          "patchBoardPercent": 6.52,
+          "wideBox": [
+            512,
+            407,
+            1281,
+            1186
+          ],
+          "crop": [
+            50,
+            0,
+            1743,
+            1536
+          ]
+        },
+        {
+          "id": "lower-left-walkway-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 69,
+          "matches": 1283,
+          "inlierRatio": 0.054,
+          "enlargement": 1.375,
+          "rotationDegrees": -1.06,
+          "surroundDeltaE": 9.6,
+          "driftFromWholePictureFitPixels": 5.5,
+          "patchBoardPercent": 3.1,
+          "wideBox": [
+            344,
+            806,
+            935,
+            1487
+          ],
+          "crop": [
+            0,
+            397,
+            1290,
+            1536
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 109,
+          "matches": 1600,
+          "inlierRatio": 0.068,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.21,
+          "surroundDeltaE": 9.57,
+          "driftFromWholePictureFitPixels": 11.5,
+          "patchBoardPercent": 4.15,
+          "wideBox": [
+            1005,
+            928,
+            1739,
+            1532
+          ],
+          "crop": [
+            564,
+            565,
+            2180,
+            1536
+          ]
+        },
+        {
+          "id": "distant-right-structure-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 65,
+          "matches": 641,
+          "inlierRatio": 0.101,
+          "enlargement": 1.381,
+          "rotationDegrees": 0.38,
+          "surroundDeltaE": 9.5,
+          "driftFromWholePictureFitPixels": 9.0,
+          "patchBoardPercent": 1.26,
+          "wideBox": [
+            1510,
+            377,
+            1894,
+            761
+          ],
+          "crop": [
+            1279,
+            146,
+            2125,
+            992
+          ]
+        },
+        {
+          "id": "left-platform-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 83,
+          "matches": 1499,
+          "inlierRatio": 0.055,
+          "enlargement": 1.371,
+          "rotationDegrees": -0.17,
+          "surroundDeltaE": 9.49,
+          "driftFromWholePictureFitPixels": 4.7,
+          "patchBoardPercent": 3.65,
+          "wideBox": [
+            366,
+            801,
+            1047,
+            1438
+          ],
+          "crop": [
+            0,
+            418,
+            1456,
+            1536
+          ]
+        },
+        {
+          "id": "left-platform-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 77,
+          "matches": 1503,
+          "inlierRatio": 0.051,
+          "enlargement": 1.372,
+          "rotationDegrees": -0.06,
+          "surroundDeltaE": 9.45,
+          "driftFromWholePictureFitPixels": 5.9,
+          "patchBoardPercent": 4.65,
+          "wideBox": [
+            277,
+            800,
+            1003,
+            1492
+          ],
+          "crop": [
+            0,
+            384,
+            1439,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 100,
+          "matches": 1593,
+          "inlierRatio": 0.063,
+          "enlargement": 1.414,
+          "rotationDegrees": 1.21,
+          "surroundDeltaE": 9.44,
+          "driftFromWholePictureFitPixels": 13.5,
+          "patchBoardPercent": 3.05,
+          "wideBox": [
+            1029,
+            602,
+            1727,
+            1187
+          ],
+          "crop": [
+            610,
+            251,
+            2146,
+            1536
+          ]
+        },
+        {
+          "id": "left-rail-junction-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 61,
+          "matches": 972,
+          "inlierRatio": 0.063,
+          "enlargement": 1.354,
+          "rotationDegrees": -0.29,
+          "surroundDeltaE": 9.43,
+          "driftFromWholePictureFitPixels": 1.7,
+          "patchBoardPercent": 1.43,
+          "wideBox": [
+            328,
+            793,
+            786,
+            1200
+          ],
+          "crop": [
+            53,
+            548,
+            1061,
+            1445
+          ]
+        },
+        {
+          "id": "left-platform-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 68,
+          "matches": 1360,
+          "inlierRatio": 0.05,
+          "enlargement": 1.368,
+          "rotationDegrees": -0.71,
+          "surroundDeltaE": 9.29,
+          "driftFromWholePictureFitPixels": 1.7,
+          "patchBoardPercent": 3.37,
+          "wideBox": [
+            414,
+            804,
+            1005,
+            1460
+          ],
+          "crop": [
+            59,
+            410,
+            1360,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 94,
+          "matches": 1099,
+          "inlierRatio": 0.086,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.24,
+          "surroundDeltaE": 9.27,
+          "driftFromWholePictureFitPixels": 9.1,
+          "patchBoardPercent": 1.75,
+          "wideBox": [
+            1435,
+            605,
+            1920,
+            1087
+          ],
+          "crop": [
+            1144,
+            315,
+            2211,
+            1377
+          ]
+        },
+        {
+          "id": "left-rail-junction-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.83,
+          "driftFromWholePictureFitPixels": 26.1,
+          "patchBoardPercent": 2.62,
+          "wideBox": [
+            740,
+            476,
+            1374,
+            1074
+          ],
+          "crop": [
+            359,
+            117,
+            1755,
+            1433
+          ]
+        },
+        {
+          "id": "distant-right-structure-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 71,
+          "matches": 777,
+          "inlierRatio": 0.091,
+          "enlargement": 1.402,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.78,
+          "driftFromWholePictureFitPixels": 17.6,
+          "patchBoardPercent": 1.55,
+          "wideBox": [
+            1433,
+            408,
+            1880,
+            788
+          ],
+          "crop": [
+            1164,
+            180,
+            2149,
+            1016
+          ]
+        },
+        {
+          "id": "right-platform-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1667,
+          "inlierRatio": 0.061,
+          "enlargement": 1.41,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.74,
+          "driftFromWholePictureFitPixels": 14.3,
+          "patchBoardPercent": 5.27,
+          "wideBox": [
+            832,
+            491,
+            1819,
+            1266
+          ],
+          "crop": [
+            239,
+            26,
+            2412,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 84,
+          "matches": 739,
+          "inlierRatio": 0.114,
+          "enlargement": 1.419,
+          "rotationDegrees": 1.1,
+          "surroundDeltaE": 8.65,
+          "driftFromWholePictureFitPixels": 18.4,
+          "patchBoardPercent": 1.46,
+          "wideBox": [
+            1527,
+            446,
+            1919,
+            882
+          ],
+          "crop": [
+            1291,
+            184,
+            2155,
+            1144
+          ]
+        },
+        {
+          "id": "distant-right-structure-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 106,
+          "matches": 1102,
+          "inlierRatio": 0.096,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.32,
+          "driftFromWholePictureFitPixels": 7.9,
+          "patchBoardPercent": 1.74,
+          "wideBox": [
+            1421,
+            577,
+            1917,
+            1178
+          ],
+          "crop": [
+            1123,
+            216,
+            2215,
+            1536
+          ]
+        },
+        {
+          "id": "distant-left-structure-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 32,
+          "matches": 374,
+          "inlierRatio": 0.086,
+          "enlargement": 1.455,
+          "rotationDegrees": -0.22,
+          "surroundDeltaE": 8.25,
+          "driftFromWholePictureFitPixels": 46.9,
+          "patchBoardPercent": 0.76,
+          "wideBox": [
+            270,
+            418,
+            605,
+            742
+          ],
+          "crop": [
+            69,
+            223,
+            806,
+            937
+          ]
+        },
+        {
+          "id": "right-platform-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 106,
+          "matches": 1102,
+          "inlierRatio": 0.096,
+          "enlargement": 1.406,
+          "rotationDegrees": 1.2,
+          "surroundDeltaE": 8.13,
+          "driftFromWholePictureFitPixels": 6.6,
+          "patchBoardPercent": 1.6,
+          "wideBox": [
+            1421,
+            625,
+            1917,
+            1200
+          ],
+          "crop": [
+            1123,
+            280,
+            2215,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 94,
+          "matches": 1296,
+          "inlierRatio": 0.073,
+          "enlargement": 1.403,
+          "rotationDegrees": 1.15,
+          "surroundDeltaE": 7.75,
+          "driftFromWholePictureFitPixels": 3.0,
+          "patchBoardPercent": 1.57,
+          "wideBox": [
+            1284,
+            836,
+            1885,
+            1434
+          ],
+          "crop": [
+            923,
+            477,
+            2246,
+            1536
+          ]
+        },
+        {
+          "id": "right-platform-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 94,
+          "matches": 1239,
+          "inlierRatio": 0.076,
+          "enlargement": 1.415,
+          "rotationDegrees": 1.19,
+          "surroundDeltaE": 7.53,
+          "driftFromWholePictureFitPixels": 6.0,
+          "patchBoardPercent": 2.31,
+          "wideBox": [
+            1331,
+            622,
+            1902,
+            1244
+          ],
+          "crop": [
+            988,
+            248,
+            2245,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 102,
+          "matches": 1074,
+          "inlierRatio": 0.095,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.24,
+          "surroundDeltaE": 7.5,
+          "driftFromWholePictureFitPixels": 2.7,
+          "patchBoardPercent": 2.5,
+          "wideBox": [
+            1439,
+            792,
+            1913,
+            1330
+          ],
+          "crop": [
+            1154,
+            469,
+            2198,
+            1536
+          ]
+        },
+        {
+          "id": "right-rail-junction-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 101,
+          "matches": 1217,
+          "inlierRatio": 0.083,
+          "enlargement": 1.407,
+          "rotationDegrees": 1.23,
+          "surroundDeltaE": 7.47,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 2.15,
+          "wideBox": [
+            1346,
+            754,
+            1909,
+            1307
+          ],
+          "crop": [
+            1008,
+            422,
+            2247,
+            1536
+          ]
+        },
+        {
+          "id": "distant-right-structure-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 42,
+          "matches": 425,
+          "inlierRatio": 0.099,
+          "enlargement": 1.392,
+          "rotationDegrees": -0.58,
+          "surroundDeltaE": 7.43,
+          "driftFromWholePictureFitPixels": 26.0,
+          "patchBoardPercent": 1.07,
+          "wideBox": [
+            1304,
+            350,
+            1712,
+            588
+          ],
+          "crop": [
+            1059,
+            207,
+            1957,
+            731
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 95,
+          "matches": 1114,
+          "inlierRatio": 0.085,
+          "enlargement": 1.419,
+          "rotationDegrees": 1.13,
+          "surroundDeltaE": 7.03,
+          "driftFromWholePictureFitPixels": 4.8,
+          "patchBoardPercent": 1.28,
+          "wideBox": [
+            1389,
+            904,
+            1909,
+            1446
+          ],
+          "crop": [
+            1077,
+            578,
+            2221,
+            1536
+          ]
+        },
+        {
+          "id": "upper-right-lens-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 87,
+          "matches": 842,
+          "inlierRatio": 0.103,
+          "enlargement": 1.43,
+          "rotationDegrees": 1.09,
+          "surroundDeltaE": 6.87,
+          "driftFromWholePictureFitPixels": 16.7,
+          "patchBoardPercent": 1.22,
+          "wideBox": [
+            1495,
+            505,
+            1849,
+            995
+          ],
+          "crop": [
+            1282,
+            211,
+            2062,
+            1289
+          ]
+        },
+        {
+          "id": "lower-right-walkway-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 91,
+          "matches": 673,
+          "inlierRatio": 0.135,
+          "enlargement": 1.418,
+          "rotationDegrees": 1.13,
+          "surroundDeltaE": 6.02,
+          "driftFromWholePictureFitPixels": 8.3,
+          "patchBoardPercent": 1.29,
+          "wideBox": [
+            1519,
+            1017,
+            1801,
+            1478
+          ],
+          "crop": [
+            1349,
+            740,
+            1971,
+            1536
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 29,
+          "matches": 377,
+          "inlierRatio": 0.077,
+          "enlargement": 1.454,
+          "rotationDegrees": -0.27,
+          "surroundDeltaE": 5.87,
+          "driftFromWholePictureFitPixels": 54.1,
+          "patchBoardPercent": 1.61,
+          "wideBox": [
+            211,
+            252,
+            580,
+            657
+          ],
+          "crop": [
+            0,
+            9,
+            802,
+            900
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 19,
+          "matches": 226,
+          "inlierRatio": 0.084,
+          "enlargement": 1.438,
+          "rotationDegrees": -0.88,
+          "surroundDeltaE": 5.82,
+          "driftFromWholePictureFitPixels": 16.1,
+          "patchBoardPercent": 0.39,
+          "wideBox": [
+            345,
+            786,
+            497,
+            1018
+          ],
+          "crop": [
+            205,
+            646,
+            637,
+            1158
+          ]
+        },
+        {
+          "id": "upper-left-conduit-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 38,
+          "matches": 671,
+          "inlierRatio": 0.057,
+          "enlargement": 1.453,
+          "rotationDegrees": -0.28,
+          "surroundDeltaE": 5.6,
+          "driftFromWholePictureFitPixels": 42.2,
+          "patchBoardPercent": 0.88,
+          "wideBox": [
+            272,
+            423,
+            800,
+            764
+          ],
+          "crop": [
+            0,
+            218,
+            1117,
+            969
+          ]
+        },
+        {
+          "id": "distant-left-structure-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 34,
+          "matches": 493,
+          "inlierRatio": 0.069,
+          "enlargement": 1.453,
+          "rotationDegrees": -0.17,
+          "surroundDeltaE": 5.44,
+          "driftFromWholePictureFitPixels": 40.6,
+          "patchBoardPercent": 0.65,
+          "wideBox": [
+            412,
+            423,
+            816,
+            713
+          ],
+          "crop": [
+            169,
+            249,
+            1059,
+            887
+          ]
+        },
+        {
+          "id": "distant-left-structure-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 37,
+          "matches": 490,
+          "inlierRatio": 0.076,
+          "enlargement": 1.455,
+          "rotationDegrees": -0.16,
+          "surroundDeltaE": 5.43,
+          "driftFromWholePictureFitPixels": 39.3,
+          "patchBoardPercent": 0.51,
+          "wideBox": [
+            412,
+            450,
+            823,
+            726
+          ],
+          "crop": [
+            165,
+            284,
+            1070,
+            892
+          ]
+        },
+        {
+          "id": "distant-left-structure-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 35,
+          "matches": 514,
+          "inlierRatio": 0.068,
+          "enlargement": 1.452,
+          "rotationDegrees": -0.26,
+          "surroundDeltaE": 5.22,
+          "driftFromWholePictureFitPixels": 39.9,
+          "patchBoardPercent": 0.95,
+          "wideBox": [
+            411,
+            425,
+            835,
+            719
+          ],
+          "crop": [
+            156,
+            248,
+            1090,
+            896
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "mode-lantern-grounds",
+      "cutOut": "production",
+      "compactSize": [
+        1200,
+        900
+      ],
+      "wideSize": [
+        1280,
+        720
+      ],
+      "wholePictureFit": {
+        "scale": 0.6825,
+        "rotationDegrees": -0.07,
+        "offset": [
+          240.4,
+          55.1
+        ],
+        "inliers": 564
+      },
+      "variants": 50,
+      "passed": 50,
+      "rows": [
+        {
+          "id": "far-right-water-niche-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 305,
+          "matches": 396,
+          "inlierRatio": 0.77,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 3.42,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 3.58,
+          "wideBox": [
+            835,
+            424,
+            1062,
+            670
+          ],
+          "crop": [
+            695,
+            276,
+            1202,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 569,
+          "matches": 767,
+          "inlierRatio": 0.742,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 3.25,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 8.27,
+          "wideBox": [
+            731,
+            295,
+            1061,
+            670
+          ],
+          "crop": [
+            533,
+            70,
+            1259,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 3.14,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 3.22,
+          "wideBox": [
+            240,
+            131,
+            821,
+            420
+          ],
+          "crop": [
+            0,
+            0,
+            1170,
+            594
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 505,
+          "matches": 731,
+          "inlierRatio": 0.691,
+          "enlargement": 0.686,
+          "rotationDegrees": 0.02,
+          "surroundDeltaE": 3.12,
+          "driftFromWholePictureFitPixels": 1.0,
+          "patchBoardPercent": 7.48,
+          "wideBox": [
+            743,
+            340,
+            1062,
+            670
+          ],
+          "crop": [
+            551,
+            142,
+            1254,
+            720
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 400,
+          "matches": 502,
+          "inlierRatio": 0.797,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.05,
+          "surroundDeltaE": 3.1,
+          "driftFromWholePictureFitPixels": 1.0,
+          "patchBoardPercent": 3.85,
+          "wideBox": [
+            807,
+            405,
+            1062,
+            671
+          ],
+          "crop": [
+            654,
+            245,
+            1215,
+            720
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 391,
+          "matches": 544,
+          "inlierRatio": 0.719,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 3.09,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 6.63,
+          "wideBox": [
+            242,
+            253,
+            504,
+            669
+          ],
+          "crop": [
+            84,
+            3,
+            662,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 457,
+          "matches": 628,
+          "inlierRatio": 0.728,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.08,
+          "surroundDeltaE": 3.07,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 7.73,
+          "wideBox": [
+            777,
+            194,
+            1062,
+            582
+          ],
+          "crop": [
+            606,
+            0,
+            1233,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 528,
+          "matches": 736,
+          "inlierRatio": 0.717,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 3.04,
+          "driftFromWholePictureFitPixels": 0.7,
+          "patchBoardPercent": 7.63,
+          "wideBox": [
+            742,
+            252,
+            1061,
+            659
+          ],
+          "crop": [
+            550,
+            7,
+            1253,
+            720
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 451,
+          "matches": 590,
+          "inlierRatio": 0.764,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.02,
+          "surroundDeltaE": 3.03,
+          "driftFromWholePictureFitPixels": 0.9,
+          "patchBoardPercent": 6.97,
+          "wideBox": [
+            787,
+            313,
+            1062,
+            648
+          ],
+          "crop": [
+            622,
+            112,
+            1227,
+            720
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 440,
+          "matches": 554,
+          "inlierRatio": 0.794,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 3.02,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 3.21,
+          "wideBox": [
+            662,
+            490,
+            965,
+            670
+          ],
+          "crop": [
+            480,
+            350,
+            1147,
+            720
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 565,
+          "matches": 738,
+          "inlierRatio": 0.766,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.11,
+          "surroundDeltaE": 3.0,
+          "driftFromWholePictureFitPixels": 0.4,
+          "patchBoardPercent": 7.17,
+          "wideBox": [
+            261,
+            158,
+            587,
+            516
+          ],
+          "crop": [
+            65,
+            0,
+            783,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 502,
+          "matches": 662,
+          "inlierRatio": 0.758,
+          "enlargement": 0.686,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 3.0,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 5.53,
+          "wideBox": [
+            754,
+            307,
+            1036,
+            659
+          ],
+          "crop": [
+            584,
+            95,
+            1206,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 578,
+          "matches": 775,
+          "inlierRatio": 0.746,
+          "enlargement": 0.686,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 3.0,
+          "driftFromWholePictureFitPixels": 0.8,
+          "patchBoardPercent": 8.19,
+          "wideBox": [
+            723,
+            54,
+            1061,
+            450
+          ],
+          "crop": [
+            520,
+            0,
+            1264,
+            688
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 413,
+          "matches": 538,
+          "inlierRatio": 0.768,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.1,
+          "surroundDeltaE": 2.99,
+          "driftFromWholePictureFitPixels": 0.7,
+          "patchBoardPercent": 3.85,
+          "wideBox": [
+            264,
+            252,
+            509,
+            505
+          ],
+          "crop": [
+            117,
+            100,
+            656,
+            657
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 456,
+          "matches": 579,
+          "inlierRatio": 0.788,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.01,
+          "surroundDeltaE": 2.98,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 4.2,
+          "wideBox": [
+            591,
+            494,
+            984,
+            670
+          ],
+          "crop": [
+            355,
+            354,
+            1220,
+            720
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 481,
+          "matches": 707,
+          "inlierRatio": 0.68,
+          "enlargement": 0.681,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 2.98,
+          "driftFromWholePictureFitPixels": 0.7,
+          "patchBoardPercent": 7.99,
+          "wideBox": [
+            558,
+            428,
+            1014,
+            669
+          ],
+          "crop": [
+            284,
+            283,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 412,
+          "matches": 553,
+          "inlierRatio": 0.745,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.03,
+          "surroundDeltaE": 2.97,
+          "driftFromWholePictureFitPixels": 0.9,
+          "patchBoardPercent": 3.41,
+          "wideBox": [
+            272,
+            288,
+            523,
+            516
+          ],
+          "crop": [
+            121,
+            148,
+            674,
+            656
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.95,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 6.88,
+          "wideBox": [
+            556,
+            54,
+            890,
+            384
+          ],
+          "crop": [
+            355,
+            0,
+            1091,
+            582
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 419,
+          "matches": 607,
+          "inlierRatio": 0.69,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.18,
+          "surroundDeltaE": 2.94,
+          "driftFromWholePictureFitPixels": 0.7,
+          "patchBoardPercent": 4.37,
+          "wideBox": [
+            264,
+            268,
+            535,
+            538
+          ],
+          "crop": [
+            101,
+            106,
+            698,
+            700
+          ]
+        },
+        {
+          "id": "right-fern-bank-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.93,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 9.21,
+          "wideBox": [
+            578,
+            71,
+            1060,
+            560
+          ],
+          "crop": [
+            288,
+            0,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 502,
+          "matches": 777,
+          "inlierRatio": 0.646,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.01,
+          "surroundDeltaE": 2.93,
+          "driftFromWholePictureFitPixels": 0.4,
+          "patchBoardPercent": 3.49,
+          "wideBox": [
+            677,
+            55,
+            972,
+            371
+          ],
+          "crop": [
+            500,
+            0,
+            1149,
+            561
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 347,
+          "matches": 472,
+          "inlierRatio": 0.735,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.09,
+          "surroundDeltaE": 2.9,
+          "driftFromWholePictureFitPixels": 0.2,
+          "patchBoardPercent": 2.97,
+          "wideBox": [
+            317,
+            55,
+            613,
+            257
+          ],
+          "crop": [
+            139,
+            0,
+            791,
+            397
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.89,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 14.13,
+          "wideBox": [
+            241,
+            335,
+            951,
+            669
+          ],
+          "crop": [
+            0,
+            134,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.89,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 6.63,
+          "wideBox": [
+            634,
+            250,
+            1038,
+            520
+          ],
+          "crop": [
+            391,
+            88,
+            1280,
+            682
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 586,
+          "matches": 846,
+          "inlierRatio": 0.693,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.88,
+          "driftFromWholePictureFitPixels": 0.3,
+          "patchBoardPercent": 7.71,
+          "wideBox": [
+            654,
+            165,
+            1057,
+            517
+          ],
+          "crop": [
+            412,
+            0,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 523,
+          "matches": 755,
+          "inlierRatio": 0.693,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.06,
+          "surroundDeltaE": 2.87,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 6.4,
+          "wideBox": [
+            296,
+            55,
+            613,
+            624
+          ],
+          "crop": [
+            105,
+            0,
+            804,
+            720
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 557,
+          "matches": 749,
+          "inlierRatio": 0.744,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.84,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 8.55,
+          "wideBox": [
+            536,
+            415,
+            962,
+            669
+          ],
+          "crop": [
+            280,
+            262,
+            1218,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 553,
+          "matches": 845,
+          "inlierRatio": 0.654,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 2.83,
+          "driftFromWholePictureFitPixels": 0.9,
+          "patchBoardPercent": 4.63,
+          "wideBox": [
+            578,
+            173,
+            897,
+            439
+          ],
+          "crop": [
+            386,
+            13,
+            1089,
+            599
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.83,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 14.92,
+          "wideBox": [
+            241,
+            329,
+            983,
+            669
+          ],
+          "crop": [
+            0,
+            125,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 490,
+          "matches": 659,
+          "inlierRatio": 0.744,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.03,
+          "surroundDeltaE": 2.83,
+          "driftFromWholePictureFitPixels": 0.7,
+          "patchBoardPercent": 5.45,
+          "wideBox": [
+            576,
+            447,
+            970,
+            670
+          ],
+          "crop": [
+            339,
+            307,
+            1207,
+            720
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 552,
+          "matches": 845,
+          "inlierRatio": 0.653,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 2.81,
+          "driftFromWholePictureFitPixels": 0.7,
+          "patchBoardPercent": 7.68,
+          "wideBox": [
+            570,
+            368,
+            963,
+            670
+          ],
+          "crop": [
+            334,
+            186,
+            1199,
+            720
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 305,
+          "matches": 434,
+          "inlierRatio": 0.703,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.12,
+          "surroundDeltaE": 2.81,
+          "driftFromWholePictureFitPixels": 0.4,
+          "patchBoardPercent": 2.97,
+          "wideBox": [
+            339,
+            64,
+            626,
+            255
+          ],
+          "crop": [
+            166,
+            0,
+            799,
+            395
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 613,
+          "matches": 792,
+          "inlierRatio": 0.774,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.8,
+          "driftFromWholePictureFitPixels": 0.4,
+          "patchBoardPercent": 3.54,
+          "wideBox": [
+            611,
+            173,
+            867,
+            444
+          ],
+          "crop": [
+            457,
+            10,
+            1021,
+            607
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 382,
+          "matches": 534,
+          "inlierRatio": 0.715,
+          "enlargement": 0.686,
+          "rotationDegrees": 0.03,
+          "surroundDeltaE": 2.8,
+          "driftFromWholePictureFitPixels": 1.0,
+          "patchBoardPercent": 3.72,
+          "wideBox": [
+            745,
+            420,
+            1009,
+            664
+          ],
+          "crop": [
+            586,
+            273,
+            1168,
+            720
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 533,
+          "matches": 743,
+          "inlierRatio": 0.717,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.01,
+          "surroundDeltaE": 2.77,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 8.99,
+          "wideBox": [
+            536,
+            417,
+            996,
+            670
+          ],
+          "crop": [
+            260,
+            265,
+            1272,
+            720
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.73,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 7.95,
+          "wideBox": [
+            536,
+            346,
+            973,
+            662
+          ],
+          "crop": [
+            273,
+            156,
+            1236,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 572,
+          "matches": 743,
+          "inlierRatio": 0.77,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 2.73,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 3.04,
+          "wideBox": [
+            659,
+            303,
+            925,
+            497
+          ],
+          "crop": [
+            499,
+            163,
+            1085,
+            637
+          ]
+        },
+        {
+          "id": "central-broken-column-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.72,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 4.72,
+          "wideBox": [
+            581,
+            246,
+            923,
+            517
+          ],
+          "crop": [
+            375,
+            83,
+            1129,
+            680
+          ]
+        },
+        {
+          "id": "center-stone-arch-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.71,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 6.85,
+          "wideBox": [
+            503,
+            130,
+            802,
+            527
+          ],
+          "crop": [
+            323,
+            0,
+            982,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.71,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 8.3,
+          "wideBox": [
+            295,
+            314,
+            853,
+            626
+          ],
+          "crop": [
+            0,
+            126,
+            1188,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 524,
+          "matches": 765,
+          "inlierRatio": 0.685,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.09,
+          "surroundDeltaE": 2.71,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 3.07,
+          "wideBox": [
+            623,
+            313,
+            904,
+            511
+          ],
+          "crop": [
+            454,
+            173,
+            1073,
+            651
+          ]
+        },
+        {
+          "id": "center-stone-arch-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.7,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 7.87,
+          "wideBox": [
+            429,
+            193,
+            755,
+            538
+          ],
+          "crop": [
+            233,
+            0,
+            951,
+            720
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 539,
+          "matches": 809,
+          "inlierRatio": 0.666,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.02,
+          "surroundDeltaE": 2.7,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 7.8,
+          "wideBox": [
+            242,
+            380,
+            722,
+            643
+          ],
+          "crop": [
+            0,
+            222,
+            1010,
+            720
+          ]
+        },
+        {
+          "id": "center-stone-arch-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.68,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 10.89,
+          "wideBox": [
+            372,
+            220,
+            763,
+            626
+          ],
+          "crop": [
+            137,
+            0,
+            998,
+            720
+          ]
+        },
+        {
+          "id": "center-stone-arch-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.67,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 7.71,
+          "wideBox": [
+            507,
+            180,
+            906,
+            535
+          ],
+          "crop": [
+            267,
+            0,
+            1146,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.67,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 7.15,
+          "wideBox": [
+            546,
+            237,
+            918,
+            556
+          ],
+          "crop": [
+            322,
+            45,
+            1142,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 521,
+          "matches": 718,
+          "inlierRatio": 0.726,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.67,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 2.33,
+          "wideBox": [
+            611,
+            149,
+            823,
+            367
+          ],
+          "crop": [
+            471,
+            9,
+            963,
+            507
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 133,
+          "matches": 177,
+          "inlierRatio": 0.751,
+          "enlargement": 0.679,
+          "rotationDegrees": -0.14,
+          "surroundDeltaE": 2.65,
+          "driftFromWholePictureFitPixels": 1.2,
+          "patchBoardPercent": 1.5,
+          "wideBox": [
+            308,
+            61,
+            542,
+            195
+          ],
+          "crop": [
+            167,
+            0,
+            683,
+            335
+          ]
+        },
+        {
+          "id": "center-stone-arch-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.64,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 11.02,
+          "wideBox": [
+            459,
+            191,
+            864,
+            660
+          ],
+          "crop": [
+            216,
+            0,
+            1107,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 586,
+          "matches": 846,
+          "inlierRatio": 0.693,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.64,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 3.85,
+          "wideBox": [
+            580,
+            303,
+            904,
+            555
+          ],
+          "crop": [
+            385,
+            151,
+            1099,
+            707
+          ]
+        }
+      ]
+    },
+    {
+      "sceneId": "mode-lantern-grounds",
+      "cutOut": "tight",
+      "compactSize": [
+        1200,
+        900
+      ],
+      "wideSize": [
+        1280,
+        720
+      ],
+      "wholePictureFit": {
+        "scale": 0.6825,
+        "rotationDegrees": -0.07,
+        "offset": [
+          240.4,
+          55.1
+        ],
+        "inliers": 564
+      },
+      "variants": 50,
+      "passed": 50,
+      "rows": [
+        {
+          "id": "far-right-water-niche-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 260,
+          "matches": 338,
+          "inlierRatio": 0.769,
+          "enlargement": 0.689,
+          "rotationDegrees": -0.06,
+          "surroundDeltaE": 3.43,
+          "driftFromWholePictureFitPixels": 1.5,
+          "patchBoardPercent": 2.09,
+          "wideBox": [
+            857,
+            427,
+            1062,
+            671
+          ],
+          "crop": [
+            717,
+            280,
+            1202,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 510,
+          "matches": 765,
+          "inlierRatio": 0.667,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.03,
+          "surroundDeltaE": 3.21,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 6.46,
+          "wideBox": [
+            733,
+            315,
+            1062,
+            670
+          ],
+          "crop": [
+            535,
+            102,
+            1260,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 3.07,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 1.93,
+          "wideBox": [
+            262,
+            132,
+            806,
+            404
+          ],
+          "crop": [
+            0,
+            0,
+            1133,
+            568
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 377,
+          "matches": 547,
+          "inlierRatio": 0.689,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 3.07,
+          "driftFromWholePictureFitPixels": 0.3,
+          "patchBoardPercent": 2.56,
+          "wideBox": [
+            295,
+            276,
+            530,
+            538
+          ],
+          "crop": [
+            154,
+            118,
+            671,
+            696
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 540,
+          "matches": 710,
+          "inlierRatio": 0.761,
+          "enlargement": 0.686,
+          "rotationDegrees": -0.06,
+          "surroundDeltaE": 3.06,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 5.05,
+          "wideBox": [
+            749,
+            369,
+            1061,
+            663
+          ],
+          "crop": [
+            561,
+            192,
+            1249,
+            720
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 451,
+          "matches": 574,
+          "inlierRatio": 0.786,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.02,
+          "surroundDeltaE": 3.06,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 2.49,
+          "wideBox": [
+            591,
+            498,
+            983,
+            669
+          ],
+          "crop": [
+            355,
+            358,
+            1219,
+            720
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 470,
+          "matches": 640,
+          "inlierRatio": 0.734,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.13,
+          "surroundDeltaE": 3.01,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 4.38,
+          "wideBox": [
+            295,
+            164,
+            567,
+            516
+          ],
+          "crop": [
+            131,
+            0,
+            731,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 426,
+          "matches": 558,
+          "inlierRatio": 0.763,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.02,
+          "surroundDeltaE": 2.99,
+          "driftFromWholePictureFitPixels": 0.8,
+          "patchBoardPercent": 5.66,
+          "wideBox": [
+            802,
+            212,
+            1062,
+            582
+          ],
+          "crop": [
+            646,
+            0,
+            1218,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 547,
+          "matches": 772,
+          "inlierRatio": 0.709,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 2.98,
+          "driftFromWholePictureFitPixels": 1.0,
+          "patchBoardPercent": 4.59,
+          "wideBox": [
+            728,
+            96,
+            1061,
+            450
+          ],
+          "crop": [
+            528,
+            0,
+            1261,
+            663
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 391,
+          "matches": 544,
+          "inlierRatio": 0.719,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 2.97,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 3.8,
+          "wideBox": [
+            242,
+            302,
+            504,
+            669
+          ],
+          "crop": [
+            84,
+            81,
+            662,
+            720
+          ]
+        },
+        {
+          "id": "right-fern-bank-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 481,
+          "matches": 655,
+          "inlierRatio": 0.734,
+          "enlargement": 0.686,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 2.97,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 3.08,
+          "wideBox": [
+            755,
+            363,
+            1034,
+            658
+          ],
+          "crop": [
+            587,
+            186,
+            1202,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.96,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 5.53,
+          "wideBox": [
+            558,
+            54,
+            876,
+            384
+          ],
+          "crop": [
+            367,
+            0,
+            1067,
+            582
+          ]
+        },
+        {
+          "id": "right-fern-bank-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 505,
+          "matches": 731,
+          "inlierRatio": 0.691,
+          "enlargement": 0.686,
+          "rotationDegrees": 0.02,
+          "surroundDeltaE": 2.96,
+          "driftFromWholePictureFitPixels": 1.0,
+          "patchBoardPercent": 4.81,
+          "wideBox": [
+            744,
+            330,
+            1062,
+            658
+          ],
+          "crop": [
+            553,
+            133,
+            1253,
+            720
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 424,
+          "matches": 587,
+          "inlierRatio": 0.722,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 2.95,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 5.07,
+          "wideBox": [
+            788,
+            347,
+            1062,
+            648
+          ],
+          "crop": [
+            623,
+            166,
+            1227,
+            720
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 338,
+          "matches": 464,
+          "inlierRatio": 0.728,
+          "enlargement": 0.687,
+          "rotationDegrees": -0.09,
+          "surroundDeltaE": 2.95,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 2.35,
+          "wideBox": [
+            809,
+            408,
+            1045,
+            661
+          ],
+          "crop": [
+            667,
+            256,
+            1187,
+            720
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 384,
+          "matches": 505,
+          "inlierRatio": 0.76,
+          "enlargement": 0.683,
+          "rotationDegrees": -0.12,
+          "surroundDeltaE": 2.94,
+          "driftFromWholePictureFitPixels": 0.9,
+          "patchBoardPercent": 2.04,
+          "wideBox": [
+            282,
+            272,
+            496,
+            505
+          ],
+          "crop": [
+            142,
+            132,
+            636,
+            645
+          ]
+        },
+        {
+          "id": "left-column-mushroom-cluster-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 365,
+          "matches": 522,
+          "inlierRatio": 0.699,
+          "enlargement": 0.683,
+          "rotationDegrees": 0.04,
+          "surroundDeltaE": 2.93,
+          "driftFromWholePictureFitPixels": 1.1,
+          "patchBoardPercent": 1.82,
+          "wideBox": [
+            303,
+            290,
+            513,
+            516
+          ],
+          "crop": [
+            163,
+            150,
+            653,
+            656
+          ]
+        },
+        {
+          "id": "right-fern-bank-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.91,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 7.74,
+          "wideBox": [
+            602,
+            73,
+            1060,
+            560
+          ],
+          "crop": [
+            327,
+            0,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 519,
+          "matches": 674,
+          "inlierRatio": 0.77,
+          "enlargement": 0.686,
+          "rotationDegrees": -0.05,
+          "surroundDeltaE": 2.91,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 2.48,
+          "wideBox": [
+            688,
+            53,
+            911,
+            357
+          ],
+          "crop": [
+            548,
+            0,
+            1051,
+            540
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 555,
+          "matches": 835,
+          "inlierRatio": 0.665,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.89,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 4.5,
+          "wideBox": [
+            658,
+            261,
+            1038,
+            514
+          ],
+          "crop": [
+            430,
+            109,
+            1266,
+            666
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.88,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 8.58,
+          "wideBox": [
+            241,
+            344,
+            983,
+            669
+          ],
+          "crop": [
+            0,
+            149,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 485,
+          "matches": 629,
+          "inlierRatio": 0.771,
+          "enlargement": 0.683,
+          "rotationDegrees": 0.01,
+          "surroundDeltaE": 2.87,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 3.63,
+          "wideBox": [
+            558,
+            465,
+            1013,
+            669
+          ],
+          "crop": [
+            285,
+            325,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 523,
+          "matches": 755,
+          "inlierRatio": 0.693,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.06,
+          "surroundDeltaE": 2.87,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 2.61,
+          "wideBox": [
+            296,
+            94,
+            613,
+            619
+          ],
+          "crop": [
+            105,
+            0,
+            804,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 594,
+          "matches": 817,
+          "inlierRatio": 0.727,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.03,
+          "surroundDeltaE": 2.87,
+          "driftFromWholePictureFitPixels": 0.4,
+          "patchBoardPercent": 4.74,
+          "wideBox": [
+            669,
+            164,
+            1018,
+            503
+          ],
+          "crop": [
+            459,
+            0,
+            1228,
+            707
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 505,
+          "matches": 646,
+          "inlierRatio": 0.782,
+          "enlargement": 0.683,
+          "rotationDegrees": 0.01,
+          "surroundDeltaE": 2.85,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 5.63,
+          "wideBox": [
+            536,
+            457,
+            989,
+            669
+          ],
+          "crop": [
+            264,
+            317,
+            1261,
+            720
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 563,
+          "matches": 801,
+          "inlierRatio": 0.703,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.03,
+          "surroundDeltaE": 2.84,
+          "driftFromWholePictureFitPixels": 0.2,
+          "patchBoardPercent": 6.64,
+          "wideBox": [
+            240,
+            400,
+            952,
+            670
+          ],
+          "crop": [
+            0,
+            238,
+            1280,
+            720
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 392,
+          "matches": 530,
+          "inlierRatio": 0.74,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.02,
+          "surroundDeltaE": 2.83,
+          "driftFromWholePictureFitPixels": 0.8,
+          "patchBoardPercent": 1.55,
+          "wideBox": [
+            665,
+            497,
+            956,
+            670
+          ],
+          "crop": [
+            490,
+            357,
+            1131,
+            720
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 255,
+          "matches": 391,
+          "inlierRatio": 0.652,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.03,
+          "surroundDeltaE": 2.82,
+          "driftFromWholePictureFitPixels": 0.8,
+          "patchBoardPercent": 1.98,
+          "wideBox": [
+            317,
+            54,
+            611,
+            239
+          ],
+          "crop": [
+            140,
+            0,
+            788,
+            379
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 481,
+          "matches": 647,
+          "inlierRatio": 0.743,
+          "enlargement": 0.682,
+          "rotationDegrees": 0.0,
+          "surroundDeltaE": 2.8,
+          "driftFromWholePictureFitPixels": 0.1,
+          "patchBoardPercent": 5.15,
+          "wideBox": [
+            536,
+            456,
+            955,
+            669
+          ],
+          "crop": [
+            284,
+            316,
+            1207,
+            720
+          ]
+        },
+        {
+          "id": "center-stone-arch-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 624,
+          "matches": 814,
+          "inlierRatio": 0.767,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.05,
+          "surroundDeltaE": 2.79,
+          "driftFromWholePictureFitPixels": 0.3,
+          "patchBoardPercent": 4.29,
+          "wideBox": [
+            528,
+            132,
+            769,
+            527
+          ],
+          "crop": [
+            383,
+            0,
+            914,
+            720
+          ]
+        },
+        {
+          "id": "far-right-water-niche-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 378,
+          "matches": 477,
+          "inlierRatio": 0.792,
+          "enlargement": 0.686,
+          "rotationDegrees": 0.02,
+          "surroundDeltaE": 2.78,
+          "driftFromWholePictureFitPixels": 0.9,
+          "patchBoardPercent": 1.54,
+          "wideBox": [
+            748,
+            442,
+            1008,
+            660
+          ],
+          "crop": [
+            592,
+            302,
+            1164,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 495,
+          "matches": 671,
+          "inlierRatio": 0.738,
+          "enlargement": 0.686,
+          "rotationDegrees": -0.01,
+          "surroundDeltaE": 2.77,
+          "driftFromWholePictureFitPixels": 0.3,
+          "patchBoardPercent": 2.12,
+          "wideBox": [
+            660,
+            181,
+            851,
+            425
+          ],
+          "crop": [
+            520,
+            34,
+            991,
+            572
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 565,
+          "matches": 784,
+          "inlierRatio": 0.721,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.03,
+          "surroundDeltaE": 2.77,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 4.44,
+          "wideBox": [
+            570,
+            405,
+            957,
+            670
+          ],
+          "crop": [
+            337,
+            246,
+            1190,
+            720
+          ]
+        },
+        {
+          "id": "left-water-lily-arc-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 442,
+          "matches": 590,
+          "inlierRatio": 0.749,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.0,
+          "surroundDeltaE": 2.76,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 2.37,
+          "wideBox": [
+            578,
+            492,
+            956,
+            670
+          ],
+          "crop": [
+            351,
+            352,
+            1183,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 589,
+          "matches": 786,
+          "inlierRatio": 0.749,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.05,
+          "surroundDeltaE": 2.75,
+          "driftFromWholePictureFitPixels": 0.3,
+          "patchBoardPercent": 2.89,
+          "wideBox": [
+            614,
+            181,
+            857,
+            424
+          ],
+          "crop": [
+            468,
+            35,
+            1003,
+            570
+          ]
+        },
+        {
+          "id": "center-stone-arch-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.73,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 5.65,
+          "wideBox": [
+            438,
+            213,
+            741,
+            538
+          ],
+          "crop": [
+            256,
+            18,
+            923,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 592,
+          "matches": 833,
+          "inlierRatio": 0.711,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.03,
+          "surroundDeltaE": 2.72,
+          "driftFromWholePictureFitPixels": 0.2,
+          "patchBoardPercent": 2.59,
+          "wideBox": [
+            588,
+            258,
+            888,
+            517
+          ],
+          "crop": [
+            408,
+            102,
+            1068,
+            673
+          ]
+        },
+        {
+          "id": "center-stone-arch-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.71,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 7.81,
+          "wideBox": [
+            372,
+            236,
+            756,
+            620
+          ],
+          "crop": [
+            141,
+            5,
+            987,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.71,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 2.86,
+          "wideBox": [
+            295,
+            322,
+            787,
+            620
+          ],
+          "crop": [
+            0,
+            143,
+            1083,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 344,
+          "matches": 472,
+          "inlierRatio": 0.729,
+          "enlargement": 0.687,
+          "rotationDegrees": 0.04,
+          "surroundDeltaE": 2.71,
+          "driftFromWholePictureFitPixels": 0.4,
+          "patchBoardPercent": 1.46,
+          "wideBox": [
+            692,
+            330,
+            864,
+            480
+          ],
+          "crop": [
+            552,
+            190,
+            1004,
+            620
+          ]
+        },
+        {
+          "id": "lower-center-lily-water-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 578,
+          "matches": 844,
+          "inlierRatio": 0.685,
+          "enlargement": 0.684,
+          "rotationDegrees": 0.01,
+          "surroundDeltaE": 2.7,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 3.93,
+          "wideBox": [
+            536,
+            369,
+            956,
+            660
+          ],
+          "crop": [
+            284,
+            194,
+            1208,
+            720
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c05",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 504,
+          "matches": 692,
+          "inlierRatio": 0.728,
+          "enlargement": 0.683,
+          "rotationDegrees": 0.02,
+          "surroundDeltaE": 2.7,
+          "driftFromWholePictureFitPixels": 0.9,
+          "patchBoardPercent": 2.59,
+          "wideBox": [
+            242,
+            409,
+            659,
+            620
+          ],
+          "crop": [
+            0,
+            269,
+            910,
+            720
+          ]
+        },
+        {
+          "id": "upper-right-stair-landing-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 341,
+          "matches": 469,
+          "inlierRatio": 0.727,
+          "enlargement": 0.687,
+          "rotationDegrees": 0.03,
+          "surroundDeltaE": 2.7,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 1.54,
+          "wideBox": [
+            727,
+            321,
+            894,
+            487
+          ],
+          "crop": [
+            587,
+            181,
+            1034,
+            627
+          ]
+        },
+        {
+          "id": "center-stone-arch-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.69,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 4.67,
+          "wideBox": [
+            516,
+            213,
+            860,
+            533
+          ],
+          "crop": [
+            309,
+            21,
+            1067,
+            720
+          ]
+        },
+        {
+          "id": "central-broken-column-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 553,
+          "matches": 825,
+          "inlierRatio": 0.67,
+          "enlargement": 0.685,
+          "rotationDegrees": 0.02,
+          "surroundDeltaE": 2.68,
+          "driftFromWholePictureFitPixels": 0.6,
+          "patchBoardPercent": 2.14,
+          "wideBox": [
+            580,
+            305,
+            862,
+            554
+          ],
+          "crop": [
+            410,
+            155,
+            1032,
+            704
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 299,
+          "matches": 387,
+          "inlierRatio": 0.773,
+          "enlargement": 0.682,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.68,
+          "driftFromWholePictureFitPixels": 0.5,
+          "patchBoardPercent": 1.82,
+          "wideBox": [
+            340,
+            65,
+            615,
+            247
+          ],
+          "crop": [
+            175,
+            0,
+            780,
+            387
+          ]
+        },
+        {
+          "id": "central-broken-column-c01",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 555,
+          "matches": 835,
+          "inlierRatio": 0.665,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.67,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 5.04,
+          "wideBox": [
+            579,
+            250,
+            880,
+            554
+          ],
+          "crop": [
+            398,
+            67,
+            1061,
+            720
+          ]
+        },
+        {
+          "id": "center-stone-arch-c04",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 564,
+          "matches": 847,
+          "inlierRatio": 0.666,
+          "enlargement": 0.684,
+          "rotationDegrees": -0.07,
+          "surroundDeltaE": 2.65,
+          "driftFromWholePictureFitPixels": 0.0,
+          "patchBoardPercent": 5.77,
+          "wideBox": [
+            459,
+            255,
+            863,
+            657
+          ],
+          "crop": [
+            216,
+            13,
+            1106,
+            720
+          ]
+        },
+        {
+          "id": "distant-cyan-mushrooms-c02",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 425,
+          "matches": 570,
+          "inlierRatio": 0.746,
+          "enlargement": 0.685,
+          "rotationDegrees": -0.04,
+          "surroundDeltaE": 2.57,
+          "driftFromWholePictureFitPixels": 0.3,
+          "patchBoardPercent": 1.61,
+          "wideBox": [
+            637,
+            153,
+            806,
+            359
+          ],
+          "crop": [
+            497,
+            13,
+            946,
+            499
+          ]
+        },
+        {
+          "id": "upper-left-ruin-window-c03",
+          "source": "generated PNG (round-03)",
+          "placed": true,
+          "pass": true,
+          "reason": "",
+          "localFit": true,
+          "inliers": 113,
+          "matches": 149,
+          "inlierRatio": 0.758,
+          "enlargement": 0.679,
+          "rotationDegrees": -0.12,
+          "surroundDeltaE": 2.56,
+          "driftFromWholePictureFitPixels": 1.3,
+          "patchBoardPercent": 0.97,
+          "wideBox": [
+            308,
+            64,
+            538,
+            169
+          ],
+          "crop": [
+            168,
+            0,
+            678,
+            309
+          ]
+        }
+      ]
+    }
+  ]
+}
