@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Transplant a scene's compact-registered variants onto its wide board.
 
-A visual check for ``docs/plans/scene-variations-on-wide-boards.md``, not a
-runtime step: nothing under ``assets/`` is written. Each variant is cut out
+A visual check for an option since rejected (see
+``docs/plans/wide-board-variations.md``), not a runtime step: nothing under
+``assets/`` is written. Each variant is cut out
 with the production patch extractor, aligned to the wide board by a similarity
 fit over SIFT features in a window around it, and composited there. The review
 page shows the compact original and the transplant in the same wide-board

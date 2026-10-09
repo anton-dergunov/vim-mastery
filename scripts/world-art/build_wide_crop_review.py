@@ -2,8 +2,8 @@
 """Show what a phone or tablet board would look like if it were cropped from
 the wide picture instead of using the compact one.
 
-A visual check for ``docs/plans/scene-variations-on-wide-boards.md`` (options
-5 and 6). Nothing under ``assets/`` is written. The compact picture's
+A visual check for an option since rejected (see
+``docs/plans/wide-board-variations.md``). Nothing under ``assets/`` is written. The compact picture's
 footprint inside the wide picture comes from the whole-picture fit; two crops
 are drawn for each scene, one matching today's framing and one using the wide
 picture's full height.
