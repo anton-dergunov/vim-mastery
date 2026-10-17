@@ -666,11 +666,16 @@ export class VimEngine {
             }),
           ] : []),
           ...(viewportRows ? [EditorView.theme({
-            ".cm-line, .cm-gutterElement": {
+            ".cm-line": {
               minHeight: "24px",
               height: "24px",
               lineHeight: "24px",
             },
+            // CodeMirror sizes each number to its line already. The gutter
+            // also holds a hidden zero-height spacer that measures the
+            // widest number; a height here would make it a row of its own
+            // and push every number one line down.
+            ".cm-gutterElement": { lineHeight: "24px" },
           })] : []),
           wildsHighlighting,
           EditorView.updateListener.of(update => {

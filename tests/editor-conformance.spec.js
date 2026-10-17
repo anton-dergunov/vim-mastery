@@ -1524,6 +1524,45 @@ test.describe("Production lesson flow", () => {
     expect(await state(page)).toMatchObject({ cursor: [1, 0], mode: "Complete", complete: true });
   });
 
+  // A fixed window sized its gutter's hidden width spacer as a full row, so
+  // every number sat one line low: line 1 had none and line 2 read "1". An
+  // instruction such as "the draft on line ten" then pointed at the wrong row.
+  test("numbers every line of a fixed window on its own row", async ({ page }) => {
+    const windowed = [...positionActivities, ...viewportActivities, ...rangeActivities, ...substitutionActivities,
+      ...macroActivities, ...automationActivities, ...capstoneActivities, ...textObjectActivities]
+      .filter(activity => activity.editor?.viewportRows);
+    const units = [positionUnit, viewportUnit, rangeUnit, substitutionUnit, macroUnit, automationUnit, capstoneUnit, textObjectUnit];
+    const unitOf = activity => units.find(unit => unit.lessons.some(lesson => lesson.activities.some(item => item.id === activity.id)));
+    expect(windowed.length).toBeGreaterThan(100);
+    for (const unit of units) {
+      const authored = windowed.filter(activity => unitOf(activity) === unit).map(activity => activity.id);
+      if (!authored.length) continue;
+      await page.goto(`/?unit=${unit.id}&activity=${authored[0]}`);
+      // A unit can author activities it does not ship; only shipped ones render.
+      const ids = await page.evaluate(ids => ids.filter(id => window.VimWilds.activities.some(activity => activity.id === id)), authored);
+      for (const id of ids) {
+        const rows = await page.evaluate(async id => {
+          window.VimWilds.goToActivity(window.VimWilds.activities.findIndex(activity => activity.id === id));
+          // CodeMirror measures a freshly mounted editor on the next frames.
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          const top = element => Math.round(element.getBoundingClientRect().top);
+          const numbers = [...document.querySelectorAll(".code-body .cm-lineNumbers .cm-gutterElement")]
+            .filter(element => element.style.visibility !== "hidden")
+            .map(element => ({ number: Number(element.textContent), top: top(element) }));
+          const lines = [...document.querySelectorAll(".code-body .cm-line")].map(top);
+          return { numbers, lines, topLine: window.VimWilds.getState().viewport?.topLine ?? 0 };
+        }, id);
+        expect(rows.numbers.length, id).toBe(rows.lines.length);
+        // CodeMirror renders from the first line in view, so line N is the Nth rendered row.
+        rows.numbers.forEach((row, index) => {
+          expect(row.top, `${id} line ${row.number}`).toBe(rows.lines[index]);
+          expect(row.number, `${id} row ${index}`).toBe(rows.numbers[0].number + index);
+        });
+        expect(rows.numbers[0].number, id).toBeLessThanOrEqual(rows.topLine + 1);
+      }
+    }
+  });
+
   // `,` is the shortest way back here, not a tour of landmarks: every landing
   // is a separator the learner then fixes.
   test("turns a find around with comma to fix separators on both sides", async ({ page }) => {
