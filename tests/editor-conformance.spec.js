@@ -1528,6 +1528,11 @@ test.describe("Production lesson flow", () => {
   // every number sat one line low: line 1 had none and line 2 read "1". An
   // instruction such as "the draft on line ten" then pointed at the wrong row.
   test("numbers every line of a fixed window on its own row", async ({ page }) => {
+    // About 160 editor mounts, each waiting two frames for CodeMirror to
+    // measure: ten seconds on a developer machine, past the 30s default on a
+    // loaded CI runner. Like the window-drift check below, the budget is
+    // stated so the loop can grow with the curriculum.
+    test.setTimeout(120000);
     const windowed = [...positionActivities, ...viewportActivities, ...rangeActivities, ...substitutionActivities,
       ...macroActivities, ...automationActivities, ...capstoneActivities, ...textObjectActivities]
       .filter(activity => activity.editor?.viewportRows);
