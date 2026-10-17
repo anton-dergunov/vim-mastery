@@ -56,7 +56,7 @@ Budget: 200000 states or 45s per exercise, then 20s for the core search.
 | 2 | 0 | 11 | 0 | 0 | 0 | 10 | 0 | 5 |
 | 3 | 0 | 5 | 0 | 0 | 6 | 26 | 0 | 1 |
 | 4 | 0 | 0 | 0 | 0 | 5 | 23 | 0 | 2 |
-| 5 | 0 | 11 | 0 | 0 | 8 | 17 | 0 | 9 |
+| 5 | 0 | 10 | 0 | 0 | 8 | 18 | 0 | 8 |
 | 6 | 0 | 0 | 2 | 0 | 7 | 29 | 0 | 0 |
 | 7 | 0 | 14 | 1 | 0 | 22 | 8 | 0 | 5 |
 | 8 | 0 | 4 | 0 | 0 | 40 | 4 | 0 | 0 |
@@ -73,7 +73,7 @@ Budget: 200000 states or 45s per exercise, then 20s for the core search.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | isolate | 0 | 24 | 2 | 0 | 60 | 61 | 0 |
 | mix | 0 | 27 | 1 | 0 | 91 | 56 | 0 |
-| challenge | 0 | 16 | 0 | 0 | 76 | 50 | 0 |
+| challenge | 0 | 15 | 0 | 0 | 76 | 51 | 0 |
 
 ## Shorter routes
 
@@ -99,7 +99,6 @@ None.
 | 3 | history-confidence-check | challenge | 5 | 3 | Practises walking the undo history: the target is the text after the walk, so a route that never makes the change reaches it sooner but never uses undo or redo. |
 | 3 | retype-a-mistyped-argument | isolate | 17 | 5 | Practises correcting text without leaving Insert mode: the instruction scripts the mistake and its correction, and the target records only the corrected text, so typing it right the first time is shorter. |
 | 3 | clear-what-you-typed | isolate | 14 | 6 | Practises correcting text without leaving Insert mode: the instruction scripts the mistake and its correction, and the target records only the corrected text, so typing it right the first time is shorter. |
-| 5 | reverse-repeated-find | challenge | 5 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
 | 5 | search-forward-timeout | isolate | 9 | 1 | Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units. |
 | 5 | search-backward-error | mix | 7 | 1 | Introduces searching with the whole word as the pattern. On a buffer this short a line motion, a till motion, or a shorter unique prefix reaches the match sooner; searching pays off when the match is out of sight, as in the long buffers of later units. |
 | 5 | search-repeat-directions | challenge | 9 | 2 | A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises. |
@@ -518,7 +517,6 @@ Routes that win only with a count of 4 or more.
 | 4 | multiply-operator-counts | 4 | `d 6 w` | 3 |
 | 5 | trim-debug-suffix | 5 | `5 w 9 x` | 4 |
 | 5 | repeat-forward-commas | 3 | `6 w` | 2 |
-| 5 | reverse-repeated-find | 5 | `5 w` | 2 |
 | 5 | trim-to-level-tag | 7 | `d 8 w` | 3 |
 | 5 | land-on-the-match-end | 8 | `9 l` | 2 |
 | 5 | delete-through-the-marker | 9 | `4 d d` | 3 |

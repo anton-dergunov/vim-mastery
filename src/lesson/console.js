@@ -83,8 +83,11 @@ function executionContent(activity, step, history, complete = false, preview = {
     };
   }
   return {
+    // The header already states the task; repeating it here read as a hint
+    // that added nothing. Recall withholds the step explanations, so the tray
+    // says what is being asked of the learner instead.
     explanation: recall && !reveal
-      ? activity.instruction
+      ? (step ? "Keep going from memory." : "Type the keys from memory.")
       : group?.explanation || "Follow the authored command sequence.",
     history,
     primary: done ? (activity.type === "demo" ? "Demo" : "Practice") : activity.type === "demo" ? "Step" : retry ? "Try" : reveal ? "Next" : recall ? "Recall" : "Next",

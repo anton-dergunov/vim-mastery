@@ -7,6 +7,11 @@ attached — the screenshot it references. The layout is deliberately the same
 shape as the hand-made ``feedback_example`` notes, so triage reads the same way
 it always has.
 
+Reports still asking for work live under ``open/`` and triaged ones (``done``
+or ``wontfix``) under ``closed/``. A report moves between the two whenever its
+status changes, here or in ``mark.py``, so the folder always agrees with
+``meta.json``. Only ``index.md`` and the sync watermark sit at the top.
+
 The endpoint is write-only to the public; reading needs the admin token set
 with ``wrangler secret put ADMIN_TOKEN``.
 
@@ -34,6 +39,8 @@ DEFAULT_OUTPUT = Path("feedback")
 WATERMARK_FILE = ".last-sync"
 SCREENSHOT_NAME = "screenshot.webp"
 META_NAME = "meta.json"
+OPEN_DIR = "open"
+CLOSED_DIR = "closed"
 
 # urllib identifies itself as "Python-urllib/x.y", which Cloudflare's browser
 # integrity check bans at the edge with a 403 and error code 1010 — before the
@@ -92,12 +99,24 @@ def report_slug(report: dict) -> str:
     return f"{created}-{safe.strip('-').lower()}"
 
 
+def report_folders(root: Path) -> list[Path]:
+    """Where reports may sit. The top level is read only so that a mirror pulled
+    before the open/closed split is still found, and moved on the next pull."""
+    return [root / OPEN_DIR, root / CLOSED_DIR, root]
+
+
+def name_taken(root: Path, name: str) -> bool:
+    return any((folder / name).exists() for folder in report_folders(root))
+
+
 def unique_directory(root: Path, slug: str, report_id: str) -> Path:
-    """Two reports on one activity in one day must not overwrite each other."""
-    candidate = root / slug
-    if not candidate.exists():
-        return candidate
-    return root / f"{slug}-{report_id[:8]}"
+    """Two reports on one activity in one day must not overwrite each other.
+
+    The name has to be free in both folders, not just the one a report starts
+    in, or closing it would collide with a namesake already there.
+    """
+    name = slug if not name_taken(root, slug) else f"{slug}-{report_id[:8]}"
+    return root / OPEN_DIR / name
 
 
 def write_meta(directory: Path, report: dict) -> None:
@@ -131,14 +150,55 @@ def is_open(directory: Path) -> bool:
 
 
 def report_directories(root: Path) -> list[Path]:
-    return sorted(
-        (path for path in root.iterdir() if path.is_dir() and (path / "report.md").exists()),
-        reverse=True,
-    )
+    """Every report on disk, newest first. Names begin with the report's date."""
+    directories = [
+        path
+        for folder in report_folders(root) if folder.is_dir()
+        for path in folder.iterdir() if path.is_dir() and (path / "report.md").exists()
+    ]
+    return sorted(directories, key=lambda path: path.name, reverse=True)
+
+
+def directory_for_id(root: Path, report_id: str) -> Path | None:
+    for directory in report_directories(root):
+        if read_meta(directory).get("id") == report_id:
+            return directory
+    return None
+
+
+def directory_named(root: Path, name: str) -> Path | None:
+    """Find a report by the name triage sees, in whichever folder it sits."""
+    for folder in report_folders(root):
+        candidate = folder / name
+        if candidate.is_dir() and candidate.name not in (OPEN_DIR, CLOSED_DIR):
+            return candidate
+    return None
+
+
+def place(root: Path, directory: Path) -> Path:
+    """Move a report into the folder its status belongs in, and return where it is."""
+    target = root / (OPEN_DIR if is_open(directory) else CLOSED_DIR) / directory.name
+    if directory.resolve() == target.resolve():
+        return directory
+    if target.exists():
+        # Only a mirror older than the split can hold two reports under one name.
+        target = target.with_name(f"{directory.name}-{(read_meta(directory).get('id') or 'x')[:8]}")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    directory.rename(target)
+    return target
+
+
+def place_all(root: Path) -> None:
+    for directory in report_directories(root):
+        place(root, directory)
 
 
 def write_report(root: Path, report: dict, token: str, endpoint: str) -> Path:
-    directory = unique_directory(root, report_slug(report), report["id"])
+    # Pulling a report again (``--all``) refreshes it where it already is
+    # instead of starting a second copy beside it.
+    directory = directory_for_id(root, report["id"]) or unique_directory(
+        root, report_slug(report), report["id"]
+    )
     directory.mkdir(parents=True, exist_ok=True)
 
     markdown = report.get("markdown") or ""
@@ -161,16 +221,18 @@ def write_report(root: Path, report: dict, token: str, endpoint: str) -> Path:
             print(f"  ! screenshot for {report['id']} could not be fetched: {error}",
                   file=sys.stderr)
 
-    return directory
+    return place(root, directory)
 
 
 def refresh_meta(root: Path, reports: list[dict]) -> None:
-    """Apply triage state pulled from the server to reports already on disk."""
+    """Apply triage state pulled from the server to reports already on disk,
+    and move each one into the folder its status now belongs in."""
     by_id = {report["id"]: report for report in reports}
     for directory in report_directories(root):
         report = by_id.get(read_meta(directory).get("id"))
         if report:
             write_meta(directory, report)
+        place(root, directory)
 
 
 def write_index(root: Path) -> None:
@@ -181,7 +243,7 @@ def write_index(root: Path) -> None:
     for directory in report_directories(root):
         heading = (directory / "report.md").read_text(encoding="utf-8").splitlines()[0]
         heading = heading.lstrip("# ").strip() or directory.name
-        entry = f"- [{heading}]({directory.name}/report.md)"
+        entry = f"- [{heading}]({directory.relative_to(root).as_posix()}/report.md)"
         if is_open(directory):
             open_entries.append(entry)
         else:
@@ -259,6 +321,9 @@ def main(argv: list[str] | None = None) -> int:
     summary = fetch("since=&limit=500&fields=summary")
     if summary is not None:
         refresh_meta(root, summary.get("reports", []))
+    # Placement also runs when the listing failed, so a mirror pulled before the
+    # open/closed split is still sorted by the status it already records.
+    place_all(root)
     write_index(root)
 
     outstanding = sum(1 for directory in report_directories(root) if is_open(directory))

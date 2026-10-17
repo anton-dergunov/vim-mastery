@@ -117,11 +117,12 @@ class MetaAndIndexTests(unittest.TestCase):
         self.assertTrue(puller.is_open(directory))
 
     def test_server_triage_state_is_applied_to_reports_already_on_disk(self):
-        directory = puller.write_report(self.root, report(), "token", "https://example.test")
+        puller.write_report(self.root, report(), "token", "https://example.test")
         puller.refresh_meta(self.root, [report(
             status="done", resolution="fixed in a1b2c3", resolved_at="2026-09-08T09:00:00.000Z",
         )])
 
+        directory = self.root / "closed" / "2026-09-06-promote-one-identifier"
         meta = puller.read_meta(directory)
         self.assertEqual(meta["status"], "done")
         self.assertEqual(meta["resolution"], "fixed in a1b2c3")
@@ -130,7 +131,7 @@ class MetaAndIndexTests(unittest.TestCase):
     def test_refresh_ignores_reports_it_has_no_local_copy_of(self):
         puller.write_report(self.root, report(), "token", "https://example.test")
         puller.refresh_meta(self.root, [report(id="unrelated-id", status="done")])
-        self.assertTrue(puller.is_open(self.root / "2026-09-06-promote-one-identifier"))
+        self.assertTrue(puller.is_open(self.root / "open" / "2026-09-06-promote-one-identifier"))
 
     def test_the_index_separates_what_still_needs_work(self):
         puller.write_report(self.root, report(), "token", "https://example.test")
@@ -156,6 +157,76 @@ class MetaAndIndexTests(unittest.TestCase):
         text = (self.root / "index.md").read_text()
         self.assertIn("## Open (0)", text)
         self.assertIn("_Nothing outstanding._", text)
+
+
+class LayoutTests(unittest.TestCase):
+    """Open reports sit under open/, triaged ones under closed/."""
+
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self.temporary.name)
+        self.addCleanup(self.temporary.cleanup)
+
+    def test_a_new_report_lands_in_open(self):
+        directory = puller.write_report(self.root, report(), "token", "https://example.test")
+        self.assertEqual(directory, self.root / "open" / "2026-09-06-promote-one-identifier")
+
+    def test_a_report_pulled_already_triaged_lands_in_closed(self):
+        directory = puller.write_report(self.root, report(status="done"), "token",
+                                        "https://example.test")
+        self.assertEqual(directory.parent, self.root / "closed")
+
+    def test_triage_on_the_server_moves_the_report_and_reopening_moves_it_back(self):
+        puller.write_report(self.root, report(), "token", "https://example.test")
+        puller.refresh_meta(self.root, [report(status="wontfix", resolution="as intended")])
+        closed = self.root / "closed" / "2026-09-06-promote-one-identifier"
+        self.assertTrue(closed.is_dir())
+        self.assertFalse((self.root / "open" / closed.name).exists())
+
+        puller.refresh_meta(self.root, [report(status="new")])
+        self.assertTrue((self.root / "open" / closed.name).is_dir())
+        self.assertFalse(closed.exists())
+
+    def test_a_mirror_from_before_the_split_is_sorted_by_its_recorded_status(self):
+        for name, status in (("2026-09-06-a", "new"), ("2026-09-07-b", "done")):
+            directory = self.root / name
+            directory.mkdir()
+            (directory / "report.md").write_text(f"# {name}\n", encoding="utf-8")
+            puller.write_meta(directory, {"id": name, "status": status})
+        puller.place_all(self.root)
+        self.assertTrue((self.root / "open" / "2026-09-06-a").is_dir())
+        self.assertTrue((self.root / "closed" / "2026-09-07-b").is_dir())
+        self.assertFalse((self.root / "2026-09-06-a").exists())
+
+    def test_pulling_a_report_again_refreshes_it_in_place(self):
+        first = puller.write_report(self.root, report(status="done"), "token",
+                                    "https://example.test")
+        again = puller.write_report(self.root, report(status="done", markdown="# Edited\n"),
+                                    "token", "https://example.test")
+        self.assertEqual(first, again)
+        self.assertEqual(len(puller.report_directories(self.root)), 1)
+        self.assertEqual((again / "report.md").read_text(), "# Edited\n")
+
+    def test_a_name_used_by_a_closed_report_is_not_reused_for_a_new_one(self):
+        puller.write_report(self.root, report(status="done"), "token", "https://example.test")
+        second = puller.write_report(
+            self.root, report(id="99999999-0000-4000-8000-000000000002"), "token",
+            "https://example.test",
+        )
+        self.assertEqual(second.parent, self.root / "open")
+        self.assertTrue(second.name.endswith("99999999"))
+
+    def test_the_index_links_into_each_folder(self):
+        puller.write_report(self.root, report(), "token", "https://example.test")
+        puller.write_report(self.root, report(
+            id="99999999-0000-4000-8000-000000000002",
+            activity_id="frame-an-assignment",
+            status="done",
+        ), "token", "https://example.test")
+        puller.write_index(self.root)
+        text = (self.root / "index.md").read_text()
+        self.assertIn("](open/2026-09-06-promote-one-identifier/report.md)", text)
+        self.assertIn("](closed/2026-09-06-frame-an-assignment/report.md)", text)
 
 
 if __name__ == "__main__":

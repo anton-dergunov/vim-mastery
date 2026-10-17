@@ -6,8 +6,9 @@ survives a re-clone and can be read from a phone through the D1 console. This
 writes it and updates the local mirror in one step.
 
 A report is addressed the way it actually appears during triage: by the
-directory name that ``pull.py`` created, or by any unambiguous prefix
-of its id. Nobody should have to retype a uuid.
+directory name that ``pull.py`` created (without its ``open/`` or ``closed/``
+folder), or by any unambiguous prefix of its id. Nobody should have to retype
+a uuid. Marking a report moves it into the folder its new status belongs in.
 
 Example:
     ./fetch-feedback.sh                      # pull, see what is open
@@ -41,8 +42,11 @@ def resolve_reference(root: Path, reference: str) -> str:
     fragment needs no local state at all — which keeps this working when
     ``feedback/`` has been deleted.
     """
-    candidate = root / reference
-    if candidate.is_dir():
+    candidate = puller.directory_named(root, reference) if root.is_dir() else None
+    if candidate is None and (root / reference).is_dir():
+        # A path such as ``open/2026-09-07-yank-ready-field`` also works.
+        candidate = root / reference
+    if candidate is not None:
         report_id = puller.read_meta(candidate).get("id")
         if report_id:
             return report_id
@@ -53,10 +57,7 @@ def resolve_reference(root: Path, reference: str) -> str:
 def local_directory_for(root: Path, report_id: str) -> Path | None:
     if not root.is_dir():
         return None
-    for directory in puller.report_directories(root):
-        if puller.read_meta(directory).get("id") == report_id:
-            return directory
-    return None
+    return puller.directory_for_id(root, report_id)
 
 
 def list_reports(root: Path) -> int:
@@ -123,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
     directory = local_directory_for(root, result["id"])
     if directory:
         puller.write_meta(directory, {**puller.read_meta(directory), **result})
+        puller.place(root, directory)
         puller.write_index(root)
 
     note = f" — {result['resolution']}" if result.get("resolution") else ""

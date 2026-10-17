@@ -4329,130 +4329,25 @@
       ],
       "canonical": {
         "keys": [
-          "$",
-          "F",
-          ",",
+          "f",
           ";",
-          ","
+          "r",
+          ",",
+          ",",
+          "."
         ],
-        "cost": 5
+        "cost": 6
       },
-      "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises.",
-      "verdict": "justified",
-      "canonicalCost": 5,
-      "routes": [
-        {
-          "keys": [
-            "E",
-            "E"
-          ],
-          "cost": 2,
-          "commands": [
-            "E",
-            "E"
-          ],
-          "distinctCommands": 1,
-          "atoms": [
-            "E"
-          ],
-          "freshEditor": true,
-          "nativeVim": true
-        },
-        {
-          "keys": [
-            "2",
-            "E"
-          ],
-          "cost": 2,
-          "commands": [
-            "2E"
-          ],
-          "distinctCommands": 1,
-          "atoms": [
-            "count",
-            "E"
-          ],
-          "freshEditor": true,
-          "nativeVim": true
-        },
-        {
-          "keys": [
-            "W",
-            "w"
-          ],
-          "cost": 2,
-          "commands": [
-            "W",
-            "w"
-          ],
-          "distinctCommands": 2,
-          "atoms": [
-            "W",
-            "w"
-          ],
-          "freshEditor": true,
-          "nativeVim": true
-        },
-        {
-          "keys": [
-            "W",
-            "E"
-          ],
-          "cost": 2,
-          "commands": [
-            "W",
-            "E"
-          ],
-          "distinctCommands": 2,
-          "atoms": [
-            "W",
-            "E"
-          ],
-          "freshEditor": true,
-          "nativeVim": true
-        }
-      ],
-      "counted": [
-        {
-          "keys": [
-            "5",
-            "w"
-          ],
-          "cost": 2,
-          "commands": [
-            "5w"
-          ],
-          "distinctCommands": 1,
-          "atoms": [
-            "count",
-            "w"
-          ],
-          "freshEditor": true,
-          "nativeVim": true
-        },
-        {
-          "keys": [
-            "6",
-            "e"
-          ],
-          "cost": 2,
-          "commands": [
-            "6e"
-          ],
-          "distinctCommands": 1,
-          "atoms": [
-            "count",
-            "e"
-          ],
-          "freshEditor": true,
-          "nativeVim": true
-        }
-      ],
-      "evaluated": 362,
-      "reachedCost": 2,
-      "elapsedMs": 730,
-      "actionCount": 581,
-      "canonicalEdits": 0,
+      "routeNote": null,
+      "verdict": "none-shorter",
+      "canonicalCost": 6,
+      "routes": [],
+      "counted": [],
+      "evaluated": 4636,
+      "reachedCost": 5,
+      "elapsedMs": 3837,
+      "actionCount": 1344,
+      "canonicalEdits": 2,
       "canonicalCovered": true,
       "resetMismatches": [],
       "reusedEditor": true

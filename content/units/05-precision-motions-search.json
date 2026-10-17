@@ -943,134 +943,139 @@
           "id": "reverse-repeated-find",
           "type": "exercise",
           "phase": "challenge",
-          "title": "Backtrack through arguments",
-          "instruction": "Visit the closing parenthesis, backtrack to the comma after “alpha”, then finish on the comma after “beta”.",
-          "languageId": "rust",
+          "title": "Turn back for the other separator",
+          "instruction": "Make the separator after `h = 3` a comma, then the one before `h`.",
+          "languageId": "toml",
           "sourceKind": "fragment",
           "scenario": {
             "initial": {
               "lines": [
-                "build(alpha, beta, gamma)"
+                "size = { w = 2; h = 3; d = 4 }"
               ],
               "cursor": [
                 0,
-                0
+                16
               ],
               "mode": "normal"
             },
             "target": {
               "lines": [
-                "build(alpha, beta, gamma)"
+                "size = { w = 2, h = 3, d = 4 }"
               ],
               "cursor": [
                 0,
-                17
+                14
               ],
               "mode": "normal"
             }
           },
           "script": {
             "steps": [
-              "$",
-              "F",
-              ",",
+              "f",
               ";",
-              ","
+              "r",
+              ",",
+              ",",
+              "."
             ],
             "commandGroups": [
               {
                 "from": 0,
-                "to": 1,
-                "display": "$",
-                "explanation": "Reach the line end."
+                "to": 2,
+                "display": "f;",
+                "explanation": "Find the semicolon after `h = 3`."
               },
               {
-                "from": 1,
-                "to": 3,
-                "display": "F,",
-                "explanation": "Find a comma backward."
-              },
-              {
-                "from": 3,
+                "from": 2,
                 "to": 4,
-                "display": ";",
-                "explanation": "Continue in the backward direction."
+                "display": "r,",
+                "explanation": "Replace it with a comma."
               },
               {
                 "from": 4,
                 "to": 5,
                 "display": ",",
-                "explanation": "Reverse toward the later comma."
+                "explanation": "Run the find in reverse, back to the earlier semicolon."
+              },
+              {
+                "from": 5,
+                "to": 6,
+                "display": ".",
+                "explanation": "Repeat the replacement."
               }
             ],
             "checkpoints": [
               {
-                "afterStep": 1,
+                "afterStep": 2,
                 "cursor": [
                   0,
-                  24
-                ],
-                "mode": "normal"
-              },
-              {
-                "afterStep": 3,
-                "cursor": [
-                  0,
-                  17
+                  21
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 4,
+                "lines": [
+                  "size = { w = 2; h = 3, d = 4 }"
+                ],
                 "cursor": [
                   0,
-                  11
+                  21
                 ],
                 "mode": "normal"
               },
               {
                 "afterStep": 5,
+                "cursor": [
+                  0,
+                  14
+                ],
+                "mode": "normal"
+              },
+              {
+                "afterStep": 6,
                 "lines": [
-                  "build(alpha, beta, gamma)"
+                  "size = { w = 2, h = 3, d = 4 }"
                 ],
                 "cursor": [
                   0,
-                  17
+                  14
                 ],
                 "mode": "normal"
               }
             ]
           },
           "hints": [
-            "Use uppercase `F` from the end.",
-            "Semicolon preserves backward direction.",
-            "Comma reverses it."
+            "Find the later semicolon with `f;` and replace it.",
+            "`,` runs the last find in the opposite direction.",
+            "Dot repeats the replacement."
           ],
           "feedback": {
-            "success": "You reversed the repeated find deliberately.",
-            "why": "The meaning of `;` and `,` comes from the original find direction."
+            "success": "Both separators are commas now.",
+            "why": "`,` reran the `f;` find backward, so turning back cost a single key."
           },
           "skills": {
             "primary": [
               "repeat-find-reverse"
             ],
             "supporting": [
-              "find-backward",
-              "line-end"
+              "find-forward",
+              "replace-character",
+              "dot-repeat"
             ]
           },
           "difficulty": {
             "level": "hard",
             "dimensions": [
-              "backward-find",
-              "direction-reversal"
+              "direction-reversal",
+              "find-plus-edit"
             ]
           },
           "portability": "Core Vim behavior.",
           "provenance": {
             "method": "llm-authored",
             "promptVersion": "precision-motions-search-v1",
-            "languageRationale": "A Rust-style call makes both comma targets unambiguous.",
+            "languageRationale": "A TOML inline table separates its keys with commas, so stray semicolons are a real typo on either side of the cursor.",
             "nativeValidation": "passed",
             "browserConformance": "passed",
             "reviewStatus": "draft"
@@ -1079,8 +1084,7 @@
             "inputPolicy": "exact-sequence",
             "requiredEvidence": [
               "repeat-find-reverse"
-            ],
-            "routeNote": "A landmark tour: the instruction names every stop on the way, and the target can record only the last one, so a direct route to it is shorter but skips the stops the exercise practises."
+            ]
           }
         }
       ]
@@ -1117,7 +1121,7 @@
                 "draft gamma"
               ],
               "cursor": [
-                0,
+                1,
                 0
               ],
               "mode": "normal"
@@ -1172,7 +1176,7 @@
                 "from": 6,
                 "to": 7,
                 "display": "↵",
-                "explanation": "Run the search."
+                "explanation": "Run the search. It starts after the cursor, so it lands on the next `draft` below."
               },
               {
                 "from": 7,

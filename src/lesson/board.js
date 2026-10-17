@@ -13,6 +13,7 @@ import {
   isFreePractice,
   isPractice,
   isRunnable,
+  opensCommandLine,
   plannedEditorRows,
 } from "../app/activity.js";
 import { renderFieldNote } from "./notes.js";
@@ -126,7 +127,11 @@ export function renderWorld() {
   // small buffers these activities use it disappears inside the slab's own
   // minimum height and costs nothing at all.
   const fileNameLabel = isRunnable(activity) ? activity.fileName : "";
-  const editorPadding = (viewportRows ? 18 : 24) + (fileNameLabel ? 14 : 0);
+  // Vim's command line is a row of its own below the buffer, never a strip
+  // painted over it. An activity that teaches `:`, `/`, or `?` keeps that row
+  // empty while no prompt is open, so opening one moves nothing.
+  const promptRow = isRunnable(activity) && opensCommandLine(activity);
+  const editorPadding = (viewportRows ? 18 : 24) + (fileNameLabel ? 14 : 0) + (promptRow ? 24 : 0);
   const editorStyle = `--editor-rows:${editorRows};--editor-height:${editorRows * 24 + editorPadding}px${viewportRows ? `;--viewport-rows:${viewportRows}` : ""}`;
   const content = isFreePractice()
     // No viewport rows and no authored height: the free practice slab is sized
@@ -138,7 +143,7 @@ export function renderWorld() {
         </div>`
     : isRunnable(activity)
     ? `<div class="editor-stack${viewportRows ? " has-viewport" : ""}${expandedRowsClass}" data-planned-rows="${editorRows}" style="${editorStyle}">
-          <div class="code-slab next-code-slab${fileNameLabel ? " has-file-name" : ""}"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}${fileNameLabel ? `<div class="buffer-name">${escapeHtml(fileNameLabel)}</div>` : ""}</div>
+          <div class="code-slab next-code-slab${fileNameLabel ? " has-file-name" : ""}${promptRow ? " has-prompt-row" : ""}"><div class="code-body" id="editorMount" aria-label="Vim lesson editor"></div>${viewportRows ? '<div class="buffer-position" aria-hidden="true"><span class="buffer-cue buffer-cue-top">▲</span><span class="buffer-track"><i></i></span><span class="buffer-cue buffer-cue-bottom">▼</span></div>' : ""}${fileNameLabel ? `<div class="buffer-name">${escapeHtml(fileNameLabel)}</div>` : ""}</div>
           ${isDemo(activity) ? '<div class="demo-controls" id="demoControls" aria-label="Demo controls"></div>' : ""}
         </div>`
     : activity.inspection

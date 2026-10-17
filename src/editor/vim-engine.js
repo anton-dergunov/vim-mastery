@@ -39,6 +39,49 @@ const previewRangeField = StateField.define({
   provide: field => EditorView.decorations.from(field),
 });
 
+// The match a search prompt would land on if Enter were pressed now: Vim's
+// `incsearch`. It is a field of its own so it never displaces an authored
+// preview range or the live pattern's matched lines.
+const setIncrementalMatch = StateEffect.define();
+const incrementalMatchField = StateField.define({
+  create: () => Decoration.none,
+  update(value, transaction) {
+    for (const effect of transaction.effects) {
+      if (effect.is(setIncrementalMatch)) {
+        const range = effect.value;
+        return range ? Decoration.set([Decoration.mark({ class: "cm-incsearch" }).range(range.from, range.to)]) : Decoration.none;
+      }
+    }
+    return value.map(transaction.changes);
+  },
+  provide: field => EditorView.decorations.from(field),
+});
+
+/**
+ * Where a search from `offset` would land, as a document range. Forward
+ * searches start after the cursor and backward ones before it, and both wrap
+ * around the buffer, as Vim's do. A zero-width match is widened to one
+ * character so it stays visible.
+ */
+function findIncrementalMatch(doc, expression, offset, backward) {
+  const scanner = new RegExp(expression.source, expression.flags.includes("g") ? expression.flags : `${expression.flags}g`);
+  const matches = [];
+  for (let number = 1; number <= doc.lines; number += 1) {
+    const line = doc.line(number);
+    scanner.lastIndex = 0;
+    let match = scanner.exec(line.text);
+    while (match !== null) {
+      const from = line.from + match.index;
+      matches.push({ from, to: Math.min(line.to, from + Math.max(1, match[0].length)) });
+      if (match.index === scanner.lastIndex) scanner.lastIndex += 1;
+      match = scanner.exec(line.text);
+    }
+  }
+  if (!matches.length) return null;
+  if (backward) return matches.findLast(match => match.from < offset) || matches.at(-1);
+  return matches.find(match => match.from > offset) || matches[0];
+}
+
 function toVimKey(key) {
   if (specialKeys[key]) return specialKeys[key];
   if (/^<[^>]+>$/.test(key)) return key;
@@ -571,6 +614,8 @@ export class VimEngine {
     this.locked = false;
     this.commandLine = null;
     this.commandPrefix = null;
+    this.incrementalMatch = null;
+    this.promptScroll = null;
     this.lastExCommand = null;
     this.lastSubstitution = null;
     this.lastSearchQuery = null;
@@ -605,6 +650,7 @@ export class VimEngine {
           lineNumbers(),
           ...(visualizeWhitespace ? [highlightWhitespace()] : []),
           previewRangeField,
+          incrementalMatchField,
           ...vimEffectExtensions,
           ...(language === "javascript" || language === "typescript" ? [javascript()] : []),
           ...(language === "html" ? [html()] : []),
@@ -645,6 +691,18 @@ export class VimEngine {
       this.disableNativeInput(input);
     };
     this.view.dom.addEventListener("focusin", this.onNativeInputFocus, true);
+    // The adapter closes its prompt when the prompt's input loses focus, so
+    // opening any app dialog (help, feedback, the course map) dropped the
+    // prompt while this bridge still owned its text: the mode stayed
+    // Command-line and Enter had nothing to submit. Vim's command line stays
+    // open until it is confirmed or cancelled, so the blur stops here, in the
+    // capture phase, before the adapter's own listener on the input sees it.
+    this.keepPromptOnBlur = event => {
+      if (!this.ownsPrompt()) return;
+      if (!(event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) return;
+      event.stopImmediatePropagation();
+    };
+    this.view.dom.addEventListener("blur", this.keepPromptOnBlur, true);
     this.blockDirectScroll = event => event.preventDefault();
     if (viewportRows) {
       this.view.scrollDOM.addEventListener("wheel", this.blockDirectScroll, { passive: false });
@@ -668,6 +726,18 @@ export class VimEngine {
     this.cm?.on("vim-mode-change", this.onModeChange);
     this.cm?.on("vim-keypress", this.onVimKey);
     this.cm?.on("vim-command-done", this.onCommandDone);
+    // Should the adapter's prompt still close behind this bridge's back, the
+    // bridge lets go of it too, cancelling as Escape would, rather than keep
+    // reporting a command line nobody can submit. The check waits a microtask
+    // because the bridge's own Enter and Escape close the panel first and
+    // release the command line straight after.
+    this.onDialogChange = () => queueMicrotask(() => {
+      if (this.cm?.state?.dialog || this.commandLine === null || !this.view.dom.isConnected) return;
+      this.closeCommandLine();
+      Vim.multiSelectHandleKey(this.cm, "<Esc>", "touch");
+      this.emit("mode");
+    });
+    this.cm?.on("dialog", this.onDialogChange);
     this.effects = new VimEffectController({
       view: this.view,
       onEffect,
@@ -827,6 +897,11 @@ export class VimEngine {
           this.rememberExCommand(command);
         } else {
           const input = this.cm?.state?.dialog?.querySelector("input");
+          // The adapter scrolls to where the search lands, so it has to start
+          // from the window the prompt opened in, not the one the live match
+          // scrolled to, or the same search would leave a different window.
+          // A landing that needs no scroll then simply keeps that window.
+          this.restorePromptScroll();
           if (input) {
             input.value = this.commandLine;
             const enterEvent = new KeyboardEvent("keydown", {
@@ -846,6 +921,7 @@ export class VimEngine {
           this.setMatchPattern(searchPattern);
           this.commandLine = null;
           this.commandPrefix = null;
+          this.promptScroll = null;
         }
       } else {
         const text = literalText(vimKey);
@@ -901,6 +977,7 @@ export class VimEngine {
     if (opensCommandLine) {
       this.commandLine = "";
       this.commandPrefix = vimKey;
+      this.promptScroll = this.view.scrollSnapshot();
     }
     if (pendingAtPrefix) Vim.multiSelectHandleKey(this.cm, "@", source);
     const handled = Vim.multiSelectHandleKey(this.cm, vimKey, source);
@@ -949,6 +1026,43 @@ export class VimEngine {
       input.value = this.commandLine || "";
       this.disableNativeInput(input);
     }
+    this.showIncrementalMatch();
+  }
+
+  /**
+   * Vim's `incsearch`: while a search is typed, mark where Enter would land.
+   * The adapter only does this from the prompt input's keyup, which never
+   * fires here because this bridge owns the text, and its version writes
+   * `"/` on every key besides. This one reads the pattern and changes
+   * nothing: not `"/`, not the adapter's search state, not the cursor.
+   */
+  showIncrementalMatch() {
+    const searching = this.commandLine !== null && (this.commandPrefix === "/" || this.commandPrefix === "?");
+    let range = null;
+    if (searching && this.commandLine) {
+      const { pattern } = Vim.parseSearchQuery(this.commandLine, this.commandPrefix);
+      const expression = pattern ? compileGlobalPattern(pattern) : null;
+      if (expression) {
+        range = findIncrementalMatch(this.view.state.doc, expression, this.view.state.selection.main.head, this.commandPrefix === "?");
+      }
+    }
+    const current = this.incrementalMatch;
+    if (current?.from === range?.from && current?.to === range?.to) return;
+    this.incrementalMatch = range;
+    const effects = [setIncrementalMatch.of(range)];
+    if (range) effects.push(EditorView.scrollIntoView(range.from, { y: "nearest" }));
+    else if (searching && this.promptScroll) effects.push(this.promptScroll);
+    this.view.dispatch({ effects });
+  }
+
+  /**
+   * Put the window back where the prompt opened. CodeMirror applies scrolls
+   * on its next measure, so this goes through its own snapshot effect: a raw
+   * `scrollTop` write would lose to a live-match scroll still waiting for
+   * that measure, which is what keys replayed in one frame produce.
+   */
+  restorePromptScroll() {
+    if (this.promptScroll) this.view.dispatch({ effects: this.promptScroll });
   }
 
   /**
@@ -1393,6 +1507,7 @@ export class VimEngine {
       Object.defineProperty(escapeEvent, "vimWildsPrompt", { value: true });
       input.dispatchEvent(escapeEvent);
     }
+    this.restorePromptScroll();
     this.closeCommandLine();
   }
 
@@ -1401,6 +1516,8 @@ export class VimEngine {
     this.commandLine = null;
     this.commandPrefix = null;
     this.awaitingCommandLineRegister = false;
+    this.promptScroll = null;
+    this.showIncrementalMatch();
     input?.blur();
   }
 
@@ -1420,13 +1537,21 @@ export class VimEngine {
   focus() {
     if (this.locked) return;
     this.disableNativeInputs();
-    if (this.commandLine !== null) return;
+    // An open prompt keeps focus on its own input, where the adapter put it.
+    // After a dialog closes, the browser hands focus back to the button that
+    // opened it, and physical keys typed there would never reach the prompt.
+    if (this.commandLine !== null) {
+      this.view.dom.querySelector(".cm-vim-panel input")?.focus({ preventScroll: true });
+      return;
+    }
     this.view.dom.focus({ preventScroll: true });
   }
 
   destroy() {
     this.effects?.destroy();
     this.view.dom.removeEventListener("focusin", this.onNativeInputFocus, true);
+    this.view.dom.removeEventListener("blur", this.keepPromptOnBlur, true);
+    this.cm?.off("dialog", this.onDialogChange);
     this.view.scrollDOM.removeEventListener("wheel", this.blockDirectScroll);
     this.view.scrollDOM.removeEventListener("touchmove", this.blockDirectScroll);
     this.cm?.off("vim-mode-change", this.onModeChange);

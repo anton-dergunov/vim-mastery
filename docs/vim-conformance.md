@@ -242,6 +242,17 @@ The Ex and search command lines accept `Ctrl-r{register}`, which
 `vim-engine.js` owns because the app owns the command-line text. Linewise
 register contents lose their trailing newline when inserted this way.
 
+Two more command-line behaviors follow from that ownership. While a `/` or
+`?` search is typed, `vim-engine.js` marks the match Enter would land on and
+scrolls it into view, as Vim's `incsearch` does; Escape puts the window back.
+It reads the pattern with `Vim.parseSearchQuery` and changes nothing else. The
+adapter's own incremental search runs from the prompt input's keyup and writes
+`"/` on every key, so it stays off. An open prompt also stays open when an app
+dialog (help, feedback, the course map) takes focus: the adapter closes its
+prompt on blur, and the bridge stops that blur while it owns the prompt text.
+This is display and focus only; no command's result changes, so there is no
+native fixture for it. The browser tests are in `editor-conformance.spec.js`.
+
 `:sort` flags are owned by `vim-engine.js` for the same reason plain `:sort`
 already was: the adapter sorts the right lines but leaves the cursor where it
 started, while Vim moves it to the first sorted line. Session 01 verified the

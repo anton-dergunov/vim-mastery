@@ -104,6 +104,14 @@ export function scriptKeys(activity = currentActivity()) {
   return activity.script.steps.map(step => typeof step === "string" ? step : step.key);
 }
 
+/**
+ * Whether the taught keys open Vim's command line. `:`, `/`, and `?` can also
+ * be a find's target character, which over-reserves a row at worst.
+ */
+export function opensCommandLine(activity = currentActivity()) {
+  return Boolean(activity?.script) && scriptKeys(activity).some(key => key === ":" || key === "/" || key === "?");
+}
+
 export function languageLabel(activity) {
   return languageNames.get(activity.languageId) || activity.languageId;
 }

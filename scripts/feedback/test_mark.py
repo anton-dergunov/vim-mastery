@@ -15,7 +15,7 @@ REPORT_ID = "3f2b1c4d-0000-4000-8000-000000000001"
 
 def seed(root: Path, report_id: str = REPORT_ID, name: str = "2026-09-06-promote-one-identifier",
          status: str = "new") -> Path:
-    directory = root / name
+    directory = root / ("open" if status == "new" else "closed") / name
     directory.mkdir(parents=True)
     (directory / "report.md").write_text("# iw is not suggested\n\nBody.\n", encoding="utf-8")
     puller.write_meta(directory, {"id": report_id, "created_at": "2026-09-06T10:00:00.000Z",
@@ -37,6 +37,16 @@ class ResolveTests(unittest.TestCase):
     def test_an_id_prefix_is_passed_through_for_the_server_to_resolve(self):
         # This is what keeps marking possible when feedback/ has been deleted.
         self.assertEqual(marker.resolve_reference(self.root, "3f2b1c4d"), "3f2b1c4d")
+
+    def test_a_name_is_found_in_either_folder(self):
+        seed(self.root, name="2026-09-07-frame-an-assignment", status="done")
+        resolved = marker.resolve_reference(self.root, "2026-09-07-frame-an-assignment")
+        self.assertEqual(resolved, REPORT_ID)
+
+    def test_a_path_with_its_folder_also_resolves(self):
+        seed(self.root)
+        resolved = marker.resolve_reference(self.root, "open/2026-09-06-promote-one-identifier")
+        self.assertEqual(resolved, REPORT_ID)
 
     def test_a_directory_without_usable_meta_is_reported_rather_than_guessed(self):
         directory = self.root / "2026-09-06-broken"
@@ -99,9 +109,11 @@ class MarkTests(unittest.TestCase):
         self.assertEqual(self.sent["body"], {"status": "done", "resolution": "fixed in a1b2c3"})
 
     def test_the_local_mirror_updates_without_waiting_for_the_next_pull(self):
-        directory = seed(self.root)
+        seed(self.root)
         self.run_mark("2026-09-06-promote-one-identifier", "done", "fixed in a1b2c3")
 
+        directory = self.root / "closed" / "2026-09-06-promote-one-identifier"
+        self.assertFalse((self.root / "open" / directory.name).exists())
         meta = puller.read_meta(directory)
         self.assertEqual(meta["status"], "done")
         self.assertEqual(meta["resolution"], "fixed in a1b2c3")

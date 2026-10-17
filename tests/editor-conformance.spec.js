@@ -1401,6 +1401,173 @@ test.describe("Production lesson flow", () => {
     expect(message).toContain("Trailing characters: x");
   });
 
+  // The adapter's panel is `sticky` against the clipped code body, so it used
+  // to paint over the last rows; a 7-row window lost two of them. It is now a
+  // row of its own, reserved in advance where the lesson teaches a prompt.
+  test("opens the command line on its own row below the code", async ({ page }) => {
+    const prompted = async () => page.evaluate(() => {
+      const box = element => {
+        const rect = element.getBoundingClientRect();
+        return { top: rect.top, bottom: rect.bottom };
+      };
+      const panel = document.querySelector(".code-body .cm-panels-bottom");
+      const scroller = box(document.querySelector(".code-body .cm-scroller"));
+      const lines = [...document.querySelectorAll(".code-body .cm-line")].map(box)
+        .filter(line => line.bottom > scroller.top + 1 && line.top < scroller.bottom - 1);
+      const de = document.documentElement;
+      return {
+        panel: panel ? box(panel) : null,
+        text: panel?.innerText || "",
+        lines,
+        documentOverflow: de.scrollHeight > window.innerHeight || de.scrollWidth > window.innerWidth,
+      };
+    });
+    const lineTops = () => page.evaluate(() => [...document.querySelectorAll(".code-body .cm-line")]
+      .map(line => Math.round(line.getBoundingClientRect().top)));
+    const cases = [
+      { unit: "precision-motions-search", activity: "search-forward-timeout", open: () => page.evaluate(() => window.VimWilds.emit("/")), rows: 4 },
+      { unit: "precision-motions-search", activity: "pattern-search-demo", open: () => page.locator('#demoControls [data-action="step"]').click(), rows: 4 },
+      { unit: "substitution-practical-regex", activity: "confirm-skip-match", open: () => page.evaluate(() => window.VimWilds.emit(":")), rows: 7 },
+    ];
+    for (const [width, height] of [[360, 740], [392, 714], [430, 932]]) {
+      await page.setViewportSize({ width, height });
+      for (const entry of cases) {
+        await page.goto(`/?unit=${entry.unit}&activity=${entry.activity}`);
+        const before = await lineTops();
+        await entry.open();
+        await expect(page.locator(".code-body .cm-panels-bottom")).toBeVisible();
+        const result = await prompted();
+        const where = `${entry.activity} at ${width}x${height}`;
+        expect(result.panel.bottom - result.panel.top, where).toBeLessThanOrEqual(26);
+        expect(result.lines.length, where).toBeGreaterThanOrEqual(entry.rows);
+        for (const line of result.lines) expect(line.bottom <= result.panel.top + 0.5, where).toBe(true);
+        expect(await lineTops(), where).toEqual(before);
+        expect(result.text, where).not.toMatch(/regexp/i);
+        expect(result.documentOverflow, where).toBe(false);
+      }
+    }
+  });
+
+  test("marks where a typed search lands without changing the search register", async ({ page }) => {
+    await page.goto("/?unit=precision-motions-search&activity=search-forward-timeout");
+    const searchRegister = async () => (await state(page)).registers["/"]?.text || "";
+    const registerBefore = await searchRegister();
+    await page.evaluate(() => ["/", "t", "i", "m", "e"].forEach(key => window.VimWilds.emit(key)));
+    const mark = page.locator(".code-body .cm-incsearch");
+    await expect(mark).toHaveCount(1);
+    await expect(mark).toHaveText("time");
+    // The mark sits on the row Enter is about to land on, not on the cursor.
+    const markRow = await mark.evaluate(element => element.closest(".cm-line").textContent);
+    expect(markRow).toBe("timeout = 10");
+    expect(await searchRegister()).toBe(registerBefore);
+    expect((await state(page)).cursor).toEqual([0, 0]);
+
+    await page.evaluate(() => ["o", "u", "t", "Enter"].forEach(key => window.VimWilds.emit(key)));
+    await expect(mark).toHaveCount(0);
+    expect(await state(page)).toMatchObject({ cursor: [1, 0], complete: true });
+
+    // Off the lesson's taught route: a match that leaves the window scrolls
+    // into view, a pattern with no match marks nothing, and Escape puts the
+    // window back where the prompt opened.
+    const standalone = await page.evaluate(async () => {
+      const { VimEngine, resetVimEngineState } = await import("/editor/vim-engine.js");
+      resetVimEngineState();
+      const host = document.createElement("div");
+      document.body.append(host);
+      const text = Array.from({ length: 20 }, (_, index) => `row ${index + 1}`).join("\n");
+      const engine = new VimEngine({ parent: host, text, cursor: [0, 0], viewportRows: 5, onEvent() {} });
+      // The lesson slab is what holds a window to its rows; stand in for it.
+      host.style.height = `${5 * 24}px`;
+      host.querySelector(".cm-editor").style.height = "100%";
+      const send = keys => keys.forEach(key => engine.sendKey(key, { bypassLock: true, source: "fixture" }));
+      const marked = () => [...host.querySelectorAll(".cm-incsearch")].map(node => node.textContent).join("|");
+      const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      send([..."/row 18"]);
+      await settle();
+      const typed = { marked: marked(), top: engine.getViewport().topLine };
+      send(["x"]);
+      const unmatched = marked();
+      send(["Escape"]);
+      await settle();
+      const cancelled = { marked: marked(), top: engine.getViewport().topLine, mode: engine.getSnapshot().mode };
+      engine.destroy();
+      host.remove();
+      return { typed, unmatched, cancelled };
+    });
+    expect(standalone.typed.marked).toBe("row 18");
+    expect(standalone.typed.top).toBeGreaterThan(0);
+    expect(standalone.unmatched).toBe("");
+    expect(standalone.cancelled).toEqual({ marked: "", top: 0, mode: "normal" });
+  });
+
+  // Opening a dialog moved focus off the adapter's prompt input, which closed
+  // the prompt while the app still owned its text, and nothing short of a
+  // reload got the editor back.
+  test("keeps a search prompt open across the hint and feedback dialogs", async ({ page }) => {
+    await page.goto("/?unit=precision-motions-search&activity=search-forward-timeout");
+    await page.evaluate(() => ["/", "t", "i", "m", "e"].forEach(key => window.VimWilds.emit(key)));
+    const input = page.locator(".code-body .cm-vim-panel input");
+
+    await page.locator("#hintButton").click();
+    await page.locator("#hintButton").click();
+    await page.locator("#feedbackButton").click();
+    await expect(page.locator("#feedbackDialog")).toHaveAttribute("open", "");
+    // The report's screenshot is taken now, so the prompt has to be there.
+    expect((await page.evaluate(() => window.VimWilds.feedback.report())).editor?.commandLine).toBe("time");
+    await page.evaluate(() => window.VimWilds.feedback.close());
+    await page.waitForTimeout(50);
+
+    expect((await state(page)).mode).toBe("command-line");
+    await expect(input).toHaveValue("time");
+    await page.keyboard.press("o");
+    await page.evaluate(() => ["u", "t", "Enter"].forEach(key => window.VimWilds.emit(key)));
+    expect(await state(page)).toMatchObject({ cursor: [1, 0], mode: "Complete", complete: true });
+  });
+
+  // `,` is the shortest way back here, not a tour of landmarks: every landing
+  // is a separator the learner then fixes.
+  test("turns a find around with comma to fix separators on both sides", async ({ page }) => {
+    const exercise = precisionExercises.find(activity => activity.id === "reverse-repeated-find");
+    const keys = keysFor(exercise);
+    const checkpoints = new Map(exercise.script.checkpoints.map(checkpoint => [checkpoint.afterStep, checkpoint]));
+    const expectCheckpoint = async (step, label) => {
+      const checkpoint = checkpoints.get(step);
+      if (!checkpoint) return;
+      const current = await state(page);
+      expect(current.cursor, `${label} after step ${step}`).toEqual(checkpoint.cursor);
+      if (checkpoint.lines) expect(current.code, `${label} after step ${step}`).toEqual(checkpoint.lines);
+    };
+
+    await page.goto("/?unit=precision-motions-search&activity=reverse-repeated-find");
+    await page.locator(".cm-content").focus();
+    for (const [index, key] of keys.entries()) {
+      await page.keyboard.press(key);
+      await expectCheckpoint(index + 1, "physical");
+    }
+    expect(await state(page)).toMatchObject({ complete: true, code: exercise.scenario.target.lines, cursor: exercise.scenario.target.cursor });
+
+    const recallIndex = await page.evaluate(() => window.VimWilds.activities.findIndex(activity => activity.id === "reverse-repeated-find-recall"));
+    await page.evaluate(index => window.VimWilds.goToActivity(index), recallIndex);
+    for (const [index, key] of keys.entries()) {
+      await page.locator(`.key[data-key="${key}"]`).first().click();
+      await expectCheckpoint(index + 1, "touch recall");
+    }
+    expect(await state(page)).toMatchObject({ complete: true, practiceMode: "recall", code: exercise.scenario.target.lines });
+  });
+
+  // Recall shows the instruction in the header already; the tray repeating it
+  // word for word read as a hint that said nothing.
+  test("does not repeat the instruction in the recall tray", async ({ page }) => {
+    await page.goto("/?unit=precision-motions-search&activity=reverse-repeated-find");
+    const recallIndex = await page.evaluate(() => window.VimWilds.activities.findIndex(activity => activity.id === "reverse-repeated-find-recall"));
+    expect(recallIndex).toBeGreaterThanOrEqual(0);
+    await page.evaluate(index => window.VimWilds.goToActivity(index), recallIndex);
+    expect((await state(page)).practicePolicy).toBe("recall-sequence");
+    const instruction = (await page.locator("#activityInstruction").textContent()).trim();
+    const tray = (await page.locator("#commandExplanation").textContent()).trim();
+    expect(tray).not.toContain(instruction);
+  });
+
   test("shows recording state and enters @ from physical and touch keyboards", async ({ page }) => {
     await page.goto("/?unit=macros&activity=comment-python-jobs");
     await page.evaluate(() => { window.VimWilds.emit("q"); window.VimWilds.emit("a"); });
